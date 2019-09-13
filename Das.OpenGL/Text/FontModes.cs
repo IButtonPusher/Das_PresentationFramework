@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Das.OpenGL
+﻿namespace Das.OpenGL
 {
     public enum FontModes
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using Das.Views.Panels;
+﻿using Das.Views.Panels;
 
 namespace Das.Views
 {

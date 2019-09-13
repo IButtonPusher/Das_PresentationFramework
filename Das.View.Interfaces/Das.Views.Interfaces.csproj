@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -19,11 +19,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Serializer\Serializer.Interfaces\Serializer.Interfaces.csproj" />
+    <Folder Include="Extended\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Extended\" />
+    <Reference Include="Serializer.Interfaces">
+      <HintPath>..\temp_lib\Serializer.Interfaces.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

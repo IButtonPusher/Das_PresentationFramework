@@ -1,5 +1,4 @@
-﻿using System;
-using Das.Views;
+﻿using Das.Views;
 using Das.Views.Rendering;
 
 namespace Das.Gdi.Kits

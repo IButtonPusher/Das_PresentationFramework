@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -15,11 +15,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Serializer\Serializer.Core\Serializer.Core.csproj" />
-    <ProjectReference Include="..\..\Serializer\Serializer.Interfaces\Serializer.Interfaces.csproj" />
     <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
     <ProjectReference Include="..\Das.Views.3d\Das.Views.Extended.csproj" />
     <ProjectReference Include="..\Das.Views\Das.Views.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Serializer.Core">
+      <HintPath>..\temp_lib\Serializer.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Serializer.Interfaces">
+      <HintPath>..\temp_lib\Serializer.Interfaces.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

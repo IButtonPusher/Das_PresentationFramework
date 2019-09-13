@@ -1,10 +1,10 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Das.Views.Core.Geometry;
 
 namespace Das.Gdi.Core
 {
     [StructLayout(LayoutKind.Sequential)]
+    // ReSharper disable once InconsistentNaming
     public struct POINT
     {
         public int X;

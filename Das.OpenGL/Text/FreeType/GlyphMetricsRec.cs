@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using FT_Long = System.IntPtr;
 
 namespace Das.OpenGL.Text.FreeType

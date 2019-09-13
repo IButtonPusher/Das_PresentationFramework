@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Das.Views.DataBinding
+﻿namespace Das.Views.DataBinding
 {
     public interface IValueConverter<in TInput, out TOutput>
     {

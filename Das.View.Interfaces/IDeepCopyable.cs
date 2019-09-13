@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Das.Views
+﻿namespace Das.Views
 {
     public interface IDeepCopyable<out T>
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using Das.Views.Core.Drawing;
+﻿using Das.Views.Core.Drawing;
 using Das.Views.Extended.Core;
 
 namespace Das.Views.Extended.Runtime

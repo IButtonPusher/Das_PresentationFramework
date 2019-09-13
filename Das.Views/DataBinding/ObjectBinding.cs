@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Das.Views.DataBinding
+﻿namespace Das.Views.DataBinding
 {
     public class ObjectBinding<T> : BaseBinding<T>
     {

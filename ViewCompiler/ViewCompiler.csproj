@@ -41,6 +41,15 @@
     <AssemblyOriginatorKeyFile>ViewArmstrong.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Das.Serializer">
+      <HintPath>..\temp_lib\Das.Serializer.dll</HintPath>
+    </Reference>
+    <Reference Include="Serializer.Core">
+      <HintPath>..\temp_lib\Serializer.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Serializer.Interfaces">
+      <HintPath>..\temp_lib\Serializer.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -89,18 +98,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Serializer\Das.Serializer\Das.Serializer.csproj">
-      <Project>{a9d2ef65-4059-4c0a-b513-d49ac3d66cf2}</Project>
-      <Name>Das.Serializer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Serializer\Serializer.Core\Serializer.Core.csproj">
-      <Project>{c111198f-d40b-43da-8181-5cd61ee2d4a8}</Project>
-      <Name>Serializer.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Serializer\Serializer.Interfaces\Serializer.Interfaces.csproj">
-      <Project>{4d827ef1-32ac-43cb-ba78-65525b299e68}</Project>
-      <Name>Serializer.Interfaces</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Das.GdiRenderKit\Das.Gdi.csproj">
       <Project>{23274743-b205-4c69-bb7e-b3fb5cf979cf}</Project>
       <Name>Das.Gdi</Name>

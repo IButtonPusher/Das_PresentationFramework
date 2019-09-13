@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Das.OpenGL;
 using Das.OpenGL.Windows;
 using Das.Views.Core.Drawing;

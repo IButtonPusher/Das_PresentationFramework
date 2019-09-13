@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using Das.Gdi.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Measuring;

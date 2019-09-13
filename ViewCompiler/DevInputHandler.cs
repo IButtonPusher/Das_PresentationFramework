@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Das.CoreExtensions;
 using Das.Gdi;
 using Das.Views.Core.Geometry;

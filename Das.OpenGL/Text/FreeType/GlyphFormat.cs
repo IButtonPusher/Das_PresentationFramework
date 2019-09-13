@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Das.OpenGL.Text.FreeType
+﻿namespace Das.OpenGL.Text.FreeType
 {
     public enum GlyphFormat : uint
     {

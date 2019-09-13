@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Das.Views.Core.Geometry;
 
 namespace Das.Views.Core.Drawing

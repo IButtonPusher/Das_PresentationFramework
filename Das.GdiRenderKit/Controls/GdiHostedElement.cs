@@ -9,7 +9,7 @@ using Das.Views.Winforms;
 namespace Das.Gdi.Controls
 {
     // ReSharper disable once UnusedMember.Global
-    public class GdiHostedElement : HostedViewControl, IBoundElementContainer, 
+    public class GdiHostedElement : HostedViewControl, 
         IViewHost<Bitmap>
     {
         public GdiHostedElement(IView view, IStyleContext styleContext)

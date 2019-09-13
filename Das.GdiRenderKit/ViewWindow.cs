@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 using Das.Gdi.Controls;
 using Das.Gdi.Core;
@@ -26,7 +25,7 @@ namespace Das.Gdi
 
         private readonly GdiHostedElement _contents;
 
-        public Thickness RenderMargin { get; set; } = Thickness.Empty;
+        
 
 
         public IPoint GetOffset(IPoint input)

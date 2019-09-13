@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Das.Views.Core.Drawing
+﻿namespace Das.Views.Core.Drawing
 {
     public interface IBrush
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using Das.Views.Core.Enums;
+﻿using Das.Views.Core.Enums;
 
 namespace Das.Views.Panels
 {

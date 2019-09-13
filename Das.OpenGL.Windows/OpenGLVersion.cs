@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Das.OpenGL.Windows
+﻿namespace Das.OpenGL.Windows
 {
     public enum OpenGLVersion
     {

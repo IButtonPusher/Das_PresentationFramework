@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Das.Views.Extended
+﻿namespace Das.Views.Extended
 {
     public interface I3dElement
     {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Das.Views.Extended.Core
+﻿namespace Das.Views.Extended.Core
 {
     public class Vector2
     {

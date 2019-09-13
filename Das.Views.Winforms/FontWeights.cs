@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Das.Views.Winforms
+﻿namespace Das.Views.Winforms
 {
     public enum FontWeights
     {

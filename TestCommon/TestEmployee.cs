@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TestCommon
+﻿namespace TestCommon
 {
     public class TestEmployee : EmployeeViewModel
     {

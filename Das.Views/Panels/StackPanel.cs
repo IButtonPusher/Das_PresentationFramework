@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Das.Views.DataBinding;
 using Das.Views.Rendering;
 
 namespace Das.Views.Panels
 {
-    public class StackPanel<T> : BaseSequentialPanel<T>, ISequentialPanel
+    public class StackPanel<T> : BaseSequentialPanel<T>
     {
         public StackPanel()
         {

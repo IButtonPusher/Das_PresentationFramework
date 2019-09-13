@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Das.Serializer;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;

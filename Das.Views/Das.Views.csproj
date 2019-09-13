@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -18,16 +18,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Update="NETStandard.Library" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Input\" />
     <Folder Include="Invocations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Serializer.Interfaces">
+      <HintPath>..\temp_lib\Serializer.Interfaces.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

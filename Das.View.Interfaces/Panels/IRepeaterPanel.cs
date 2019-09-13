@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Das.Views.DataBinding;
 
 namespace Das.Views.Panels

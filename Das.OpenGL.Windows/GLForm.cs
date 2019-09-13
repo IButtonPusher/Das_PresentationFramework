@@ -1,6 +1,5 @@
 ﻿using Das.Views;
 using Das.Views.Winforms;
-using System;
 using System.Windows.Forms;
 
 namespace Das.OpenGL.Windows

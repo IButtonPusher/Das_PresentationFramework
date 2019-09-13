@@ -1,5 +1,4 @@
-﻿using System;
-using Das.Views.Core.Geometry;
+﻿using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 

@@ -17,14 +17,14 @@ namespace Das.Views.Rendering
 
             _measureContext = measureContext;
             Perspective = perspective;
-            _currentElementRect = new Rectangle();
+            CurrentElementRect = new Rectangle();
             _locations = new Stack<Rectangle>();
-            _locations.Push(_currentElementRect);
+            _locations.Push(CurrentElementRect);
         }
 
         private readonly IMeasureContext _measureContext;
-        protected Point CurrentLocation => _currentElementRect.Location;
-        protected Rectangle _currentElementRect;
+        protected Point CurrentLocation => CurrentElementRect.Location;
+        protected Rectangle CurrentElementRect;
         private readonly Stack<Rectangle> _locations;
         private Int32 _currentZ;
 
@@ -209,22 +209,22 @@ namespace Das.Views.Rendering
         {
             _currentZ++;
             _locations.Push(rect);
-            _currentElementRect = rect;
+            CurrentElementRect = rect;
         }
 
         private void PopRect()
         {
             _currentZ--;
             _locations.Pop();
-            _currentElementRect = _locations.Peek();
+            CurrentElementRect = _locations.Peek();
         }
 
         protected virtual Rectangle OnDrawElement(IVisualElement element,
             // ReSharper disable once UnusedParameter.Global
             IRectangle rect)
         {
-            element.Arrange(_currentElementRect.Size, this);
-            return _currentElementRect;
+            element.Arrange(CurrentElementRect.Size, this);
+            return CurrentElementRect;
         }
 
         public abstract void DrawString(string s, IFont font, IBrush brush, IRectangle location);

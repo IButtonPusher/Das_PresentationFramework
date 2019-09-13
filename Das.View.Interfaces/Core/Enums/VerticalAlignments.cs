@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Das.Views.Core.Enums
+﻿namespace Das.Views.Core.Enums
 {
     public enum VerticalAlignments
     {

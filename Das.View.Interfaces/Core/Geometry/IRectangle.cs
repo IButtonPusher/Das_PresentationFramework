@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Das.Views.Core.Geometry
+﻿namespace Das.Views.Core.Geometry
 {
     public interface IRectangle : IShape2d, IPoint, IPointContainer
     {

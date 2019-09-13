@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Das.Views.Rendering;
 
 namespace Das.Views.Panels
