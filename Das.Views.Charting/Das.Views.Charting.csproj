@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
+    <ProjectReference Include="..\Das.Views\Das.Views.csproj" />
+  </ItemGroup>
+
+</Project>

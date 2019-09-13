@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="Das.Views.LoopViewUpdater&lt;TAsset&gt;">
+    <Position X="0.5" Y="0.5" Width="7.75" />
+    <Members>
+      <Method Name="Dispose" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACCAAAQAAQQAAAiAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>LoopViewUpdater.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Das.Views.IMeasureContext" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="2.25" Width="6.25" />
+    <Members>
+      <Method Name="GetLastMeasure" Hidden="true" />
+      <Method Name="MeasureImage" Hidden="true" />
+      <Method Name="MeasureString" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

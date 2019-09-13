@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>DevkitArmstrong.snk</AssemblyOriginatorKeyFile>
+	<SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DesignView.cs" />
+    <Compile Remove="DevRenderKit.cs" />
+    <Compile Remove="ViewDeserializer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Serializer\Serializer.Core\Serializer.Core.csproj" />
+    <ProjectReference Include="..\..\Serializer\Serializer.Interfaces\Serializer.Interfaces.csproj" />
+    <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
+    <ProjectReference Include="..\Das.Views.3d\Das.Views.Extended.csproj" />
+    <ProjectReference Include="..\Das.Views\Das.Views.csproj" />
+  </ItemGroup>
+
+</Project>

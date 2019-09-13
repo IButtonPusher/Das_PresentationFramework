@@ -1,0 +1,7 @@
+﻿{
+  "Binding": "ISceneViewModel",
+  "Content": {
+
+    "SceneMonitor": { "Binding": "Camera" }
+  }
+}

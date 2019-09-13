@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Das.Views.Extended</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Core\_ICamera.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
+    <ProjectReference Include="..\Das.Views\Das.Views.csproj" />
+  </ItemGroup>
+
+</Project>

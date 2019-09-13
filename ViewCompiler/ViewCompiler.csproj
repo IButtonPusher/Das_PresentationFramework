@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2A2FC2BA-AF07-492D-A438-2239791511F5}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ViewCompiler</RootNamespace>
+    <AssemblyName>ViewCompiler</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>ViewCompiler.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>ViewCompiler.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>ViewArmstrong.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DesignerProvider.cs" />
+    <Compile Include="DesignViewUpdater.cs" />
+    <Compile Include="DesignViewWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DevInputHandler.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewBuilderProvider.cs" />
+    <Compile Include="ViewDeserializer.cs" />
+    <Compile Include="ViewProvider.cs" />
+    <Compile Include="ViewTypeBuilder.cs" />
+    <EmbeddedResource Include="DesignViewWindow.resx">
+      <DependentUpon>DesignViewWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="DesignView.cd" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="ViewArmstrong.snk" />
+    <None Include="ViewCompiler.ruleset" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Serializer\Das.Serializer\Das.Serializer.csproj">
+      <Project>{a9d2ef65-4059-4c0a-b513-d49ac3d66cf2}</Project>
+      <Name>Das.Serializer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Serializer\Serializer.Core\Serializer.Core.csproj">
+      <Project>{c111198f-d40b-43da-8181-5cd61ee2d4a8}</Project>
+      <Name>Serializer.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Serializer\Serializer.Interfaces\Serializer.Interfaces.csproj">
+      <Project>{4d827ef1-32ac-43cb-ba78-65525b299e68}</Project>
+      <Name>Serializer.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.GdiRenderKit\Das.Gdi.csproj">
+      <Project>{23274743-b205-4c69-bb7e-b3fb5cf979cf}</Project>
+      <Name>Das.Gdi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj">
+      <Project>{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}</Project>
+      <Name>Das.Views.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.Views.DevKit\Das.Views.DevKit.csproj">
+      <Project>{6ce40a8a-a51b-47e3-91ed-dbc98d1d54d7}</Project>
+      <Name>Das.Views.DevKit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.Views.Winforms\Das.Views.Winforms.csproj">
+      <Project>{d1e2bdf7-69d4-42c0-883f-2a2f2d8de4d3}</Project>
+      <Name>Das.Views.Winforms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.Views\Das.Views.csproj">
+      <Project>{a71c8e34-0909-487d-8c50-c02fc2408b8f}</Project>
+      <Name>Das.Views</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestCommon\TestCommon.csproj">
+      <Project>{e227e4eb-e9cb-447e-9a6f-275c174e6425}</Project>
+      <Name>TestCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

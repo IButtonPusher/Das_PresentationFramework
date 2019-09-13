@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="BasicGlobalStyle.cs" />
+    <Compile Remove="Company\CompanyViewProvider.cs" />
+    <Compile Remove="Scene3d\CubeView.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
+    <ProjectReference Include="..\Das.Views.3d\Das.Views.Extended.csproj" />
+    <ProjectReference Include="..\Das.Views.Charting\Das.Views.Charting.csproj" />
+    <ProjectReference Include="..\Das.Views\Das.Views.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Company\EmployeesView.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Company\LabelTest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Company\ZoomTest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scene3d\3dTest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

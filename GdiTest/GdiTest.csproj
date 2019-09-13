@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3F841198-E67C-49A7-9F96-D72548084538}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>GdiTest</RootNamespace>
+    <AssemblyName>GdiTest</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>GdiTest.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>GdiTest.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="InvocationBsae.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestGLPanelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestGLPanelForm.Designer.cs">
+      <DependentUpon>TestGLPanelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TestLauncher.cs" />
+    <Compile Include="TestOpenGLPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="freetype.lib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="GdiTest.ruleset" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Das.GdiRenderKit\Das.Gdi.csproj">
+      <Project>{23274743-b205-4c69-bb7e-b3fb5cf979cf}</Project>
+      <Name>Das.Gdi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.OpenGL.Windows\Das.OpenGL.Windows.csproj">
+      <Project>{aa3e511b-3696-46d8-81ae-98f547b0b43c}</Project>
+      <Name>Das.OpenGL.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.OpenGL\Das.OpenGL.csproj">
+      <Project>{0C0C363D-8A60-4982-9BAD-0E53E3B989BD}</Project>
+      <Name>Das.OpenGL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj">
+      <Project>{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}</Project>
+      <Name>Das.Views.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.Views.3d\Das.Views.Extended.csproj">
+      <Project>{e109ceda-64ef-4674-ac1b-1ea62624519e}</Project>
+      <Name>Das.Views.Extended</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.Views.Winforms\Das.Views.Winforms.csproj">
+      <Project>{d1e2bdf7-69d4-42c0-883f-2a2f2d8de4d3}</Project>
+      <Name>Das.Views.Winforms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.Views\Das.Views.csproj">
+      <Project>{a71c8e34-0909-487d-8c50-c02fc2408b8f}</Project>
+      <Name>Das.Views</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestCommon\TestCommon.csproj">
+      <Project>{e227e4eb-e9cb-447e-9a6f-275c174e6425}</Project>
+      <Name>TestCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewCompiler\ViewCompiler.csproj">
+      <Project>{2a2fc2ba-af07-492d-a438-2239791511f5}</Project>
+      <Name>ViewCompiler</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="freetype.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

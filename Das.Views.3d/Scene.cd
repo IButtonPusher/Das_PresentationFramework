@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Interface Name="Das.Views.Extended.Runtime.IScene">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <AssociationLine Name="VisualElements" Type="Das.Views.Extended.IVisual3dElement">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-1.025" Y="0.227" Height="0.162" Width="1.422" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Runtime\IScene.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="VisualElements" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="Das.Views.Extended.IVisual3dElement" Collapsed="true">
+    <Position X="0.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAA=</HashCode>
+      <FileName>Core\IVisual3dElement.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Das.Views.Extended.Core.ICamera" Collapsed="true">
+    <Position X="6" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAgAAAAAAAAAAAAACgAAAAAQAABA=</HashCode>
+      <FileName>Core\ICamera.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

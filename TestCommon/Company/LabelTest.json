@@ -1,0 +1,11 @@
+﻿{
+	"Binding": "ICompanyViewModel",
+	"Content":
+	{
+		"StackPanel[EmployeeViewModel]": {
+			"Children": [
+				{"Label": { "Binding": "FirstName" }}
+			]
+		}
+	}
+}

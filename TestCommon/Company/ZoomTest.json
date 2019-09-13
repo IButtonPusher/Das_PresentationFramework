@@ -1,0 +1,10 @@
+﻿{
+  "Binding": "IEmployee",
+  "DesignObject": "TestEmployee",
+  "Content": {
+    "Label": {
+      "Binding": "FirstName",
+      "Style": "StyleForLabel"
+    } 
+  } 
+}

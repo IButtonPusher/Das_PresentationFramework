@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{0E33EFB9-71B9-4769-85B8-F3AECB86F901}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VSExtension</RootNamespace>
+    <AssemblyName>VSExtension</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <GeneratePkgDefFile>true</GeneratePkgDefFile>
+    <UseCodebase>true</UseCodebase>
+    <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
+    <StartAction>Program</StartAction>
+    <StartProgram Condition="'$(DevEnvDir)' != ''">$(DevEnvDir)devenv.exe</StartProgram>
+    <StartArguments>/rootsuffix Exp</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>VSExtension.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>VSExtension.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AsyncCommands.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SettingsCommand.cs" />
+    <Compile Include="SettingsCommandPackage.cs" />
+    <Compile Include="VSExtensionPackage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Key.snk" />
+    <None Include="source.extension.vsixmanifest">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="VSExtension.ruleset" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="16.0.200" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.2.3073">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\AsyncCommands.ico" />
+    <Content Include="Resources\SettingsCommand.png" />
+    <Content Include="Resources\SettingsCommandPackage.ico" />
+    <VSCTCompile Include="SettingsCommandPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="VSPackage.resx">
+      <MergeWithCTO>true</MergeWithCTO>
+      <ManifestResourceName>VSPackage</ManifestResourceName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Serializer\Das.Serializer\Das.Serializer.csproj">
+      <Project>{a9d2ef65-4059-4c0a-b513-d49ac3d66cf2}</Project>
+      <Name>Das.Serializer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Serializer\Serializer.Core\Serializer.Core.csproj">
+      <Project>{c111198f-d40b-43da-8181-5cd61ee2d4a8}</Project>
+      <Name>Serializer.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Serializer\Serializer.Interfaces\Serializer.Interfaces.csproj">
+      <Project>{4d827ef1-32ac-43cb-ba78-65525b299e68}</Project>
+      <Name>Serializer.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.GdiRenderKit\Das.Gdi.csproj">
+      <Project>{23274743-b205-4c69-bb7e-b3fb5cf979cf}</Project>
+      <Name>Das.Gdi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj">
+      <Project>{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}</Project>
+      <Name>Das.Views.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.Views.3d\Das.Views.Extended.csproj">
+      <Project>{e109ceda-64ef-4674-ac1b-1ea62624519e}</Project>
+      <Name>Das.Views.Extended</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.Views.DevKit\Das.Views.DevKit.csproj">
+      <Project>{6ce40a8a-a51b-47e3-91ed-dbc98d1d54d7}</Project>
+      <Name>Das.Views.DevKit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.Views\Das.Views.csproj">
+      <Project>{a71c8e34-0909-487d-8c50-c02fc2408b8f}</Project>
+      <Name>Das.Views</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViewCompiler\ViewCompiler.csproj">
+      <Project>{2a2fc2ba-af07-492d-a438-2239791511f5}</Project>
+      <Name>ViewCompiler</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

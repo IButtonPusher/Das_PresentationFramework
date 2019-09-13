@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>ViewsArmstrong.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Input\BaseInputContext.cs" />
+    <Compile Remove="Input\NullInputHandler.cs" />
+    <Compile Remove="Input\NullInputProvider.cs" />
+    <Compile Remove="Kits\BaseRenderKit.cs" />
+    <Compile Remove="Kits\NullRenderKit.cs" />
+    <Compile Remove="Measuring\NullPositionOffsetter.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="NETStandard.Library" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Input\" />
+    <Folder Include="Invocations\" />
+  </ItemGroup>
+
+</Project>
