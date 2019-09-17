@@ -12,7 +12,7 @@ using Das.Views.Styles;
 namespace Das.Views.DevKit
 {
     // ReSharper disable once ClassNeverInstantiated.Global - via de-serialized
-    public class ViewBuilder : IView, IBindingSetter
+    public class ViewBuilder : IView
     {
         void IVisualRenderer.Arrange(ISize availableSpace, IRenderContext renderContext)
         {

@@ -9,21 +9,34 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Input\BaseInputContext.cs" />
-    <Compile Remove="Input\NullInputHandler.cs" />
-    <Compile Remove="Input\NullInputProvider.cs" />
-    <Compile Remove="Kits\BaseRenderKit.cs" />
-    <Compile Remove="Kits\NullRenderKit.cs" />
-    <Compile Remove="Measuring\NullPositionOffsetter.cs" />
+    <Compile Remove="Controls\**" />
+    <Compile Remove="DataBinding\**" />
+    <Compile Remove="Input\**" />
+    <Compile Remove="Invocations\**" />
+    <Compile Remove="Kits\**" />
+    <Compile Remove="Measuring\**" />
+    <Compile Remove="Rendering\**" />
+    <Compile Remove="Styles\**" />
+    <EmbeddedResource Remove="Controls\**" />
+    <EmbeddedResource Remove="DataBinding\**" />
+    <EmbeddedResource Remove="Input\**" />
+    <EmbeddedResource Remove="Invocations\**" />
+    <EmbeddedResource Remove="Kits\**" />
+    <EmbeddedResource Remove="Measuring\**" />
+    <EmbeddedResource Remove="Rendering\**" />
+    <EmbeddedResource Remove="Styles\**" />
+    <None Remove="Controls\**" />
+    <None Remove="DataBinding\**" />
+    <None Remove="Input\**" />
+    <None Remove="Invocations\**" />
+    <None Remove="Kits\**" />
+    <None Remove="Measuring\**" />
+    <None Remove="Rendering\**" />
+    <None Remove="Styles\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Update="NETStandard.Library" Version="2.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Input\" />
-    <Folder Include="Invocations\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,5 +48,13 @@
       <HintPath>..\temp_lib\Serializer.Interfaces.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Kits\" />
+  </ItemGroup>
+
+  <Import Project="..\Views.Shared\Views.Shared.projitems" Label="Shared" />
+
+  <Import Project="..\Views.Dynamic\Views.Dynamic.projitems" Label="Shared" />
 
 </Project>

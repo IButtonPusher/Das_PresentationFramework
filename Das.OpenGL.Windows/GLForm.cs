@@ -1,10 +1,9 @@
-﻿using Das.Views;
-using Das.Views.Winforms;
+﻿using Das.Views.Winforms;
 using System.Windows.Forms;
 
 namespace Das.OpenGL.Windows
 {
-    public class GLForm : ViewForm, IViewHost
+    public class GLForm : ViewForm
     {
         private readonly GLHostedElement _element;
 

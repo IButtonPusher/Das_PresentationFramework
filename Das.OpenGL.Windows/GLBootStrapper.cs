@@ -20,7 +20,7 @@ namespace Das.OpenGL
         public GLBootStrapper(GLWindowBuilder windowBuilder)
         {
             _windowBuilder = windowBuilder;
-            _taskScheduler = new StaScheduler();
+            _taskScheduler = new StaScheduler("Das GL Thread");
         }
 
         public void Run<TViewModel>(TViewModel viewModel, IView view)

@@ -1,6 +1,7 @@
 ﻿using Das.Views.Panels;
 using Das.Views.Styles;
 using Das.Views.Winforms;
+using WinForms.Shared;
 
 namespace Das.OpenGL.Windows
 {

@@ -34,3 +34,4 @@
 /VSExtension/bin/Debug
 /VSExtension/obj
 /.vs/Das.Views/DesignTimeBuild/.dtbcache
+*.user

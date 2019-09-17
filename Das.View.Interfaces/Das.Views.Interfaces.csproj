@@ -9,23 +9,16 @@
     <AssemblyOriginatorKeyFile>InterfacesArmstrong.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Core\Geometry\IThickness.cs" />
-    <Compile Remove="Extended\I3dElement.cs" />
-    <Compile Remove="Extended\ICamera.cs" />
-    <Compile Remove="Extended\IPoint3d.cs" />
-    <Compile Remove="Extended\IVisual3dElement.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Extended\" />
-  </ItemGroup>
+  <PropertyGroup>
+   <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+</PropertyGroup>
 
   <ItemGroup>
     <Reference Include="Serializer.Interfaces">
       <HintPath>..\temp_lib\Serializer.Interfaces.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <Import Project="..\Interfaces.Shared\Interfaces.Shared.projitems" Label="Shared" />
 
 </Project>

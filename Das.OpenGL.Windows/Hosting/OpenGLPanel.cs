@@ -5,11 +5,10 @@ using Das.Views;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
-using Das.Views.Winforms;
 
 namespace Das.OpenGL.Windows
 {
-    public abstract class OpenGLPanel : GLHostedElement, IWindowsHost
+    public abstract class OpenGLPanel : GLHostedElement
     {
         public OpenGLPanel(IView view, IStyleContext styleContext)
             : base(view, styleContext)

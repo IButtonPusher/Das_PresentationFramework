@@ -1,12 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="IDataPoint.cs" />
+    <Compile Remove="Pie\IPieData.cs" />
+    <Compile Remove="Pie\PieChart.cs" />
+    <Compile Remove="Pie\PieLegendItem.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
     <ProjectReference Include="..\Das.Views\Das.Views.csproj" />
   </ItemGroup>
+
+  <Import Project="..\Charting.Shared\Charting.Shared.projitems" Label="Shared" />
 
 </Project>

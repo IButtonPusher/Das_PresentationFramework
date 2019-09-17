@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>2e14d9ea-bfc7-439c-8e84-156d1437c6a8</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Interfaces.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\Brush.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\Color.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\Colors.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IBrush.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IColor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IFrame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IImage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IPen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\Pen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Enums\Alignment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Enums\HorizontalAlignments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Enums\Orientation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Enums\VerticalAlignments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Cube.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\GeometryBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ICube.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IMultiLine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IPoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IPointContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IPositionOffseter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IRectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IRoundedRectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IRoundedSize.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IShape2d.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ISize.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ISize3d.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Point.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Rectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\RoundedSize.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Size.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Thickness.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Input\KeyboardButtons.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Input\MouseButtons.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\Font.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\FontStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\IFont.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\IFontProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\IFontRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\IStringRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IBindableElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IBindingSetter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IDataBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IDataContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IValueConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExtensionMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hosting\IHost.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hosting\IViewHost.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IBootStrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IDeepCopyable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\IElementLocator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\IInputContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\IInputHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\IInputProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Invocations\ExclusiveSynchronizationContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Invocations\InvocationBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IRenderKit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IUiProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IViewProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IWindowProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\IBoundElementContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\IContentContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\IPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\IRepeaterPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\ISequentialPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\IView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\IVisualContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\IVisualFinder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\OverflowBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IMeasureContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IMutableViewPerspective.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IRenderContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IRenderedVisual.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\ISequentialRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IViewPerspective.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IViewState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IVisualContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IVisualElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IVisualRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSetters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleTypeAttribute.cs" />
+  </ItemGroup>
+</Project>

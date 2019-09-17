@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>778a378f-7a09-4c1d-abd3-634f3d9cc8ab</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Views.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Image.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Label.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\BaseBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\BindableElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\ConverterBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\DeferredPropertyBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\InstanceBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\ObjectBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\PropertyBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Measuring\BaseMeasureContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\BasePanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\BaseSequentialPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\ContentPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\RepeaterPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\StackPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\View.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\BasePerspective.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\BaseRenderContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\RenderedVisual.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\SequentialRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\VisualElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\BaseStyleContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\DefaultStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\ElementStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\ScopedStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Style.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\TriggerBoundStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\TypeStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Updaters\StaScheduler.cs" />
+  </ItemGroup>
+</Project>

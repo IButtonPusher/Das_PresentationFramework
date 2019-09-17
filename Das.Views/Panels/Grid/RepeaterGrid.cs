@@ -15,16 +15,16 @@ namespace Das.Views.Panels.Grid
     {
         public RepeaterGrid()
         {
-            _controls = new Dictionary<int, List<IVisualElement>>();
-            _sizes = new Dictionary<int, List<ISize>>();
-            _columnWidths = new Dictionary<int, double>();
+            _controls = new Dictionary<Int32, List<IVisualElement>>();
+            _sizes = new Dictionary<Int32, List<ISize>>();
+            _columnWidths = new Dictionary<Int32, Double>();
         }
 
         private readonly Dictionary<Int32, List<IVisualElement>> _controls;
         private readonly Dictionary<Int32, List<ISize>> _sizes;
         private readonly Dictionary<Int32, Double> _columnWidths;
 
-        public override void SetDataContext(object dataContext)
+        public override void SetDataContext(Object dataContext)
         {
             DataContext = dataContext;
 

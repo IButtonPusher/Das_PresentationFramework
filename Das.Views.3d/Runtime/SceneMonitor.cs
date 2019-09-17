@@ -9,7 +9,7 @@ namespace Das.Views.Extended.Runtime
     /// Control that renders the data provided by a Camera that is watching a Scene
     /// </summary>
     // ReSharper disable once UnusedMember.Global
-    public class SceneMonitor : BindableElement<ICamera>, IBindableElement<ICamera>
+    public class SceneMonitor : BindableElement<ICamera>
     {
         public override ISize Measure(ISize availableSpace, IMeasureContext measureContext)
         {

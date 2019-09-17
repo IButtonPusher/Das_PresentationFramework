@@ -23,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>Das.OpenGL.Windows.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>Das.OpenGL.Windows.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -85,6 +87,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Das.OpenGL.Windows.ruleset" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -99,14 +102,12 @@
       <Project>{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}</Project>
       <Name>Das.Views.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Das.Views.Winforms\Das.Views.Winforms.csproj">
-      <Project>{d1e2bdf7-69d4-42c0-883f-2a2f2d8de4d3}</Project>
-      <Name>Das.Views.Winforms</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Das.Views\Das.Views.csproj">
       <Project>{a71c8e34-0909-487d-8c50-c02fc2408b8f}</Project>
       <Name>Das.Views</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\Windows.Shared\Windows.Shared.projitems" Label="Shared" />
+  <Import Project="..\WinForms.Shared\WinForms.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

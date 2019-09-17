@@ -1,8 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>	
   </PropertyGroup>
+  <PropertyGroup>
+   <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+</PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Text\StringRenderer.cs" />

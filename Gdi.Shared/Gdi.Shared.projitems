@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>ce7e6b63-33e2-44f8-85c9-979a4f6b6f2c</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Gdi.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BitmapRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GdiDevice.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GdiMeasureContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GdiRenderContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GdiRenderKit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TypeConverter.cs" />
+  </ItemGroup>
+</Project>
