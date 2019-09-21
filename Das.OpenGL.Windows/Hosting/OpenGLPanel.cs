@@ -50,7 +50,7 @@ namespace Das.OpenGL.Windows
                 await GameLoop();
             }
 
-            protected override bool IsChanged => true;
+            protected override Boolean IsChanged => true;
             protected override void Update()
             {
                 if (!_renderer.PreRender())

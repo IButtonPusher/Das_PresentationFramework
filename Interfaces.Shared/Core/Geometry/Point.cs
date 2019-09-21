@@ -29,7 +29,7 @@ namespace Das.Views.Core.Geometry
 
         IPoint IDeepCopyable<IPoint>.DeepCopy() => DeepCopy();
 
-        public override string ToString() => X + ", " + Y;
+        public override String ToString() => X + ", " + Y;
 
         public static IPoint operator +(Point p1, IPoint p2)
         {

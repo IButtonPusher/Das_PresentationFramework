@@ -1,13 +1,15 @@
-﻿namespace Das.Views.Core.Drawing
+﻿using System;
+
+namespace Das.Views.Core.Drawing
 {
     public interface IColor
     {
-        byte A { get; }
+        Byte A { get; }
 
-        byte B { get; }
+        Byte B { get; }
 
-        byte R { get; }
+        Byte R { get; }
 
-        byte G { get; }
+        Byte G { get; }
     }
 }

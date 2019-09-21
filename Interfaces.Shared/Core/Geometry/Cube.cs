@@ -4,7 +4,7 @@ namespace Das.Views.Core.Geometry
 {
     public class Cube : Rectangle, ISize3d, ICube
     {
-        public double Depth { get; }
+        public Double Depth { get; }
 
         public Cube(Point location, ISize3d size)
             : base(location, size)

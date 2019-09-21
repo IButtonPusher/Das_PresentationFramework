@@ -10,38 +10,20 @@ namespace Das.Views.DevKit
 {
     public class DevInputHandler : InputContext
     {
-        private readonly IElementLocator _elementLocator;
-        private readonly DesignViewUpdater _designViewUpdater;
-        
-
-//        public event EventHandler SelectionChanged;
-
         public DevInputHandler(IPositionOffseter offsetter, IElementLocator elementLocator,
             DesignViewUpdater designViewUpdater) 
             : base(offsetter)
         {
             _elementLocator = elementLocator;
             _designViewUpdater = designViewUpdater;
-            //RenderKit = new NullRenderKit();
-            //InputProvider =new NullInputProvider();
         }
 
-        //public DevInputHandler(IRenderKit renderKit, IInputProvider inputProvider)
-        //{
-        //    //InputProvider = inputProvider;
-        //    RenderKit = renderKit;
-        //}
-
-        //public IRenderKit RenderKit { get; set; }
-
-        //public IInputProvider InputProvider { get; set; }
-
-        protected override void OnMouseHovering(IPoint position) { }
+        private readonly IElementLocator _elementLocator;
+        private readonly DesignViewUpdater _designViewUpdater;
 
         protected override void OnMouseDown(MouseButtons button, IPoint position)
         {
            UpdateSelectedItems();
-
         }
 
         protected override void OnMouseUp(MouseButtons button, IPoint position) { }
@@ -65,12 +47,6 @@ namespace Das.Views.DevKit
                 return;
 
             _designViewUpdater.SelectedVisuals = newArr;
-            //SelectionChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void Dispose()
-        {
-         
         }
     }
 }

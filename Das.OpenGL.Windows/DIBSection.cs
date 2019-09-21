@@ -6,7 +6,7 @@ namespace Das.OpenGL.Windows
 {
     public class DIBSection : IDisposable
     {
-		public virtual void Create(IntPtr hDC, Int32 width, Int32 height, int bitCount)
+		public virtual void Create(IntPtr hDC, Int32 width, Int32 height, Int32 bitCount)
         {
             _width = width;
             _height = height;
@@ -20,7 +20,7 @@ namespace Das.OpenGL.Windows
             info.Init();
 
             //	Set the data.
-            info.biBitCount = (short)bitCount;
+            info.biBitCount = (Int16)bitCount;
             info.biPlanes = 1;
             info.biWidth = _width;
             info.biHeight = _height;
@@ -41,7 +41,7 @@ namespace Das.OpenGL.Windows
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="bitCount">The bit count.</param>
-        public void Resize(int width, int height, int bitCount)
+        public void Resize(Int32 width, Int32 height, Int32 bitCount)
         {
             //	Destroy existing objects.
             Destroy();
@@ -55,7 +55,7 @@ namespace Das.OpenGL.Windows
             info.Init();
 
             //	Set the data.
-            info.biBitCount = (short)bitCount;
+            info.biBitCount = (Int16)bitCount;
             info.biPlanes = 1;
             info.biWidth = width;
             info.biHeight = height;
@@ -75,13 +75,13 @@ namespace Das.OpenGL.Windows
             Destroy();
         }
 
-        public const byte PFD_TYPE_RGBA = 0;
-        public const uint PFD_DRAW_TO_BITMAP = 8;
-        public const uint PFD_SUPPORT_GDI = 16;
-        public const uint PFD_SUPPORT_OPENGL = 32;
-        public const sbyte PFD_MAIN_PLANE = 0;
+        public const Byte PFD_TYPE_RGBA = 0;
+        public const UInt32 PFD_DRAW_TO_BITMAP = 8;
+        public const UInt32 PFD_SUPPORT_GDI = 16;
+        public const UInt32 PFD_SUPPORT_OPENGL = 32;
+        public const SByte PFD_MAIN_PLANE = 0;
       
-        protected virtual bool SetPixelFormat(IntPtr hDC, int bitCount)
+        protected virtual Boolean SetPixelFormat(IntPtr hDC, Int32 bitCount)
         {
             //	Create the big lame pixel format majoo.
             var pixelFormat = new Pixelformatdescriptor();
@@ -91,12 +91,12 @@ namespace Das.OpenGL.Windows
             pixelFormat.nVersion = 1;
             pixelFormat.dwFlags = (PFD_DRAW_TO_BITMAP | PFD_SUPPORT_OPENGL | PFD_SUPPORT_GDI);
             pixelFormat.iPixelType = PFD_TYPE_RGBA;
-            pixelFormat.cColorBits = (byte)bitCount;
+            pixelFormat.cColorBits = (Byte)bitCount;
             pixelFormat.cDepthBits = 32;
             pixelFormat.iLayerType = PFD_MAIN_PLANE;
 
             //	Match an appropriate pixel format 
-            int iPixelformat;
+            Int32 iPixelformat;
             if ((iPixelformat = Native.ChoosePixelFormat(hDC, pixelFormat)) == 0)
                 return false;
 
@@ -141,12 +141,12 @@ namespace Das.OpenGL.Windows
         /// <summary>
         /// The width.
         /// </summary>
-		protected int _width;
+		protected Int32 _width;
 
         /// <summary>
         /// The height.
         /// </summary>
-        protected int _height;
+        protected Int32 _height;
 
         /// <summary>
         /// Gets the handle to the bitmap.
@@ -163,7 +163,7 @@ namespace Das.OpenGL.Windows
         /// Gets or sets the width.
         /// </summary>
         /// <value>The width.</value>
-		public int Width
+		public Int32 Width
         {
             get => _width;
             protected set => _width = value;
@@ -173,7 +173,7 @@ namespace Das.OpenGL.Windows
         /// Gets or sets the height.
         /// </summary>
         /// <value>The height.</value>
-		public int Height
+		public Int32 Height
         {
             get => _height;
             protected set => _height = value;

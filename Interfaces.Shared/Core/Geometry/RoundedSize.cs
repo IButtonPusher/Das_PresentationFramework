@@ -1,11 +1,13 @@
-﻿namespace Das.Views.Core.Geometry
+﻿using System;
+
+namespace Das.Views.Core.Geometry
 {
     public class RoundedSize : IRoundedSize
     {
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public Int32 Width { get; set; }
+        public Int32 Height { get; set; }
 
-        public bool Equals(IRoundedSize other)
+        public Boolean Equals(IRoundedSize other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -14,10 +16,10 @@
                    Height == other.Height;
         }
 
-        public override bool Equals(object obj)
+        public override Boolean Equals(Object obj)
             => (obj is IRoundedSize isize && Equals(isize));
 
-        public override int GetHashCode()
+        public override Int32 GetHashCode()
         {
             unchecked
             {

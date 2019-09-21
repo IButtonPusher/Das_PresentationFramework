@@ -8,13 +8,13 @@ namespace Das.OpenGL.Windows
     {
         public DelegateCache()
         {
-            _cache = new Dictionary<string, Delegate>();
+            _cache = new Dictionary<String, Delegate>();
         }
 
-        public const string OpenGL32 = "opengl32.dll";
+        public const String OpenGL32 = "opengl32.dll";
 
         [DllImport(OpenGL32, SetLastError = true)]
-        public static extern IntPtr wglGetProcAddress(string name);
+        public static extern IntPtr wglGetProcAddress(String name);
 
         public T Get<T>() where T : class
         {
@@ -45,6 +45,6 @@ namespace Das.OpenGL.Windows
             throw new Exception("Extension function " + name + " not supported");
         }
 
-        private readonly Dictionary<string, Delegate> _cache;
+        private readonly Dictionary<String, Delegate> _cache;
     }
 }

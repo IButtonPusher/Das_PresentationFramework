@@ -1,13 +1,15 @@
-﻿namespace Das.Views.Core.Geometry
+﻿using System;
+
+namespace Das.Views.Core.Geometry
 {
     public interface IShape2d : ISize
     {
-        double Left { get; }
+        Double Left { get; }
 
-        double Top { get; }
+        Double Top { get; }
 
-        double Right { get; }
+        Double Right { get; }
 
-        double Bottom { get; }
+        Double Bottom { get; }
     }
 }

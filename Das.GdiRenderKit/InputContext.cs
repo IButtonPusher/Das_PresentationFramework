@@ -11,17 +11,16 @@ namespace Das.Gdi
 {
     public abstract class InputContext : IInputContext, IMessageFilter
     {
-        //private readonly IInputHandler _inputHandler;
+        
         private readonly IPositionOffseter _offsetter;
 
         public InputContext(IPositionOffseter offsetter)
         {
-            // _inputHandler = inputHandler;
             _offsetter = offsetter;
             Application.AddMessageFilter(this);
         }
 
-        public bool AreButtonsPressed(MouseButtons button1,
+        public Boolean AreButtonsPressed(MouseButtons button1,
             MouseButtons button2, MouseButtons button3) => false;
 
         public IPoint CursorPosition
@@ -35,7 +34,7 @@ namespace Das.Gdi
             }
         }
 
-        public bool IsButtonPressed(KeyboardButtons keyboardButton)
+        public Boolean IsButtonPressed(KeyboardButtons keyboardButton)
         {
             switch (keyboardButton)
             {
@@ -51,18 +50,18 @@ namespace Das.Gdi
             }
         }
 
-        public bool AreButtonsPressed(KeyboardButtons button1, KeyboardButtons button2)
+        public Boolean AreButtonsPressed(KeyboardButtons button1, KeyboardButtons button2)
             => IsButtonPressed(button1) && IsButtonPressed(button2);
 
-        public bool AreButtonsPressed(KeyboardButtons button1, KeyboardButtons button2,
+        public Boolean AreButtonsPressed(KeyboardButtons button1, KeyboardButtons button2,
             KeyboardButtons button3) => AreButtonsPressed(
                                             button1, button2) && IsButtonPressed(button3);
 
-        public bool IsButtonPressed(MouseButtons mouseButton) => false;
+        public Boolean IsButtonPressed(MouseButtons mouseButton) => false;
 
-        public bool AreButtonsPressed(MouseButtons button1, MouseButtons button2) => false;
+        public Boolean AreButtonsPressed(MouseButtons button1, MouseButtons button2) => false;
 
-        public bool IsCapsLockOn
+        public Boolean IsCapsLockOn
         {
             get
             {
@@ -72,15 +71,13 @@ namespace Das.Gdi
         }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        private static extern short GetKeyState(int keyCode);
+        private static extern Int16 GetKeyState(Int32 keyCode);
 
 
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool GetCursorPos(out POINT lpPoint);
-
-
-        protected abstract void OnMouseHovering(IPoint position);
+        static extern Boolean GetCursorPos(out POINT lpPoint);
+        
 
         protected abstract void OnMouseDown(MouseButtons button, IPoint position);
 
@@ -88,7 +85,7 @@ namespace Das.Gdi
 
         protected abstract void OnKeyboardStateChanged();
 
-        public bool PreFilterMessage(ref Message m)
+        public Boolean PreFilterMessage(ref Message m)
         {
             switch (m.Msg)
             {
@@ -114,6 +111,6 @@ namespace Das.Gdi
             return false;
         }
 
-        public bool IsMousePresent => throw new NotImplementedException();
+        public Boolean IsMousePresent => throw new NotImplementedException();
     }
 }

@@ -26,15 +26,15 @@ namespace Das.OpenGL.Windows
             _viewHost.HostCreated += OnHostHandleCreated;
         }
 
-        public const byte PFD_TYPE_RGBA = 0;
-        public const uint PFD_DOUBLEBUFFER = 1;
-        public const uint PFD_DRAW_TO_WINDOW = 4;
-        public const uint PFD_SUPPORT_OPENGL = 32;
-        public const sbyte PFD_MAIN_PLANE = 0;
-        public const int WGL_CONTEXT_MAJOR_VERSION_ARB = 0x2091;
-        public const int WGL_CONTEXT_MINOR_VERSION_ARB = 0x2092;
-        public const int WGL_CONTEXT_FLAGS_ARB = 0x2094;
-        public const int WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB = 0x0002;
+        public const Byte PFD_TYPE_RGBA = 0;
+        public const UInt32 PFD_DOUBLEBUFFER = 1;
+        public const UInt32 PFD_DRAW_TO_WINDOW = 4;
+        public const UInt32 PFD_SUPPORT_OPENGL = 32;
+        public const SByte PFD_MAIN_PLANE = 0;
+        public const Int32 WGL_CONTEXT_MAJOR_VERSION_ARB = 0x2091;
+        public const Int32 WGL_CONTEXT_MINOR_VERSION_ARB = 0x2092;
+        public const Int32 WGL_CONTEXT_FLAGS_ARB = 0x2094;
+        public const Int32 WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB = 0x0002;
 
         public IntPtr DeviceContextHandle => _deviceContextHandle;
         public IntPtr RenderContextHandle => _renderContextHandle;
@@ -58,9 +58,9 @@ namespace Das.OpenGL.Windows
         private Graphics _hostGraphics;
         private IntPtr _hostDc;
 
-        protected uint _frameBufferID;
-        protected uint _colorRenderBufferID;
-        protected uint _depthRenderBufferID;
+        protected UInt32 _frameBufferID;
+        protected UInt32 _colorRenderBufferID;
+        protected UInt32 _depthRenderBufferID;
 
         public void Initialize()
         {
@@ -80,7 +80,7 @@ namespace Das.OpenGL.Windows
             pfd.cStencilBits = 8;
             pfd.iLayerType = PFD_MAIN_PLANE;
 
-            int iPixelformat;
+            Int32 iPixelformat;
             if ((iPixelformat = Native.ChoosePixelFormat(_deviceContextHandle, pfd)) == 0)
                 throw new InvalidOperationException();
 
@@ -104,7 +104,7 @@ namespace Das.OpenGL.Windows
             OnSizeChanged();
         }
 
-        private void OnHostHandleCreated(object sender, EventArgs e)
+        private void OnHostHandleCreated(Object sender, EventArgs e)
         {
             _viewHost.Invoke(() =>
             {
@@ -115,7 +115,7 @@ namespace Das.OpenGL.Windows
             _viewHost.HostCreated -= OnHostHandleCreated;
         }
 
-        private void OnHostSizeChanged(object sender, EventArgs e)
+        private void OnHostSizeChanged(Object sender, EventArgs e)
         {
             Interlocked.Increment(ref _resizesPending);
         }
@@ -134,7 +134,7 @@ namespace Das.OpenGL.Windows
             //  attempt to create a 3.0+ context.
             try
             {
-                int[] attributes =
+                Int32[] attributes =
                 {
                     WGL_CONTEXT_MAJOR_VERSION_ARB, requestedVersionNumber.Major,
                     WGL_CONTEXT_MINOR_VERSION_ARB, requestedVersionNumber.Minor,
@@ -195,7 +195,7 @@ namespace Das.OpenGL.Windows
             GL.glMatrixMode(GL.PROJECTION);
             GL.glLoadIdentity();
 
-            GL.gluPerspective(45.0f, w / (float)h, 0.1f, 100.0f);
+            GL.gluPerspective(45.0f, w / (Single)h, 0.1f, 100.0f);
 
             GL.glMatrixMode(GL.MODELVIEW);
 
@@ -225,7 +225,7 @@ namespace Das.OpenGL.Windows
 
         private void BindBuffers()
         {
-            var ids = new uint[1];
+            var ids = new UInt32[1];
             _delegateCache.Get<glGenFramebuffersEXT>()(1, ids);
             _frameBufferID = ids[0];
             _delegateCache.Get<glBindFramebufferEXT>()(GL.FRAMEBUFFER_EXT, _frameBufferID);
@@ -267,7 +267,7 @@ namespace Das.OpenGL.Windows
         }
 
 
-        public IntPtr CreateContextAttribsARB(IntPtr hShareContext, int[] attribList) =>
+        public IntPtr CreateContextAttribsARB(IntPtr hShareContext, Int32[] attribList) =>
             _delegateCache.Get<wglCreateContextAttribsARB>()(_deviceContextHandle,
                 hShareContext, attribList);
     }

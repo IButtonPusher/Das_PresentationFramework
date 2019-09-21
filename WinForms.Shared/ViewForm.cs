@@ -53,7 +53,7 @@ namespace Das.Views.Winforms
 
         private readonly Size _availableSize;
 
-        protected override bool DoubleBuffered
+        protected override Boolean DoubleBuffered
         {
             get => true;
             set { }
@@ -61,7 +61,7 @@ namespace Das.Views.Winforms
 
         public Thickness RenderMargin { get; set; } = Thickness.Empty;
 
-        public bool IsLoaded => _contents.IsLoaded;
+        public Boolean IsLoaded => _contents.IsLoaded;
 
         public event EventHandler HostCreated
         {
@@ -72,14 +72,14 @@ namespace Das.Views.Winforms
         public event EventHandler AvailableSizeChanged;
         public void Invoke(Action action) => base.Invoke(action);
 
-        private bool _isChanged;
+        private Boolean _isChanged;
 
         public void AcceptChanges()
         {
 
         }
 
-        public virtual bool IsChanged => View != null && View.IsChanged || _isChanged;
+        public virtual Boolean IsChanged => View != null && View.IsChanged || _isChanged;
 
         public IViewModel DataContext
         {
@@ -99,7 +99,7 @@ namespace Das.Views.Winforms
 
         public virtual IStyleContext StyleContext => _contents.StyleContext;
 
-        public double ZoomLevel
+        public Double ZoomLevel
         {
             get => _contents.ZoomLevel;
             set => _contents.ZoomLevel = value;

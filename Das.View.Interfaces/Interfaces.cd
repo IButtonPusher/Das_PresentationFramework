@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Interface Name="Das.Views.IView">
+  <Interface Name="Das.Views.Panels.IView">
     <Position X="0.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
@@ -17,11 +17,11 @@
       <Property Name="View" />
     </ShowAsAssociation>
   </Interface>
-  <Interface Name="Das.Views.IRenderContext">
+  <Interface Name="Das.Views.Rendering.IRenderContext">
     <Position X="2.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ABAAAAAIABAAAAAAEAAQQAAAAAAAAAAAAEAAAAABAAA=</HashCode>
-      <FileName>Rendering\IRenderContext.cs</FileName>
+      <FileName>IRenderContext.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Das.Views.IRenderKit">

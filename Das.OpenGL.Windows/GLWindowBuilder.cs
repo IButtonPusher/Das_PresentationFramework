@@ -8,7 +8,7 @@ namespace Das.OpenGL.Windows
 {
     public class GLWindowBuilder : IWindowProvider<GLForm>
     {
-        private readonly string _nativeWindowClassName;
+        private readonly String _nativeWindowClassName;
         private const SetWindowPosFlags ResizeFlags = SetWindowPosFlags.SWP_NOACTIVATE |
                                                       SetWindowPosFlags.SWP_NOCOPYBITS |
                                                       SetWindowPosFlags.SWP_NOMOVE |
@@ -36,7 +36,7 @@ namespace Das.OpenGL.Windows
         {
             _wndProcDelegate = WndProc;
         }
-        private static IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam) 
+        private static IntPtr WndProc(IntPtr hWnd, UInt32 msg, IntPtr wParam, IntPtr lParam) 
             => DefWindowProc(hWnd, msg, wParam, lParam);
 
         private static readonly WndProc _wndProcDelegate;
@@ -81,18 +81,18 @@ namespace Das.OpenGL.Windows
         }
 
         [DllImport(Native.User32, SetLastError = true)]
-        public static extern IntPtr DefWindowProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
+        public static extern IntPtr DefWindowProc(IntPtr hWnd, UInt32 uMsg, IntPtr wParam, IntPtr lParam);
 
         [DllImport(Native.User32, SetLastError = true)]
         public static extern IntPtr CreateWindowEx(
             WindowStylesEx dwExStyle,
-            string lpClassName,
-            string lpWindowName,
+            String lpClassName,
+            String lpWindowName,
             WindowStyles dwStyle,
-            int x,
-            int y,
-            int nWidth,
-            int nHeight,
+            Int32 x,
+            Int32 y,
+            Int32 nWidth,
+            Int32 nHeight,
             IntPtr hWndParent,
             IntPtr hMenu,
             IntPtr hInstance,

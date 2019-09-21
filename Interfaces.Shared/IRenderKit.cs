@@ -2,14 +2,10 @@
 
 namespace Das.Views
 {
-    public interface IRenderKit //: IInputHandler, IChangeTracking
+    public interface IRenderKit
     {
-        //IInputContext InputContext { get; }
-
         IMeasureContext MeasureContext { get; }
 
         IRenderContext RenderContext { get; }
-
-        //IStyleContext StyleContext { get; }
     }
 }

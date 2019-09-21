@@ -4,7 +4,7 @@ namespace Das.Views.Core.Writing
 {
     public class Font : IEquatable<Font>, IFont, IEquatable<IFont>
     {
-        public Font(double size, string familyName, FontStyle fontStyle)
+        public Font(Double size, String familyName, FontStyle fontStyle)
         {
             Size = size;
             FamilyName = familyName;
@@ -25,7 +25,7 @@ namespace Das.Views.Core.Writing
 
         public FontStyle FontStyle { get; }
 
-        public bool Equals(Font other)
+        public Boolean Equals(Font other)
         {
             if (ReferenceEquals(other, null))
                 return false;
@@ -39,7 +39,7 @@ namespace Das.Views.Core.Writing
             return other.FamilyName.Equals(FamilyName, StringComparison.Ordinal);
         }
 
-        public override bool Equals(object ooooo)
+        public override Boolean Equals(Object ooooo)
         {
             switch (ooooo)
             {
@@ -50,7 +50,7 @@ namespace Das.Views.Core.Writing
             return false;
         }
 
-        public bool Equals(IFont other)
+        public Boolean Equals(IFont other)
         {
 
             if (ReferenceEquals(other, null))
@@ -65,7 +65,7 @@ namespace Das.Views.Core.Writing
             return other.FamilyName.Equals(FamilyName, StringComparison.Ordinal);
         }
 
-        public override int GetHashCode() => _hashCode;
+        public override Int32 GetHashCode() => _hashCode;
 
         public static Font operator *(Font font, Double val)
         {
@@ -78,6 +78,6 @@ namespace Das.Views.Core.Writing
             return new Font(font.Size * val, font.FamilyName, font.FontStyle);
         }
 
-        public override string ToString() => $"{FamilyName} {FontStyle}: {Size}";
+        public override String ToString() => $"{FamilyName} {FontStyle}: {Size}";
     }
 }

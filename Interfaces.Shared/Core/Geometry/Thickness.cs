@@ -6,12 +6,12 @@ namespace Das.Views.Core.Geometry
     {
         public new static Thickness Empty { get; } = new Thickness(0);
 
-        public Thickness(double uniformLength)
+        public Thickness(Double uniformLength)
         {
             Left = Right = Top = Bottom = uniformLength;
         }
 
-        public Thickness(double left, double top, double right, double bottom)
+        public Thickness(Double left, Double top, Double right, Double bottom)
         {
             Left = left;
             Top = top;
@@ -19,13 +19,13 @@ namespace Das.Views.Core.Geometry
             Bottom = bottom;
         }
 
-        public double Left { get; }
+        public Double Left { get; }
 
-        public double Top { get; }
+        public Double Top { get; }
 
-        public double Right { get; }
+        public Double Right { get; }
 
-        public double Bottom { get; }
+        public Double Bottom { get; }
 
         public override Double Width => Left + Right;
 
@@ -62,7 +62,7 @@ namespace Das.Views.Core.Geometry
 
         public new Thickness DeepCopy() => new Thickness(Left, Top, Right, Bottom);
 
-        public override string ToString() => "L: " + Left.ToString("0.0") +
+        public override String ToString() => "L: " + Left.ToString("0.0") +
                                              " T: " + Top.ToString("0.0") +
                                              " R: " + Right.ToString("0.0") +
                                              " B: " + Bottom.ToString("0.0");

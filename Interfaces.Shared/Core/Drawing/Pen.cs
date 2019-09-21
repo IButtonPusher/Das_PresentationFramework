@@ -6,7 +6,7 @@ namespace Das.Views.Core.Drawing
     {
         private readonly Int32 _hash;
 
-        public Pen(Color color, int thickness)
+        public Pen(Color color, Int32 thickness)
         {
             Color = color;
             Thickness = thickness;
@@ -24,17 +24,17 @@ namespace Das.Views.Core.Drawing
         IColor IPen.Color => Color;
         public Int32 Thickness { get; }
 
-        public override int GetHashCode() => _hash;
+        public override Int32 GetHashCode() => _hash;
 
 
-        public override bool Equals(object obj)
+        public override Boolean Equals(Object obj)
         {
             if (obj is IPen pen)
                 return Equals(pen);
             return false;
         }
 
-        public bool Equals(IPen other)
+        public Boolean Equals(IPen other)
         {
             if (ReferenceEquals(null, other))
                 return false;

@@ -9,7 +9,7 @@ namespace Das.Views.Core.Drawing
             Color = color;
         }
 
-        public static Brush FromRgb(byte r, byte g, byte b) => new Brush(new Color(r, g, b));
+        public static Brush FromRgb(Byte r, Byte g, Byte b) => new Brush(new Color(r, g, b));
 
         public static Brush White { get; } = new Brush(Color.White);
 
@@ -32,16 +32,16 @@ namespace Das.Views.Core.Drawing
 
         public virtual Boolean IsInvisible => Color.A == 0;
 
-        public override string ToString() => "Brush: " + Color;
+        public override String ToString() => "Brush: " + Color;
 
-        public bool Equals(Brush other)
+        public Boolean Equals(Brush other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             return Equals(Color, other.Color);
         }
 
-        public override bool Equals(object obj)
+        public override Boolean Equals(Object obj)
         {
             if (obj is Brush b)
                 return Equals(b);
@@ -49,6 +49,6 @@ namespace Das.Views.Core.Drawing
             return false;
         }
 
-        public override int GetHashCode() => (Color != null ? Color.GetHashCode() : 0);
+        public override Int32 GetHashCode() => (Color != null ? Color.GetHashCode() : 0);
     }
 }

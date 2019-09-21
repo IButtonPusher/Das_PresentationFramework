@@ -109,10 +109,10 @@ namespace Das.Views.Core.Geometry
             return new Rectangle(wDiff, hDiff, Width, Height);
         }
 
-        public override string ToString() => Width.ToString("0.00") + ", " +
+        public override String ToString() => Width.ToString("0.00") + ", " +
                                              Height.ToString("0.00");
 
-        public bool Equals(ISize other)
+        public Boolean Equals(ISize other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -121,9 +121,9 @@ namespace Das.Views.Core.Geometry
                    Height.AreEqualEnough(other.Height);
         }
 
-        public override bool Equals(object obj) => (obj is ISize isize && Equals(isize));
+        public override Boolean Equals(Object obj) => (obj is ISize isize && Equals(isize));
 
-        public override int GetHashCode()
+        public override Int32 GetHashCode()
         {
             unchecked
             {

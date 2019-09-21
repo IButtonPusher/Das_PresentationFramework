@@ -5,40 +5,40 @@ namespace Das.OpenGL.Windows
 {
     public static class GLWindows
     {
-        public const string OpenGL32 = "opengl32.dll";
+        public const String OpenGL32 = "opengl32.dll";
 
         [DllImport(OpenGL32, SetLastError = true)]
-        public static extern int wglDeleteContext(IntPtr hrc);
+        public static extern Int32 wglDeleteContext(IntPtr hrc);
 
         [DllImport(OpenGL32, SetLastError = true)]
         public static extern IntPtr wglCreateContext(IntPtr hdc);
 
         [DllImport(OpenGL32, SetLastError = true)]
-        public static extern int wglMakeCurrent(IntPtr hdc, IntPtr hrc);
+        public static extern Int32 wglMakeCurrent(IntPtr hdc, IntPtr hrc);
 
         [DllImport(OpenGL32, SetLastError = true)]
-        public static extern bool wglUseFontBitmaps(IntPtr hDC, uint first, 
-            uint count, uint listBase);
+        public static extern Boolean wglUseFontBitmaps(IntPtr hDC, UInt32 first, 
+            UInt32 count, UInt32 listBase);
     }
 
-    public delegate void glRenderbufferStorageEXT(uint target, uint internalformat,
-        int width, int height);
+    public delegate void glRenderbufferStorageEXT(UInt32 target, UInt32 internalformat,
+        Int32 width, Int32 height);
 
-    public delegate void glBindRenderbufferEXT(uint target, uint renderbuffer);
+    public delegate void glBindRenderbufferEXT(UInt32 target, UInt32 renderbuffer);
 
 
-    public delegate void glGenRenderbuffersEXT(uint n, uint[] renderbuffers);
+    public delegate void glGenRenderbuffersEXT(UInt32 n, UInt32[] renderbuffers);
 
-    public delegate void glGenFramebuffersEXT(uint n, uint[] framebuffers);
+    public delegate void glGenFramebuffersEXT(UInt32 n, UInt32[] framebuffers);
 
-    public delegate void glBindFramebufferEXT(uint target, uint framebuffer);
+    public delegate void glBindFramebufferEXT(UInt32 target, UInt32 framebuffer);
 
-    public delegate void glFramebufferRenderbufferEXT(uint target, uint attachment,
-        uint renderbuffertarget, uint renderbuffer);
+    public delegate void glFramebufferRenderbufferEXT(UInt32 target, UInt32 attachment,
+        UInt32 renderbuffertarget, UInt32 renderbuffer);
 
-    public delegate void glDeleteRenderbuffersEXT(uint n, uint[] renderbuffers);
-    public delegate void glDeleteFramebuffersEXT(uint n, uint[] framebuffers);
+    public delegate void glDeleteRenderbuffersEXT(UInt32 n, UInt32[] renderbuffers);
+    public delegate void glDeleteFramebuffersEXT(UInt32 n, UInt32[] framebuffers);
 
     public delegate IntPtr wglCreateContextAttribsARB(IntPtr hDC, IntPtr hShareContext,
-        int[] attribList);
+        Int32[] attribList);
 }

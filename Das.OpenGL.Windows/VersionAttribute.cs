@@ -6,15 +6,15 @@ namespace Das.OpenGL.Windows
     [AttributeUsage(AttributeTargets.Field)]
     public class VersionAttribute : Attribute
     {
-        private readonly int _major;
-        private readonly int _minor;
+        private readonly Int32 _major;
+        private readonly Int32 _minor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VersionAttribute"/> class.
         /// </summary>
         /// <param name="major">The major version number.</param>
         /// <param name="minor">The minor version number.</param>
-        public VersionAttribute(int major, int minor)
+        public VersionAttribute(Int32 major, Int32 minor)
         {
             _major = major;
             _minor = minor;
@@ -26,7 +26,7 @@ namespace Das.OpenGL.Windows
         /// <param name="major">The major version.</param>
         /// <param name="minor">The minor version.</param>
         /// <returns>True if this version object is at least as high as the version specified by <paramref name="major"/> and <paramref name="minor"/>.</returns>
-        public bool IsAtLeastVersion(int major, int minor)
+        public Boolean IsAtLeastVersion(Int32 major, Int32 minor)
         {
             //  If major versions match, we care about minor. Otherwise, we only care about major.
             if (_major == major)
@@ -51,11 +51,11 @@ namespace Das.OpenGL.Windows
         /// <summary>
         /// Gets the major version number.
         /// </summary>
-        public int Major => _major;
+        public Int32 Major => _major;
 
         /// <summary>
         /// Gets the minor version number.
         /// </summary>
-        public int Minor => _minor;
+        public Int32 Minor => _minor;
     }
 }

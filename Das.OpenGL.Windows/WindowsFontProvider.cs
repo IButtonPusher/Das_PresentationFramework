@@ -22,11 +22,11 @@ namespace Das.OpenGL.Windows
 
             GLWindows.wglMakeCurrent(dcHandle, r);
 
-            var fontHeight = (int)(font.Size * (20.0f / 12.0f));
+            var fontHeight = (Int32)(font.Size * (20.0f / 12.0f));
             var weight = GetFontWeight(font);
 
             //  Create the font based on the face name.
-            var hFont = Native.CreateFont(fontHeight, 0, 0, 0, (uint)weight, 0, 0, 0, 
+            var hFont = Native.CreateFont(fontHeight, 0, 0, 0, (UInt32)weight, 0, 0, 0, 
                 Native.DEFAULT_CHARSET,
                 Native.OUT_OUTLINE_PRECIS, Native.CLIP_DEFAULT_PRECIS, Native.CLEARTYPE_QUALITY,
                 Native.VARIABLE_PITCH, font.FamilyName);

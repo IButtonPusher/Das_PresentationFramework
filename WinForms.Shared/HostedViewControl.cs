@@ -27,7 +27,7 @@ namespace WinForms.Shared
 
         public event EventHandler DataContextChanged;
 
-        private bool _isChanged;
+        private Boolean _isChanged;
         private IViewModel _dataContext;
 
         public IView View { get; protected set; }
@@ -53,7 +53,7 @@ namespace WinForms.Shared
 
         private Double _zoomLevel;
 
-        public double ZoomLevel
+        public Double ZoomLevel
         {
             get => _zoomLevel;
             set
@@ -71,6 +71,6 @@ namespace WinForms.Shared
             
         }
 
-        public virtual bool IsChanged => _isChanged;
+        public virtual Boolean IsChanged => _isChanged;
     }
 }

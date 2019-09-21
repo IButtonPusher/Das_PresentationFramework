@@ -121,13 +121,13 @@ namespace Das.Views.Core.Geometry
             set => _x = value;
         }
 
-        int IRoundedRectangle.Y => Convert.ToInt32(Y);
+        Int32 IRoundedRectangle.Y => Convert.ToInt32(Y);
 
-        int IRoundedRectangle.Width => Convert.ToInt32(Width);
+        Int32 IRoundedRectangle.Width => Convert.ToInt32(Width);
 
-        int IRoundedRectangle.Height => Convert.ToInt32(Height);
+        Int32 IRoundedRectangle.Height => Convert.ToInt32(Height);
 
-        int IRoundedRectangle.X => Convert.ToInt32(X);
+        Int32 IRoundedRectangle.X => Convert.ToInt32(X);
 
         public Double Y
         {
@@ -147,7 +147,7 @@ namespace Das.Views.Core.Geometry
             set => _h = value;
         }
 
-        public bool Contains(IPoint point)
+        public Boolean Contains(IPoint point)
         {
             if (point == null)
                 return false;
@@ -158,12 +158,12 @@ namespace Das.Views.Core.Geometry
                    && point.Y <= Bottom;
         }
 
-        public bool Contains(int x, int y) => x >= Left
+        public Boolean Contains(Int32 x, Int32 y) => x >= Left
                                               && x <= Right
                                               && y >= Top
                                               && y <= Bottom;
 
-        public bool Contains(Double x, Double y) => x >= Left
+        public Boolean Contains(Double x, Double y) => x >= Left
                                                     && x <= Right
                                                     && y >= Top
                                                     && y <= Bottom;
@@ -212,7 +212,7 @@ namespace Das.Views.Core.Geometry
 
         IPoint IDeepCopyable<IPoint>.DeepCopy() => new Point(X, Y);
 
-        public bool Equals(Rectangle other)
+        public Boolean Equals(Rectangle other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -222,7 +222,7 @@ namespace Das.Views.Core.Geometry
                    _h.Equals(other._h);
         }
 
-        public bool Equals(IRectangle other)
+        public Boolean Equals(IRectangle other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -233,7 +233,7 @@ namespace Das.Views.Core.Geometry
         }
 
 
-        public bool Equals(IRoundedRectangle other)
+        public Boolean Equals(IRoundedRectangle other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -246,11 +246,11 @@ namespace Das.Views.Core.Geometry
                    me.Height.Equals(other.Height);
         }
 
-        public override string ToString() => $"x: {_x:0.0}, y: {_y:0.0} w: {_w:0.0} h: {_h:0.0}";
+        public override String ToString() => $"x: {_x:0.0}, y: {_y:0.0} w: {_w:0.0} h: {_h:0.0}";
 
         public new Rectangle DeepCopy() => new Rectangle(X, Y, Width, Height);
 
-        public override bool Equals(object obj)
+        public override Boolean Equals(Object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -268,7 +268,7 @@ namespace Das.Views.Core.Geometry
 
         private Int32 _hash;
 
-        public override int GetHashCode()
+        public override Int32 GetHashCode()
         {
             if (_hash != 0)
                 return _hash;

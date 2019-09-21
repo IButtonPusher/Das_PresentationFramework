@@ -5,6 +5,6 @@ namespace Das.Views.Rendering
 {
     public interface IMutableViewPerspective : IViewPerspective, IChangeTracking
     {
-        Boolean TrySetZoomLevel(double zoom);
+        Boolean TrySetZoomLevel(Double zoom);
     }
 }

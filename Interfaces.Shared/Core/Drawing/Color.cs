@@ -4,17 +4,17 @@ namespace Das.Views.Core.Drawing
 {
     public class Color : IColor, IEquatable<Color>
     {
-        public byte A { get; }
+        public Byte A { get; }
 
-        public byte B { get; }
+        public Byte B { get; }
 
-        public byte R { get; }
+        public Byte R { get; }
 
-        public byte G { get; }
+        public Byte G { get; }
 
         private readonly Int32 _hash;
 
-        public Color(byte a, byte r, byte g, byte b)
+        public Color(Byte a, Byte r, Byte g, Byte b)
         {
             A = a;
             R = r;
@@ -24,12 +24,12 @@ namespace Das.Views.Core.Drawing
             _hash = r + (g << 8) + (b << 16) + (a << 24);
         }
 
-        public Color(byte r, byte g, byte b)
+        public Color(Byte r, Byte g, Byte b)
             : this(255, r, g, b)
         {
         }
 
-        public static Color FromRgb(byte r, byte g, byte b) => new Color(r,g,b);
+        public static Color FromRgb(Byte r, Byte g, Byte b) => new Color(r,g,b);
 
         public static Color White => new Color(255, 255, 255);
 
@@ -58,7 +58,7 @@ namespace Das.Views.Core.Drawing
         private static readonly Lazy<Color> _darkGray = new Lazy<Color>(()
             => new Color(30, 30, 30));
 
-        public bool Equals(Color other)
+        public Boolean Equals(Color other)
         {
             if (ReferenceEquals(other, null))
                 return false;
@@ -66,9 +66,9 @@ namespace Das.Views.Core.Drawing
             return other._hash == _hash;
         }
 
-        public override int GetHashCode() => _hash;
+        public override Int32 GetHashCode() => _hash;
 
-        public override string ToString() => !Enum.IsDefined(typeof(Colors), _hash)
+        public override String ToString() => !Enum.IsDefined(typeof(Colors), _hash)
             ? $"{R}, {G}, {B} - {A}"
             : ((Colors) _hash).ToString();
     }

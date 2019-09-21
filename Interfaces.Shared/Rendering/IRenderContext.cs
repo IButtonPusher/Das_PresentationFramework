@@ -13,9 +13,9 @@ namespace Das.Views.Rendering
 
         IViewPerspective Perspective { get; }
 
-        void DrawString(string s, IFont font, IBrush brush, IPoint location);
+        void DrawString(String s, IFont font, IBrush brush, IPoint location);
 
-        void DrawString(string s, IFont font, IBrush brush, IRectangle location);
+        void DrawString(String s, IFont font, IBrush brush, IRectangle location);
 
         void DrawImage(IImage img, IRectangle rect);
 

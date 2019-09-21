@@ -1,6 +1,6 @@
-﻿using Das.Views.Panels;
+﻿using System;
+using Das.Views.Panels;
 using Das.Views.Styles;
-using Das.Views.Winforms;
 using WinForms.Shared;
 
 namespace Das.OpenGL.Windows
@@ -13,8 +13,8 @@ namespace Das.OpenGL.Windows
             IsLoaded = true;
         }
 
-        public override bool IsLoaded { get; }
+        public override Boolean IsLoaded { get; }
 
-        public override bool IsChanged => true;
+        public override Boolean IsChanged => true;
     }
 }
