@@ -540,7 +540,7 @@ namespace Das.Views.Core.Input
         //
         // Summary:
         //     The decimal key.
-        Decimal = 110,
+        Double = 110,
 
         //
         // Summary:

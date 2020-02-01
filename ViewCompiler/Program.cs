@@ -36,9 +36,9 @@ namespace ViewCompiler
             settings.NotFoundBehavior = TypeNotFound.NullValue;
             var serializer = new ViewDeserializer(settings);
             var viewBuilderProvider = new ViewBuilderProvider(serializer);
-            var typeMani = new TypeManipulator(settings);
-            var maniPedi = new ObjectManipulator(typeMani);
-            var typeBuilder = new ViewTypeBuilder(serializer, maniPedi,
+            var typeMani = serializer.TypeManipulator;//  new TypeManipulator(settings, new NodePool(settings, new NodeTypeProvider()));
+           // var maniPedi = new ObjectManipulator(typeMani);
+            var typeBuilder = new ViewTypeBuilder(serializer, serializer.ObjectManipulator,//  maniPedi,
                 settings);
 
             foreach (var file in files)
@@ -53,7 +53,7 @@ namespace ViewCompiler
                 var lol = Activator.CreateInstance(dType);
             }
 
-            typeBuilder.Save();
+            //typeBuilder.Save();
         }
     }
 }

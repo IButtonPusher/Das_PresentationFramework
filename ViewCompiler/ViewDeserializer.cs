@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Das;
 using Das.Serializer;
 using Das.Views.DevKit;
 using Das.Views.Panels;
@@ -90,7 +89,7 @@ namespace ViewCompiler
         private Boolean TryGetElementStyle(IVisualElement element, String styleName,
             out IStyle style)
         {
-            var styleType = GetTypeFromClearName(styleName);
+            var styleType = TypeInferrer.GetTypeFromClearName(styleName);
 
             if (typeof(ElementStyle).IsAssignableFrom(styleType))
             {

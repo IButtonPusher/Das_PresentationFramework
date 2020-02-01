@@ -35,3 +35,8 @@
 /VSExtension/obj
 /.vs/Das.Views/DesignTimeBuild/.dtbcache
 *.user
+/Das.GdiRenderKit/obj
+/Das.OpenGL.Windows/obj
+/Das.Views.Winforms/obj
+/Tests/Input/TestWinFormsInput/obj/Debug
+/ViewCompiler/obj

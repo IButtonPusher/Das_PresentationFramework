@@ -1,4 +1,5 @@
 ﻿using System;
+using Das.Extensions;
 
 namespace Das.Views.Core.Geometry
 {
@@ -31,7 +32,7 @@ namespace Das.Views.Core.Geometry
 
         public override Double Height => Top + Bottom;
 
-        public override Boolean IsEmpty => Height.AreEqualEnough(0) && Width.AreEqualEnough(0);
+        public override Boolean IsEmpty => Height.IsZero() && Width.IsZero();
 
         public static Thickness operator +(Thickness size, Thickness margin)
         {

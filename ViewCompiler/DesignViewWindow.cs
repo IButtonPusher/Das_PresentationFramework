@@ -72,8 +72,8 @@ namespace ViewCompiler
             var bldr = await _viewBuilderProvider.GetViewBuilder(_fileDesigning);
 
             bldr.Serializer = _serializer;
-            var type = _serializer.GetTypeFromClearName(bldr.DesignObject);
-            var vm = _serializer.BuildDefault(type, false);
+            var type = _serializer.TypeInferrer.GetTypeFromClearName(bldr.DesignObject);
+            var vm = _serializer.ObjectInstantiator.BuildDefault(type, false);
 
             _styleContext = bldr.StyleContext;
 

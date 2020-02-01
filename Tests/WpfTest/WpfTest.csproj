@@ -37,6 +37,15 @@
     <CodeAnalysisRuleSet>WpfTest.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Das.Serializer, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Das.Serializer.Split.0.0.1-alpha\lib\net472\Das.Serializer.dll</HintPath>
+    </Reference>
+    <Reference Include="Serializer.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=15561faeaf074445, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Das.Serializer.Split.0.0.1-alpha\lib\net472\Serializer.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Serializer.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=55ec9f54a6117381, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Das.Serializer.Split.0.0.1-alpha\lib\net472\Serializer.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -57,6 +66,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="TestKeybdHook.cs" />
+    <Compile Include="TestWindow.xaml.cs">
+      <DependentUpon>TestWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UiThreadSeparatedControl.cs" />
+    <Compile Include="VisualTargetPresentationSource.cs" />
+    <Compile Include="Win32Host.cs" />
+    <Compile Include="WpfHost.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -69,6 +86,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="TestWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -88,6 +109,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -97,5 +119,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <Import Project="..\..\Windows.Shared\Windows.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\Interfaces.Shared\Interfaces.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

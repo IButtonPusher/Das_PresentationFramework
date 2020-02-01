@@ -25,38 +25,29 @@ namespace GdiTest
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            //Application.Run(new TestGLPanelForm());
+            
 
             _testLauncher = GetGdiLauncher();
-            //_testLauncher = GetOpenGLLauncher();
             
             _testLauncher.MvvmTest().Wait();
             
-
-            //_testLauncher.CubeTest().Wait();
-
-
-
-            //            ZoomTest();
-            //            DesignTest();
-            //            MvvmTest();
-            //            CubeTest().Wait();
         }
 
         // ReSharper disable once UnusedMember.Local
         private static TestLauncher GetGdiLauncher()
         {
-            var provider = new GdiProvider();
-            return new TestLauncher(provider);
+            var boot = new GdiProvider();
+            var viewProvider = new ViewProvider();
+            return new TestLauncher(boot,viewProvider);
         }
 
         // ReSharper disable once UnusedMember.Local
         private static TestLauncher GetOpenGLLauncher()
         {
             var windowBuilder = new GLWindowBuilder("OpenGLSurface");
-            var provider = new GLBootStrapper(windowBuilder);
-            return new TestLauncher(provider);
+            var boot = new GLBootStrapper(windowBuilder);
+            var viewProvider = new ViewProvider();
+            return new TestLauncher(boot,viewProvider);
         }
 
         // ReSharper disable once UnusedMember.Local

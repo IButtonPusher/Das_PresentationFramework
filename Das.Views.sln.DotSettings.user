@@ -1,4 +1,5 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=2680AF22_002DD4D0_002D4A5C_002DA55F_002D0E465A4434A3_002Ff_003ATestWindow_002Examl/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/AnalysisEnabled/@EntryValue">SOLUTION</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/AutoDetectedNamingRules/=Parameters/@EntryIndexedValue">&lt;Policy Inspect="True" Prefix="" Suffix="" Style="aaBb" /&gt;</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/AutoDetectedNamingRules/=Method/@EntryIndexedValue">&lt;Policy Inspect="True" Prefix="" Suffix="" Style="AaBb" /&gt;</s:String>
@@ -9,4 +10,7 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;Assembly Path="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Drawing.dll" /&gt;&#xD;
   &lt;Assembly Path="E:\SourceCode\DAS\PresentationFramework\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll" /&gt;&#xD;
+  &lt;Assembly Path="E:\src\Das\PresentationFramework\temp_lib\Serializer.Core.dll" /&gt;&#xD;
+  &lt;Assembly Path="E:\src\Das\PresentationFramework\temp_lib\Das.Serializer.Split.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\Chan\.nuget\packages\das.serializer.split\0.0.1-alpha\lib\net472\Serializer.Interfaces.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String></wpf:ResourceDictionary>

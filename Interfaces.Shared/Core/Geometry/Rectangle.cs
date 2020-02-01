@@ -1,4 +1,5 @@
 ﻿using System;
+using Das.Extensions;
 
 // ReSharper disable UnusedMember.Global
 
@@ -87,7 +88,9 @@ namespace Das.Views.Core.Geometry
             }
         }
 
-        public ISize Size
+        ISize IPointContainer.Size => Size;
+
+        public Size Size
         {
             get => new Size(_w, _h);
             set
@@ -204,7 +207,8 @@ namespace Das.Views.Core.Geometry
             if (rect == null)
                 return null;
 
-            return new Rectangle(rect.Location, rect * val);
+            return new Rectangle(rect.Location, 
+                rect.Size * val);
         }
 
 

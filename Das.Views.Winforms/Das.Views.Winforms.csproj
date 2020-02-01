@@ -39,6 +39,7 @@
     <AssemblyOriginatorKeyFile>FormArmstrong.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -58,6 +59,11 @@
   <ItemGroup>
     <None Include="Das.Views.Winforms.ruleset" />
     <None Include="FormArmstrong.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Das.Serializer.Split">
+      <Version>0.0.1-alpha</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="..\Windows.Shared\Windows.Shared.projitems" Label="Shared" />
   <Import Project="..\WinForms.Shared\WinForms.Shared.projitems" Label="Shared" />

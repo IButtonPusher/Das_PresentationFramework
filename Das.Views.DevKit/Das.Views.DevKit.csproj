@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Das.Serializer.Core" Version="0.0.1-alpha" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
     <ProjectReference Include="..\Das.Views.3d\Das.Views.Extended.csproj" />
     <ProjectReference Include="..\Das.Views\Das.Views.csproj" />

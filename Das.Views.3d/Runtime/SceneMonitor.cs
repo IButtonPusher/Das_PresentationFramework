@@ -1,4 +1,5 @@
-﻿using Das.Views.Core.Geometry;
+﻿using Das.Extensions;
+using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Extended.Core;
 using Das.Views.Rendering;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Das.Extensions;
 using Das.OpenGL.Text.FreeType;
 using Das.Views;
 using Das.Views.Core.Drawing;

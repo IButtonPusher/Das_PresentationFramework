@@ -194,9 +194,9 @@ namespace ViewCompiler
             return bldr;
         }
 
-        public void Save()
-        {
-            _codeGenerator.Save("bob.dll");
-        }
+//        public void Save()
+//        {
+//            _codeGenerator.Save("bob.dll");
+//        }
     }
 }

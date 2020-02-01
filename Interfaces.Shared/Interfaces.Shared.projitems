@@ -65,6 +65,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Input\IInputProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Invocations\ExclusiveSynchronizationContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Invocations\InvocationBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Invocations\StaScheduler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRenderKit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IUiProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IViewModel.cs" />

@@ -36,6 +36,16 @@
     <CodeAnalysisRuleSet>GdiTest.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Das.Serializer, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Das.Serializer.Split.0.0.1-alpha\lib\net472\Das.Serializer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Serializer.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=15561faeaf074445, processorArchitecture=MSIL">
+      <HintPath>..\packages\Das.Serializer.Split.0.0.1-alpha\lib\net472\Serializer.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Serializer.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=55ec9f54a6117381, processorArchitecture=MSIL">
+      <HintPath>..\packages\Das.Serializer.Split.0.0.1-alpha\lib\net472\Serializer.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -54,7 +64,6 @@
     <Compile Include="TestGLPanelForm.Designer.cs">
       <DependentUpon>TestGLPanelForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="TestLauncher.cs" />
     <Compile Include="TestOpenGLPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -71,6 +80,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="GdiTest.ruleset" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -13,12 +13,10 @@
    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
 </PropertyGroup>
 
-  <ItemGroup>
-    <Reference Include="Serializer.Interfaces">
-      <HintPath>..\temp_lib\Serializer.Interfaces.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
   <Import Project="..\Interfaces.Shared\Interfaces.Shared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <PackageReference Include="Das.Serializer.Core" Version="0.0.1-alpha" />
+  </ItemGroup>
 
 </Project>

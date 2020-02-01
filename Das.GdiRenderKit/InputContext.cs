@@ -5,6 +5,7 @@ using Das.Gdi.Core;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Input;
 using Das.Views.Input;
+using Windows.Shared;
 using MouseButtons = Das.Views.Core.Input.MouseButtons;
 
 namespace Das.Gdi
@@ -87,23 +88,23 @@ namespace Das.Gdi
 
         public Boolean PreFilterMessage(ref Message m)
         {
-            switch (m.Msg)
+            switch ((MessageTypes)m.Msg)
             {
-                case Win32.WM_LBUTTONDOWN:
+                case MessageTypes.WM_LBUTTONDOWN:
                     OnMouseDown(MouseButtons.Left, CursorPosition);
                     break;
-                case Win32.WM_RBUTTONDOWN:
+                case MessageTypes.WM_RBUTTONDOWN:
                     OnMouseDown(MouseButtons.Right, CursorPosition);
                     break;
 
-                case Win32.WM_LBUTTONUP:
+                case MessageTypes.WM_LBUTTONUP:
                     OnMouseUp(MouseButtons.Left, CursorPosition);
                     break;
-                case Win32.WM_RBUTTONUP:
+                case MessageTypes.WM_RBUTTONUP:
                     OnMouseUp(MouseButtons.Right, CursorPosition);
                     break;
 
-                case Win32.WM_KEYDOWN:
+                case MessageTypes.WM_KEYDOWN:
                     OnKeyboardStateChanged();
                     break;
             }

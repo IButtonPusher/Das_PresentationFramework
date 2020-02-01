@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Windows.Shared.Messages;
 
 namespace Das.Views.Winforms
 {
@@ -56,6 +57,12 @@ namespace Das.Views.Winforms
 
         public static extern Boolean GetTextExtentPoint32(IntPtr hdc, String lpString,
             Int32 cbString, out SIZE lpSize);
+
+       
+
+        [DllImport(User32, CharSet = CharSet.Unicode, SetLastError = true)]
+        internal static extern Int32 GetMessage([In, Out] ref MSG msg, IntPtr hWnd, 
+            Int32 uMsgFilterMin, Int32 uMsgFilterMax);
 
         public const UInt32 SRCCOPY = 0x00CC0020;
 

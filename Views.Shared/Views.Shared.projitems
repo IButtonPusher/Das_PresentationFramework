@@ -37,6 +37,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Style.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\TriggerBoundStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\TypeStyle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Updaters\StaScheduler.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Updaters\" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Das.Extensions;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
@@ -85,7 +86,7 @@ namespace Das.Views.Charting.Pie
 
 
             var side = Math.Min(availableSpace.Width, availableSpace.Height);
-            if (side.AreEqualEnough(0))
+            if (side.IsZero())
                 return Size.Empty;
 
             
@@ -129,7 +130,7 @@ namespace Das.Views.Charting.Pie
         public override void Arrange(ISize availableSpace, IRenderContext renderContext)
         {
             var side = Math.Min(availableSpace.Width, availableSpace.Height);
-            if (side.AreEqualEnough(0))
+            if (side.IsZero())
                 return;
 
             var radius = side / 2;

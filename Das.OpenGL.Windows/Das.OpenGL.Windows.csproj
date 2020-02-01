@@ -35,6 +35,7 @@
     <CodeAnalysisRuleSet>Das.OpenGL.Windows.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -106,6 +107,11 @@
       <Project>{a71c8e34-0909-487d-8c50-c02fc2408b8f}</Project>
       <Name>Das.Views</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Das.Serializer.Split">
+      <Version>0.0.1-alpha</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="..\Windows.Shared\Windows.Shared.projitems" Label="Shared" />
   <Import Project="..\WinForms.Shared\WinForms.Shared.projitems" Label="Shared" />

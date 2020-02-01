@@ -40,7 +40,7 @@ namespace Das.Views.DevKit
 
         public void SetBoundValue(object value)
         {
-            var viewBindingType = Serializer.GetTypeFromClearName(Binding);
+            var viewBindingType = Serializer.TypeInferrer.GetTypeFromClearName(Binding);
 
             _viewModel = value as IViewModel;
 
@@ -68,7 +68,7 @@ namespace Das.Views.DevKit
                 switch (element)
                 {
                     case IRepeaterPanel repeater when repeater.Content is IBindableElement bindable:
-                        var repeatingType = Serializer.GetGermaneType(rType.PropertyType);
+                        var repeatingType = Serializer.TypeInferrer.GetGermaneType(rType.PropertyType);
                         SetDataBinding(bindable, repeatingType, rType);
 
                         if (bindable is IVisualContainer cnt)
@@ -110,7 +110,7 @@ namespace Das.Views.DevKit
             if (strBinding == null)
                 return default;
 
-            var propInfo = Serializer.FindPublicProperty(parentType, strBinding);
+            var propInfo = Serializer.TypeManipulator.FindPublicProperty(parentType, strBinding);
 
             return propInfo;
         }
@@ -131,8 +131,8 @@ namespace Das.Views.DevKit
             }
             else
             {
-                propInfo = Serializer.FindPublicProperty(parentType, strBinding);
-                genericArg = Serializer.GetPropertyType(elementType, "Binding").GenericTypeArguments[0];
+                propInfo = Serializer.TypeManipulator.FindPublicProperty(parentType, strBinding);
+                genericArg = Serializer.TypeManipulator.GetPropertyType(elementType, "Binding").GenericTypeArguments[0];
             }
             var genericBindingType = typeof(DeferredPropertyBinding<>).MakeGenericType(genericArg);
 

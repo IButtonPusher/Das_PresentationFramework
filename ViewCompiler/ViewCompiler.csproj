@@ -41,15 +41,7 @@
     <AssemblyOriginatorKeyFile>ViewArmstrong.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Das.Serializer">
-      <HintPath>..\temp_lib\Das.Serializer.dll</HintPath>
-    </Reference>
-    <Reference Include="Serializer.Core">
-      <HintPath>..\temp_lib\Serializer.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Serializer.Interfaces">
-      <HintPath>..\temp_lib\Serializer.Interfaces.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -122,6 +114,11 @@
       <Project>{e227e4eb-e9cb-447e-9a6f-275c174e6425}</Project>
       <Name>TestCommon</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Das.Serializer.Split">
+      <Version>0.0.1-alpha</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

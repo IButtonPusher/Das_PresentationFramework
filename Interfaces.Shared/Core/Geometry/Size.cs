@@ -1,4 +1,5 @@
 ﻿using System;
+using Das.Extensions;
 
 namespace Das.Views.Core.Geometry
 {
@@ -19,7 +20,7 @@ namespace Das.Views.Core.Geometry
 
         public static Size Empty { get; } = new Size(0, 0);
 
-        public virtual Boolean IsEmpty => Width.AreEqualEnough(0) || Height.AreEqualEnough(0);
+        public virtual Boolean IsEmpty => Width.IsZero() || Height.IsZero();
 
         protected Size()
         {

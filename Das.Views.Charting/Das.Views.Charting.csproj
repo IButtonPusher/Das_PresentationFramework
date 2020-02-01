@@ -12,8 +12,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Das.Serializer.Core" Version="0.0.1-alpha" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
     <ProjectReference Include="..\Das.Views\Das.Views.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Serializer.Core">
+      <HintPath>..\temp_lib\Serializer.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <Import Project="..\Charting.Shared\Charting.Shared.projitems" Label="Shared" />
