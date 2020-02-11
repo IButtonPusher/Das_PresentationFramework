@@ -57,6 +57,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWinFormsInput", "Tests\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewCompiler", "ViewCompiler\ViewCompiler.csproj", "{2A2FC2BA-AF07-492D-A438-2239791511F5}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ViewModels.Shared", "ViewModels.Shared\ViewModels.Shared.shproj", "{CEC76F49-102D-4F52-9F95-231829C47839}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{689E8686-0B02-4B93-8275-36B7BF65BBA4}"
+	ProjectSection(SolutionItems) = preProject
+		Dependencies.txt = Dependencies.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Das.ViewModels", "Das.ViewModels\Das.ViewModels.csproj", "{4AD8F035-A30F-4D67-8E84-FAD46D1B8877}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		WinForms.Shared\WinForms.Shared.projitems*{15783956-b706-41d5-982b-1bcf698ca5b1}*SharedItemsImports = 13
@@ -75,6 +84,7 @@ Global
 		Windows.Shared\Windows.Shared.projitems*{aa3e511b-3696-46d8-81ae-98f547b0b43c}*SharedItemsImports = 4
 		WinForms.Shared\WinForms.Shared.projitems*{aa3e511b-3696-46d8-81ae-98f547b0b43c}*SharedItemsImports = 4
 		Gdi.Shared\Gdi.Shared.projitems*{ce7e6b63-33e2-44f8-85c9-979a4f6b6f2c}*SharedItemsImports = 13
+		ViewModels.Shared\ViewModels.Shared.projitems*{cec76f49-102d-4f52-9f95-231829c47839}*SharedItemsImports = 13
 		Windows.Shared\Windows.Shared.projitems*{d1e2bdf7-69d4-42c0-883f-2a2f2d8de4d3}*SharedItemsImports = 4
 		WinForms.Shared\WinForms.Shared.projitems*{d1e2bdf7-69d4-42c0-883f-2a2f2d8de4d3}*SharedItemsImports = 4
 	EndGlobalSection
@@ -168,6 +178,12 @@ Global
 		{2A2FC2BA-AF07-492D-A438-2239791511F5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2A2FC2BA-AF07-492D-A438-2239791511F5}.TEST|Any CPU.ActiveCfg = Release|Any CPU
 		{2A2FC2BA-AF07-492D-A438-2239791511F5}.TEST|Any CPU.Build.0 = Release|Any CPU
+		{4AD8F035-A30F-4D67-8E84-FAD46D1B8877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AD8F035-A30F-4D67-8E84-FAD46D1B8877}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AD8F035-A30F-4D67-8E84-FAD46D1B8877}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AD8F035-A30F-4D67-8E84-FAD46D1B8877}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AD8F035-A30F-4D67-8E84-FAD46D1B8877}.TEST|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AD8F035-A30F-4D67-8E84-FAD46D1B8877}.TEST|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

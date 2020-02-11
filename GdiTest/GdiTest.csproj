@@ -76,6 +76,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="TestGLPanelForm.resx">
+      <DependentUpon>TestGLPanelForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="freetype.lib">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

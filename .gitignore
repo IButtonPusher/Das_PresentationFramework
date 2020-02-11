@@ -40,3 +40,6 @@
 /Das.Views.Winforms/obj
 /Tests/Input/TestWinFormsInput/obj/Debug
 /ViewCompiler/obj
+/Das.ViewModels/bin/Debug/netstandard2.0
+/Das.ViewModels/obj
+/Tests/Input/TestWinFormsInput/bin/Debug

@@ -1,4 +1,6 @@
-﻿using Das.Views.Extended;
+﻿using System;
+using System.ComponentModel;
+using Das.Views.Extended;
 using Das.Views.Extended.Core;
 using Das.Views.Extended.Runtime;
 
@@ -27,6 +29,7 @@ namespace TestCommon.Scene3d
             IsChanged = false;
         }
 
-        public bool IsChanged { get; private set; }
+        public Boolean IsChanged { get; private set; }
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

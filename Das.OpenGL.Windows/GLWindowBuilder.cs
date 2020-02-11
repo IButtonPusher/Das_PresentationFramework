@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using Das.Views;
 using Das.Views.Panels;
 using Das.Views.Winforms;
+using Das.ViewsModels;
 
 namespace Das.OpenGL.Windows
 {

@@ -8,6 +8,7 @@ using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
+using Das.ViewsModels;
 
 namespace Das.Views.DevKit
 {
@@ -42,7 +43,7 @@ namespace Das.Views.DevKit
         {
             var viewBindingType = Serializer.TypeInferrer.GetTypeFromClearName(Binding);
 
-            _viewModel = value as IViewModel;
+            _viewModel = value as IMutableVm;
 
             if (!(Content is IBindableElement setter))
                 return;
@@ -151,6 +152,6 @@ namespace Das.Views.DevKit
         private Boolean _isChanged;
         public bool IsChanged => _isChanged || _viewModel?.IsChanged == true;
 
-        private IViewModel _viewModel;
+        private IMutableVm _viewModel;
     }
 }

@@ -68,7 +68,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Invocations\StaScheduler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRenderKit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IUiProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IAsyncObservableCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IMutableVm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IObservableCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IViewProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IWindowProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IBoundElementContainer.cs" />

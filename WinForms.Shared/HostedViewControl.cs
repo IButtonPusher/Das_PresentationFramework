@@ -5,6 +5,7 @@ using Das.Views;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 using Das.Views.Winforms;
+using Das.ViewsModels;
 
 
 namespace WinForms.Shared

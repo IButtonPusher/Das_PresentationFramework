@@ -4,6 +4,7 @@ using System.ComponentModel;
 using Das.Views.Core.Geometry;
 using Das.Views.Panels;
 using Das.Views.Styles;
+using Das.ViewsModels;
 
 namespace Das.Views
 {

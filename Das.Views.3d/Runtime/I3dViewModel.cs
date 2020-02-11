@@ -1,4 +1,6 @@
-﻿namespace Das.Views.Extended.Runtime
+﻿using Das.ViewsModels;
+
+namespace Das.Views.Extended.Runtime
 {
     public interface I3dViewModel : I3dElement, IViewModel
     {

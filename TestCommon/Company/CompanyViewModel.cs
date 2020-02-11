@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Das.ViewModels;
 using Das.Views.Charting;
 using Das.Views.Extended;
 using Das.Views.Extended.Core;
@@ -7,7 +8,7 @@ using Das.Views.Extended.Runtime;
 
 namespace TestCommon.Company
 {
-    public class CompanyViewModel : ICompanyViewModel
+    public class CompanyViewModel : BaseViewModel, ICompanyViewModel
     {
         public CompanyViewModel(IScene scene)
         {
@@ -22,19 +23,21 @@ namespace TestCommon.Company
         public List<EmployeeViewModel> Employees { get; set; }
         public IPieData<String, double> SalesReport { get; }
 
-        public void AcceptChanges()
+        public override void AcceptChanges()
         {
             
         }
 
-        public bool IsChanged { get; private set; }
+        private Boolean _isChanged;
+
+        public override bool IsChanged => _isChanged;
         public ICamera Camera { get; }
         public void Update()
         {
             foreach (var element in _scene.VisualElements)
                 element.Rotate(0.025f, 0.025f, 0);
 
-            IsChanged = true;
+            _isChanged = true;
         }
     }
 }

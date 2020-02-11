@@ -5,6 +5,7 @@ using Das.Gdi.Kits;
 using Das.Views;
 using Das.Views.Panels;
 using Das.Views.Rendering;
+using Das.ViewsModels;
 
 namespace Das.Gdi
 {

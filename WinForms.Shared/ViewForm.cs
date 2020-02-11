@@ -4,6 +4,7 @@ using Das.Views.Core.Geometry;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
+using Das.ViewsModels;
 using WinForms.Shared;
 using Size = Das.Views.Core.Geometry.Size;
 

@@ -29,11 +29,11 @@ namespace Windows.Shared.Messages
             {
                 //if (messagePump == null)
                     return GetMessageW(ref msg, new HandleRef((object)this, hwnd), minMessage, maxMessage);
-//                int result;
-//                messagePump.GetMessageW(ref msg, hwnd, minMessage, maxMessage, out result);
-//                if (result == -1)
+//                int plan;
+//                messagePump.GetMessageW(ref msg, hwnd, minMessage, maxMessage, out plan);
+//                if (plan == -1)
 //                    throw new Win32Exception();
-//                return result != 0;
+//                return plan != 0;
             }
             finally
             {
@@ -102,7 +102,7 @@ namespace Windows.Shared.Messages
             int msgFilterMin,
             int msgFilterMax,
             int removeMsg,
-            out int result);
+            out int plan);
 
         [SecurityCritical]
         void GetMessageA(
@@ -110,7 +110,7 @@ namespace Windows.Shared.Messages
             IntPtr hwnd,
             int msgFilterMin,
             int msgFilterMax,
-            out int result);
+            out int plan);
 
         [SecurityCritical]
         void PeekMessageW(
@@ -119,7 +119,7 @@ namespace Windows.Shared.Messages
             int msgFilterMin,
             int msgFilterMax,
             int removeMsg,
-            out int result);
+            out int plan);
 
         [SecurityCritical]
         void GetMessageW(
@@ -127,7 +127,7 @@ namespace Windows.Shared.Messages
             IntPtr hwnd,
             int msgFilterMin,
             int msgFilterMax,
-            out int result);
+            out int plan);
     }
 }
 #endif

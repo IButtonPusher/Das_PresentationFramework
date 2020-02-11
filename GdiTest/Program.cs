@@ -10,6 +10,7 @@ using Das.Views.Panels;
 using TestCommon;
 using ViewCompiler;
 using Das.OpenGL.Windows;
+using Das.ViewsModels;
 
 namespace GdiTest
 {
