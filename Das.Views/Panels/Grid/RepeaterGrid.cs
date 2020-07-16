@@ -8,7 +8,7 @@ using Das.Views.Rendering;
 namespace Das.Views.Panels.Grid
 {
     /// <summary>
-    /// Control where each control in the Children collection occupies its own column.
+    /// Control where each visual in the Children collection occupies its own column.
     /// For each record in the bound collection, a row is created
     /// </summary>
     public class RepeaterGrid<T> : BasePanel<IEnumerable<T>>
@@ -123,6 +123,11 @@ namespace Das.Views.Panels.Grid
 
                 targetRect.Y += h;
             }
+        }
+
+        public override void Dispose()
+        {
+            
         }
     }
 }

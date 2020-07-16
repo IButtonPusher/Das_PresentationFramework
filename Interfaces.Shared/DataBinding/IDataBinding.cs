@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.DataBinding
 {
@@ -6,14 +7,12 @@ namespace Das.Views.DataBinding
     {
         T GetValue(Object dataContext);
 
-        //void SetValue(T value);
-
-        //T GetLastValue();
+        Task<T> GetValueAsync(Object dataContext);
     }
 
     public interface IDataBinding
     {
-        Object GetBoundValue(Object dataContext);
+        Object? GetBoundValue(Object dataContext);
 
         /// <summary>
         /// Assumes that the binding is to an IEnumerable[T],

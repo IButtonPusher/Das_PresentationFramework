@@ -1,17 +1,22 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.DataBinding
 {
     public class ConverterBinding<TInput, TOutput> : BaseBinding<TOutput>
     {
-        private readonly IDataBinding<TInput> _binding;
-        private readonly IValueConverter<TInput, TOutput> _converter;
-
         public ConverterBinding(IDataBinding<TInput> binding,
             IValueConverter<TInput, TOutput> converter)
         {
             _binding = binding;
             _converter = converter;
+        }
+
+        public override IDataBinding<TOutput> DeepCopy()
+        {
+            var innerCopy = _binding.DeepCopy();
+            var conv = new ConverterBinding<TInput, TOutput>(innerCopy, _converter) {DataContext = null!};
+            return conv;
         }
 
         public override TOutput GetValue(Object dataContext)
@@ -21,15 +26,19 @@ namespace Das.Views.DataBinding
             return converted;
         }
 
-        public override IDataBinding<TOutput> DeepCopy()
+        public override async Task<TOutput> GetValueAsync(Object dataContext)
         {
-            var innerCopy = _binding.DeepCopy();
-            var conv = new ConverterBinding<TInput, TOutput>(innerCopy, _converter);
-            conv.DataContext = null;
-            return conv;
+            var val = await _binding.GetValueAsync(dataContext);
+            var converted = await _converter.ConvertAsync(val);
+            return converted;
         }
 
         public override IDataBinding ToSingleBinding()
-            => throw new NotImplementedException();
+        {
+            throw new NotImplementedException();
+        }
+
+        private readonly IDataBinding<TInput> _binding;
+        private readonly IValueConverter<TInput, TOutput> _converter;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
@@ -17,10 +18,30 @@ namespace Das.Views.Charting.Pie
             _label = new Label<IDataPoint<TKey, TValue>>();
         }
 
-        private readonly Label<IDataPoint<TKey, TValue>> _label;
-        private Boolean _isStyleSet;
-        private Double _offsetX;
         public IBrush Brush { get; set; }
+
+        public override void Arrange(ISize availableSpace, IRenderContext renderContext)
+        {
+            var h = availableSpace.Height * 0.7;
+            var center = new Point(0, h);
+            renderContext.FillPie(center, h, 0, -90, Brush);
+            var rect = new Rectangle(_offsetX, 0, availableSpace.Width - _offsetX, h);
+            renderContext.DrawElement(_label, rect);
+        }
+
+        public override void Dispose()
+        {
+        }
+
+        public override ISize Measure(ISize availableSpace, IMeasureContext measureContext)
+        {
+            if (!_isStyleSet) _isStyleSet = true;
+
+            var sz = _label.Measure(availableSpace, measureContext);
+            _offsetX = sz.Height + 5;
+            var res = new Size(sz.Width + _offsetX, sz.Height);
+            return res;
+        }
 
         public override void SetBoundValue(IDataPoint<TKey, TValue> value)
         {
@@ -28,28 +49,13 @@ namespace Das.Views.Charting.Pie
             _label.SetBoundValue(value);
         }
 
-        public override ISize Measure(ISize availableSpace, IMeasureContext measureContext)
+        public Boolean Contains(IVisualElement element)
         {
-            if (!_isStyleSet)
-            {
-                _isStyleSet = true;
-            }
-
-            var sz =  _label.Measure(availableSpace, measureContext);
-            _offsetX = sz.Height + 5;
-            var res = new Size(sz.Width + _offsetX, sz.Height);
-            return res;
+            return _label == element;
         }
 
-        public override void Arrange(ISize availableSpace, IRenderContext renderContext)
-        {
-            var h = availableSpace.Height * 0.7;
-            var center = new Point(0, h);
-            renderContext.FillPie(center, h, 0, -90, Brush);
-            var rect = new Rectangle(_offsetX,0, availableSpace.Width - _offsetX,h);
-            renderContext.DrawElement(_label, rect);
-        }
-
-        public bool Contains(IVisualElement element) => _label == element;
+        private readonly Label<IDataPoint<TKey, TValue>> _label;
+        private Boolean _isStyleSet;
+        private Double _offsetX;
     }
 }

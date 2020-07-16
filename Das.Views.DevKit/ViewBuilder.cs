@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using Das.Serializer;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
@@ -29,7 +30,7 @@ namespace Das.Views.DevKit
 
         IVisualElement IDeepCopyable<IVisualElement>.DeepCopy() => null;
 
-        int IVisualElement.Id => -1;
+        Int32 IVisualElement.Id => -1;
 
         public IVisualElement Content { get; set; }
 
@@ -39,7 +40,7 @@ namespace Das.Views.DevKit
 
         public IStyleContext StyleContext { get; set; }
 
-        public void SetBoundValue(object value)
+        public void SetBoundValue(Object value)
         {
             var viewBindingType = Serializer.TypeInferrer.GetTypeFromClearName(Binding);
 
@@ -55,7 +56,19 @@ namespace Das.Views.DevKit
             _isChanged = true;
         }
 
-        public void SetDataContext(object dataContext) => SetBoundValue(dataContext);
+        public Task SetBoundValueAsync(Object value)
+        {
+            SetBoundValue(value);
+            return Task.CompletedTask;
+        }
+
+        public void SetDataContext(Object dataContext) => SetBoundValue(dataContext);
+
+        public Task SetDataContextAsync(Object dataContext)
+        {
+            SetDataContext(dataContext);
+            return Task.CompletedTask;
+        }
 
         private void SetDataContext(IBindableElement element, Type parentType)
         {
@@ -150,8 +163,14 @@ namespace Das.Views.DevKit
         }
 
         private Boolean _isChanged;
-        public bool IsChanged => _isChanged || _viewModel?.IsChanged == true;
+        public Boolean IsChanged => _isChanged || _viewModel?.IsChanged == true;
 
-        private IMutableVm _viewModel;
+        private IMutableVm? _viewModel;
+
+        public void Dispose()
+        {
+            _viewModel?.Dispose();
+            Content?.Dispose();
+        }
     }
 }

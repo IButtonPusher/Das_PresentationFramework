@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
+using System.Threading.Tasks;
 using Das.Gdi.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Measuring;
@@ -17,13 +19,16 @@ namespace Das.Gdi
 
         internal Graphics Graphics { get; }
 
-        public override Size MeasureString(string s, Font font)
+        public override Size MeasureImage(IImage img)
+        {
+            return new Size(img.Width, img.Height);
+        }
+
+        public override Size MeasureString(String s, Font font)
         {
             var useFont = TypeConverter.GetFont(font);
             var sz = Graphics.MeasureString(s, useFont);
             return new Size(sz.Width, sz.Height);
         }
-
-        public override Size MeasureImage(IImage img) => new Size(img.Width, img.Height);
     }
 }

@@ -12,7 +12,7 @@ namespace Das.Views.Rendering
     {
         TAsset DoRender();
 
-        event EventHandler Rendering;
+        event EventHandler? Rendering;
     }
 
     public interface IRenderer

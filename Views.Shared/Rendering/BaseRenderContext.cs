@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
@@ -22,45 +23,19 @@ namespace Das.Views.Rendering
             _locations.Push(CurrentElementRect);
         }
 
-        private readonly IMeasureContext _measureContext;
         protected Point CurrentLocation => CurrentElementRect.Location;
-        protected Rectangle CurrentElementRect;
-        private readonly Stack<Rectangle> _locations;
-        private Int32 _currentZ;
 
         protected Dictionary<IVisualElement, ICube> RenderPositions { get; }
 
-        IDictionary<IVisualElement, ICube> IRenderContext.RenderPositions
-            => new Dictionary<IVisualElement, ICube>(RenderPositions);
-
-        public IEnumerable<IRenderedVisual> GetElementsAt(IPoint point)
+        protected virtual IPoint GetAbsolutePoint(IPoint relativePoint)
         {
-            var positions = RenderPositions;
-            var elements = positions.Where(p => p.Value.Contains(point))
-                .OrderByDescending(p => p.Value.Depth);
-
-            foreach (var kvp in elements)
-                yield return new RenderedVisual(kvp.Key, kvp.Value);
+            return CurrentLocation + relativePoint;
         }
 
-
-        public abstract void DrawLine(IPen pen, IPoint pt1, IPoint pt2);
-        public abstract void DrawLines(IPen pen, IPoint[] points);
-
-        public abstract void FillRect(IRectangle rect, IBrush brush);
-//        {
-//            rect = GetAbsoluteRect(rect);
-//            OnFillRect(rect, brush);
-//        }
-
-        public abstract void DrawRect(IRectangle rect, IPen pen);
-
-        public abstract void FillPie(IPoint center, Double radius, Double startAngle, 
-            Double endAngle, IBrush brush);
-
-        public abstract void DrawEllipse(IPoint center, Double radius, IPen pen);
-
-        public abstract void DrawFrame(IFrame frame);
+        protected virtual Rectangle GetAbsoluteRect(IRectangle relativeRect)
+        {
+            return new Rectangle(relativeRect.TopLeft + CurrentLocation, relativeRect.Size);
+        }
 
         //protected abstract void OnFillRect(IRectangle rect, IBrush brush);
 
@@ -88,8 +63,16 @@ namespace Das.Views.Rendering
             FillRect(bottomRect, brush);
         }
 
+        protected virtual Rectangle OnDrawElement(IVisualElement element,
+            // ReSharper disable once UnusedParameter.Global
+            IRectangle rect)
+        {
+            element.Arrange(CurrentElementRect.Size, this);
+            return CurrentElementRect;
+        }
+
         /// <summary>
-        /// Margins + space added due to alignment
+        ///     Margins + space added due to alignment
         /// </summary>
         /// <returns></returns>
         private Rectangle GetOffset(IRectangle rect, IVisualElement element,
@@ -169,6 +152,53 @@ namespace Das.Views.Rendering
             return new Rectangle(xGap + rect.X, yGap + rect.Y, width, height);
         }
 
+        private void PopRect()
+        {
+            _currentZ--;
+            _locations.Pop();
+            CurrentElementRect = _locations.Peek();
+        }
+
+        private void PushRect(Rectangle rect)
+        {
+            _currentZ++;
+            _locations.Push(rect);
+            CurrentElementRect = rect;
+        }
+
+        IDictionary<IVisualElement, ICube> IRenderContext.RenderPositions
+            => new Dictionary<IVisualElement, ICube>(RenderPositions);
+
+        public IEnumerable<IRenderedVisual> GetElementsAt(IPoint point)
+        {
+            var positions = RenderPositions;
+            var elements = positions.Where(p => p.Value.Contains(point))
+                .OrderByDescending(p => p.Value.Depth);
+
+            foreach (var kvp in elements)
+                yield return new RenderedVisual(kvp.Key, kvp.Value);
+        }
+
+
+        public abstract void DrawLine(IPen pen, IPoint pt1, IPoint pt2);
+
+        public abstract void DrawLines(IPen pen, IPoint[] points);
+
+        public abstract void FillRect(IRectangle rect, IBrush brush);
+//        {
+//            rect = GetAbsoluteRect(rect);
+//            OnFillRect(rect, brush);
+//        }
+
+        public abstract void DrawRect(IRectangle rect, IPen pen);
+
+        public abstract void FillPie(IPoint center, Double radius, Double startAngle,
+            Double endAngle, IBrush brush);
+
+        public abstract void DrawEllipse(IPoint center, Double radius, IPen pen);
+
+        public abstract void DrawFrame(IFrame frame);
+
         public Rectangle DrawElement(IVisualElement element, IRectangle rect)
         {
             var border = GetStyleSetter<Thickness>(StyleSetters.BorderThickness, element);
@@ -205,44 +235,25 @@ namespace Das.Views.Rendering
             return drawn;
         }
 
-        private void PushRect(Rectangle rect)
-        {
-            _currentZ++;
-            _locations.Push(rect);
-            CurrentElementRect = rect;
-        }
-
-        private void PopRect()
-        {
-            _currentZ--;
-            _locations.Pop();
-            CurrentElementRect = _locations.Peek();
-        }
-
-        protected virtual Rectangle OnDrawElement(IVisualElement element,
-            // ReSharper disable once UnusedParameter.Global
-            IRectangle rect)
-        {
-            element.Arrange(CurrentElementRect.Size, this);
-            return CurrentElementRect;
-        }
-
         public abstract void DrawString(String s, IFont font, IBrush brush, IRectangle location);
 
         public abstract void DrawImage(IImage img, IRectangle rect);
 
         public IViewState ViewState { get; set; }
+
         public abstract void DrawString(String s, IFont font, IBrush brush, IPoint point);
 
-        protected virtual IPoint GetAbsolutePoint(IPoint relativePoint)
-            => CurrentLocation + relativePoint;
-
-        protected virtual Rectangle GetAbsoluteRect(IRectangle relativeRect)
-            => new Rectangle(relativeRect.TopLeft + CurrentLocation, relativeRect.Size);
-
         public T GetStyleSetter<T>(StyleSetters setter, IVisualElement element)
-            => ViewState.GetStyleSetter<T>(setter, element);
+        {
+            return ViewState.GetStyleSetter<T>(setter, element);
+        }
 
         public IViewPerspective Perspective { get; }
+
+        private readonly Stack<Rectangle> _locations;
+
+        private readonly IMeasureContext _measureContext;
+        private Int32 _currentZ;
+        protected Rectangle CurrentElementRect;
     }
 }

@@ -11,5 +11,10 @@ namespace Das.Views.Panels
         }
 
         protected override IEnumerable<IVisualElement> GetChildrenToRender() => Children;
+
+        public override void Dispose()
+        {
+            
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Das.Extensions;
+﻿
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Extended.Core;
@@ -50,6 +50,11 @@ namespace Das.Views.Extended.Runtime
 
             var frame = camera.GetFrame(availableSpace);
             renderContext.DrawFrame(frame);
+        }
+
+        public override void Dispose()
+        {
+            
         }
     }
 }

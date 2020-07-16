@@ -3,6 +3,7 @@ using System;
 using System.Threading;
 using Das.Views.Winforms;
 using System.Drawing;
+using Das.Views.Windows;
 using Size = Das.Views.Core.Geometry.Size;
 
 namespace Das.OpenGL.Windows

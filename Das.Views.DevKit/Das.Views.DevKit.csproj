@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <SignAssembly>true</SignAssembly>
-    <DelaySign>false</DelaySign>
-    <AssemblyOriginatorKeyFile>DevkitArmstrong.snk</AssemblyOriginatorKeyFile>
+	 <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>    
 	<SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
   </PropertyGroup>
 

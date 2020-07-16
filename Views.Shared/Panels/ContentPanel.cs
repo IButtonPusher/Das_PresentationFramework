@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Das.Serializer;
+//using Das.Serializer;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Rendering;
@@ -18,7 +20,7 @@ namespace Das.Views.Panels
         {
         }
 
-        private IVisualElement _content;
+      
 
         public virtual IVisualElement Content
         {
@@ -31,7 +33,9 @@ namespace Das.Views.Panels
         }
 
         public override ISize Measure(ISize availableSpace, IMeasureContext measureContext)
-            => Content?.Measure(availableSpace, measureContext) ?? Size.Empty;
+        {
+            return Content?.Measure(availableSpace, measureContext) ?? Size.Empty;
+        }
 
 
         public override void Arrange(ISize availableSpace, IRenderContext renderContext)
@@ -56,6 +60,13 @@ namespace Das.Views.Panels
             return newObject;
         }
 
+        public virtual void AcceptChanges()
+        {
+            IsChanged = false;
+        }
+
+        public virtual Boolean IsChanged { get; private set; }
+
         IList<IVisualElement> IVisualContainer.Children
         {
             get
@@ -76,11 +87,18 @@ namespace Das.Views.Panels
         }
 
         void IVisualContainer.AddChildren(params IVisualElement[] elements)
-            => throw new NotSupportedException();
-
-        public virtual void OnChildDeserialized(IVisualElement element, INode node)
         {
+            throw new NotSupportedException();
         }
+
+        public void OnChildDeserialized(IVisualElement element, INode node)
+        {
+            
+        }
+
+        //public virtual void OnChildDeserialized(IVisualElement element, INode node)
+        //{
+        //}
 
         public virtual Boolean Contains(IVisualElement element)
         {
@@ -94,15 +112,6 @@ namespace Das.Views.Panels
         }
 
 
-        public override void SetDataContext(Object dataContext)
-        {
-            IsChanged = true;
-            DataContext = dataContext;
-
-            if (Content is IBindableElement bindable)
-                bindable.SetDataContext(dataContext);
-        }
-
         public override void SetBoundValue(T value)
         {
             IsChanged = true;
@@ -114,11 +123,35 @@ namespace Das.Views.Panels
                 almost.SetDataContext(value);
         }
 
-        public virtual void AcceptChanges()
+        public override async Task SetBoundValueAsync(T value)
         {
-            IsChanged = false;
+            IsChanged = true;
+            Binding = new ObjectBinding<T>(value);
+
+            if (Content is IBindableElement<T> bindable)
+                await bindable.SetBoundValueAsync(value);
+            else if (Content is IBindableElement almost)
+                await almost.SetDataContextAsync(value);
         }
 
-        public virtual Boolean IsChanged { get; private set; }
+        public override void SetDataContext(Object dataContext)
+        {
+            IsChanged = true;
+            DataContext = dataContext;
+
+            if (Content is IBindableElement bindable)
+                bindable.SetDataContext(dataContext);
+        }
+
+        public override async Task SetDataContextAsync(Object dataContext)
+        {
+            IsChanged = true;
+            DataContext = dataContext;
+
+            if (Content is IBindableElement bindable)
+                await bindable.SetDataContextAsync(dataContext);
+        }
+
+        private IVisualElement _content;
     }
 }

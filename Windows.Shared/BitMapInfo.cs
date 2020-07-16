@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
-namespace Das.Views.Winforms
+namespace Das.Views.Windows
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct BitMapInfo

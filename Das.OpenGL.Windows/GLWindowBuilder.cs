@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using Das.Views;
 using Das.Views.Panels;
+using Das.Views.Windows;
 using Das.Views.Winforms;
 using Das.ViewsModels;
 
@@ -62,23 +63,23 @@ namespace Das.OpenGL.Windows
 
         public WNDCLASSEX GetGLWindowClass()
         {
-            var _wndClass = new WNDCLASSEX();
-            _wndClass.Init();
-            _wndClass.style = ClassStyles.HorizontalRedraw | ClassStyles.VerticalRedraw 
+            var wndClass = new WNDCLASSEX();
+            wndClass.Init();
+            wndClass.style = ClassStyles.HorizontalRedraw | ClassStyles.VerticalRedraw 
                 | ClassStyles.OwnDC;
-            _wndClass.lpfnWndProc = _wndProcDelegate;
-            _wndClass.cbClsExtra = 0;
-            _wndClass.cbWndExtra = 0;
-            _wndClass.hInstance = IntPtr.Zero;
-            _wndClass.hIcon = IntPtr.Zero;
-            _wndClass.hCursor = IntPtr.Zero;
-            _wndClass.hbrBackground = IntPtr.Zero;
-            _wndClass.lpszMenuName = null;
-            _wndClass.lpszClassName = _nativeWindowClassName;
-            _wndClass.hIconSm = IntPtr.Zero;
-            Native.RegisterClassEx(ref _wndClass);
+            wndClass.lpfnWndProc = _wndProcDelegate;
+            wndClass.cbClsExtra = 0;
+            wndClass.cbWndExtra = 0;
+            wndClass.hInstance = IntPtr.Zero;
+            wndClass.hIcon = IntPtr.Zero;
+            wndClass.hCursor = IntPtr.Zero;
+            wndClass.hbrBackground = IntPtr.Zero;
+            wndClass.lpszMenuName = null;
+            wndClass.lpszClassName = _nativeWindowClassName;
+            wndClass.hIconSm = IntPtr.Zero;
+            Native.RegisterClassEx(ref wndClass);
 
-            return _wndClass;
+            return wndClass;
         }
 
         [DllImport(Native.User32, SetLastError = true)]

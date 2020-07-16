@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 
 namespace Das.Views.Rendering
@@ -11,9 +12,13 @@ namespace Das.Views.Rendering
             Position = position;
         }
 
-        public IVisualElement Element { get; }
-        public ICube Position { get; }
+        public override String ToString()
+        {
+            return Element + "\t" + Position;
+        }
 
-        public override String ToString() => Element + "\t" + Position;
+        public IVisualElement Element { get; }
+
+        public ICube Position { get; }
     }
 }

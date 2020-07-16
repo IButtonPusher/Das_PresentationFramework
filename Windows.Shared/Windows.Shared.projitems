@@ -11,16 +11,22 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BitMapInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClassStyles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IWindowsHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IWindowsViewHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Messages\MessageTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Messages\MSG.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Messages\WindowsMessageRouter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MONITORINFOEX.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Native.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pixelformatdescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)POINT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RECT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SetWindowPosFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SIZE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Messages\WindowsMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WNDCLASSEX.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Dialogs\" />
   </ItemGroup>
 </Project>

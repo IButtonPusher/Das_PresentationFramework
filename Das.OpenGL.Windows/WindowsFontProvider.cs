@@ -1,6 +1,7 @@
 ﻿using System;
 using Das.OpenGL.Text;
 using Das.Views.Core.Writing;
+using Das.Views.Windows;
 using Das.Views.Winforms;
 
 namespace Das.OpenGL.Windows

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Das.Serializer;
+//using Das.Serializer;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Rendering;
@@ -20,10 +22,33 @@ namespace Das.Views.Panels
         {
         }
 
+        public override void SetBoundValue(T value)
+        {
+            base.SetBoundValue(value);
+
+            foreach (var child in Children)
+            {
+                if (!(child is IBindableElement bindable))
+                    continue;
+
+                bindable.SetDataContext(value);
+            }
+        }
+
+        public override async Task SetBoundValueAsync(T value)
+        {
+            //await base.SetBoundValueAsync(value);
+
+            foreach (var child in Children)
+            {
+                if (!(child is IBindableElement bindable))
+                    continue;
+
+                await bindable.SetDataContextAsync(value);
+            }
+        }
+
         public IList<IVisualElement> Children => _children;
-
-
-        private readonly List<IVisualElement> _children;
 
         public void AddChild(IVisualElement element)
         {
@@ -55,19 +80,6 @@ namespace Das.Views.Panels
             return false;
         }
 
-        public override void SetBoundValue(T value)
-        {
-            base.SetBoundValue(value);
-
-            foreach (var child in Children)
-            {
-                if (!(child is IBindableElement bindable))
-                    continue;
-
-                bindable.SetDataContext(value);
-            }
-        }
-
         public override IVisualElement DeepCopy()
         {
             var newObject = (BasePanel<T>) base.DeepCopy();
@@ -79,6 +91,9 @@ namespace Das.Views.Panels
 
             return newObject;
         }
+
+
+        private readonly List<IVisualElement> _children;
 
         protected readonly Dictionary<VisualElement, Rectangle> ElementsRendered;
     }

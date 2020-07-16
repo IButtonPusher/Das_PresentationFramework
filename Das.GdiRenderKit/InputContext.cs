@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Das.Gdi.Core;
+using Das.Views;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Input;
 using Das.Views.Input;

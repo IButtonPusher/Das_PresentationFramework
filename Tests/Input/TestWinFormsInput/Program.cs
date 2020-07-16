@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Das.Gdi;
+using Das.Views.Updaters;
 using TestCommon;
 using ViewCompiler;
 
@@ -24,7 +25,8 @@ namespace TestWinFormsInput
         {
             var gdi = new GdiProvider();
             var views = new ViewProvider();
-            return new TestLauncher(gdi, views);
+            var staInvoker = new StaScheduler("TestWinFormsInput");
+            return new TestLauncher(gdi, views, staInvoker);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Windows.Shared.Messages
 {
@@ -7,13 +8,13 @@ namespace Windows.Shared.Messages
     public struct MSG
     {
         public IntPtr hwnd;
-        public int message;
+        public Int32 message;
         public IntPtr wParam;
         public IntPtr lParam;
-        public int time;
+        public Int32 time;
 
         // pt was a by-value POINT structure
-        public int pt_x;
-        public int pt_y;
+        public Int32 pt_x;
+        public Int32 pt_y;
     }
 }

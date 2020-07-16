@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 
-namespace Das.Views.Winforms
+namespace Das.Views.Windows
 {
     public interface IWindowsHost : IHost
     {

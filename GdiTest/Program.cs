@@ -10,6 +10,7 @@ using Das.Views.Panels;
 using TestCommon;
 using ViewCompiler;
 using Das.OpenGL.Windows;
+using Das.Views.Updaters;
 using Das.ViewsModels;
 
 namespace GdiTest
@@ -17,6 +18,7 @@ namespace GdiTest
     static class Program
     {
         private static TestLauncher _testLauncher;
+        private static ISingleThreadedInvoker _staInvoker;
 
         /// <summary>
         /// The main entry point for the application.
@@ -27,6 +29,7 @@ namespace GdiTest
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             
+            _staInvoker = new StaScheduler("GDI Test");
 
             _testLauncher = GetGdiLauncher();
             
@@ -39,7 +42,7 @@ namespace GdiTest
         {
             var boot = new GdiProvider();
             var viewProvider = new ViewProvider();
-            return new TestLauncher(boot,viewProvider);
+            return new TestLauncher(boot,viewProvider, _staInvoker);
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -48,7 +51,7 @@ namespace GdiTest
             var windowBuilder = new GLWindowBuilder("OpenGLSurface");
             var boot = new GLBootStrapper(windowBuilder);
             var viewProvider = new ViewProvider();
-            return new TestLauncher(boot,viewProvider);
+            return new TestLauncher(boot,viewProvider, _staInvoker);
         }
 
         // ReSharper disable once UnusedMember.Local

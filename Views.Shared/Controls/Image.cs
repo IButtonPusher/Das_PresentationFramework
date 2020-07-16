@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
@@ -19,7 +20,28 @@ namespace Das.Views.Controls
         {
         }
 
-        private IImage _currentImage;
+        public override void Arrange(ISize availableSpace, IRenderContext renderContext)
+        {
+            var img = _currentImage;
+            if (img == null)
+                return;
+
+            if (!availableSpace.Width.AreEqualEnough(_currentImage.Width) ||
+                !availableSpace.Height.AreEqualEnough(availableSpace.Height))
+                if (availableSpace.Height < _currentImage.Height)
+                {
+                    var scale = availableSpace.Height / _currentImage.Height;
+                    availableSpace = new Size(img.Width * scale, availableSpace.Height);
+                }
+
+            var rect = new Rectangle(Point.Empty, availableSpace);
+            renderContext.DrawImage(_currentImage, rect * renderContext.ViewState.ZoomLevel);
+        }
+
+        public override void Dispose()
+        {
+            _currentImage?.Dispose();
+        }
 
         public override ISize Measure(ISize availableSpace, IMeasureContext measureContext)
         {
@@ -53,26 +75,6 @@ namespace Das.Views.Controls
             return size;
         }
 
-        public override void Arrange(ISize availableSpace, IRenderContext renderContext)
-        {
-            var img = _currentImage;
-            if (img == null)
-                return;
-
-            if (!availableSpace.Width.AreEqualEnough(_currentImage
-                    .Width) || //Math.Abs(availableSpace.Width -_currentImage.Width) > 0.0001
-                !availableSpace.Height.AreEqualEnough(availableSpace.Height)
-            ) //    Math.Abs(availableSpace.Height - _currentImage.Height) > 0.0001)
-            {
-                if (availableSpace.Height < _currentImage.Height)
-                {
-                    var scale = availableSpace.Height / _currentImage.Height;
-                    availableSpace = new Size(img.Width * scale, availableSpace.Height);
-                }
-            }
-
-            var rect = new Rectangle(Point.Empty, availableSpace);
-            renderContext.DrawImage(_currentImage, rect * renderContext.ViewState.ZoomLevel);
-        }
+        private IImage _currentImage;
     }
 }

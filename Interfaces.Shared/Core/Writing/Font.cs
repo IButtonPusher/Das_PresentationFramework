@@ -1,6 +1,7 @@
 ﻿using System;
 using Das.Extensions;
 
+
 namespace Das.Views.Core.Writing
 {
     public class Font : IEquatable<Font>, IFont, IEquatable<IFont>
@@ -74,7 +75,7 @@ namespace Das.Views.Core.Writing
                 return font;
 
             if (font == null)
-                return null;
+                return null!;
 
             return new Font(font.Size * val, font.FamilyName, font.FontStyle);
         }

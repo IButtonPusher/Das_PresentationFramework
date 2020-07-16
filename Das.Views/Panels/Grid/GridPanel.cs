@@ -10,5 +10,10 @@ namespace Das.Views.Panels
         public override void Arrange(ISize availableSpace, IRenderContext renderContext)
         {
         }
+
+        public override void Dispose()
+        {
+            
+        }
     }
 }

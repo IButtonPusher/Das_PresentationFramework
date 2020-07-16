@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
@@ -13,10 +14,6 @@ namespace Das.Views.Styles
 {
     public class BaseStyleContext : IStyleContext
     {
-        private readonly IStyle _defaultStyle;
-        private readonly Dictionary<Type, List<ScopedStyle>> _typeStyles;
-        private readonly Dictionary<Int32, List<IStyle>> _elementStyles;
-
         public BaseStyleContext(IStyle defaultStyle)
         {
             AssertStyleValidity(defaultStyle, true);
@@ -93,6 +90,7 @@ namespace Das.Views.Styles
                             {
                                 yield return style.Style;
                             }
+
                             break;
                         case IVisualElement ele when ele == element:
                             yield return style.Style;
@@ -161,7 +159,7 @@ namespace Das.Views.Styles
         }
 
         public void RegisterStyleSetter<T>(StyleSetters setter, Object value,
-            IVisualElement scope) 
+            IVisualElement scope)
             where T : IVisualElement
         {
             var style = new TypeStyle<T>();
@@ -201,5 +199,9 @@ namespace Das.Views.Styles
 
             return _defaultStyle[setter] is T good ? good : default;
         }
+
+        private readonly IStyle _defaultStyle;
+        private readonly Dictionary<Int32, List<IStyle>> _elementStyles;
+        private readonly Dictionary<Type, List<ScopedStyle>> _typeStyles;
     }
 }

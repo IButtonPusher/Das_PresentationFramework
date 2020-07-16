@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Extensions;
 
 
@@ -6,9 +7,6 @@ namespace Das.Views.Rendering
 {
     public class BasePerspective : IMutableViewPerspective
     {
-        private readonly Double _minZoomLevel;
-        private readonly Double _maxZoomLevel;
-
         public BasePerspective(Double minZoomLevel = Constants.DefaultMinZoom,
             Double maxZoomLevel = Constants.DefaultMaxZoom)
         {
@@ -44,5 +42,8 @@ namespace Das.Views.Rendering
         }
 
         public Boolean IsChanged { get; private set; }
+
+        private readonly Double _maxZoomLevel;
+        private readonly Double _minZoomLevel;
     }
 }

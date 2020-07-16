@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
+#if !NET40
+using TaskEx = System.Threading.Tasks.Task;
+#endif
 
 namespace Das.Views.DataBinding
 {
@@ -6,11 +10,16 @@ namespace Das.Views.DataBinding
     {
         public abstract T GetValue(Object dataContext);
 
+        public virtual Task<T> GetValueAsync(Object dataContext)
+        {
+            var val = GetValue(dataContext);
+            return TaskEx.FromResult(val);
+        }
 
-//        public T GetLastValue() => GetValue(DataContext);
-
-        public override Object GetBoundValue(Object dataContext)
-            => GetValue(dataContext);
+        public override Object? GetBoundValue(Object dataContext)
+        {
+            return GetValue(dataContext);
+        }
 
         public abstract IDataBinding<T> DeepCopy();
     }
@@ -19,8 +28,11 @@ namespace Das.Views.DataBinding
     {
         public Object DataContext { get; set; }
 
-        public abstract Object GetBoundValue(Object dataContext);
+        public abstract Object? GetBoundValue(Object dataContext);
 
-        public virtual IDataBinding ToSingleBinding() => throw new NotImplementedException();
+        public virtual IDataBinding ToSingleBinding()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

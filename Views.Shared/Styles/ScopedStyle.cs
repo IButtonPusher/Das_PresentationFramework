@@ -1,11 +1,11 @@
-﻿using Das.Views.Rendering;
+﻿using System;
+using System.Threading.Tasks;
+using Das.Views.Rendering;
 
 namespace Das.Views.Styles
 {
     public class ScopedStyle
     {
-        public IStyle Style { get; }
-
         public ScopedStyle(IVisualElement scope, IStyle style)
         {
             Style = style;
@@ -13,5 +13,7 @@ namespace Das.Views.Styles
         }
 
         public IVisualElement Scope { get; }
+
+        public IStyle Style { get; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
@@ -9,8 +10,6 @@ namespace Das.Views.Styles
 {
     public class DefaultStyle : Style
     {
-        public const String FontName = "Segoe UI";
-
         public DefaultStyle()
         {
             var font = new Font(10, FontName, FontStyle.Regular);
@@ -36,5 +35,7 @@ namespace Das.Views.Styles
                 {StyleSetters.Width, Double.NaN}
             };
         }
+
+        public const String FontName = "Segoe UI";
     }
 }

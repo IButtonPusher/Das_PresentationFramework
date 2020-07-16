@@ -7,12 +7,16 @@ namespace Das.ViewsModels
     public interface IObservableCommand<in TParam> : IObservableCommand
     {
         Task Execute(TParam paramValue);
+
+        Task Execute(TParam[] paramValues);
     }
 
 
-    public interface IObservableCommand : INotifyPropertyChanged
+    public interface IObservableCommand : INotifyPropertyChanged, IEquatable<IObservableCommand>
     {
-        Boolean CanExecute { get; set; }
+        Boolean IsExecutable { get; set; }
+
+        String Description { get; set; }
 
         Task Execute();
 

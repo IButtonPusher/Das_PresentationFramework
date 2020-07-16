@@ -10,9 +10,9 @@ namespace TestWinFormsInput
             InitializeComponent();
         }
 
-        protected override void WndProc(ref Message m)
-        {
-            base.WndProc(ref m);
-        }
+        //protected override void WndProc(ref Message m)
+        //{
+        //    base.WndProc(ref m);
+        //}
     }
 }

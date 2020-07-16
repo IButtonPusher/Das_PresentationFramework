@@ -1,10 +1,11 @@
-﻿using Das.Views.Rendering;
-using Das.Views.Styles;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
+using Das.Views.Rendering;
+using Das.Views.Styles;
 
 namespace Das.Views.Measuring
 {
@@ -17,9 +18,6 @@ namespace Das.Views.Measuring
         }
 
         public IViewState ViewState { get; set; }
-
-        private readonly Size _empty;
-        private readonly Dictionary<IVisualElement, Size> _lastMeasurements;
 
         public abstract Size MeasureImage(IImage img);
 
@@ -52,11 +50,18 @@ namespace Das.Views.Measuring
         }
 
         public Size GetLastMeasure(IVisualElement element)
-            => _lastMeasurements.TryGetValue(element, out var val) ? val : _empty;
+        {
+            return _lastMeasurements.TryGetValue(element, out var val) ? val : _empty;
+        }
 
         public abstract Size MeasureString(String s, Font font);
 
         public T GetStyleSetter<T>(StyleSetters setter, IVisualElement element)
-            => ViewState.GetStyleSetter<T>(setter, element);
+        {
+            return ViewState.GetStyleSetter<T>(setter, element);
+        }
+
+        private readonly Size _empty;
+        private readonly Dictionary<IVisualElement, Size> _lastMeasurements;
     }
 }

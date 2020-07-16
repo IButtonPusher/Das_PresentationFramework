@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
@@ -6,6 +7,10 @@ using Das.Views.Core.Writing;
 using Das.Views.DataBinding;
 using Das.Views.Rendering;
 using Das.Views.Styles;
+
+#if !NET40
+using TaskEx = System.Threading.Tasks.Task;
+#endif
 
 namespace Das.Views.Controls
 {
@@ -23,13 +28,27 @@ namespace Das.Views.Controls
 
     public class Label<T> : BindableElement<T>
     {
-        private String _currentValue;
-
         public Label()
         {
         }
 
         public Label(IDataBinding<T> binding) : base(binding)
+        {
+        }
+
+        public override void Arrange(ISize availableSpace, IRenderContext renderContext)
+        {
+            var font = renderContext.GetStyleSetter<Font>(StyleSetters.Font, this)
+                       * renderContext.ViewState.ZoomLevel;
+
+            var useSize = renderContext.GetStyleSetter<Double>(StyleSetters.FontSize, this);
+            if (!useSize.AreEqualEnough(font.Size)) font = new Font(useSize, font.FamilyName, font.FontStyle);
+
+            var brush = renderContext.GetStyleSetter<Brush>(StyleSetters.Foreground, this);
+            renderContext.DrawString(_currentValue, font, brush, Point.Empty);
+        }
+
+        public override void Dispose()
         {
         }
 
@@ -44,21 +63,6 @@ namespace Das.Views.Controls
             return size;
         }
 
-        public override void Arrange(ISize availableSpace, IRenderContext renderContext)
-        {
-            var font = renderContext.GetStyleSetter<Font>(StyleSetters.Font, this)
-                       * renderContext.ViewState.ZoomLevel;
-
-            var useSize = renderContext.GetStyleSetter<Double>(StyleSetters.FontSize, this);
-            if (!useSize.AreEqualEnough(font.Size))
-            {
-                font = new Font(useSize, font.FamilyName, font.FontStyle);
-            }
-
-            var brush = renderContext.GetStyleSetter<Brush>(StyleSetters.Foreground, this);
-            renderContext.DrawString(_currentValue, font, brush, Point.Empty);
-        }
-
         public override void SetBoundValue(Object value)
         {
             DataContext = value;
@@ -66,6 +70,17 @@ namespace Das.Views.Controls
                 Binding = new ObjectBinding<T>(val);
         }
 
-        public override String ToString() => "Label: " + _currentValue;
+        public override Task SetBoundValueAsync(Object value)
+        {
+            SetBoundValue(value);
+            return TaskEx.CompletedTask;
+        }
+
+        public override String ToString()
+        {
+            return "Label: " + _currentValue;
+        }
+
+        private String _currentValue;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views.Rendering;
 
 namespace Das.Views.DataBinding
@@ -17,6 +18,8 @@ namespace Das.Views.DataBinding
         new T GetBoundValue(Object dataContext);
 
         void SetBoundValue(T value);
+
+        Task SetBoundValueAsync(T value);
 
         new IDataBinding<T> Binding { get; set; }
     }

@@ -11,11 +11,14 @@ namespace TestCommon
     {
         private readonly IBootStrapper _windowProvider;
         private readonly IViewProvider _viewProvider;
+        private readonly ISingleThreadedInvoker _staInvoker;
 
-        public TestLauncher(IBootStrapper windowProvider, IViewProvider viewProvider)
+        public TestLauncher(IBootStrapper windowProvider, 
+            IViewProvider viewProvider, ISingleThreadedInvoker staInvoker)
         {
             _windowProvider = windowProvider;
             _viewProvider = viewProvider;
+            _staInvoker = staInvoker;
         }
 
         public async Task MvvmTest()
@@ -23,7 +26,7 @@ namespace TestCommon
             var file = new FileInfo("company\\EmployeesView.json");
             var view = await _viewProvider.GetView(file);
 
-            var vm = new TestCompanyVm();
+            var vm = new TestCompanyVm(_staInvoker);
             var _ = new SceneUpdater(vm, 50);
             Run(vm, view);
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Das.Views;
+using System;
 using System.Collections.Concurrent;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -7,7 +8,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
-using WpfTest;
 
 namespace MultiUiThreadedExample.CustomVisuals
 {
@@ -199,6 +199,6 @@ namespace MultiUiThreadedExample.CustomVisuals
             throw new NotImplementedException();
         }
 
-        public IKeyboardInputSink Sink { get; }
+        public IKeyboardInputSink Sink => this;
     }
 }

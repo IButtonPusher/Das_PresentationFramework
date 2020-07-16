@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Das.Views.Core.Geometry;
+using Das.Views.Windows;
 
 namespace Das.Views.Winforms
 {

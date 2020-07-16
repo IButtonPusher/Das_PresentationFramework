@@ -8,7 +8,7 @@ using Das.Views.Invocations;
 
 namespace Das.Views.Updaters
 {
-    public class StaScheduler : TaskScheduler, IUiProvider
+    public class StaScheduler : TaskScheduler, ISingleThreadedInvoker
     {
         private readonly String _staThreadName;
 
@@ -31,8 +31,47 @@ namespace Das.Views.Updaters
                 TaskCreationOptions.PreferFairness, this));
         }
 
+        public void Invoke(Action action, Int32 priority)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task InvokeAsync(Action action) => await Task.Factory.StartNew(action, 
             CancellationToken.None, TaskCreationOptions.PreferFairness, this);
+
+        public async Task<T> InvokeAsync<T>(Func<T> action)
+        {
+            return await Task.Factory.StartNew(action, CancellationToken.None,
+                TaskCreationOptions.PreferFairness, this);
+        }
+
+        public async Task<TOutput> InvokeAsync<TInput, TOutput>(TInput input,
+            Func<TInput, TOutput> action)
+        {
+            return await Task.Factory.StartNew(() => action(input), CancellationToken.None,
+                TaskCreationOptions.PreferFairness, this);
+        }
+
+        public async Task InvokeAsync<TInput>(TInput input, Func<TInput, Task> action)
+        {
+            await action(input);
+        }
+
+        public async Task<T> InvokeAsync<T>(Func<Task<T>> action)
+        {
+            var ran = await Task.Factory.StartNew(() => InnerInvokeAsync(action), 
+                CancellationToken.None,
+                TaskCreationOptions.PreferFairness, this);
+            return await ran;
+        }
+
+        private static async Task<T> InnerInvokeAsync<T>(Func<Task<T>> action)
+            => await action();
+
+        public T Invoke<T>(Func<T> action)
+        {
+            return action();
+        }
 
         private void Start()
         {

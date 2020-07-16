@@ -3,20 +3,24 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Das.Views</RootNamespace>
-    <AssemblyName>Das.Views.Interfaces</AssemblyName>
-    <LangVersion>7.3</LangVersion>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>InterfacesArmstrong.snk</AssemblyOriginatorKeyFile>
-    <DelaySign>false</DelaySign>
+    <AssemblyName>Das.Views.Interfaces</AssemblyName>    
+	 <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>    
   </PropertyGroup>
   <PropertyGroup>
    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
 </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\bla</OutputPath>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
 
   <Import Project="..\Interfaces.Shared\Interfaces.Shared.projitems" Label="Shared" />
 
-  <ItemGroup>
-    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.2-alpha" />
-  </ItemGroup>
+  <Import Project="..\..\NetFramework\CSharp8NetFramework\CSharp8NetFramework.projitems" Label="Shared" />
 
 </Project>

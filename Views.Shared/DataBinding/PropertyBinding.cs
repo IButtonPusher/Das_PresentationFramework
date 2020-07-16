@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Das.Views.DataBinding
 {
     public class PropertyBinding<T> : BaseBinding<T>
     {
-        private readonly IDataContext _dataContext;
-        private readonly PropertyInfo _prop;
-
         public PropertyBinding(IDataContext dataContext, PropertyInfo prop)
         {
             _dataContext = dataContext;
@@ -20,6 +18,11 @@ namespace Das.Views.DataBinding
             _prop = dataContext.GetType().GetProperty(propertyName);
         }
 
+        public override IDataBinding<T> DeepCopy()
+        {
+            return new PropertyBinding<T>(null, _prop);
+        }
+
         public override T GetValue(Object dataContext)
         {
             if (_prop.GetValue(_dataContext.Value, null) is T prop)
@@ -27,6 +30,7 @@ namespace Das.Views.DataBinding
             return default;
         }
 
-        public override IDataBinding<T> DeepCopy() => new PropertyBinding<T>(null, _prop);
+        private readonly IDataContext _dataContext;
+        private readonly PropertyInfo _prop;
     }
 }

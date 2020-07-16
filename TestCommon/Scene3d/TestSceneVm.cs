@@ -31,5 +31,9 @@ namespace TestCommon.Scene3d
 
         public Boolean IsChanged { get; private set; }
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public void Dispose()
+        {
+        }
     }
 }

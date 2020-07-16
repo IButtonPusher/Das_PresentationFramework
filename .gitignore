@@ -43,3 +43,4 @@
 /Das.ViewModels/bin/Debug/netstandard2.0
 /Das.ViewModels/obj
 /Tests/Input/TestWinFormsInput/bin/Debug
+*.v2

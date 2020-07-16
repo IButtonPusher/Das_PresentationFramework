@@ -27,6 +27,7 @@ namespace Das.Views
         Thickness RenderMargin { get; }
     }
 
+    /// <inheritdoc/>
     public interface IViewHost<TAsset> : IViewHost
     {
         TAsset Asset { get; set; }

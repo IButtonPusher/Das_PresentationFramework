@@ -1,18 +1,14 @@
-﻿using Das.Views.Winforms;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using Das.Views.Windows;
 
 namespace Das.Gdi
 {
     public class GdiDevice
     {
-        private readonly Color _backgroundColor;
-
-        public Int32 Width { get; set; }
-        public Int32 Height { get; set; }
-
         public GdiDevice(Color backgroundColor, Int32 width, Int32 height)
         {
             _backgroundColor = backgroundColor;
@@ -20,7 +16,15 @@ namespace Das.Gdi
             Height = height;
         }
 
-        public Bitmap Run(Action<Graphics> action)
+        public Int32 Height { get; set; }
+
+        public Int32 Width { get; set; }
+
+
+        [DllImport("gdi32.dll", ExactSpelling = true, SetLastError = true)]
+        public static extern Boolean DeleteDC(IntPtr hdc);
+
+        public Bitmap Run<TData>(TData data, Action<Graphics, TData> action)
         {
             var width = Width;
             var height = Height;
@@ -33,7 +37,7 @@ namespace Das.Gdi
                 using (var g = Graphics.FromHdc(memoryHdc))
                 {
                     g.Clear(_backgroundColor);
-                    action(g);
+                    action(g, data);
                 }
 
                 using (var g = Graphics.FromImage(image))
@@ -52,7 +56,11 @@ namespace Das.Gdi
             return image;
         }
 
-        private static IntPtr CreateMemoryHdc(IntPtr hdc, int width, int height,
+
+        [DllImport("gdi32.dll")]
+        public static extern Int32 SetBkMode(IntPtr hdc, Int32 mode);
+
+        private static IntPtr CreateMemoryHdc(IntPtr hdc, Int32 width, Int32 height,
             out IntPtr dib)
         {
             var memoryHdc = Native.CreateCompatibleDC(hdc);
@@ -70,14 +78,7 @@ namespace Das.Gdi
 
             return memoryHdc;
         }
-      
 
-        [DllImport("gdi32.dll")]
-        public static extern int SetBkMode(IntPtr hdc, int mode);
-
-        
-
-        [DllImport("gdi32.dll", ExactSpelling = true, SetLastError = true)]
-        public static extern bool DeleteDC(IntPtr hdc);
+        private readonly Color _backgroundColor;
     }
 }

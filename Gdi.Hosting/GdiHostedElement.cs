@@ -46,7 +46,7 @@ namespace Das.Gdi.Controls
             }
         }
        
-        private Bitmap _backingBitmap;
+        private Bitmap? _backingBitmap;
         private bool _isChanged;
 
         public Bitmap BackingBitmap

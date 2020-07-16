@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
-namespace Das.Views.Winforms
+namespace Das.Views.Windows
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct WNDCLASSEX
     {
         public UInt32 cbSize;
         public ClassStyles style;
-        [MarshalAs(UnmanagedType.FunctionPtr)]
-        public WndProc lpfnWndProc;
+        [MarshalAs(UnmanagedType.FunctionPtr)] public WndProc lpfnWndProc;
         public Int32 cbClsExtra;
         public Int32 cbWndExtra;
         public IntPtr hInstance;
@@ -22,7 +22,7 @@ namespace Das.Views.Winforms
 
         public void Init()
         {
-            cbSize = (UInt32)Marshal.SizeOf(this);
+            cbSize = (UInt32) Marshal.SizeOf(this);
         }
     }
 

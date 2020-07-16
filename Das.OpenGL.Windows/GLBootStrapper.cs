@@ -7,6 +7,7 @@ using Das.Views;
 using Das.Views.Core.Writing;
 using Das.Views.Panels;
 using Das.Views.Updaters;
+using Das.Views.Windows;
 using Das.Views.Winforms;
 using Das.ViewsModels;
 

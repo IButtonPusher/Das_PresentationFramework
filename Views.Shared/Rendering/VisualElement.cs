@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 
 namespace Das.Views.Rendering
 {
     public abstract class VisualElement : IVisualElement
     {
-        private static Int32 _currentId;
-
         protected VisualElement()
         {
             Id = Interlocked.Increment(ref _currentId);
@@ -25,5 +24,9 @@ namespace Das.Views.Rendering
         }
 
         public Int32 Id { get; private set; }
+
+        public abstract void Dispose();
+
+        private static Int32 _currentId;
     }
 }

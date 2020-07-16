@@ -1,6 +1,7 @@
 ﻿using System;
 using Das.Extensions;
 
+
 namespace Das.Views.Core.Geometry
 {
     public class Thickness : Size, IDeepCopyable<Thickness>, IShape2d

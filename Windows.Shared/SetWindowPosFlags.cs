@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 
-namespace Das.Views.Winforms
+namespace Das.Views.Windows
 {
     [Flags]
     public enum SetWindowPosFlags : uint
@@ -19,6 +20,6 @@ namespace Das.Views.Winforms
         SWP_NOSENDCHANGING = 0x0400,
         SWP_NOSIZE = 0x0001,
         SWP_NOZORDER = 0x0004,
-        SWP_SHOWWINDOW = 0x0040,
+        SWP_SHOWWINDOW = 0x0040
     }
 }

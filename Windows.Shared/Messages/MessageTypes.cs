@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Windows.Shared
 {
@@ -251,12 +252,14 @@ namespace Windows.Shared
         WM_PENWINLAST = 0x038F,
 
         #region Windows 7
+
         WM_DWMSENDICONICTHUMBNAIL = 0x0323,
         WM_DWMSENDICONICLIVEPREVIEWBITMAP = 0x0326,
+
         #endregion
 
         WM_USER = 0x0400,
 
-        WM_APP = 0x8000,
+        WM_APP = 0x8000
     }
 }

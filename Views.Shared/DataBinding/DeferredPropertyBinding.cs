@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Das.Views.DataBinding
 {
     public class DeferredPropertyBinding<T> : BaseBinding<T>
     {
-        private readonly PropertyInfo _prop;
-        private readonly Type _parentClassType;
-
         public DeferredPropertyBinding(Type parentClassType, String propertyName)
         {
             _parentClassType = parentClassType;
@@ -21,15 +19,17 @@ namespace Das.Views.DataBinding
             _parentClassType = _prop.DeclaringType;
         }
 
+        public override IDataBinding<T> DeepCopy()
+        {
+            return new DeferredPropertyBinding<T>(_parentClassType, _prop.Name);
+        }
+
         public override T GetValue(Object dataContext)
         {
             if (_prop.GetValue(dataContext, null) is T prop)
                 return prop;
-            return default;
+            return default!;
         }
-
-        public override IDataBinding<T> DeepCopy() =>
-            new DeferredPropertyBinding<T>(_parentClassType, _prop.Name);
 
         public override IDataBinding ToSingleBinding()
         {
@@ -37,5 +37,8 @@ namespace Das.Views.DataBinding
             var itemType = typeof(InstanceBinding<>).MakeGenericType(argh);
             return (IDataBinding) Activator.CreateInstance(itemType, null);
         }
+
+        private readonly Type _parentClassType;
+        private readonly PropertyInfo _prop;
     }
 }

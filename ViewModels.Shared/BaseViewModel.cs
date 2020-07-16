@@ -1,39 +1,58 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Das.Views;
 using Das.ViewsModels;
 
 namespace Das.ViewModels
 {
     public abstract class BaseViewModel : IViewModel
     {
-        protected virtual void SetPropertyValue<T>(ref T field, T value, 
+        protected readonly ISingleThreadedInvoker StaInvoker;
+
+        public BaseViewModel(ISingleThreadedInvoker invoker)
+        {
+            StaInvoker = invoker;
+        }
+
+        protected virtual Boolean SetValue<T>(ref T field, T value, 
             [CallerMemberName]String propertyName = null)
         {
             if (Equals(field, value))
-                return;
+                return false;
             
             field = value;
 
             RaisePropertyChanged(propertyName);
-        }
-
-        protected virtual void SetPropertyValue<TField, TValue>(ref TField field, TValue value,
-            [CallerMemberName]String propertyName = null) where TValue : TField, IEquatable<TField>
-        {
-            if (Equals(field, value))
-                return;
-
-            field = value;
-
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return true;
         }
 
         protected virtual void RaisePropertyChanged(String propertyName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            var handler = PropertyChanged;
+            if (handler == null)
+                return;
+
+            var args = new PropertyChangedEventArgs(propertyName);
+            handler(this, args);
         }
 
-        public virtual event PropertyChangedEventHandler PropertyChanged;
+        protected void RaisePropertyChanged(PropertyChangedEventArgs args)
+        {
+            PropertyChanged?.Invoke(this, args);
+        }
+
+        protected Boolean TryGetPropertyHandler(out PropertyChangedEventHandler handler)
+        {
+            handler = PropertyChanged;
+            return handler != null;
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public virtual void Dispose()
+        {
+            PropertyChanged = null;
+        }
     }
 }

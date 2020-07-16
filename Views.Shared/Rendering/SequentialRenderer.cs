@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Styles;
@@ -7,13 +8,10 @@ using Das.Views.Styles;
 namespace Das.Views.Rendering
 {
     /// <summary>
-    /// Renders a collection of elements vertically or horizontally
+    ///     Renders a collection of elements vertically or horizontally
     /// </summary>
     public class SequentialRenderer : ISequentialRenderer
     {
-        private readonly Boolean _isWrapContent;
-        protected readonly Dictionary<IVisualElement, Rectangle> ElementsRendered;
-
         public SequentialRenderer(Boolean isWrapContent = false)
         {
             _isWrapContent = isWrapContent;
@@ -46,11 +44,11 @@ namespace Das.Views.Rendering
                             maxHeight = current.Height;
 
                         if (_isWrapContent && current.Width + totalWidth > availableSpace.Width
-                            && totalHeight + maxHeight < availableSpace.Height)
+                                           && totalHeight + maxHeight < availableSpace.Height)
                         {
                             maxWidth = Math.Max(maxWidth, totalWidth);
                             totalHeight += maxHeight;
-                            
+
                             current.X = 0;
                             current.Y += maxHeight;
                             maxHeight = totalWidth = 0;
@@ -112,5 +110,8 @@ namespace Das.Views.Rendering
                 var _ = renderContext.DrawElement(child, current);
             }
         }
+
+        private readonly Boolean _isWrapContent;
+        protected readonly Dictionary<IVisualElement, Rectangle> ElementsRendered;
     }
 }

@@ -9,6 +9,8 @@
     <RootNamespace>GdiTest</RootNamespace>
     <AssemblyName>GdiTest</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -23,7 +25,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>GdiTest.ruleset</CodeAnalysisRuleSet>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,21 +34,20 @@
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>GdiTest.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>ViewsArmstrong.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Das.Serializer, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Das.Serializer.Split.0.0.1-alpha\lib\net472\Das.Serializer.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Serializer.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=15561faeaf074445, processorArchitecture=MSIL">
-      <HintPath>..\packages\Das.Serializer.Split.0.0.1-alpha\lib\net472\Serializer.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Serializer.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=55ec9f54a6117381, processorArchitecture=MSIL">
-      <HintPath>..\packages\Das.Serializer.Split.0.0.1-alpha\lib\net472\Serializer.Interfaces.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -79,6 +81,9 @@
     <EmbeddedResource Include="TestGLPanelForm.resx">
       <DependentUpon>TestGLPanelForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="freetype.lib">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -93,6 +98,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="ViewsArmstrong.snk" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Das.GdiRenderKit\Das.Gdi.csproj">
@@ -137,5 +143,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <Import Project="..\..\NetFramework\CSharp8NetFramework\CSharp8NetFramework.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
