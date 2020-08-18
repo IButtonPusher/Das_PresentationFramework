@@ -6,9 +6,9 @@ namespace Das.ViewsModels
 {
     public interface IObservableCommand<in TParam> : IObservableCommand
     {
-        Task Execute(TParam paramValue);
+        Task ExecuteAsync(TParam paramValue);
 
-        Task Execute(TParam[] paramValues);
+        Task ExecuteAsync(TParam[] paramValues);
     }
 
 
@@ -16,10 +16,10 @@ namespace Das.ViewsModels
     {
         Boolean IsExecutable { get; set; }
 
-        String Description { get; set; }
+        String? Description { get; set; }
 
-        Task Execute();
+        Task ExecuteAsync();
 
-        Task Execute(Object paramValue);
+        Task ExecuteAsync(Object paramValue);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using Das.Serializer;
 using Das.Views.DevKit;
 using Das.Views.Panels;
@@ -16,15 +18,38 @@ namespace ViewCompiler
 
         private IJsonLoaner _state;
 
-        protected override T FromJsonCharArray<T>(IEnumerable<Char> json)
+        //public override T FromJson<T>(Stream stream)
+        //{
+        //    return ((DasCoreSerializer) this).FromJson<T>(stream);
+        //}
+
+        protected override T FromJsonCharArray<T>(Char[] json)
         {
             _state?.Dispose();
 
             _state = StateProvider.BorrowJson(Settings);
-            
+
             var res = _state.Scanner.Deserialize<T>(json);
             RootNode = _state.Scanner.RootNode;
             return res;
+        }
+
+        public override T FromJson<T>(Stream stream)
+        {  
+            var len = (Int32)stream.Length;
+            Byte[] buffer;
+
+            using(var memoryStream = new MemoryStream(len))
+            {
+                stream.CopyTo(memoryStream);
+                buffer = memoryStream.ToArray();
+            }
+
+            var encoding = GetEncoding(buffer);
+            var charArr = encoding.GetChars(buffer, 0, len);
+
+            return FromJsonCharArray<T>(charArr);
+            //    return ((DasCoreSerializer) this).FromJson<T>(stream);
         }
 
         public IEnumerable<Tuple<IStyle, IVisualElement>> GetStyles()
@@ -33,19 +58,29 @@ namespace ViewCompiler
                 yield return style;
         }
 
+        private static Encoding GetEncoding(Byte[] bom)
+        {
+            if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76) return Encoding.UTF7;
+            if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf) return Encoding.UTF8;
+            if (bom[0] == 0xff && bom[1] == 0xfe) return Encoding.Unicode; //UTF-16LE
+            if (bom[0] == 0xfe && bom[1] == 0xff) return Encoding.BigEndianUnicode; //UTF-16BE
+            if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) return Encoding.UTF32;
+            return Encoding.ASCII;
+        }
+
 
         public void PostDeserialize()
         {
             PostDeserialize(RootNode);
         }
 
-        private void PostDeserialize(ITextNode node)
+        private static void PostDeserialize(ITextNode node)
         {
             switch (node.Value)
             {
                 case IVisualElement visualElement:
                     var current = node.Parent;
-                    if (current?.Value is IVisualContainer container)
+                    if (current != NullNode.Instance &&  current?.Value is IVisualContainer container)
                     {
                         if (container.Children.Contains(visualElement))
                             container.OnChildDeserialized(visualElement, node);

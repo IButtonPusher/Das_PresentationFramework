@@ -9,7 +9,7 @@ namespace Das.Views.Panels
     {
         IVisualElement Element { get; set; }
 
-        IViewModel DataContext { get; set; }
+        IViewModel? DataContext { get; set; }
 
         IStyleContext StyleContext { get; set; }
 

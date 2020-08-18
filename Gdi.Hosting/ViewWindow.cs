@@ -9,13 +9,12 @@ using Das.Views.Winforms;
 
 namespace Das.Gdi
 {
-    public partial class ViewWindow : ViewForm, IPositionOffseter, 
-        IViewHost<Bitmap>
+    public partial class ViewWindow : ViewForm, IViewHost<Bitmap>
     {
         public ViewWindow(GdiHostedElement element) : base(element)
         {
             _contents = element;
-            
+
             SetStyle(ControlStyles.UserPaint |
                      ControlStyles.AllPaintingInWmPaint |
                      ControlStyles.OptimizedDoubleBuffer |
@@ -23,18 +22,15 @@ namespace Das.Gdi
                 true);
         }
 
-        private readonly GdiHostedElement _contents;
-
-        
-
-
-        public IPoint GetOffset(IPoint input)
+        public override IPoint GetOffset(IPoint input)
         {
             var point = TypeConverter.GetPoint(input);
             point = PointToClient(point);
             return TypeConverter.GetPoint(point);
         }
-        
+
+        private readonly GdiHostedElement _contents;
+
         private bool _isChanged;
 
         public Bitmap BackingBitmap
@@ -48,12 +44,12 @@ namespace Das.Gdi
         }
 
         public override bool IsChanged => base.IsChanged || _isChanged;
-        
+
         public Bitmap Asset
         {
             get => BackingBitmap;
             set => BackingBitmap = value;
         }
-        
+
     }
 }

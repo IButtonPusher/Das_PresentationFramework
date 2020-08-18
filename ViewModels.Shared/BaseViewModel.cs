@@ -1,18 +1,15 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Das.Views;
 using Das.ViewsModels;
 
 namespace Das.ViewModels
 {
     public abstract class BaseViewModel : IViewModel
     {
-        protected readonly ISingleThreadedInvoker StaInvoker;
-
-        public BaseViewModel(ISingleThreadedInvoker invoker)
+        public BaseViewModel()
         {
-            StaInvoker = invoker;
+     
         }
 
         protected virtual Boolean SetValue<T>(ref T field, T value, 
@@ -44,7 +41,7 @@ namespace Das.ViewModels
 
         protected Boolean TryGetPropertyHandler(out PropertyChangedEventHandler handler)
         {
-            handler = PropertyChanged;
+            handler = PropertyChanged!;
             return handler != null;
         }
 

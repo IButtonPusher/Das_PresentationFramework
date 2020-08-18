@@ -16,8 +16,9 @@ namespace ViewCompiler
 
             var updater = new DesignViewUpdater(form, renderer, RenderKit.MeasureContext,
                 RenderKit.RenderContext);
-            var _ = new DevInputHandler(form, RenderKit.RenderContext, 
-                updater);
+            var devInputHandler = new DevInputHandler(RenderKit.RenderContext, updater);
+            var _ = new DevInputProvider(form, RenderKit.RenderContext, 
+                updater, devInputHandler);
 
             return form;
         }

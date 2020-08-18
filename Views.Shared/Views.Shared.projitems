@@ -6,9 +6,10 @@
     <SharedGUID>778a378f-7a09-4c1d-abd3-634f3d9cc8ab</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Views.Shared</Import_RootNamespace>
+    <Import_RootNamespace>Das.Views</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ButtonBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Image.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Label.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\BaseBinding.cs" />
@@ -18,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\InstanceBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\ObjectBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\PropertyBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\BaseInputHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Measuring\BaseMeasureContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BasePanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BaseSequentialPanel.cs" />

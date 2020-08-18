@@ -6,24 +6,31 @@
     <SharedGUID>6f514769-88cf-4d8a-8aa4-a015919df274</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Windows.Shared</Import_RootNamespace>
+    <Import_RootNamespace>Das.Views.Windows</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BitMapInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClassStyles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Delegates.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HwndWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\Win32InputContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IWindowsHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IWindowsViewHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Messages\MessageTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Messages\MSG.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MONITORINFOEX.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Native.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pinvoke\Native.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pinvoke\NativeInput.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pinvoke\NativeWindows.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pixelformatdescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)POINT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RECT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SetWindowPosFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SIZE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Messages\WindowsMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WindowStyles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WindowStylesEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WNDCLASSEX.cs" />
   </ItemGroup>
   <ItemGroup>

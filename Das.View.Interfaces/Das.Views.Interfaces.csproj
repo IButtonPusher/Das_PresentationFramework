@@ -9,6 +9,7 @@
   </PropertyGroup>
   <PropertyGroup>
    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+   <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
 </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath></OutputPath>
@@ -22,5 +23,9 @@
   <Import Project="..\Interfaces.Shared\Interfaces.Shared.projitems" Label="Shared" />
 
   <Import Project="..\..\NetFramework\CSharp8NetFramework\CSharp8NetFramework.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.4-alpha" />
+  </ItemGroup>
 
 </Project>

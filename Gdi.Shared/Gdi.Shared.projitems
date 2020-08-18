@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GdiMeasureContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GdiRenderContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GdiRenderKit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InputContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverter.cs" />
   </ItemGroup>
 </Project>

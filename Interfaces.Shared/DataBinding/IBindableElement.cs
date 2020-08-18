@@ -6,11 +6,11 @@ namespace Das.Views.DataBinding
 {
     public interface IBindableElement : IVisualElement, IDataContext, IBindingSetter
     {
-        IDataBinding Binding { get; set; }
+        IDataBinding? Binding { get; set; }
 
-        Object DataContext { get; set; }
+        Object? DataContext { get; set; }
 
-        Object GetBoundValue(Object dataContext);
+        Object? GetBoundValue(Object dataContext);
     }
 
     public interface IBindableElement<T> : IBindableElement
@@ -21,6 +21,6 @@ namespace Das.Views.DataBinding
 
         Task SetBoundValueAsync(T value);
 
-        new IDataBinding<T> Binding { get; set; }
+        new IDataBinding<T>? Binding { get; set; }
     }
 }

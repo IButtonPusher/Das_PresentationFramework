@@ -11,7 +11,7 @@ namespace Das.Views.Panels
 {
     public abstract class BasePanel<T> : BindableElement<T>, IVisualContainer
     {
-        protected BasePanel(IDataBinding<T> binding) : base(binding)
+        protected BasePanel(IDataBinding<T>? binding) : base(binding)
         {
             ElementsRendered = new Dictionary<VisualElement, Rectangle>();
             _children = new List<IVisualElement>();

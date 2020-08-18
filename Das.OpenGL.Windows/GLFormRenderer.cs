@@ -5,14 +5,15 @@ namespace Das.OpenGL.Windows
 {
     public class GLFormRenderer
     {
-        public GLFormRenderer(HostedControl control, GLWindowsContext context)
+        public GLFormRenderer(HostedControl control, 
+                              GLWindowsContext context)
         {
             _host = control;
             _context = context;
         }
 
         private readonly HostedControl _host;
-        private readonly GLWindowsContext _context;
+        private readonly IGLContext _context;
 
         public void Initialize()
         {

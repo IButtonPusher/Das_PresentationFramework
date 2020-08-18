@@ -14,7 +14,7 @@ namespace GdiTest
     {
         private readonly IFont _font;
         private readonly IPen _pen;
-        private readonly float[] _zoo1PieData;
+        private readonly Single[] _zoo1PieData;
         private const Double TwoPi = 2.0 * Math.PI;
 
         public TestOpenGLPanel(IView view, IStyleContext styleContext)
@@ -23,11 +23,11 @@ namespace GdiTest
             _font = new Font(18, "Segoe UI", FontStyle.Regular);
             _pen = new Pen(Color.Black, 2);
             var rng = new Random();
-            float[] z = {
-                (float)rng.NextDouble(),(float)rng.NextDouble(),
-                (float)rng.NextDouble(), (float)rng.NextDouble(),
-                (float)rng.NextDouble(),(float)rng.NextDouble(),
-                (float)rng.NextDouble(),(float)rng.NextDouble()};
+            Single[] z = {
+                (Single)rng.NextDouble(),(Single)rng.NextDouble(),
+                (Single)rng.NextDouble(), (Single)rng.NextDouble(),
+                (Single)rng.NextDouble(),(Single)rng.NextDouble(),
+                (Single)rng.NextDouble(),(Single)rng.NextDouble()};
             _zoo1PieData = z;
         }
 
@@ -41,7 +41,7 @@ namespace GdiTest
             PieChart1(200, 200, 200);
         }
 
-        private void PieChart1(int x, int y, int radius)
+        private void PieChart1(Int32 x, Int32 y, Int32 radius)
         {
             var pntCnt = _zoo1PieData.Length;
           
@@ -82,8 +82,8 @@ namespace GdiTest
         {
             var t = (TwoPi * j / 100.0) + Math.PI;
 
-            var xVert = (float)(x - Math.Sin(t) * radius);
-            var yVert = (float)(y + Math.Cos(t) * radius);
+            var xVert = (Single)(x - Math.Sin(t) * radius);
+            var yVert = (Single)(y + Math.Cos(t) * radius);
 
             GL.glVertex3f(xVert, yVert, 0);
         }

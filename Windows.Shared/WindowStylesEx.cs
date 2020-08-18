@@ -1,6 +1,7 @@
 ﻿using System;
+// ReSharper disable UnusedMember.Global
 
-namespace Das.OpenGL.Windows
+namespace Das.Views.Windows
 {
     [Flags]
     public enum WindowStylesEx : uint

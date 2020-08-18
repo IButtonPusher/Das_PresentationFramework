@@ -306,7 +306,7 @@ namespace MultiUiThreadedExample
 //        }
 
 
-        private void OnThreadMessage(ref MSG msg, ref Boolean handled)
+        private static void OnThreadMessage(ref MSG msg, ref Boolean handled)
         {
             //System.Diagnostics.Debug.WriteLine("no msg " + msg.message);
         }

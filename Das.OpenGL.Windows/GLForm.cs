@@ -1,5 +1,7 @@
-﻿using Das.Views.Winforms;
+﻿using System;
+using Das.Views.Winforms;
 using System.Windows.Forms;
+using Das.Views.Core.Geometry;
 
 namespace Das.OpenGL.Windows
 {
@@ -19,5 +21,10 @@ namespace Das.OpenGL.Windows
 
         public static implicit operator GLHostedElement(GLForm form)
             => form._element;
+
+        public override IPoint GetOffset(IPoint input)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

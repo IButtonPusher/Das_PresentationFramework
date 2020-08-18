@@ -12,7 +12,7 @@ namespace Das.Views
     /// Represents the system specific UI Element that is hosting a root level View.
     /// For example, a wpf Window, windows Form, a 'Control'
     /// </summary>
-    public interface IViewHost : IHost, IViewState, IChangeTracking
+    public interface IViewHost : IHost, IViewState, IChangeTracking, IPositionOffseter
     {
         IView View { get; }
 
@@ -20,7 +20,7 @@ namespace Das.Views
 
         new Double ZoomLevel { get; set; }
 
-        IViewModel DataContext { get; set; }
+        IViewModel? DataContext { get; set; }
 
         void Invalidate();
 

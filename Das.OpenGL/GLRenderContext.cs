@@ -8,8 +8,10 @@ namespace Das.OpenGL
 {
     public class GLRenderContext : BaseRenderContext
     {
-        public GLRenderContext(IMeasureContext measureContext, IViewPerspective perspective,
-            IGLContext openGlContext, IFontProvider fontProvider) 
+        public GLRenderContext(IMeasureContext measureContext,
+                               IViewPerspective perspective,
+                               IGLContext openGlContext,
+                               IFontProvider fontProvider)
             : base(measureContext, perspective)
         {
             _openGlContext = openGlContext;
@@ -20,7 +22,7 @@ namespace Das.OpenGL
         private readonly IFontProvider _fontProvider;
         private const Double TwoPi = 2.0 * Math.PI;
 
-        public override void DrawString(string s, IFont font, IBrush brush, IPoint point)
+        public override void DrawString(String s, IFont font, IBrush brush, IPoint point)
         {
             var to = GetAbsolutePoint(point);
             var renderer = _fontProvider.GetRenderer(font);
@@ -43,14 +45,14 @@ namespace Das.OpenGL
 
         private static void SetColor(IColor color)
         {
-            var r = (float)color.R / 255;
-            var g = (float)color.G / 255;
-            var b = (float)color.B / 255;
+            var r = (Single)color.R / 255;
+            var g = (Single)color.G / 255;
+            var b = (Single)color.B / 255;
 
             GL.glColor3f(r, g, b);
         }
 
-        public override void DrawString(string s, IFont font, IBrush brush, IRectangle location)
+        public override void DrawString(String s, IFont font, IBrush brush, IRectangle location)
         {
             throw new NotImplementedException();
         }
@@ -114,8 +116,8 @@ namespace Das.OpenGL
             GL.glOrtho(left, right, bottom, top, -1, 1);
         }
 
-        public override void FillPie(IPoint center, double radius, double startAngle, 
-            double endAngle, IBrush brush)
+        public override void FillPie(IPoint center, Double radius, Double startAngle, 
+            Double endAngle, IBrush brush)
         {
             startAngle += 90;
             endAngle += 90;
@@ -136,8 +138,8 @@ namespace Das.OpenGL
             GL.glBegin(GL.TRIANGLE_FAN);
             SetColor(brush.Color);
 
-            var fx = (float)center.X;
-            var fy = (float)center.Y;
+            var fx = (Single)center.X;
+            var fy = (Single)center.Y;
 
             GL.glVertex3f(fx, fy, 0);
 
@@ -148,9 +150,9 @@ namespace Das.OpenGL
             GL.glEnd();
         }
 
-        public override void DrawEllipse(IPoint center, double radius, IPen pen)
+        public override void DrawEllipse(IPoint center, Double radius, IPen pen)
         {
-            const float halfPie = (float)(Math.PI / 180f);
+            const Single halfPie = (Single)(Math.PI / 180f);
 
             SetOrtho();
 
@@ -165,8 +167,8 @@ namespace Das.OpenGL
             
             for (var i = 0f; i < 360f; i++)
             {
-                var x = (float)((Math.Cos(i * halfPie) * radius) + center.X);
-                var y = (float)((Math.Sin(i * halfPie) * radius) + center.Y);
+                var x = (Single)((Math.Cos(i * halfPie) * radius) + center.X);
+                var y = (Single)((Math.Sin(i * halfPie) * radius) + center.Y);
                 GL.glVertex2f(x, y);
             }
 
@@ -178,8 +180,8 @@ namespace Das.OpenGL
         {
             var t = (TwoPi * j / 100.0) + Math.PI;
 
-            var xVert = (float)(x - Math.Sin(t) * radius);
-            var yVert = (float)(y + Math.Cos(t) * radius);
+            var xVert = (Single)(x - Math.Sin(t) * radius);
+            var yVert = (Single)(y + Math.Cos(t) * radius);
 
             GL.glVertex3f(xVert, yVert, 0);
         }

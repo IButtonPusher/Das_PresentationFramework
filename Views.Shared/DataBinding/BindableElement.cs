@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Das.Views.Rendering;
+#pragma warning disable 8618
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
 #endif
@@ -10,7 +11,7 @@ namespace Das.Views.DataBinding
 {
     public abstract class BindableElement<T> : VisualElement, IBindableElement<T>
     {
-        protected BindableElement(IDataBinding<T> binding)
+        protected BindableElement(IDataBinding<T>? binding)
         {
             _binding = binding;
         }
@@ -37,12 +38,13 @@ namespace Das.Views.DataBinding
                 case T set:
                     return set;
                 default:
-                    BoundValue = _binding.GetValue(dataContext);
+                    if (_binding != null)
+                        BoundValue = _binding.GetValue(dataContext);
                     return BoundValue;
             }
         }
 
-        private void SetBinding(IDataBinding<T> value)
+        private void SetBinding(IDataBinding<T>? value)
         {
             _binding = value;
         }
@@ -53,19 +55,19 @@ namespace Das.Views.DataBinding
             return TaskEx.CompletedTask;
         }
 
-        public IDataBinding<T> Binding
+        public IDataBinding<T>? Binding
         {
             get => _binding;
             set => SetBinding(value);
         }
 
-        IDataBinding IBindableElement.Binding
+        IDataBinding? IBindableElement.Binding
         {
             get => Binding;
             set => Binding = value as IDataBinding<T> ?? Binding;
         }
 
-        public Object DataContext { get; set; }
+        public Object? DataContext { get; set; }
 
         T IBindableElement<T>.GetBoundValue(Object dataContext)
         {
@@ -80,7 +82,7 @@ namespace Das.Views.DataBinding
             BoundValue = value;
         }
 
-        public virtual void SetBoundValue(Object value)
+        public virtual void SetBoundValue(Object? value)
         {
             if (value is T works)
                 SetBoundValue(works);
@@ -88,7 +90,7 @@ namespace Das.Views.DataBinding
                 throw new NotSupportedException();
         }
 
-        public virtual async Task SetBoundValueAsync(Object value)
+        public virtual async Task SetBoundValueAsync(Object? value)
         {
             if (value is T works)
                 await SetBoundValueAsync(works);
@@ -96,14 +98,17 @@ namespace Das.Views.DataBinding
                 throw new NotSupportedException();
         }
 
-        public virtual void SetDataContext(Object dataContext)
+        public virtual void SetDataContext(Object? dataContext)
         {
             var binding = _binding;
             if (binding == null)
                 return;
 
             DataContext = dataContext;
-            var val = _binding.GetValue(dataContext);
+            if (dataContext == null)
+                return;
+
+            var val = binding.GetValue(dataContext);
             SetBoundValue(val);
         }
 
@@ -114,7 +119,7 @@ namespace Das.Views.DataBinding
                 return;
 
             DataContext = dataContext;
-            var val = await _binding.GetValueAsync(dataContext);
+            var val = await binding.GetValueAsync(dataContext);
             await SetBoundValueAsync(val);
         }
 
@@ -131,15 +136,18 @@ namespace Das.Views.DataBinding
             return newObject;
         }
 
-        Object IBindableElement.GetBoundValue(Object dataContext)
+        Object? IBindableElement.GetBoundValue(Object dataContext)
         {
-            return _binding.GetValue(dataContext);
+            if (_binding is {} b)
+                return b.GetValue(dataContext);
+
+            return null;
         }
 
-        public Object Value => DataContext;
+        public Object? Value => DataContext;
 
 
-        private IDataBinding<T> _binding;
+        private IDataBinding<T>? _binding;
         protected T BoundValue;
     }
 }

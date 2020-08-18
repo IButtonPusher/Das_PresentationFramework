@@ -54,15 +54,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IDataBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IDataContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IValueConverter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ExtensionMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hosting\IHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hosting\IViewHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IBootStrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDeepCopyable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IInteractiveView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IElementLocator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IInputContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IInputHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IInputProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\InputAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\MousePointers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Invocations\ExclusiveSynchronizationContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Invocations\InvocationBase.cs" />

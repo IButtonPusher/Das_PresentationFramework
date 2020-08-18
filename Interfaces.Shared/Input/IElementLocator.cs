@@ -7,5 +7,7 @@ namespace Das.Views.Input
     public interface IElementLocator
     {
         IEnumerable<IRenderedVisual> GetElementsAt(IPoint point);
+
+        IRenderedVisual? GetVisualForInput(IPoint point, InputAction inputAction);
     }
 }

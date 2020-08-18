@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Das.Gdi.Controls;
 using Das.Gdi.Kits;
@@ -18,14 +19,15 @@ namespace Das.Gdi
             RenderKit = renderKit;
         }
 
-        public GdiProvider() : this(GetKit())
+        public GdiProvider()
         {
+            RenderKit = GetKit(this);
         }
 
-        private static GdiRenderKit GetKit()
+        private static GdiRenderKit GetKit(IWindowProvider<ViewWindow> windowProvider)
         {
             var perspective = new BasePerspective();
-            var kit = new GdiRenderKit(perspective);
+            var kit = new GdiRenderKit(perspective, windowProvider);
             return kit;
         }
 
@@ -43,10 +45,13 @@ namespace Das.Gdi
             return form;
         }
 
+        public event Action<ViewWindow>? WindowShown;
+
         public void Run<TViewModel>(TViewModel viewModel, IView view) 
             where TViewModel : IViewModel
         {
             var window = Show(viewModel, view);
+            WindowShown?.Invoke(window);
             Application.Run(window);
         }
 

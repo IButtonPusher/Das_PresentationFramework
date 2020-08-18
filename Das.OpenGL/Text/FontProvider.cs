@@ -18,7 +18,7 @@ namespace Das.OpenGL.Text
         private readonly List<FontBitmapEntry> _fontBitmapEntries;
         public IFontRenderer GetRenderer(IFont font)
         {
-            var fontHeight = (int)(font.Size * (16.0f / 12.0f));
+            var fontHeight = (Int32)(font.Size * (16.0f / 12.0f));
 
             var result = (from fbe in _fontBitmapEntries
                 where fbe.HDC == _context.DeviceContextHandle

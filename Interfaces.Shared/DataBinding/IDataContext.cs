@@ -9,6 +9,6 @@ namespace Das.Views.DataBinding
 
     public interface IDataContext
     {
-        Object Value { get; }
+        Object? Value { get; }
     }
 }

@@ -34,7 +34,7 @@ namespace Das.Views.Core.Drawing
 
         public override String ToString() => "Brush: " + Color;
 
-        public Boolean Equals(Brush other)
+        public Boolean Equals(Brush? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;

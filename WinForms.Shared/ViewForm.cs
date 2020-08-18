@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Views.Core.Geometry;
 using Das.Views.Panels;
@@ -43,7 +44,14 @@ namespace Das.Views.Winforms
             _availableSize.Width = _contents.Width;
             _availableSize.Height = _contents.Height;
             _isChanged = true;
-            AvailableSizeChanged?.Invoke(this, e);
+            AvailableSizeChanged?.Invoke(_availableSize);
+        }
+
+        protected override async void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+
+            await HostCreated.InvokeAsyncEvent(true);
         }
 
         protected override void OnResizeEnd(EventArgs e)
@@ -64,14 +72,21 @@ namespace Das.Views.Winforms
 
         public Boolean IsLoaded => _contents.IsLoaded;
 
-        public event EventHandler HostCreated
-        {
-            add => HandleCreated += value;
-            remove => HandleCreated -= value;
-        }
+        public event Func<Task>? HostCreated;
 
-        public event EventHandler AvailableSizeChanged;
+        //public event EventHandler HostCreated
+        //{
+        //    add => HandleCreated += value;
+        //    remove => HandleCreated -= value;
+        //}
+
+        public event Action<ISize>? AvailableSizeChanged;
         public void Invoke(Action action) => base.Invoke(action);
+
+        public Task InvokeAsync(Action action)
+        {
+            return this.RunInvokeAsync(action);
+        }
 
         private Boolean _isChanged;
 
@@ -106,5 +121,7 @@ namespace Das.Views.Winforms
             set => _contents.ZoomLevel = value;
         }
 
+
+        public abstract IPoint GetOffset(IPoint input);
     }
 }

@@ -11,7 +11,7 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-	 <LangVersion>8.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -22,9 +22,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-	 <LangVersion>8.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
-    <CodeAnalysisRuleSet>Das.GdiRenderKit.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\Das.Presentation.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,11 +32,11 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-	 <LangVersion>8.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>Das.GdiRenderKit.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>  
+    <CodeAnalysisRuleSet>..\Das.Presentation.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InputContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
@@ -65,7 +64,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Das.GdiRenderKit.ruleset" />
     <None Include="GdiArmstrong.snk" />
   </ItemGroup>
   <ItemGroup>
@@ -75,7 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Das.Serializer.Split">
-      <Version>0.0.1-alpha</Version>
+      <Version>0.0.4-alpha</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="..\WinForms.Shared\WinForms.Shared.projitems" Label="Shared" />

@@ -49,7 +49,7 @@ namespace WpfTest
         
         
 
-        public delegate IntPtr WndProc(IntPtr hWnd, Int32 msg, IntPtr wParam, IntPtr lParam);
+        
         
 
         protected override void DestroyWindowCore(HandleRef hwnd)

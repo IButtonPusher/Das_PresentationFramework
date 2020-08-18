@@ -47,7 +47,10 @@ namespace Das.Views.Controls
         {
             var zoom = measureContext.ViewState.ZoomLevel;
 
-            _currentImage = GetBoundValue(DataContext);
+            if (!(DataContext is {} dc))
+                return Size.Empty;
+
+            _currentImage = GetBoundValue(dc);
             var size = measureContext.MeasureImage(_currentImage);
             var forced = measureContext.GetStyleSetter<Size>(StyleSetters.Size, this)
                          * zoom;

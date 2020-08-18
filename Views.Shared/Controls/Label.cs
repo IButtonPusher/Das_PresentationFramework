@@ -63,7 +63,7 @@ namespace Das.Views.Controls
             return size;
         }
 
-        public override void SetBoundValue(Object value)
+        public override void SetBoundValue(Object? value)
         {
             DataContext = value;
             if (Binding == null && value is T val)

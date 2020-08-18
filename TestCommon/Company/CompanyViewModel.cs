@@ -11,8 +11,7 @@ namespace TestCommon.Company
 {
     public class CompanyViewModel : BaseViewModel, ICompanyViewModel
     {
-        public CompanyViewModel(IScene scene, ISingleThreadedInvoker staInvoker) 
-            : base(staInvoker)
+        public CompanyViewModel(IScene scene, ISingleThreadedInvoker staInvoker)
         {
             Employees  = new List<EmployeeViewModel>();
             _scene = scene;

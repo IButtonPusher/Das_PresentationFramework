@@ -1,5 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Rules for WpfTest" Description="Code analysis rules for WpfTest.csproj." ToolsVersion="16.0">
+<RuleSet Name="Rules for Das.GdiRenderKit" Description="Code analysis rules for Das.GdiRenderKit.csproj." ToolsVersion="16.0">
+  <Rules AnalyzerId="ClrHeapAllocationAnalyzer" RuleNamespace="ClrHeapAllocationAnalyzer">
+    <Rule Id="HAA0101" Action="None" />
+    <Rule Id="HAA0102" Action="None" />
+    <Rule Id="HAA0201" Action="None" />
+    <Rule Id="HAA0202" Action="None" />
+    <Rule Id="HAA0301" Action="None" />
+    <Rule Id="HAA0302" Action="None" />
+    <Rule Id="HAA0303" Action="None" />
+    <Rule Id="HAA0401" Action="None" />
+    <Rule Id="HAA0501" Action="None" />
+    <Rule Id="HAA0502" Action="None" />
+    <Rule Id="HAA0503" Action="None" />
+    <Rule Id="HAA0504" Action="None" />
+    <Rule Id="HAA0505" Action="None" />
+    <Rule Id="HAA0506" Action="None" />
+    <Rule Id="HAA0601" Action="None" />
+    <Rule Id="HAA0602" Action="None" />
+    <Rule Id="HAA0603" Action="None" />
+    <Rule Id="HAA0604" Action="None" />
+  </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
     <Rule Id="AD0001" Action="None" />
     <Rule Id="CS0078" Action="None" />
@@ -171,6 +191,7 @@
     <Rule Id="CS8371" Action="None" />
     <Rule Id="CS8383" Action="None" />
     <Rule Id="CS8387" Action="None" />
+    <Rule Id="CS8402" Action="None" />
     <Rule Id="CS8424" Action="None" />
     <Rule Id="CS8425" Action="None" />
     <Rule Id="CS8509" Action="None" />
@@ -179,6 +200,7 @@
     <Rule Id="CS8519" Action="None" />
     <Rule Id="CS8520" Action="None" />
     <Rule Id="CS8597" Action="None" />
+    <Rule Id="CS8599" Action="None" />
     <Rule Id="CS8600" Action="None" />
     <Rule Id="CS8601" Action="None" />
     <Rule Id="CS8602" Action="None" />
@@ -219,7 +241,14 @@
     <Rule Id="CS8655" Action="None" />
     <Rule Id="CS8656" Action="None" />
     <Rule Id="CS8667" Action="None" />
+    <Rule Id="CS8669" Action="None" />
+    <Rule Id="CS8670" Action="None" />
     <Rule Id="CS8714" Action="None" />
+    <Rule Id="CS8762" Action="None" />
+    <Rule Id="CS8763" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.EditorFeatures" RuleNamespace="Microsoft.CodeAnalysis.CSharp.EditorFeatures">
+    <Rule Id="IDE0065" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
     <Rule Id="IDE0001" Action="None" />
@@ -235,6 +264,8 @@
     <Rule Id="IDE0008WithoutSuggestion" Action="None" />
     <Rule Id="IDE0009" Action="None" />
     <Rule Id="IDE0009WithoutSuggestion" Action="None" />
+    <Rule Id="IDE0010" Action="None" />
+    <Rule Id="IDE0010WithoutSuggestion" Action="None" />
     <Rule Id="IDE0011" Action="None" />
     <Rule Id="IDE0011WithoutSuggestion" Action="None" />
     <Rule Id="IDE0016" Action="None" />
@@ -314,6 +345,10 @@
     <Rule Id="IDE0065" Action="None" />
     <Rule Id="IDE0066" Action="None" />
     <Rule Id="IDE0066WithoutSuggestion" Action="None" />
+    <Rule Id="IDE0071" Action="None" />
+    <Rule Id="IDE0071WithoutSuggestion" Action="None" />
+    <Rule Id="IDE0072" Action="None" />
+    <Rule Id="IDE0072WithoutSuggestion" Action="None" />
     <Rule Id="IDE1005" Action="None" />
     <Rule Id="IDE1005WithoutSuggestion" Action="None" />
     <Rule Id="IDE1006" Action="None" />
@@ -330,8 +365,13 @@
     <Rule Id="IDE0044WithoutSuggestion" Action="None" />
     <Rule Id="IDE0055" Action="None" />
     <Rule Id="IDE0055WithoutSuggestion" Action="None" />
-    <Rule Id="IDE0067" Action="None" />
-    <Rule Id="IDE0068" Action="None" />
-    <Rule Id="IDE0069" Action="None" />
+    <Rule Id="IDE0070" Action="None" />
+    <Rule Id="IDE0070WithoutSuggestion" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.VisualBasic.Features" RuleNamespace="Microsoft.CodeAnalysis.VisualBasic.Features">
+    <Rule Id="IDE0010" Action="None" />
+    <Rule Id="IDE0010WithoutSuggestion" Action="None" />
+    <Rule Id="IDE0071" Action="None" />
+    <Rule Id="IDE0071WithoutSuggestion" Action="None" />
   </Rules>
 </RuleSet>

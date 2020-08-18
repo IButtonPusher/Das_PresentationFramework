@@ -13,8 +13,9 @@ namespace TestCommon
         private readonly IViewProvider _viewProvider;
         private readonly ISingleThreadedInvoker _staInvoker;
 
-        public TestLauncher(IBootStrapper windowProvider, 
-            IViewProvider viewProvider, ISingleThreadedInvoker staInvoker)
+        public TestLauncher(IBootStrapper windowProvider,
+                            IViewProvider viewProvider,
+                            ISingleThreadedInvoker staInvoker)
         {
             _windowProvider = windowProvider;
             _viewProvider = viewProvider;

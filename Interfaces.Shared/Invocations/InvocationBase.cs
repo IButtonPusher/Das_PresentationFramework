@@ -55,7 +55,7 @@ namespace Das.Views.Invocations
                 {
                     synch.EndMessageLoop();
                 }
-            }, null);
+            }, null!);
             synch.BeginMessageLoop();
             SynchronizationContext.SetSynchronizationContext(oldContext);
             return ret;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -40,16 +41,17 @@ namespace Das.Views.DevKit
 
         public IStyleContext StyleContext { get; set; }
 
-        public void SetBoundValue(Object value)
+        public void SetBoundValue(Object? value)
         {
             var viewBindingType = Serializer.TypeInferrer.GetTypeFromClearName(Binding);
 
-            _viewModel = value as IMutableVm;
+            _viewModel = value;// as IMutableVm;
 
             if (!(Content is IBindableElement setter))
                 return;
 
-            SetDataContext(setter, viewBindingType);
+            if (viewBindingType != null)
+                SetDataContext(setter, viewBindingType);
 
             setter.SetDataContext(value);
 
@@ -62,7 +64,7 @@ namespace Das.Views.DevKit
             return Task.CompletedTask;
         }
 
-        public void SetDataContext(Object dataContext) => SetBoundValue(dataContext);
+        public void SetDataContext(Object? dataContext) => SetBoundValue(dataContext);
 
         public Task SetDataContextAsync(Object dataContext)
         {
@@ -163,13 +165,19 @@ namespace Das.Views.DevKit
         }
 
         private Boolean _isChanged;
-        public Boolean IsChanged => _isChanged || _viewModel?.IsChanged == true;
 
-        private IMutableVm? _viewModel;
+        public Boolean IsChanged =>
+            _isChanged || (_viewModel is IChangeTracking changeTracking &&
+                           changeTracking.IsChanged);// _viewModel?.IsChanged == true;
+
+        //private IMutableVm? _viewModel;
+        private Object? _viewModel;
 
         public void Dispose()
         {
-            _viewModel?.Dispose();
+            if (_viewModel is IDisposable disposable)
+                disposable.Dispose();
+            // _viewModel?.Dispose();
             Content?.Dispose();
         }
     }

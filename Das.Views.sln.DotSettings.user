@@ -13,4 +13,7 @@
   &lt;Assembly Path="E:\src\Das\PresentationFramework\temp_lib\Serializer.Core.dll" /&gt;&#xD;
   &lt;Assembly Path="E:\src\Das\PresentationFramework\temp_lib\Das.Serializer.Split.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\Chan\.nuget\packages\das.serializer.split\0.0.1-alpha\lib\net472\Serializer.Interfaces.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Windows\Microsoft.NET\assembly\GAC_64\PresentationCore\v4.0_4.0.0.0__31bf3856ad364e35\PresentationCore.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Windows\Microsoft.NET\assembly\GAC_MSIL\WindowsBase\v4.0_4.0.0.0__31bf3856ad364e35\WindowsBase.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Windows\Microsoft.NET\assembly\GAC_MSIL\PresentationFramework\v4.0_4.0.0.0__31bf3856ad364e35\PresentationFramework.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String></wpf:ResourceDictionary>

@@ -6,7 +6,7 @@
     <SharedGUID>15783956-b706-41d5-982b-1bcf698ca5b1</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>WinForms.Shared</Import_RootNamespace>
+    <Import_RootNamespace>Das.Views.Winforms</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)FontWeights.cs" />
@@ -16,8 +16,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)HostedViewControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)InvokeCompletionSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)WinformExtensions.cs" />
   </ItemGroup>
 </Project>

@@ -13,15 +13,13 @@ namespace Das.ViewsModels
     {
         T this[Int32 index] { get; }
 
-        Task AddItemsAsync(IEnumerable<T> items);
+        Task AddRangeAsync(IEnumerable<T> items);
 
-        Task<Boolean> AddOrUpdate(T item);
-
-        void AddRange(IEnumerable<T> items);
+        Task<Boolean> AddOrUpdateAsync(T item);
 
         Task<Boolean> AllAsync(Func<T, Boolean> predicate);
 
-        Task<Boolean> Any(Func<T, Boolean> predicate);
+        Task<Boolean> AnyAsync(Func<T, Boolean> predicate);
 
         Task ClearAsync();
 
@@ -36,7 +34,8 @@ namespace Das.ViewsModels
 
         Task DoTransaction(Action<IAsyncObservableCollection<T>> action);
 
-        Task DoTransaction<TInput>(IEnumerable<TInput> datas, Action<IAsyncObservableCollection<T>, TInput> action);
+        Task DoTransaction<TInput>(IEnumerable<TInput> datas, 
+                                   Action<IAsyncObservableCollection<T>, TInput> action);
 
         Task<T> FirstOrDefaultAsync(Func<T, Boolean> predicate);
 

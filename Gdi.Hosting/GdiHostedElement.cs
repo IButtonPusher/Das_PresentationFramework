@@ -8,23 +8,27 @@ using WinForms.Shared;
 
 namespace Das.Gdi.Controls
 {
-    // ReSharper disable once UnusedMember.Global
+    /// <summary>
+    /// Control to show an IView in windows forms using GDI rendering
+    /// </summary>
     public class GdiHostedElement : HostedViewControl, 
         IViewHost<Bitmap>
     {
-        public GdiHostedElement(IView view, IStyleContext styleContext)
+        public GdiHostedElement(IView view, 
+                                IStyleContext styleContext)
             : base(view, styleContext)
         {
             View = view;
-            _lockBmp = new object();
+            _lockBmp = new Object();
         }
 
-        public GdiHostedElement(IStyleContext styleContext) : base(styleContext)
+        public GdiHostedElement(IStyleContext styleContext) : 
+            base(styleContext)
         {
-            _lockBmp = new object();
+            _lockBmp = new Object();
         }
         
-        public override bool IsLoaded => true;
+        public override Boolean IsLoaded => true;
         
         private readonly Object _lockBmp;
 
@@ -47,9 +51,9 @@ namespace Das.Gdi.Controls
         }
        
         private Bitmap? _backingBitmap;
-        private bool _isChanged;
+        private Boolean _isChanged;
 
-        public Bitmap BackingBitmap
+        public Bitmap? BackingBitmap
         {
             get => _backingBitmap;
             set
@@ -66,12 +70,13 @@ namespace Das.Gdi.Controls
 
         public Bitmap Asset
         {
-            get => BackingBitmap;
+            get => BackingBitmap!;
             set => BackingBitmap = value;
         }
 
         //todo: base on IView after changing element to IView type _
-        public override bool IsChanged => View != null && (_isChanged || View.IsChanged 
-            || base.IsChanged);
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        public override Boolean IsChanged => View != null && (_isChanged || View.IsChanged 
+                                                                         || base.IsChanged);
     }
 }

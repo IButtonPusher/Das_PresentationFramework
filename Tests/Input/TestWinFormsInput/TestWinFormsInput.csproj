@@ -12,7 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-	 <LangVersion>8.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -24,8 +24,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-	 <LangVersion>8.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
+    <CodeAnalysisRuleSet>..\..\..\Das.Presentation.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -35,18 +36,19 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-	 <LangVersion>8.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
+    <CodeAnalysisRuleSet>..\..\..\Das.Presentation.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Das.Serializer, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Das.Serializer.Split.0.0.1-alpha\lib\net472\Das.Serializer.dll</HintPath>
+    <Reference Include="Das.Serializer, Version=0.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Das.Serializer.Split.0.0.4-alpha\lib\net472\Das.Serializer.dll</HintPath>
     </Reference>
-    <Reference Include="Serializer.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=15561faeaf074445, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Das.Serializer.Split.0.0.1-alpha\lib\net472\Serializer.Core.dll</HintPath>
+    <Reference Include="Serializer.Core, Version=0.0.4.0, Culture=neutral, PublicKeyToken=15561faeaf074445, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Das.Serializer.Core.0.0.4-alpha\lib\netstandard2.0\Serializer.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Serializer.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=55ec9f54a6117381, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Das.Serializer.Split.0.0.1-alpha\lib\net472\Serializer.Interfaces.dll</HintPath>
+    <Reference Include="Serializer.Interfaces, Version=0.0.4.0, Culture=neutral, PublicKeyToken=55ec9f54a6117381, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Das.Serializer.Interfaces.0.0.4-alpha\lib\netstandard2.0\Serializer.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

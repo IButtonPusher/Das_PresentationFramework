@@ -24,11 +24,14 @@ namespace Das.Views.Panels.Grid
         private readonly Dictionary<Int32, List<ISize>> _sizes;
         private readonly Dictionary<Int32, Double> _columnWidths;
 
-        public override void SetDataContext(Object dataContext)
+        public override void SetDataContext(Object? dataContext)
         {
             DataContext = dataContext;
 
-            var val = Binding.GetValue(dataContext);
+            var val = dataContext != null
+                ? Binding.GetValue(dataContext)
+                : Enumerable.Empty<T>();
+
             SetBoundValue(val);
         }
 

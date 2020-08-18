@@ -9,7 +9,7 @@ namespace Das.Views.Windows
     {
         public UInt32 cbSize;
         public ClassStyles style;
-        [MarshalAs(UnmanagedType.FunctionPtr)] public WndProc lpfnWndProc;
+        [MarshalAs(UnmanagedType.FunctionPtr)] public UWndProc lpfnWndProc;
         public Int32 cbClsExtra;
         public Int32 cbWndExtra;
         public IntPtr hInstance;
@@ -26,5 +26,5 @@ namespace Das.Views.Windows
         }
     }
 
-    public delegate IntPtr WndProc(IntPtr hWnd, UInt32 msg, IntPtr wParam, IntPtr lParam);
+    
 }

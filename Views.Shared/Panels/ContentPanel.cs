@@ -134,7 +134,7 @@ namespace Das.Views.Panels
                 await almost.SetDataContextAsync(value);
         }
 
-        public override void SetDataContext(Object dataContext)
+        public override void SetDataContext(Object? dataContext)
         {
             IsChanged = true;
             DataContext = dataContext;

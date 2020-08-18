@@ -12,5 +12,7 @@ namespace TestCommon
     {
         String FirstName { get; }
         String LastName { get; }
+
+
     }
 }

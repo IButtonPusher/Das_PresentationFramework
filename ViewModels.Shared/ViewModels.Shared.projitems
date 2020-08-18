@@ -10,5 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BaseViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InvokableViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SelectableCollection{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SelectableEnumCollection{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Selectable{T}.cs" />
   </ItemGroup>
 </Project>

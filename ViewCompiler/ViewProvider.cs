@@ -34,6 +34,7 @@ namespace ViewCompiler
                 "TestCommon"
             };
             settings.NotFoundBehavior = TypeNotFound.NullValue;
+            settings.PropertySearchDepth = TextPropertySearchDepths.AsTypeInNamespacesAndSystem;
             var serializer = new ViewDeserializer(settings);
             return serializer;
         }

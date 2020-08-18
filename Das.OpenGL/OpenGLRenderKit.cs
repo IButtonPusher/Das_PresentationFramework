@@ -1,5 +1,6 @@
 ﻿using Das.Views;
 using Das.Views.Core.Writing;
+using Das.Views.Input;
 using Das.Views.Rendering;
 
 namespace Das.OpenGL
@@ -15,6 +16,8 @@ namespace Das.OpenGL
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;
         IRenderContext IRenderKit.RenderContext => RenderContext;
+
+        public IInputContext InputContext { get; } = null;
 
         public GLMeasureContext MeasureContext { get; }
 

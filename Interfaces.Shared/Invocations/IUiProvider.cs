@@ -17,7 +17,9 @@ namespace Das.Views
 
         Task NotifyErrorAsync(String message);
 
-        void HandleError(String wasDoing, Exception ex);
+        //void HandleError(String wasDoing, Exception ex);
+
+        Task HandleErrorAsync(String wasDoing, Exception ex);
 
         IObservableCommand GetCommand(Action action);
 
@@ -25,9 +27,9 @@ namespace Das.Views
 
         IObservableCommand GetCommand(Func<Task> action, String description);
 
-        IObservableCommand GetCommand(Action<Object> action);
+        //IObservableCommand GetCommand(Action<Object> action);
 
-        IObservableCommand GetCommand(Func<Object, Task> action);
+        //IObservableCommand GetCommand(Func<Object, Task> action);
 
         IObservableCommand<T> GetCommand<T>(Func<T, Task> action);
 

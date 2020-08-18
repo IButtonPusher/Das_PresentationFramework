@@ -27,7 +27,7 @@
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CodeAnalysisRuleSet>Das.OpenGL.Windows.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\Das.Presentation.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,7 +38,7 @@
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>Das.OpenGL.Windows.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\Das.Presentation.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -88,13 +88,10 @@
     </Compile>
     <Compile Include="VersionAttribute.cs" />
     <Compile Include="WindowsFontProvider.cs" />
-    <Compile Include="WindowStyles.cs" />
-    <Compile Include="WindowStylesEx.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Das.OpenGL.Windows.ruleset" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -117,7 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Das.Serializer.Split">
-      <Version>0.0.1-alpha</Version>
+      <Version>0.0.4-alpha</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="..\Windows.Shared\Windows.Shared.projitems" Label="Shared" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 
 namespace Das.Views
@@ -12,14 +13,18 @@ namespace Das.Views
 
         Size AvailableSize { get; }
 
-        event EventHandler HostCreated;
+        event Func<Task>? HostCreated;
 
-        event EventHandler AvailableSizeChanged;
+        event Action<ISize>? AvailableSizeChanged;
 
         /// <summary>
         /// Runs the action on the host's UI thread while blocking the caller
         /// </summary>
-        /// <param name="action"></param>
         void Invoke(Action action);
+
+        /// <summary>
+        /// Asynchronously runs the action on the host's UI thread
+        /// </summary>
+        Task InvokeAsync(Action action);
     }
 }

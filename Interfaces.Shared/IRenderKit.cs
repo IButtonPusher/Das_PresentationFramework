@@ -1,4 +1,5 @@
-﻿using Das.Views.Rendering;
+﻿using Das.Views.Input;
+using Das.Views.Rendering;
 
 namespace Das.Views
 {
@@ -7,5 +8,7 @@ namespace Das.Views
         IMeasureContext MeasureContext { get; }
 
         IRenderContext RenderContext { get; }
+
+        //IInputContext InputContext { get; }
     }
 }

@@ -4,10 +4,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Shared;
 using Windows.Shared.Messages;
+// ReSharper disable UnusedMember.Global
 
 namespace Das.Views.Windows
 {
-    public static class Native
+    public static partial class Native
     {
         [DllImport(Gdi32)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -68,16 +69,11 @@ namespace Das.Views.Windows
             [In] [MarshalAs(UnmanagedType.LPStruct)]
             Pixelformatdescriptor ppfd);
 
-        [DllImport(User32, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern Boolean SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter,
-            Int32 X, Int32 Y, Int32 cx, Int32 cy, SetWindowPosFlags uFlags);
+        
 
         #region Window Handling
 
-        [DllImport(User32, SetLastError = true, EntryPoint = "DestroyWindow",
-            CallingConvention = CallingConvention.StdCall)]
-        internal static extern Int32 DestroyWindow(IntPtr handle);
+       
 
         #endregion
 
@@ -86,8 +82,15 @@ namespace Das.Views.Windows
         internal static extern Int32 GetMessage([In] [Out] ref MSG msg, IntPtr hWnd,
             Int32 uMsgFilterMin, Int32 uMsgFilterMax);
 
+        [DllImport(Native.User32, SetLastError = true)]
+        public static extern IntPtr DefWindowProc(IntPtr hWnd, UInt32 uMsg, IntPtr wParam, IntPtr lParam);
+
+       
+
         public const String Gdi32 = "gdi32.dll";
         public const String User32 = "user32.dll";
+
+        public const String Core = "coredll.dll";
 
         public const UInt32 SRCCOPY = 0x00CC0020;
 
@@ -351,9 +354,9 @@ namespace Das.Views.Windows
 
 
         public delegate Int32 WNDPROC(IntPtr hWnd,
-            UInt32 uMessage,
-            IntPtr wParam,
-            IntPtr lParam);
+                                      UInt32 uMessage,
+                                      IntPtr wParam,
+                                      IntPtr lParam);
 
         #endregion
     }

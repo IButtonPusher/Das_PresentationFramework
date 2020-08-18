@@ -6,6 +6,7 @@ using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
+using Das.Views.Input;
 using Das.Views.Styles;
 
 namespace Das.Views.Rendering
@@ -36,8 +37,6 @@ namespace Das.Views.Rendering
         {
             return new Rectangle(relativeRect.TopLeft + CurrentLocation, relativeRect.Size);
         }
-
-        //protected abstract void OnFillRect(IRectangle rect, IBrush brush);
 
         protected void OnDrawBorder(IRectangle rect, IShape2d thickness, IBrush brush)
         {
@@ -74,9 +73,8 @@ namespace Das.Views.Rendering
         /// <summary>
         ///     Margins + space added due to alignment
         /// </summary>
-        /// <returns></returns>
         private Rectangle GetOffset(IRectangle rect, IVisualElement element,
-            Thickness border)
+                                    Thickness border)
         {
             var margin = GetStyleSetter<Thickness>(StyleSetters.Margin, element)
                          * Perspective.ZoomLevel;
@@ -179,16 +177,27 @@ namespace Das.Views.Rendering
                 yield return new RenderedVisual(kvp.Key, kvp.Value);
         }
 
+        public IRenderedVisual? GetVisualForInput(IPoint point, 
+                                                  InputAction inputAction)
+        {
+            foreach (var visual in GetElementsAt(point))
+            {
+                if (!(visual.Element is IInteractiveView interactive))
+                    continue;
+
+                if (interactive.HandlesActions.HasFlag(inputAction))
+                    return visual;
+            }
+
+            return default;
+        }
+
 
         public abstract void DrawLine(IPen pen, IPoint pt1, IPoint pt2);
 
         public abstract void DrawLines(IPen pen, IPoint[] points);
 
         public abstract void FillRect(IRectangle rect, IBrush brush);
-//        {
-//            rect = GetAbsoluteRect(rect);
-//            OnFillRect(rect, brush);
-//        }
 
         public abstract void DrawRect(IRectangle rect, IPen pen);
 

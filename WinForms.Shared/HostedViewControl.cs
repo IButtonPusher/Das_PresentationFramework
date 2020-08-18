@@ -1,7 +1,6 @@
 ﻿using Das.Views.Panels;
 using Das.Views.Styles;
 using System;
-using Das.Views;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 using Das.Views.Windows;
@@ -27,15 +26,15 @@ namespace WinForms.Shared
         }
      
 
-        public event EventHandler DataContextChanged;
+        public event EventHandler? DataContextChanged;
 
         private Boolean _isChanged;
-        private IViewModel _dataContext;
+        private IViewModel? _dataContext;
 
         public IView View { get; protected set; }
 
         public IVisualElement Element { get; set; }
-        public IViewModel DataContext
+        public IViewModel? DataContext
         {
             get => _dataContext;
             set
@@ -74,5 +73,10 @@ namespace WinForms.Shared
         }
 
         public virtual Boolean IsChanged => _isChanged;
+
+        public IPoint GetOffset(IPoint input)
+        {
+            return Point.Empty;
+        }
     }
 }

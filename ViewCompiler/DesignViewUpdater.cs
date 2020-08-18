@@ -17,9 +17,11 @@ namespace ViewCompiler
 {
     public class DesignViewUpdater : LoopViewUpdater<Bitmap>
     {
-        public DesignViewUpdater(IViewHost<Bitmap> viewHost, IRenderer<Bitmap> renderer,
-            IMeasureContext measureContext, IRenderContext renderContext,
-            int maxFramesPerSecond = 60)
+        public DesignViewUpdater(IViewHost<Bitmap> viewHost,
+                                 IRenderer<Bitmap> renderer,
+                                 IMeasureContext measureContext,
+                                 IRenderContext renderContext,
+                                 Int32 maxFramesPerSecond = 60)
             : base(viewHost, renderer, maxFramesPerSecond)
         {
             MeasureContext = measureContext;
@@ -30,9 +32,9 @@ namespace ViewCompiler
             renderer.Rendering += OnRendering;
         }
 
-        protected override bool IsChanged => base.IsChanged || _isChanged;
+        protected override Boolean IsChanged => base.IsChanged || _isChanged;
 
-        private void OnRendering(object sender, EventArgs e)
+        private void OnRendering(Object sender, EventArgs e)
         {
             _sbSelected.Clear();
             _isChanged = false;
@@ -41,13 +43,13 @@ namespace ViewCompiler
 
             MeasureContext.ViewState = _viewHost;
             var measured = MeasureContext.MeasureElement(element, _viewHost.RenderMargin);
-            var SelectedVisual = SelectedVisuals?.FirstOrDefault();
-            if (SelectedVisual == null)
+            var selectedVisual = SelectedVisuals?.FirstOrDefault();
+            if (selectedVisual == null)
                 return;
 
             _sbSelected.AppendLine(element.ToString());
             _sbSelected.AppendLine("Measured: " + measured);
-            _sbSelected.AppendLine("Arranged: " + SelectedVisual.Position);
+            _sbSelected.AppendLine("Arranged: " + selectedVisual.Position);
 
             var nonDefaults = GetNonDefaultSetters(element).ToArray();
 
@@ -61,7 +63,7 @@ namespace ViewCompiler
             RenderContext.ViewState = _viewHost;
             RenderContext.FillRect(_rightRectangle, Brush.DarkGray);
 
-            if (SelectedVisual.Element == null)
+            if (selectedVisual.Element == null)
                 return;
 
 

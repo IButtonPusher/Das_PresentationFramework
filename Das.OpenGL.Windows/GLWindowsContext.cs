@@ -1,22 +1,29 @@
 ﻿using Das.Views.Core.Geometry;
 using System;
 using System.Threading;
-using Das.Views.Winforms;
-using System.Drawing;
+using System.Threading.Tasks;
+using Das.Views;
 using Das.Views.Windows;
 using Size = Das.Views.Core.Geometry.Size;
 
 namespace Das.OpenGL.Windows
 {
+    /// <summary>
+    /// Renders onto a windows forms control by getting a device context from a Graphics object
+    /// that belongs to the control
+    /// </summary>
+    // ReSharper disable once InconsistentNaming
     public class GLWindowsContext : IGLContext
     {
-        public GLWindowsContext(IWindowsHost viewHost,
-            OpenGLVersion glVersion, GLWindowBuilder windowBuilder,
-            Byte bitDepth = 32)
+        public GLWindowsContext(IHost viewHost,
+                                OpenGLVersion glVersion,
+                                GLWindowBuilder windowBuilder,
+                                Task<IntPtr> deviceContextPromise,
+                                Byte bitDepth = 32)
         {
             _dibSection = new DIBSection();
             _delegateCache = new DelegateCache();
-            _currentSize = new Size(0,0);
+            _currentSize = new Size(0, 0);
             _windowBuilder = windowBuilder;
 
             _viewHost = viewHost;
@@ -24,12 +31,19 @@ namespace Das.OpenGL.Windows
 
             _bitDepth = bitDepth;
             _requestedOpenGLVersion = glVersion;
-            _viewHost.HostCreated += OnHostHandleCreated;
+            //_viewHost.HostCreated += OnHostHandleCreated;
+
+            deviceContextPromise.ContinueWith(OnDeviceContextAvailable);
+        }
+
+        private void OnDeviceContextAvailable(Task<IntPtr> promise)
+        {
+            _hostDc = promise.Result;
         }
 
         public const Byte PFD_TYPE_RGBA = 0;
         public const UInt32 PFD_DOUBLEBUFFER = 1;
-        public const UInt32 PFD_DRAW_TO_WINDOW = 4;
+        private const UInt32 PFD_DRAW_TO_WINDOW = 4;
         public const UInt32 PFD_SUPPORT_OPENGL = 32;
         public const SByte PFD_MAIN_PLANE = 0;
         public const Int32 WGL_CONTEXT_MAJOR_VERSION_ARB = 0x2091;
@@ -45,7 +59,7 @@ namespace Das.OpenGL.Windows
         protected IntPtr _deviceContextHandle = IntPtr.Zero;
         protected IntPtr _renderContextHandle = IntPtr.Zero;
         private readonly DelegateCache _delegateCache;
-        private readonly IWindowsHost _viewHost;
+        private readonly IHost _viewHost;
         private readonly Size _currentSize;
         private Int32 _roundedWidth;
         private Int32 _roundedHeight;
@@ -56,7 +70,7 @@ namespace Das.OpenGL.Windows
         protected IntPtr _dibSectionDeviceContext = IntPtr.Zero;
         protected readonly DIBSection _dibSection;
         protected readonly OpenGLVersion _requestedOpenGLVersion;
-        private Graphics _hostGraphics;
+        //private Graphics _hostGraphics;
         private IntPtr _hostDc;
 
         protected UInt32 _frameBufferID;
@@ -105,18 +119,18 @@ namespace Das.OpenGL.Windows
             OnSizeChanged();
         }
 
-        private void OnHostHandleCreated(Object sender, EventArgs e)
-        {
-            _viewHost.Invoke(() =>
-            {
-                _hostGraphics = Graphics.FromHwnd(_viewHost.Handle);
-                _hostDc = _hostGraphics.GetHdc();
-            });
+        //private async Task OnHostHandleCreated()
+        //{
+        //    await _viewHost.InvokeAsync(() =>
+        //    {
+        //        var hostGraphics = Graphics.FromHwnd(_viewHost.Handle);
+        //        _hostDc = hostGraphics.GetHdc();
+        //    });
 
-            _viewHost.HostCreated -= OnHostHandleCreated;
-        }
+        //    _viewHost.HostCreated -= OnHostHandleCreated;
+        //}
 
-        private void OnHostSizeChanged(Object sender, EventArgs e)
+        private void OnHostSizeChanged(ISize size)
         {
             Interlocked.Increment(ref _resizesPending);
         }
@@ -180,7 +194,7 @@ namespace Das.OpenGL.Windows
             var w = _roundedWidth;
             var h = _roundedHeight;
 
-            _windowBuilder.ResizeNativeWindow(_windowHandle, w, h);
+            GLWindowBuilder.ResizeNativeWindow(_windowHandle, w, h);
 
             _dibSection.Resize(w, h, _bitDepth);
 

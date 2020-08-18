@@ -8,7 +8,7 @@ using Das.Views.Core.Writing;
 using Das.Views.Panels;
 using Das.Views.Updaters;
 using Das.Views.Windows;
-using Das.Views.Winforms;
+
 using Das.ViewsModels;
 
 namespace Das.OpenGL
@@ -40,8 +40,11 @@ namespace Das.OpenGL
             return new FreeTypeFontProvider(fontFolder, context);
         }
 
-        public GLWindowsContext GetContext(IWindowsHost host) =>
-            new GLWindowsContext(host, OpenGLVersion.OpenGL2_1, _windowBuilder);
+        public GLWindowsContext GetContext(IWindowsHost host)
+        {
+            return new GLWindowsContext(host, OpenGLVersion.OpenGL2_1, 
+                _windowBuilder, host.GraphicsDeviceContextPromise);
+        }
 
         private void Cook(GLHostedElement element)
         {

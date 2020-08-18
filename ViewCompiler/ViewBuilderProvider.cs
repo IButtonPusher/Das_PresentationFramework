@@ -21,10 +21,19 @@ namespace ViewCompiler
         {
             ViewBuilder bldr;
 
-            using (var stream = file.OpenRead())
-            {
-                bldr = await _serializer.FromJsonAsync<ViewBuilder>(stream);
-            }
+            bldr = _serializer.FromJson<ViewBuilder>(file);
+
+            //var json = File.ReadAllText(file.FullName);
+            //bldr = _serializer.FromJson<ViewBuilder>(json);
+
+
+            //using (var stream = file.OpenRead())
+            //{
+                
+
+            //    //bldr = await _serializer.FromJsonAsync<ViewBuilder>(stream);
+            //    bldr = _serializer.FromJson<ViewBuilder>(stream);
+            //}
 
             if (bldr == null)
                 return null;
@@ -40,7 +49,7 @@ namespace ViewCompiler
 
             bldr.StyleContext = styleContext;
 
-            return bldr;
+            return await Task.FromResult(bldr);
         }
     }
 }

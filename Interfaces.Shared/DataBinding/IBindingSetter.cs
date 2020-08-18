@@ -10,11 +10,11 @@ namespace Das.Views.DataBinding
 
     public interface IBindingSetter
     {
-        void SetBoundValue(Object value);
+        void SetBoundValue(Object? value);
 
-        Task SetBoundValueAsync(Object value);
+        Task SetBoundValueAsync(Object? value);
 
-        void SetDataContext(Object dataContext);
+        void SetDataContext(Object? dataContext);
 
         Task SetDataContextAsync(Object dataContext);
     }

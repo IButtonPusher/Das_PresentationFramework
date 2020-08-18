@@ -159,7 +159,7 @@ namespace ViewCompiler
             
             foreach (var prop in props)
             {
-                LocalBuilder liveLocal = null;
+                LocalBuilder? liveLocal = null;
 
                 switch (prop.Value)
                 {

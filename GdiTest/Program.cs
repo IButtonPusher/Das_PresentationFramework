@@ -31,9 +31,13 @@ namespace GdiTest
             
             _staInvoker = new StaScheduler("GDI Test");
 
-            _testLauncher = GetGdiLauncher();
+            //_testLauncher = GetGdiLauncher();
+            _testLauncher = GetOpenGLLauncher();
             
             _testLauncher.MvvmTest().Wait();
+
+
+            ZoomTest();
             
         }
 
