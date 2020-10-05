@@ -19,7 +19,7 @@ namespace Das.Views.Rendering
         }
 
         public Size Measure(IVisualElement container, IEnumerable<IVisualElement> elements,
-            Orientations orientation, ISize availableSpace, IMeasureContext measureContext)
+                            Orientations orientation, ISize availableSpace, IMeasureContext measureContext)
         {
             var remainingSize = new Size(availableSpace.Width, availableSpace.Height);
 
@@ -89,7 +89,7 @@ namespace Das.Views.Rendering
         }
 
         public void Arrange(Orientations orientation,
-            ISize availableSpace, IRenderContext renderContext)
+                            ISize availableSpace, IRenderContext renderContext)
         {
             foreach (var kvp in ElementsRendered)
             {

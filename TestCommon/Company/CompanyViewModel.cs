@@ -15,7 +15,7 @@ namespace TestCommon.Company
         {
             Employees  = new List<EmployeeViewModel>();
             _scene = scene;
-            Camera = new Camera(new Vector3(0, 0, 10.0f), Vector3.Zero, Vector3.Zero, scene);
+            Camera = new WireframeCamera(new Vector3(0, 0, 10.0f), Vector3.Zero, Vector3.Zero, scene);
             SalesReport = new SalesReportPie();
         }
 

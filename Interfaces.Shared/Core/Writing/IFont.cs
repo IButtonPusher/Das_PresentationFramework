@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Core.Writing
 {
     public interface IFont
     {
-        Double Size { get; }
         String FamilyName { get; }
+
         FontStyle FontStyle { get; }
+
+        Double Size { get; }
     }
 }

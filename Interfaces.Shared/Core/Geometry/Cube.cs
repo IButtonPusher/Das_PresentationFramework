@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Core.Geometry
 {
     public class Cube : Rectangle, ISize3d, ICube
     {
-        public Double Depth { get; }
-
-        public Cube(Point location, ISize3d size)
+        public Cube(Point2D location, ISize3d size)
             : base(location, size)
         {
             Depth = size.Depth;
@@ -27,5 +26,7 @@ namespace Das.Views.Core.Geometry
         {
             Depth = depth;
         }
+
+        public Double Depth { get; }
     }
 }

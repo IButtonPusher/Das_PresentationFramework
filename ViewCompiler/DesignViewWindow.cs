@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Das.Gdi;
 using Das.Gdi.Controls;
 using Das.Views.Core.Geometry;
+using Das.Views.Panels;
 using Das.Views.Styles;
 using Point = System.Drawing.Point;
 using Size = System.Drawing.Size;
@@ -19,8 +20,18 @@ namespace ViewCompiler
     public class DesignViewWindow : ViewWindow
     {
         public DesignViewWindow(ViewDeserializer serializer, FileInfo fileDesigning)
-            : base(new GdiHostedElement(new BaseStyleContext(new DefaultStyle())))
+            : this(serializer, fileDesigning, new BaseStyleContext(new DefaultStyle()))
+            //: base(new GdiHostedElement(new BaseStyleContext(new DefaultStyle())))
         {
+            
+        }
+
+        private DesignViewWindow(ViewDeserializer serializer,
+                                 FileInfo fileDesigning,
+                                 IStyleContext styleContext)
+            : base(new GdiHostedElement(new View<Object>(styleContext), styleContext))
+        {
+            trackBar1 = new TrackBar();
             _viewBuilderProvider = new ViewBuilderProvider(serializer);
 
             RenderMargin = new Thickness(0, 0, 300, 0);
@@ -53,7 +64,6 @@ namespace ViewCompiler
 
         private void InitializeComponent()
         {
-            trackBar1 = new TrackBar();
             ((ISupportInitialize) trackBar1).BeginInit();
             SuspendLayout();
             // 
@@ -84,6 +94,8 @@ namespace ViewCompiler
 
             bldr.Serializer = _serializer;
             var type = _serializer.TypeInferrer.GetTypeFromClearName(bldr.DesignObject);
+            if (type == null)
+                return;
             var vm = _serializer.ObjectInstantiator.BuildDefault(type, false);
 
             _styleContext = bldr.StyleContext;
@@ -127,7 +139,7 @@ namespace ViewCompiler
         private readonly ViewBuilderProvider _viewBuilderProvider;
         private Boolean _isChanged;
 
-        private IStyleContext _styleContext;
+        private IStyleContext? _styleContext;
 
         private TrackBar trackBar1;
     }

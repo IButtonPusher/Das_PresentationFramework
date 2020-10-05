@@ -20,6 +20,25 @@ namespace Das.Gdi
 
         public Int32 Width { get; set; }
 
+        private static IntPtr CreateMemoryHdc(IntPtr hdc, Int32 width, Int32 height,
+                                              out IntPtr dib)
+        {
+            var memoryHdc = Native.CreateCompatibleDC(hdc);
+            SetBkMode(memoryHdc, 1);
+
+            var info = new BitMapInfo();
+            info.biSize = Marshal.SizeOf(info);
+            info.biWidth = width;
+            info.biHeight = -height;
+            info.biPlanes = 1;
+            info.biBitCount = 32;
+            info.biCompression = 0; // BI_RGB
+            dib = Native.CreateDIBSection(hdc, ref info, 0, out _, IntPtr.Zero, 0);
+            Native.SelectObject(memoryHdc, dib);
+
+            return memoryHdc;
+        }
+
 
         [DllImport("gdi32.dll", ExactSpelling = true, SetLastError = true)]
         public static extern Boolean DeleteDC(IntPtr hdc);
@@ -28,6 +47,12 @@ namespace Das.Gdi
         {
             var width = Width;
             var height = Height;
+
+            if (width == 0 || height == 0)
+            {
+                _empty ??= new Bitmap(1,1);
+                return _empty;
+            }
 
             var image = new Bitmap(width, height, PixelFormat.Format32bppArgb);
 
@@ -60,25 +85,7 @@ namespace Das.Gdi
         [DllImport("gdi32.dll")]
         public static extern Int32 SetBkMode(IntPtr hdc, Int32 mode);
 
-        private static IntPtr CreateMemoryHdc(IntPtr hdc, Int32 width, Int32 height,
-            out IntPtr dib)
-        {
-            var memoryHdc = Native.CreateCompatibleDC(hdc);
-            SetBkMode(memoryHdc, 1);
-
-            var info = new BitMapInfo();
-            info.biSize = Marshal.SizeOf(info);
-            info.biWidth = width;
-            info.biHeight = -height;
-            info.biPlanes = 1;
-            info.biBitCount = 32;
-            info.biCompression = 0; // BI_RGB
-            dib = Native.CreateDIBSection(hdc, ref info, 0, out _, IntPtr.Zero, 0);
-            Native.SelectObject(memoryHdc, dib);
-
-            return memoryHdc;
-        }
-
         private readonly Color _backgroundColor;
+        private Bitmap? _empty;
     }
 }

@@ -12,7 +12,7 @@ using Das.Views.Rendering;
 namespace Das.Views.Charting.Pie
 {
     public class PieChart<TKey, TValue> : BindableElement<IPieData<TKey, TValue>>,
-        IVisualFinder
+                                          IVisualFinder
         where TValue : IConvertible
     {
         public PieChart()
@@ -24,7 +24,12 @@ namespace Das.Views.Charting.Pie
             _legendOutline = new Pen(new Color(203, 212, 225), 1);
             _legendItems = new List<PieLegendItem<TKey, TValue>>();
             _legendItemSizes = new List<ISize>();
-            _legendBackground = new Brush(Color.White);
+            _legendBackground = new SolidColorBrush(Color.White);
+        }
+
+        public Boolean Contains(IVisualElement element)
+        {
+            return _legendItems.Any(l => l.Contains(element));
         }
 
         public override void Arrange(ISize availableSpace, IRenderContext renderContext)
@@ -34,7 +39,7 @@ namespace Das.Views.Charting.Pie
                 return;
 
             var radius = side / 2;
-            var center = new Point(availableSpace.Width - side + radius,
+            var center = new Point2D(availableSpace.Width - side + radius,
                 availableSpace.Height - side + side / 2);
             var currentValue = Binding.GetValue(DataContext);
             var data = currentValue.Items.ToArray();
@@ -74,8 +79,51 @@ namespace Das.Views.Charting.Pie
             ArrangeLegend(renderContext);
         }
 
+        private void ArrangeLegend(IRenderContext renderContext)
+        {
+            var padding = 20;
+            var rowMargin = 5;
+            var totalRowMargin = _legendItems.Count * rowMargin;
+
+            var w = _legendItemSizes.Max(s => s.Width) + padding;
+            var h = _legendItemSizes.Sum(s => s.Height) + padding + totalRowMargin;
+
+            var rect = new Rectangle(0, 0, w, h);
+
+            renderContext.FillRect(rect, _legendBackground);
+            renderContext.DrawRect(rect, _legendOutline);
+
+
+            var i = 0;
+            rect.X = 10;
+            rect.Width -= 10;
+            rect.Y = 10;
+            foreach (var item in _legendItems)
+            {
+                rect.Height = _legendItemSizes[i].Height;
+                renderContext.DrawElement(item, rect);
+
+                rect.Y += rect.Height + rowMargin;
+            }
+        }
+
         public override void Dispose()
         {
+        }
+
+        private IBrush GetBrush(IPieData<TKey, TValue> value, IDataPoint<TKey, TValue> current)
+        {
+            if (!value.ItemColors.TryGetValue(current.Description, out var brush)
+                && !_defaultedColors.TryGetValue(current.Description, out brush))
+            {
+                var bytes = new Byte[3];
+                _random.NextBytes(bytes);
+                var color = new Color(bytes[0], bytes[1], bytes[2]);
+                brush = new SolidColorBrush(color);
+                _defaultedColors[current.Description] = brush;
+            }
+
+            return brush;
         }
 
         public override ISize Measure(ISize availableSpace, IMeasureContext measureContext)
@@ -127,59 +175,11 @@ namespace Das.Views.Charting.Pie
             }
         }
 
-        private void ArrangeLegend(IRenderContext renderContext)
-        {
-            var padding = 20;
-            var rowMargin = 5;
-            var totalRowMargin = _legendItems.Count * rowMargin;
-
-            var w = _legendItemSizes.Max(s => s.Width) + padding;
-            var h = _legendItemSizes.Sum(s => s.Height) + padding + totalRowMargin;
-
-            var rect = new Rectangle(0, 0, w, h);
-
-            renderContext.FillRect(rect, _legendBackground);
-            renderContext.DrawRect(rect, _legendOutline);
-
-
-            var i = 0;
-            rect.X = 10;
-            rect.Width -= 10;
-            rect.Y = 10;
-            foreach (var item in _legendItems)
-            {
-                rect.Height = _legendItemSizes[i].Height;
-                renderContext.DrawElement(item, rect);
-
-                rect.Y += rect.Height + rowMargin;
-            }
-        }
-
-        private IBrush GetBrush(IPieData<TKey, TValue> value, IDataPoint<TKey, TValue> current)
-        {
-            if (!value.ItemColors.TryGetValue(current.Description, out var brush)
-                && !_defaultedColors.TryGetValue(current.Description, out brush))
-            {
-                var bytes = new Byte[3];
-                _random.NextBytes(bytes);
-                var color = new Color(bytes[0], bytes[1], bytes[2]);
-                brush = new Brush(color);
-                _defaultedColors[current.Description] = brush;
-            }
-
-            return brush;
-        }
-
-        public Boolean Contains(IVisualElement element)
-        {
-            return _legendItems.Any(l => l.Contains(element));
-        }
-
         private readonly Dictionary<TKey, IBrush> _defaultedColors;
 
         private readonly Size _desiredSize;
 
-        private readonly Brush _legendBackground;
+        private readonly SolidColorBrush _legendBackground;
         private readonly List<PieLegendItem<TKey, TValue>> _legendItems;
         private readonly List<ISize> _legendItemSizes;
         private readonly Pen _legendOutline;

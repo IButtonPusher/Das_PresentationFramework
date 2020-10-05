@@ -10,30 +10,38 @@ using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
-using Das.ViewsModels;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+#pragma warning disable 8618
 
 namespace Das.Views.DevKit
 {
     // ReSharper disable once ClassNeverInstantiated.Global - via de-serialized
     public class ViewBuilder : IView
     {
-        void IVisualRenderer.Arrange(ISize availableSpace, IRenderContext renderContext)
+        void IVisualRenderer.Arrange(ISize availableSpace,
+                                     IRenderContext renderContext)
         {
-            renderContext.DrawElement(Content, new Rectangle(0,0,availableSpace));
+            if (Content is {} content)
+                renderContext.DrawElement(content, new Rectangle(0, 0, availableSpace));
         }
 
         ISize IVisualRenderer.Measure(ISize availableSpace, IMeasureContext measureContext)
-            => measureContext.MeasureElement(Content, availableSpace);
+        {
+            if (Content is {} content)
+                return measureContext.MeasureElement(content, availableSpace);
+
+            return Size.Empty;
+        }
 
         [IgnoreDataMember]
         public ISerializationCore Serializer { get; set; }
         
 
-        IVisualElement IDeepCopyable<IVisualElement>.DeepCopy() => null;
+        IVisualElement IDeepCopyable<IVisualElement>.DeepCopy() => null!;
 
         Int32 IVisualElement.Id => -1;
 
-        public IVisualElement Content { get; set; }
+        public IVisualElement? Content { get; set; }
 
         public String DesignObject { get; set; }
 
@@ -58,7 +66,7 @@ namespace Das.Views.DevKit
             _isChanged = true;
         }
 
-        public Task SetBoundValueAsync(Object value)
+        public Task SetBoundValueAsync(Object? value)
         {
             SetBoundValue(value);
             return Task.CompletedTask;
@@ -66,7 +74,7 @@ namespace Das.Views.DevKit
 
         public void SetDataContext(Object? dataContext) => SetBoundValue(dataContext);
 
-        public Task SetDataContextAsync(Object dataContext)
+        public Task SetDataContextAsync(Object? dataContext)
         {
             SetDataContext(dataContext);
             return Task.CompletedTask;
@@ -119,8 +127,8 @@ namespace Das.Views.DevKit
             }
         }
 
-        private PropertyInfo GetPropertyBinding(IBindableElement element, 
-            Type parentType)
+        private PropertyInfo? GetPropertyBinding(IBindableElement element, 
+                                                 Type parentType)
         {
             var strBinding = element.Binding?.ToString();
             if (strBinding == null)
@@ -166,9 +174,20 @@ namespace Das.Views.DevKit
 
         private Boolean _isChanged;
 
-        public Boolean IsChanged =>
-            _isChanged || (_viewModel is IChangeTracking changeTracking &&
-                           changeTracking.IsChanged);// _viewModel?.IsChanged == true;
+        public Boolean IsChanged
+        {
+            get
+            {
+                if (_isChanged)
+                    return true;
+
+                if (_viewModel is IChangeTracking changeTracking &&
+                    changeTracking.IsChanged)
+                    return true;
+
+                return Content is IChangeTracking content && content.IsChanged;
+            }
+        }
 
         //private IMutableVm? _viewModel;
         private Object? _viewModel;

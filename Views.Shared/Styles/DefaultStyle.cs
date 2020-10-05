@@ -14,15 +14,15 @@ namespace Das.Views.Styles
         {
             var font = new Font(10, FontName, FontStyle.Regular);
 
-            Setters = new Dictionary<StyleSetters, Object>
+            Setters = new Dictionary<StyleSetters, Object?>
             {
                 {StyleSetters.Margin, new Thickness(0)},
                 {StyleSetters.Padding, new Thickness(0)},
                 {StyleSetters.BorderThickness, new Thickness(0)},
 
-                {StyleSetters.BorderBrush, new Brush(Color.Transparent)},
-                {StyleSetters.Foreground, new Brush(Color.Black)},
-                {StyleSetters.Background, new Brush(Color.Transparent)},
+                {StyleSetters.BorderBrush, new SolidColorBrush(Color.Transparent)},
+                {StyleSetters.Foreground, new SolidColorBrush(Color.Black)},
+                {StyleSetters.Background, new SolidColorBrush(Color.Transparent)},
 
                 {StyleSetters.FontName, font.FamilyName},
                 {StyleSetters.FontSize, font.Size},

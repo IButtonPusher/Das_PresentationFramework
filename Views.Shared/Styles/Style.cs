@@ -9,17 +9,15 @@ namespace Das.Views.Styles
     {
         public Style()
         {
-            Setters = new Dictionary<StyleSetters, Object>();
+            Setters = new Dictionary<StyleSetters, Object?>();
         }
 
-        public IDictionary<StyleSetters, Object> Setters { get; protected set; }
-
-        public virtual Object this[StyleSetters setter]
+        public virtual Object? this[StyleSetters setter]
             => TryGetValue(setter, out var found) ? found : default;
 
         public virtual Boolean TryGetValue(StyleSetters setter, out Object val)
         {
-            return Setters.TryGetValue(setter, out val);
+            return Setters.TryGetValue(setter, out val!);
         }
 
         public virtual Boolean TryGetValue(StyleSetters setter, Object dataContext, out Object val)
@@ -27,7 +25,7 @@ namespace Das.Views.Styles
             return TryGetValue(setter, out val);
         }
 
-        public virtual IEnumerator<KeyValuePair<StyleSetters, Object>> GetEnumerator()
+        public virtual IEnumerator<KeyValuePair<StyleSetters, Object?>> GetEnumerator()
         {
             foreach (var kvp in Setters)
                 yield return kvp;
@@ -37,5 +35,7 @@ namespace Das.Views.Styles
         {
             return GetEnumerator();
         }
+
+        public IDictionary<StyleSetters, Object?> Setters { get; protected set; }
     }
 }

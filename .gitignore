@@ -44,3 +44,14 @@
 /Das.ViewModels/obj
 /Tests/Input/TestWinFormsInput/bin/Debug
 *.v2
+/3D/3DF5Tests/bin/Debug
+/3D/3DF5Tests/obj/Debug
+/Android/Das.Android.Xamarin/bin/Debug
+/Android/Das.Android.Xamarin/obj
+/Android/XamarinAndroidTest/bin/Debug
+/Android/XamarinAndroidTest/obj
+/Core/OpenGL/OpenGLTests/bin/Debug
+/Core/OpenGL/OpenGLTests/obj/Debug
+/DPF/SystemBase/obj
+/DPF/PresentationCore/obj
+/DPF

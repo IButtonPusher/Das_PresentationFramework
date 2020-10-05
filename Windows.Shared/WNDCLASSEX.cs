@@ -25,6 +25,4 @@ namespace Das.Views.Windows
             cbSize = (UInt32) Marshal.SizeOf(this);
         }
     }
-
-    
 }

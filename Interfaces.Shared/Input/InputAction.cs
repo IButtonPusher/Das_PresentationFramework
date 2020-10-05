@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Input
 {
@@ -6,9 +7,11 @@ namespace Das.Views.Input
     public enum InputAction
     {
         None,
-        MouseHover = 1,
+        MouseOver = 1,
         MouseDown = 2,
         MouseUp = 4,
-        LeftClick = 8
+        LeftClick = 8,
+        MouseDrag = 16,
+        MouseWheel = 32
     }
 }

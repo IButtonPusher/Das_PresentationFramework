@@ -1,4 +1,7 @@
-﻿namespace Das.Views.Core.Geometry
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Das.Views.Core.Geometry
 {
     public abstract class GeometryBase
     {

@@ -3,19 +3,22 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading.Tasks;
+// ReSharper disable UnusedMember.Global
 
-namespace Das.ViewsModels
+namespace Das.ViewModels
 {
+    // ReSharper disable once UnusedType.Global
     public interface IAsyncObservableCollection<T> :
         INotifyCollectionChanged, INotifyPropertyChanged, ICollection<T>,
         IAsyncCollection<T>, IDisposable
         where T : IEquatable<T>
     {
+        // ReSharper disable once UnusedMember.Global
         T this[Int32 index] { get; }
 
-        Task AddRangeAsync(IEnumerable<T> items);
-
         Task<Boolean> AddOrUpdateAsync(T item);
+
+        Task AddRangeAsync(IEnumerable<T> items);
 
         Task<Boolean> AllAsync(Func<T, Boolean> predicate);
 
@@ -34,7 +37,7 @@ namespace Das.ViewsModels
 
         Task DoTransaction(Action<IAsyncObservableCollection<T>> action);
 
-        Task DoTransaction<TInput>(IEnumerable<TInput> datas, 
+        Task DoTransaction<TInput>(IEnumerable<TInput> datas,
                                    Action<IAsyncObservableCollection<T>, TInput> action);
 
         Task<T> FirstOrDefaultAsync(Func<T, Boolean> predicate);
@@ -43,13 +46,13 @@ namespace Das.ViewsModels
 
         Task<IReadOnlyList<T>> GetEnumerableAsync();
 
+        IAsyncEnumerable<TRes> GetFromEach<TRes>(Func<T, TRes> action);
+
         Task<Int32> IndexOfAsync(T item);
 
         Task Remove(IEnumerable<T> items);
 
         Task RunOnEach(Action<T> action);
-
-        IAsyncEnumerable<TRes> GetFromEach<TRes>(Func<T, TRes> action);
 
         Task<IReadOnlyList<T>> SelectAsync(Func<T, Boolean> predicate);
 
@@ -60,12 +63,12 @@ namespace Das.ViewsModels
             where TCollection : ICollection<TOut>, new();
 
         Task Synchonize<TOther>(NotifyCollectionChangedEventArgs args,
-            Func<T, TOther, Boolean> equate,
-            Func<TOther, T> forNew);
+                                Func<T, TOther, Boolean> equate,
+                                Func<TOther, T> forNew);
 
         Task Synchonize<TOther>(IEnumerable<TOther> args,
-            Func<T, TOther, Boolean> equate,
-            Func<TOther, T> forNew);
+                                Func<T, TOther, Boolean> equate,
+                                Func<TOther, T> forNew);
 
         Task Synchronize(IEnumerable<T> items);
 

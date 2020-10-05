@@ -1,30 +1,34 @@
-﻿using Das.Views.Core.Drawing;
+﻿using System;
+using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 
-namespace Das.Views.Extended.Core
+namespace Das.Views.Extended
 {
     public interface ICamera<out TFrame> : ICamera
         where TFrame : IFrame
     {
-        new TFrame GetFrame(ISize targetSize);
+        TFrame GetFrame(ISize targetSize);
     }
 
-    public interface ICamera : I3dElement, IMutableViewPerspective
+    public interface ICamera : I3DElement, IMutableViewPerspective
     {
-        IPoint3d FocalPoint { get; }
+        IPoint3D FocalPoint { get; }
 
         /// <summary>
         /// Width / Height
         /// </summary>
-        float AspectRatio { get; }
+        Single AspectRatio { get; }
 
-        float FieldOfView { get; }
+        Single FieldOfView { get; }
 
-        float NearZenith { get; }
+        Single NearZenith { get; }
 
-        float FarZenith { get; }
+        Single FarZenith { get; }
 
-        IFrame GetFrame(ISize targetSize);
+        void RenderFrame(ISize availableSpace, 
+                         IRenderContext renderContext);
+
+        //IFrame GetFrame(ISize targetSize);
     }
 }

@@ -1,12 +1,10 @@
-﻿using Das.Views.Extended.Core;
-
-namespace Das.Views.Extended
+﻿namespace Das.Views.Extended
 {
-    public interface IVisual3dElement : I3dElement
-        
+    /// <summary>
+    /// A collection of meshes and textures with a common position
+    /// </summary>
+    public interface IVisual3dElement : I3DElement
     {
-        IPoint3d[] Vertices { get; }
-
-        Face[] Faces { get; }
+        IMesh[] Meshes { get; }
     }
 }

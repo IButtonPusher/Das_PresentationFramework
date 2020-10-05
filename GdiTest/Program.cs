@@ -11,7 +11,7 @@ using TestCommon;
 using ViewCompiler;
 using Das.OpenGL.Windows;
 using Das.Views.Updaters;
-using Das.ViewsModels;
+using Das.ViewModels;
 
 namespace GdiTest
 {
@@ -31,15 +31,15 @@ namespace GdiTest
             
             _staInvoker = new StaScheduler("GDI Test");
 
-            //_testLauncher = GetGdiLauncher();
-            _testLauncher = GetOpenGLLauncher();
-            
+            _testLauncher = GetGdiLauncher();
+            //_testLauncher = GetOpenGLLauncher();
+
             _testLauncher.MvvmTest().Wait();
 
 
             ZoomTest();
-            
         }
+
 
         // ReSharper disable once UnusedMember.Local
         private static TestLauncher GetGdiLauncher()
@@ -83,7 +83,7 @@ namespace GdiTest
             return view;
         }
 
-        private static ViewWindow Show<TViewModel>(TViewModel viewModel, IView view)
+        private static Form Show<TViewModel>(TViewModel viewModel, IView view)
             where TViewModel : IViewModel
         {
             var provider = new GdiProvider();

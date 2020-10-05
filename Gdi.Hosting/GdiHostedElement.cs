@@ -22,11 +22,11 @@ namespace Das.Gdi.Controls
             _lockBmp = new Object();
         }
 
-        public GdiHostedElement(IStyleContext styleContext) : 
-            base(styleContext)
-        {
-            _lockBmp = new Object();
-        }
+        //public GdiHostedElement(IStyleContext styleContext) : 
+        //    base(styleContext)
+        //{
+        //    _lockBmp = new Object();
+        //}
         
         public override Boolean IsLoaded => true;
         

@@ -14,16 +14,30 @@ namespace Das.Views.Measuring
         public BaseMeasureContext()
         {
             _empty = new Size(0, 0);
+            _contextBounds = Size.Empty;
             _lastMeasurements = new Dictionary<IVisualElement, Size>();
         }
 
-        public IViewState ViewState { get; set; }
+        public IViewState? ViewState { get; private set; }
 
-        public abstract Size MeasureImage(IImage img);
-
-        public Size MeasureElement(IVisualElement element, ISize availableSpace)
+        public virtual Size MeasureImage(IImage img)
         {
-            var viewState = ViewState;
+            return new Size(img.Width, img.Height);
+        }
+
+        public Size MeasureMainView(IVisualElement element, 
+                                    ISize availableSpace, 
+                                    IViewState viewState)
+        {
+            ViewState = viewState;
+            _contextBounds = availableSpace;
+            return MeasureElement(element, availableSpace);
+        }
+
+        public Size MeasureElement(IVisualElement element, 
+                                   ISize availableSpace)
+        {
+            var viewState = GetViewState();
             var zoom = viewState.ZoomLevel;
 
             var margin = viewState.GetStyleSetter<Thickness>(StyleSetters.Margin, element)
@@ -56,12 +70,24 @@ namespace Das.Views.Measuring
 
         public abstract Size MeasureString(String s, Font font);
 
+        public virtual ISize ContextBounds
+        {
+            get => _contextBounds;
+        }
+
+        private IViewState GetViewState() => ViewState ??
+                                             throw new Exception(
+                                                 "No view state has been set.  Call MeasureMainView");
+
+        //public virtual void UpdateContextBounds(ISize value) => _contextBounds = value;
+
         public T GetStyleSetter<T>(StyleSetters setter, IVisualElement element)
         {
-            return ViewState.GetStyleSetter<T>(setter, element);
+            return GetViewState().GetStyleSetter<T>(setter, element);
         }
 
         private readonly Size _empty;
         private readonly Dictionary<IVisualElement, Size> _lastMeasurements;
+        private ISize _contextBounds;
     }
 }

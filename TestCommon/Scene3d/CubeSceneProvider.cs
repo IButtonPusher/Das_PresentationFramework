@@ -22,7 +22,7 @@ namespace TestCommon
         {
             var cube = new TestCube();
             
-            var scene = new CoreScene(new List<IVisual3dElement> { cube });
+            var scene = new CoreScene(new List<IMesh> { cube });
             var vm = new TestSceneVm(scene);
             
             return vm;

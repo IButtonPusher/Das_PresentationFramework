@@ -44,8 +44,8 @@ namespace Das.Views.Controls
             var useSize = renderContext.GetStyleSetter<Double>(StyleSetters.FontSize, this);
             if (!useSize.AreEqualEnough(font.Size)) font = new Font(useSize, font.FamilyName, font.FontStyle);
 
-            var brush = renderContext.GetStyleSetter<Brush>(StyleSetters.Foreground, this);
-            renderContext.DrawString(_currentValue, font, brush, Point.Empty);
+            var brush = renderContext.GetStyleSetter<SolidColorBrush>(StyleSetters.Foreground, this);
+            renderContext.DrawString(_currentValue, font, brush, Point2D.Empty);
         }
 
         public override void Dispose()
@@ -53,7 +53,7 @@ namespace Das.Views.Controls
         }
 
         public override ISize Measure(ISize availableSpace,
-            IMeasureContext measureContext)
+                                      IMeasureContext measureContext)
         {
             var font = measureContext.GetStyleSetter<Font>(StyleSetters.Font, this) *
                        measureContext.ViewState.ZoomLevel;
@@ -70,7 +70,7 @@ namespace Das.Views.Controls
                 Binding = new ObjectBinding<T>(val);
         }
 
-        public override Task SetBoundValueAsync(Object value)
+        public override Task SetBoundValueAsync(Object? value)
         {
             SetBoundValue(value);
             return TaskEx.CompletedTask;

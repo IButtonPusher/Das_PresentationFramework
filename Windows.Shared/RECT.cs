@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Das.Views.Core.Geometry;
 
-namespace Das.Views.Windows
+namespace Das.Views.Core.Geometry
 {
     public struct RECT
     {

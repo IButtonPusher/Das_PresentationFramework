@@ -1,8 +1,9 @@
 ﻿
+using System;
+using System.ComponentModel;
 using Das.Extensions;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
-using Das.Views.Extended.Core;
 using Das.Views.Rendering;
 
 namespace Das.Views.Extended.Runtime
@@ -11,19 +12,19 @@ namespace Das.Views.Extended.Runtime
     /// Control that renders the data provided by a Camera that is watching a Scene
     /// </summary>
     // ReSharper disable once UnusedMember.Global
-    public class SceneMonitor : BindableElement<ICamera>
+    // ReSharper disable once UnusedType.Global
+    public class SceneMonitor : BindableElement<ICamera>, IChangeTracking
     {
-        public override ISize Measure(ISize availableSpace, IMeasureContext measureContext)
+        public override ISize Measure(ISize availableSpace, 
+                                      IMeasureContext measureContext)
         {
-            var h = availableSpace.Height;
-            var camera = Binding.GetValue(DataContext);
-            if (camera == null)
+            if (!TryGetCamera(out var camera))
                 return Size.Empty;
 
-            if (h.AreEqualEnough(0))
+            if (availableSpace.Height.AreEqualEnough(0))
                 return availableSpace;
 
-            var aspect = availableSpace.Width / h;
+            var aspect = availableSpace.Width / availableSpace.Height;
             
             if (aspect.AreEqualEnough(camera.AspectRatio))
             {
@@ -43,19 +44,36 @@ namespace Das.Views.Extended.Runtime
             }
         }
 
+        private Boolean TryGetCamera(out ICamera camera)
+        {
+            if (!(Binding is {} binding) || !(DataContext is {} dc))
+                camera = default!;
+            else camera = binding.GetValue(dc);
+
+            return camera != null;
+        }
+
         public override void Arrange(ISize availableSpace, IRenderContext renderContext)
         {
-            var camera = Binding.GetValue(DataContext);
-            if (camera == null)
+            if (!TryGetCamera(out var camera))
                 return;
 
-            var frame = camera.GetFrame(availableSpace);
-            renderContext.DrawFrame(frame);
+            camera.RenderFrame(availableSpace, renderContext);
+
+            //var frame = camera.GetFrame(availableSpace);
+            //renderContext.DrawFrame(frame);
         }
 
         public override void Dispose()
         {
             
         }
+
+        public void AcceptChanges()
+        {
+            
+        }
+
+        public Boolean IsChanged => true;
     }
 }

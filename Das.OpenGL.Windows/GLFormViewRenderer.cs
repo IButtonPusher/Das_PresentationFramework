@@ -34,8 +34,9 @@ namespace Das.OpenGL.Windows
             var available = _context.Size;
             if (available.IsEmpty)
                 return;
-            _measureContext.ViewState = _viewHost;
-            var desired = _measureContext.MeasureElement(view, available);
+            //_measureContext.ViewState = _viewHost;
+            //_measureContext.UpdateContextBounds(available);
+            var desired = _measureContext.MeasureMainView(view, available, _viewHost);
             _renderRect.Size = desired;
 
             //arrange

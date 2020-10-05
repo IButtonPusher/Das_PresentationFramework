@@ -1,59 +1,59 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Das.Views.Extended.Core
+namespace Das.Views.Extended
 {
     public struct Matrix 
     {
-        public float M11;
+        public Single M11;
         /// <summary>Value at row 1 column 2 of the matrix.</summary>
-        public float M12;
+        public Single M12;
         /// <summary>Value at row 1 column 3 of the matrix.</summary>
-        public float M13;
+        public Single M13;
         /// <summary>Value at row 1 column 4 of the matrix.</summary>
-        public float M14;
+        public Single M14;
         /// <summary>Value at row 2 column 1 of the matrix.</summary>
-        public float M21;
+        public Single M21;
         /// <summary>Value at row 2 column 2 of the matrix.</summary>
-        public float M22;
+        public Single M22;
         /// <summary>Value at row 2 column 3 of the matrix.</summary>
-        public float M23;
+        public Single M23;
         /// <summary>Value at row 2 column 4 of the matrix.</summary>
-        public float M24;
+        public Single M24;
         /// <summary>Value at row 3 column 1 of the matrix.</summary>
-        public float M31;
+        public Single M31;
         /// <summary>Value at row 3 column 2 of the matrix.</summary>
-        public float M32;
+        public Single M32;
         /// <summary>Value at row 3 column 3 of the matrix.</summary>
-        public float M33;
+        public Single M33;
         /// <summary>Value at row 3 column 4 of the matrix.</summary>
-        public float M34;
+        public Single M34;
         /// <summary>Value at row 4 column 1 of the matrix.</summary>
-        public float M41;
+        public Single M41;
         /// <summary>Value at row 4 column 2 of the matrix.</summary>
-        public float M42;
+        public Single M42;
         /// <summary>Value at row 4 column 3 of the matrix.</summary>
-        public float M43;
+        public Single M43;
         /// <summary>Value at row 4 column 4 of the matrix.</summary>
-        public float M44;
+        public Single M44;
 
         public static readonly Matrix Identity = new Matrix()
             { M11 = 1f, M22 = 1f, M33 = 1f, M44 = 1f };
 
-        public static Matrix PerspectiveFovRH(float fov, float aspect, float znear, float zfar)
+        public static Matrix PerspectiveFovRH(Single fov, Single aspect, Single znear, Single zfar)
         {
             PerspectiveFovRH(fov, aspect, znear, zfar, out var result);
             return result;
         }
 
         public static void PerspectiveFovRH(
-            float fov,
-            float aspect,
-            float znear,
-            float zfar,
+            Single fov,
+            Single aspect,
+            Single znear,
+            Single zfar,
             out Matrix result)
         {
-            var num1 = (float)(1.0 / Math.Tan(fov * 0.5));
+            var num1 = (Single)(1.0 / Math.Tan(fov * 0.5));
             var num2 = num1 / aspect;
             var right = znear / num2;
             var top = znear / num1;
@@ -61,12 +61,12 @@ namespace Das.Views.Extended.Core
         }
 
         public static void PerspectiveOffCenterRH(
-            float left,
-            float right,
-            float bottom,
-            float top,
-            float znear,
-            float zfar,
+            Single left,
+            Single right,
+            Single bottom,
+            Single top,
+            Single znear,
+            Single zfar,
             out Matrix result)
         {
             PerspectiveOffCenterLH(left, right, bottom, top, znear, zfar, out result);
@@ -77,20 +77,20 @@ namespace Das.Views.Extended.Core
         }
 
         public static void PerspectiveOffCenterLH(
-            float left,
-            float right,
-            float bottom,
-            float top,
-            float znear,
-            float zfar,
+            Single left,
+            Single right,
+            Single bottom,
+            Single top,
+            Single znear,
+            Single zfar,
             out Matrix result)
         {
             var num = zfar / (zfar - znear);
             result = new Matrix();
-            result.M11 = (float)(2.0 * znear / (right - (double)left));
-            result.M22 = (float)(2.0 * znear / (top - (double)bottom));
-            result.M31 = (float)((left + (double)right) / (left - (double)right));
-            result.M32 = (float)((top + (double)bottom) / (bottom - (double)top));
+            result.M11 = (Single)(2.0 * znear / (right - (Double)left));
+            result.M22 = (Single)(2.0 * znear / (top - (Double)bottom));
+            result.M31 = (Single)((left + (Double)right) / (left - (Double)right));
+            result.M32 = (Single)((top + (Double)bottom) / (bottom - (Double)top));
             result.M33 = num;
             result.M34 = 1f;
             result.M43 = -znear * num;
@@ -133,8 +133,8 @@ namespace Das.Views.Extended.Core
         }
 
 
-        public override string ToString() => 
-            String.Format(CultureInfo.CurrentCulture, "[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}] [M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]", (object)M11, (object)M12, (object)M13, (object)M14, (object)M21, (object)M22, (object)M23, (object)M24, (object)M31, (object)M32, (object)M33, (object)M34, (object)M41, (object)M42, (object)M43, (object)M44);
+        public override String ToString() => 
+            String.Format(CultureInfo.CurrentCulture, "[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}] [M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]", (Object)M11, (Object)M12, (Object)M13, (Object)M14, (Object)M21, (Object)M22, (Object)M23, (Object)M24, (Object)M31, (Object)M32, (Object)M33, (Object)M34, (Object)M41, (Object)M42, (Object)M43, (Object)M44);
 
         public static Matrix LookAtLH(
             Vector3 eye,
@@ -168,13 +168,13 @@ namespace Das.Views.Extended.Core
             return result;
         }
 
-        public static Matrix RotationYawPitchRoll(float yaw, float pitch, float roll)
+        public static Matrix RotationYawPitchRoll(Single yaw, Single pitch, Single roll)
         {
             var result1 = Quaternion.RotationYawPitchRoll(yaw, pitch, roll);
             return RotationQuaternion(result1);
         }
 
-        public static Matrix RotationYawPitchRoll(I3dElement element)
+        public static Matrix RotationYawPitchRoll(I3DElement element)
         {
             var result1 = Quaternion.RotationYawPitchRoll(element);
             return RotationQuaternion(result1);
@@ -194,15 +194,15 @@ namespace Das.Views.Extended.Core
             var num8 = rotation.Y * rotation.Z;
             var num9 = rotation.X * rotation.W;
             var result = Identity;
-            result.M11 = (float)(1.0 - 2.0 * (num2 + (double)num3));
-            result.M12 = (float)(2.0 * (num4 + (double)num5));
-            result.M13 = (float)(2.0 * (num6 - (double)num7));
-            result.M21 = (float)(2.0 * (num4 - (double)num5));
-            result.M22 = (float)(1.0 - 2.0 * (num3 + (double)num1));
-            result.M23 = (float)(2.0 * (num8 + (double)num9));
-            result.M31 = (float)(2.0 * (num6 + (double)num7));
-            result.M32 = (float)(2.0 * (num8 - (double)num9));
-            result.M33 = (float)(1.0 - 2.0 * (num2 + (double)num1));
+            result.M11 = (Single)(1.0 - 2.0 * (num2 + (Double)num3));
+            result.M12 = (Single)(2.0 * (num4 + (Double)num5));
+            result.M13 = (Single)(2.0 * (num6 - (Double)num7));
+            result.M21 = (Single)(2.0 * (num4 - (Double)num5));
+            result.M22 = (Single)(1.0 - 2.0 * (num3 + (Double)num1));
+            result.M23 = (Single)(2.0 * (num8 + (Double)num9));
+            result.M31 = (Single)(2.0 * (num6 + (Double)num7));
+            result.M32 = (Single)(2.0 * (num8 - (Double)num9));
+            result.M33 = (Single)(1.0 - 2.0 * (num2 + (Double)num1));
 
             return result;
         }
@@ -210,7 +210,7 @@ namespace Das.Views.Extended.Core
 
 
 
-        public static Matrix Translation(IPoint3d value)
+        public static Matrix Translation(IPoint3D value)
         {
             var result = Identity;
             result.M41 = value.X;
@@ -219,7 +219,7 @@ namespace Das.Views.Extended.Core
             return result;
         }
 
-        public static void Translation(float x, float y, float z, out Matrix result)
+        public static void Translation(Single x, Single y, Single z, out Matrix result)
         {
             result = Identity;
             result.M41 = x;
@@ -233,26 +233,26 @@ namespace Das.Views.Extended.Core
         public static Matrix Multiply(Matrix left, Matrix right)
         {
             var result = new Matrix();
-            result.M11 = (float)(left.M11 * (double)right.M11 + left.M12 * (double)right.M21 + left.M13 * (double)right.M31 + left.M14 * (double)right.M41);
-            result.M12 = (float)(left.M11 * (double)right.M12 + left.M12 * (double)right.M22 + left.M13 * (double)right.M32 + left.M14 * (double)right.M42);
-            result.M13 = (float)(left.M11 * (double)right.M13 + left.M12 * (double)right.M23 + left.M13 * (double)right.M33 + left.M14 * (double)right.M43);
-            result.M14 = (float)(left.M11 * (double)right.M14 + left.M12 * (double)right.M24 + left.M13 * (double)right.M34 + left.M14 * (double)right.M44);
-            result.M21 = (float)(left.M21 * (double)right.M11 + left.M22 * (double)right.M21 + left.M23 * (double)right.M31 + left.M24 * (double)right.M41);
-            result.M22 = (float)(left.M21 * (double)right.M12 + left.M22 * (double)right.M22 + left.M23 * (double)right.M32 + left.M24 * (double)right.M42);
-            result.M23 = (float)(left.M21 * (double)right.M13 + left.M22 * (double)right.M23 + left.M23 * (double)right.M33 + left.M24 * (double)right.M43);
-            result.M24 = (float)(left.M21 * (double)right.M14 + left.M22 * (double)right.M24 + left.M23 * (double)right.M34 + left.M24 * (double)right.M44);
-            result.M31 = (float)(left.M31 * (double)right.M11 + left.M32 * (double)right.M21 + left.M33 * (double)right.M31 + left.M34 * (double)right.M41);
-            result.M32 = (float)(left.M31 * (double)right.M12 + left.M32 * (double)right.M22 + left.M33 * (double)right.M32 + left.M34 * (double)right.M42);
-            result.M33 = (float)(left.M31 * (double)right.M13 + left.M32 * (double)right.M23 + left.M33 * (double)right.M33 + left.M34 * (double)right.M43);
-            result.M34 = (float)(left.M31 * (double)right.M14 + left.M32 * (double)right.M24 + left.M33 * (double)right.M34 + left.M34 * (double)right.M44);
-            result.M41 = (float)(left.M41 * (double)right.M11 + left.M42 * (double)right.M21 + left.M43 * (double)right.M31 + left.M44 * (double)right.M41);
-            result.M42 = (float)(left.M41 * (double)right.M12 + left.M42 * (double)right.M22 + left.M43 * (double)right.M32 + left.M44 * (double)right.M42);
-            result.M43 = (float)(left.M41 * (double)right.M13 + left.M42 * (double)right.M23 + left.M43 * (double)right.M33 + left.M44 * (double)right.M43);
-            result.M44 = (float)(left.M41 * (double)right.M14 + left.M42 * (double)right.M24 + left.M43 * (double)right.M34 + left.M44 * (double)right.M44);
+            result.M11 = (Single)(left.M11 * (Double)right.M11 + left.M12 * (Double)right.M21 + left.M13 * (Double)right.M31 + left.M14 * (Double)right.M41);
+            result.M12 = (Single)(left.M11 * (Double)right.M12 + left.M12 * (Double)right.M22 + left.M13 * (Double)right.M32 + left.M14 * (Double)right.M42);
+            result.M13 = (Single)(left.M11 * (Double)right.M13 + left.M12 * (Double)right.M23 + left.M13 * (Double)right.M33 + left.M14 * (Double)right.M43);
+            result.M14 = (Single)(left.M11 * (Double)right.M14 + left.M12 * (Double)right.M24 + left.M13 * (Double)right.M34 + left.M14 * (Double)right.M44);
+            result.M21 = (Single)(left.M21 * (Double)right.M11 + left.M22 * (Double)right.M21 + left.M23 * (Double)right.M31 + left.M24 * (Double)right.M41);
+            result.M22 = (Single)(left.M21 * (Double)right.M12 + left.M22 * (Double)right.M22 + left.M23 * (Double)right.M32 + left.M24 * (Double)right.M42);
+            result.M23 = (Single)(left.M21 * (Double)right.M13 + left.M22 * (Double)right.M23 + left.M23 * (Double)right.M33 + left.M24 * (Double)right.M43);
+            result.M24 = (Single)(left.M21 * (Double)right.M14 + left.M22 * (Double)right.M24 + left.M23 * (Double)right.M34 + left.M24 * (Double)right.M44);
+            result.M31 = (Single)(left.M31 * (Double)right.M11 + left.M32 * (Double)right.M21 + left.M33 * (Double)right.M31 + left.M34 * (Double)right.M41);
+            result.M32 = (Single)(left.M31 * (Double)right.M12 + left.M32 * (Double)right.M22 + left.M33 * (Double)right.M32 + left.M34 * (Double)right.M42);
+            result.M33 = (Single)(left.M31 * (Double)right.M13 + left.M32 * (Double)right.M23 + left.M33 * (Double)right.M33 + left.M34 * (Double)right.M43);
+            result.M34 = (Single)(left.M31 * (Double)right.M14 + left.M32 * (Double)right.M24 + left.M33 * (Double)right.M34 + left.M34 * (Double)right.M44);
+            result.M41 = (Single)(left.M41 * (Double)right.M11 + left.M42 * (Double)right.M21 + left.M43 * (Double)right.M31 + left.M44 * (Double)right.M41);
+            result.M42 = (Single)(left.M41 * (Double)right.M12 + left.M42 * (Double)right.M22 + left.M43 * (Double)right.M32 + left.M44 * (Double)right.M42);
+            result.M43 = (Single)(left.M41 * (Double)right.M13 + left.M42 * (Double)right.M23 + left.M43 * (Double)right.M33 + left.M44 * (Double)right.M43);
+            result.M44 = (Single)(left.M41 * (Double)right.M14 + left.M42 * (Double)right.M24 + left.M43 * (Double)right.M34 + left.M44 * (Double)right.M44);
             return result;
         }
 
-        public static Matrix Multiply(Matrix left, float right)
+        public static Matrix Multiply(Matrix left, Single right)
         {
             var result = new Matrix();
 

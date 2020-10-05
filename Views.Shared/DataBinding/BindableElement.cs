@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Das.Views.Rendering;
+
 #pragma warning disable 8618
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
@@ -18,35 +19,6 @@ namespace Das.Views.DataBinding
 
         protected BindableElement()
         {
-        }
-
-        public override String ToString()
-        {
-            var str = GetType().Name;
-            var gargs = GetType().GetGenericArguments().FirstOrDefault();
-            if (gargs != null)
-                str += "[" + gargs.Name + "]";
-
-            return str;
-        }
-
-
-        protected T GetBoundValue(Object dataContext)
-        {
-            switch (BoundValue)
-            {
-                case T set:
-                    return set;
-                default:
-                    if (_binding != null)
-                        BoundValue = _binding.GetValue(dataContext);
-                    return BoundValue;
-            }
-        }
-
-        private void SetBinding(IDataBinding<T>? value)
-        {
-            _binding = value;
         }
 
         public virtual Task SetBoundValueAsync(T value)
@@ -112,13 +84,16 @@ namespace Das.Views.DataBinding
             SetBoundValue(val);
         }
 
-        public virtual async Task SetDataContextAsync(Object dataContext)
+        public virtual async Task SetDataContextAsync(Object? dataContext)
         {
             var binding = _binding;
             if (binding == null)
                 return;
 
             DataContext = dataContext;
+            if (dataContext == null)
+                return;
+
             var val = await binding.GetValueAsync(dataContext);
             await SetBoundValueAsync(val);
         }
@@ -145,6 +120,35 @@ namespace Das.Views.DataBinding
         }
 
         public Object? Value => DataContext;
+
+
+        protected T GetBoundValue(Object dataContext)
+        {
+            switch (BoundValue)
+            {
+                case T set:
+                    return set;
+                default:
+                    if (_binding != null)
+                        BoundValue = _binding.GetValue(dataContext);
+                    return BoundValue;
+            }
+        }
+
+        private void SetBinding(IDataBinding<T>? value)
+        {
+            _binding = value;
+        }
+
+        public override String ToString()
+        {
+            var str = GetType().Name;
+            var gargs = GetType().GetGenericArguments().FirstOrDefault();
+            if (gargs != null)
+                str += "[" + gargs.Name + "]";
+
+            return str;
+        }
 
 
         private IDataBinding<T>? _binding;

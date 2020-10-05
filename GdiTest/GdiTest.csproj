@@ -114,10 +114,6 @@
       <Project>{e109ceda-64ef-4674-ac1b-1ea62624519e}</Project>
       <Name>Das.Views.Extended</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Das.Views.Winforms\Das.Views.Winforms.csproj">
-      <Project>{d1e2bdf7-69d4-42c0-883f-2a2f2d8de4d3}</Project>
-      <Name>Das.Views.Winforms</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Das.Views\Das.Views.csproj">
       <Project>{a71c8e34-0909-487d-8c50-c02fc2408b8f}</Project>
       <Name>Das.Views</Name>
@@ -136,6 +132,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <Import Project="..\..\NetFramework\CSharp8NetFramework\CSharp8NetFramework.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

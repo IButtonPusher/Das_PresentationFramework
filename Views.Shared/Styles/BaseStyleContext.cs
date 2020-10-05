@@ -22,74 +22,19 @@ namespace Das.Views.Styles
             _typeStyles = new Dictionary<Type, List<ScopedStyle>>();
         }
 
-        private static void AssertStyleValidity(IStyle style, Boolean isRequireExhaustive)
-        {
-            foreach (StyleSetters setter in Enum.GetValues(typeof(StyleSetters)))
-            {
-                if (style.TryGetValue(setter, out var val))
-                {
-                    if (!IsTypeValid(setter, val))
-                        throw new Exception("Setter: " + setter + " is of the wrong type");
-                }
-                else if (isRequireExhaustive)
-                    throw new Exception("Default style is missing a setter for " + setter);
-            }
-        }
-
-        private static Boolean IsTypeValid(StyleSetters setter, Object value)
-        {
-            switch (setter)
-            {
-                case StyleSetters.Margin:
-                case StyleSetters.Padding:
-                case StyleSetters.BorderThickness:
-                    return value is Thickness ||
-                           value is IConvertible;
-                case StyleSetters.Font:
-                    return value is Font;
-                case StyleSetters.FontName:
-                    return value is String;
-                case StyleSetters.FontSize:
-                    return value is IConvertible;
-                case StyleSetters.FontWeight:
-                    return value is FontStyle;
-                case StyleSetters.Foreground:
-                case StyleSetters.Background:
-                case StyleSetters.BorderBrush:
-                    return value is Brush;
-                case StyleSetters.VerticalAlignment:
-                    return value is VerticalAlignments;
-                case StyleSetters.HorizontalAlignment:
-                    return value is HorizontalAlignments;
-                case StyleSetters.Size:
-                    return value == null || value is ISize;
-                case StyleSetters.Height:
-                case StyleSetters.Width:
-                    return value == null || value is IConvertible;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(setter), setter, null);
-            }
-        }
-
         public virtual IEnumerable<IStyle> GetStylesForElement(IVisualElement element)
         {
             if (_elementStyles.TryGetValue(element.Id, out var styles))
-            {
                 for (var c = styles.Count - 1; c >= 0; c--)
                     yield return styles[c];
-            }
 
             if (_typeStyles.TryGetValue(element.GetType(), out var styleCollection))
-            {
                 foreach (var style in styleCollection)
                 {
                     switch (style.Scope)
                     {
                         case IVisualFinder container:
-                            if (container.Contains(element))
-                            {
-                                yield return style.Style;
-                            }
+                            if (container.Contains(element)) yield return style.Style;
 
                             break;
                         case IVisualElement ele when ele == element:
@@ -98,12 +43,9 @@ namespace Das.Views.Styles
                     }
 
                     if (styles != default)
-                    {
                         for (var c = styles.Count - 1; c >= 0; c--)
                             yield return styles[c];
-                    }
                 }
-            }
 
             yield return _defaultStyle;
         }
@@ -124,7 +66,7 @@ namespace Das.Views.Styles
                     forElement.Add(elementStyle);
                     break;
                 case TypeStyle typeStyle:
-                    Type forType = null;
+                    Type? forType = null;
                     var currentType = typeStyle.GetType();
                     while (currentType != typeof(Object) && currentType != null)
                     {
@@ -159,7 +101,7 @@ namespace Das.Views.Styles
         }
 
         public void RegisterStyleSetter<T>(StyleSetters setter, Object value,
-            IVisualElement scope)
+                                           IVisualElement scope)
             where T : IVisualElement
         {
             var style = new TypeStyle<T>();
@@ -174,7 +116,7 @@ namespace Das.Views.Styles
             var styles = GetStylesForElement(element);
             foreach (var style in styles)
             {
-                Object v = null;
+                Object? v = null;
 
                 if (asDc == null && !style.TryGetValue(setter, out v))
                     continue;
@@ -197,7 +139,56 @@ namespace Das.Views.Styles
                 }
             }
 
-            return _defaultStyle[setter] is T good ? good : default;
+            return _defaultStyle[setter] is T good ? good : default!;
+        }
+
+        private static void AssertStyleValidity(IStyle style, Boolean isRequireExhaustive)
+        {
+            foreach (StyleSetters setter in Enum.GetValues(typeof(StyleSetters)))
+                if (style.TryGetValue(setter, out var val))
+                {
+                    if (!IsTypeValid(setter, val))
+                        throw new Exception("Setter: " + setter + " is of the wrong type");
+                }
+                else if (isRequireExhaustive)
+                {
+                    throw new Exception("Default style is missing a setter for " + setter);
+                }
+        }
+
+        private static Boolean IsTypeValid(StyleSetters setter, Object value)
+        {
+            switch (setter)
+            {
+                case StyleSetters.Margin:
+                case StyleSetters.Padding:
+                case StyleSetters.BorderThickness:
+                    return value is Thickness ||
+                           value is IConvertible;
+                case StyleSetters.Font:
+                    return value is Font;
+                case StyleSetters.FontName:
+                    return value is String;
+                case StyleSetters.FontSize:
+                    return value is IConvertible;
+                case StyleSetters.FontWeight:
+                    return value is FontStyle;
+                case StyleSetters.Foreground:
+                case StyleSetters.Background:
+                case StyleSetters.BorderBrush:
+                    return value is SolidColorBrush;
+                case StyleSetters.VerticalAlignment:
+                    return value is VerticalAlignments;
+                case StyleSetters.HorizontalAlignment:
+                    return value is HorizontalAlignments;
+                case StyleSetters.Size:
+                    return value == null || value is ISize;
+                case StyleSetters.Height:
+                case StyleSetters.Width:
+                    return value == null || value is IConvertible;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(setter), setter, null);
+            }
         }
 
         private readonly IStyle _defaultStyle;

@@ -4,7 +4,7 @@ using Das.Views.Core.Geometry;
 
 namespace Das.Views.Rendering
 {
-    public class RenderedVisual : IRenderedVisual
+    public readonly struct RenderedVisual : IRenderedVisual
     {
         public RenderedVisual(IVisualElement element, ICube position)
         {
@@ -12,13 +12,13 @@ namespace Das.Views.Rendering
             Position = position;
         }
 
+        public IVisualElement Element { get; }
+
+        public ICube Position { get; }
+
         public override String ToString()
         {
             return Element + "\t" + Position;
         }
-
-        public IVisualElement Element { get; }
-
-        public ICube Position { get; }
     }
 }

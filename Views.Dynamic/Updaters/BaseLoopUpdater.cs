@@ -28,7 +28,10 @@ namespace Das.Views
                 swLast.Restart();
 
                 if (IsChanged)
+                {
                     Update();
+                    continue;
+                }
 
                 if (swLast.ElapsedMilliseconds >= _minDelay)
                     continue;
@@ -36,11 +39,11 @@ namespace Das.Views
                 var letsWait = _minDelay - (Int32)swLast.ElapsedMilliseconds;
                 if (letsWait < 0)
                     continue;
-#if !NET40
+                #if !NET40
                 await Task.Delay(letsWait);
-#else
+                #else
                 System.Threading.Thread.Sleep(letsWait);
-#endif
+                #endif
             } while (!_isDisposed);
         }
 

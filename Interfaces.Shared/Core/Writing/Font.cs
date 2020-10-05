@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Extensions;
-
 
 namespace Das.Views.Core.Writing
 {
@@ -15,17 +15,9 @@ namespace Das.Views.Core.Writing
             var familyHash = String.Intern(FamilyName).GetHashCode();
 
             _hashCode = Convert.ToInt32(Size) +
-                        ((Int32)FontStyle << 8) +
+                        ((Int32) FontStyle << 8) +
                         (familyHash << 11);
         }
-
-        private readonly Int32 _hashCode;
-
-        public Double Size { get; }
-
-        public String FamilyName { get; }
-
-        public FontStyle FontStyle { get; }
 
         public Boolean Equals(Font other)
         {
@@ -41,20 +33,8 @@ namespace Das.Views.Core.Writing
             return other.FamilyName.Equals(FamilyName, StringComparison.Ordinal);
         }
 
-        public override Boolean Equals(Object ooooo)
-        {
-            switch (ooooo)
-            {
-                case IFont fu:
-                    return Equals(fu);
-            }
-
-            return false;
-        }
-
         public Boolean Equals(IFont other)
         {
-
             if (ReferenceEquals(other, null))
                 return false;
 
@@ -67,7 +47,27 @@ namespace Das.Views.Core.Writing
             return other.FamilyName.Equals(FamilyName, StringComparison.Ordinal);
         }
 
-        public override Int32 GetHashCode() => _hashCode;
+        public Double Size { get; }
+
+        public String FamilyName { get; }
+
+        public FontStyle FontStyle { get; }
+
+        public override Boolean Equals(Object ooooo)
+        {
+            switch (ooooo)
+            {
+                case IFont fu:
+                    return Equals(fu);
+            }
+
+            return false;
+        }
+
+        public override Int32 GetHashCode()
+        {
+            return _hashCode;
+        }
 
         public static Font operator *(Font font, Double val)
         {
@@ -80,6 +80,11 @@ namespace Das.Views.Core.Writing
             return new Font(font.Size * val, font.FamilyName, font.FontStyle);
         }
 
-        public override String ToString() => $"{FamilyName} {FontStyle}: {Size}";
+        public override String ToString()
+        {
+            return $"{FamilyName} {FontStyle}: {Size}";
+        }
+
+        private readonly Int32 _hashCode;
     }
 }

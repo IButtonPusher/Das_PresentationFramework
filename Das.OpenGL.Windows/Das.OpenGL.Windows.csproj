@@ -119,6 +119,5 @@
   </ItemGroup>
   <Import Project="..\Windows.Shared\Windows.Shared.projitems" Label="Shared" />
   <Import Project="..\WinForms.Shared\WinForms.Shared.projitems" Label="Shared" />
-  <Import Project="..\..\NetFramework\CSharp8NetFramework\CSharp8NetFramework.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

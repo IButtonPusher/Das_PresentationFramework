@@ -7,14 +7,14 @@ using Das.Views.Core.Writing;
 
 namespace Das.OpenGL.Text.FreeType
 {
-    public class FreeTypeFontProvider : IFontProvider
+    public class FreeTypeFontProvider : IFontProvider<GLFont>, IFontProvider
     {
         private readonly IGLContext _context;
 
         public FreeTypeFontProvider(DirectoryInfo fontDirectory, IGLContext context)
         {
             _context = context;
-            _cached = new Dictionary<IFont, IFontRenderer>();
+            _cached = new Dictionary<IFont, GLFont>();
             _fontFiles = new Dictionary<string, Dictionary<FontStyle, FileInfo>>(
                 StringComparer.OrdinalIgnoreCase);
 
@@ -77,7 +77,7 @@ namespace Das.OpenGL.Text.FreeType
             }
         }
 
-        public IFontRenderer GetRenderer(IFont font)
+        public GLFont GetRenderer(IFont font)
         {
             if (_cached.TryGetValue(font, out var found))
                 return found;
@@ -96,7 +96,9 @@ namespace Das.OpenGL.Text.FreeType
 
         }
 
-        private readonly Dictionary<IFont, IFontRenderer> _cached;
+        private readonly Dictionary<IFont, GLFont> _cached;
         private readonly Dictionary<String, Dictionary<FontStyle, FileInfo>> _fontFiles;
+
+        IFontRenderer IFontProvider.GetRenderer(IFont font)=> GetRenderer(font);
     }
 }

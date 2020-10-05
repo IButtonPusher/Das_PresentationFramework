@@ -60,13 +60,6 @@ namespace Das.Mvvm
             set => SetSelected(value);
         }
 
-        public void SetSelectionAll(Boolean isSelected)
-        {
-            SetSelected(isSelected 
-                ? this.Select(i => i.Item) 
-                : Enumerable.Empty<T>());
-        }
-
         private void OnPropertyChanged(Object sender, PropertyChangedEventArgs e)
         {
             if (_isSuspendEvents)
@@ -80,6 +73,13 @@ namespace Das.Mvvm
             var searchSelected = new HashSet<T>(items);
             foreach (var item in this)
                 item.IsSelected = searchSelected.Contains(item.Item);
+        }
+
+        public void SetSelectionAll(Boolean isSelected)
+        {
+            SetSelected(isSelected
+                ? this.Select(i => i.Item)
+                : Enumerable.Empty<T>());
         }
 
         private readonly Boolean _isSuspendEvents;

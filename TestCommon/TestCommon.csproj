@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Remove="BasicGlobalStyle.cs" />
+    <Compile Remove="Company\CompanyView.cs" />
     <Compile Remove="Company\CompanyViewProvider.cs" />
     <Compile Remove="Scene3d\CubeView.cs" />
   </ItemGroup>

@@ -3,29 +3,35 @@
   "DesignObject": "TestCompanyVm",
   "Content": {
     "StackPanel[ICompanyViewModel]": {
-      "Binding":  "Self",
+      "Binding": "Self",
       "Orientation": "Horizontal",
       "Children": [
         {
-          "RepeaterPanel[EmployeeViewModel]": {
+          "ScrollPanel[EmployeeViewModel]": {
+            "ScrollMode": "Vertical",
             "Binding": "Employees",
             "Content": {
-              "StackPanel[IEmployee]": {
-                "Orientation": "Horizontal",
-                "Children": [
-                  {
-                    "Label": {
-                      "Binding": "FirstName",
-                      "Style": "TestBorderStyle"
-                    }
-                  },
-                  {
-                    "Label": {
-                      "Binding": "LastName",
-                      "Style": "StyleForLabel"
-                    }
+              "RepeaterPanel[EmployeeViewModel]": {
+                "Binding": "Employees",
+                "Content": {
+                  "StackPanel[IEmployee]": {
+                    "Orientation": "Horizontal",
+                    "Children": [
+                      {
+                        "Label": {
+                          "Binding": "FirstName",
+                          "Style": "TestBorderStyle"
+                        }
+                      },
+                      {
+                        "Label": {
+                          "Binding": "LastName",
+                          "Style": "StyleForLabel"
+                        }
+                      }
+                    ]
                   }
-                ]
+                }
               }
             }
           }
@@ -36,7 +42,7 @@
         {
           "PieChart[String][Double]": {
             "Binding": "SalesReport",
-            "Style": "LegendItemStyle" 
+            "Style": "LegendItemStyle"
           }
         }
       ]

@@ -9,7 +9,7 @@ using Das.Views.Core.Geometry;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
-using Das.ViewsModels;
+using Das.ViewModels;
 using Size = System.Windows.Size;
 
 namespace Das.Views.Wpf
@@ -111,9 +111,11 @@ namespace Das.Views.Wpf
 
         public Boolean IsChanged => _isChanged;
 
-        public IPoint GetOffset(IPoint input)
+        public IPoint2D GetOffset(IPoint2D input)
         {
-            return Core.Geometry.Point.Empty;
+            return Core.Geometry.Point2D.Empty;
         }
+
+        public IVisualRenderer Visual => View;
     }
 }

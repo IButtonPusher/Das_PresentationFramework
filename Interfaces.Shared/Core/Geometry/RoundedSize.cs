@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Core.Geometry
 {
     public class RoundedSize : IRoundedSize
     {
         public Int32 Width { get; set; }
+
         public Int32 Height { get; set; }
 
         public Boolean Equals(IRoundedSize other)
@@ -17,7 +19,9 @@ namespace Das.Views.Core.Geometry
         }
 
         public override Boolean Equals(Object obj)
-            => (obj is IRoundedSize isize && Equals(isize));
+        {
+            return obj is IRoundedSize isize && Equals(isize);
+        }
 
         public override Int32 GetHashCode()
         {

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Views.Core.Geometry;
+using Das.Views.Rendering;
 using Das.Views.Windows;
 
 namespace Das.Views.Winforms
@@ -86,5 +87,22 @@ namespace Das.Views.Winforms
         /// we keep a reference to this guy so he doesn't get GC'd
         /// </summary>
         private Graphics? _hostGraphics;
+    }
+
+    public class HostedControl<TAsset> : HostedControl, IVisualHost<TAsset>
+    {
+        public HostedControl(IVisualRenderer visual)
+        {
+            Visual = visual;
+        }
+
+        public virtual IPoint2D GetOffset(IPoint2D input)
+        {
+            return Point2D.Empty;
+        }
+
+        public IVisualRenderer Visual { get; }
+
+        public TAsset Asset { get; set; }
     }
 }

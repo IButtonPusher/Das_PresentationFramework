@@ -6,7 +6,7 @@ namespace Das.Views.DataBinding
     public class ConverterBinding<TInput, TOutput> : BaseBinding<TOutput>
     {
         public ConverterBinding(IDataBinding<TInput> binding,
-            IValueConverter<TInput, TOutput> converter)
+                                IValueConverter<TInput, TOutput> converter)
         {
             _binding = binding;
             _converter = converter;

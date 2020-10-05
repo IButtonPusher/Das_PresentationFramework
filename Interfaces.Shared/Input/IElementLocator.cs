@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 
@@ -6,8 +8,13 @@ namespace Das.Views.Input
 {
     public interface IElementLocator
     {
-        IEnumerable<IRenderedVisual> GetElementsAt(IPoint point);
+        IEnumerable<IRenderedVisual> GetElementsAt(IPoint2D point2D);
 
-        IRenderedVisual? GetVisualForInput(IPoint point, InputAction inputAction);
+        IEnumerable<T> GetVisualsForInput<T>(IPoint2D point2D, 
+                                           InputAction inputAction) where T : class;
+
+        IEnumerable<IHandleInput<T>> GetVisualsForMouseInput<T>(IPoint2D point2D,
+                                                                InputAction inputAction) 
+            where T : IInputEventArgs;
     }
 }

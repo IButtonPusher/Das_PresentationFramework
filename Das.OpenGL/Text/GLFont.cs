@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Das.Extensions;
 using Das.OpenGL.Text.FreeType;
-using Das.Views;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
@@ -14,12 +13,12 @@ namespace Das.OpenGL.Text
     {
         private const Int32 SPACE = 32;
 
-        public GLFont(IFont font, string fontFile, uint size, IGLContext context)
+        public GLFont(IFont font, String fontFile, UInt32 size, IGLContext context)
         {
             Font = font;
             _fontSize = size;
             _context = context;
-            _wordRects = new Dictionary<string, Rectangle>();
+            _wordRects = new Dictionary<String, Rectangle>();
 
             _charGlyphs = new Dictionary<Int32, Glyph>();
             
@@ -42,39 +41,39 @@ namespace Das.OpenGL.Text
             var h = (IntPtr)(size << 6);
             FT.FT_Set_Char_Size(_facePtr, w, h, 0, 96);
             
-            _textures = new uint[128];
-            _extentX = new int[128];
+            _textures = new UInt32[128];
+            _extentX = new Int32[128];
             _listBase = GL.glGenLists(128);
             GL.glGenTextures(128, _textures);
             for (var c = 0; c < 128; c++)
                 CompileCharacter(_facePtr, c);
         }
 
-        private float _maxHeight;
-        private readonly uint _listBase;
-        private readonly uint _fontSize;
-        private uint[] _textures;
-        private int[] _extentX;
+        private Single _maxHeight;
+        private readonly UInt32 _listBase;
+        private readonly UInt32 _fontSize;
+        private UInt32[] _textures;
+        private Int32[] _extentX;
 
         private readonly FreeTypeFont _ftFont;
         private readonly IntPtr _facePtr;
         private readonly IGLContext _context;
         
         private readonly Dictionary<Int32, Glyph> _charGlyphs;
-        private readonly Dictionary<string, Rectangle> _wordRects;
+        private readonly Dictionary<String, Rectangle> _wordRects;
         private readonly Boolean _hasKerning;
 
         public IFont Font { get; }
 
-        public override string ToString() => Font.ToString();
+        public override String ToString() => Font.ToString();
 
-        public void CompileCharacter(IntPtr face, int c)
+        public void CompileCharacter(IntPtr face, Int32 c)
         {
             //  We first convert the number index to a character index
             var index = FT.FT_Get_Char_Index(face, Convert.ToChar(c));
 
             //  Here we load the actual glyph for the character
-            var ret = FT.FT_Load_Glyph(face, index, (int)FtLoadFlags.Default);
+            var ret = FT.FT_Load_Glyph(face, index, (Int32)FtLoadFlags.Default);
             if (ret != 0)
                 return;
 
@@ -95,53 +94,53 @@ namespace Das.OpenGL.Text
             
             _charGlyphs[c] = glyphItemB;
 
-            int size = (glyph_bmp.bitmap.width * glyph_bmp.bitmap.rows);
+            Int32 size = (glyph_bmp.bitmap.width * glyph_bmp.bitmap.rows);
             if (size <= 0)
             {
                 _extentX[c] = 0;
                 if (c == SPACE)
                 {
-                    GL.glNewList((uint)(_listBase + c), GL.COMPILE);
+                    GL.glNewList((UInt32)(_listBase + c), GL.COMPILE);
                     GL.glTranslatef(_fontSize >> 1, 0, 0);
-                    _extentX[c] = (int)(_fontSize >> 1);
+                    _extentX[c] = (Int32)(_fontSize >> 1);
                     GL.glEndList();
                 }
 
                 return;
             }
 
-            var bmp = new byte[size];
+            var bmp = new Byte[size];
             
             Marshal.Copy(glyph_bmp.bitmap.buffer, bmp, 0, bmp.Length);
             
             var width = GetSideLength(glyph_bmp.bitmap.width);
             var height = GetSideLength(glyph_bmp.bitmap.rows);
-            var expanded = new byte[2 * width * height];
+            var expanded = new Byte[2 * width * height];
             for (var j = 0; j < height; j++)
             {
                 for (var i = 0; i < width; i++)
                 {
                     expanded[2 * (i + j * width)] = expanded[2 * (i + j * width) + 1] =
                         (i >= glyph_bmp.bitmap.width || j >= glyph_bmp.bitmap.rows) ?
-                        (byte)0 : bmp[i + glyph_bmp.bitmap.width * j];
+                        (Byte)0 : bmp[i + glyph_bmp.bitmap.width * j];
                 }
             }
             
             GL.glBindTexture(GL.TEXTURE_2D, _textures[c]);
-            GL.glTexParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, (int)GL.LINEAR);
-            GL.glTexParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, (int)GL.LINEAR);
+            GL.glTexParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, (Int32)GL.LINEAR);
+            GL.glTexParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, (Int32)GL.LINEAR);
             
             GL.glTexImage2D(GL.TEXTURE_2D, 0, GL.RGBA, width, height,
                 0, GL.LUMINANCE_ALPHA, GL.UNSIGNED_BYTE, expanded);
             
-            GL.glNewList((uint)(_listBase + c), GL.COMPILE);
+            GL.glNewList((UInt32)(_listBase + c), GL.COMPILE);
             GL.glBindTexture(GL.TEXTURE_2D, _textures[c]);
             
             GL.glTranslatef(glyph_bmp.left, 0, 0);
             GL.glPushMatrix();
             GL.glTranslatef(0, glyph_bmp.top - glyph_bmp.bitmap.rows, 0);
-            var x = glyph_bmp.bitmap.width / (float)width;
-            var y = glyph_bmp.bitmap.rows / (float)height;
+            var x = glyph_bmp.bitmap.width / (Single)width;
+            var y = glyph_bmp.bitmap.rows / (Single)height;
 
             
             GL.glBegin(GL.QUADS);
@@ -160,14 +159,19 @@ namespace Das.OpenGL.Text
             GL.glEndList();
         }
 
-        public Size MeasureString(string text)
+        public void DrawString(String s, IBrush brush, IRectangle location)
         {
-            float w = 0;
+            DrawString(s, brush, location.TopLeft);
+        }
+
+        public Size MeasureString(String text)
+        {
+            Single w = 0;
             var isUnderrun = false;
-            float overrun = 0;
-            float underrun = 0;
+            Single overrun = 0;
+            Single underrun = 0;
             var top = 0f;
-            float bottom = 0;
+            Single bottom = 0;
 
             var glyphIndex = FT.FT_Get_Char_Index(_facePtr, text[0]);
 
@@ -175,7 +179,7 @@ namespace Das.OpenGL.Text
             {
                 var glyph = _charGlyphs[text[i]];
 
-                var gAdvanceX = (float)glyph.Advance.x; 
+                var gAdvanceX = (Single)glyph.Advance.x; 
                 var gBearingX = glyph.HorizontalBearingX;
                 var gWidth = glyph.Width;
 
@@ -217,10 +221,10 @@ namespace Das.OpenGL.Text
                 var cNext = text[i + 1];
                 var wasIndex = glyphIndex;
                 glyphIndex = FT.FT_Get_Char_Index(_facePtr, cNext);
-                var err = FT.FT_Get_Kerning(_facePtr, wasIndex, glyphIndex, (uint)KerningMode.Default,
+                var err = FT.FT_Get_Kerning(_facePtr, wasIndex, glyphIndex, (UInt32)KerningMode.Default,
                     out var kern);
 
-                var kerning = (float)kern.X;
+                var kerning = (Single)kern.X;
 
                 if (err != FtErrors.Ok)
                     throw new InvalidOperationException(err.ToString());
@@ -238,7 +242,7 @@ namespace Das.OpenGL.Text
             return new Size(w, h);
         }
 
-        public void DrawString(string text, IBrush brush, IPoint point)
+        public void DrawString(String text, IBrush brush, IPoint2D point2D)
         {
             if (!_wordRects.TryGetValue(text, out var wordRect))
             {
@@ -248,15 +252,19 @@ namespace Das.OpenGL.Text
 
             var font = _listBase;
 
-            var r = brush.Color.R;
-            var g = brush.Color.G;
-            var b = brush.Color.B;
 
-            var y = _context.Size.Height - (point.Y);
+            if (!(brush is SolidColorBrush scb))
+                throw new NotImplementedException();
+
+            var r = scb.Color.R;
+            var g = scb.Color.G;
+            var b = scb.Color.B;
+
+            var y = _context.Size.Height - (point2D.Y);
 
 
             GL.glPushAttrib(GL.TRANSFORM_BIT);
-            var viewport = new int[4];
+            var viewport = new Int32[4];
             GL.glGetIntegerv(GL.VIEWPORT, viewport);
             GL.glMatrixMode(GL.PROJECTION);
             GL.glPushMatrix();
@@ -273,7 +281,7 @@ namespace Das.OpenGL.Text
             GL.glEnable(GL.BLEND);
             GL.glBlendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
             GL.glListBase(font);
-            var modelview_matrix = new float[16];
+            var modelview_matrix = new Single[16];
             GL.glGetFloatv(GL.MODELVIEW_MATRIX, modelview_matrix);
             GL.glPushMatrix();
             GL.glColor3f(r, g, b);
@@ -284,12 +292,12 @@ namespace Das.OpenGL.Text
             var gap = _maxHeight - _fontSize + wordRect.Height;
             var offset = y - _fontSize - gap + bottom;
 
-            GL.glTranslated(point.X, offset, 0);
+            GL.glTranslated(point2D.X, offset, 0);
             GL.glMultMatrixf(modelview_matrix);
             
-            var textbytes = new byte[text.Length];
+            var textbytes = new Byte[text.Length];
             for (var i = 0; i < text.Length; i++)
-                textbytes[i] = (byte)text[i];
+                textbytes[i] = (Byte)text[i];
             GL.glCallLists(text.Length, GL.UNSIGNED_BYTE, textbytes);
             
             GL.glPopMatrix();
@@ -308,12 +316,12 @@ namespace Das.OpenGL.Text
 
             GL.glDeleteLists(_listBase, 128);
             GL.glDeleteTextures(128, _textures);
-            _textures = null;
-            _extentX = null;
+            //_textures = null;
+            //_extentX = null;
         }
 
 
-        private static int GetSideLength(int a)
+        private static Int32 GetSideLength(Int32 a)
         {
             var rval = 1;
             while (rval < a) rval <<= 1;

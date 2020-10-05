@@ -11,18 +11,21 @@ namespace Das.OpenGL
         public GLMeasureContext(IFontProvider fontProvider)
         {
             _fontProvider = fontProvider;
+            
         }
 
         private readonly IFontProvider _fontProvider;
         
+        
 
-        public override Size MeasureString(string s, Font font)
+        public override Size MeasureString(String s, Font font)
         {
             var renderer = _fontProvider.GetRenderer(font);
             var res = renderer.MeasureString(s);
             
             return res;
         }
+
 
         public override Size MeasureImage(IImage img) 
             => throw new NotImplementedException();

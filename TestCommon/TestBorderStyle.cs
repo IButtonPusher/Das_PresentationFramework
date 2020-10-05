@@ -10,7 +10,7 @@ namespace TestCommon
         public TestBorderStyle(IVisualElement element) : base(element)
         {
             Setters.Add(StyleSetters.BorderThickness, new Thickness(1,2,3,4));
-            Setters.Add(StyleSetters.BorderBrush, Brush.Red);
+            Setters.Add(StyleSetters.BorderBrush, SolidColorBrush.Red);
         }
     }
 }

@@ -25,10 +25,8 @@ namespace Das.Views.Panels
 
         public override void Dispose()
         {
-            for (var c = 0; c < Children.Count; c++)
-            {
-                Children[c].Dispose();
-            }
+            foreach (var child in Children)
+                child.Dispose();
         }
 
         protected override IEnumerable<IVisualElement> GetChildrenToRender()

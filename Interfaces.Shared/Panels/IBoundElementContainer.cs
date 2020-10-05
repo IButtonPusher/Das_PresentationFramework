@@ -1,18 +1,20 @@
-﻿using Das.Views.Core.Geometry;
+﻿using System;
+using System.Threading.Tasks;
+using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 using Das.Views.Styles;
-using Das.ViewsModels;
+using Das.ViewModels;
 
 namespace Das.Views.Panels
 {
     public interface IBoundElementContainer
     {
-        IVisualElement Element { get; set; }
+        Size AvailableSize { get; }
 
         IViewModel? DataContext { get; set; }
 
-        IStyleContext StyleContext { get; set; }
+        IVisualElement Element { get; set; }
 
-        Size AvailableSize { get; }
+        IStyleContext StyleContext { get; set; }
     }
 }

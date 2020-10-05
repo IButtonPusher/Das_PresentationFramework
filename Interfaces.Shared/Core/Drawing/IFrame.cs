@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 
 namespace Das.Views.Core.Drawing
 {
     /// <summary>
-    /// Two dimensional data from a three dimensional scene as observed by a camera.
+    ///     Two dimensional data from a three dimensional scene as observed by a camera.
     /// </summary>
     public interface IFrame
     {

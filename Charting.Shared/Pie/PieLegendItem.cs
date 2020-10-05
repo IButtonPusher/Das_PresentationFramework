@@ -10,7 +10,7 @@ using Das.Views.Rendering;
 namespace Das.Views.Charting.Pie
 {
     public class PieLegendItem<TKey, TValue> : BindableElement<IDataPoint<TKey, TValue>>,
-        IVisualFinder
+                                               IVisualFinder
         where TValue : IConvertible
     {
         public PieLegendItem()
@@ -18,12 +18,17 @@ namespace Das.Views.Charting.Pie
             _label = new Label<IDataPoint<TKey, TValue>>();
         }
 
+        public Boolean Contains(IVisualElement element)
+        {
+            return _label == element;
+        }
+
         public IBrush Brush { get; set; }
 
         public override void Arrange(ISize availableSpace, IRenderContext renderContext)
         {
             var h = availableSpace.Height * 0.7;
-            var center = new Point(0, h);
+            var center = new Point2D(0, h);
             renderContext.FillPie(center, h, 0, -90, Brush);
             var rect = new Rectangle(_offsetX, 0, availableSpace.Width - _offsetX, h);
             renderContext.DrawElement(_label, rect);
@@ -47,11 +52,6 @@ namespace Das.Views.Charting.Pie
         {
             base.SetBoundValue(value);
             _label.SetBoundValue(value);
-        }
-
-        public Boolean Contains(IVisualElement element)
-        {
-            return _label == element;
         }
 
         private readonly Label<IDataPoint<TKey, TValue>> _label;

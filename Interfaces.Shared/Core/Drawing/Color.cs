@@ -1,19 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Core.Drawing
 {
     public class Color : IColor, IEquatable<Color>
     {
-        public Byte A { get; }
-
-        public Byte B { get; }
-
-        public Byte R { get; }
-
-        public Byte G { get; }
-
-        private readonly Int32 _hash;
-
         public Color(Byte a, Byte r, Byte g, Byte b)
         {
             A = a;
@@ -29,34 +20,13 @@ namespace Das.Views.Core.Drawing
         {
         }
 
-        public static Color FromRgb(Byte r, Byte g, Byte b) => new Color(r,g,b);
+        public Byte A { get; }
 
-        public static Color White => new Color(255, 255, 255);
+        public Byte B { get; }
 
-        public static Color Red => new Color(255, 0, 0);
+        public Byte R { get; }
 
-        public static Color Black => new Color(0, 0, 0);
-
-        public static Color Transparent => new Color(0, 0, 0, 0);
-
-        public static Color Orange => new Color(255, 127, 39);
-
-        public static Color Yellow => new Color(255, 255, 0, 255);
-
-        public static Color Green => _green.Value;
-
-        private static readonly Lazy<Color> _green = new Lazy<Color>(()
-            => new Color(0, 255, 0));
-
-        public static Color Pink => _pink.Value;
-
-        private static readonly Lazy<Color> _pink = new Lazy<Color>(()
-            => new Color(255, 106, 155));
-
-        public static Color DarkGray => _darkGray.Value;
-
-        private static readonly Lazy<Color> _darkGray = new Lazy<Color>(()
-            => new Color(30, 30, 30));
+        public Byte G { get; }
 
         public Boolean Equals(Color other)
         {
@@ -66,10 +36,78 @@ namespace Das.Views.Core.Drawing
             return other._hash == _hash;
         }
 
-        public override Int32 GetHashCode() => _hash;
+        public static Color Black => _black.Value;
 
-        public override String ToString() => !Enum.IsDefined(typeof(Colors), _hash)
-            ? $"{R}, {G}, {B} - {A}"
-            : ((Colors) _hash).ToString();
+        public static Color Gray => _gray.Value;
+
+        public static Color DarkGray => _darkGray.Value;
+
+        public static Color LightGray => _lightGray.Value;
+
+        public static Color Green => _green.Value;
+
+        public static Color Orange => _orange.Value;
+
+        public static Color Pink => _pink.Value;
+
+        public static Color Red => _red.Value;
+
+        public static Color Transparent => _transparent.Value;
+
+        public static Color White => _white.Value;
+
+        public static Color Yellow => _yellow.Value;
+
+        public static Color FromRgb(Byte r, Byte g, Byte b)
+        {
+            return new Color(r, g, b);
+        }
+
+        public override Int32 GetHashCode()
+        {
+            return _hash;
+        }
+
+        public override String ToString()
+        {
+            return !Enum.IsDefined(typeof(Colors), _hash)
+                ? $"{R}, {G}, {B} - {A}"
+                : ((Colors) _hash).ToString();
+        }
+
+        private static readonly Lazy<Color> _green = new Lazy<Color>(()
+            => new Color(0, 255, 0));
+
+        private static readonly Lazy<Color> _pink = new Lazy<Color>(()
+            => new Color(255, 106, 155));
+
+        private static readonly Lazy<Color> _darkGray = new Lazy<Color>(()
+            => new Color(169, 169, 169));
+
+        private static readonly Lazy<Color> _lightGray = new Lazy<Color>(()
+            => new Color(211, 211, 211));
+
+        private static readonly Lazy<Color> _gray = new Lazy<Color>(()
+            => new Color(128, 128, 128));
+
+        private static readonly Lazy<Color> _black = new Lazy<Color>(()
+            => new Color(0, 0, 0));
+
+        private static readonly Lazy<Color> _orange = new Lazy<Color>(()
+            => new Color(255, 127, 39));
+
+        private static readonly Lazy<Color> _red = new Lazy<Color>(()
+            => new Color(255, 0, 0));
+
+        private static readonly Lazy<Color> _transparent = new Lazy<Color>(()
+            => new Color(0, 0, 0, 0));
+
+        private static readonly Lazy<Color> _white = new Lazy<Color>(()
+            => new Color(255, 255, 255));
+
+        private static readonly Lazy<Color> _yellow = new Lazy<Color>(()
+            => new Color(255, 255, 0, 255));
+
+        private readonly Int32 _hash;
     }
 }

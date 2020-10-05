@@ -10,12 +10,12 @@ namespace Das.OpenGL
     {
         private readonly IGLContext _context;
 
-        public FontBitmapEntry(IFont font, IGLContext context, uint listBase, 
-            uint listCount)
+        public FontBitmapEntry(IFont font, IGLContext context, UInt32 listBase, 
+            UInt32 listCount)
         {
             Font = font;
             _context = context;
-            Height = (int)(font.Size * (16.0f / 12.0f));
+            Height = (Int32)(font.Size * (16.0f / 12.0f));
             ListBase = listBase;
             ListCount = listCount;
         }
@@ -24,32 +24,36 @@ namespace Das.OpenGL
 
         public IntPtr HRC => _context.RenderContextHandle;
 
-        public string FaceName => Font.FamilyName;
+        public String FaceName => Font.FamilyName;
 
-        public int Height { get; }
+        public Int32 Height { get; }
 
-        public uint ListBase { get; }
+        public UInt32 ListBase { get; }
 
-        public uint ListCount { get; }
+        public UInt32 ListCount { get; }
 
         public IFont Font { get; }
 
-        public void DrawString(String text, IBrush brush, IPoint point)
+        public void DrawString(String text, IBrush brush, IPoint2D point2D)
         {
             var width = _context.Size.Width;
             var height = _context.Size.Height;
 
-            var x = Convert.ToInt32(point.X);
-            var y = Convert.ToInt32(point.Y);
-            var r = brush.Color.R;
-            var g = brush.Color.G;
-            var b = brush.Color.B;
+            var x = Convert.ToInt32(point2D.X);
+            var y = Convert.ToInt32(point2D.Y);
+
+            if (!(brush is SolidColorBrush scb))
+                throw new NotImplementedException();
+
+            var r = scb.Color.R;
+            var g = scb.Color.G;
+            var b = scb.Color.B;
 
             GL.glMatrixMode(GL.PROJECTION);
             GL.glPushMatrix();
             GL.glLoadIdentity();
 
-            var viewport = new int[4];
+            var viewport = new Int32[4];
             GL.glGetIntegerv(GL.VIEWPORT, viewport);
             GL.glOrtho(0, width, height, -10, -1, 1);
 
@@ -73,7 +77,7 @@ namespace Das.OpenGL
             //  Set the list base.
             GL.glListBase(ListBase);
 
-            var lists = text.Select(c => (byte)c).ToArray();
+            var lists = text.Select(c => (Byte)c).ToArray();
 
             GL.glCallLists(lists.Length, GL.UNSIGNED_BYTE, lists);
             GL.glFlush();
@@ -87,7 +91,12 @@ namespace Das.OpenGL
             GL.glMatrixMode(GL.MODELVIEW);
         }
 
-        public Size MeasureString(string text) => throw new NotImplementedException();
+        public void DrawString(String s, IBrush brush, IRectangle location)
+        {
+            DrawString(s, brush, location.TopLeft);
+        }
+
+        public Size MeasureString(String text) => throw new NotImplementedException();
 
         public void Dispose()
         {

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
-using Brush = System.Drawing.Brush;
 using Color = System.Drawing.Color;
 using Font = System.Drawing.Font;
 using FontStyle = System.Drawing.FontStyle;
@@ -39,7 +38,26 @@ namespace Das.Gdi.Core
             if (brushes.TryGetValue(brush, out var found))
                 return found;
 
-            found = GetBrush(brush.Color);
+            switch (brush)
+            {
+                case SolidColorBrush scb:
+                    found = GetBrush(scb.Color);
+                    break;
+
+                case HatchBrush hb:
+                    found = new System.Drawing.Drawing2D.HatchBrush(
+                        (System.Drawing.Drawing2D.HatchStyle)hb.HatchStyle,
+                        GetColor(hb.ForegroundColor),
+                        GetColor(hb.BackgroundColor));
+
+                    //found = brush as Brush ?? throw new NotImplementedException();
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
+
+            //found = GetBrush(brush.Color);
 
             brushes.Add(brush, found);
             return found;
@@ -92,14 +110,14 @@ namespace Das.Gdi.Core
             return pen15;
         }
 
-        public static Point GetPoint(IPoint point)
+        public static Point GetPoint(IPoint2D point2D)
         {
-            return new Point(Convert.ToInt32(point.X), Convert.ToInt32(point.Y));
+            return new Point(Convert.ToInt32(point2D.X), Convert.ToInt32(point2D.Y));
         }
 
-        public static Views.Core.Geometry.Point GetPoint(Point point)
+        public static Point2D GetPoint(Point point)
         {
-            return new Views.Core.Geometry.Point(point.X, point.Y);
+            return new Point2D(point.X, point.Y);
         }
 
         public static Rectangle GetRect(IRectangle rect)

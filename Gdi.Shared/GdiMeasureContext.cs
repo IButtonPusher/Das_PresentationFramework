@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Threading.Tasks;
 using Das.Gdi.Core;
-using Das.Views.Core.Drawing;
 using Das.Views.Measuring;
 using Font = Das.Views.Core.Writing.Font;
 using Size = Das.Views.Core.Geometry.Size;
@@ -17,12 +16,10 @@ namespace Das.Gdi
             Graphics = Graphics.FromImage(bmp);
         }
 
-        internal Graphics Graphics { get; }
 
-        public override Size MeasureImage(IImage img)
-        {
-            return new Size(img.Width, img.Height);
-        }
+        // ReSharper disable once MemberCanBePrivate.Global
+        public Graphics Graphics { get; }
+
 
         public override Size MeasureString(String s, Font font)
         {

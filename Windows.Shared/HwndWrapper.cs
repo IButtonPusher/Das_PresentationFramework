@@ -22,7 +22,7 @@
 //        {
 //            s_msgGCMemory = UnsafeNativeMethods.RegisterWindowMessage("HwndWrapper.GetGCMemMessage");
 //        }
- 
+
 //        ///<SecurityNote>
 //        ///    SecurityCritical: uses UnsafeNativeMethods GetModuleHandle
 //        ///                      elevates to call HwndSubclass Dispose
@@ -41,10 +41,10 @@
 //            IntPtr parent,
 //            HwndWrapperHook[] hooks)
 //        {
- 
+
 //            _ownerThreadID = new SecurityCriticalDataForSet<int>(Thread.CurrentThread.ManagedThreadId);
- 
- 
+
+
 //            // First, add the set of hooks.  This allows the hooks to receive the
 //            // messages sent to the window very early in the process.
 //            if(hooks != null)
@@ -55,33 +55,33 @@
 //                        AddHook(hooks[i]);
 //                }
 //            }
- 
- 
+
+
 //            _wndProc = new SecurityCriticalData<HwndWrapperHook>(new HwndWrapperHook(WndProc));
- 
+
 //            // We create the HwndSubclass object so that we can use its
 //            // window proc directly.  We will not be "subclassing" the
 //            // window we create.
 //            HwndSubclass hwndSubclass = new HwndSubclass(_wndProc.Value);
-            
+
 //            // Register a unique window class for this instance.
 //            NativeMethods.WNDCLASSEX_D wc_d = new NativeMethods.WNDCLASSEX_D();
- 
+
 //            IntPtr hNullBrush = UnsafeNativeMethods.CriticalGetStockObject(NativeMethods.NULL_BRUSH);
- 
+
 //            if (hNullBrush == IntPtr.Zero)
 //            {
 //                throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
 //            }
- 
+
 //            IntPtr hInstance = UnsafeNativeMethods.GetModuleHandle( null );
- 
+
 //            // We need to keep the Delegate object alive through the call to CreateWindowEx().
 //            // Subclass.WndProc will install a better delegate (to the same function) when it
 //            // processes the first message.
 //            // But this first delegate needs be held alive until then.
 //            NativeMethods.WndProc initialWndProc = new NativeMethods.WndProc(hwndSubclass.SubclassWndProc);
- 
+
 //            // The class name is a concat of AppName, ThreadName, and RandomNumber.
 //            // Register will fail if the string gets over 255 in length.
 //            // So limit each part to a reasonable amount.
@@ -90,18 +90,18 @@
 //                appName = AppDomain.CurrentDomain.FriendlyName.Substring(0, 128);
 //            else
 //                appName = AppDomain.CurrentDomain.FriendlyName;
- 
+
 //            string threadName;
 //            if(null != Thread.CurrentThread.Name && 64 <= Thread.CurrentThread.Name.Length)
 //                threadName = Thread.CurrentThread.Name.Substring(0, 64);
 //            else
 //                threadName = Thread.CurrentThread.Name;
- 
+
 //            // Create a suitable unique class name.
 //            _classAtom = 0;
 //            string randomName = Guid.NewGuid().ToString();
 //            string className = String.Format(CultureInfo.InvariantCulture, "HwndWrapper[{0};{1};{2}]", appName, threadName, randomName);
- 
+
 //            wc_d.cbSize        = Marshal.SizeOf(typeof(NativeMethods.WNDCLASSEX_D));
 //            wc_d.style         = classStyle;
 //            wc_d.lpfnWndProc   = initialWndProc;
@@ -114,13 +114,13 @@
 //            wc_d.lpszMenuName  = "";
 //            wc_d.lpszClassName = className;
 //            wc_d.hIconSm       = IntPtr.Zero;
- 
+
 //            // Register the unique class for this instance.
 //            // Note we use a GUID in the name so we are confident that
 //            // the class name should be unique.  And RegisterClassEx won't
 //            // fail (for that reason).
 //            _classAtom = UnsafeNativeMethods.RegisterClassEx(wc_d);
- 
+
 //            // call CreateWindow
 //            _isInCreateWindow = true;
 //            try {
@@ -157,23 +157,23 @@
 //            }
 //            GC.KeepAlive(initialWndProc);
 //        }
- 
- 
+
+
 //        ~HwndWrapper()
 //        {
 //            Dispose(/*disposing = */ false, 
 //                    /*isHwndBeingDestroyed = */ false);
 //        }
-        
+
 //        public virtual void Dispose()
 //        {
 //            //             VerifyAccess();
- 
+
 //            Dispose(/*disposing = */ true, 
 //                    /*isHwndBeingDestroyed = */ false);
 //            GC.SuppressFinalize(this);
 //        }            
- 
+
 //        // internal Dispose(bool, bool)
 //        /// <SecurityNote>
 //        ///  TreatAsSafe:  we demand when constructed, disposing considered safe
@@ -188,24 +188,24 @@
 //                // a WM_NCDESTROY -- WndProc may catch this and call Dispose again.
 //                return;
 //            }
- 
+
 //            if(disposing)
 //            {
 //                // diposing == false means we're being called from the finalizer
 //                // and can't follow any reference types that may themselves be
 //                // finalizable - thus don't call the Disposed callback.
- 
+
 //                // Notify listeners that we are being disposed.
 //                if(Disposed != null)
 //                {
 //                    Disposed(this, EventArgs.Empty);
 //                }
 //            }
- 
+
 //            // We are now considered disposed.
 //            _isDisposed = true;
- 
-            
+
+
 //            if (isHwndBeingDestroyed)
 //            {
 //                // The window is in the process of being destroyed.  We can't call UnregisterClass yet
@@ -217,7 +217,7 @@
 //                // The window isn't in the process of being destroyed and it hasn't been destroyed yet
 //                // (we know this since we're listening for WM_NCDESTROY).  Since we're being disposed
 //                // we destroy it now.
- 
+
 //                if(Thread.CurrentThread.ManagedThreadId == _ownerThreadID.Value)
 //                {
 //                    // We are the owner thread, we can safely destroy the window and unregister
@@ -233,12 +233,12 @@
 //                        new DestroyWindowArgs(_handle, _classAtom));
 //                }
 //            }
- 
-         
+
+
 //            _classAtom = 0;
 //            _handle = null;
 //        }
-            
+
 //        /// <SecurityNote>
 //        ///     Critical: Returns the handle of the window
 //        /// </SecurityNote>
@@ -248,7 +248,7 @@
 //            {
 //                // This could be called from other threads, so snap the member.
 //                SecurityCriticalDataClass<IntPtr> handle = _handle;
-                
+
 //                if (handle != null)
 //                {
 //                    return handle.Value;
@@ -259,9 +259,9 @@
 //                }
 //            }
 //        }
- 
+
 //        public event EventHandler Disposed;
- 
+
 //        /// <SecurityNote>
 //        ///     Critical: Used to add hooks to the system which can be used to listen to window messages
 //        /// </SecurityNote>
@@ -273,10 +273,10 @@
 //            {
 //                _hooks = new SecurityCriticalDataClass<WeakReferenceList>(new WeakReferenceList());
 //            }
- 
+
 //            _hooks.Value.Insert(0, hook);
 //        }
- 
+
 //        /// <SecurityNote>
 //        ///     Critical: Used to add hooks to the system which can be used to listen to window messages
 //        /// </SecurityNote>
@@ -289,7 +289,7 @@
 //            }
 //            _hooks.Value.Add(hook);
 //        }
- 
+
 //        /// <SecurityNote>
 //        ///     Critical: This code acceses critical value hooks     
 //        /// </SecurityNote>
@@ -302,7 +302,7 @@
 //                _hooks.Value.Remove(hook);
 //            }
 //        }
- 
+
 //        /// <SecurityNote>
 //        ///     Critical: Calls the hooks and can be used to send spurious input to the system
 //        /// </SecurityNote>
@@ -312,29 +312,29 @@
 //            // The default result for messages we handle is 0.
 //            IntPtr result = IntPtr.Zero;
 //            WindowMessage message = (WindowMessage)msg;
-        
+
 //            // Call all of the hooks
 //            if(_hooks != null)
 //            {
 //                foreach(HwndWrapperHook hook in _hooks.Value)
 //                {
 //                    result = hook(hwnd, msg, wParam, lParam, ref handled);
- 
+
 //                    CheckForCreateWindowFailure(result, handled);
- 
+
 //                    if(handled)
 //                    {
 //                        break;
 //                    }
 //                }
 //            }
- 
+
 //            if (message == WindowMessage.WM_NCDESTROY)
 //            {
 //                Dispose(/*disposing = */ true, 
 //                        /*isHwndBeingDestroyed = */ true);
 //                GC.SuppressFinalize(this);
- 
+
 //                // We want the default window proc to process this message as
 //                // well, so we mark it as unhandled.
 //                handled = false;
@@ -347,18 +347,18 @@
 //                result =  lHeap;
 //                handled = true;
 //            }
- 
+
 //            CheckForCreateWindowFailure(result, true);
- 
+
 //            // return our result
 //            return result;
 //        }
- 
+
 //        private void CheckForCreateWindowFailure( IntPtr result, bool handled )
 //        {
 //            if( ! _isInCreateWindow )
 //                return;
-            
+
 //            if( IntPtr.Zero != result )
 //            {
 //                System.Diagnostics.Debug.WriteLine("Non-zero WndProc result=" + result);
@@ -371,8 +371,8 @@
 //                }
 //            }
 //        }
- 
- 
+
+
 //        /// <summary>
 //        /// Destroys the window with the given handle and class atom and unregisters its window class
 //        /// </summary>
@@ -388,17 +388,17 @@
 //        {
 //            SecurityCriticalDataClass<IntPtr> handle = ((DestroyWindowArgs)args).Handle;
 //            ushort classAtom = ((DestroyWindowArgs)args).ClassAtom;
- 
+
 //            Invariant.Assert(handle != null && handle.Value != IntPtr.Zero,
 //               "Attempting to destroy an invalid hwnd");
- 
+
 //            UnsafeNativeMethods.DestroyWindow(new HandleRef(null, handle.Value));
- 
+
 //            UnregisterClass((object)classAtom);
- 
+
 //            return null;
 //        }
- 
+
 //        /// <summary>
 //        /// Unregisters the window class represented by classAtom
 //        /// </summary>
@@ -413,7 +413,7 @@
 //        internal static object UnregisterClass(object arg)
 //        {
 //            ushort classAtom = (ushort)arg;
- 
+
 //            if (classAtom != 0)
 //            {
 //                IntPtr hInstance = UnsafeNativeMethods.GetModuleHandle(null);
@@ -421,10 +421,10 @@
 //                                new IntPtr(classAtom), //* this function is defined as taking a type lpClassName - but this can be an atom. 2 Low Bytes are the atom*/ 
 //                                hInstance);
 //            }
- 
+
 //            return null;
 //        }
- 
+
 //        // This is used only so that DestroyWindow can take a single object parameter
 //        // in order for it to be called by a DispatcherOperationCallback
 //        internal class DestroyWindowArgs
@@ -434,7 +434,7 @@
 //                _handle = handle;
 //                _classAtom = classAtom;
 //            }
- 
+
 //            public SecurityCriticalDataClass<IntPtr> Handle
 //            {
 //                get
@@ -442,7 +442,7 @@
 //                    return _handle;
 //                }
 //            }
- 
+
 //            public ushort ClassAtom
 //            {
 //                get
@@ -450,26 +450,26 @@
 //                    return _classAtom;
 //                }
 //            }
- 
+
 //            private SecurityCriticalDataClass<IntPtr> _handle;
 //            private ushort _classAtom;
 //        }
-        
- 
+
+
 //        private SecurityCriticalDataClass<IntPtr> _handle;
 //        private UInt16 _classAtom;
 //        private SecurityCriticalDataClass<WeakReferenceList> _hooks;
 //        private SecurityCriticalDataForSet<int> _ownerThreadID;
-        
+
 //        /// <SecurityNote>
 //        ///     Critical: Provides access to Win32 message loop which is considerd an elevation of privilage
 //        /// </SecurityNote>
 //        [SecurityCritical]
 //        private SecurityCriticalData<HwndWrapperHook> _wndProc;
 //        private bool _isDisposed;
- 
+
 //        private bool _isInCreateWindow = false;     // debugging variable (temporary)
- 
+
 //        // Message to cause a dispose.  We need this to ensure we destroy the window on the right thread.
 //        /// <SecurityNote>
 //        ///     Critical: This is initialized under an elevation
@@ -478,3 +478,6 @@
 //        private static WindowMessage s_msgGCMemory;
 //    } // class RawWindow
 //}
+
+using System;
+using System.Threading.Tasks;

@@ -5,7 +5,7 @@ using Das.Views.Core.Geometry;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
-using Das.ViewsModels;
+using Das.ViewModels;
 using WinForms.Shared;
 using Size = Das.Views.Core.Geometry.Size;
 
@@ -13,10 +13,11 @@ namespace Das.Views.Winforms
 {
     public abstract class ViewForm : Form, IViewHost
     {
-        public ViewForm(HostedViewControl control)
+        public ViewForm(HostedViewControl control) //: base(control.View, control)
         {
             _contents = control;
             _availableSize = new Size(Width, Height);
+            _changeLock = new Object();
 
             Controls.Add(_contents);
             _contents.Dock = DockStyle.Fill;
@@ -70,17 +71,15 @@ namespace Das.Views.Winforms
 
         public Thickness RenderMargin { get; set; } = Thickness.Empty;
 
+        public abstract IPoint2D GetOffset(IPoint2D input);
+
         public Boolean IsLoaded => _contents.IsLoaded;
 
         public event Func<Task>? HostCreated;
 
-        //public event EventHandler HostCreated
-        //{
-        //    add => HandleCreated += value;
-        //    remove => HandleCreated -= value;
-        //}
-
         public event Action<ISize>? AvailableSizeChanged;
+        
+
         public void Invoke(Action action) => base.Invoke(action);
 
         public Task InvokeAsync(Action action)
@@ -89,15 +88,29 @@ namespace Das.Views.Winforms
         }
 
         private Boolean _isChanged;
+        private Object _changeLock;
 
         public void AcceptChanges()
         {
+            lock (_changeLock)
+                _isChanged = false;
 
+            _contents.AcceptChanges();
         }
 
-        public virtual Boolean IsChanged => View != null && View.IsChanged || _isChanged;
+        public virtual Boolean IsChanged
+        {
+            get
+            {
+                if (View != null && View.IsChanged)
+                    return true;
 
-        public IViewModel DataContext
+                lock (_changeLock)
+                    return _isChanged;
+            }
+        }
+
+        public IViewModel? DataContext
         {
             get => _contents.DataContext;
             set => _contents.DataContext = value;
@@ -110,6 +123,7 @@ namespace Das.Views.Winforms
         public IView View
         {
             get => _contents.View;
+            // ReSharper disable once UnusedMember.Global
             protected set => _contents.SetView(value);
         }
 
@@ -121,7 +135,5 @@ namespace Das.Views.Winforms
             set => _contents.ZoomLevel = value;
         }
 
-
-        public abstract IPoint GetOffset(IPoint input);
     }
 }

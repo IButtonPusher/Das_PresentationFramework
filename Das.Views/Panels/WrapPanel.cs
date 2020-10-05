@@ -5,7 +5,8 @@ namespace Das.Views.Panels
 {
     public class WrapPanel<T> : BaseSequentialPanel<T>
     {
-        public WrapPanel() : base(default, new SequentialRenderer(true))
+        public WrapPanel() : base(default!,
+            new SequentialRenderer(true))
         {
             
         }

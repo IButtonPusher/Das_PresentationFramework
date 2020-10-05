@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Shared;
 using Windows.Shared.Messages;
+
 // ReSharper disable UnusedMember.Global
 
 namespace Das.Views.Windows
@@ -13,12 +14,12 @@ namespace Das.Views.Windows
         [DllImport(Gdi32)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern Boolean BitBlt(IntPtr hdc, Int32 nXDest, Int32 nYDest, Int32 nWidth,
-            Int32 nHeight, IntPtr hdcSrc, Int32 nXSrc, Int32 nYSrc, UInt32 dwRop);
+                                            Int32 nHeight, IntPtr hdcSrc, Int32 nXSrc, Int32 nYSrc, UInt32 dwRop);
 
         [DllImport(Gdi32, SetLastError = true)]
         public static extern Int32 ChoosePixelFormat(IntPtr hDC,
-            [In] [MarshalAs(UnmanagedType.LPStruct)]
-            Pixelformatdescriptor ppfd);
+                                                     [In] [MarshalAs(UnmanagedType.LPStruct)]
+                                                     Pixelformatdescriptor ppfd);
 
         [DllImport(Gdi32, ExactSpelling = true, SetLastError = true)]
         public static extern IntPtr CreateCompatibleDC(IntPtr hdc);
@@ -32,17 +33,27 @@ namespace Das.Views.Windows
 
         [DllImport(Gdi32)]
         public static extern IntPtr CreateDIBSection(IntPtr hdc, [In] ref BitMapInfo pbmi, UInt32 iUsage,
-            out IntPtr ppvBits, IntPtr hSection, UInt32 dwOffset);
+                                                     out IntPtr ppvBits, IntPtr hSection, UInt32 dwOffset);
 
         [DllImport(Gdi32, SetLastError = true)]
         public static extern IntPtr CreateFont(Int32 nHeight, Int32 nWidth, Int32 nEscapement,
-            Int32 nOrientation, UInt32 fnWeight, UInt32 fdwItalic, UInt32 fdwUnderline, UInt32
-                fdwStrikeOut, UInt32 fdwCharSet, UInt32 fdwOutputPrecision, UInt32
-                fdwClipPrecision, UInt32 fdwQuality, UInt32 fdwPitchAndFamily, String lpszFace);
+                                               Int32 nOrientation, UInt32 fnWeight, UInt32 fdwItalic,
+                                               UInt32 fdwUnderline, UInt32
+                                                   fdwStrikeOut, UInt32 fdwCharSet, UInt32 fdwOutputPrecision, UInt32
+                                                   fdwClipPrecision, UInt32 fdwQuality, UInt32 fdwPitchAndFamily,
+                                               String lpszFace);
+
+        [DllImport(User32, SetLastError = true)]
+        public static extern IntPtr DefWindowProc(IntPtr hWnd, UInt32 uMsg, IntPtr wParam, IntPtr lParam);
 
 
         [DllImport(User32, SetLastError = true)]
         public static extern IntPtr GetDC(IntPtr hWnd);
+
+
+        [DllImport(User32, CharSet = CharSet.Unicode, SetLastError = true)]
+        internal static extern Int32 GetMessage([In] [Out] ref MSG msg, IntPtr hWnd,
+                                                Int32 uMsgFilterMin, Int32 uMsgFilterMax);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern Boolean GetMonitorInfo(HandleRef hmonitor, [In] [Out] MONITORINFOEX info);
@@ -52,7 +63,7 @@ namespace Das.Views.Windows
 
         [DllImport(Gdi32, CharSet = CharSet.Unicode)]
         public static extern Boolean GetTextExtentPoint32(IntPtr hdc, String lpString,
-            Int32 cbString, out SIZE lpSize);
+                                                          Int32 cbString, out SIZE lpSize);
 
         [DllImport("user32.dll")]
         public static extern IntPtr MonitorFromWindow(HandleRef handle, Int32 flags);
@@ -66,26 +77,9 @@ namespace Das.Views.Windows
 
         [DllImport(Gdi32, SetLastError = true)]
         public static extern Int32 SetPixelFormat(IntPtr hDC, Int32 iPixelFormat,
-            [In] [MarshalAs(UnmanagedType.LPStruct)]
-            Pixelformatdescriptor ppfd);
+                                                  [In] [MarshalAs(UnmanagedType.LPStruct)]
+                                                  Pixelformatdescriptor ppfd);
 
-        
-
-        #region Window Handling
-
-       
-
-        #endregion
-
-
-        [DllImport(User32, CharSet = CharSet.Unicode, SetLastError = true)]
-        internal static extern Int32 GetMessage([In] [Out] ref MSG msg, IntPtr hWnd,
-            Int32 uMsgFilterMin, Int32 uMsgFilterMax);
-
-        [DllImport(Native.User32, SetLastError = true)]
-        public static extern IntPtr DefWindowProc(IntPtr hWnd, UInt32 uMsg, IntPtr wParam, IntPtr lParam);
-
-       
 
         public const String Gdi32 = "gdi32.dll";
         public const String User32 = "user32.dll";
@@ -99,6 +93,11 @@ namespace Das.Views.Windows
         public const UInt32 CLIP_DEFAULT_PRECIS = 0;
         public const UInt32 VARIABLE_PITCH = 2;
         public const UInt32 CLEARTYPE_QUALITY = 5;
+
+
+        #region Window Handling
+
+        #endregion
 
         #region General Definitions
 

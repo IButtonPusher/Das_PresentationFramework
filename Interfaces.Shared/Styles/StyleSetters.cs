@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
@@ -27,11 +28,11 @@ namespace Das.Views.Styles
 
         [StyleType(typeof(FontStyle))] FontWeight,
 
-        [StyleType(typeof(Brush))] Foreground,
+        [StyleType(typeof(SolidColorBrush))] Foreground,
 
-        [StyleType(typeof(Brush))] Background,
+        [StyleType(typeof(SolidColorBrush))] Background,
 
-        [StyleType(typeof(Brush))] BorderBrush,
+        [StyleType(typeof(SolidColorBrush))] BorderBrush,
 
         [StyleType(typeof(VerticalAlignments))]
         VerticalAlignment,

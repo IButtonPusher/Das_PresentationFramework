@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 
-namespace Das.ViewsModels
+namespace Das.ViewModels
 {
     public interface IVisibilityMutable : IViewModel
     {
-        Boolean  IsVisible { get; set; }
+        Boolean IsVisible { get; set; }
     }
 }

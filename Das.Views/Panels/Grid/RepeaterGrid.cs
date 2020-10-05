@@ -37,12 +37,12 @@ namespace Das.Views.Panels.Grid
 
         public override void SetBoundValue(IEnumerable<T> value)
         {
-            var content = Children;
-            if (content == null)
-                return;
+            var content = Children.ToArray();
+            //if (content == null)
+            //    return;
 
             _columnWidths.Clear();
-            for (var c = 0; c < content.Count; c++)
+            for (var c = 0; c < content.Length; c++)
                 _columnWidths.Add(c, 0);
 
             _controls.Clear(); //todo: more efficient

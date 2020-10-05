@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Core.Writing
 {
@@ -6,6 +7,7 @@ namespace Das.Views.Core.Writing
     public enum FontStyle
     {
         Unusable = -1,
+
         //
         // Summary:
         //     Normal text.

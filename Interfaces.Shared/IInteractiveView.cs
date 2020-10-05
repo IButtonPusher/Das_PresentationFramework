@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 using Das.Views.Input;
-using Das.Views.Panels;
 
 namespace Das.Views
 {
-    public interface IInteractiveView 
+    public interface IInteractiveView
     {
         InputAction HandlesActions { get; }
     }

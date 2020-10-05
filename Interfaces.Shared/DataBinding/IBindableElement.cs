@@ -15,12 +15,12 @@ namespace Das.Views.DataBinding
 
     public interface IBindableElement<T> : IBindableElement
     {
+        new IDataBinding<T>? Binding { get; set; }
+
         new T GetBoundValue(Object dataContext);
 
         void SetBoundValue(T value);
 
         Task SetBoundValueAsync(T value);
-
-        new IDataBinding<T>? Binding { get; set; }
     }
 }

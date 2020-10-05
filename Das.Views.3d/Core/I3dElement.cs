@@ -1,11 +1,16 @@
-﻿namespace Das.Views.Extended
+﻿using System;
+
+namespace Das.Views.Extended
 {
-    public interface I3dElement
+    /// <summary>
+    /// An element that has a three-dimensional position and rotation
+    /// </summary>
+    public interface I3DElement
     {
-        IPoint3d Position { get; }
+        IPoint3D Position { get; }
 
-        IPoint3d Rotation { get; }
+        IPoint3D Rotation { get; }
 
-        void Rotate(float x, float y, float z);
+        void Rotate(Single x, Single y, Single z);
     }
 }

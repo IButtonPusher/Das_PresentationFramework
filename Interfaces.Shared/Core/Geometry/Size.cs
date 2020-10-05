@@ -1,11 +1,27 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Extensions;
 
 namespace Das.Views.Core.Geometry
 {
     public class Size : GeometryBase, IDeepCopyable<Size>,
-        ISize
+                        ISize
     {
+        protected Size()
+        {
+        }
+
+        public Size(Double width, Double height)
+        {
+            _width = width;
+            _height = height;
+        }
+
+        public Size DeepCopy()
+        {
+            return new Size(Width, Height);
+        }
+
         public virtual Double Width
         {
             get => _width;
@@ -18,22 +34,14 @@ namespace Das.Views.Core.Geometry
             set => _height = value;
         }
 
-        public static Size Empty { get; } = new Size(0, 0);
-
         public virtual Boolean IsEmpty => Width.IsZero() || Height.IsZero();
 
-        protected Size()
+        public Boolean Equals(ISize? other)
         {
+            return GeometryHelper.AreSizesEqual(this, other);
         }
 
-        public Size(Double width, Double height)
-        {
-            _width = width;
-            _height = height;
-        }
-
-        private Double _width;
-        private Double _height;
+        public static Size Empty { get; } = new Size(0, 0);
 
         public static Size Add(params ISize[] sizes)
         {
@@ -63,6 +71,26 @@ namespace Das.Views.Core.Geometry
                 size1.Height + size2.Height);
         }
 
+        public Rectangle CenteredIn(Size outerRect)
+        {
+            var wDiff = (outerRect.Width - Width) / 2;
+            var hDiff = (outerRect.Height - Height) / 2;
+            return new Rectangle(wDiff, hDiff, Width, Height);
+        }
+
+        public override Boolean Equals(Object obj)
+        {
+            return obj is ISize isize && Equals(isize);
+        }
+
+        public override Int32 GetHashCode()
+        {
+            unchecked
+            {
+                return (Width.GetHashCode() * 397) ^ Height.GetHashCode();
+            }
+        }
+
         public static Size operator +(Size size, Thickness margin)
         {
             if (margin == null)
@@ -72,13 +100,15 @@ namespace Das.Views.Core.Geometry
                 size.Height + margin.Top + margin.Bottom);
         }
 
-        public static Size Subtract(ISize size, ISize size2)
+        public static Size operator *(Size size, Double val)
         {
-            if (size == null || size2 == null)
-                throw new InvalidOperationException();
+            if (val.AreEqualEnough(1))
+                return size;
 
-            return new Size(size.Width - size2.Width,
-                size.Height - size2.Width);
+            if (size == null)
+                return null!;
+
+            return new Size(size.Width * val, size.Height * val);
         }
 
         public static Size operator -(Size size, Thickness margin)
@@ -90,46 +120,23 @@ namespace Das.Views.Core.Geometry
                 size.Height - (margin.Top + margin.Bottom));
         }
 
-        public static Size operator *(Size size, Double val)
+        public static Size Subtract(ISize size, ISize size2)
         {
-            if (val.AreEqualEnough(1))
-                return size;
+            if (size == null || size2 == null)
+                throw new InvalidOperationException();
 
-            if (size == null)
-                return null;
-
-            return new Size(size.Width * val, size.Height * val);
+            return new Size(size.Width - size2.Width,
+                size.Height - size2.Width);
         }
 
-        public Size DeepCopy() => new Size(Width, Height);
-
-        public Rectangle CenteredIn(Size outerRect)
+        public override String ToString()
         {
-            var wDiff = (outerRect.Width - Width) / 2;
-            var hDiff = (outerRect.Height - Height) / 2;
-            return new Rectangle(wDiff, hDiff, Width, Height);
+            return Width.ToString("0.00") + ", " +
+                   Height.ToString("0.00");
         }
 
-        public override String ToString() => Width.ToString("0.00") + ", " +
-                                             Height.ToString("0.00");
+        private Double _height;
 
-        public Boolean Equals(ISize other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-
-            return Width.AreEqualEnough(other.Width) &&
-                   Height.AreEqualEnough(other.Height);
-        }
-
-        public override Boolean Equals(Object obj) => (obj is ISize isize && Equals(isize));
-
-        public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-                return (Width.GetHashCode() * 397) ^ Height.GetHashCode();
-            }
-        }
+        private Double _width;
     }
 }

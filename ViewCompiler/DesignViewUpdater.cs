@@ -4,11 +4,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using Das.Views;
+using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Rendering;
 using Das.Views.Styles;
-using Brush = Das.Views.Core.Drawing.Brush;
 using Font = Das.Views.Core.Writing.Font;
 using FontStyle = Das.Views.Core.Writing.FontStyle;
 using Rectangle = Das.Views.Core.Geometry.Rectangle;
@@ -41,8 +41,9 @@ namespace ViewCompiler
 
             var element = _viewHost.View;
 
-            MeasureContext.ViewState = _viewHost;
-            var measured = MeasureContext.MeasureElement(element, _viewHost.RenderMargin);
+            //MeasureContext.ViewState = _viewHost;
+            var measured = MeasureContext.MeasureMainView(element, _viewHost.RenderMargin,
+                _viewHost);
             var selectedVisual = SelectedVisuals?.FirstOrDefault();
             if (selectedVisual == null)
                 return;
@@ -61,13 +62,13 @@ namespace ViewCompiler
                                                       _viewHost.RenderMargin.Right,
                 0, _viewHost.RenderMargin.Width, _viewHost.AvailableSize.Height);
             RenderContext.ViewState = _viewHost;
-            RenderContext.FillRect(_rightRectangle, Brush.DarkGray);
+            RenderContext.FillRect(_rightRectangle, SolidColorBrush.DarkGray);
 
             if (selectedVisual.Element == null)
                 return;
 
 
-            RenderContext.DrawString(_sbSelected.ToString(), _font, Brush.White, _rightRectangle);
+            RenderContext.DrawString(_sbSelected.ToString(), _font, SolidColorBrush.White, _rightRectangle);
         }
 
         public IMeasureContext MeasureContext { get; }

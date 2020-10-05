@@ -26,16 +26,16 @@ namespace Das.Views.Controls
             if (img == null)
                 return;
 
-            if (!availableSpace.Width.AreEqualEnough(_currentImage.Width) ||
+            if (!availableSpace.Width.AreEqualEnough(img.Width) ||
                 !availableSpace.Height.AreEqualEnough(availableSpace.Height))
-                if (availableSpace.Height < _currentImage.Height)
+                if (availableSpace.Height < img.Height)
                 {
-                    var scale = availableSpace.Height / _currentImage.Height;
+                    var scale = availableSpace.Height / img.Height;
                     availableSpace = new Size(img.Width * scale, availableSpace.Height);
                 }
 
-            var rect = new Rectangle(Point.Empty, availableSpace);
-            renderContext.DrawImage(_currentImage, rect * renderContext.ViewState.ZoomLevel);
+            var rect = new Rectangle(Point2D.Empty, availableSpace);
+            renderContext.DrawImage(img, rect * renderContext.ViewState.ZoomLevel);
         }
 
         public override void Dispose()
@@ -78,6 +78,6 @@ namespace Das.Views.Controls
             return size;
         }
 
-        private IImage _currentImage;
+        private IImage? _currentImage;
     }
 }

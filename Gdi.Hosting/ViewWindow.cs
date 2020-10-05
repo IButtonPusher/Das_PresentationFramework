@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Das.Gdi.Controls;
 using Das.Gdi.Core;
@@ -22,7 +23,7 @@ namespace Das.Gdi
                 true);
         }
 
-        public override IPoint GetOffset(IPoint input)
+        public override IPoint2D GetOffset(IPoint2D input)
         {
             var point = TypeConverter.GetPoint(input);
             point = PointToClient(point);
@@ -31,11 +32,11 @@ namespace Das.Gdi
 
         private readonly GdiHostedElement _contents;
 
-        private bool _isChanged;
+        private Boolean _isChanged;
 
         public Bitmap BackingBitmap
         {
-            get => _contents.BackingBitmap;
+            get => _contents.BackingBitmap!;
             set
             {
                 _contents.BackingBitmap = value;
@@ -43,7 +44,7 @@ namespace Das.Gdi
             }
         }
 
-        public override bool IsChanged => base.IsChanged || _isChanged;
+        public override Boolean IsChanged => base.IsChanged || _isChanged;
 
         public Bitmap Asset
         {

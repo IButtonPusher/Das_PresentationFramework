@@ -9,7 +9,7 @@ using Das.Views.Panels;
 using Das.Views.Updaters;
 using Das.Views.Windows;
 
-using Das.ViewsModels;
+using Das.ViewModels;
 
 namespace Das.OpenGL
 {

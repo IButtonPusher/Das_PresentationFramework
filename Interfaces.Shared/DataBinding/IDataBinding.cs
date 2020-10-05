@@ -15,8 +15,8 @@ namespace Das.Views.DataBinding
         Object? GetBoundValue(Object dataContext);
 
         /// <summary>
-        /// Assumes that the binding is to an IEnumerable[T],
-        /// returns the same kind of binding to just T
+        ///     Assumes that the binding is to an IEnumerable[T],
+        ///     returns the same kind of binding to just T
         /// </summary>
         /// <returns></returns>
         IDataBinding ToSingleBinding();

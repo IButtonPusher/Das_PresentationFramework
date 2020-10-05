@@ -1,4 +1,7 @@
-﻿namespace Das.Views.Core.Enums
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Das.Views.Core.Enums
 {
     public enum Alignment
     {

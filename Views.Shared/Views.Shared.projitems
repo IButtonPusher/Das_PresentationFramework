@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\BindableElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\ConverterBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\DeferredPropertyBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\DynamicBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\InstanceBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\ObjectBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\PropertyBinding.cs" />
@@ -25,6 +26,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BaseSequentialPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\ContentPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\RepeaterPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\ScrollMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\ScrollPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\StackPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\View.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BasePerspective.cs" />

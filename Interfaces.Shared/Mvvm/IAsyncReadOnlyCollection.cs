@@ -4,13 +4,11 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 
-namespace Das.ViewsModels
+namespace Das.ViewModels
 {
-    public interface IAsyncReadOnlyCollection<out T> : IEnumerable<T>, 
-        INotifyCollectionChanged, ICollection
+    public interface IAsyncReadOnlyCollection<out T> : IEnumerable<T>,
+                                                       INotifyCollectionChanged, ICollection
     {
         T this[Int32 index] { get; }
-
-        
     }
 }

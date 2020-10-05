@@ -1,44 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Input;
+using Das.Views.Core;
 
 namespace Das.Views.Rendering
 {
-    public interface IRenderContext : IVisualContext, IElementLocator
+    public interface IRenderContext : IVisualContext, 
+                                      IElementLocator,
+                                      IImageProvider
     {
-        IViewState ViewState { get; set; }
-
         IViewPerspective Perspective { get; }
 
-        void DrawString(String s, IFont font, IBrush brush, IPoint location);
+        //IDictionary<IVisualElement, ICube> RenderPositions { get; }
 
-        void DrawString(String s, IFont font, IBrush brush, IRectangle location);
+        IViewState? ViewState { get; set; }
 
-        void DrawImage(IImage img, IRectangle rect);
+        /// <summary>
+        ///     Returns the actual rectangle occupied by the element, including borders etc
+        /// </summary>
+        Rectangle DrawElement(IVisualElement element, IRectangle rect);
 
-        void DrawLine(IPen pen, IPoint pt1, IPoint pt2);
-
-        void DrawLines(IPen pen, IPoint[] points);
-
-        void FillRect(IRectangle rect, IBrush brush);
-
-        void DrawRect(IRectangle rect, IPen pen);
-
-        void FillPie(IPoint center, Double radius, Double startAngle, 
-            Double endAngle, IBrush brush);
-
-        void DrawEllipse(IPoint center, Double radius, IPen pen);
+        void DrawEllipse(IPoint2D center, Double radius, IPen pen);
 
         void DrawFrame(IFrame frame);
 
-        /// <summary>
-        /// Returns the actual rectangle occupied by the element, including borders etc
-        /// </summary>        
-        Rectangle DrawElement(IVisualElement element, IRectangle rect);
+        void DrawImage(IImage img, IRectangle rect);
 
-        IDictionary<IVisualElement, ICube> RenderPositions { get; }
+        void DrawLine(IPen pen, IPoint2D pt1, IPoint2D pt2);
+
+        void DrawLines(IPen pen, IPoint2D[] points);
+
+        void DrawRect(IRectangle rect, IPen pen);
+
+        void DrawString(String s, IFont font, IBrush brush, IPoint2D location);
+
+        /// <summary>
+        /// Draws the string within the provided rectangle.  Wraps text as needed
+        /// </summary>
+        void DrawString(String s, IFont font, IBrush brush, IRectangle rect);
+
+        void FillPie(IPoint2D center, Double radius, Double startAngle,
+                     Double endAngle, IBrush brush);
+
+        void FillRect(IRectangle rect, IBrush brush);
     }
 }

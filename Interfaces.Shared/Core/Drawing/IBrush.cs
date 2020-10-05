@@ -1,7 +1,10 @@
-﻿namespace Das.Views.Core.Drawing
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Das.Views.Core.Drawing
 {
-    public interface IBrush
+    public interface IBrush : IEquatable<IBrush>
     {
-        IColor Color { get; }
+        //IColor Color { get; }
     }
 }

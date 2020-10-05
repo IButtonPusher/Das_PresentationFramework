@@ -1,17 +1,20 @@
-﻿namespace Das.Views.Extended.Core
+﻿using System;
+
+namespace Das.Views.Extended
 {
     public class Vector2
     {
-        public float X { get; set; }
-        /// <summary>The Y component of the vector.</summary>
-        public float Y { get; set; }
+        public Single X { get; set; }
+        public Single Y { get; set; }
 
-    public Vector2(float x, float y)
+        public Vector2(Single x, Single y)
         {
             X = x;
             Y = y;
         }
 
-        public Vector2() { }
+        public Vector2()
+        {
+        }
     }
 }

@@ -16,6 +16,6 @@ namespace Das.Views.DataBinding
 
         void SetDataContext(Object? dataContext);
 
-        Task SetDataContextAsync(Object dataContext);
+        Task SetDataContextAsync(Object? dataContext);
     }
 }

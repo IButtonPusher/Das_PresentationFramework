@@ -17,8 +17,6 @@ namespace Das.OpenGL
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;
         IRenderContext IRenderKit.RenderContext => RenderContext;
 
-        public IInputContext InputContext { get; } = null;
-
         public GLMeasureContext MeasureContext { get; }
 
         public GLRenderContext RenderContext { get; }

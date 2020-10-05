@@ -18,7 +18,7 @@ namespace TestCommon
             Color bg) 
             : base(element)
         {
-            Setters.Add(StyleSetters.Background, new Brush(bg));
+            Setters.Add(StyleSetters.Background, new SolidColorBrush(bg));
 
             Setters.Add(StyleSetters.Font, new Font(fontSize, "Segoe UI", fontStyle));
             Setters.Add(StyleSetters.FontSize, fontSize);

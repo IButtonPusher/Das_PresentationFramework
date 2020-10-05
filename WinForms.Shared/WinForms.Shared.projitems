@@ -16,10 +16,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)HostedViewControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)HostedVisualControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InvokeCompletionSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)VisualForm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinformExtensions.cs" />
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Das.Views;
 using Das.Views.Extended;
 using Das.Views.Panels;
-using Das.ViewsModels;
+using Das.ViewModels;
 
 namespace TestCommon
 {

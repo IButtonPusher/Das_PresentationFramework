@@ -1,11 +1,13 @@
-﻿namespace Das.Views.Extended
-{
-    public interface IPoint3d
-    {
-        float X { get; }
-        float Y { get; }
-        float Z { get; }
+﻿using System;
 
-        IPoint3d Rotate(float x, float y, float z);
+namespace Das.Views.Extended
+{
+    public interface IPoint3D : IEquatable<IPoint3D>
+    {
+        Single X { get; }
+        Single Y { get; }
+        Single Z { get; }
+
+        IPoint3D Rotate(Single x, Single y, Single z);
     }
 }

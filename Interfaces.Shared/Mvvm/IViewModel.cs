@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
-namespace Das.ViewsModels
+namespace Das.ViewModels
 {
     public interface IViewModel : INotifyPropertyChanged, IDisposable
     {
-        
     }
 }

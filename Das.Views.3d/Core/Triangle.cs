@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Das.Views.Core.Geometry;
 
@@ -6,32 +7,34 @@ namespace Das.Views.Extended.Core
 {
     public class Triangle : IMultiLine
     {
-        public Triangle(IPoint pointA, IPoint pointB, IPoint pointC)
+        public Triangle(IPoint2D point2DA, 
+                        IPoint2D point2DB, 
+                        IPoint2D point2DC)
         {
-            PointA = pointA;
-            PointB = pointB;
-            PointC = pointC;
-            _asArray = new[] { pointA, pointB, pointC };
+            Point2DA = point2DA;
+            Point2DB = point2DB;
+            Point2DC = point2DC;
+            _asArray = new[] { point2DA, point2DB, point2DC, point2DA };
         }
 
-        public override string ToString() => $"{PointA}, {PointB}, {PointC}";
+        public override String ToString() => $"{Point2DA}, {Point2DB}, {Point2DC}";
 
-        public IPoint PointA { get; }
-        public IPoint PointB { get; }
-        public IPoint PointC { get; }
+        public IPoint2D Point2DA { get; }
+        public IPoint2D Point2DB { get; }
+        public IPoint2D Point2DC { get; }
 
-        private readonly IPoint[] _asArray;
+        private readonly IPoint2D[] _asArray;
 
-        public IEnumerator<IPoint> GetEnumerator()
+        public IEnumerator<IPoint2D> GetEnumerator()
         {
-            yield return PointA;
-            yield return PointB;
-            yield return PointC;
+            yield return Point2DA;
+            yield return Point2DB;
+            yield return Point2DC;
         }
 
-        public static implicit operator IPoint[](Triangle t) => t._asArray;
+        public static implicit operator IPoint2D[](Triangle t) => t._asArray;
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        public IPoint[] PointArray => _asArray;
+        public IPoint2D[] PointArray => _asArray;
     }
 }

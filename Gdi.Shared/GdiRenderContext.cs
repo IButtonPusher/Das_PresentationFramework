@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Gdi.Core;
@@ -7,6 +8,7 @@ using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Rendering;
+using Gdi.Shared;
 using Color = Das.Views.Core.Drawing.Color;
 using Pen = Das.Views.Core.Drawing.Pen;
 using Point = System.Drawing.Point;
@@ -16,15 +18,18 @@ namespace Das.Gdi
 {
     public class GdiRenderContext : BaseRenderContext
     {
-        public GdiRenderContext(IMeasureContext measureContext, IViewPerspective perspective)
+        public GdiRenderContext(IMeasureContext measureContext, 
+                                IViewPerspective perspective,
+                                Graphics nullGraphics)
             : base(measureContext, perspective)
         {
             _testPen = new Pen(Color.Yellow, 1);
+            Graphics = nullGraphics;
         }
 
         internal Graphics Graphics { get; set; }
 
-        public override void DrawEllipse(IPoint center, Double radius, IPen pen)
+        public override void DrawEllipse(IPoint2D center, Double radius, IPen pen)
         {
             var c = GetAbsolutePoint(center);
 
@@ -49,7 +54,13 @@ namespace Das.Gdi
             Graphics.DrawImage(bmp, dest);
         }
 
-        public override void DrawLine(IPen pen, IPoint pt1, IPoint pt2)
+        public override IImage? GetImage(Stream stream)
+        {
+            var bmp = new Bitmap(stream);
+            return new GdiBitmap(bmp);
+        }
+
+        public override void DrawLine(IPen pen, IPoint2D pt1, IPoint2D pt2)
         {
             var usePen = TypeConverter.GetPen(pen);
             var l1 = GetAbsoluteGdiPoint(pt1);
@@ -57,7 +68,7 @@ namespace Das.Gdi
             Graphics.DrawLine(usePen, l1, l2);
         }
 
-        public override void DrawLines(IPen pen, IPoint[] points)
+        public override void DrawLines(IPen pen, IPoint2D[] points)
         {
             var usePen = TypeConverter.GetPen(pen);
             var gPoints = new PointF[points.Length];
@@ -75,10 +86,14 @@ namespace Das.Gdi
             Graphics.DrawRectangle(usePen, useRect);
         }
 
-        public override void DrawString(String s, IFont font, IBrush brush, IPoint point)
+        public override void DrawString(String s, IFont font, IBrush brush, IPoint2D point2D)
         {
-            var loc = GetAbsoluteGdiPoint(point);
-            var color = TypeConverter.GetColor(brush.Color);
+            var loc = GetAbsoluteGdiPoint(point2D);
+
+            if (!(brush is SolidColorBrush scb))
+                throw new NotImplementedException();
+
+            var color = TypeConverter.GetColor(scb.Color);
             var useFont = TypeConverter.GetFont(font);
             TextRenderer.DrawText(Graphics, s, useFont, loc, color);
         }
@@ -86,13 +101,18 @@ namespace Das.Gdi
         public override void DrawString(String s, IFont font, IBrush brush, IRectangle location)
         {
             var rect = GetAbsoluteGdiRectangle(location);
-            var color = TypeConverter.GetColor(brush.Color);
+            
+            var useBrush = TypeConverter.GetBrush(brush);
             var useFont = TypeConverter.GetFont(font);
-            TextRenderer.DrawText(Graphics, s, useFont, rect, color);
+            Graphics.DrawString(s, useFont, useBrush, rect, StringFormat.GenericDefault);
+            // text renderer doesn't wrap the text
+            //TextRenderer.DrawText(Graphics, s, useFont, rect, color);
         }
 
-        public override void FillPie(IPoint center, Double radius, Double startAngle,
-            Double endAngle, IBrush brush)
+        public override void FillPie(IPoint2D center, 
+                                     Double radius, 
+                                     Double startAngle,
+                                     Double endAngle, IBrush brush)
         {
             var c = GetAbsolutePoint(center);
 
@@ -110,9 +130,9 @@ namespace Das.Gdi
             Graphics.FillRectangle(useBrush, useRect);
         }
 
-        private Point GetAbsoluteGdiPoint(IPoint relativePoint)
+        private Point GetAbsoluteGdiPoint(IPoint2D relativePoint2D)
         {
-            var to = GetAbsolutePoint(relativePoint);
+            var to = GetAbsolutePoint(relativePoint2D);
             return new Point(Convert.ToInt32(to.X),
                 Convert.ToInt32(to.Y));
         }

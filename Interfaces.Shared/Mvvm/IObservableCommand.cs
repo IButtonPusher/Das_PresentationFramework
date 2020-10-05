@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace Das.ViewsModels
+namespace Das.ViewModels
 {
     public interface IObservableCommand<in TParam> : IObservableCommand
     {
@@ -14,9 +14,9 @@ namespace Das.ViewsModels
 
     public interface IObservableCommand : INotifyPropertyChanged, IEquatable<IObservableCommand>
     {
-        Boolean IsExecutable { get; set; }
-
         String? Description { get; set; }
+
+        Boolean IsExecutable { get; set; }
 
         Task ExecuteAsync();
 

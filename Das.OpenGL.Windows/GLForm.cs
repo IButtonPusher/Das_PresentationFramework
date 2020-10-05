@@ -22,7 +22,7 @@ namespace Das.OpenGL.Windows
         public static implicit operator GLHostedElement(GLForm form)
             => form._element;
 
-        public override IPoint GetOffset(IPoint input)
+        public override IPoint2D GetOffset(IPoint2D input)
         {
             throw new NotImplementedException();
         }

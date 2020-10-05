@@ -6,11 +6,14 @@
     <SharedGUID>2e14d9ea-bfc7-439c-8e84-156d1437c6a8</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Interfaces.Shared</Import_RootNamespace>
+    <Import_RootNamespace>Das.Views</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\Brush.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\HatchBrush.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\HatchStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IImageProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\SolidColorBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\Color.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\Colors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IBrush.cs" />
@@ -25,9 +28,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Enums\VerticalAlignments.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Cube.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\GeometryBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\GeometryHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ICube.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IMultiLine.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IPoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IPoint2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IPointContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IPositionOffseter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IRectangle.cs" />
@@ -36,13 +40,26 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IShape2d.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ISize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ISize3d.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Point.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Point2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Rectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\RoundedSize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Size.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Thickness.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Input\KeyboardButtons.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Input\MouseButtons.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValuePoint2D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueRectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueSize.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Vector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\ClickMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\DragEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\IInputEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\IMouseInputEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\MouseClickEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\MouseOverEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\MouseUpEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\MouseWheelEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\KeyboardButtons.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\MouseButtons.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\MouseDownEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\Font.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\FontStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\IFont.cs" />
@@ -56,13 +73,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IValueConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hosting\IHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hosting\IViewHost.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hosting\IVisualHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IBootStrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDeepCopyable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IInteractiveView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IElementLocator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\IHandleInput.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IInputContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IInputHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IInputProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\IMouseInputHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\InputAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\MousePointers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Invocations\ExclusiveSynchronizationContext.cs" />
@@ -80,6 +100,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)IViewProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IWindowProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IVisibilityMutable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\NotifyPropertyChangedBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IBoundElementContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IContentContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IPanel.cs" />
@@ -105,5 +126,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSetters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleTypeAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Threading\" />
   </ItemGroup>
 </Project>

@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Core.Geometry
 {
     public interface IShape2d : ISize
     {
-        Double Left { get; }
+        Double Bottom { get; }
 
-        Double Top { get; }
+        Double Left { get; }
 
         Double Right { get; }
 
-        Double Bottom { get; }
+        Double Top { get; }
     }
 }

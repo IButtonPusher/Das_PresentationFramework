@@ -33,10 +33,10 @@ namespace GdiTest
 
         protected override void Render(IRenderContext context)
         {
-            context.DrawString("hello world", _font, Brush.Black, 
-                new Point(50,50));
+            context.DrawString("hello world", _font, SolidColorBrush.Black, 
+                new Point2D(50,50));
 
-            context.DrawLine(_pen, new Point(10,10), new Point(150,50));
+            context.DrawLine(_pen, new Point2D(10,10), new Point2D(150,50));
 
             PieChart1(200, 200, 200);
         }

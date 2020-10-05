@@ -6,13 +6,13 @@ using Das.Gdi.Kits;
 using Das.Views;
 using Das.Views.Panels;
 using Das.Views.Rendering;
-using Das.ViewsModels;
+using Das.ViewModels;
 
 namespace Das.Gdi
 {
     public class GdiProvider : IWindowProvider<ViewWindow>, IBootStrapper
     {
-        protected readonly GdiRenderKit RenderKit;
+        public GdiRenderKit RenderKit { get; }
 
         public GdiProvider(GdiRenderKit renderKit)
         {
@@ -24,7 +24,7 @@ namespace Das.Gdi
             RenderKit = GetKit(this);
         }
 
-        private static GdiRenderKit GetKit(IWindowProvider<ViewWindow> windowProvider)
+        private static GdiRenderKit GetKit(IWindowProvider<IVisualHost> windowProvider)
         {
             var perspective = new BasePerspective();
             var kit = new GdiRenderKit(perspective, windowProvider);
@@ -44,6 +44,30 @@ namespace Das.Gdi
 
             return form;
         }
+
+        public ViewWindow Show<TViewModel>(TViewModel viewModel, 
+                                           IView<TViewModel> view) 
+            where TViewModel : IViewModel
+        {
+            var styleContext = view.StyleContext;
+
+            var control = new GdiHostedElement(view, styleContext);
+            var form = new ViewWindow(control);
+            Cook(form);
+
+            view.SetDataContext(viewModel);
+
+            return form;
+        }
+
+        //public VisualForm Show(IVisualRenderer visual)
+        //{
+        //    var control = new HostedVisualControl(visual);
+        //    var form = new VisualForm(visual, control);
+        //    Cook(form);
+
+        //    return form;
+        //}
 
         public event Action<ViewWindow>? WindowShown;
 

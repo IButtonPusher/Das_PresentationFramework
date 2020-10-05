@@ -1,5 +1,7 @@
 ﻿using Das.Views.Rendering;
 using System;
+using System.Diagnostics;
+using System.IO;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
@@ -22,9 +24,9 @@ namespace Das.OpenGL
         private readonly IFontProvider _fontProvider;
         private const Double TwoPi = 2.0 * Math.PI;
 
-        public override void DrawString(String s, IFont font, IBrush brush, IPoint point)
+        public override void DrawString(String s, IFont font, IBrush brush, IPoint2D point2D)
         {
-            var to = GetAbsolutePoint(point);
+            var to = GetAbsolutePoint(point2D);
             var renderer = _fontProvider.GetRenderer(font);
             renderer.DrawString(s, brush, to);
         }
@@ -36,7 +38,8 @@ namespace Das.OpenGL
 
             GL.glMatrixMode(GL.MODELVIEW);
             GL.glLoadIdentity();
-            SetColor(brush.Color);
+            if (brush is SolidColorBrush scb)
+                SetColor(scb.Color);
 
             GL.glRectd(rect.Left, rect.Top, rect.Right, rect.Bottom);
 
@@ -62,7 +65,12 @@ namespace Das.OpenGL
             throw new NotImplementedException();
         }
 
-        public override void DrawLine(IPen pen, IPoint pt1, IPoint pt2)
+        public override IImage? GetImage(Stream stream)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DrawLine(IPen pen, IPoint2D pt1, IPoint2D pt2)
         {
             SetOrtho();
 
@@ -80,7 +88,7 @@ namespace Das.OpenGL
             GL.glFlush(); 
         }
 
-        public override void DrawLines(IPen pen, IPoint[] points)
+        public override void DrawLines(IPen pen, IPoint2D[] points)
         {
             SetOrtho();
 
@@ -96,7 +104,7 @@ namespace Das.OpenGL
 
         public override void DrawRect(IRectangle rect, IPen pen)
         {
-            var points = new IPoint[] { rect.TopLeft, rect.TopRight,
+            var points = new IPoint2D[] { rect.TopLeft, rect.TopRight,
                 rect.BottomRight, rect.BottomLeft };
 
             DrawLines(pen, points);
@@ -116,7 +124,7 @@ namespace Das.OpenGL
             GL.glOrtho(left, right, bottom, top, -1, 1);
         }
 
-        public override void FillPie(IPoint center, Double radius, Double startAngle, 
+        public override void FillPie(IPoint2D center, Double radius, Double startAngle, 
             Double endAngle, IBrush brush)
         {
             startAngle += 90;
@@ -136,7 +144,8 @@ namespace Das.OpenGL
             GL.glLoadIdentity();
 
             GL.glBegin(GL.TRIANGLE_FAN);
-            SetColor(brush.Color);
+            if (brush is SolidColorBrush scb)
+                SetColor(scb.Color);
 
             var fx = (Single)center.X;
             var fy = (Single)center.Y;
@@ -150,7 +159,7 @@ namespace Das.OpenGL
             GL.glEnd();
         }
 
-        public override void DrawEllipse(IPoint center, Double radius, IPen pen)
+        public override void DrawEllipse(IPoint2D center, Double radius, IPen pen)
         {
             const Single halfPie = (Single)(Math.PI / 180f);
 
@@ -186,8 +195,13 @@ namespace Das.OpenGL
             GL.glVertex3f(xVert, yVert, 0);
         }
 
+        private Int32 _wotCount;
+        private static Stopwatch _sw = new Stopwatch();
+
         public override void DrawFrame(IFrame frame)
         {
+            _sw.Restart();
+
             SetOrtho();
 
             GL.glMatrixMode(GL.MODELVIEW);
@@ -198,13 +212,20 @@ namespace Das.OpenGL
                 GL.glBegin(GL.LINE_LOOP);
                 GL.glColor3f(1.0f, 0.5f, 0.0f);
 
+                //GL.glVertex3f(frame.Triangles[c]);
+
                 var points = frame.Triangles[c].PointArray;
                 for (var d = 0; d < points.Length; d++)
+                {
                     GL.glVertex2d(points[d].X, points[d].Y);
+                    _wotCount++;
+                }
 
                 GL.glEnd();
                 GL.glFlush();
             }
+
+            Debug.WriteLine("cnt: " + _wotCount + " " + _sw.ElapsedMilliseconds);
         }
     }
 }

@@ -4,6 +4,6 @@ namespace Das.Views.Extended.Runtime
 {
     public interface IScene
     {
-        IEnumerable<IVisual3dElement> VisualElements { get; }
+        IEnumerable<IMesh> VisualElements { get; }
     }
 }

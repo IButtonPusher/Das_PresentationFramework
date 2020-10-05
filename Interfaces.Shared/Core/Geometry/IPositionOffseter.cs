@@ -1,7 +1,10 @@
-﻿namespace Das.Views.Core.Geometry
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Das.Views.Core.Geometry
 {
     public interface IPositionOffseter
     {
-        IPoint GetOffset(IPoint input);
+        IPoint2D GetOffset(IPoint2D input);
     }
 }

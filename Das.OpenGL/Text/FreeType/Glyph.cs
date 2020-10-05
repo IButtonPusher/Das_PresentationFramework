@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Das.Views.Core.Geometry;
+using System;
 
 namespace Das.OpenGL.Text.FreeType
 {

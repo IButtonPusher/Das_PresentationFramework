@@ -8,7 +8,7 @@ namespace Das.Views.Styles
     public abstract class TriggerBoundStyle : ElementStyle
     {
         protected TriggerBoundStyle(IVisualElement visual,
-            IDataContext dataContext) : base(visual)
+                                    IDataContext dataContext) : base(visual)
         {
             DataContext = dataContext;
         }

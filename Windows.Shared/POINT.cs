@@ -12,9 +12,9 @@ namespace Das.Views
         public Int32 X;
         public Int32 Y;
 
-        public static implicit operator Point(POINT point)
+        public static implicit operator Point2D(POINT point)
         {
-            return new Point(point.X, point.Y);
+            return new Point2D(point.X, point.Y);
         }
     }
 }

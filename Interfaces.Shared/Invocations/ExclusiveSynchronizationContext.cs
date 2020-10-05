@@ -1,21 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Das.Views.Invocations
 {
     public class ExclusiveSynchronizationContext : SynchronizationContext
     {
-        private Boolean done;
         public Exception? InnerException { get; set; }
-        readonly AutoResetEvent workItemsWaiting = new AutoResetEvent(false);
 
-        readonly Queue<Tuple<SendOrPostCallback, Object>> items =
-            new Queue<Tuple<SendOrPostCallback, Object>>();
-
-        public override void Send(SendOrPostCallback d, Object state)
+        public void BeginMessageLoop()
         {
-            throw new NotSupportedException("We cannot send to our same thread");
+            while (!done)
+            {
+                Tuple<SendOrPostCallback, Object>? task = null;
+                lock (items)
+                {
+                    if (items.Count > 0) task = items.Dequeue();
+                }
+
+                if (task != null)
+                {
+                    task.Item1(task.Item2);
+                    if (InnerException != null)
+                        throw new AggregateException("AsyncHelpers.Run method threw an exception.", InnerException);
+                }
+                else
+                {
+                    workItemsWaiting.WaitOne();
+                }
+            }
+        }
+
+        public override SynchronizationContext CreateCopy()
+        {
+            return this;
+        }
+
+        public void EndMessageLoop()
+        {
+            Post(_ => done = true, null!);
         }
 
         public override void Post(SendOrPostCallback d, Object state)
@@ -28,39 +52,15 @@ namespace Das.Views.Invocations
             workItemsWaiting.Set();
         }
 
-        public void EndMessageLoop()
+        public override void Send(SendOrPostCallback d, Object state)
         {
-            Post(_ => done = true, null!);
+            throw new NotSupportedException("We cannot send to our same thread");
         }
 
-        public void BeginMessageLoop()
-        {
-            while (!done)
-            {
-                Tuple<SendOrPostCallback, Object>? task = null;
-                lock (items)
-                {
-                    if (items.Count > 0)
-                    {
-                        task = items.Dequeue();
-                    }
-                }
+        private readonly Queue<Tuple<SendOrPostCallback, Object>> items =
+            new Queue<Tuple<SendOrPostCallback, Object>>();
 
-                if (task != null)
-                {
-                    task.Item1(task.Item2);
-                    if (InnerException != null)
-                    {
-                        throw new AggregateException("AsyncHelpers.Run method threw an exception.", InnerException);
-                    }
-                }
-                else
-                {
-                    workItemsWaiting.WaitOne();
-                }
-            }
-        }
-
-        public override SynchronizationContext CreateCopy() => this;
+        private readonly AutoResetEvent workItemsWaiting = new AutoResetEvent(false);
+        private Boolean done;
     }
 }

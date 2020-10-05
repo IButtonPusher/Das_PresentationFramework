@@ -2,10 +2,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
+using Das.Views.Mvvm;
 
 namespace Das.Views.Rendering
 {
-    public abstract class VisualElement : IVisualElement
+    public abstract class VisualElement : NotifyPropertyChangedBase, 
+                                          IVisualElement
     {
         protected VisualElement()
         {
@@ -23,9 +25,16 @@ namespace Das.Views.Rendering
             return newObject;
         }
 
-        public Int32 Id { get; private set; }
 
-        public abstract void Dispose();
+        private Boolean _isEnabled;
+
+        public Boolean IsEnabled
+        {
+            get => _isEnabled;
+            set => SetValue(ref _isEnabled, value);
+        }
+
+        public Int32 Id { get; private set; }
 
         private static Int32 _currentId;
     }

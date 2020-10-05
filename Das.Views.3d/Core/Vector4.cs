@@ -1,17 +1,19 @@
-﻿namespace Das.Views.Extended.Core
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Das.Views.Extended
 {
     public class Vector4 : Vector3
     {
-        public float W;
-
         public Vector4()
         {
-            
         }
 
-        public Vector4(float x, float y, float z, float w) : base(x, y, z)
+        public Vector4(Single x, Single y, Single z, Single w) : base(x, y, z)
         {
             W = w;
         }
+
+        public Single W;
     }
 }

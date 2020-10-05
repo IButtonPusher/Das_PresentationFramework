@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Core.Drawing
 {
@@ -8,8 +9,8 @@ namespace Das.Views.Core.Drawing
 
         Byte B { get; }
 
-        Byte R { get; }
-
         Byte G { get; }
+
+        Byte R { get; }
     }
 }

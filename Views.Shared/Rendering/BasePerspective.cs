@@ -2,13 +2,12 @@
 using System.Threading.Tasks;
 using Das.Extensions;
 
-
 namespace Das.Views.Rendering
 {
     public class BasePerspective : IMutableViewPerspective
     {
         public BasePerspective(Double minZoomLevel = Constants.DefaultMinZoom,
-            Double maxZoomLevel = Constants.DefaultMaxZoom)
+                               Double maxZoomLevel = Constants.DefaultMaxZoom)
         {
             _minZoomLevel = minZoomLevel <= 0
                 ? throw new ArgumentException(nameof(minZoomLevel))

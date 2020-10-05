@@ -1,23 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Das.ViewModels;
 
 namespace Das.Mvvm
 {
     public class Selectable<T> : BaseViewModel
     {
-        public T Item { get; }
-
-
-        private Boolean _isSelected;
-        private readonly String _description;
-
-        public Boolean IsSelected
-        {
-            get => _isSelected;
-            set => SetValue(ref _isSelected, value);
-        }
-
         public Selectable(T item)
         {
             switch (item)
@@ -45,7 +34,22 @@ namespace Das.Mvvm
             Item = item;
         }
 
-        public override String ToString() => _description;
+        public Boolean IsSelected
+        {
+            get => _isSelected;
+            set => SetValue(ref _isSelected, value);
+        }
 
+        public T Item { get; }
+
+        public override String ToString()
+        {
+            return _description;
+        }
+
+        private readonly String _description;
+
+
+        private Boolean _isSelected;
     }
 }

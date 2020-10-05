@@ -1,112 +1,167 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using Das.Views.Core.Geometry;
 using Windows.Shared;
 using Windows.Shared.Input;
+using Das.Views.Core.Geometry;
 using Das.Views.Input;
+using DragEventArgs = Das.Views.Input.DragEventArgs;
+using MouseButtons = Das.Views.Input.MouseButtons;
 
 namespace Das.Gdi
 {
     public class InputContext : Win32InputContext, IMessageFilter
     {
-        
-        private readonly IPositionOffseter _offsetter;
-
         public InputContext(IPositionOffseter offsetter,
                             IInputHandler inputHandler)
-        : base(offsetter, inputHandler)
+            : base(offsetter, inputHandler)
         {
-            _offsetter = offsetter;
             Application.AddMessageFilter(this);
         }
 
-        //public Boolean AreButtonsPressed(MouseButtons button1,
-        //    MouseButtons button2, MouseButtons button3) => false;
-
-        //public IPoint CursorPosition
-        //{
-        //    get
-        //    {
-        //        Native.GetCursorPos(out var lpPoint);
-        //        Point point = lpPoint;
-        //        var offset = _offsetter.GetOffset(point);
-        //        return offset;
-        //    }
-        //}
-
-        //public Boolean IsButtonPressed(KeyboardButtons keyboardButton)
-        //{
-        //    switch (keyboardButton)
-        //    {
-        //        case KeyboardButtons.Control:
-        //            return IsButtonPressed(KeyboardButtons.LControlKey) ||
-        //                   IsButtonPressed(KeyboardButtons.RControlKey);
-        //        case KeyboardButtons.Shift:
-        //            return IsButtonPressed(KeyboardButtons.LShiftKey) ||
-        //                   IsButtonPressed(KeyboardButtons.RShiftKey);
-        //        default:
-        //            var retVal = Native.GetKeyState((Int32) keyboardButton);
-        //            return (retVal & 0x8000) == 0x8000;
-        //    }
-        //}
-
-        //public Boolean AreButtonsPressed(KeyboardButtons button1, KeyboardButtons button2)
-        //    => IsButtonPressed(button1) && IsButtonPressed(button2);
-
-        //public Boolean AreButtonsPressed(KeyboardButtons button1, KeyboardButtons button2,
-        //    KeyboardButtons button3) => AreButtonsPressed(
-        //                                    button1, button2) && IsButtonPressed(button3);
-
-        //public Boolean IsButtonPressed(MouseButtons mouseButton) => false;
-
-        //public Boolean AreButtonsPressed(MouseButtons button1, MouseButtons button2) => false;
-
-        //public Boolean IsCapsLockOn
-        //{
-        //    get
-        //    {
-        //        var retVal = Native.GetKeyState((Int32) KeyboardButtons.CapsLock);
-        //        return (retVal & 1) == 1;
-        //    }
-        //}
-
-      
-        
-
-        //protected abstract void OnMouseDown(MouseButtons button, IPoint position);
-
-        //protected abstract void OnMouseUp(MouseButtons button, IPoint position);
-
-        //protected abstract void OnKeyboardStateChanged();
 
         public Boolean PreFilterMessage(ref Message m)
         {
-            ProcessMessage((MessageTypes)m.Msg);
+            ValuePoint2D pos;
 
-            //switch ((MessageTypes)m.Msg)
-            //{
-            //    case MessageTypes.WM_LBUTTONDOWN:
-            //        OnMouseDown(MouseButtons.Left, CursorPosition);
-            //        break;
-            //    case MessageTypes.WM_RBUTTONDOWN:
-            //        OnMouseDown(MouseButtons.Right, CursorPosition);
-            //        break;
+            switch ((MessageTypes)m.Msg)
+            {
+                case MessageTypes.WM_LBUTTONDOWN:
 
-            //    case MessageTypes.WM_LBUTTONUP:
-            //        OnMouseUp(MouseButtons.Left, CursorPosition);
-            //        break;
-            //    case MessageTypes.WM_RBUTTONUP:
-            //        OnMouseUp(MouseButtons.Right, CursorPosition);
-            //        break;
+                    pos = GetPosition(m.LParam);
+                    _leftButtonWentDown = pos;
 
-            //    case MessageTypes.WM_KEYDOWN:
-            //        OnKeyboardStateChanged();
-            //        break;
-            //}
+                    _inputHandler.OnMouseInput(
+                        new MouseDownEventArgs(pos, MouseButtons.Left, this),
+                        InputAction.MouseDown);
+                    break;
+
+                case MessageTypes.WM_RBUTTONDOWN:
+                    pos = GetPosition(m.LParam);
+                    _rightButtonWentDown = pos;
+                    _inputHandler.OnMouseInput(
+                        new MouseDownEventArgs(pos, MouseButtons.Right, this),
+                        InputAction.MouseDown);
+                    break;
+
+                case MessageTypes.WM_LBUTTONUP:
+                    _leftButtonWentDown = default;
+                    _lastDragPosition = default;
+                    _inputHandler.OnMouseInput(
+                        new MouseUpEventArgs(GetPosition(m.LParam),
+                            MouseButtons.Left, this), 
+                        InputAction.MouseUp);
+                    break;
+
+                case MessageTypes.WM_RBUTTONUP:
+                    _rightButtonWentDown = default;
+                    _lastDragPosition = default;
+                    _inputHandler.OnMouseInput(
+                        new MouseUpEventArgs(GetPosition(m.LParam),
+                        MouseButtons.Right, this), 
+                        InputAction.MouseUp);
+                    break;
+
+                case MessageTypes.WM_MOUSEWHEEL:
+                    var args = new MouseWheelEventArgs(CursorPosition, 
+                        (Int32) m.WParam >> 16 > 0 ? -1 : 1, this);
+
+                    _inputHandler.OnMouseInput(args, InputAction.MouseWheel);
+
+                    break;
+
+                case MessageTypes.WM_MOUSEMOVE:
+
+                    var letsUse = _leftButtonWentDown ?? _rightButtonWentDown;
+                    if (letsUse == null)
+                        break;
+
+                    if (_leftButtonWentDown == null && _rightButtonWentDown == null)
+                        break;
+
+                    pos = GetPosition(m.LParam);
+
+                    ValueSize lastDragChange;
+                    if (_lastDragPosition == null)
+                        lastDragChange = new ValueSize(pos.X - letsUse.Value.X,
+                            pos.Y - letsUse.Value.Y);
+                    else
+                        lastDragChange = new ValueSize(pos.X - _lastDragPosition.Value.X,
+                            pos.Y - _lastDragPosition.Value.Y);
+
+                    if (lastDragChange.IsEmpty)
+                        break;
+
+                   // System.Diagnostics.Debug.WriteLine("drag now:" + lastDragChange);
+
+                    _lastDragPosition = pos;
+
+                    var dragArgs = new DragEventArgs(letsUse, pos, lastDragChange,
+                        _leftButtonWentDown != null ? MouseButtons.Left : MouseButtons.Right,
+                        this);
+                    _inputHandler.OnMouseInput(dragArgs, InputAction.MouseDrag);
+
+                    break;
+
+                case MessageTypes.WM_QUERYDRAGICON:
+                    break;
+
+                case MessageTypes.WM_MOUSEHWHEEL:
+                    throw new NotImplementedException();
+            }
 
             return false;
         }
 
-        //public Boolean IsMousePresent => throw new NotImplementedException();
+
+        private ValuePoint2D? _leftButtonWentDown;
+        private ValuePoint2D? _rightButtonWentDown;
+        private ValuePoint2D? _lastDragPosition;
+
+        //private static MouseButtons GetMouseButton(MessageTypes messageType)
+        //{
+        //    switch (messageType)
+        //    {
+        //        case MessageTypes.WM_LBUTTONDOWN:
+        //        case MessageTypes.WM_LBUTTONUP:
+        //        case MessageTypes.WM_LBUTTONDBLCLK:
+        //            return MouseButtons.Left;
+
+
+        //        case MessageTypes.WM_RBUTTONDOWN:
+        //        case MessageTypes.WM_RBUTTONUP:
+        //        case MessageTypes.WM_RBUTTONDBLCLK:
+        //            return MouseButtons.Right;
+
+        //        default:
+        //            throw new NotImplementedException();
+        //    }
+        //}
+
+        //private static TArgs GetArgs<TArgs>(MessageTypes messageType) where TArgs: struct, Enum
+        //{
+
+        //    switch (messageType)
+        //    {
+        //        case MessageTypes.WM_LBUTTONUP when MouseButtons.Left is TArgs ta:
+        //            return ta;
+
+        //        default:
+        //            throw new NotImplementedException();
+        //    }
+        //}
+
+        //private MouseDownEventArgs ToArgs(MouseButtons button, IntPtr lParam)
+        //{
+        //    return new MouseDownEventArgs(GetPosition((Int32)lParam), button, this);
+        //}
+
+        private static ValuePoint2D GetPosition(IntPtr lParam) => GetPosition((Int32) lParam);
+        
+
+        private static ValuePoint2D GetPosition(Int32 lParam)
+        {
+            return new ValuePoint2D(lParam & Int16.MaxValue, lParam >> 16);
+        }
     }
 }

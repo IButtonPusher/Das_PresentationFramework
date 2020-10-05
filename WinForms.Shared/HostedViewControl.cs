@@ -5,7 +5,7 @@ using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 using Das.Views.Windows;
 using Das.Views.Winforms;
-using Das.ViewsModels;
+using Das.ViewModels;
 
 
 namespace WinForms.Shared
@@ -69,14 +69,16 @@ namespace WinForms.Shared
 
         public void AcceptChanges()
         {
-            
+            View.AcceptChanges();
         }
 
         public virtual Boolean IsChanged => _isChanged;
 
-        public IPoint GetOffset(IPoint input)
+        public IPoint2D GetOffset(IPoint2D input)
         {
-            return Point.Empty;
+            return Point2D.Empty;
         }
+
+        public IVisualRenderer Visual => View;
     }
 }

@@ -17,8 +17,8 @@ namespace TestCommon.Company
             Items = items;
 
             var colors = new Dictionary<String, IBrush>();
-            colors.Add("widgets", new Brush(new Color(255, 0, 255)));
-            colors.Add("warantees", new Brush(new Color(255, 255, 20)));
+            colors.Add("widgets", new SolidColorBrush(new Color(255, 0, 255)));
+            colors.Add("warantees", new SolidColorBrush(new Color(255, 255, 20)));
             ItemColors = colors;
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
 #endif
@@ -26,13 +27,13 @@ namespace Das.Views.DataBinding
 
     public abstract class BaseBinding : IDataBinding
     {
-        public Object DataContext { get; set; }
-
         public abstract Object? GetBoundValue(Object dataContext);
 
         public virtual IDataBinding ToSingleBinding()
         {
             throw new NotImplementedException();
         }
+
+        public Object DataContext { get; set; }
     }
 }

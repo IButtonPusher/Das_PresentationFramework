@@ -1,36 +1,69 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Das.Views.Core.Geometry;
-using Das.Views.Core.Input;
+using System.Threading.Tasks;
 
 namespace Das.Views.Input
 {
     public class BaseInputHandler : IInputHandler
     {
+        public BaseInputHandler(IElementLocator elementLocator)
+        {
+            _elementLocator = elementLocator;
+        }
+
         public void Dispose()
         {
             //TODO_IMPLEMENT_ME();
         }
 
-        public IRenderKit RenderKit { get; set; }
+        
 
-        public IInputProvider InputProvider { get; set; }
-
-        public void OnMouseHovering(IPoint position)
+        public Boolean OnMouseHovering(MouseDownEventArgs args)
         {
-            //TODO_IMPLEMENT_ME();
+            foreach (var clickable in _elementLocator.GetVisualsForInput<IMouseInputHandler>(
+                args.Position, InputAction.MouseDown))
+            {
+                if (clickable.OnMouseHovering(args))
+                    return true;
+            }
+
+            return false;
         }
 
-        public void OnMouseDown(MouseButtons button, IPoint position)
+        public Boolean OnMouseDown(MouseDownEventArgs args)
         {
-            var clickable = _elementLocator.GetVisualForInput(position, InputAction.MouseDown);
-            //TODO_IMPLEMENT_ME();
+            foreach (var clickable in _elementLocator.GetVisualsForMouseInput<MouseDownEventArgs>(
+                args.Position, InputAction.MouseDown))
+            {
+                if (clickable.OnInput(args))
+                    return true;
+            }
+
+            return false;
         }
 
-        public void OnMouseUp(MouseButtons button, IPoint position)
+        public Boolean OnMouseUp(MouseUpEventArgs args)
         {
-            //TODO_IMPLEMENT_ME();
+            foreach (var clickable in _elementLocator.GetVisualsForMouseInput<MouseUpEventArgs>(
+                args.Position, InputAction.MouseDown))
+            {
+                if (clickable.OnInput(args))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public void OnMouseInput<TArgs>(TArgs args, InputAction action)
+            where TArgs : IMouseInputEventArgs
+        {
+            foreach (var clickable in _elementLocator.GetVisualsForMouseInput<TArgs>(
+                args.Position, action))
+            {
+                //System.Diagnostics.Debug.WriteLine("routing input: " + args + " to " + clickable);
+
+                if (clickable.OnInput(args))
+                    return;
+            }
         }
 
         public void OnKeyboardStateChanged()
@@ -39,10 +72,5 @@ namespace Das.Views.Input
         }
 
         private readonly IElementLocator _elementLocator;
-
-        public BaseInputHandler(IElementLocator elementLocator)
-        {
-            _elementLocator = elementLocator;
-        }
     }
 }

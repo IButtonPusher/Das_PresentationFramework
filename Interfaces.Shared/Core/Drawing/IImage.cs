@@ -7,19 +7,19 @@ namespace Das.Views.Core.Drawing
 {
     public interface IImage : ISize, IDisposable
     {
-        T Unwrap<T>();
-
-        Task<Boolean> TrySave(FileInfo path);
+        Boolean IsDisposed { get; }
 
         Task SaveAsync(FileInfo path);
 
         Task SaveThenDisposeAsync(FileInfo path);
 
-        Task<TResult> UseImage<TImage, TParam, TResult>(
-            TParam param1, Func<TImage, TParam, TResult> action);
-
         Stream ToStream();
 
-        Boolean IsDisposed { get; }
+        Task<Boolean> TrySave(FileInfo path);
+
+        T Unwrap<T>();
+
+        Task<TResult> UseImage<TImage, TParam, TResult>(
+            TParam param1, Func<TImage, TParam, TResult> action);
     }
 }

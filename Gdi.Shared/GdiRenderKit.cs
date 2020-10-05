@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Windows.Shared.Input;
 using Das.Views;
-using Das.Views.Core.Geometry;
 using Das.Views.Input;
 using Das.Views.Rendering;
 
@@ -10,35 +8,34 @@ namespace Das.Gdi.Kits
 {
     public class GdiRenderKit : IRenderKit
     {
-        private readonly IWindowProvider<IViewHost> _windowProvider;
-
         public GdiRenderKit(IViewPerspective viewPerspective,
-                            IWindowProvider<IViewHost> windowProvider)
+                            IWindowProvider<IVisualHost> windowProvider)
         {
-            _windowProvider = windowProvider;
             MeasureContext = new GdiMeasureContext();
-            RenderContext = new GdiRenderContext(MeasureContext, viewPerspective);
+            RenderContext = new GdiRenderContext(MeasureContext, 
+                viewPerspective, MeasureContext.Graphics);
 
-             _windowProvider.WindowShown += OnWindowShown;
+            windowProvider.WindowShown += OnWindowShown;
 
             //InputContext = new Win32InputContext();
         }
 
-        private void OnWindowShown(IViewHost window)
-        {
-            
-            var i = new InputContext(window, new BaseInputHandler(RenderContext));
-            //var test = new Win32InputContext(window.Handle);
-        }
+        // ReSharper disable once NotAccessedField.Local
+        private IInputContext? _inputContext;
+
+        //public IInputContext InputContext { get; } = null;
+
+        IMeasureContext IRenderKit.MeasureContext => MeasureContext;
+
+        IRenderContext IRenderKit.RenderContext => RenderContext;
 
         public GdiMeasureContext MeasureContext { get; }
 
         public GdiRenderContext RenderContext { get; }
 
-        public IInputContext InputContext { get; } = null;
-
-        IMeasureContext IRenderKit.MeasureContext => MeasureContext;
-
-        IRenderContext IRenderKit.RenderContext => RenderContext;
+        private void OnWindowShown(IVisualHost window)
+        {
+            _inputContext = new InputContext(window, new BaseInputHandler(RenderContext));
+        }
     }
 }

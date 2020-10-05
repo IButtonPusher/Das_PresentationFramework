@@ -1,8 +1,9 @@
 ﻿using System;
 using Das.Views;
 using Das.Views.Panels;
+using Das.Views.Rendering;
 using Das.Views.Windows;
-using Das.ViewsModels;
+using Das.ViewModels;
 
 namespace Das.OpenGL.Windows
 {
@@ -30,6 +31,25 @@ namespace Das.OpenGL.Windows
             view.SetDataContext(viewModel);
 
             return form;
+        }
+
+        public GLForm Show<TViewModel>(TViewModel viewModel, 
+                                       IView<TViewModel> view) 
+            where TViewModel : IViewModel
+        {
+            var styleContext = view.StyleContext;
+
+            var control = new GLHostedElement(view, styleContext);
+            var form = new GLForm(control);
+
+            view.SetDataContext(viewModel);
+
+            return form;
+        }
+
+        public GLForm Show(IVisualRenderer visual)
+        {
+            throw new NotImplementedException();
         }
 
         public event Action<GLForm>? WindowShown;
@@ -81,24 +101,6 @@ namespace Das.OpenGL.Windows
 
             return wndClass;
         }
-
-        //[DllImport(Native.User32, SetLastError = true)]
-        //public static extern IntPtr DefWindowProc(IntPtr hWnd, UInt32 uMsg, IntPtr wParam, IntPtr lParam);
-
-        //[DllImport(Native.User32, SetLastError = true)]
-        //public static extern IntPtr CreateWindowEx(
-        //    WindowStylesEx dwExStyle,
-        //    String lpClassName,
-        //    String lpWindowName,
-        //    WindowStyles dwStyle,
-        //    Int32 x,
-        //    Int32 y,
-        //    Int32 nWidth,
-        //    Int32 nHeight,
-        //    IntPtr hWndParent,
-        //    IntPtr hMenu,
-        //    IntPtr hInstance,
-        //    IntPtr lpParam);
 
     }
 }

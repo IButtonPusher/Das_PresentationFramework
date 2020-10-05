@@ -10,22 +10,16 @@ namespace Das.Views.Panels
 {
     public abstract class BaseSequentialPanel<T> : BasePanel<T>, ISequentialPanel
     {
-        protected BaseSequentialPanel(IDataBinding<T> binding,
-            ISequentialRenderer renderer = null) : base(binding)
+        protected BaseSequentialPanel(IDataBinding<T>? binding,
+                                      ISequentialRenderer? renderer = null) 
+            : base(binding)
         {
             _renderer = EnsureRenderer(renderer);
         }
 
-        protected BaseSequentialPanel(ISequentialRenderer renderer = null)
+        protected BaseSequentialPanel(ISequentialRenderer? renderer = null)
             : this(null, renderer)
         {
-        }
-
-        protected abstract IEnumerable<IVisualElement> GetChildrenToRender();
-
-        private static ISequentialRenderer EnsureRenderer(ISequentialRenderer input)
-        {
-            return input ?? new SequentialRenderer();
         }
 
         public Orientations Orientation { get; set; }
@@ -40,6 +34,13 @@ namespace Das.Views.Panels
         {
             _renderer.Arrange(Orientation, availableSpace, renderContext);
         }
+
+        private static ISequentialRenderer EnsureRenderer(ISequentialRenderer? input)
+        {
+            return input ?? new SequentialRenderer();
+        }
+
+        protected abstract IEnumerable<IVisualElement> GetChildrenToRender();
 
         private readonly ISequentialRenderer _renderer;
     }

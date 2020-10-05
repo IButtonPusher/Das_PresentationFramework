@@ -20,19 +20,36 @@ namespace Das.Views.DevKit
 
         public IInputProvider InputProvider { get; set; }
 
-        public void OnMouseHovering(IPoint position)
+        public Boolean OnMouseHovering(MouseDownEventArgs args)
         {
-            
+            return false;
         }
 
-        public void OnMouseDown(MouseButtons button, IPoint position)
+        public Boolean OnMouseUp(MouseUpEventArgs args)
         {
-            _lastPosition = position;
-            UpdateSelectedItems(position);
+            return false;
+        }
+
+        public void OnMouseInput<TArgs>(TArgs args, 
+                                        InputAction action) 
+            where TArgs : IMouseInputEventArgs
+        {
+            if (action == InputAction.MouseDown &&
+                args is MouseDownEventArgs e)
+            {
+                OnMouseDown(e);
+            }
+        }
+
+        public Boolean OnMouseDown(MouseDownEventArgs args)
+        {
+            _lastPosition = args.Position;
+            UpdateSelectedItems(args.Position);
+            return true;
         }
 
 
-        public void OnMouseUp(MouseButtons button, IPoint position) { }
+        public Boolean OnMouseUp(MouseDownEventArgs args) => false;
 
         public void OnKeyboardStateChanged()
         {
@@ -44,7 +61,7 @@ namespace Das.Views.DevKit
                 UpdateSelectedItems(position);
         }
 
-        private void UpdateSelectedItems(IPoint position)
+        private void UpdateSelectedItems(IPoint2D position)
         {
             var cursor = position;
             var elements = _elementLocator.GetElementsAt(cursor).ToArray();
@@ -58,7 +75,7 @@ namespace Das.Views.DevKit
 
         private readonly IElementLocator _elementLocator;
         private readonly DesignViewUpdater _designViewUpdater;
-        private IPoint? _lastPosition;
+        private IPoint2D? _lastPosition;
 
         public DevInputHandler(IElementLocator elementLocator, DesignViewUpdater designViewUpdater)
         {
