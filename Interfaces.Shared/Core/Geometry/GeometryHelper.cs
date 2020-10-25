@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Das.Extensions;
 
 namespace Das.Views.Core.Geometry
@@ -17,7 +15,9 @@ namespace Das.Views.Core.Geometry
                    && point.Y <= rectangle.Bottom;
         }
 
-        public static Boolean IsRectangleContains<TRect>(TRect rectangle, Int32 x, Int32 y)
+        public static Boolean IsRectangleContains<TRect>(TRect rectangle, 
+                                                         Int32 x, 
+                                                         Int32 y)
             where TRect : IRectangle
         {
             return x >= rectangle.Left
@@ -43,6 +43,16 @@ namespace Das.Views.Core.Geometry
 
             return left.Width.AreEqualEnough(other.Width) &&
                    left.Height.AreEqualEnough(other.Height);
+        }
+
+        public static ISize Reduce(ISize size, 
+                                      Thickness margin)
+        {
+            if (margin == null)
+                return size.DeepCopy();
+
+            return new ValueSize(size.Width - (margin.Left + margin.Right),
+                size.Height - (margin.Top + margin.Bottom));
         }
 
     }

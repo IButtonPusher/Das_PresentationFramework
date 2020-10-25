@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading.Tasks;
 using Das.Views;
+using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 using Rectangle = Das.Views.Core.Geometry.Rectangle;
 
@@ -20,8 +21,8 @@ namespace Das.Gdi
             _measureContext = measureContext;
             _renderContext = renderContext;
             _gdiDevice = new GdiDevice(backgroundColor,
-                (Int32) _viewHost.AvailableSize.Width,
-                (Int32) _viewHost.AvailableSize.Height);
+                Convert.ToInt32(_viewHost.AvailableSize.Width),
+                Convert.ToInt32(_viewHost.AvailableSize.Height));
             _renderRect = new Rectangle(0, 0, 1, 1);
         }
 
@@ -42,8 +43,7 @@ namespace Das.Gdi
                     return default!;
 
                 var available = _visualHost.AvailableSize;
-                //_measureContext.ViewState = _viewHost;
-                //_measureContext.UpdateContextBounds(available);
+                
                 var desired = _measureContext.MeasureMainView(view, available, _viewHost);
                 _gdiDevice.Width = Convert.ToInt32(desired.Width);
                 _gdiDevice.Height = Convert.ToInt32(desired.Height);
@@ -52,6 +52,16 @@ namespace Das.Gdi
                 var bmp = _gdiDevice.Run(view, DoRender);
                 return bmp;
             }
+        }
+
+        public ISize? GetContentSize(ISize available)
+        {
+            var view = _viewHost.View;
+            if (view == null)
+                return default;
+                
+            return _measureContext.MeasureMainView(view, 
+                available, _viewHost);
         }
 
         public event EventHandler? Rendering;

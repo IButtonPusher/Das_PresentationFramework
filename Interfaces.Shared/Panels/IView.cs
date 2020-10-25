@@ -10,7 +10,8 @@ namespace Das.Views.Panels
     {
     }
 
-    public interface IView : IContentContainer, IBindingSetter
+    public interface IView : IContentContainer, 
+                             IBindingSetter
     {
         IStyleContext StyleContext { get; }
     }

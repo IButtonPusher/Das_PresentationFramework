@@ -11,8 +11,10 @@ namespace Das.Views
             _minDelay = 1000 / maxFramesPerSecond;
         }
 
-        private Boolean _isDisposed;
-        private readonly Int32 _minDelay;
+        public virtual void Dispose()
+        {
+            _isDisposed = true;
+        }
 
         protected abstract Boolean IsChanged { get; }
 
@@ -36,7 +38,7 @@ namespace Das.Views
                 if (swLast.ElapsedMilliseconds >= _minDelay)
                     continue;
 
-                var letsWait = _minDelay - (Int32)swLast.ElapsedMilliseconds;
+                var letsWait = _minDelay - (Int32) swLast.ElapsedMilliseconds;
                 if (letsWait < 0)
                     continue;
                 #if !NET40
@@ -47,14 +49,14 @@ namespace Das.Views
             } while (!_isDisposed);
         }
 
-        protected virtual void Initialize() { }
+        protected virtual void Initialize()
+        {
+        }
 
         protected abstract void Update();
 
-        public virtual void Dispose()
-        {
-            _isDisposed = true;
-        }
+        private readonly Int32 _minDelay;
 
+        private Boolean _isDisposed;
     }
 }

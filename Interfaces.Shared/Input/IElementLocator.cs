@@ -16,5 +16,13 @@ namespace Das.Views.Input
         IEnumerable<IHandleInput<T>> GetVisualsForMouseInput<T>(IPoint2D point2D,
                                                                 InputAction inputAction) 
             where T : IInputEventArgs;
+
+        IEnumerable<IRenderedVisual<IHandleInput<T>>> GetRenderedVisualsForMouseInput<T>(IPoint2D point2D,
+                                                                InputAction inputAction) 
+            where T : IInputEventArgs;
+
+
+        ICube? TryGetElementBounds(IVisualElement element);
+
     }
 }

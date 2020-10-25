@@ -131,7 +131,9 @@ namespace Das.Views.Extended
                      left.Z * (Double)right.Z);
 
         public Vector3 Rotate(Single x, Single y, Single z) => 
-            new Vector3(X + x, Y + y, Z + z);
+            new Vector3((X + x) % 360, 
+                (Y + y) % 360, 
+                (Z + z) % 360);
 
         IPoint3D IPoint3D.Rotate(Single x, Single y, Single z) => Rotate(x, y, z);
 

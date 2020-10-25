@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Das.Views.Input
 {
     public interface IInputEventArgs
     {
+        InputAction Action { get; }
+
         IInputContext InputContext { get; }
     }
 }

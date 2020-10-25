@@ -29,6 +29,11 @@ namespace Das.Views.Core.Geometry
 
         public Double Y { get; }
 
+        public IPoint2D Offset(IPoint2D offset)
+        {
+            return new ValuePoint2D(X - offset.X, Y - offset.Y);
+        }
+
         IPoint2D IDeepCopyable<IPoint2D>.DeepCopy()
         {
             return DeepCopy();

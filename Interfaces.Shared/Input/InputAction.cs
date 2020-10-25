@@ -11,7 +11,10 @@ namespace Das.Views.Input
         MouseDown = 2,
         MouseUp = 4,
         LeftClick = 8,
-        MouseDrag = 16,
-        MouseWheel = 32
+        RightClick = 16,
+        MiddleClick = 32,
+        MouseDrag = 64,
+        MouseWheel = 128,
+        Fling = 256
     }
 }

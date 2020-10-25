@@ -4,6 +4,26 @@ namespace Das.Views.Core.Geometry
 {
     public readonly struct ValueRectangle : IRectangle
     {
+        public ValueRectangle(Double x,
+                              Double y,
+                              ISize size)
+            : this(x, y, size.Width, size.Height)
+        {
+        }
+
+        public ValueRectangle(IPoint2D position,
+                              ISize size)
+            : this(position.X, position.Y, size.Width, size.Height)
+        {
+        }
+
+        public ValueRectangle(IPoint2D position,
+                              Double width,
+                              Double height)
+            : this(position.X, position.Y, width, height)
+        {
+        }
+
         public ValueRectangle(Double x, 
                               Double y, 
                               Double width,
@@ -35,6 +55,11 @@ namespace Das.Views.Core.Geometry
         public Boolean IsEmpty => Width > 0 || Height > 0;
         public Double Width { get; }
 
+        public ISize Reduce(Thickness padding)
+        {
+            return GeometryHelper.Reduce(this, padding);
+        }
+
         public Point2D Location => TopLeft;
         
         public ISize Size => new ValueSize(Width, Height);
@@ -62,6 +87,11 @@ namespace Das.Views.Core.Geometry
         void IRectangle.Union(IRectangle rect)
         {
             throw new NotSupportedException();
+        }
+
+        ISize IDeepCopyable<ISize>.DeepCopy()
+        {
+            return new ValueSize(Width, Height);
         }
 
         public override String ToString()

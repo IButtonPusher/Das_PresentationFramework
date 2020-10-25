@@ -8,5 +8,7 @@ namespace Das.Views.Core.Geometry
         Double X { get; }
 
         Double Y { get; }
+
+        IPoint2D Offset(IPoint2D offset);
     }
 }

@@ -85,6 +85,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DF5Tests", "3D\3DF5Tests\3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenGLTests", "Core\OpenGL\OpenGLTests\OpenGLTests.csproj", "{3C6BB6B6-8966-402F-A330-7288B6D36888}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Das.Container.Interfaces.Shared", "..\Das_DistributedContainer\Das.Container.Interfaces.Shared\Das.Container.Interfaces.Shared.shproj", "{E347B4BA-D388-4413-BC57-6FA57FCF6512}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		WinForms.Shared\WinForms.Shared.projitems*{15783956-b706-41d5-982b-1bcf698ca5b1}*SharedItemsImports = 13
@@ -110,6 +112,7 @@ Global
 		Charting.Shared\Charting.Shared.projitems*{b0a43ae7-19a0-4c0c-b854-d4f77dae7bba}*SharedItemsImports = 5
 		Gdi.Shared\Gdi.Shared.projitems*{ce7e6b63-33e2-44f8-85c9-979a4f6b6f2c}*SharedItemsImports = 13
 		ViewModels.Shared\ViewModels.Shared.projitems*{cec76f49-102d-4f52-9f95-231829c47839}*SharedItemsImports = 13
+		..\Das_DistributedContainer\Das.Container.Interfaces.Shared\Das.Container.Interfaces.Shared.projitems*{e347b4ba-d388-4413-bc57-6fa57fcf6512}*SharedItemsImports = 13
 		..\NetFramework\CSharp8NetFramework\CSharp8NetFramework.projitems*{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}*SharedItemsImports = 5
 		Interfaces.Shared\Interfaces.Shared.projitems*{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}*SharedItemsImports = 5
 	EndGlobalSection

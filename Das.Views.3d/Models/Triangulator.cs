@@ -1,6 +1,9 @@
 ﻿using Das.Views.Extended;
 using System;
 using System.Collections.Generic;
+// ReSharper disable All
+#pragma warning disable 8601
+#pragma warning disable 8602
 
 namespace Triangulation
 {
@@ -113,7 +116,7 @@ namespace Triangulation
                                              List<Vector3> points,
                                              Dictionary<Vector3, List<ConnectionEdge>> incidentEdges)
         {
-            ConnectionEdge prev = null, first = null;
+            ConnectionEdge? prev = null, first = null;
             Dictionary<Vector3, Vector3> pointsHashSet = new Dictionary<Vector3, Vector3>();
             int pointCount = 0;
             for (int i = 0; i < points.Count; i++)
@@ -219,7 +222,6 @@ namespace Triangulation
                 if (!guard)
                 {
                     return new List<Vector3>();
-                    throw new Exception("No progression. The input must be wrong");
                 }
             }
 

@@ -11,15 +11,12 @@ namespace TestCommon
     {
         private readonly IBootStrapper _windowProvider;
         private readonly IViewProvider _viewProvider;
-        private readonly ISingleThreadedInvoker _staInvoker;
 
         public TestLauncher(IBootStrapper windowProvider,
-                            IViewProvider viewProvider,
-                            ISingleThreadedInvoker staInvoker)
+                            IViewProvider viewProvider)
         {
             _windowProvider = windowProvider;
             _viewProvider = viewProvider;
-            _staInvoker = staInvoker;
         }
 
         public async Task MvvmTest()
@@ -27,7 +24,7 @@ namespace TestCommon
             var file = new FileInfo("company\\EmployeesView.json");
             var view = await _viewProvider.GetView(file);
 
-            var vm = new TestCompanyVm(_staInvoker);
+            var vm = new TestCompanyVm();
             var _ = new SceneUpdater(vm, 50);
             Run(vm, view);
         }
@@ -37,6 +34,7 @@ namespace TestCommon
             _windowProvider.Run(vm, view);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public async Task CubeTest()
         {
             var provider = new CubeSceneProvider(_viewProvider);

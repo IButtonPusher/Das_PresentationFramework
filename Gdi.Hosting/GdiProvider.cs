@@ -10,10 +10,12 @@ using Das.ViewModels;
 
 namespace Das.Gdi
 {
-    public class GdiProvider : IWindowProvider<ViewWindow>, IBootStrapper
+    public class GdiProvider : IWindowProvider<ViewWindow>, 
+                               IBootStrapper
     {
         public GdiRenderKit RenderKit { get; }
 
+        // ReSharper disable once UnusedMember.Global
         public GdiProvider(GdiRenderKit renderKit)
         {
             RenderKit = renderKit;
@@ -31,7 +33,8 @@ namespace Das.Gdi
             return kit;
         }
 
-        public ViewWindow Show<TViewModel>(TViewModel viewModel, IView view)
+        public ViewWindow Show<TViewModel>(TViewModel viewModel, 
+                                           IView view)
             where TViewModel : IViewModel
         {
             var styleContext = view.StyleContext;
@@ -40,7 +43,19 @@ namespace Das.Gdi
             var form = new ViewWindow(control);
             Cook(form);
 
+            //var myScreen = Screen.FromControl(form);
+            //var area = myScreen.WorkingArea;
+            //var size = new ValueSize(area.Width, area.Height);
+
+            //var iWant = renderer.GetContentSize(size);
+
+            //var hwnd = new WindowInteropHelper( this ).EnsureHandle();
+            //var monitor = NativeMethods.MonitorFromWindow( hwnd, NativeMethods.MONITOR_DEFAULTTONEAREST );
+
+
             view.SetDataContext(viewModel);
+
+            WindowShown?.Invoke(form);
 
             return form;
         }
@@ -55,7 +70,13 @@ namespace Das.Gdi
             var form = new ViewWindow(control);
             Cook(form);
 
+            //System.Windows.SystemParameters.PrimaryScreenWidth System.Windows.SystemParameters.PrimaryScreenHeight
+
+            //renderer.GetContentSize()
+
             view.SetDataContext(viewModel);
+
+            WindowShown?.Invoke(form);
 
             return form;
         }
@@ -71,16 +92,18 @@ namespace Das.Gdi
 
         public event Action<ViewWindow>? WindowShown;
 
-        public void Run<TViewModel>(TViewModel viewModel, IView view) 
+        public void Run<TViewModel>(TViewModel viewModel, 
+                                    IView view) 
             where TViewModel : IViewModel
         {
             var window = Show(viewModel, view);
-            WindowShown?.Invoke(window);
+            
             Application.Run(window);
         }
 
         // ReSharper disable once UnusedMember.Global
-        public GdiHostedElement Host<TViewModel>(TViewModel viewModel, IView<TViewModel> view)
+        public GdiHostedElement Host<TViewModel>(TViewModel viewModel, 
+                                                 IView<TViewModel> view)
             where TViewModel : IViewModel
         {
             var styleContext = view.StyleContext;
@@ -109,11 +132,14 @@ namespace Das.Gdi
             return control;
         }
 
-        private void Cook(IViewHost<Bitmap> form)
+        // ReSharper disable once UnusedMethodReturnValue.Local
+        private IRenderer<Bitmap> Cook(IViewHost<Bitmap> form)
         {
             var renderer = new BitmapRenderer(form,
                 RenderKit.MeasureContext, RenderKit.RenderContext);
             var _ = new LoopViewUpdater<Bitmap>(form, renderer);
+            return renderer;
+
         }
     }
 }

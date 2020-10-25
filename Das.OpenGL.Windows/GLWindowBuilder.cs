@@ -1,7 +1,6 @@
 ﻿using System;
 using Das.Views;
 using Das.Views.Panels;
-using Das.Views.Rendering;
 using Das.Views.Windows;
 using Das.ViewModels;
 
@@ -20,7 +19,8 @@ namespace Das.OpenGL.Windows
             _nativeWindowClassName = nativeWindowClassName;
         }
 
-        public GLForm Show<TViewModel>(TViewModel viewModel, IView view)
+        public GLForm Show<TViewModel>(TViewModel viewModel, 
+                                       IView view)
             where TViewModel : IViewModel
         {
             var styleContext = view.StyleContext;
@@ -29,6 +29,8 @@ namespace Das.OpenGL.Windows
             var form = new GLForm(control);
 
             view.SetDataContext(viewModel);
+
+            WindowShown?.Invoke(form);
 
             return form;
         }
@@ -44,14 +46,11 @@ namespace Das.OpenGL.Windows
 
             view.SetDataContext(viewModel);
 
+            WindowShown?.Invoke(form);
+
             return form;
         }
-
-        public GLForm Show(IVisualRenderer visual)
-        {
-            throw new NotImplementedException();
-        }
-
+       
         public event Action<GLForm>? WindowShown;
 
         static GLWindowBuilder()

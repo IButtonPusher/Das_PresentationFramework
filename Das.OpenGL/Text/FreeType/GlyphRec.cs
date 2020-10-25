@@ -1,6 +1,8 @@
 ﻿using Das.Views.Core.Geometry;
 using System;
 using System.Runtime.InteropServices;
+// ReSharper disable All
+#pragma warning disable 8618
 
 namespace Das.OpenGL.Text.FreeType
 {

@@ -1,22 +1,40 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Das.Views.Core.Geometry;
-using Das.Views.DataBinding;
-using Das.Views.Input;
-using Das.Views.Rendering;
 using Das.ViewModels;
+using Das.Views.Core.Geometry;
+using Das.Views.Input;
+using Das.Views.Panels;
+using Das.Views.Rendering;
+using Das.Views.Styles;
 
 namespace Das.Views.Controls
 {
-    public class ButtonBase<T> : BindableElement<T>,
+    public class ButtonBase<T> : ContentPanel<T>,
                                  IHandleInput<MouseClickEventArgs>,
                                  IHandleInput<MouseDownEventArgs>,
                                  IHandleInput<MouseUpEventArgs>,
-                                 IHandleInput<MouseOverEventArgs>
+                                 IHandleInput<MouseOverEventArgs>,
+                                 IButtonBase
     {
-        public ButtonBase()
+        public override void Arrange(ISize availableSpace,
+                                     IRenderContext renderContext)
         {
-        
+        }
+
+        public override void Dispose()
+        {
+        }
+
+        public override ISize Measure(ISize availableSpace,
+                                      IMeasureContext measureContext)
+        {
+            return Size.Empty;
+        }
+
+        public StyleSelector CurrentStyleSelector
+        {
+            get => _currentStyleSelector;
+            set => SetValue(ref _currentStyleSelector, value, OnCurrentSelectorChanged);
         }
 
         public virtual Boolean OnInput(MouseClickEventArgs args)
@@ -28,8 +46,15 @@ namespace Das.Views.Controls
             return true;
         }
 
+        InputAction IInteractiveView.HandlesActions => InputAction.MouseDown |
+                                                       InputAction.MouseUp |
+                                                       InputAction.LeftClick |
+                                                       InputAction.MouseOver;
+
         public virtual Boolean OnInput(MouseDownEventArgs args)
         {
+            CurrentStyleSelector = StyleSelector.Active;
+
             if (ClickMode != ClickMode.Press || !(Command is {} cmd))
                 return true;
 
@@ -37,25 +62,20 @@ namespace Das.Views.Controls
             return true;
         }
 
-        public virtual Boolean OnInput(MouseUpEventArgs args)
-        {
-            throw new NotImplementedException();
-        }
-
         public virtual Boolean OnInput(MouseOverEventArgs args)
         {
-            throw new NotImplementedException();
+            CurrentStyleSelector = args.IsMouseOver
+                ? StyleSelector.Hover
+                : StyleSelector.None;
+
+            return true;
         }
 
-        InputAction IInteractiveView.HandlesActions =>InputAction.MouseDown |
-                                                      InputAction.MouseUp |
-                                                      InputAction.LeftClick |
-                                                      InputAction.MouseOver;
-
-        public IObservableCommand<T>? Command { get; set; }
-
-
-        private ClickMode _clickMode;
+        public virtual Boolean OnInput(MouseUpEventArgs args)
+        {
+            CurrentStyleSelector = StyleSelector.Hover;
+            return true;
+        }
 
         public ClickMode ClickMode
         {
@@ -63,19 +83,17 @@ namespace Das.Views.Controls
             set => SetValue(ref _clickMode, value);
         }
 
-        public override void Arrange(ISize availableSpace, 
-                                     IRenderContext renderContext)
+        public IObservableCommand<T>? Command { get; set; }
+
+        private void OnCurrentSelectorChanged(StyleSelector value)
         {
+            IsChanged = true;
         }
 
-        public override void Dispose()
-        {
-        }
 
-        public override ISize Measure(ISize availableSpace, 
-                                      IMeasureContext measureContext)
-        {
-            return Size.Empty;
-        }
+        private ClickMode _clickMode;
+
+
+        private StyleSelector _currentStyleSelector;
     }
 }

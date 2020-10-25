@@ -4,13 +4,18 @@ using System.Threading.Tasks;
 
 namespace Das.Views.Styles
 {
-    public interface IStyle : IEnumerable<KeyValuePair<StyleSetters, Object?>>
+    public interface IStyle : IEnumerable<AssignedStyle>
     {
-        Object? this[StyleSetters setter] { get; }
+        Object? this[StyleSetter setter] { get; }
 
-        Boolean TryGetValue(StyleSetters setter, out Object val);
+        Object? this[StyleSetter setter, StyleSelector selector] { get; }
 
-        Boolean TryGetValue(StyleSetters setter, 
+        Boolean TryGetValue(StyleSetter setter, 
+                            StyleSelector selector,
+                            out Object val);
+
+        Boolean TryGetValue(StyleSetter setter, 
+                            StyleSelector selector,
                             Object dataContext, 
                             out Object val);
     }

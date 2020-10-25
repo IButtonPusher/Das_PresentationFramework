@@ -9,8 +9,10 @@
     <Import_RootNamespace>Das.Views</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ContextBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ButtonBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\Image.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\PictureFrame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Label.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\BaseBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\BindableElement.cs" />
@@ -27,11 +29,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Panels\ContentPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\RepeaterPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\ScrollMode.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Panels\ScrollPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\StackPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\View.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BasePerspective.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BaseRenderContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\BaseRenderKit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\RenderedVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\SequentialRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VisualElement.cs" />

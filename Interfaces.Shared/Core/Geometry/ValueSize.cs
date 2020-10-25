@@ -23,9 +23,19 @@ namespace Das.Views.Core.Geometry
 
         public Double Width { get; }
 
+        public ISize Reduce(Thickness padding)
+        {
+            return GeometryHelper.Reduce(this, padding);
+        }
+
         public Double Height { get; }
 
         public Boolean IsEmpty => Width.IsZero() || Height.IsZero();
+
+        public ISize DeepCopy()
+        {
+            return new ValueSize(Width, Height);
+        }
 
         public override String ToString()
         {

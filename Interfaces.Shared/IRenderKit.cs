@@ -9,5 +9,13 @@ namespace Das.Views
         IMeasureContext MeasureContext { get; }
 
         IRenderContext RenderContext { get; }
+
+        TInterface Resolve<TObject, TInterface>() 
+            where TObject : TInterface;
+
+        void ResolveTo<TInterface, TObject>(TObject obj) 
+            where TObject : class, TInterface;
+
+        T Resolve<T>();
     }
 }

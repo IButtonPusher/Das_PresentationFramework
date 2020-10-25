@@ -7,13 +7,14 @@ using Das.Views.Core.Writing;
 
 namespace Das.Views.Styles
 {
-    public enum StyleSetters
+    public enum StyleSetter
     {
         [StyleType(typeof(Thickness))] Margin,
-
         [StyleType(typeof(Thickness))] Padding,
 
         [StyleType(typeof(Thickness))] BorderThickness,
+
+        [StyleType(typeof(Int32))] BorderRadius,
 
         [StyleType(typeof(ISize))] Size,
 

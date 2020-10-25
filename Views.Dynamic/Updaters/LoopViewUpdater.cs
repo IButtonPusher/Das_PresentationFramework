@@ -3,27 +3,24 @@ using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Rendering;
 
-
 namespace Das.Views
 {
     /// <summary>
-    /// Runs a 'game loop' that checks if the IViewHost has changes and redraws when it does
+    ///     Runs a 'game loop' that checks if the IViewHost has changes and redraws when it does
     /// </summary>
     public class LoopViewUpdater<TAsset> : BaseLoopUpdater
     {
         public LoopViewUpdater(IViewHost<TAsset> viewHost,
-            IRenderer<TAsset> renderer, Int32 maxFramesPerSecond = 60)
-            :base(maxFramesPerSecond)
+                               IRenderer<TAsset> renderer,
+                               Int32 maxFramesPerSecond = 60)
+            : base(maxFramesPerSecond)
         {
             _viewHost = viewHost;
             _renderer = renderer;
-            
+
 
             Task.Factory.StartNew(GameLoop, TaskCreationOptions.LongRunning);
         }
-
-        private readonly IViewHost<TAsset> _viewHost;
-        private readonly IRenderer<TAsset> _renderer;
 
         protected override Boolean IsChanged => _viewHost.IsChanged;
 
@@ -35,12 +32,16 @@ namespace Das.Views
 
             _viewHost.AcceptChanges();
         }
+
+        private readonly IRenderer<TAsset> _renderer;
+
+        private readonly IViewHost<TAsset> _viewHost;
     }
 
     public class LoopViewUpdater : BaseLoopUpdater
     {
         public LoopViewUpdater(IRenderer renderer, IViewHost viewHost,
-            TaskScheduler taskScheduler, Int32 maxFramesPerSecond = 60)
+                               TaskScheduler taskScheduler, Int32 maxFramesPerSecond = 60)
             : base(maxFramesPerSecond)
         {
             _renderer = renderer;
@@ -49,9 +50,6 @@ namespace Das.Views
             Task.Factory.StartNew(GameLoop, CancellationToken.None,
                 TaskCreationOptions.LongRunning, taskScheduler);
         }
-        
-        private readonly IRenderer _renderer;
-        private readonly IViewHost _viewHost;
 
         protected override Boolean IsChanged => _viewHost.IsChanged;
 
@@ -65,5 +63,8 @@ namespace Das.Views
             _renderer.DoRender();
             _viewHost.AcceptChanges();
         }
+
+        private readonly IRenderer _renderer;
+        private readonly IViewHost _viewHost;
     }
 }

@@ -37,14 +37,19 @@ namespace Das.Xamarin.Android
         public IFont Font { get; }
 
 
-        public void DrawString(String text, IBrush brush, IPoint2D point2D)
+        public void DrawString(String text, 
+                               IBrush brush, 
+                               IPoint2D point2D)
         {
             SetColor(brush);
 
-            GetCanvas().DrawText(text, (Single) point2D.X + 50, (Single) point2D.Y + 50, this);
+            //GetCanvas().DrawText(text, (Single) point2D.X + 50, (Single) point2D.Y + 50, this);
+            GetCanvas().DrawText(text, (Single) point2D.X, (Single) point2D.Y, this);
         }
 
-        public void DrawString(String s, IBrush brush, IRectangle bounds)
+        public void DrawString(String s, 
+                               IBrush brush, 
+                               IRectangle bounds)
         {
             var canvas = GetCanvas();
 

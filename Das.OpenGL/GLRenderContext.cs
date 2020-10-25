@@ -31,7 +31,12 @@ namespace Das.OpenGL
             renderer.DrawString(s, brush, to);
         }
 
-        public override void FillRect(IRectangle orect, IBrush brush)
+        public override void DrawRoundedRect(IRectangle rect, IPen pen, Double cornerRadius)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void FillRectangle(IRectangle orect, IBrush brush)
         {
             var rect = orect;
             SetOrtho();
@@ -44,6 +49,11 @@ namespace Das.OpenGL
             GL.glRectd(rect.Left, rect.Top, rect.Right, rect.Bottom);
 
             GL.glFlush();
+        }
+
+        public override void FillRoundedRectangle(IRectangle rect, IBrush brush, Double cornerRadius)
+        {
+            throw new NotImplementedException();
         }
 
         private static void SetColor(IColor color)
@@ -61,6 +71,13 @@ namespace Das.OpenGL
         }
 
         public override void DrawImage(IImage img, IRectangle rect)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DrawImage(IImage img, 
+                                       IRectangle sourceRest, 
+                                       IRectangle destination)
         {
             throw new NotImplementedException();
         }

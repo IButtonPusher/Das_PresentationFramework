@@ -7,7 +7,7 @@ namespace ViewModels.Shared
 {
     public abstract class InvokableViewModel : BaseViewModel
     {
-        public InvokableViewModel(ISingleThreadedInvoker invoker)
+        protected InvokableViewModel(ISingleThreadedInvoker invoker)
         {
             StaInvoker = invoker;
         }

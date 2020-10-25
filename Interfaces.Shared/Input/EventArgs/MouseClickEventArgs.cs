@@ -14,12 +14,34 @@ namespace Das.Views.Input
             InputContext = inputContext;
             Button = button;
             ClickCount = clickCount;
+
+            switch (button)
+            {
+                case MouseButtons.Left:
+                    Action = InputAction.LeftClick;
+                    break;
+
+                case MouseButtons.Right:
+                    Action = InputAction.RightClick;
+                    break;
+
+                case MouseButtons.Middle:
+                    Action = InputAction.MiddleClick;
+                    break;
+
+                default:
+                    throw new NotSupportedException();
+            }
+
         }
 
         public readonly MouseButtons Button;
         public readonly Int32 ClickCount;
 
         public IPoint2D Position { get; }
+
+        public InputAction Action { get; }
+
         public IInputContext InputContext { get; }
     }
 }

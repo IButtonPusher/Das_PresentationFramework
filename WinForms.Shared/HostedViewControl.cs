@@ -64,8 +64,13 @@ namespace WinForms.Shared
             }
         }
 
-        public T GetStyleSetter<T>(StyleSetters setter, IVisualElement element)
+        public T GetStyleSetter<T>(StyleSetter setter, IVisualElement element)
             => StyleContext.GetStyleSetter<T>(setter, element);
+
+        public T GetStyleSetter<T>(StyleSetter setter, StyleSelector selector, IVisualElement element)
+        {
+            return StyleContext.GetStyleSetter<T>(setter, selector, element);
+        }
 
         public void AcceptChanges()
         {
@@ -79,6 +84,6 @@ namespace WinForms.Shared
             return Point2D.Empty;
         }
 
-        public IVisualRenderer Visual => View;
+        //public IVisualRenderer Visual => View;
     }
 }

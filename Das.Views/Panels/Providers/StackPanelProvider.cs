@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Das.Views.Core.Enums;
 using Das.Views.DataBinding;
 
@@ -8,7 +9,7 @@ namespace Das.Views.Panels.Providers
     public class StackPanelProvider
     {
         public static IVisualContainer GetStackPanel<TViewModel, TProperty>(Orientations orientation,
-            String propertyName)
+                                                                            String propertyName)
         {
             var prop = typeof(TViewModel).GetProperty(propertyName);
             if (prop == null)

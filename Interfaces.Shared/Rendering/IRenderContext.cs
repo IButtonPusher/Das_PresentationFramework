@@ -21,30 +21,59 @@ namespace Das.Views.Rendering
         /// <summary>
         ///     Returns the actual rectangle occupied by the element, including borders etc
         /// </summary>
-        Rectangle DrawElement(IVisualElement element, IRectangle rect);
+        Rectangle DrawElement(IVisualElement element, 
+                              IRectangle rect);
 
-        void DrawEllipse(IPoint2D center, Double radius, IPen pen);
+        void DrawEllipse(IPoint2D center, 
+                         Double radius, 
+                         IPen pen);
 
         void DrawFrame(IFrame frame);
 
-        void DrawImage(IImage img, IRectangle rect);
+        void DrawImage(IImage img, 
+                       IRectangle destination);
 
-        void DrawLine(IPen pen, IPoint2D pt1, IPoint2D pt2);
+        void DrawImage(IImage img, 
+                       IRectangle sourceRest,
+                       IRectangle destination);
 
-        void DrawLines(IPen pen, IPoint2D[] points);
+        void DrawLine(IPen pen, IPoint2D pt1, 
+                      IPoint2D pt2);
 
-        void DrawRect(IRectangle rect, IPen pen);
+        void DrawLines(IPen pen, 
+                       IPoint2D[] points);
 
-        void DrawString(String s, IFont font, IBrush brush, IPoint2D location);
+        void DrawRect(IRectangle rect, 
+                      IPen pen);
+
+        void DrawRoundedRect(IRectangle rect, 
+                      IPen pen,
+                      Double cornerRadius);
+
+        void DrawString(String s, 
+                        IFont font, 
+                        IBrush brush, 
+                        IPoint2D location);
 
         /// <summary>
         /// Draws the string within the provided rectangle.  Wraps text as needed
         /// </summary>
-        void DrawString(String s, IFont font, IBrush brush, IRectangle rect);
+        void DrawString(String s, 
+                        IFont font, 
+                        IBrush brush, 
+                        IRectangle rect);
 
-        void FillPie(IPoint2D center, Double radius, Double startAngle,
-                     Double endAngle, IBrush brush);
+        void FillPie(IPoint2D center, 
+                     Double radius, 
+                     Double startAngle,
+                     Double endAngle, 
+                     IBrush brush);
 
-        void FillRect(IRectangle rect, IBrush brush);
+        void FillRectangle(IRectangle rect, 
+                      IBrush brush);
+
+        void FillRoundedRectangle(IRectangle rect, 
+                             IBrush brush,
+                             Double cornerRadius);
     }
 }

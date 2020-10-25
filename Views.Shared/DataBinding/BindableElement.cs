@@ -155,3 +155,83 @@ namespace Das.Views.DataBinding
         protected T BoundValue;
     }
 }
+
+//#pragma warning disable 8618
+//using System;
+//using System.Threading.Tasks;
+//using Das.Views.Rendering;
+//#if !NET40
+//using TaskEx = System.Threading.Tasks.Task;
+//#endif
+
+//namespace Das.Views.DataBinding
+//{
+//    public abstract class BindableElement : VisualElement,
+//                                            IBindableElement
+//    {
+//        public Object? Value => DataContext;
+
+//        public virtual void SetBoundValue(Object? value)
+//        {
+//            var binding = _binding;
+//            if (binding == null || binding is InstanceBinding) 
+//                _binding = new ObjectBinding(value);
+
+//            BoundValue = value;
+//        }
+
+//        public virtual Task SetBoundValueAsync(Object? value)
+//        {
+//            SetBoundValue(value);
+//            return TaskEx.CompletedTask;
+//        }
+
+//        public virtual void SetDataContext(Object? dataContext)
+//        {
+//            var binding = _binding;
+//            if (binding == null)
+//                return;
+
+//            DataContext = dataContext;
+//            if (dataContext == null)
+//                return;
+
+//            var val = binding.GetValue(dataContext);
+//            SetBoundValue(val);
+//        }
+
+//        public virtual async Task SetDataContextAsync(Object? dataContext)
+//        {
+//            var binding = _binding;
+//            if (binding == null)
+//                return;
+
+//            DataContext = dataContext;
+//            if (dataContext == null)
+//                return;
+
+//            var val = await binding.GetValueAsync(dataContext);
+//            await SetBoundValueAsync(val);
+//        }
+
+//        public IDataBinding? Binding { get; set; }
+
+//        public Object? DataContext { get; set; }
+
+//        private IDataBinding? _binding;
+//        protected Object? BoundValue;
+
+//        public Object? GetBoundValue(Object dataContext)
+//        {
+//            switch (BoundValue)
+//            {
+//                case {} set:
+//                    return set;
+//                default:
+//                    if (_binding != null)
+//                        BoundValue = _binding.GetValue(dataContext);
+//                    return BoundValue;
+//            }
+//        }
+//    }
+//}

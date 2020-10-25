@@ -7,7 +7,7 @@ namespace Das.Views.Charting.Pie
     {
         public LegendItemStyle()
         {
-            Setters.Add(StyleSetters.FontSize, 9);
+            AddSetter(StyleSetter.FontSize, 9);
         }
     }
 }

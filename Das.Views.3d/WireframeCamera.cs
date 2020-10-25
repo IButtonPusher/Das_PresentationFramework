@@ -45,8 +45,12 @@ namespace Das.Views.Extended
 
         public Single FarZenith { get; }
 
-        public void RenderFrame(ISize availableSpace, IRenderContext renderContext)
+        public void RenderFrame(ISize availableSpace, 
+                                IRenderContext renderContext)
         {
+            if (availableSpace.Width == 0 || availableSpace.Height == 0)
+                return;
+
             var frame = GetFrame(availableSpace);
             renderContext.DrawFrame(frame);
         }
@@ -124,7 +128,9 @@ namespace Das.Views.Extended
             return result;
         }
 
-        private static IPoint2D Project(ISize availableSpace, IPoint3D vertex, Matrix aviatrix)
+        private static IPoint2D Project(ISize availableSpace, 
+                                        IPoint3D vertex, 
+                                        Matrix aviatrix)
         {
             var point = Vector3.TransformCoordinate(vertex, aviatrix);
 

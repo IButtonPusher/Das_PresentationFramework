@@ -1,19 +1,26 @@
 ﻿using System;
 using Das.Views.Core.Geometry;
-using Das.Views.Core.Input;
+using Das.Views.Rendering;
 
 namespace Das.Views.Input
 {
     public interface IMouseInputHandler
     {
-        Boolean OnMouseDown(MouseDownEventArgs args);
+        Boolean OnMouseInput<TArgs>(TArgs args, 
+                                    InputAction action) 
+            where TArgs : IMouseInputEventArgs<TArgs>;
 
-        Boolean OnMouseHovering(MouseDownEventArgs args);
+        /// <summary>
+        /// Special case since it happens so frequently
+        /// </summary>
+        /// <param name="position">Position relative to the main window</param>
+        /// <param name="inputContext"></param>
+        Boolean OnMouseMove<TPoint>(TPoint position,
+                                    IInputContext inputContext) 
+            where TPoint : IPoint2D;
 
-        Boolean OnMouseUp(MouseUpEventArgs args);
+        Boolean TryCaptureMouseInput(IVisualElement view);
 
-        void OnMouseInput<TArgs>(TArgs args, 
-                                 InputAction action) 
-            where TArgs : IMouseInputEventArgs;
+        Boolean TryReleaseMouseCapture(IVisualElement view);
     }
 }

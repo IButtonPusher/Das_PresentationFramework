@@ -5,6 +5,7 @@ using Das.Extensions;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Input;
 using Das.Views.Input;
+using Das.Views.Rendering;
 using ViewCompiler;
 
 namespace Das.Views.DevKit
@@ -30,15 +31,35 @@ namespace Das.Views.DevKit
             return false;
         }
 
-        public void OnMouseInput<TArgs>(TArgs args, 
+        public Boolean OnMouseInput<TArgs>(TArgs args, 
                                         InputAction action) 
-            where TArgs : IMouseInputEventArgs
+            where TArgs : IMouseInputEventArgs<TArgs>
         {
             if (action == InputAction.MouseDown &&
                 args is MouseDownEventArgs e)
             {
                 OnMouseDown(e);
+                return true;
             }
+
+            return false;
+        }
+
+        public Boolean OnMouseMove<TPoint>(TPoint position, 
+                                           IInputContext inputContext) 
+            where TPoint : IPoint2D
+        {
+            return false;
+        }
+
+        public Boolean TryCaptureMouseInput(IVisualElement view)
+        {
+            return false;
+        }
+
+        public Boolean TryReleaseMouseCapture(IVisualElement view)
+        {
+            return false;
         }
 
         public Boolean OnMouseDown(MouseDownEventArgs args)
@@ -49,7 +70,7 @@ namespace Das.Views.DevKit
         }
 
 
-        public Boolean OnMouseUp(MouseDownEventArgs args) => false;
+        //public Boolean OnMouseUp(MouseDownEventArgs args) => false;
 
         public void OnKeyboardStateChanged()
         {

@@ -348,6 +348,10 @@ namespace XamarinAndroidTest
 			global::Das.Xamarin.Android.Resource.Color.bright_foreground_inverse_material_light = global::XamarinAndroidTest.Resource.Color.bright_foreground_inverse_material_light;
 			global::Das.Xamarin.Android.Resource.Color.bright_foreground_material_dark = global::XamarinAndroidTest.Resource.Color.bright_foreground_material_dark;
 			global::Das.Xamarin.Android.Resource.Color.bright_foreground_material_light = global::XamarinAndroidTest.Resource.Color.bright_foreground_material_light;
+			global::Das.Xamarin.Android.Resource.Color.browser_actions_bg_grey = global::XamarinAndroidTest.Resource.Color.browser_actions_bg_grey;
+			global::Das.Xamarin.Android.Resource.Color.browser_actions_divider_color = global::XamarinAndroidTest.Resource.Color.browser_actions_divider_color;
+			global::Das.Xamarin.Android.Resource.Color.browser_actions_text_color = global::XamarinAndroidTest.Resource.Color.browser_actions_text_color;
+			global::Das.Xamarin.Android.Resource.Color.browser_actions_title_color = global::XamarinAndroidTest.Resource.Color.browser_actions_title_color;
 			global::Das.Xamarin.Android.Resource.Color.button_material_dark = global::XamarinAndroidTest.Resource.Color.button_material_dark;
 			global::Das.Xamarin.Android.Resource.Color.button_material_light = global::XamarinAndroidTest.Resource.Color.button_material_light;
 			global::Das.Xamarin.Android.Resource.Color.dim_foreground_disabled_material_dark = global::XamarinAndroidTest.Resource.Color.dim_foreground_disabled_material_dark;
@@ -471,6 +475,8 @@ namespace XamarinAndroidTest
 			global::Das.Xamarin.Android.Resource.Dimension.abc_text_size_subtitle_material_toolbar = global::XamarinAndroidTest.Resource.Dimension.abc_text_size_subtitle_material_toolbar;
 			global::Das.Xamarin.Android.Resource.Dimension.abc_text_size_title_material = global::XamarinAndroidTest.Resource.Dimension.abc_text_size_title_material;
 			global::Das.Xamarin.Android.Resource.Dimension.abc_text_size_title_material_toolbar = global::XamarinAndroidTest.Resource.Dimension.abc_text_size_title_material_toolbar;
+			global::Das.Xamarin.Android.Resource.Dimension.browser_actions_context_menu_max_width = global::XamarinAndroidTest.Resource.Dimension.browser_actions_context_menu_max_width;
+			global::Das.Xamarin.Android.Resource.Dimension.browser_actions_context_menu_min_padding = global::XamarinAndroidTest.Resource.Dimension.browser_actions_context_menu_min_padding;
 			global::Das.Xamarin.Android.Resource.Dimension.compat_button_inset_horizontal_material = global::XamarinAndroidTest.Resource.Dimension.compat_button_inset_horizontal_material;
 			global::Das.Xamarin.Android.Resource.Dimension.compat_button_inset_vertical_material = global::XamarinAndroidTest.Resource.Dimension.compat_button_inset_vertical_material;
 			global::Das.Xamarin.Android.Resource.Dimension.compat_button_padding_horizontal_material = global::XamarinAndroidTest.Resource.Dimension.compat_button_padding_horizontal_material;
@@ -636,6 +642,11 @@ namespace XamarinAndroidTest
 			global::Das.Xamarin.Android.Resource.Id.beginning = global::XamarinAndroidTest.Resource.Id.beginning;
 			global::Das.Xamarin.Android.Resource.Id.blocking = global::XamarinAndroidTest.Resource.Id.blocking;
 			global::Das.Xamarin.Android.Resource.Id.bottom = global::XamarinAndroidTest.Resource.Id.bottom;
+			global::Das.Xamarin.Android.Resource.Id.browser_actions_header_text = global::XamarinAndroidTest.Resource.Id.browser_actions_header_text;
+			global::Das.Xamarin.Android.Resource.Id.browser_actions_menu_items = global::XamarinAndroidTest.Resource.Id.browser_actions_menu_items;
+			global::Das.Xamarin.Android.Resource.Id.browser_actions_menu_item_icon = global::XamarinAndroidTest.Resource.Id.browser_actions_menu_item_icon;
+			global::Das.Xamarin.Android.Resource.Id.browser_actions_menu_item_text = global::XamarinAndroidTest.Resource.Id.browser_actions_menu_item_text;
+			global::Das.Xamarin.Android.Resource.Id.browser_actions_menu_view = global::XamarinAndroidTest.Resource.Id.browser_actions_menu_view;
 			global::Das.Xamarin.Android.Resource.Id.buttonPanel = global::XamarinAndroidTest.Resource.Id.buttonPanel;
 			global::Das.Xamarin.Android.Resource.Id.center = global::XamarinAndroidTest.Resource.Id.center;
 			global::Das.Xamarin.Android.Resource.Id.center_horizontal = global::XamarinAndroidTest.Resource.Id.center_horizontal;
@@ -774,6 +785,8 @@ namespace XamarinAndroidTest
 			global::Das.Xamarin.Android.Resource.Layout.abc_search_view = global::XamarinAndroidTest.Resource.Layout.abc_search_view;
 			global::Das.Xamarin.Android.Resource.Layout.abc_select_dialog_material = global::XamarinAndroidTest.Resource.Layout.abc_select_dialog_material;
 			global::Das.Xamarin.Android.Resource.Layout.abc_tooltip = global::XamarinAndroidTest.Resource.Layout.abc_tooltip;
+			global::Das.Xamarin.Android.Resource.Layout.browser_actions_context_menu_page = global::XamarinAndroidTest.Resource.Layout.browser_actions_context_menu_page;
+			global::Das.Xamarin.Android.Resource.Layout.browser_actions_context_menu_row = global::XamarinAndroidTest.Resource.Layout.browser_actions_context_menu_row;
 			global::Das.Xamarin.Android.Resource.Layout.notification_action = global::XamarinAndroidTest.Resource.Layout.notification_action;
 			global::Das.Xamarin.Android.Resource.Layout.notification_action_tombstone = global::XamarinAndroidTest.Resource.Layout.notification_action_tombstone;
 			global::Das.Xamarin.Android.Resource.Layout.notification_template_custom_big = global::XamarinAndroidTest.Resource.Layout.notification_template_custom_big;
@@ -823,6 +836,8 @@ namespace XamarinAndroidTest
 			global::Das.Xamarin.Android.Resource.String.abc_shareactionprovider_share_with = global::XamarinAndroidTest.Resource.String.abc_shareactionprovider_share_with;
 			global::Das.Xamarin.Android.Resource.String.abc_shareactionprovider_share_with_application = global::XamarinAndroidTest.Resource.String.abc_shareactionprovider_share_with_application;
 			global::Das.Xamarin.Android.Resource.String.abc_toolbar_collapse_description = global::XamarinAndroidTest.Resource.String.abc_toolbar_collapse_description;
+			global::Das.Xamarin.Android.Resource.String.app_name = global::XamarinAndroidTest.Resource.String.app_name;
+			global::Das.Xamarin.Android.Resource.String.hello = global::XamarinAndroidTest.Resource.String.hello;
 			global::Das.Xamarin.Android.Resource.String.search_menu_title = global::XamarinAndroidTest.Resource.String.search_menu_title;
 			global::Das.Xamarin.Android.Resource.String.status_bar_notification_info_overflow = global::XamarinAndroidTest.Resource.String.status_bar_notification_info_overflow;
 			global::Das.Xamarin.Android.Resource.Style.AlertDialog_AppCompat = global::XamarinAndroidTest.Resource.Style.AlertDialog_AppCompat;
@@ -1630,6 +1645,7 @@ namespace XamarinAndroidTest
 			global::Das.Xamarin.Android.Resource.Styleable.View_paddingEnd = global::XamarinAndroidTest.Resource.Styleable.View_paddingEnd;
 			global::Das.Xamarin.Android.Resource.Styleable.View_paddingStart = global::XamarinAndroidTest.Resource.Styleable.View_paddingStart;
 			global::Das.Xamarin.Android.Resource.Styleable.View_theme = global::XamarinAndroidTest.Resource.Styleable.View_theme;
+			global::Das.Xamarin.Android.Resource.Xml.xamarin_essentials_fileprovider_file_paths = global::XamarinAndroidTest.Resource.Xml.xamarin_essentials_fileprovider_file_paths;
 			global::Xamarin.Essentials.Resource.Attribute.alpha = global::XamarinAndroidTest.Resource.Attribute.alpha;
 			global::Xamarin.Essentials.Resource.Attribute.coordinatorLayoutStyle = global::XamarinAndroidTest.Resource.Attribute.coordinatorLayoutStyle;
 			global::Xamarin.Essentials.Resource.Attribute.font = global::XamarinAndroidTest.Resource.Attribute.font;

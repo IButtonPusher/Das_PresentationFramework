@@ -7,6 +7,17 @@
       "Orientation": "Horizontal",
       "Children": [
         {
+          "Button[ICompanyViewModel]": {
+            "Binding": "Self",
+            "Content": {
+              "Binding": "Self",
+              "Label": {
+                "Binding": "Name"
+              }
+            }
+          }
+        },
+        {
           "ScrollPanel[EmployeeViewModel]": {
             "ScrollMode": "Vertical",
             "Binding": "Employees",

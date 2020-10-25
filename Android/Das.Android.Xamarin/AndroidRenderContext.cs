@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using Android.Graphics;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
@@ -10,12 +11,10 @@ namespace Das.Xamarin.Android
 {
     public class AndroidRenderContext : BaseRenderContext
     {
-        private readonly IFontProvider<AndroidFontPaint> _fontProvider;
-
-        public AndroidRenderContext(IMeasureContext measureContext, 
+        public AndroidRenderContext(IMeasureContext measureContext,
                                     IViewPerspective perspective,
                                     IFontProvider<AndroidFontPaint> fontProvider,
-                                    IViewState viewState) 
+                                    IViewState viewState)
             : base(measureContext, perspective)
         {
             _fontProvider = fontProvider;
@@ -25,58 +24,41 @@ namespace Das.Xamarin.Android
 
         public Canvas? Canvas { get; set; }
 
-        private Paint _paint;
-
-        private Canvas GetCanvas()
+        public override void DrawEllipse(IPoint2D center,
+                                         Double radius,
+                                         IPen pen)
         {
-            return Canvas ?? throw new NullReferenceException("Canvas must be set");
+            throw new NotImplementedException();
         }
 
-        public override void DrawString(String s, 
-                                        IFont font, 
-                                        IBrush brush, 
-                                        IPoint2D point2D)
+        public override void DrawFrame(IFrame frame)
         {
-            var renderer = _fontProvider.GetRenderer(font);
-            renderer.Canvas = GetCanvas();
-            renderer.DrawString(s, brush, point2D);
-            
+            throw new NotImplementedException();
         }
 
-        public override void DrawString(String s, 
-                                        IFont font, 
-                                        IBrush brush, 
-                                        IRectangle rect)
+        public override void DrawImage(IImage img,
+                                       IRectangle rect)
         {
-            var renderer = _fontProvider.GetRenderer(font);
-            var dest = GetAbsoluteRect(rect);
-            renderer.Canvas = GetCanvas();
-            renderer.DrawString(s, brush, dest);
+            DrawImage(img, new ValueRectangle(0, 0, img.Width, img.Height), rect);
         }
 
-        public override void DrawImage(IImage img, IRectangle rect)
+        public override void DrawImage(IImage img,
+                                       IRectangle srcRect,
+                                       IRectangle destination)
         {
             var bmp = img.Unwrap<Bitmap>();
-            var dest = GetAbsoluteAndroidRect(rect);
-            var src = new Rect(0,0, 
-                Convert.ToInt32(img.Width),
-                Convert.ToInt32(img.Height));
+            var dest = GetAbsoluteAndroidRect(destination);
+            var src = new Rect(Convert.ToInt32(srcRect.X),
+                Convert.ToInt32(srcRect.Y),
+                Convert.ToInt32(srcRect.Width),
+                Convert.ToInt32(srcRect.Height));
 
 
             GetCanvas().DrawBitmap(bmp, src, dest, _paint);
         }
 
-        public override IImage? GetImage(Stream stream)
-        {
-            var bmp = BitmapFactory.DecodeStream(stream);
-            if (bmp == null)
-                return default;
-
-            return new AndroidBitmap(bmp);
-        }
-
-        public override void DrawLine(IPen pen, 
-                                      IPoint2D pt1, 
+        public override void DrawLine(IPen pen,
+                                      IPoint2D pt1,
                                       IPoint2D pt2)
         {
             _paint.SetStyle(Paint.Style.Stroke);
@@ -107,13 +89,6 @@ namespace Das.Xamarin.Android
             }
         }
 
-        public override void FillRect(IRectangle rect, IBrush brush)
-        {
-            _paint.SetStyle(Paint.Style.Fill);
-            SetColor(brush);
-            GetCanvas().DrawRect(GetAbsoluteAndroidRect(rect), _paint);
-        }
-
         public override void DrawRect(IRectangle rect, IPen pen)
         {
             _paint.SetStyle(Paint.Style.Stroke);
@@ -121,25 +96,83 @@ namespace Das.Xamarin.Android
             GetCanvas().DrawRect(GetAbsoluteAndroidRect(rect), _paint);
         }
 
-        public override void FillPie(IPoint2D center, 
-                                     Double radius, 
-                                     Double startAngle, 
-                                     Double endAngle, 
+        public override void DrawRoundedRect(IRectangle rect,
+                                             IPen pen,
+                                             Double cornerRadius)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DrawString(String s,
+                                        IFont font,
+                                        IBrush brush,
+                                        IPoint2D point2D)
+        {
+            var renderer = _fontProvider.GetRenderer(font);
+            var dest = GetAbsolutePoint(point2D);
+            renderer.Canvas = GetCanvas();
+            renderer.DrawString(s, brush, dest);
+        }
+
+        public override void DrawString(String s,
+                                        IFont font,
+                                        IBrush brush,
+                                        IRectangle rect)
+        {
+            var renderer = _fontProvider.GetRenderer(font);
+            var dest = GetAbsoluteRect(rect);
+            renderer.Canvas = GetCanvas();
+            renderer.DrawString(s, brush, dest);
+        }
+
+        public override void FillPie(IPoint2D center,
+                                     Double radius,
+                                     Double startAngle,
+                                     Double endAngle,
                                      IBrush brush)
         {
             throw new NotImplementedException();
         }
 
-        public override void DrawEllipse(IPoint2D center, 
-                                         Double radius, 
-                                         IPen pen)
+        public override void FillRectangle(IRectangle rect, IBrush brush)
+        {
+            _paint.SetStyle(Paint.Style.Fill);
+            SetColor(brush);
+            GetCanvas().DrawRect(GetAbsoluteAndroidRect(rect), _paint);
+        }
+
+        public override void FillRoundedRectangle(IRectangle rect, IBrush brush, Double cornerRadius)
         {
             throw new NotImplementedException();
         }
 
-        public override void DrawFrame(IFrame frame)
+        private Point GetAbsoluteAndroidPoint(IPoint2D relativePoint2D)
         {
-            throw new NotImplementedException();
+            var to = GetAbsolutePoint(relativePoint2D);
+            return new Point(Convert.ToInt32(to.X),
+                Convert.ToInt32(to.Y));
+        }
+
+        private Rect GetAbsoluteAndroidRect(IRectangle rect)
+        {
+            return new Rect(Convert.ToInt32(rect.Left + CurrentLocation.X),
+                Convert.ToInt32(rect.Top + CurrentLocation.Y),
+                Convert.ToInt32(rect.Right + CurrentLocation.X),
+                Convert.ToInt32(rect.Bottom + CurrentLocation.Y));
+        }
+
+        private Canvas GetCanvas()
+        {
+            return Canvas ?? throw new NullReferenceException("Canvas must be set");
+        }
+
+        public override IImage? GetImage(Stream stream)
+        {
+            var bmp = BitmapFactory.DecodeStream(stream);
+            if (bmp == null)
+                return default;
+
+            return new AndroidBitmap(bmp);
         }
 
         private void SetColor(IPen pen)
@@ -160,21 +193,8 @@ namespace Das.Xamarin.Android
             }
         }
 
-        private Point GetAbsoluteAndroidPoint(IPoint2D relativePoint2D)
-        {
-            var to = GetAbsolutePoint(relativePoint2D);
-            return new Point(Convert.ToInt32(to.X),
-                Convert.ToInt32(to.Y));
-        }
+        private readonly IFontProvider<AndroidFontPaint> _fontProvider;
 
-        private Rect GetAbsoluteAndroidRect(IRectangle rect)
-        {
-            return new Rect(Convert.ToInt32(rect.Left + CurrentLocation.X),
-                Convert.ToInt32(rect.Top + CurrentLocation.Y),
-                Convert.ToInt32(rect.Right + CurrentLocation.X),
-                Convert.ToInt32(rect.Bottom + CurrentLocation.Y));
-        }
-
-
+        private readonly Paint _paint;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Rendering;
@@ -8,9 +9,10 @@ using Das.Views.Rendering;
 namespace Das.Views.Panels.Grid
 {
     /// <summary>
-    /// Control where each visual in the Children collection occupies its own column.
-    /// For each record in the bound collection, a row is created
+    ///     Control where each visual in the Children collection occupies its own column.
+    ///     For each record in the bound collection, a row is created
     /// </summary>
+    // ReSharper disable once UnusedType.Global
     public class RepeaterGrid<T> : BasePanel<IEnumerable<T>>
     {
         public RepeaterGrid()
@@ -20,52 +22,35 @@ namespace Das.Views.Panels.Grid
             _columnWidths = new Dictionary<Int32, Double>();
         }
 
-        private readonly Dictionary<Int32, List<IVisualElement>> _controls;
-        private readonly Dictionary<Int32, List<ISize>> _sizes;
-        private readonly Dictionary<Int32, Double> _columnWidths;
-
-        public override void SetDataContext(Object? dataContext)
+        public override void Arrange(ISize availableSpace, IRenderContext renderContext)
         {
-            DataContext = dataContext;
+            var rowNumbers = _controls.Keys.ToArray();
+            var targetRect = new Rectangle(0, 0, 1, 1);
 
-            var val = dataContext != null
-                ? Binding.GetValue(dataContext)
-                : Enumerable.Empty<T>();
-
-            SetBoundValue(val);
-        }
-
-        public override void SetBoundValue(IEnumerable<T> value)
-        {
-            var content = Children.ToArray();
-            //if (content == null)
-            //    return;
-
-            _columnWidths.Clear();
-            for (var c = 0; c < content.Length; c++)
-                _columnWidths.Add(c, 0);
-
-            _controls.Clear(); //todo: more efficient
-            var i = 0;
-
-            foreach (var vm in value)
+            foreach (var rowNumber in rowNumbers)
             {
-                var row = new List<IVisualElement>();
+                var sizeRow = _sizes[rowNumber];
+                var row = _controls[rowNumber];
 
-                foreach (var c in content)
+                var h = sizeRow.Max(r => r.Height);
+
+                for (var c = 0; c < row.Count; c++)
                 {
-                    var ctrl = c.DeepCopy();
-                    if (ctrl is IBindableElement bindable)
-                        bindable.SetDataContext(vm);
+                    var w = _columnWidths[c];
 
-                    row.Add(ctrl);
+                    var child = row[c];
+                    targetRect.Width = w;
+                    targetRect.Height = h;
+                    renderContext.DrawElement(child, targetRect);
+                    targetRect.X += w;
                 }
 
-                _controls.Add(i, row);
-                _sizes.Add(i, new List<ISize>());
-
-                i++;
+                targetRect.Y += h;
             }
+        }
+
+        public override void Dispose()
+        {
         }
 
         public override ISize Measure(ISize availableSpace, IMeasureContext measureContext)
@@ -101,36 +86,53 @@ namespace Das.Views.Panels.Grid
             return new Size(widthNeeded, heightNeeded);
         }
 
-        public override void Arrange(ISize availableSpace, IRenderContext renderContext)
+        public override void SetBoundValue(IEnumerable<T> value)
         {
-            var rowNumbers = _controls.Keys.ToArray();
-            var targetRect = new Rectangle(0,0,1,1);
+            var content = Children.ToArray();
+            //if (content == null)
+            //    return;
 
-            foreach (var rowNumber in rowNumbers)
+            _columnWidths.Clear();
+            for (var c = 0; c < content.Length; c++)
+                _columnWidths.Add(c, 0);
+
+            _controls.Clear(); //todo: more efficient
+            var i = 0;
+
+            foreach (var vm in value)
             {
-                var sizeRow = _sizes[rowNumber];
-                var row = _controls[rowNumber];
+                var row = new List<IVisualElement>();
 
-                var h = sizeRow.Max(r => r.Height);
-
-                for (var c = 0; c < row.Count; c++)
+                foreach (var c in content)
                 {
-                    var w = _columnWidths[c];
-                    
-                    var child = row[c];
-                    targetRect.Width = w;
-                    targetRect.Height = h;
-                    renderContext.DrawElement(child, targetRect);
-                    targetRect.X += w;
+                    var ctrl = c.DeepCopy();
+                    if (ctrl is IBindableElement bindable)
+                        bindable.SetDataContext(vm);
+
+                    row.Add(ctrl);
                 }
 
-                targetRect.Y += h;
+                _controls.Add(i, row);
+                _sizes.Add(i, new List<ISize>());
+
+                i++;
             }
         }
 
-        public override void Dispose()
+        public override void SetDataContext(Object? dataContext)
         {
-            
+            DataContext = dataContext;
+
+            var val = dataContext != null && Binding is {} binding
+                ? binding.GetValue(dataContext)
+                : Enumerable.Empty<T>();
+
+            SetBoundValue(val);
         }
+
+        private readonly Dictionary<Int32, Double> _columnWidths;
+
+        private readonly Dictionary<Int32, List<IVisualElement>> _controls;
+        private readonly Dictionary<Int32, List<ISize>> _sizes;
     }
 }

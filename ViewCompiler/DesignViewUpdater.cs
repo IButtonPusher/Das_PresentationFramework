@@ -55,14 +55,17 @@ namespace ViewCompiler
             var nonDefaults = GetNonDefaultSetters(element).ToArray();
 
             foreach (var kvp in nonDefaults)
-                _sbSelected.AppendLine(kvp.Key + ": " + kvp.Value);
+            {
+                _sbSelected.AppendLine(kvp.ToString());
+            }
+            //_sbSelected.AppendLine(kvp.Key + ": " + kvp.Value);
             
 
             _rightRectangle = new Rectangle(_viewHost.AvailableSize.Width -
                                                       _viewHost.RenderMargin.Right,
                 0, _viewHost.RenderMargin.Width, _viewHost.AvailableSize.Height);
             RenderContext.ViewState = _viewHost;
-            RenderContext.FillRect(_rightRectangle, SolidColorBrush.DarkGray);
+            RenderContext.FillRectangle(_rightRectangle, SolidColorBrush.DarkGray);
 
             if (selectedVisual.Element == null)
                 return;
@@ -91,10 +94,10 @@ namespace ViewCompiler
         private readonly IFont _font;
         private Boolean _isChanged;
 
-        protected IEnumerable<KeyValuePair<StyleSetters, Object>> GetNonDefaultSetters(
+        protected IEnumerable<AssignedStyle> GetNonDefaultSetters(
             IVisualElement element)
         {
-            var set = new HashSet<StyleSetters>();
+            var set = new HashSet<AssignedStyle>();
             var arr = _viewHost.StyleContext.GetStylesForElement(element).ToArray();
 
             for (var c = 0; c < arr.Length - 1; c++)
@@ -103,7 +106,7 @@ namespace ViewCompiler
 
                 foreach (var setter in style)
                 {
-                    if (!set.Add(setter.Key))
+                    if (!set.Add(setter))
                         continue;
 
                     yield return setter;

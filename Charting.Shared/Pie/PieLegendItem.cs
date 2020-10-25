@@ -23,13 +23,15 @@ namespace Das.Views.Charting.Pie
             return _label == element;
         }
 
-        public IBrush Brush { get; set; }
+        public IBrush? Brush { get; set; }
 
-        public override void Arrange(ISize availableSpace, IRenderContext renderContext)
+        public override void Arrange(ISize availableSpace, 
+                                     IRenderContext renderContext)
         {
             var h = availableSpace.Height * 0.7;
             var center = new Point2D(0, h);
-            renderContext.FillPie(center, h, 0, -90, Brush);
+            if (Brush is {} brush)
+                renderContext.FillPie(center, h, 0, -90, brush);
             var rect = new Rectangle(_offsetX, 0, availableSpace.Width - _offsetX, h);
             renderContext.DrawElement(_label, rect);
         }
@@ -38,7 +40,8 @@ namespace Das.Views.Charting.Pie
         {
         }
 
-        public override ISize Measure(ISize availableSpace, IMeasureContext measureContext)
+        public override ISize Measure(ISize availableSpace, 
+                                      IMeasureContext measureContext)
         {
             if (!_isStyleSet) _isStyleSet = true;
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Das.Extensions;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
@@ -13,9 +14,9 @@ using Das.Views.Styles;
 
 namespace Das.Views.Rendering
 {
-    public abstract class BaseRenderContext : IRenderContext
+    public abstract class BaseRenderContext : ContextBase, IRenderContext
     {
-        protected BaseRenderContext(IMeasureContext measureContext, 
+        protected BaseRenderContext(IMeasureContext measureContext,
                                     IViewPerspective perspective)
         {
             RenderPositions = new Dictionary<IVisualElement, ICube>();
@@ -28,9 +29,6 @@ namespace Das.Views.Rendering
             _locations.Push(CurrentElementRect);
         }
 
-        //IDictionary<IVisualElement, ICube> IRenderContext.RenderPositions
-        //    => new Dictionary<IVisualElement, ICube>(RenderPositions);
-
         public IEnumerable<IRenderedVisual> GetElementsAt(IPoint2D point2D)
         {
             lock (_renderLock)
@@ -40,20 +38,19 @@ namespace Das.Views.Rendering
                 {
                     if (kvp.Key is IContentContainer container && container.Content != null)
                         yield return new RenderedVisual(container.Content, kvp.Value);
-                    
+
                     yield return new RenderedVisual(kvp.Key, kvp.Value);
                 }
-                    
             }
         }
 
         public IEnumerable<T> GetVisualsForInput<T>(IPoint2D point2D,
-                                                  InputAction inputAction)
-        where T : class
+                                                    InputAction inputAction)
+            where T : class
         {
             foreach (var visual in GetElementsAt(point2D))
             {
-                if (!(visual.Element is IInteractiveView interactive) || 
+                if (!(visual.Element is IInteractiveView interactive) ||
                     !(visual.Element is T ofType))
                     continue;
 
@@ -62,42 +59,80 @@ namespace Das.Views.Rendering
             }
         }
 
-        public IEnumerable<IHandleInput<T>> GetVisualsForMouseInput<T>(IPoint2D point2D, 
-                                                                       InputAction inputAction) 
+        public IEnumerable<IHandleInput<T>> GetVisualsForMouseInput<T>(IPoint2D point2D,
+                                                                       InputAction inputAction)
             where T : IInputEventArgs
         {
             foreach (var visual in GetElementsAt(point2D))
-            {
-                if ((visual.Element is IInteractiveView interactive) &&
+                if (visual.Element is IInteractiveView interactive &&
                     (interactive.HandlesActions & inputAction) == inputAction &&
                     interactive is IHandleInput<T> handler)
-                {
                     yield return handler;
-                }
-            }
+        }
+
+        public IEnumerable<IRenderedVisual<IHandleInput<T>>> GetRenderedVisualsForMouseInput<T>(
+            IPoint2D point2D, InputAction inputAction)
+            where T : IInputEventArgs
+        {
+            foreach (var visual in GetElementsAt<IHandleInput<T>>(point2D))
+                if (visual.Element is IInteractiveView interactive &&
+                    (interactive.HandlesActions & inputAction) == inputAction)
+                    yield return visual;
+        }
+
+        public ICube? TryGetElementBounds(IVisualElement element)
+        {
+            if (RenderPositions.TryGetValue(element, out var c))
+                return c;
+
+            return default;
         }
 
 
         public abstract IImage? GetImage(Stream stream);
 
-        public abstract void DrawLine(IPen pen, IPoint2D pt1, IPoint2D pt2);
+        public abstract void DrawImage(IImage img,
+                                       IRectangle sourceRest,
+                                       IRectangle destination);
 
-        public abstract void DrawLines(IPen pen, IPoint2D[] points);
+        public abstract void DrawLine(IPen pen,
+                                      IPoint2D pt1,
+                                      IPoint2D pt2);
 
-        public abstract void FillRect(IRectangle rect, IBrush brush);
+        public abstract void DrawLines(IPen pen,
+                                       IPoint2D[] points);
 
-        public abstract void DrawRect(IRectangle rect, IPen pen);
+        public abstract void FillRectangle(IRectangle rect,
+                                      IBrush brush);
 
-        public abstract void FillPie(IPoint2D center, Double radius, Double startAngle,
-                                     Double endAngle, IBrush brush);
+        public abstract void FillRoundedRectangle(IRectangle rect, 
+                                             IBrush brush, 
+                                             Double cornerRadius);
+
+        public abstract void DrawRect(IRectangle rect,
+                                      IPen pen);
+
+        public abstract void DrawRoundedRect(IRectangle rect, IPen pen, Double cornerRadius);
+
+        public abstract void FillPie(IPoint2D center,
+                                     Double radius,
+                                     Double startAngle,
+                                     Double endAngle,
+                                     IBrush brush);
 
         public abstract void DrawEllipse(IPoint2D center, Double radius, IPen pen);
 
         public abstract void DrawFrame(IFrame frame);
 
-        public Rectangle DrawElement(IVisualElement element, IRectangle rect)
+        public Rectangle DrawElement(IVisualElement element,
+                                     IRectangle rect)
         {
-            var border = GetStyleSetter<Thickness>(StyleSetters.BorderThickness, element);
+            var selector = element is IInteractiveView interactive
+                ? interactive.CurrentStyleSelector
+                : StyleSelector.None;
+
+            var border = GetStyleSetter<Thickness>(StyleSetter.BorderThickness, 
+                selector, element);
 
             //zb rect = 0,0,1024,768, CurrentLocation = 0,0
             //suppose element measured at 200x200 and is center,center aligned
@@ -107,21 +142,33 @@ namespace Das.Views.Rendering
             //however, if the margin is 10,,, 
             //=> useRect = { x: 422, y: 294, w: 200, h: 200}
 
-            if (!border.IsEmpty)
+            var radius = GetStyleSetter<Double>(StyleSetter.BorderRadius, selector, element);
+
+            
+
+            var background = GetStyleSetter<SolidColorBrush>(StyleSetter.Background, 
+                selector, element);
+            if (!background.IsInvisible)
             {
-                var brush = GetStyleSetter<IBrush>(StyleSetters.BorderBrush, element);
-                OnDrawBorder(useRect, border, brush);
+                if (radius.IsZero())
+                    FillRectangle(useRect, background);
+                else
+                    FillRoundedRectangle(useRect, background, radius);
             }
 
-            var background = GetStyleSetter<SolidColorBrush>(StyleSetters.Background, element);
-            if (!background.IsInvisible)
-                FillRect(useRect, background);
-            useRect += CurrentLocation;
+            if (!border.IsEmpty)
+            {
+                var brush = GetStyleSetter<IBrush>(StyleSetter.BorderBrush, selector, element);
+                OnDrawBorder(useRect, border, brush, radius);
+            }
 
+            useRect += CurrentLocation;
 
             PushRect(useRect);
             lock (_renderLock)
+            {
                 RenderPositions[element] = new Cube(useRect, _currentZ);
+            }
 
             var drawn = OnDrawElement(element, useRect);
 
@@ -130,19 +177,23 @@ namespace Das.Views.Rendering
             return drawn;
         }
 
-        public abstract void DrawString(String s, IFont font, IBrush brush, IRectangle location);
+        public abstract void DrawString(String s,
+                                        IFont font,
+                                        IBrush brush,
+                                        IRectangle location);
 
-        public abstract void DrawImage(IImage img, IRectangle rect);
+        public abstract void DrawImage(IImage img,
+                                       IRectangle rect);
 
-        public IViewState? ViewState { get; set; }
+        public abstract void DrawString(String s,
+                                        IFont font,
+                                        IBrush brush,
+                                        IPoint2D point2D);
 
-        public abstract void DrawString(String s, IFont font, IBrush brush, IPoint2D point2D);
 
-        public T GetStyleSetter<T>(StyleSetters setter, IVisualElement element)
+        public Double GetZoomLevel()
         {
-            if (ViewState is {} vs)
-                return vs.GetStyleSetter<T>(setter, element);
-            else throw new NullReferenceException();
+            return ViewState?.ZoomLevel ?? 1;
         }
 
         public IViewPerspective Perspective { get; }
@@ -161,13 +212,39 @@ namespace Das.Views.Rendering
             return new Rectangle(relativeRect.TopLeft + CurrentLocation, relativeRect.Size);
         }
 
+        public IEnumerable<IRenderedVisual<TElement>> GetElementsAt<TElement>(IPoint2D point2D)
+        {
+            lock (_renderLock)
+            {
+                foreach (var kvp in RenderPositions.Where(p => p.Value.Contains(point2D))
+                                                   .OrderByDescending(p => p.Value.Depth))
+                {
+                    var current = kvp.Key;
+                    while (current is IContentContainer container)
+                    {
+                        if (container.Content is TElement valid)
+                            yield return new RenderedVisual<TElement>(valid, kvp.Value);
+
+                        current = container.Content;
+                    }
+
+                    //if (kvp.Key is IContentContainer container &&
+                    //    container.Content is TElement valid)
+                    //    yield return new RenderedVisual<TElement>(valid, kvp.Value);
+
+                    if (kvp.Key is TElement good)
+                        yield return new RenderedVisual<TElement>(good, kvp.Value);
+                }
+            }
+        }
+
         /// <summary>
         ///     Margins + space added due to alignment
         /// </summary>
         private Rectangle GetOffset(IRectangle rect, IVisualElement element,
                                     Thickness border)
         {
-            var margin = GetStyleSetter<Thickness>(StyleSetters.Margin, element)
+            var margin = GetStyleSetter<Thickness>(StyleSetter.Margin, element)
                          * Perspective.ZoomLevel;
 
             margin += border;
@@ -180,9 +257,9 @@ namespace Das.Views.Rendering
 
 
             var valign = GetStyleSetter<VerticalAlignments>(
-                StyleSetters.VerticalAlignment, element);
+                StyleSetter.VerticalAlignment, element);
             var halign = GetStyleSetter<HorizontalAlignments>(
-                StyleSetters.HorizontalAlignment, element);
+                StyleSetter.HorizontalAlignment, element);
 
             if (valign == VerticalAlignments.Top && halign == HorizontalAlignments.Left)
                 return new Rectangle(rect, margin);
@@ -241,35 +318,52 @@ namespace Das.Views.Rendering
             return new Rectangle(xGap + rect.X, yGap + rect.Y, width, height);
         }
 
-        protected void OnDrawBorder(IRectangle rect, IShape2d thickness, IBrush brush)
+        protected void OnDrawBorder(IRectangle rect,
+                                    IShape2d thickness,
+                                    IBrush brush,
+                                    Double cornerRadius)
         {
+            if (cornerRadius != 0)
+            {
+                var scb = (SolidColorBrush) brush;
+                var p = new Pen(scb.Color, Convert.ToInt32(thickness.Left));
+
+                DrawRoundedRect(rect, p, cornerRadius);
+                return;
+            }
+
             var sumHeight = rect.Height + thickness.Top + thickness.Bottom;
             var sumWidth = rect.Width + thickness.Left + thickness.Right;
 
-            var topLeftOutside = new Point2D(rect.Left - thickness.Left,
+            var topLeftOutside = new ValuePoint2D(rect.Left - thickness.Left,
                 rect.Top - thickness.Top);
 
             var bottomRightInside = rect.BottomRight;
 
-            var leftRect = new Rectangle(topLeftOutside, thickness.Left, sumHeight);
-            FillRect(leftRect, brush);
+            var leftRect = new ValueRectangle(topLeftOutside, thickness.Left, sumHeight);
+            FillRectangle(leftRect, brush);
 
-            var topRect = new Rectangle(topLeftOutside, sumWidth, thickness.Top);
-            FillRect(topRect, brush);
+            var topRect = new ValueRectangle(topLeftOutside, sumWidth, thickness.Top);
+            FillRectangle(topRect, brush);
 
-            var rightRect = new Rectangle(rect.Right, topLeftOutside.Y, thickness.Right, sumHeight);
-            FillRect(rightRect, brush);
+            var rightRect = new ValueRectangle(rect.Right, topLeftOutside.Y, thickness.Right, sumHeight);
+            FillRectangle(rightRect, brush);
 
-            var bottomRect = new Rectangle(topLeftOutside.X, bottomRightInside.Y,
+            var bottomRect = new ValueRectangle(topLeftOutside.X, bottomRightInside.Y,
                 sumWidth, thickness.Bottom);
-            FillRect(bottomRect, brush);
+            FillRectangle(bottomRect, brush);
         }
 
         protected virtual Rectangle OnDrawElement(IVisualElement element,
                                                   // ReSharper disable once UnusedParameter.Global
                                                   IRectangle rect)
         {
-            element.Arrange(CurrentElementRect.Size, this);
+            if (rect.Bottom >= 0 && rect.Left >= 0)
+            {
+                // don't draw it if it's completely off screen
+                element.Arrange(CurrentElementRect.Size, this);
+            }
+
             return CurrentElementRect;
         }
 
@@ -288,9 +382,9 @@ namespace Das.Views.Rendering
         }
 
         private readonly Stack<Rectangle> _locations;
-        private readonly Object _renderLock;
 
         private readonly IMeasureContext _measureContext;
+        private readonly Object _renderLock;
         private Int32 _currentZ;
         protected Rectangle CurrentElementRect;
     }

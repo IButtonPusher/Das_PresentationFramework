@@ -6,6 +6,7 @@ namespace Das.Views.Rendering
 {
     public interface IVisualContext : IStyleProvider
     {
-        //IViewPerspective Perspective { get; }
+        Double GetZoomLevel();
+
     }
 }

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
+using Das.Views;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 
@@ -28,6 +29,11 @@ namespace Gdi.Shared
         Boolean ISize.IsEmpty => false;
 
         Double ISize.Width => _bmp.Width;
+
+        public ISize Reduce(Thickness padding)
+        {
+            return GeometryHelper.Reduce(this, padding);
+        }
 
         void IDisposable.Dispose()
         {
@@ -72,6 +78,11 @@ namespace Gdi.Shared
                                                                Func<TImage, TParam, TResult> action)
         {
             throw new NotImplementedException();
+        }
+
+        ISize IDeepCopyable<ISize>.DeepCopy()
+        {
+            return new ValueSize(_bmp.Width, _bmp.Height);
         }
     }
 }

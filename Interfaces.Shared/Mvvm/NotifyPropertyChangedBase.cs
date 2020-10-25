@@ -4,7 +4,8 @@ using System.Runtime.CompilerServices;
 
 namespace Das.Views.Mvvm
 {
-    public abstract class NotifyPropertyChangedBase : INotifyPropertyChanged, IDisposable
+    public abstract class NotifyPropertyChangedBase : INotifyPropertyChanged, 
+                                                      IDisposable
     {
         public virtual event PropertyChangedEventHandler? PropertyChanged;
 

@@ -11,9 +11,11 @@ namespace Das.Xamarin.Android
 {
     public class AndroidMeasureKit : BaseMeasureContext
     {
-        public AndroidMeasureKit(IWindowManager windowManager)
+        public AndroidMeasureKit(IWindowManager windowManager,
+                                 IFontProvider<AndroidFontPaint> fontProvider)
         {
             _windowManager = windowManager;
+            _fontProvider = fontProvider;
         }
 
         public override ISize ContextBounds
@@ -26,15 +28,18 @@ namespace Das.Xamarin.Android
                 var metrics = new DisplayMetrics();
                 disp.GetMetrics(metrics);
 
-                return new ValueSize();
+                return new ValueSize(metrics.WidthPixels, metrics.HeightPixels);
             }
         }
 
-        public override Size MeasureString(String s, Font font)
+        public override Size MeasureString(String s, 
+                                           IFont font)
         {
-            return Size.Empty;
+            var renderer = _fontProvider.GetRenderer(font);
+            return renderer.MeasureString(s);
         }
 
         private readonly IWindowManager _windowManager;
+        private readonly IFontProvider<AndroidFontPaint> _fontProvider;
     }
 }

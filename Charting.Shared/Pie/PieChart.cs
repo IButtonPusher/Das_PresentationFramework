@@ -11,6 +11,7 @@ using Das.Views.Rendering;
 
 namespace Das.Views.Charting.Pie
 {
+    // ReSharper disable once UnusedType.Global
     public class PieChart<TKey, TValue> : BindableElement<IPieData<TKey, TValue>>,
                                           IVisualFinder
         where TValue : IConvertible
@@ -32,16 +33,21 @@ namespace Das.Views.Charting.Pie
             return _legendItems.Any(l => l.Contains(element));
         }
 
-        public override void Arrange(ISize availableSpace, IRenderContext renderContext)
+        public override void Arrange(ISize availableSpace, 
+                                     IRenderContext renderContext)
         {
             var side = Math.Min(availableSpace.Width, availableSpace.Height);
-            if (side.IsZero())
+            if (side.IsZero() ||
+                !(Binding is {} binding))
+                //|| !(DataContext is {} dc))
+            {
                 return;
+            }
 
             var radius = side / 2;
             var center = new Point2D(availableSpace.Width - side + radius,
                 availableSpace.Height - side + side / 2);
-            var currentValue = Binding.GetValue(DataContext);
+            var currentValue = binding.GetValue(DataContext);
             var data = currentValue.Items.ToArray();
 
             var pntCnt = data.Length;
@@ -81,6 +87,9 @@ namespace Das.Views.Charting.Pie
 
         private void ArrangeLegend(IRenderContext renderContext)
         {
+            if (_legendItems.Count == 0 || _legendItemSizes.Count == 0)
+                return;
+
             var padding = 20;
             var rowMargin = 5;
             var totalRowMargin = _legendItems.Count * rowMargin;
@@ -90,7 +99,7 @@ namespace Das.Views.Charting.Pie
 
             var rect = new Rectangle(0, 0, w, h);
 
-            renderContext.FillRect(rect, _legendBackground);
+            renderContext.FillRectangle(rect, _legendBackground);
             renderContext.DrawRect(rect, _legendOutline);
 
 
@@ -111,7 +120,8 @@ namespace Das.Views.Charting.Pie
         {
         }
 
-        private IBrush GetBrush(IPieData<TKey, TValue> value, IDataPoint<TKey, TValue> current)
+        private IBrush GetBrush(IPieData<TKey, TValue> value, 
+                                IDataPoint<TKey, TValue> current)
         {
             if (!value.ItemColors.TryGetValue(current.Description, out var brush)
                 && !_defaultedColors.TryGetValue(current.Description, out brush))

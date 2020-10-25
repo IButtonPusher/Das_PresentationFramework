@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -47,11 +48,25 @@ namespace Das.Gdi
         }
 
 
-        public override void DrawImage(IImage img, IRectangle rect)
+        public override void DrawImage(IImage img, 
+                                       IRectangle rect)
         {
             var dest = GetAbsoluteGdiRectangleF(rect);
             var bmp = img.Unwrap<Bitmap>();
             Graphics.DrawImage(bmp, dest);
+        }
+
+        public override void DrawImage(IImage img, 
+                                       IRectangle sourceRect, 
+                                       IRectangle destination)
+        {
+            var dest = GetAbsoluteGdiRectangleF(destination);
+            var src = new Rectangle(Convert.ToInt32(sourceRect.X),
+                Convert.ToInt32(sourceRect.Y),
+                Convert.ToInt32(sourceRect.Width),
+                Convert.ToInt32(sourceRect.Height));
+            var bmp = img.Unwrap<Bitmap>();
+            Graphics.DrawImage(bmp, dest, src, GraphicsUnit.Pixel);
         }
 
         public override IImage? GetImage(Stream stream)
@@ -79,11 +94,84 @@ namespace Das.Gdi
             Graphics.DrawLines(usePen, gPoints);
         }
 
+        public override void FillRoundedRectangle(IRectangle rect, 
+                                             IBrush brush, 
+                                             Double cornerRadius)
+        {
+            if (cornerRadius == 0)
+            {
+                FillRectangle(rect, brush);
+                return;
+            }
+
+            var useRect = GetAbsoluteGdiRectangle(rect);
+            var useBrush = TypeConverter.GetBrush(brush);
+
+            using (GraphicsPath path = RoundedRect(useRect, cornerRadius))
+            {
+                Graphics.FillPath(useBrush, path);
+            }
+        }
+
         public override void DrawRect(IRectangle rect, IPen pen)
         {
             var useRect = GetAbsoluteGdiRectangle(rect);
             var usePen = TypeConverter.GetPen(pen);
             Graphics.DrawRectangle(usePen, useRect);
+        }
+
+        public override void DrawRoundedRect(IRectangle rect, 
+                                             IPen pen, 
+                                             Double cornerRadius)
+        {
+            if (cornerRadius == 0)
+            {
+                DrawRect(rect, pen);
+                return;
+            }
+
+            var useRect = GetAbsoluteGdiRectangle(rect);
+            var usePen = TypeConverter.GetPen(pen);
+
+            using (GraphicsPath path = RoundedRect(useRect, cornerRadius))
+            {
+                Graphics.DrawPath(usePen, path);
+            }
+        }
+
+        // https://stackoverflow.com/questions/33853434/how-to-draw-a-rounded-rectangle-in-c-sharp
+        private static GraphicsPath RoundedRect(Rectangle bounds, Double cornerRadius)
+        {
+            var radius = Convert.ToInt32(cornerRadius);
+
+            var diameter = radius * 2;
+            var size = new System.Drawing.Size(diameter, diameter);
+            var arc = new Rectangle(bounds.Location, size);
+            GraphicsPath path = new GraphicsPath();
+
+            if (radius == 0)
+            {
+                path.AddRectangle(bounds);
+                return path;
+            }
+
+            // top left arc  
+            path.AddArc(arc, 180, 90);
+
+            // top right arc  
+            arc.X = bounds.Right - diameter;
+            path.AddArc(arc, 270, 90);
+
+            // bottom right arc  
+            arc.Y = bounds.Bottom - diameter;
+            path.AddArc(arc, 0, 90);
+
+            // bottom left arc 
+            arc.X = bounds.Left;
+            path.AddArc(arc, 90, 90);
+
+            path.CloseFigure();
+            return path;
         }
 
         public override void DrawString(String s, IFont font, IBrush brush, IPoint2D point2D)
@@ -119,11 +207,15 @@ namespace Das.Gdi
             var useBrush = TypeConverter.GetBrush(brush);
             var asRect = new RectangleF((Single) (c.X - radius), (Single) (c.Y - radius),
                 (Single) radius * 2, (Single) radius * 2);
+
+            if (asRect.Width == 0 || asRect.Height == 0)
+                return;
+
             Graphics.FillPie(useBrush, asRect.X, asRect.Y, asRect.Width, asRect.Height,
                 (Single) startAngle, (Single) (endAngle - startAngle));
         }
 
-        public override void FillRect(IRectangle rect, IBrush brush)
+        public override void FillRectangle(IRectangle rect, IBrush brush)
         {
             var useRect = GetAbsoluteGdiRectangle(rect);
             var useBrush = TypeConverter.GetBrush(brush);

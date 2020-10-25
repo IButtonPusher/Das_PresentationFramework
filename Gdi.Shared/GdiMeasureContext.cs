@@ -2,8 +2,8 @@
 using System.Drawing;
 using System.Threading.Tasks;
 using Das.Gdi.Core;
+using Das.Views.Core.Writing;
 using Das.Views.Measuring;
-using Font = Das.Views.Core.Writing.Font;
 using Size = Das.Views.Core.Geometry.Size;
 
 namespace Das.Gdi
@@ -21,7 +21,7 @@ namespace Das.Gdi
         public Graphics Graphics { get; }
 
 
-        public override Size MeasureString(String s, Font font)
+        public override Size MeasureString(String s, IFont font)
         {
             var useFont = TypeConverter.GetFont(font);
             var sz = Graphics.MeasureString(s, useFont);

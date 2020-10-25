@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Das.Views.Core.Geometry;
-using Das.Views.Core.Input;
 
 namespace Das.Views.Input
 {
-    public readonly struct MouseDownEventArgs : IMouseInputEventArgs
+    public readonly struct MouseDownEventArgs : IMouseInputEventArgs<MouseDownEventArgs>
     {
         public MouseDownEventArgs(IPoint2D position, 
                               MouseButtons? button, 
@@ -20,6 +17,14 @@ namespace Das.Views.Input
         public IPoint2D Position { get; }
         
         public readonly MouseButtons? Button;
+
+        public MouseDownEventArgs Offset(IPoint2D position)
+        {
+            return new MouseDownEventArgs(Position.Offset(position), 
+                Button, InputContext);
+        }
+
+        public InputAction Action => InputAction.MouseDown;
 
         public IInputContext InputContext { get; }
     }

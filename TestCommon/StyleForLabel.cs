@@ -18,11 +18,11 @@ namespace TestCommon
             Color bg) 
             : base(element)
         {
-            Setters.Add(StyleSetters.Background, new SolidColorBrush(bg));
+            AddSetter(StyleSetter.Background, new SolidColorBrush(bg));
 
-            Setters.Add(StyleSetters.Font, new Font(fontSize, "Segoe UI", fontStyle));
-            Setters.Add(StyleSetters.FontSize, fontSize);
-            Setters.Add(StyleSetters.Margin, new  Thickness(5));
+            AddSetter(StyleSetter.Font, new Font(fontSize, "Segoe UI", fontStyle));
+            AddSetter(StyleSetter.FontSize, fontSize);
+            AddSetter(StyleSetter.Margin, new  Thickness(5));
         }
     }
 }

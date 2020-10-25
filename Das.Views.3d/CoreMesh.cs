@@ -16,6 +16,8 @@ namespace Das.Views.Extended
         {
             Position = new Vector3();
             Rotation = new Vector3();
+            Vertices = new IPoint3D[0];
+            Faces = new Face[0];
         }
 
         public CoreMesh(IEnumerable<IPoint3D> vertices) : this()

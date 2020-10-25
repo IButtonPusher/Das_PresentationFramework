@@ -9,18 +9,25 @@ namespace Das.Views.Styles
     {
         IEnumerable<IStyle> GetStylesForElement(IVisualElement element);
 
-        void RegisterStyle(IStyle style, IVisualElement scope);
+        /// <summary>
+        /// registers a style on the application level
+        /// </summary>
+        void RegisterStyle(IStyle style);
+
+        void RegisterStyle(IStyle style, 
+                           IVisualElement scope);
 
         /// <summary>
         ///     Registers a single style setter at the element level
         /// </summary>
-        void RegisterStyleSetter(IVisualElement element, StyleSetters setter,
+        void RegisterStyleSetter(IVisualElement element, 
+                                 StyleSetter setter,
                                  Object value);
 
         /// <summary>
         ///     Registers a single style setter at the type level.
         /// </summary>
-        void RegisterStyleSetter<T>(StyleSetters setter,
+        void RegisterStyleSetter<T>(StyleSetter setter,
                                     Object value, IVisualElement scope) where T : IVisualElement;
     }
 }

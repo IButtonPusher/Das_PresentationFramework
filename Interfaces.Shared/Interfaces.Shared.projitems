@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\IButtonBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\HatchBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\HatchStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IImageProvider.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Vector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\ClickMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\DragEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\FlingEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\IInputEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\IMouseInputEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\MouseClickEventArgs.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IVisualContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IVisualFinder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\OverflowBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IChangingVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IMeasureContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IMutableViewPerspective.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IRenderContext.cs" />
@@ -121,10 +124,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IVisualContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IVisualElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IVisualRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\AssignedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSetters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleSheet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSelector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSetter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleTypeAttribute.cs" />
   </ItemGroup>
   <ItemGroup>

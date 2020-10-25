@@ -37,7 +37,7 @@ namespace Das.Views.Panels
             else throw new NotImplementedException();
         }
 
-        public override ISize Measure(ISize availableSpace, 
+        public override ISize Measure(ISize availableSpace,
                                       IMeasureContext measureContext)
         {
             return _renderer.Measure(this, _controls, Orientation, availableSpace, measureContext);
@@ -68,7 +68,6 @@ namespace Das.Views.Panels
                 SetBoundValue(Enumerable.Empty<T>());
             else
                 SetBoundValue(binding.GetValue(dc));
-            
         }
 
         public override async Task SetDataContextAsync(Object? dataContext)

@@ -72,14 +72,14 @@ namespace Das.Gdi
 
                 case MessageTypes.WM_MOUSEMOVE:
 
+                    pos = GetPosition(m.LParam);
+
                     var letsUse = _leftButtonWentDown ?? _rightButtonWentDown;
                     if (letsUse == null)
+                    {
+                        _inputHandler.OnMouseMove(pos, this);
                         break;
-
-                    if (_leftButtonWentDown == null && _rightButtonWentDown == null)
-                        break;
-
-                    pos = GetPosition(m.LParam);
+                    }
 
                     ValueSize lastDragChange;
                     if (_lastDragPosition == null)
@@ -91,8 +91,6 @@ namespace Das.Gdi
 
                     if (lastDragChange.IsEmpty)
                         break;
-
-                   // System.Diagnostics.Debug.WriteLine("drag now:" + lastDragChange);
 
                     _lastDragPosition = pos;
 
@@ -161,7 +159,17 @@ namespace Das.Gdi
 
         private static ValuePoint2D GetPosition(Int32 lParam)
         {
-            return new ValuePoint2D(lParam & Int16.MaxValue, lParam >> 16);
+            //var ox = (Int16) (lParam & Int16.MaxValue);
+            //var oy = (Int16) (lParam >> 16);
+
+            //var nx = (Int16) (lParam);
+
+            //if (nx != ox)
+            //{}
+
+
+            return new ValuePoint2D((Int16) lParam,
+                (Int16) (lParam >> 16)); //cast to int16 for overflow-negatives
         }
     }
 }

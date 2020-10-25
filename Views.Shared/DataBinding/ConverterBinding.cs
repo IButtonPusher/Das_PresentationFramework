@@ -19,24 +19,24 @@ namespace Das.Views.DataBinding
             return conv;
         }
 
-        public override TOutput GetValue(Object dataContext)
+        public override TOutput GetValue(Object? dataContext)
         {
             var val = _binding.GetValue(dataContext);
             var converted = _converter.Convert(val);
             return converted;
         }
 
-        public override async Task<TOutput> GetValueAsync(Object dataContext)
+        public override async Task<TOutput> GetValueAsync(Object? dataContext)
         {
             var val = await _binding.GetValueAsync(dataContext);
             var converted = await _converter.ConvertAsync(val);
             return converted;
         }
 
-        public override IDataBinding ToSingleBinding()
-        {
-            throw new NotImplementedException();
-        }
+        //public override IDataBinding ToSingleBinding()
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         private readonly IDataBinding<TInput> _binding;
         private readonly IValueConverter<TInput, TOutput> _converter;

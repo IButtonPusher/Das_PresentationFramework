@@ -9,24 +9,22 @@ using Das.Views.Styles;
 
 namespace Das.Views.Measuring
 {
-    public abstract class BaseMeasureContext : IMeasureContext
+    public abstract class BaseMeasureContext : ContextBase, IMeasureContext
     {
-        public BaseMeasureContext()
+        protected BaseMeasureContext()
         {
             _empty = new Size(0, 0);
             _contextBounds = Size.Empty;
             _lastMeasurements = new Dictionary<IVisualElement, Size>();
         }
 
-        public IViewState? ViewState { get; private set; }
-
         public virtual Size MeasureImage(IImage img)
         {
             return new Size(img.Width, img.Height);
         }
 
-        public Size MeasureMainView(IVisualElement element, 
-                                    ISize availableSpace, 
+        public Size MeasureMainView(IVisualElement element,
+                                    ISize availableSpace,
                                     IViewState viewState)
         {
             ViewState = viewState;
@@ -34,24 +32,24 @@ namespace Das.Views.Measuring
             return MeasureElement(element, availableSpace);
         }
 
-        public Size MeasureElement(IVisualElement element, 
+        public Size MeasureElement(IVisualElement element,
                                    ISize availableSpace)
         {
             var viewState = GetViewState();
             var zoom = viewState.ZoomLevel;
 
-            var margin = viewState.GetStyleSetter<Thickness>(StyleSetters.Margin, element)
+            var margin = viewState.GetStyleSetter<Thickness>(StyleSetter.Margin, element)
                          * zoom;
-            var border = viewState.GetStyleSetter<Thickness>(StyleSetters.BorderThickness, element)
+            var border = viewState.GetStyleSetter<Thickness>(StyleSetter.BorderThickness, element)
                          * zoom;
 
-            var specificSize = viewState.GetStyleSetter<Size>(StyleSetters.Size, element)
+            var specificSize = viewState.GetStyleSetter<Size>(StyleSetter.Size, element)
                                * zoom;
             var desiredSize = element.Measure(availableSpace, this);
 
-            var specificHeight = viewState.GetStyleSetter<Double>(StyleSetters.Height, element)
+            var specificHeight = viewState.GetStyleSetter<Double>(StyleSetter.Height, element)
                                  * zoom;
-            var specificWidth = viewState.GetStyleSetter<Double>(StyleSetters.Width, element)
+            var specificWidth = viewState.GetStyleSetter<Double>(StyleSetter.Width, element)
                                 * zoom;
 
             var size = specificSize ?? desiredSize;
@@ -68,22 +66,14 @@ namespace Das.Views.Measuring
             return _lastMeasurements.TryGetValue(element, out var val) ? val : _empty;
         }
 
-        public abstract Size MeasureString(String s, Font font);
+        public abstract Size MeasureString(String s, 
+                                           IFont font);
 
-        public virtual ISize ContextBounds
+        public virtual ISize ContextBounds => _contextBounds;
+
+        public Double GetZoomLevel()
         {
-            get => _contextBounds;
-        }
-
-        private IViewState GetViewState() => ViewState ??
-                                             throw new Exception(
-                                                 "No view state has been set.  Call MeasureMainView");
-
-        //public virtual void UpdateContextBounds(ISize value) => _contextBounds = value;
-
-        public T GetStyleSetter<T>(StyleSetters setter, IVisualElement element)
-        {
-            return GetViewState().GetStyleSetter<T>(setter, element);
+            return ViewState?.ZoomLevel ?? 1;
         }
 
         private readonly Size _empty;

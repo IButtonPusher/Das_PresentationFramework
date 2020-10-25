@@ -6,7 +6,14 @@ namespace Das.Xamarin.Android
 {
     public class AndroidStyleProvider : IViewState
     {
-        public T GetStyleSetter<T>(StyleSetters setter, IVisualElement element)
+        public T GetStyleSetter<T>(StyleSetter setter, IVisualElement element)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T GetStyleSetter<T>(StyleSetter setter, 
+                                   StyleSelector selector, 
+                                   IVisualElement element)
         {
             throw new NotImplementedException();
         }

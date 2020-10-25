@@ -28,6 +28,11 @@ namespace Das.Views.Core.Geometry
             set => _width = value;
         }
 
+        public ISize Reduce(Thickness padding)
+        {
+            return GeometryHelper.Reduce(this, padding);
+        }
+
         public virtual Double Height
         {
             get => _height;
@@ -71,11 +76,16 @@ namespace Das.Views.Core.Geometry
                 size1.Height + size2.Height);
         }
 
-        public Rectangle CenteredIn(Size outerRect)
+        //public Rectangle CenteredIn(Size outerRect)
+        //{
+        //    var wDiff = (outerRect.Width - Width) / 2;
+        //    var hDiff = (outerRect.Height - Height) / 2;
+        //    return new Rectangle(wDiff, hDiff, Width, Height);
+        //}
+
+        ISize IDeepCopyable<ISize>.DeepCopy()
         {
-            var wDiff = (outerRect.Width - Width) / 2;
-            var hDiff = (outerRect.Height - Height) / 2;
-            return new Rectangle(wDiff, hDiff, Width, Height);
+            return DeepCopy();
         }
 
         public override Boolean Equals(Object obj)
@@ -111,7 +121,8 @@ namespace Das.Views.Core.Geometry
             return new Size(size.Width * val, size.Height * val);
         }
 
-        public static Size operator -(Size size, Thickness margin)
+        public static Size operator -(Size size, 
+                                      Thickness margin)
         {
             if (margin == null)
                 return size.DeepCopy();
@@ -131,8 +142,9 @@ namespace Das.Views.Core.Geometry
 
         public override String ToString()
         {
-            return Width.ToString("0.00") + ", " +
-                   Height.ToString("0.00");
+            return "Width: " + Width + " Height: " + Height;
+            //return Width.ToString("0.00") + ", " +
+            //       Height.ToString("0.00");
         }
 
         private Double _height;

@@ -6,7 +6,8 @@ namespace Das.Views.Rendering
 {
     public readonly struct RenderedVisual : IRenderedVisual
     {
-        public RenderedVisual(IVisualElement element, ICube position)
+        public RenderedVisual(IVisualElement element,
+                              ICube position)
         {
             Element = element;
             Position = position;
@@ -20,5 +21,20 @@ namespace Das.Views.Rendering
         {
             return Element + "\t" + Position;
         }
+    }
+
+    public readonly struct RenderedVisual<TElement> : IRenderedVisual<TElement>
+        //where TElement : IVisualElement
+    {
+        public RenderedVisual(TElement element,
+                              ICube position)
+        {
+            Element = element;
+            Position = position;
+        }
+
+        public TElement Element { get; }
+
+        public ICube Position { get; }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Views;
+using Das.Views.Core;
 using Das.Views.Input;
 using Das.Views.Rendering;
 
 namespace Das.Gdi.Kits
 {
-    public class GdiRenderKit : IRenderKit
+    public class GdiRenderKit : BaseRenderKit, IRenderKit
     {
         public GdiRenderKit(IViewPerspective viewPerspective,
                             IWindowProvider<IVisualHost> windowProvider)
@@ -15,15 +16,13 @@ namespace Das.Gdi.Kits
             RenderContext = new GdiRenderContext(MeasureContext, 
                 viewPerspective, MeasureContext.Graphics);
 
-            windowProvider.WindowShown += OnWindowShown;
+            _containedObjects[typeof(IImageProvider)] = RenderContext;
 
-            //InputContext = new Win32InputContext();
+            windowProvider.WindowShown += OnWindowShown;
         }
 
         // ReSharper disable once NotAccessedField.Local
         private IInputContext? _inputContext;
-
-        //public IInputContext InputContext { get; } = null;
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;
 

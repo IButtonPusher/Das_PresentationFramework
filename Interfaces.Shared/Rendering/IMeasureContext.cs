@@ -21,7 +21,7 @@ namespace Das.Views.Rendering
 
         Size MeasureImage(IImage img);
 
-        Size MeasureString(String s, Font font);
+        Size MeasureString(String s, IFont font);
 
         /// <summary>
         /// The total amount of space available (e.g. size of the window, screen size of a mobile device)

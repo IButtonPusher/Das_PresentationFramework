@@ -218,7 +218,7 @@ namespace Das.OpenGL
         /// </summary>
         /// <typeparam name="T">The extension delegate type.</typeparam>
         /// <returns>The delegate that points to the extension function.</returns>
-        private static T GetDelegateFor<T>() where T : class
+        private static T GetDelegateFor<T>() where T : Delegate
         {
             //  Get the type of the extension function.
             Type delegateType = typeof(T);
@@ -240,7 +240,7 @@ namespace Das.OpenGL
                 extensionFunctions.Add(name, del);
             }
 
-            return del as T;
+            return (T)del;
         }
 
 

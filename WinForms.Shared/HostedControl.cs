@@ -91,7 +91,9 @@ namespace Das.Views.Winforms
 
     public class HostedControl<TAsset> : HostedControl, IVisualHost<TAsset>
     {
+#pragma warning disable 8618
         public HostedControl(IVisualRenderer visual)
+#pragma warning restore 8618
         {
             Visual = visual;
         }
@@ -101,6 +103,7 @@ namespace Das.Views.Winforms
             return Point2D.Empty;
         }
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public IVisualRenderer Visual { get; }
 
         public TAsset Asset { get; set; }

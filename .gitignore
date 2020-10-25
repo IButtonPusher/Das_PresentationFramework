@@ -55,3 +55,7 @@
 /DPF/SystemBase/obj
 /DPF/PresentationCore/obj
 /DPF
+/Android/Das.Android.Xamarin/bin/Release
+/bla/netstandard2.0
+/Das.ViewModels/bin/Release/netstandard2.0
+/Das.Views/bin/Release/netstandard2.0

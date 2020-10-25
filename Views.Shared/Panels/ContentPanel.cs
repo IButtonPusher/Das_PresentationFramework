@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Das.Serializer;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
-using Das.Views.Rendering; //using Das.Serializer;
+using Das.Views.Rendering;
+
+//using Das.Serializer;
 
 namespace Das.Views.Panels
 {
@@ -31,13 +33,14 @@ namespace Das.Views.Panels
             }
         }
 
-        public override ISize Measure(ISize availableSpace, IMeasureContext measureContext)
+        public override ISize Measure(ISize availableSpace,
+                                      IMeasureContext measureContext)
         {
             return Content?.Measure(availableSpace, measureContext) ?? Size.Empty;
         }
 
 
-        public override void Arrange(ISize availableSpace, 
+        public override void Arrange(ISize availableSpace,
                                      IRenderContext renderContext)
         {
             var content = Content;
@@ -66,9 +69,6 @@ namespace Das.Views.Panels
             if (Content is IChangeTracking ct)
                 ct.AcceptChanges();
         }
-
-
-        private Boolean _isChanged;
 
         public virtual Boolean IsChanged
         {
@@ -159,5 +159,8 @@ namespace Das.Views.Panels
         }
 
         private IVisualElement? _content;
+
+
+        private Boolean _isChanged;
     }
 }

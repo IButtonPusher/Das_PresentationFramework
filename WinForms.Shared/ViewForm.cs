@@ -117,8 +117,14 @@ namespace Das.Views.Winforms
         }
 
         public Size AvailableSize => _availableSize;
-        public T GetStyleSetter<T>(StyleSetters setter, IVisualElement element)
+        public T GetStyleSetter<T>(StyleSetter setter, 
+                                   IVisualElement element)
             => StyleContext.GetStyleSetter<T>(setter, element);
+
+        public T GetStyleSetter<T>(StyleSetter setter, 
+                                   StyleSelector selector, 
+                                   IVisualElement element)
+            => StyleContext.GetStyleSetter<T>(setter, selector, element);
 
         public IView View
         {

@@ -5,7 +5,7 @@ using Das.Views.Rendering;
 namespace Das.Gdi.Kits
 {
     // ReSharper disable once UnusedType.Global
-    public class StaticGdiRenderKit : IRenderKit
+    public class StaticGdiRenderKit : BaseRenderKit, IRenderKit
     { 
         public StaticGdiRenderKit(IViewPerspective viewPerspective)
         {

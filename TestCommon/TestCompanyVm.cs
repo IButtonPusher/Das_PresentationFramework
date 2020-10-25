@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using Das.Views;
 using Das.Views.Extended;
 using Das.Views.Extended.Runtime;
 using TestCommon.Company;
@@ -9,8 +7,8 @@ namespace TestCommon
 {
     public class TestCompanyVm : CompanyViewModel
     {
-        public TestCompanyVm(ISingleThreadedInvoker staInvoker) 
-            : base(MakeAScene(), staInvoker)
+        public TestCompanyVm() 
+            : base("ACME Inc.", MakeAScene())
         {
             var larry = new EmployeeViewModel { FirstName = "larry", LastName = "larry" };
             var curly = new EmployeeViewModel { FirstName = "curly", LastName = "sue" };
@@ -24,7 +22,7 @@ namespace TestCommon
 
         private static IScene MakeAScene()
         {
-            var fileName = @"E:\src\master_clones\ThirdParty\FbxWriter-master\FbxTest\bin\Debug\kettle.fbx";
+            //var fileName = @"E:\src\master_clones\ThirdParty\FbxWriter-master\FbxTest\bin\Debug\kettle.fbx";
             //var fileName = @"E:\src\master_clones\ThirdParty\FbxWriter-master\FbxTest\bin\Debug\cube.fbx";
 
             //var lodr = new CoreFbxLoader();

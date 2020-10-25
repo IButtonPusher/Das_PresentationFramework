@@ -5,7 +5,7 @@ using Das.Views.Rendering;
 
 namespace Das.OpenGL
 {
-    public class OpenGLRenderKit : IRenderKit
+    public class OpenGLRenderKit : BaseRenderKit, IRenderKit
     {
         public OpenGLRenderKit(IFontProvider fontProvider, IGLContext glContext)
         {

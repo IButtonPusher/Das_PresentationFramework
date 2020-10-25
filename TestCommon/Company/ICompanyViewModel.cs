@@ -12,5 +12,7 @@ namespace TestCommon.Company
         List<EmployeeViewModel> Employees { get; set; }
 
         IPieData<String, Double> SalesReport { get; }
+
+        String Name { get; }
     }
 }

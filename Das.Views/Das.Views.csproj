@@ -12,25 +12,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controls\**" />
     <Compile Remove="DataBinding\**" />
-    <Compile Remove="Input\**" />
     <Compile Remove="Invocations\**" />
     <Compile Remove="Kits\**" />
     <Compile Remove="Measuring\**" />
     <Compile Remove="Rendering\**" />
     <Compile Remove="Styles\**" />
-    <EmbeddedResource Remove="Controls\**" />
     <EmbeddedResource Remove="DataBinding\**" />
-    <EmbeddedResource Remove="Input\**" />
     <EmbeddedResource Remove="Invocations\**" />
     <EmbeddedResource Remove="Kits\**" />
     <EmbeddedResource Remove="Measuring\**" />
     <EmbeddedResource Remove="Rendering\**" />
     <EmbeddedResource Remove="Styles\**" />
-    <None Remove="Controls\**" />
     <None Remove="DataBinding\**" />
-    <None Remove="Input\**" />
     <None Remove="Invocations\**" />
     <None Remove="Kits\**" />
     <None Remove="Measuring\**" />

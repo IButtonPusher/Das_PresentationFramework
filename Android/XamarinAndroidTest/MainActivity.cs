@@ -8,7 +8,6 @@ using Android.Views;
 using Android.Widget;
 using Das.Views.Updaters;
 using Das.Xamarin.Android;
-using TestCommon;
 
 namespace XamarinAndroidTest
 {
@@ -23,17 +22,15 @@ namespace XamarinAndroidTest
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
 
             var sta = new StaScheduler("ANDROID");
-            //var vm = new TestCompanyVm(sta);
-            //vm.Name = "hello world";
-            //var bob = new Bob();
-            //bob.SetBoundValue(vm);
-            //var v = new AndroidView(bob, this);
 
             var vm = new TestVm();
             vm.Name = "hello world";
             var bob = new TestView();
             bob.SetBoundValue(vm);
             var v = new AndroidView(bob, this, WindowManager ?? throw new NullReferenceException());
+
+            //var wv = new WebView(this);
+
             SetContentView(v);
 
             //SetContentView(Resource.Layout.activity_main);

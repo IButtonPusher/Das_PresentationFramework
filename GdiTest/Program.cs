@@ -17,8 +17,7 @@ namespace GdiTest
 {
     static class Program
     {
-        private static TestLauncher _testLauncher;
-        private static ISingleThreadedInvoker _staInvoker;
+        //private static TestLauncher _testLauncher;
 
         /// <summary>
         /// The main entry point for the application.
@@ -29,9 +28,9 @@ namespace GdiTest
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             
-            _staInvoker = new StaScheduler("GDI Test");
+//            new StaScheduler("GDI Test");
 
-            _testLauncher = GetGdiLauncher();
+            var _testLauncher = GetGdiLauncher();
             //_testLauncher = GetOpenGLLauncher();
 
             _testLauncher.MvvmTest().Wait();
@@ -46,7 +45,7 @@ namespace GdiTest
         {
             var boot = new GdiProvider();
             var viewProvider = new ViewProvider();
-            return new TestLauncher(boot,viewProvider, _staInvoker);
+            return new TestLauncher(boot,viewProvider);
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -55,7 +54,7 @@ namespace GdiTest
             var windowBuilder = new GLWindowBuilder("OpenGLSurface");
             var boot = new GLBootStrapper(windowBuilder);
             var viewProvider = new ViewProvider();
-            return new TestLauncher(boot,viewProvider, _staInvoker);
+            return new TestLauncher(boot,viewProvider);
         }
 
         // ReSharper disable once UnusedMember.Local

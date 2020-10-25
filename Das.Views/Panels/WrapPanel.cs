@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Das.Views.Rendering;
 
 namespace Das.Views.Panels
@@ -8,14 +10,15 @@ namespace Das.Views.Panels
         public WrapPanel() : base(default!,
             new SequentialRenderer(true))
         {
-            
         }
-
-        protected override IEnumerable<IVisualElement> GetChildrenToRender() => Children;
 
         public override void Dispose()
         {
-            
+        }
+
+        protected override IEnumerable<IVisualElement> GetChildrenToRender()
+        {
+            return Children;
         }
     }
 }

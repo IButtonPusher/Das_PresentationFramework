@@ -10,4 +10,12 @@ namespace Das.Views.Rendering
 
         ICube Position { get; }
     }
+
+    public interface IRenderedVisual<out TElement>
+    //where TElement : IVisualElement
+    {
+        TElement Element { get; }
+
+        ICube Position { get; }
+    }
 }

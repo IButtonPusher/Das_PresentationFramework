@@ -1,8 +1,9 @@
-﻿using Das.Views.Measuring;
-using System;
+﻿using System;
+using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
+using Das.Views.Measuring;
 
 namespace Das.OpenGL
 {
@@ -11,23 +12,24 @@ namespace Das.OpenGL
         public GLMeasureContext(IFontProvider fontProvider)
         {
             _fontProvider = fontProvider;
-            
         }
 
-        private readonly IFontProvider _fontProvider;
-        
-        
 
-        public override Size MeasureString(String s, Font font)
+        public override Size MeasureImage(IImage img)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public override Size MeasureString(String s,
+                                           IFont font)
         {
             var renderer = _fontProvider.GetRenderer(font);
             var res = renderer.MeasureString(s);
-            
+
             return res;
         }
 
-
-        public override Size MeasureImage(IImage img) 
-            => throw new NotImplementedException();
+        private readonly IFontProvider _fontProvider;
     }
 }

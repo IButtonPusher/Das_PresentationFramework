@@ -1,7 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Android.Content;
 using Android.Graphics;
+using Android.OS;
+using Android.Support.V4.View;
 using Android.Views;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Input;
@@ -10,19 +13,32 @@ using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 
+
 namespace Das.Xamarin.Android
 {
-    public class AndroidView : View, IViewState, IInputContext
+    public class AndroidView : View, 
+                               IViewState, 
+                               IInputContext,
+                               GestureDetector.IOnGestureListener,
+                               GestureDetector.IOnDoubleTapListener,
+                               View.IOnTouchListener
     {
+        // ReSharper disable once UnusedMember.Global
         public AndroidView(IView view,
                            Context context,
                            IWindowManager windowManager)
             : base(context)
         {
+            _loopHandler = new Handler(Looper.MainLooper);
             _measured = Size.Empty;
             _view = view;
+            _view.PropertyChanged += OnViewPropertyChanged;
 
-            
+            var viewConfig = ViewConfiguration.Get(context) ?? throw new NotSupportedException();
+
+            _maximumFlingVelocity = viewConfig.ScaledMaximumFlingVelocity;
+            _minimumFlingVelocity = viewConfig.ScaledMinimumFlingVelocity;
+            //_ceilingFlingVelocity = _maximumFlingVelocity - _minimumFlingVelocity;
 
             var displayMetrics = context.Resources?.DisplayMetrics ?? throw new NullReferenceException();
 
@@ -32,9 +48,105 @@ namespace Das.Xamarin.Android
                 fontProvider, windowManager);
             _inputHandler = new BaseInputHandler(RenderKit.RenderContext);
 
-            Touch += OnTouched;
-            Click += OnClick;
-            Drag += OnDrag;
+            _gestureDetector = new GestureDetectorCompat(context, this);
+            _gestureDetector.SetOnDoubleTapListener(this);
+
+            SetOnTouchListener(this);
+
+
+            Task.Run(RefreshLoop).ConfigureAwait(false);
+        }
+
+
+
+        public AndroidView(IView view,
+                           Context context,
+                           AndroidRenderKit renderKit)
+            : base(context)
+        {
+            _loopHandler = new Handler(Looper.MainLooper);
+            _measured = Size.Empty;
+            _view = view;
+            _view.PropertyChanged += OnViewPropertyChanged;
+
+            var viewConfig = ViewConfiguration.Get(context) ?? throw new NotSupportedException();
+
+            _maximumFlingVelocity = viewConfig.ScaledMaximumFlingVelocity;
+            _minimumFlingVelocity = viewConfig.ScaledMinimumFlingVelocity;
+            //_ceilingFlingVelocity = _maximumFlingVelocity - _minimumFlingVelocity;
+
+            RenderKit = renderKit;
+
+            _inputHandler = new BaseInputHandler(RenderKit.RenderContext);
+
+            _gestureDetector = new GestureDetectorCompat(context, this);
+            _gestureDetector.SetOnDoubleTapListener(this);
+            
+            SetOnTouchListener(this);
+
+            var _ = RefreshLoop();
+
+            //Task.Run(RefreshLoop).ConfigureAwait(false);
+        }
+
+
+
+
+        public sealed override void SetOnTouchListener(IOnTouchListener? l)
+        {
+            base.SetOnTouchListener(l);
+        }
+
+
+        //public IView CurrentView
+        //{
+        //    get => _view;
+        //    set
+        //    {
+        //        _view = value;
+        //        _loopHandler.Post(Invalidate);
+        //    }
+        //}
+
+        private async Task RefreshLoop()
+        {
+            while (true)
+            {
+                if (_view.IsChanged)
+                {
+                    System.Diagnostics.Debug.WriteLine("view change detected");
+                    _view.AcceptChanges();
+                    RenderKit.MeasureContext.MeasureMainView(_view, _measured, this);
+                    Invalidate();
+                    //_loopHandler.Post(Invalidate);
+
+                    //await Task.Delay(10);
+                }
+                else
+                    await Task.Delay(50);
+            }
+            // ReSharper disable once FunctionNeverReturns
+        }
+
+        private void OnViewPropertyChanged(Object sender, 
+                                           PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(IChangeTracking.IsChanged) || !_view.IsChanged)
+                return;
+            
+            Invalidate();
+        }
+
+        public override Boolean OnGenericMotionEvent(MotionEvent? e)
+        {
+            _gestureDetector.OnTouchEvent(e);
+            return base.OnGenericMotionEvent(e);
+        }
+
+        public override Boolean OnTouchEvent(MotionEvent? e)
+        {
+            _gestureDetector.OnTouchEvent(e);
+            return base.OnTouchEvent(e);
         }
 
         IPoint2D IInputProvider.CursorPosition { get; } = Point2D.Empty;
@@ -79,36 +191,48 @@ namespace Das.Xamarin.Android
 
         Boolean IInputContext.IsMousePresent => false;
 
+        public Double MaximumFlingVelocity => _maximumFlingVelocity;
 
-        public T GetStyleSetter<T>(StyleSetters setter, IVisualElement element)
+        public Double MinimumFlingVelocity => _minimumFlingVelocity;
+
+        public Boolean TryCaptureMouseInput(IVisualElement view)
+        {
+            return _inputHandler.TryCaptureMouseInput(view);
+        }
+
+        public Boolean TryReleaseMouseCapture(IVisualElement view)
+        {
+            return _inputHandler.TryReleaseMouseCapture(view);
+        }
+
+
+        public T GetStyleSetter<T>(StyleSetter setter, 
+                                   IVisualElement element)
         {
             return _view.StyleContext.GetStyleSetter<T>(setter, element);
+        }
+
+        public T GetStyleSetter<T>(StyleSetter setter, 
+                                   StyleSelector selector, 
+                                   IVisualElement element)
+        {
+            return _view.StyleContext.GetStyleSetter<T>(setter, selector, element);
         }
 
         public Double ZoomLevel => 1;
 
         public AndroidRenderKit RenderKit { get; }
 
-        private MouseDownEventArgs GetArgs(MouseButtons button, MotionEvent eve)
-        {
-            return new MouseDownEventArgs(
-                GetPosition(eve),
-                button, this);
-        }
+        //private MouseDownEventArgs GetArgs(MouseButtons button, MotionEvent eve)
+        //{
+        //    return new MouseDownEventArgs(
+        //        GetPosition(eve),
+        //        button, this);
+        //}
 
         private static ValuePoint2D GetPosition(MotionEvent eve)
         {
             return new ValuePoint2D(eve.GetX(), eve.GetY());
-        }
-
-        private void OnClick(Object sender, EventArgs e)
-        {
-            Console.WriteLine("click");
-        }
-
-        private void OnDrag(Object sender, DragEventArgs e)
-        {
-            Console.WriteLine("drag " + e.Event?.GetX() + ", " + e.Event?.GetY());
         }
 
 
@@ -132,69 +256,224 @@ namespace Das.Xamarin.Android
             _measured = RenderKit.MeasureContext.MeasureMainView(_view, sz, this);
         }
 
-        private void OnTouched(Object sender, TouchEventArgs e)
-        {
-            if (!(e.Event is {} eve))
-                return;
+        //private void OnTouched(Object sender, TouchEventArgs e)
+        //{
+        //    if (!(e.Event is {} eve))
+        //        return;
 
-            var pos = new ValuePoint2D(eve.GetX(), eve.GetY());
-            Console.WriteLine("touch # " + eve.ActionIndex + " - " + eve.Action + " " + pos);
+        //    var pos = new ValuePoint2D(eve.GetX(), eve.GetY());
+        //    Console.WriteLine("touch # " + eve.ActionIndex + " - " + eve.Action + " " + pos);
 
-            switch (eve.Action)
-            {
-                case MotionEventActions.Down:
-                    _inputHandler.OnMouseDown(GetArgs(MouseButtons.Left, eve));
-                    break;
+        //    switch (eve.Action)
+        //    {
+        //        case MotionEventActions.Down:
+        //            _leftButtonWentDown = pos;
 
-                case MotionEventActions.Up:
-                    _inputHandler.OnMouseUp(
-                        new MouseUpEventArgs(
-                            GetPosition(eve),
-                            MouseButtons.Left, this));
+        //            if (_inputHandler.OnMouseInput(new MouseDownEventArgs(
+        //                pos, MouseButtons.Left, this), InputAction.MouseDown))
+        //                Invalidate();
+        //            //_inputHandler.OnMouseDown(GetArgs(MouseButtons.Left, eve));
+        //            break;
+
+        //        case MotionEventActions.Up:
+        //            _leftButtonWentDown = default;
+        //            _lastDragPosition = default;
+
+        //            if (_inputHandler.OnMouseInput(new MouseUpEventArgs(
+        //                pos, MouseButtons.Left, this), InputAction.MouseUp))
+        //                Invalidate();
+        //            //_inputHandler.OnMouseUp(
+        //            //    new MouseUpEventArgs(
+        //            //        GetPosition(eve),
+        //            //        MouseButtons.Left, this));
                         
-                        //GetArgs(MouseButtons.Left, eve));
-                    break;
-                case MotionEventActions.ButtonPress:
-                    break;
-                case MotionEventActions.ButtonRelease:
-                    break;
-                case MotionEventActions.Cancel:
-                    break;
-                case MotionEventActions.HoverEnter:
-                    break;
-                case MotionEventActions.HoverExit:
-                    break;
-                case MotionEventActions.HoverMove:
-                    break;
-                case MotionEventActions.Mask:
-                    break;
-                case MotionEventActions.Move:
-                    break;
-                case MotionEventActions.Outside:
-                    break;
-                case MotionEventActions.Pointer1Down:
-                    break;
-                case MotionEventActions.Pointer1Up:
-                    break;
-                case MotionEventActions.Pointer2Down:
-                    break;
-                case MotionEventActions.Pointer2Up:
-                    break;
-                case MotionEventActions.Pointer3Down:
-                    break;
-                case MotionEventActions.Pointer3Up:
-                    break;
-                case MotionEventActions.PointerIdMask:
-                    break;
-                case MotionEventActions.PointerIdShift:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+        //                //GetArgs(MouseButtons.Left, eve));
+        //            break;
+        //        case MotionEventActions.ButtonPress:
+        //            break;
+        //        case MotionEventActions.ButtonRelease:
+        //            break;
+        //        case MotionEventActions.Cancel:
+        //            break;
+        //        case MotionEventActions.HoverEnter:
+        //            break;
+        //        case MotionEventActions.HoverExit:
+        //            break;
+        //        case MotionEventActions.HoverMove:
+        //            break;
+        //        case MotionEventActions.Mask:
+        //            break;
+                
+        //        case MotionEventActions.Move:
+        //            var letsUse = _leftButtonWentDown;
+        //            if (letsUse == null)
+        //                break;
+
+        //            ValueSize lastDragChange;
+        //            if (_lastDragPosition == null)
+        //                lastDragChange = new ValueSize(pos.X - letsUse.Value.X,
+        //                    pos.Y - letsUse.Value.Y);
+        //            else
+        //                lastDragChange = new ValueSize(pos.X - _lastDragPosition.Value.X,
+        //                    pos.Y - _lastDragPosition.Value.Y);
+
+        //            if (lastDragChange.IsEmpty)
+        //                break;
+
+        //            _lastDragPosition = pos;
+
+        //            var dragArgs = new Das.Views.Input.DragEventArgs(letsUse, pos, lastDragChange,
+        //                _leftButtonWentDown != null ? MouseButtons.Left : MouseButtons.Right,
+        //                this);
+        //            if (_inputHandler.OnMouseInput(dragArgs, InputAction.MouseDrag))
+        //                Invalidate();
+        //            break;
+                
+                
+        //        case MotionEventActions.Outside:
+        //            break;
+        //        case MotionEventActions.Pointer1Down:
+        //            break;
+        //        case MotionEventActions.Pointer1Up:
+        //            break;
+        //        case MotionEventActions.Pointer2Down:
+        //            break;
+        //        case MotionEventActions.Pointer2Up:
+        //            break;
+        //        case MotionEventActions.Pointer3Down:
+        //            break;
+        //        case MotionEventActions.Pointer3Up:
+        //            break;
+        //        case MotionEventActions.PointerIdMask:
+        //            break;
+        //        case MotionEventActions.PointerIdShift:
+        //            break;
+        //        default:
+        //            throw new ArgumentOutOfRangeException();
+        //    }
+        //}
 
         private readonly BaseInputHandler _inputHandler;
         private readonly IView _view;
+        
         private Size _measured;
+        private ValuePoint2D? _leftButtonWentDown;
+        //private ValuePoint2D? _lastDragPosition;
+        private readonly GestureDetectorCompat _gestureDetector;
+        private readonly Int32 _maximumFlingVelocity;
+        private readonly Int32 _minimumFlingVelocity;
+        //private readonly Int32 _ceilingFlingVelocity;
+        // ReSharper disable once NotAccessedField.Local
+        private Handler _loopHandler;
+        
+
+
+        public Boolean OnDown(MotionEvent? e)
+        {
+            if (!(e is {} eve))
+                return false;
+
+            var pos = new ValuePoint2D(eve.GetX(), eve.GetY());
+            _leftButtonWentDown = pos;
+
+            if (_inputHandler.OnMouseInput(new MouseDownEventArgs(
+                pos, MouseButtons.Left, this), InputAction.MouseDown))
+            {
+                Invalidate();
+                return true;
+            }
+
+            return true;
+        }
+
+        public Boolean OnFling(MotionEvent? e1, 
+                               MotionEvent? e2, 
+                               Single velocityX, 
+                               Single velocityY)
+        {
+            if (e1 == null)
+                return false;
+
+            var pos = GetPosition(e1);
+            var ags = new FlingEventArgs(0 - (velocityX * 0.5), 0 - (velocityY * 0.5), pos, this);
+            if (_inputHandler.OnMouseInput(ags, InputAction.Fling))
+                Invalidate();
+
+
+            return true;
+        }
+
+        public void OnLongPress(MotionEvent? e)
+        {
+            
+        }
+
+        public Boolean OnScroll(MotionEvent? e1, 
+                                MotionEvent? e2, 
+                                Single distanceX, 
+                                Single distanceY)
+        {
+            if (e1 == null || e2 == null)
+                return false;
+
+            var start = GetPosition(e1);
+            var last = GetPosition(e2);
+
+            var delta = new ValueSize(0 - distanceX, 0 - distanceY);
+
+            var dragArgs = new Das.Views.Input.DragEventArgs(start, last, delta, 
+                _leftButtonWentDown != null ? MouseButtons.Left : MouseButtons.Right,
+                this);
+            if (_inputHandler.OnMouseInput(dragArgs, InputAction.MouseDrag))
+                Invalidate();
+
+            return true;
+        }
+
+        public void OnShowPress(MotionEvent? e)
+        {
+            
+        }
+
+        public Boolean OnSingleTapUp(MotionEvent? e)
+        {
+            if (e == null)
+                return false;
+
+            var pos = GetPosition(e);
+            if (_inputHandler.OnMouseInput(new MouseUpEventArgs(
+                pos, MouseButtons.Left, this), InputAction.MouseUp))
+                Invalidate();
+            return false;
+        }
+
+        public Boolean OnDoubleTap(MotionEvent? e)
+        {
+            return false;
+        }
+
+        public Boolean OnDoubleTapEvent(MotionEvent? e)
+        {
+            return false;
+        }
+
+        public Boolean OnSingleTapConfirmed(MotionEvent? e)
+        {
+            return false;
+        }
+
+        public Boolean OnTouch(View? v, MotionEvent? e)
+        {
+            if (e?.Action == MotionEventActions.Up)
+            {
+                // gesture detector not detecting anything for when you lift the finger after dragging
+                var pos = GetPosition(e);
+                if (_inputHandler.OnMouseInput(new MouseUpEventArgs(
+                    pos, MouseButtons.Left, this), InputAction.MouseUp))
+                    Invalidate();
+            }
+
+            return _gestureDetector.OnTouchEvent(e);
+        }
     }
 }

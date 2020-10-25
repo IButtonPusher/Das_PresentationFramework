@@ -6,7 +6,7 @@ using Das.Views.Mvvm;
 
 namespace Das.Views.Rendering
 {
-    public abstract class VisualElement : NotifyPropertyChangedBase, 
+    public abstract class VisualElement : NotifyPropertyChangedBase,
                                           IVisualElement
     {
         protected VisualElement()
@@ -14,9 +14,11 @@ namespace Das.Views.Rendering
             Id = Interlocked.Increment(ref _currentId);
         }
 
-        public abstract ISize Measure(ISize availableSpace, IMeasureContext measureContext);
+        public abstract ISize Measure(ISize availableSpace,
+                                      IMeasureContext measureContext);
 
-        public abstract void Arrange(ISize availableSpace, IRenderContext renderContext);
+        public abstract void Arrange(ISize availableSpace,
+                                     IRenderContext renderContext);
 
         public virtual IVisualElement DeepCopy()
         {
@@ -25,17 +27,28 @@ namespace Das.Views.Rendering
             return newObject;
         }
 
+        public Int32 Id { get; private set; }
 
-        private Boolean _isEnabled;
+        public event Action<IVisualElement>? Disposed;
 
-        public Boolean IsEnabled
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            Disposed?.Invoke(this);
+
+            Disposed = null;
+        }
+
+        public virtual Boolean IsEnabled
         {
             get => _isEnabled;
             set => SetValue(ref _isEnabled, value);
         }
 
-        public Int32 Id { get; private set; }
-
         private static Int32 _currentId;
+
+
+        private Boolean _isEnabled;
     }
 }

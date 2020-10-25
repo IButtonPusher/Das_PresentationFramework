@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Das.Serializer;
@@ -40,6 +41,8 @@ namespace Das.Views.DevKit
         IVisualElement IDeepCopyable<IVisualElement>.DeepCopy() => null!;
 
         Int32 IVisualElement.Id => -1;
+
+        public event Action<IVisualElement>? Disposed;
 
         public IVisualElement? Content { get; set; }
 
@@ -198,6 +201,17 @@ namespace Das.Views.DevKit
                 disposable.Dispose();
             // _viewModel?.Dispose();
             Content?.Dispose();
+
+            Disposed?.Invoke(this);
+            Disposed = null;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        // ReSharper disable once UnusedMember.Global
+        protected virtual void OnPropertyChanged([CallerMemberName] String? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

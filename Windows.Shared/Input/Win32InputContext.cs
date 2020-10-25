@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Input;
 using Das.Views.Input;
+using Das.Views.Rendering;
 using Das.Views.Windows;
 
 namespace Windows.Shared.Input
@@ -86,6 +87,20 @@ namespace Windows.Shared.Input
         }
 
         public Boolean IsMousePresent => true; //todo: better answer
+
+        public Double MaximumFlingVelocity => 0;
+
+        public Double MinimumFlingVelocity => 0;
+
+        public Boolean TryCaptureMouseInput(IVisualElement view)
+        {
+            return _inputHandler.TryCaptureMouseInput(view);
+        }
+
+        public Boolean TryReleaseMouseCapture(IVisualElement view)
+        {
+            return _inputHandler.TryReleaseMouseCapture(view);
+        }
 
 
         //internal static IntPtr GetWindowLongPtr(HandleRef hWnd, int nIndex)

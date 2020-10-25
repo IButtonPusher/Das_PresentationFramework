@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Android.Graphics;
+using Das.Views;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 
@@ -20,7 +21,8 @@ namespace Das.Xamarin.Android
 
         Boolean IEquatable<ISize>.Equals(ISize other)
         {
-            return _bmp.Width == other.Width && _bmp.Height == other.Height;
+            return _bmp.Width == Convert.ToInt32(other.Width) && 
+                   _bmp.Height == Convert.ToInt32(other.Height);
         }
 
         Double ISize.Height => _bmp.Height;
@@ -35,6 +37,16 @@ namespace Das.Xamarin.Android
                 return;
             _bmp.Dispose();
             _isDisposed = true;
+        }
+
+        ISize IDeepCopyable<ISize>.DeepCopy()
+        {
+            return new ValueSize(_bmp.Width, _bmp.Height);
+        }
+
+        public ISize Reduce(Thickness padding)
+        {
+            return GeometryHelper.Reduce(this, padding);
         }
 
         Boolean IImage.IsDisposed => _isDisposed;

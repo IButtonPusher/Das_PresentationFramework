@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Das.Views.Extended;
+// ReSharper disable All
+#pragma warning disable 8618
 
 namespace Triangulation
 {
@@ -62,7 +64,7 @@ namespace Triangulation
     internal class Polygon
     {
         internal ConnectionEdge Start;
-        internal Int32 PointCount = 0;
+        internal Int32 PointCount;
 
         internal IEnumerable<ConnectionEdge> GetPolygonCirculator()
         {
@@ -73,6 +75,7 @@ namespace Triangulation
                 yield return h;
                 h = h.Next;
             }
+            // ReSharper disable once PossibleUnintendedReferenceComparison
             while (h != Start);
         }
 

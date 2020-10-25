@@ -18,6 +18,8 @@ namespace Das.Views.Input
 
         public IPoint2D Position { get; }
 
+        public InputAction Action => InputAction.MouseOver;
+
         public IInputContext InputContext { get; }
     }
 }
