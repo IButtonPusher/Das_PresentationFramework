@@ -35,6 +35,11 @@ namespace Gdi.Shared
             return GeometryHelper.Reduce(this, padding);
         }
 
+        ISize ISize.Minus(ISize subtract)
+        {
+            return GeometryHelper.Minus(this, subtract);
+        }
+
         void IDisposable.Dispose()
         {
             if (_isDisposed)

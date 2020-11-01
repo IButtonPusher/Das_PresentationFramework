@@ -1,7 +1,6 @@
 ﻿using Das.Gdi;
 using System.IO;
 using System.Threading.Tasks;
-using Das.Serializer;
 using Das.Views.Panels;
 using Das.Views;
 
@@ -26,16 +25,16 @@ namespace ViewCompiler
         
         public static ViewDeserializer GetViewDeserializer()
         {
-            var settings = DasSettings.Default;
-            settings.TypeSearchNameSpaces = new[]
-            {
-                "Das.Views.Controls",
-                "Das.Views.Panels",
-                "TestCommon"
-            };
-            settings.NotFoundBehavior = TypeNotFound.NullValue;
-            settings.PropertySearchDepth = TextPropertySearchDepths.AsTypeInNamespacesAndSystem;
-            var serializer = new ViewDeserializer(settings);
+            //var settings = DasSettings.Default;
+            //settings.TypeSearchNameSpaces = new[]
+            //{
+            //    "Das.Views.Controls",
+            //    "Das.Views.Panels",
+            //    "TestCommon"
+            //};
+            //settings.NotFoundBehavior = TypeNotFound.NullValue;
+            //settings.PropertySearchDepth = TextPropertySearchDepths.AsTypeInNamespacesAndSystem;
+            var serializer = new ViewDeserializer();
             return serializer;
         }
     }

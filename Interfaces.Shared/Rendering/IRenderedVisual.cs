@@ -12,7 +12,6 @@ namespace Das.Views.Rendering
     }
 
     public interface IRenderedVisual<out TElement>
-    //where TElement : IVisualElement
     {
         TElement Element { get; }
 

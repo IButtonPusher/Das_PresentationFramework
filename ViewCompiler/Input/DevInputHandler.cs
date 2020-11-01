@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Geometry;
-using Das.Views.Core.Input;
 using Das.Views.Input;
 using Das.Views.Rendering;
 using ViewCompiler;
@@ -35,7 +34,7 @@ namespace Das.Views.DevKit
                                         InputAction action) 
             where TArgs : IMouseInputEventArgs<TArgs>
         {
-            if (action == InputAction.MouseDown &&
+            if (action == InputAction.LeftMouseButtonDown &&
                 args is MouseDownEventArgs e)
             {
                 OnMouseDown(e);

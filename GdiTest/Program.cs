@@ -28,6 +28,8 @@ namespace GdiTest
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             
+            Application.Run(new TestBrowser());
+
 //            new StaScheduler("GDI Test");
 
             var _testLauncher = GetGdiLauncher();

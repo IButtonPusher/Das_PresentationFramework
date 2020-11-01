@@ -38,14 +38,42 @@ namespace Das.Views.Winforms
             }
         }
 
+        public static T RunInvoke<T>(this Control ctrl,
+                                     Func<T> action)
+        {
+            if (ctrl.InvokeRequired)
+            {
+                var rwaffle = (T)ctrl.Invoke(
+                    new Func<T>(() => action()));
 
-        public static async Task RunInvokeAsync(this Control ctrl, Action action)
+                return rwaffle;
+                
+
+                //T value = default;
+
+                //Action wtf = () =>
+                //{
+                //    value = action();
+                //};
+
+                //var waffle = (Delegate)wtf;
+
+                //ctrl.Invoke(waffle);
+
+                //return value!;
+            }
+            
+            return action();
+        }
+
+        public static async Task RunInvokeAsync(this Control ctrl, 
+                                                Action action)
         {
             if (!ctrl.InvokeRequired)
                 action();
             else
             {
-                var src = new InvokeCompletionSource<Object>(action, ctrl);
+                var src = new InvokeActionCompletionSource<Object>(action, ctrl);
                 await src.Task;
             }
         }

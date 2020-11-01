@@ -9,12 +9,12 @@ namespace Das.Views.Core.Writing
     {
         IFont Font { get; }
 
-        void DrawString(String text, 
-                        IBrush brush, 
+        void DrawString(String text,
+                        IBrush brush,
                         IPoint2D point2D);
 
         void DrawString(String s,
-                        IBrush brush, 
+                        IBrush brush,
                         IRectangle bounds);
 
         Size MeasureString(String text);

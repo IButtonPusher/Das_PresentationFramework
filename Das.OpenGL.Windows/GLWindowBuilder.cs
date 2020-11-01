@@ -50,7 +50,13 @@ namespace Das.OpenGL.Windows
 
             return form;
         }
-       
+
+        public GLForm Show<TViewModel>(IView<TViewModel> view) 
+            where TViewModel : IViewModel
+        {
+            return Show(view.DataContext, view);
+        }
+
         public event Action<GLForm>? WindowShown;
 
         static GLWindowBuilder()

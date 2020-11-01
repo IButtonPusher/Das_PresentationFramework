@@ -8,7 +8,9 @@ using Das.Views.Rendering; //using Das.Serializer;
 
 namespace Das.Views.Panels
 {
-    public interface IVisualContainer : IBindableElement, IVisualFinder, IChangeTracking
+    public interface IVisualContainer : IBindableElement, 
+                                        IVisualFinder, 
+                                        IChangeTracking
     {
         IList<IVisualElement> Children { get; }
 

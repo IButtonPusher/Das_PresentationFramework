@@ -25,5 +25,7 @@ namespace Das.Views.Panels
         {
             throw new NotImplementedException();
         }
+
+        public new virtual T DataContext => throw new NotImplementedException();
     }
 }

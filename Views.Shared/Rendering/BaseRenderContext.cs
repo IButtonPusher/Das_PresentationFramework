@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Das.Extensions;
+using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
@@ -14,14 +15,17 @@ using Das.Views.Styles;
 
 namespace Das.Views.Rendering
 {
-    public abstract class BaseRenderContext : ContextBase, IRenderContext
+    public abstract class BaseRenderContext : ContextBase, 
+                                              IRenderContext
     {
         protected BaseRenderContext(IMeasureContext measureContext,
-                                    IViewPerspective perspective)
+                                    IViewPerspective perspective,
+                                    IVisualSurrogateProvider surrogateProvider)
         {
             RenderPositions = new Dictionary<IVisualElement, ICube>();
 
             _measureContext = measureContext;
+            _surrogateProvider = surrogateProvider;
             _renderLock = new Object();
             Perspective = perspective;
             CurrentElementRect = new Rectangle();
@@ -112,7 +116,9 @@ namespace Das.Views.Rendering
         public abstract void DrawRect(IRectangle rect,
                                       IPen pen);
 
-        public abstract void DrawRoundedRect(IRectangle rect, IPen pen, Double cornerRadius);
+        public abstract void DrawRoundedRect(IRectangle rect, 
+                                             IPen pen, 
+                                             Double cornerRadius);
 
         public abstract void FillPie(IPoint2D center,
                                      Double radius,
@@ -124,9 +130,21 @@ namespace Das.Views.Rendering
 
         public abstract void DrawFrame(IFrame frame);
 
+        public Rectangle DrawMainElement(IVisualElement element, 
+                                         IRectangle rect, 
+                                         IViewState viewState)
+        {
+            lock (_renderLock)
+                RenderPositions.Clear();
+            ViewState = viewState;
+            return DrawElement(element, rect);
+        }
+
         public Rectangle DrawElement(IVisualElement element,
                                      IRectangle rect)
         {
+            _surrogateProvider.EnsureSurrogate(ref element);
+
             var selector = element is IInteractiveView interactive
                 ? interactive.CurrentStyleSelector
                 : StyleSelector.None;
@@ -143,8 +161,6 @@ namespace Das.Views.Rendering
             //=> useRect = { x: 422, y: 294, w: 200, h: 200}
 
             var radius = GetStyleSetter<Double>(StyleSetter.BorderRadius, selector, element);
-
-            
 
             var background = GetStyleSetter<SolidColorBrush>(StyleSetter.Background, 
                 selector, element);
@@ -228,10 +244,6 @@ namespace Das.Views.Rendering
                         current = container.Content;
                     }
 
-                    //if (kvp.Key is IContentContainer container &&
-                    //    container.Content is TElement valid)
-                    //    yield return new RenderedVisual<TElement>(valid, kvp.Value);
-
                     if (kvp.Key is TElement good)
                         yield return new RenderedVisual<TElement>(good, kvp.Value);
                 }
@@ -241,7 +253,8 @@ namespace Das.Views.Rendering
         /// <summary>
         ///     Margins + space added due to alignment
         /// </summary>
-        private Rectangle GetOffset(IRectangle rect, IVisualElement element,
+        private Rectangle GetOffset(IRectangle rect, 
+                                    IVisualElement element,
                                     Thickness border)
         {
             var margin = GetStyleSetter<Thickness>(StyleSetter.Margin, element)
@@ -249,7 +262,8 @@ namespace Das.Views.Rendering
 
             margin += border;
 
-            var totalSize = _measureContext.GetLastMeasure(element);
+            //var totalSize = _measureContext.GetLastMeasure(element);
+            var totalSize = rect.Size;
             if (Size.Empty.Equals(totalSize))
                 return new Rectangle(rect, margin);
 
@@ -358,7 +372,7 @@ namespace Das.Views.Rendering
                                                   // ReSharper disable once UnusedParameter.Global
                                                   IRectangle rect)
         {
-            if (rect.Bottom >= 0 && rect.Left >= 0)
+            if (rect.Bottom > 0 || rect.Right > 0)
             {
                 // don't draw it if it's completely off screen
                 element.Arrange(CurrentElementRect.Size, this);
@@ -384,6 +398,7 @@ namespace Das.Views.Rendering
         private readonly Stack<Rectangle> _locations;
 
         private readonly IMeasureContext _measureContext;
+        private readonly IVisualSurrogateProvider _surrogateProvider;
         private readonly Object _renderLock;
         private Int32 _currentZ;
         protected Rectangle CurrentElementRect;

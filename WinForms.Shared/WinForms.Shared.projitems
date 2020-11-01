@@ -17,7 +17,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)HostedVisualControl.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)InvokeCompletionSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InvokeActionCompletionSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewForm.cs">
       <SubType>Form</SubType>
     </Compile>

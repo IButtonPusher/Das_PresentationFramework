@@ -49,6 +49,11 @@ namespace Das.Xamarin.Android
             return GeometryHelper.Reduce(this, padding);
         }
 
+        ISize ISize.Minus(ISize subtract)
+        {
+            return GeometryHelper.Minus(this, subtract);
+        }
+
         Boolean IImage.IsDisposed => _isDisposed;
 
         Task IImage.SaveAsync(FileInfo path)

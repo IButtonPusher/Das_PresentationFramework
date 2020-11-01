@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 
 namespace Das.Views.Input
 {
     public readonly struct FlingEventArgs : IMouseInputEventArgs<FlingEventArgs>
     {
-        public FlingEventArgs(Double velocityX, 
-                              Double velocityY, 
-                              IPoint2D position, 
+        public FlingEventArgs(Double velocityX,
+                              Double velocityY,
+                              IPoint2D position,
                               IInputContext inputContext)
         {
             VelocityX = velocityX;
@@ -30,8 +31,5 @@ namespace Das.Views.Input
         public InputAction Action => InputAction.Fling;
 
         public IInputContext InputContext { get; }
-
-        
-
     }
 }

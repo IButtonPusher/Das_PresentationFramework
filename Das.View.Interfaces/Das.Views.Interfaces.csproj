@@ -25,7 +25,7 @@
   <Import Project="..\..\NetFramework\CSharp8NetFramework\CSharp8NetFramework.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.4-alpha" />
+    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.11-alpha" />
   </ItemGroup>
 
 </Project>

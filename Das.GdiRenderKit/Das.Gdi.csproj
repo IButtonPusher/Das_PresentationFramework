@@ -8,11 +8,12 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Das.Views.Gdi</RootNamespace>
     <AssemblyName>Das.Views.Gdi</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,6 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\HtmlViewSurrogate.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GdiRenderKit.cs" />
+    <Compile Include="GdiUiProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
@@ -53,6 +59,10 @@
     <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj">
       <Project>{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}</Project>
       <Name>Das.Views.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.ViewModels\Das.ViewModels.csproj">
+      <Project>{4ad8f035-a30f-4d67-8e84-fad46d1b8877}</Project>
+      <Name>Das.ViewModels</Name>
     </ProjectReference>
     <ProjectReference Include="..\Das.Views\Das.Views.csproj">
       <Project>{a71c8e34-0909-487d-8c50-c02fc2408b8f}</Project>
@@ -63,13 +73,12 @@
     <None Include="GdiArmstrong.snk" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controls\" />
     <Folder Include="Core\" />
     <Folder Include="Kits\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Das.Serializer.Split">
-      <Version>0.0.4-alpha</Version>
+      <Version>0.0.11-alpha</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="..\WinForms.Shared\WinForms.Shared.projitems" Label="Shared" />

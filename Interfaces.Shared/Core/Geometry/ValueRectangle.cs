@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Core.Geometry
 {
@@ -24,8 +25,8 @@ namespace Das.Views.Core.Geometry
         {
         }
 
-        public ValueRectangle(Double x, 
-                              Double y, 
+        public ValueRectangle(Double x,
+                              Double y,
                               Double width,
                               Double height)
         {
@@ -36,10 +37,15 @@ namespace Das.Views.Core.Geometry
         }
 
         public Point2D BottomLeft => new Point2D(Left, Top + Height);
+
         public Point2D BottomRight => new Point2D(Left + Width, Top + Height);
+
         public Point2D TopLeft => new Point2D(Left, Top);
+
         public Point2D TopRight => new Point2D(Left + Width, Top);
+
         public Double X { get; }
+
         public Double Y { get; }
 
         public Double Bottom => Y + Height;
@@ -53,6 +59,7 @@ namespace Das.Views.Core.Geometry
         public Double Height { get; }
 
         public Boolean IsEmpty => Width > 0 || Height > 0;
+
         public Double Width { get; }
 
         public ISize Reduce(Thickness padding)
@@ -60,8 +67,13 @@ namespace Das.Views.Core.Geometry
             return GeometryHelper.Reduce(this, padding);
         }
 
+        ISize ISize.Minus(ISize subtract)
+        {
+            return GeometryHelper.Minus(this, subtract);
+        }
+
         public Point2D Location => TopLeft;
-        
+
         public ISize Size => new ValueSize(Width, Height);
 
         public Boolean Contains(IPoint2D point2D)

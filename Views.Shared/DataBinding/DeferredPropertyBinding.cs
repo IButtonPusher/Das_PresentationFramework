@@ -19,6 +19,10 @@ namespace Das.Views.DataBinding
             _prop = prop;
         }
 
+
+
+       
+
         public override IDataBinding<T> DeepCopy()
         {
             return new DeferredPropertyBinding<T>(_prop);
@@ -39,5 +43,25 @@ namespace Das.Views.DataBinding
         //}
 
         private readonly PropertyInfo _prop;
+    }
+
+    public class DeferredPropertyBinding : BaseBinding
+    {
+        private readonly String _propertyName;
+
+        public DeferredPropertyBinding(String propertyName)
+        {
+            _propertyName = propertyName;
+        }
+
+        public override Object? GetBoundValue(Object? dataContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override String ToString()
+        {
+            return _propertyName;
+        }
     }
 }

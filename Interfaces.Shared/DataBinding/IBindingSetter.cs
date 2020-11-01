@@ -6,6 +6,8 @@ namespace Das.Views.DataBinding
     public interface IBindingSetter<TDataContext>
     {
         void SetDataContext(TDataContext dataContext);
+
+        TDataContext DataContext { get; }
     }
 
     public interface IBindingSetter

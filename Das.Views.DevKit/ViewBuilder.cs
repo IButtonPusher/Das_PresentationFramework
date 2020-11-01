@@ -44,6 +44,11 @@ namespace Das.Views.DevKit
 
         public event Action<IVisualElement>? Disposed;
 
+        public void OnParentChanging(IContentContainer? newParent)
+        {
+            
+        }
+
         public IVisualElement? Content { get; set; }
 
         public String DesignObject { get; set; }
@@ -62,7 +67,7 @@ namespace Das.Views.DevKit
                 return;
 
             if (viewBindingType != null)
-                SetDataContext(setter, viewBindingType);
+                SetDataContext(setter, viewBindingType, value);
 
             setter.SetDataContext(value);
 
@@ -83,13 +88,19 @@ namespace Das.Views.DevKit
             return Task.CompletedTask;
         }
 
-        private void SetDataContext(IBindableElement element, Type parentType)
+        private void SetDataContext(IBindableElement element, 
+                                    Type parentType,
+                                    Object? parentBinding)
         {
             while (true)
             {
                 var rType = GetPropertyBinding(element, parentType);
                 if (rType == null)
+                {
+
                     throw new InvalidOperationException($"Invalid binding on element: {element}");
+                }
+
                 var _ = SetDataBinding(element, parentType, rType);
 
                 switch (element)
@@ -100,7 +111,10 @@ namespace Das.Views.DevKit
 
                         if (bindable is IVisualContainer cnt)
                         {
-                            foreach (var child in cnt.Children.OfType<IBindableElement>()) SetDataContext(child, repeatingType);
+                            foreach (var child in cnt.Children.OfType<IBindableElement>())
+                            {
+                                SetDataContext(child, repeatingType, parentBinding);
+                            }
                         }
 
                         break;
@@ -116,7 +130,7 @@ namespace Das.Views.DevKit
                     case IVisualContainer container:
                         foreach (var child in container.Children.OfType<IBindableElement>())
                         {
-                            SetDataContext(child, parentType);
+                            SetDataContext(child, parentType, parentBinding);
                         }
 
                         break;
@@ -142,14 +156,15 @@ namespace Das.Views.DevKit
             return propInfo;
         }
 
-        private IDataBinding SetDataBinding(IBindableElement element, Type parentType, 
-            PropertyInfo bindingProp)
+        private IDataBinding SetDataBinding(IBindableElement element,
+                                            Type parentType,
+                                            PropertyInfo bindingProp)
         {
             var elementType = element.GetType();
             var strBinding = element.Binding?.ToString();
 
-            Type genericArg;
-            PropertyInfo propInfo;
+            Type? genericArg;
+            PropertyInfo? propInfo;
 
             if (strBinding == null)
             {
@@ -159,13 +174,19 @@ namespace Das.Views.DevKit
             else
             {
                 propInfo = Serializer.TypeManipulator.FindPublicProperty(parentType, strBinding);
-                genericArg = Serializer.TypeManipulator.GetPropertyType(elementType, "Binding").GenericTypeArguments[0];
+                var propType = Serializer.TypeManipulator.GetPropertyType(elementType, "Binding");
+
+                if (propType == null)
+                    throw new InvalidOperationException();
+
+                genericArg = propType.GenericTypeArguments[0];
             }
+
             var genericBindingType = typeof(DeferredPropertyBinding<>).MakeGenericType(genericArg);
 
-            var cookedBinding = (IDataBinding)Activator.CreateInstance(genericBindingType, propInfo);
+            var cookedBinding = (IDataBinding) Activator.CreateInstance(genericBindingType, propInfo);
             element.Binding = cookedBinding;
-           
+
 
             return cookedBinding;
         }

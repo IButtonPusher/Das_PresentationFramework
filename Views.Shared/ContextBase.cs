@@ -7,7 +7,7 @@ namespace Das.Views
 {
     public abstract class ContextBase
     {
-        public IViewState? ViewState { get; set; }
+        public IViewState? ViewState { get; protected set; }
 
         public T GetStyleSetter<T>(StyleSetter setter, IVisualElement element)
         {

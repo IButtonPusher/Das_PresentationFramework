@@ -7,7 +7,8 @@ using TaskEx = System.Threading.Tasks.Task;
 
 namespace Das.Views.DataBinding
 {
-    public abstract class BaseBinding<T> : BaseBinding, IDataBinding<T>
+    public abstract class BaseBinding<T> : BaseBinding, 
+                                           IDataBinding<T>
     {
         public abstract T GetValue(Object? dataContext);
 

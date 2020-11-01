@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 using Das.Views.Mvvm;
+using Das.Views.Panels;
 
 namespace Das.Views.Rendering
 {
@@ -30,6 +31,11 @@ namespace Das.Views.Rendering
         public Int32 Id { get; private set; }
 
         public event Action<IVisualElement>? Disposed;
+
+        public virtual void OnParentChanging(IContentContainer? newParent)
+        {
+            
+        }
 
         public override void Dispose()
         {

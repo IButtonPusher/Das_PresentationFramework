@@ -18,6 +18,10 @@ namespace Das.Views.Controls
             var contentCanHave = GetPaddedSpace(measureContext, availableSpace, out var padding);
 
             var contentWants = measureContext.MeasureElement(content, contentCanHave);
+            var ambition = contentWants + padding;
+            if (ambition.Width > availableSpace.Width ||
+                ambition.Height > availableSpace.Height)
+                return availableSpace;
             return contentWants + padding;
         }
 

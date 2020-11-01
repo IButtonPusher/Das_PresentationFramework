@@ -81,6 +81,12 @@ namespace Das.Gdi
             return form;
         }
 
+        public ViewWindow Show<TViewModel>(IView<TViewModel> view) 
+            where TViewModel : IViewModel
+        {
+            return Show(view.DataContext, view);
+        }
+
         //public VisualForm Show(IVisualRenderer visual)
         //{
         //    var control = new HostedVisualControl(visual);

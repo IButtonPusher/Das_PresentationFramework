@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
@@ -9,7 +10,9 @@ namespace Das.OpenGL
 {
     public class GLMeasureContext : BaseMeasureContext
     {
-        public GLMeasureContext(IFontProvider fontProvider)
+        public GLMeasureContext(IFontProvider fontProvider,
+                                IVisualSurrogateProvider surrogateProvider)
+        : base(surrogateProvider)
         {
             _fontProvider = fontProvider;
         }

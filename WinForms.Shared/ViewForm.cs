@@ -61,6 +61,11 @@ namespace Das.Views.Winforms
             _contents.OnResizeEnded(); 
         }
 
+        public T Invoke<T>(Func<T> action)
+        {
+            return this.RunInvoke(action);
+        }
+
         private readonly Size _availableSize;
 
         protected override Boolean DoubleBuffered
@@ -88,7 +93,7 @@ namespace Das.Views.Winforms
         }
 
         private Boolean _isChanged;
-        private Object _changeLock;
+        private readonly Object _changeLock;
 
         public void AcceptChanges()
         {

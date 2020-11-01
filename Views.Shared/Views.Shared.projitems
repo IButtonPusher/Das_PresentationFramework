@@ -9,6 +9,7 @@
     <Import_RootNamespace>Das.Views</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BaseSurrogateProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ContextBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ButtonBase.cs" />
@@ -18,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\BindableElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\ConverterBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\DeferredPropertyBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\DeferredPropertyNameBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\DynamicBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\InstanceBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\ObjectBinding.cs" />
@@ -34,6 +36,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BasePerspective.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BaseRenderContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BaseRenderKit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\BaseSurrogatedVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\RenderedVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\SequentialRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VisualElement.cs" />

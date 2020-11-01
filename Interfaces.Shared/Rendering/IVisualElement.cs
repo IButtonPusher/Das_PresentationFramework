@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Das.Views.Panels;
 
 namespace Das.Views.Rendering
 {
@@ -13,5 +14,7 @@ namespace Das.Views.Rendering
         Int32 Id { get; }
 
         event Action<IVisualElement>? Disposed;
+
+        void OnParentChanging(IContentContainer? newParent);
     }
 }

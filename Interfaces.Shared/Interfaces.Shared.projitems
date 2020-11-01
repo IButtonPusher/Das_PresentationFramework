@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IButtonBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\IVisualSurrogateProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\HatchBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\HatchStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IImageProvider.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\DragEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\FlingEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\IInputEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\IMouseButtonEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\IMouseInputEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\MouseClickEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\MouseOverEventArgs.cs" />

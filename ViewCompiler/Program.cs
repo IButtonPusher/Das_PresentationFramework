@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Das.Serializer;
-using Das.Types;
 
 namespace ViewCompiler
 {
@@ -26,22 +24,22 @@ namespace ViewCompiler
 
         private static async Task Compile(IEnumerable<FileInfo> files)
         {
-            var settings = DasSettings.Default;
-            settings.TypeSearchNameSpaces = new[]
-            {
-                "Das.Views.Controls",
-                "Das.Views.Panels",
-                "TestCommon"
-            };
-            settings.NotFoundBehavior = TypeNotFound.NullValue;
-            settings.PropertySearchDepth = TextPropertySearchDepths.AsTypeInNamespacesAndSystem;
+            //var settings = DasSettings.Default;
+            //settings.TypeSearchNameSpaces = new[]
+            //{
+            //    "Das.Views.Controls",
+            //    "Das.Views.Panels",
+            //    "TestCommon"
+            //};
+            //settings.NotFoundBehavior = TypeNotFound.NullValue;
+            //settings.PropertySearchDepth = TextPropertySearchDepths.AsTypeInNamespacesAndSystem;
 
-            var serializer = new ViewDeserializer(settings);
+            var serializer = new ViewDeserializer();
             var viewBuilderProvider = new ViewBuilderProvider(serializer);
             var typeMani = serializer.TypeManipulator;//  new TypeManipulator(settings, new NodePool(settings, new NodeTypeProvider()));
            // var maniPedi = new ObjectManipulator(typeMani);
             var typeBuilder = new ViewTypeBuilder(serializer, serializer.ObjectManipulator,//  maniPedi,
-                settings);
+                serializer.Settings);
 
             foreach (var file in files)
             {

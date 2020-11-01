@@ -11,9 +11,9 @@ namespace Das.Views.Core.Geometry
             Left = Right = Top = Bottom = uniformLength;
         }
 
-        public Thickness(Double left, 
-                         Double top, 
-                         Double right, 
+        public Thickness(Double left,
+                         Double top,
+                         Double right,
                          Double bottom)
         {
             Left = left;

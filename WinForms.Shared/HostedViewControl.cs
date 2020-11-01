@@ -19,7 +19,9 @@ namespace WinForms.Shared
             View = view;
         }
 
+#pragma warning disable 8618
         protected HostedViewControl(IStyleContext styleContext)
+#pragma warning restore 8618
         {
             StyleContext = styleContext;
             _zoomLevel = 1;

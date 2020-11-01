@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading.Tasks;
 using Das.Gdi.Core;
+using Das.Views.Controls;
 using Das.Views.Core.Writing;
 using Das.Views.Measuring;
 using Size = Das.Views.Core.Geometry.Size;
@@ -10,7 +11,8 @@ namespace Das.Gdi
 {
     public class GdiMeasureContext : BaseMeasureContext
     {
-        public GdiMeasureContext()
+        public GdiMeasureContext(IVisualSurrogateProvider surrogateProvider)
+        : base(surrogateProvider)
         {
             var bmp = new Bitmap(1, 1);
             Graphics = Graphics.FromImage(bmp);

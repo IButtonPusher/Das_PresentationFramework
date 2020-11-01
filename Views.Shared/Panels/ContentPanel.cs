@@ -7,12 +7,11 @@ using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Rendering;
 
-//using Das.Serializer;
-
 namespace Das.Views.Panels
 {
     public abstract class ContentPanel<T> : BindableElement<T>,
-                                            IContentContainer, IVisualContainer
+                                            IContentContainer, 
+                                            IVisualContainer
     {
         protected ContentPanel()
         {
@@ -26,11 +25,25 @@ namespace Das.Views.Panels
         public virtual IVisualElement? Content
         {
             get => _content;
-            set
-            {
-                _content = value;
-                IsChanged = true;
-            }
+            set => SetValue(ref _content, value, 
+                OnContentChanging, OnContentChanged);
+        }
+
+        protected virtual void OnContentChanged(IVisualElement? obj)
+        {
+            IsChanged = true;
+        }
+
+        protected virtual Boolean OnContentChanging(IVisualElement? oldValue, 
+                                          IVisualElement? newValue)
+        {
+            if (oldValue is {} old)
+                old.OnParentChanging(null);
+
+            if (newValue is {} valid)
+                valid.OnParentChanging(this);
+
+            return true;
         }
 
         public override ISize Measure(ISize availableSpace,
@@ -75,8 +88,6 @@ namespace Das.Views.Panels
             get => _isChanged || Content is IChangeTracking ct && ct.IsChanged;
             protected set => SetValue(ref _isChanged, value);
         }
-
-        //public virtual Boolean IsChanged { get; protected set; }
 
         IList<IVisualElement> IVisualContainer.Children
         {

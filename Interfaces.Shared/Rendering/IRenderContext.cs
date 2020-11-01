@@ -16,7 +16,12 @@ namespace Das.Views.Rendering
 
         //IDictionary<IVisualElement, ICube> RenderPositions { get; }
 
-        IViewState? ViewState { get; set; }
+        IViewState? ViewState { get; }
+
+
+        Rectangle DrawMainElement(IVisualElement element,
+                                  IRectangle rect,
+                                  IViewState viewState);
 
         /// <summary>
         ///     Returns the actual rectangle occupied by the element, including borders etc

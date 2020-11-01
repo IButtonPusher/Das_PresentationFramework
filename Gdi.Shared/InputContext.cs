@@ -33,7 +33,7 @@ namespace Das.Gdi
 
                     _inputHandler.OnMouseInput(
                         new MouseDownEventArgs(pos, MouseButtons.Left, this),
-                        InputAction.MouseDown);
+                        InputAction.LeftMouseButtonDown);
                     break;
 
                 case MessageTypes.WM_RBUTTONDOWN:
@@ -41,7 +41,7 @@ namespace Das.Gdi
                     _rightButtonWentDown = pos;
                     _inputHandler.OnMouseInput(
                         new MouseDownEventArgs(pos, MouseButtons.Right, this),
-                        InputAction.MouseDown);
+                        InputAction.RightMouseButtonDown);
                     break;
 
                 case MessageTypes.WM_LBUTTONUP:
@@ -50,7 +50,7 @@ namespace Das.Gdi
                     _inputHandler.OnMouseInput(
                         new MouseUpEventArgs(GetPosition(m.LParam),
                             MouseButtons.Left, this), 
-                        InputAction.MouseUp);
+                        InputAction.LeftMouseButtonUp);
                     break;
 
                 case MessageTypes.WM_RBUTTONUP:
@@ -59,12 +59,14 @@ namespace Das.Gdi
                     _inputHandler.OnMouseInput(
                         new MouseUpEventArgs(GetPosition(m.LParam),
                         MouseButtons.Right, this), 
-                        InputAction.MouseUp);
+                        InputAction.RightMouseButtonUp);
                     break;
 
                 case MessageTypes.WM_MOUSEWHEEL:
                     var args = new MouseWheelEventArgs(CursorPosition, 
-                        (Int32) m.WParam >> 16 > 0 ? -1 : 1, this);
+                        (Int32) m.LParam >> 16 > 0 ? -1 : 1, this);
+                    //var args = new MouseWheelEventArgs(CursorPosition, 
+                    //    (Int32) m.WParam >> 16 > 0 ? -1 : 1, this);
 
                     _inputHandler.OnMouseInput(args, InputAction.MouseWheel);
 

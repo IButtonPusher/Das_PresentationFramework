@@ -9,9 +9,10 @@ namespace Das.Gdi.Kits
     { 
         public StaticGdiRenderKit(IViewPerspective viewPerspective)
         {
-            MeasureContext = new GdiMeasureContext();
+            var defaultSurrogates = new BaseSurrogateProvider();
+            MeasureContext = new GdiMeasureContext(defaultSurrogates);
             RenderContext = new GdiRenderContext(MeasureContext, 
-                viewPerspective, MeasureContext.Graphics);
+                viewPerspective, MeasureContext.Graphics, defaultSurrogates);
         }
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;

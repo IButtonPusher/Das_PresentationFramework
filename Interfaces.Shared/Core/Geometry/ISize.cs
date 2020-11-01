@@ -14,6 +14,8 @@ namespace Das.Views.Core.Geometry
 
         ISize Reduce(Thickness padding);
 
+        ISize Minus(ISize subtract);
+
         ///// <summary>
         ///// Gives the Y value needed to show an item centered in this size
         ///// </summary>

@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Gdi.Core;
+using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
@@ -21,8 +22,9 @@ namespace Das.Gdi
     {
         public GdiRenderContext(IMeasureContext measureContext, 
                                 IViewPerspective perspective,
-                                Graphics nullGraphics)
-            : base(measureContext, perspective)
+                                Graphics nullGraphics,
+                                IVisualSurrogateProvider surrogateProvider)
+            : base(measureContext, perspective, surrogateProvider)
         {
             _testPen = new Pen(Color.Yellow, 1);
             Graphics = nullGraphics;
@@ -208,7 +210,7 @@ namespace Das.Gdi
             var asRect = new RectangleF((Single) (c.X - radius), (Single) (c.Y - radius),
                 (Single) radius * 2, (Single) radius * 2);
 
-            if (asRect.Width == 0 || asRect.Height == 0)
+            if (asRect.Width <= 0 || asRect.Height <= 0)
                 return;
 
             Graphics.FillPie(useBrush, asRect.X, asRect.Y, asRect.Width, asRect.Height,

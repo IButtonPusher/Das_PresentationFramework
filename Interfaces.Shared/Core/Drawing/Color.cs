@@ -38,13 +38,13 @@ namespace Das.Views.Core.Drawing
 
         public static Color Black => _black.Value;
 
-        public static Color Gray => _gray.Value;
-
         public static Color DarkGray => _darkGray.Value;
 
-        public static Color LightGray => _lightGray.Value;
+        public static Color Gray => _gray.Value;
 
         public static Color Green => _green.Value;
+
+        public static Color LightGray => _lightGray.Value;
 
         public static Color Orange => _orange.Value;
 

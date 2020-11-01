@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Core.Geometry
 {
@@ -6,11 +7,12 @@ namespace Das.Views.Core.Geometry
     {
         public ValuePoint2D(Double x, Double y)
         {
-            X =x;
+            X = x;
             Y = y;
         }
 
         public Double X { get; }
+
         public Double Y { get; }
 
         public IPoint2D DeepCopy()
@@ -27,6 +29,5 @@ namespace Das.Views.Core.Geometry
         {
             return new ValuePoint2D(X - offset.X, Y - offset.Y);
         }
-
     }
 }

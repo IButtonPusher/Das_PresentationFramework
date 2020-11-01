@@ -10,7 +10,8 @@ using Das.Views.Winforms;
 
 namespace Das.Gdi
 {
-    public partial class ViewWindow : ViewForm, IViewHost<Bitmap>
+    public partial class ViewWindow : ViewForm, 
+                                      IViewHost<Bitmap>
     {
         public ViewWindow(GdiHostedElement element) : base(element)
         {

@@ -134,7 +134,8 @@ namespace ViewCompiler
             il.Emit(OpCodes.Callvirt, setter);
         }
 
-        private static void SetPropertyValue(LocalBuilder recipient, INamedField fieldInfo,
+        private static void SetPropertyValue(LocalBuilder recipient, 
+                                             IProperty fieldInfo,
             LocalBuilder value, ILGenerator il)
         {
             var setter = recipient.LocalType?.GetProperty(fieldInfo.Name)?.GetSetMethod(true);

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Das.Serializer;
 using Das.Views.DevKit;
 using Das.Views.Panels;
@@ -13,11 +13,77 @@ namespace ViewCompiler
 {
     public class ViewDeserializer : DasSerializer, IViewDeserializer
     {
-        public ViewDeserializer(ISerializerSettings settings) : base(settings) { }
+        //public ViewDeserializer(ISerializerSettings settings) : base(settings)
+        public ViewDeserializer() : base(GetSettings())
+        {
+
+        }
+
+
+        private static DasSettings GetSettings()
+        {
+            var settings = DasSettings.Default;
+            settings.NotFoundBehavior = TypeNotFound.NullValue;
+            settings.PropertySearchDepth = TextPropertySearchDepths.AsTypeInNamespacesAndSystem;
+            settings.AttributeValueSurrogates = new AttributeBindingSurrogate();
+            settings.TypeSearchNameSpaces = new[]
+            {
+                "Das.Views.Controls",
+                "Das.Views.Panels",
+                "TestCommon"
+            };
+            return settings;
+        }
+
+        public IEnumerable<Tuple<IStyle, IVisualElement>> GetStyles()
+        {
+            foreach (var style in GetStyles(RootNode))
+                yield return style;
+        }
 
         public ITextNode RootNode { get; private set; }
 
-        private IJsonLoaner _state;
+        public override T FromJson<T>(Stream stream)
+        {
+            var len = (Int32) stream.Length;
+            Byte[] buffer;
+
+            using (var memoryStream = new MemoryStream(len))
+            {
+                stream.CopyTo(memoryStream);
+                buffer = memoryStream.ToArray();
+            }
+
+            var encoding = GetEncoding(buffer);
+            var charArr = encoding.GetChars(buffer, 0, len);
+
+            return FromJsonCharArray<T>(charArr);
+            //    return ((DasCoreSerializer) this).FromJson<T>(stream);
+        }
+
+        public IEnumerable<Tuple<IStyle, IVisualElement>> GetStyles(ITextNode node)
+        {
+            if (node.Attributes.TryGetValue(nameof(Style), out var styleName))
+                switch (node.Value)
+                {
+                    case IVisualElement visualElement:
+                        if (TryGetElementStyle(visualElement, styleName, out var found))
+                            yield return new Tuple<IStyle, IVisualElement>(found, visualElement);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+
+            foreach (var kvp in node.Children.Values)
+            foreach (var style in GetStyles(kvp))
+                yield return style;
+        }
+
+
+        public void PostDeserialize()
+        {
+            PostDeserialize(RootNode);
+        }
 
         //public override T FromJson<T>(Stream stream)
         //{
@@ -35,30 +101,6 @@ namespace ViewCompiler
             return res;
         }
 
-        public override T FromJson<T>(Stream stream)
-        {  
-            var len = (Int32)stream.Length;
-            Byte[] buffer;
-
-            using(var memoryStream = new MemoryStream(len))
-            {
-                stream.CopyTo(memoryStream);
-                buffer = memoryStream.ToArray();
-            }
-
-            var encoding = GetEncoding(buffer);
-            var charArr = encoding.GetChars(buffer, 0, len);
-
-            return FromJsonCharArray<T>(charArr);
-            //    return ((DasCoreSerializer) this).FromJson<T>(stream);
-        }
-
-        public IEnumerable<Tuple<IStyle, IVisualElement>> GetStyles()
-        {
-            foreach (var style in GetStyles(RootNode))
-                yield return style;
-        }
-
         private static Encoding GetEncoding(Byte[] bom)
         {
             if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76) return Encoding.UTF7;
@@ -69,30 +111,25 @@ namespace ViewCompiler
             return Encoding.ASCII;
         }
 
-
-        public void PostDeserialize()
-        {
-            PostDeserialize(RootNode);
-        }
-
         private static void PostDeserialize(ITextNode node)
         {
             switch (node.Value)
             {
                 case IVisualElement visualElement:
                     var current = node.Parent;
-                    if (current != NullNode.Instance &&  current?.Value is IVisualContainer container)
+                    if (current != NullNode.Instance && current?.Value is IVisualContainer container)
                     {
                         if (container.Children.Contains(visualElement))
                             container.OnChildDeserialized(visualElement, node);
-
-                        break;
                     }
                     else if (current == null)
-                        break;
-                    else current = current.Parent;
-                    break;
-                default:
+                    {
+                    }
+                    else
+                    {
+                        current = current.Parent;
+                    }
+
                     break;
             }
 
@@ -100,51 +137,33 @@ namespace ViewCompiler
                 PostDeserialize(kvp);
         }
 
-        public IEnumerable<Tuple<IStyle, IVisualElement>> GetStyles(ITextNode node)
-        {
-            if (node.Attributes.TryGetValue(nameof(Style), out var styleName))
-            {
-                switch (node.Value)
-                {
-                    case IVisualElement visualElement:
-                        if (TryGetElementStyle(visualElement, styleName, out var found))
-                            yield return new Tuple<IStyle, IVisualElement>(found, visualElement);
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-            }
-
-            foreach (var kvp in node.Children.Values)
-            {
-                foreach (var style in GetStyles(kvp))
-                    yield return style;
-            }
-        }
-
         private Boolean TryGetElementStyle(IVisualElement element, String styleName,
-            out IStyle style)
+                                           out IStyle style)
         {
             var styleType = TypeInferrer.GetTypeFromClearName(styleName);
 
             if (typeof(ElementStyle).IsAssignableFrom(styleType))
             {
                 var ctorToUse = styleType.GetConstructor(
-                    new [] { typeof(IVisualElement) });
+                    new[] {typeof(IVisualElement)});
                 if (ctorToUse == null)
-                    throw new InvalidOperationException($"Style '{styleName}' does not have a valid constructor that accepts a single parameter of type: {nameof(IVisualElement)}.");
+                    throw new InvalidOperationException(
+                        $"Style '{styleName}' does not have a valid constructor that accepts a single parameter of type: {nameof(IVisualElement)}.");
 
-                style = (ElementStyle)Activator.CreateInstance(styleType, element);
+                style = (ElementStyle) Activator.CreateInstance(styleType, element);
                 return true;
             }
+
             if (typeof(TypeStyle).IsAssignableFrom(styleType))
             {
-                style = (TypeStyle)Activator.CreateInstance(styleType);
+                style = (TypeStyle) Activator.CreateInstance(styleType);
                 return true;
             }
 
             style = default;
             return false;
         }
+
+        private IJsonLoaner _state;
     }
 }

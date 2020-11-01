@@ -59,3 +59,5 @@
 /bla/netstandard2.0
 /Das.ViewModels/bin/Release/netstandard2.0
 /Das.Views/bin/Release/netstandard2.0
+/3D/3DF5Tests/obj
+/Core/OpenGL/OpenGLTests/obj

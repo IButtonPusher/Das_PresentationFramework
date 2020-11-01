@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Android.Util;
 using Android.Views;
+using Das.Views.Controls;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Measuring;
@@ -12,7 +13,9 @@ namespace Das.Xamarin.Android
     public class AndroidMeasureKit : BaseMeasureContext
     {
         public AndroidMeasureKit(IWindowManager windowManager,
-                                 IFontProvider<AndroidFontPaint> fontProvider)
+                                 IFontProvider<AndroidFontPaint> fontProvider,
+                                 IVisualSurrogateProvider surrogateProvider)
+        : base(surrogateProvider)
         {
             _windowManager = windowManager;
             _fontProvider = fontProvider;

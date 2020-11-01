@@ -1,6 +1,7 @@
 ﻿using System;
 using Android.Views;
 using Das.Views;
+using Das.Views.Controls;
 using Das.Views.Core;
 using Das.Views.Core.Writing;
 using Das.Views.Rendering;
@@ -8,7 +9,8 @@ using Das.Views.Rendering;
 namespace Das.Xamarin.Android
 {
     public class AndroidRenderKit : BaseRenderKit, 
-                                    IRenderKit
+                                    IRenderKit,
+                                    IVisualSurrogateProvider
     {
         public AndroidRenderKit(IViewPerspective viewPerspective,
                                 IViewState viewState,
@@ -16,9 +18,9 @@ namespace Das.Xamarin.Android
                                 IWindowManager windowManager)
         {
 
-            MeasureContext = new AndroidMeasureKit(windowManager, fontProvider);
+            MeasureContext = new AndroidMeasureKit(windowManager, fontProvider, this);
             RenderContext = new AndroidRenderContext(MeasureContext, viewPerspective,
-                fontProvider, viewState);
+                fontProvider, viewState, this);
 
             _containedObjects[typeof(IImageProvider)] = RenderContext;
         }
@@ -30,5 +32,10 @@ namespace Das.Xamarin.Android
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;
 
         IRenderContext IRenderKit.RenderContext => RenderContext;
+
+        public void EnsureSurrogate(ref IVisualElement element)
+        {
+         
+        }
     }
 }

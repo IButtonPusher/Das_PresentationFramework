@@ -10,7 +10,8 @@ using TaskEx = System.Threading.Tasks.Task;
 
 namespace Das.Views.DataBinding
 {
-    public abstract class BindableElement<T> : VisualElement, IBindableElement<T>
+    public abstract class BindableElement<T> : VisualElement, 
+                                               IBindableElement<T>
     {
         protected BindableElement(IDataBinding<T>? binding)
         {

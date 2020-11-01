@@ -17,61 +17,128 @@ namespace Das.Views.Input
             //TODO_IMPLEMENT_ME();
         }
 
-
-        //public Boolean OnMouseHovering(MouseDownEventArgs args)
-        //{
-        //    //foreach (var clickable in _elementLocator.GetVisualsForInput<IMouseInputHandler>(
-        //    //    args.Position, InputAction.MouseDown))
-        //    //    if (clickable.OnMouseHovering(args))
-        //    //        return true;
-
-        //    return false;
-        //}
-
-        //public Boolean OnMouseDown(MouseDownEventArgs args)
-        //{
-        //    foreach (var clickable in _elementLocator.GetVisualsForMouseInput<MouseDownEventArgs>(
-        //        args.Position, InputAction.MouseDown))
-        //        if (clickable.OnInput(args))
-        //            return true;
-
-        //    return false;
-        //}
-
-        //public Boolean OnMouseUp(MouseUpEventArgs args)
-        //{
-        //    foreach (var clickable in _elementLocator.GetVisualsForMouseInput<MouseUpEventArgs>(
-        //        args.Position, InputAction.MouseDown))
-        //        if (clickable.OnInput(args))
-        //            return true;
-
-        //    return false;
-        //}
-
-        public Boolean OnMouseInput<TArgs>(TArgs args, InputAction action)
+        public Boolean OnMouseInput<TArgs>(TArgs args, 
+                                           InputAction action)
             where TArgs : IMouseInputEventArgs<TArgs>
         {
+            var isButtonAction = (InputAction.AnyMouseButton & action) > InputAction.None;
+            IInteractiveView? handledBy = null;
+
             if (_inputCapturingMouse is IHandleInput<TArgs> capture &&
                 _elementLocator.TryGetElementBounds(_inputCapturingMouse) is {} bounds)
             {
-                var margs = args.Offset(bounds.TopLeft);
-                if (capture.OnInput(margs))
-                    return true;
+                if (TryHandleMouseAction(args, capture, isButtonAction, action, bounds))
+                    handledBy = capture;
             }
 
-            foreach (var clickable in _elementLocator.GetRenderedVisualsForMouseInput<TArgs>(
-                args.Position, action))
+            if (handledBy == null)
             {
-                if (clickable.Element == _inputCapturingMouse)
-                    continue;
+                foreach (var clickable in _elementLocator.GetRenderedVisualsForMouseInput<TArgs>(
+                    args.Position, action))
+                {
+                    var element = clickable.Element;
 
-                var margs = args.Offset(clickable.Position.TopLeft);
+                    if (element == _inputCapturingMouse)
+                        continue;
 
-                if (clickable.Element.OnInput(margs))
-                    return true;
+                    if (TryHandleMouseAction(args, element, isButtonAction, action,
+                        clickable.Position))
+                    {
+                        handledBy = element;
+                        break;
+                    }
+
+                   
+                }
             }
 
-            return false;
+            if (_handledMouseDown != null && (action == InputAction.LeftMouseButtonUp ||
+                                              action == InputAction.RightMouseButtonUp))
+                _handledMouseDown = null;
+
+            return handledBy !=null;
+        }
+
+        private Boolean TryHandleMouseAction<TArgs>(TArgs args,
+                                                    IHandleInput<TArgs> element,
+                                                    Boolean isButtonAction,
+                                                    InputAction action,
+                                                    ICube offsetCube)
+            where TArgs : IMouseInputEventArgs<TArgs>
+        {
+            var margs = args.Offset(offsetCube.TopLeft);
+
+            if (isButtonAction)
+            {
+                return HandleButtonAction(margs, element, action);
+
+            }
+
+            return element.OnInput(margs);
+        }
+
+        private Boolean HandleButtonAction<TArgs>(TArgs margs,
+                                                            IHandleInput<TArgs> element,
+                                                            InputAction action)
+            where TArgs : IMouseInputEventArgs<TArgs>
+        {
+            var handledActionDirectly = element.OnInput(margs);
+
+            switch (action)
+            {
+                case InputAction.LeftMouseButtonDown:
+                    if (handledActionDirectly ||
+                        IsHandlesAction(element, InputAction.LeftClick))
+                    {
+                        _handledMouseDown = element;
+                    }
+
+                    break;
+                case InputAction.RightMouseButtonDown:
+                    if (handledActionDirectly ||
+                        IsHandlesAction(element, InputAction.RightClick))
+                    {
+                        _handledMouseDown = element;
+                    }
+
+                    break;
+                
+                case InputAction.LeftMouseButtonUp:
+                    if (ReferenceEquals(_handledMouseDown, element) &&
+                        IsHandlesAction(element, InputAction.LeftClick) && 
+                        element is IHandleInput<MouseClickEventArgs> clickMe)
+                    {
+                        var clickArgs = new MouseClickEventArgs(margs.Position,
+                            MouseButtons.Left, 1, margs.InputContext);
+                        if (clickMe.OnInput(clickArgs))
+                            handledActionDirectly = true;
+                    }
+
+                    break;
+                case InputAction.RightMouseButtonUp:
+                    if (ReferenceEquals(_handledMouseDown, element) &&
+                        IsHandlesAction(element, InputAction.RightClick) && 
+                        element is IHandleInput<MouseClickEventArgs> rightClickMe)
+                    {
+                        var clickArgs = new MouseClickEventArgs(margs.Position,
+                            MouseButtons.Right, 1, margs.InputContext);
+                        if (rightClickMe.OnInput(clickArgs))
+                            handledActionDirectly = true;
+                    }
+                    break;
+
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
+
+            return handledActionDirectly;
+        }
+
+        private static Boolean IsHandlesAction(IInteractiveView view,
+                                               InputAction action)
+        {
+            return (view.HandlesActions & action) > InputAction.None;
         }
 
         public Boolean OnMouseMove<TPoint>(TPoint position,
@@ -208,6 +275,8 @@ namespace Das.Views.Input
         }
 
         private readonly IElementLocator _elementLocator;
+        //private static InputAction 
+        private Object? _handledMouseDown;
         private IVisualElement? _inputCapturingMouse;
         private IHandleInput<MouseOverEventArgs>? _lastMouseOverVisual;
     }

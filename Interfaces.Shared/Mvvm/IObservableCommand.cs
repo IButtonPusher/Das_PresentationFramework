@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 
 namespace Das.ViewModels
 {
-    public interface IObservableCommand<in TParam> : IObservableCommand
+    public interface IObservableCommand<in TParam> : 
+        IObservableCommand
     {
         Task ExecuteAsync(TParam paramValue);
 
@@ -12,7 +13,8 @@ namespace Das.ViewModels
     }
 
 
-    public interface IObservableCommand : INotifyPropertyChanged, IEquatable<IObservableCommand>
+    public interface IObservableCommand : INotifyPropertyChanged, 
+                                          IEquatable<IObservableCommand>
     {
         String? Description { get; set; }
 

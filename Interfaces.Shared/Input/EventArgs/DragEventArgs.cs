@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 
 namespace Das.Views.Input
 {
     public readonly struct DragEventArgs : IMouseInputEventArgs<DragEventArgs>
     {
-        public DragEventArgs(IPoint2D startPosition, 
-                             IPoint2D currentPosition, 
+        public DragEventArgs(IPoint2D startPosition,
+                             IPoint2D currentPosition,
                              ISize lastChange,
-                             MouseButtons button, 
+                             MouseButtons button,
                              IInputContext inputContext)
         {
             StartPosition = startPosition;
@@ -25,7 +26,7 @@ namespace Das.Views.Input
         public readonly ISize LastChange;
 
         public readonly IPoint2D TotalDragged;
-        
+
         public readonly MouseButtons Button;
 
         public DragEventArgs Offset(IPoint2D offset)

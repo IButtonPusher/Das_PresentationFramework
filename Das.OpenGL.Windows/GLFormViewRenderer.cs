@@ -40,9 +40,9 @@ namespace Das.OpenGL.Windows
             _renderRect.Size = desired;
 
             //arrange
-            _renderContext.ViewState = _viewHost;
+            //_renderContext.ViewState = _viewHost;
             //----------------------------
-            _renderContext.DrawElement(view, _renderRect);
+            _renderContext.DrawMainElement(view, _renderRect, _viewHost);
             //----------------------------
 //            var _pen = new Pen(Color.White, 2);
 //            _renderContext.DrawLine(_pen, new Point(10, 10), new Point(50, 50));

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Android.Graphics;
+using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
@@ -14,8 +15,9 @@ namespace Das.Xamarin.Android
         public AndroidRenderContext(IMeasureContext measureContext,
                                     IViewPerspective perspective,
                                     IFontProvider<AndroidFontPaint> fontProvider,
-                                    IViewState viewState)
-            : base(measureContext, perspective)
+                                    IViewState viewState,
+                                    IVisualSurrogateProvider surrogateProvider)
+            : base(measureContext, perspective, surrogateProvider)
         {
             _fontProvider = fontProvider;
             _paint = new Paint();

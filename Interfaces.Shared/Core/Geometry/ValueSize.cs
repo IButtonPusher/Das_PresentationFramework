@@ -28,6 +28,11 @@ namespace Das.Views.Core.Geometry
             return GeometryHelper.Reduce(this, padding);
         }
 
+        public ISize Minus(ISize subtract)
+        {
+            return GeometryHelper.Minus(this, subtract);
+        }
+
         public Double Height { get; }
 
         public Boolean IsEmpty => Width.IsZero() || Height.IsZero();

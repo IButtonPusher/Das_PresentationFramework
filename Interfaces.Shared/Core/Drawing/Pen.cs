@@ -48,6 +48,5 @@ namespace Das.Views.Core.Drawing
         }
 
         private readonly Int32 _hash;
-
     }
 }

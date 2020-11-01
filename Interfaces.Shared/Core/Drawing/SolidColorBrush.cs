@@ -10,6 +10,11 @@ namespace Das.Views.Core.Drawing
             Color = color;
         }
 
+        public Boolean Equals(IBrush other)
+        {
+            return other is SolidColorBrush scb && Equals(scb);
+        }
+
         //IColor IBrush.Color => Color;
 
         public Boolean Equals(SolidColorBrush? other)
@@ -25,19 +30,14 @@ namespace Das.Views.Core.Drawing
 
         public static SolidColorBrush DarkGray => _darkGray.Value;
 
-        public static SolidColorBrush LightGray => _lightGray.Value;
-
         public virtual Boolean IsInvisible => Color.A == 0;
+
+        public static SolidColorBrush LightGray => _lightGray.Value;
 
 
         public static SolidColorBrush Red => _red.Value;
 
         public static SolidColorBrush White { get; } = new SolidColorBrush(Color.White);
-
-        public Boolean Equals(IBrush other)
-        {
-            return other is SolidColorBrush scb && Equals(scb);
-        }
 
         public override Boolean Equals(Object obj)
         {

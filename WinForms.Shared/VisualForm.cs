@@ -27,6 +27,11 @@ namespace Das.Views.Winforms
             await HostCreated.InvokeAsyncEvent(true);
         }
 
+        public T Invoke<T>(Func<T> action)
+        {
+            return this.RunInvoke(action);
+        }
+
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);

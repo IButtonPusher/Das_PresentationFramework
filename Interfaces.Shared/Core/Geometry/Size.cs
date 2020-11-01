@@ -33,6 +33,11 @@ namespace Das.Views.Core.Geometry
             return GeometryHelper.Reduce(this, padding);
         }
 
+        public ISize Minus(ISize subtract)
+        {
+            return GeometryHelper.Minus(this, subtract);
+        }
+
         public virtual Double Height
         {
             get => _height;
@@ -44,6 +49,18 @@ namespace Das.Views.Core.Geometry
         public Boolean Equals(ISize? other)
         {
             return GeometryHelper.AreSizesEqual(this, other);
+        }
+
+        //public Rectangle CenteredIn(Size outerRect)
+        //{
+        //    var wDiff = (outerRect.Width - Width) / 2;
+        //    var hDiff = (outerRect.Height - Height) / 2;
+        //    return new Rectangle(wDiff, hDiff, Width, Height);
+        //}
+
+        ISize IDeepCopyable<ISize>.DeepCopy()
+        {
+            return DeepCopy();
         }
 
         public static Size Empty { get; } = new Size(0, 0);
@@ -74,18 +91,6 @@ namespace Das.Views.Core.Geometry
 
             return new Size(size1.Width + size2.Width,
                 size1.Height + size2.Height);
-        }
-
-        //public Rectangle CenteredIn(Size outerRect)
-        //{
-        //    var wDiff = (outerRect.Width - Width) / 2;
-        //    var hDiff = (outerRect.Height - Height) / 2;
-        //    return new Rectangle(wDiff, hDiff, Width, Height);
-        //}
-
-        ISize IDeepCopyable<ISize>.DeepCopy()
-        {
-            return DeepCopy();
         }
 
         public override Boolean Equals(Object obj)
@@ -121,7 +126,7 @@ namespace Das.Views.Core.Geometry
             return new Size(size.Width * val, size.Height * val);
         }
 
-        public static Size operator -(Size size, 
+        public static Size operator -(Size size,
                                       Thickness margin)
         {
             if (margin == null)

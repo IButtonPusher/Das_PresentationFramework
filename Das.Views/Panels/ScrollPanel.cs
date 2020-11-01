@@ -150,33 +150,20 @@ namespace Das.Views.Panels
                                         Double y)
         {
             if (x != 0 && IsScrollsHorizontal)
-                //var proposed = Math.Max(HorizontalOffset + x, 0);
+
                 HorizontalOffset = Convert.ToInt32(
                     Math.Min(
                         Math.Max(HorizontalOffset + x, 0),
                         _maximumXScroll));
-            //var maximum = Math.Max(_lastNeeded.Width - _lastAvailable.Width, 0);
-            //if (proposed <= maximum)
-            //    HorizontalOffset = Convert.ToInt32(proposed);
 
             if (y != 0 && IsScrollsVertical)
-                //var proposed = Math.Max(VerticalOffset + y, 0);
                 VerticalOffset = Convert.ToInt32(
                     Math.Min(
                         Math.Max(VerticalOffset + y, 0),
                         _maximumYScroll));
-            //var maximum = Math.Max(_lastNeeded.Height - _lastAvailable.Height, 0);
-            //if (proposed <= _maximumYScroll)
-            //    VerticalOffset = Convert.ToInt32(proposed);
         }
 
         private const Int32 _scrollCoefficient = 5;
-
-        //private Int64 _flingProcessCounter;
-        //private Int32 _pendingXFling;
-        //private Int32 _pendingYFling;
-        //private Int32 _flingCancelCounter;
-        //private Object _flingLock;
         private readonly FlingHandler _flingHandler;
 
 

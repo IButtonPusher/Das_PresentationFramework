@@ -69,8 +69,8 @@ namespace Das.Gdi
         private void DoRender(Graphics g, IVisualElement view)
         {
             _renderContext.Graphics = g;
-            _renderContext.ViewState = _viewHost;
-            _renderContext.DrawElement(view, _renderRect);
+            //_renderContext.ViewState = _viewHost;
+            _renderContext.DrawMainElement(view, _renderRect, _viewHost);
 
             Rendering?.Invoke(this, EventArgs.Empty);
         }

@@ -18,6 +18,8 @@ namespace Das.Views
         /// </summary>
         void Invoke(Action action);
 
+        T Invoke<T>(Func<T> action);
+
         /// <summary>
         ///     Asynchronously runs the action on the host's UI thread
         /// </summary>

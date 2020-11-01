@@ -46,8 +46,8 @@ namespace Das.Views.Controls
             return true;
         }
 
-        InputAction IInteractiveView.HandlesActions => InputAction.MouseDown |
-                                                       InputAction.MouseUp |
+        InputAction IInteractiveView.HandlesActions => InputAction.LeftMouseButtonDown |
+                                                       InputAction.LeftMouseButtonUp |
                                                        InputAction.LeftClick |
                                                        InputAction.MouseOver;
 

@@ -64,7 +64,7 @@ namespace ViewCompiler
             _rightRectangle = new Rectangle(_viewHost.AvailableSize.Width -
                                                       _viewHost.RenderMargin.Right,
                 0, _viewHost.RenderMargin.Width, _viewHost.AvailableSize.Height);
-            RenderContext.ViewState = _viewHost;
+            //RenderContext.ViewState = _viewHost;
             RenderContext.FillRectangle(_rightRectangle, SolidColorBrush.DarkGray);
 
             if (selectedVisual.Element == null)

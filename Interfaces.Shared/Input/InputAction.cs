@@ -8,13 +8,19 @@ namespace Das.Views.Input
     {
         None,
         MouseOver = 1,
-        MouseDown = 2,
-        MouseUp = 4,
-        LeftClick = 8,
-        RightClick = 16,
-        MiddleClick = 32,
-        MouseDrag = 64,
-        MouseWheel = 128,
-        Fling = 256
+        LeftMouseButtonDown = 2,
+        RightMouseButtonDown = 8,
+        MouseButtonDown = LeftMouseButtonDown | RightMouseButtonDown,
+        LeftMouseButtonUp = 16,
+        RightMouseButtonUp = 32,
+        LeftClick = 64,
+        RightClick = 128,
+        MiddleClick = 256,
+        AnyMouseButton = LeftMouseButtonDown | RightMouseButtonDown | 
+                         LeftMouseButtonUp  | RightMouseButtonUp | 
+                         LeftClick | RightClick | MiddleClick,
+        MouseDrag = 512,
+        MouseWheel = 1024,
+        Fling = 2056
     }
 }

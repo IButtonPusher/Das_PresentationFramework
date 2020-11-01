@@ -43,6 +43,23 @@ namespace Das.Views.Mvvm
             return true;
         }
 
+        protected virtual void SetValue<T>(ref T field, T newValue,
+                                                Func<T, T, Boolean> onValueChanging,
+                                                Action<T> handleValueChanged,
+                                                [CallerMemberName] String propertyName = "")
+        {
+            if (field?.Equals(newValue) == true)
+                return;
+
+            if (!onValueChanging(field, newValue))
+                return;
+
+            if (!SetValue(ref field, newValue, handleValueChanged, propertyName))
+                return;
+
+            handleValueChanged(newValue);
+        }
+
         protected virtual Boolean SetValue<T>(ref T field,
                                               T value,
                                               Action<T> onValueChanged,

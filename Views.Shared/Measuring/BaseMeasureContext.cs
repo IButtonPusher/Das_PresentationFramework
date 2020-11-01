@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
@@ -9,10 +10,14 @@ using Das.Views.Styles;
 
 namespace Das.Views.Measuring
 {
-    public abstract class BaseMeasureContext : ContextBase, IMeasureContext
+    public abstract class BaseMeasureContext : ContextBase, 
+                                               IMeasureContext
     {
-        protected BaseMeasureContext()
+        private readonly IVisualSurrogateProvider _surrogateProvider;
+
+        protected BaseMeasureContext(IVisualSurrogateProvider surrogateProvider)
         {
+            _surrogateProvider = surrogateProvider;
             _empty = new Size(0, 0);
             _contextBounds = Size.Empty;
             _lastMeasurements = new Dictionary<IVisualElement, Size>();
@@ -35,6 +40,8 @@ namespace Das.Views.Measuring
         public Size MeasureElement(IVisualElement element,
                                    ISize availableSpace)
         {
+            _surrogateProvider.EnsureSurrogate(ref element);
+
             var viewState = GetViewState();
             var zoom = viewState.ZoomLevel;
 
