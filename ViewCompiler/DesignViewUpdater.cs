@@ -42,7 +42,10 @@ namespace ViewCompiler
             var element = _viewHost.View;
 
             //MeasureContext.ViewState = _viewHost;
-            var measured = MeasureContext.MeasureMainView(element, _viewHost.RenderMargin,
+            var size = new ValueRenderSize(_viewHost.RenderMargin.Width,
+                _viewHost.RenderMargin.Height);
+
+            var measured = MeasureContext.MeasureMainView(element, size,
                 _viewHost);
             var selectedVisual = SelectedVisuals?.FirstOrDefault();
             if (selectedVisual == null)

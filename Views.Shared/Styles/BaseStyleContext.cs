@@ -40,39 +40,7 @@ namespace Das.Views.Styles
             _cachedStyles[element] = buildCached;
             yield return buildCached;
 
-            //yield break;
-
-
-            //if (_elementStyles.TryGetValue(element.Id, out var styles))
-            //    for (var c = styles.Count - 1; c >= 0; c--)
-            //        yield return styles[c];
-
-            //if (_typeStyles.TryGetValue(element.GetType(), out var styleCollection))
-            //    foreach (var style in styleCollection)
-            //    {
-            //        switch (style.Scope)
-            //        {
-            //            case IVisualFinder container:
-            //                if (container.Contains(element)) 
-            //                    yield return style.Style;
-            //                break;
-
-            //            case IVisualElement ele when ele == element:
-            //                yield return style.Style;
-            //                break;
-
-            //            case null:
-            //                yield return style.Style;
-            //                break;
-
-            //        }
-
-            //        if (styles != default)
-            //            for (var c = styles.Count - 1; c >= 0; c--)
-            //                yield return styles[c];
-            //    }
-
-            //yield return _defaultStyle;
+           
         }
 
         public void RegisterStyle(IStyle style)

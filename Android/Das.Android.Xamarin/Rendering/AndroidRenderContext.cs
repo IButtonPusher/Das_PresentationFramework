@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Android.Graphics;
@@ -12,12 +13,12 @@ namespace Das.Xamarin.Android
 {
     public class AndroidRenderContext : BaseRenderContext
     {
-        public AndroidRenderContext(IMeasureContext measureContext,
-                                    IViewPerspective perspective,
+        public AndroidRenderContext(IViewPerspective perspective,
                                     IFontProvider<AndroidFontPaint> fontProvider,
                                     IViewState viewState,
-                                    IVisualSurrogateProvider surrogateProvider)
-            : base(measureContext, perspective, surrogateProvider)
+                                    IVisualSurrogateProvider surrogateProvider,
+                                    Dictionary<IVisualElement, ICube> renderPositions)
+            : base(perspective, surrogateProvider, renderPositions)
         {
             _fontProvider = fontProvider;
             _paint = new Paint();
@@ -43,6 +44,8 @@ namespace Das.Xamarin.Android
         {
             DrawImage(img, new ValueRectangle(0, 0, img.Width, img.Height), rect);
         }
+
+        
 
         public override void DrawImage(IImage img,
                                        IRectangle srcRect,
@@ -71,7 +74,8 @@ namespace Das.Xamarin.Android
             GetCanvas().DrawLine(l1.X, l1.Y, l2.X, l2.Y, _paint);
         }
 
-        public override void DrawLines(IPen pen, IPoint2D[] points)
+        public override void DrawLines(IPen pen, 
+                                       IPoint2D[] points)
         {
             if (points.Length < 2)
                 return;
@@ -102,7 +106,12 @@ namespace Das.Xamarin.Android
                                              IPen pen,
                                              Double cornerRadius)
         {
-            throw new NotImplementedException();
+            _paint.SetStyle(Paint.Style.Stroke);
+            SetColor(pen);
+            GetCanvas().DrawRoundRect(GetAbsoluteAndroidRectF(rect),
+                Convert.ToSingle(cornerRadius),
+                Convert.ToSingle(cornerRadius),
+                _paint);
         }
 
         public override void DrawString(String s,
@@ -136,14 +145,17 @@ namespace Das.Xamarin.Android
             throw new NotImplementedException();
         }
 
-        public override void FillRectangle(IRectangle rect, IBrush brush)
+        public override void FillRectangle(IRectangle rect, 
+                                           IBrush brush)
         {
             _paint.SetStyle(Paint.Style.Fill);
             SetColor(brush);
             GetCanvas().DrawRect(GetAbsoluteAndroidRect(rect), _paint);
         }
 
-        public override void FillRoundedRectangle(IRectangle rect, IBrush brush, Double cornerRadius)
+        public override void FillRoundedRectangle(IRectangle rect, 
+                                                  IBrush brush, 
+                                                  Double cornerRadius)
         {
             throw new NotImplementedException();
         }
@@ -153,6 +165,14 @@ namespace Das.Xamarin.Android
             var to = GetAbsolutePoint(relativePoint2D);
             return new Point(Convert.ToInt32(to.X),
                 Convert.ToInt32(to.Y));
+        }
+
+        private RectF GetAbsoluteAndroidRectF(IRectangle rect)
+        {
+            return new RectF(Convert.ToSingle(rect.Left + CurrentLocation.X),
+                Convert.ToSingle(rect.Top + CurrentLocation.Y),
+                Convert.ToSingle(rect.Right + CurrentLocation.X),
+                Convert.ToSingle(rect.Bottom + CurrentLocation.Y));
         }
 
         private Rect GetAbsoluteAndroidRect(IRectangle rect)
@@ -166,6 +186,12 @@ namespace Das.Xamarin.Android
         private Canvas GetCanvas()
         {
             return Canvas ?? throw new NullReferenceException("Canvas must be set");
+        }
+
+        public override IImage GetNullImage()
+        {
+            var bmp = BitmapFactory.DecodeByteArray(Array.Empty<Byte>(), 0, 0);
+            return new AndroidBitmap(bmp!);
         }
 
         public override IImage? GetImage(Stream stream)

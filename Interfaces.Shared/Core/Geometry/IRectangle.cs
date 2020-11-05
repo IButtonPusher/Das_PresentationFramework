@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Das.Views.Core.Geometry
 {
-    public interface IRectangle : IShape2d, //IPoint2D, 
+    public interface IRectangle : IShape2d,
                                   IPointContainer
     {
         Point2D BottomLeft { get; }

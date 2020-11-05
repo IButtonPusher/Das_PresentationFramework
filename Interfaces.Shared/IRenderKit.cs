@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Das.Container;
+using Das.Views.Controls;
 using Das.Views.Rendering;
 
 namespace Das.Views
@@ -10,12 +12,17 @@ namespace Das.Views
 
         IRenderContext RenderContext { get; }
 
-        TInterface Resolve<TObject, TInterface>() 
-            where TObject : TInterface;
+        IResolver Resolver { get; }
 
-        void ResolveTo<TInterface, TObject>(TObject obj) 
-            where TObject : class, TInterface;
+        //TInterface Resolve<TObject, TInterface>() 
+        //    where TObject : TInterface;
 
-        T Resolve<T>();
+        //void ResolveTo<TInterface, TObject>(TObject obj) 
+        //    where TObject : class, TInterface;
+
+        void RegisterSurrogate<T>(Func<IVisualElement, IVisualSurrogate> builder)
+            where T : IVisualElement;
+
+        //T Resolve<T>();
     }
 }

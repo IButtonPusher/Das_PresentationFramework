@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Views;
@@ -13,23 +12,22 @@ using Das.Views.Rendering;
 namespace Das.Gdi.Kits
 {
     public class GdiRenderKit : BaseRenderKit,
-                                IRenderKit,
-                                IVisualSurrogateProvider
+                                       IRenderKit
     {
         public GdiRenderKit(IViewPerspective viewPerspective,
                             IWindowProvider<IVisualHost> windowProvider)
         {
-            _surrogateInstances = new Dictionary<IVisualElement, IVisualSurrogate>();
-            _surrogateTypeBuilders = new Dictionary<Type, Func<IVisualElement,IVisualSurrogate>>();
-
-            _surrogateTypeBuilders[typeof(HtmlPanel)] = GetHtmlPanelSurrogate;
+            // ReSharper disable once VirtualMemberCallInConstructor
+            RegisterSurrogate<HtmlPanel>(GetHtmlPanelSurrogate);
 
             MeasureContext = new GdiMeasureContext(this);
-            RenderContext = new GdiRenderContext(MeasureContext,
-                viewPerspective, MeasureContext.Graphics, this);
+            RenderContext = new GdiRenderContext(viewPerspective, MeasureContext.Graphics, this);
 
-            _containedObjects[typeof(IImageProvider)] = RenderContext;
-            _containedObjects[typeof(IUiProvider)] = new GdiUiProvider();
+            Resolver.ResolveTo<IImageProvider, GdiRenderContext>(RenderContext);
+            Resolver.ResolveTo<IUiProvider, GdiUiProvider>(new GdiUiProvider());
+
+            //_containedObjects[typeof(IImageProvider)] = RenderContext;
+            //_containedObjects[typeof(IUiProvider)] = new GdiUiProvider();
 
             windowProvider.WindowShown += OnWindowShown;
         }
@@ -51,18 +49,7 @@ namespace Das.Gdi.Kits
 
         IRenderContext IRenderKit.RenderContext => RenderContext;
 
-        public void EnsureSurrogate(ref IVisualElement element)
-        {
-            if (_surrogateInstances.TryGetValue(element, out var surrogate))
-                element = surrogate;
-            else if (_surrogateTypeBuilders.TryGetValue(element.GetType(), out var bldr))
-            {
-                var res = bldr(element);
-                _surrogateInstances[element] = res;
-                element = res;
-            }
-        }
-
+      
         public GdiMeasureContext MeasureContext { get; }
 
         public GdiRenderContext RenderContext { get; }
@@ -78,8 +65,7 @@ namespace Das.Gdi.Kits
             _inputContext = new InputContext(window, new BaseInputHandler(RenderContext));
         }
 
-        private readonly Dictionary<IVisualElement, IVisualSurrogate> _surrogateInstances;
-        private readonly Dictionary<Type, Func<IVisualElement, IVisualSurrogate>> _surrogateTypeBuilders;
+      
 
         // ReSharper disable once NotAccessedField.Local
         private IInputContext? _inputContext;

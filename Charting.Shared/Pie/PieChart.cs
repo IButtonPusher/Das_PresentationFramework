@@ -8,6 +8,7 @@ using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Rendering;
+using Das.Views.Rendering.Geometry;
 
 namespace Das.Views.Charting.Pie
 {
@@ -33,7 +34,7 @@ namespace Das.Views.Charting.Pie
             return _legendItems.Any(l => l.Contains(element));
         }
 
-        public override void Arrange(ISize availableSpace, 
+        public override void Arrange(IRenderSize availableSpace, 
                                      IRenderContext renderContext)
         {
             var side = Math.Min(availableSpace.Width, availableSpace.Height);
@@ -97,7 +98,7 @@ namespace Das.Views.Charting.Pie
             var w = _legendItemSizes.Max(s => s.Width) + padding;
             var h = _legendItemSizes.Sum(s => s.Height) + padding + totalRowMargin;
 
-            var rect = new Rectangle(0, 0, w, h);
+            var rect = new RenderRectangle(0, 0, w, h, Point2D.Empty);
 
             renderContext.FillRectangle(rect, _legendBackground);
             renderContext.DrawRect(rect, _legendOutline);
@@ -136,7 +137,8 @@ namespace Das.Views.Charting.Pie
             return brush;
         }
 
-        public override ISize Measure(ISize availableSpace, IMeasureContext measureContext)
+        public override ISize Measure(IRenderSize availableSpace, 
+                                      IMeasureContext measureContext)
         {
             _legendItemSizes.Clear();
             foreach (var item in _legendItems)

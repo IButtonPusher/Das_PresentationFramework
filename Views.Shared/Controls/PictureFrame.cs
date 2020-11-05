@@ -20,7 +20,7 @@ namespace Das.Views.Controls
         {
         }
 
-        public override void Arrange(ISize availableSpace,
+        public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
             var img = _currentImage;
@@ -32,7 +32,7 @@ namespace Das.Views.Controls
                 if (availableSpace.Height < img.Height)
                 {
                     var scale = availableSpace.Height / img.Height;
-                    availableSpace = new Size(img.Width * scale, availableSpace.Height);
+                    availableSpace = new ValueRenderSize(img.Width * scale, availableSpace.Height);
                 }
 
             var rect = new Rectangle(Point2D.Empty, availableSpace);
@@ -46,7 +46,7 @@ namespace Das.Views.Controls
             _currentImage?.Dispose();
         }
 
-        public override ISize Measure(ISize availableSpace,
+        public override ISize Measure(IRenderSize availableSpace,
                                       IMeasureContext measureContext)
         {
             var zoom = measureContext.ViewState?.ZoomLevel ?? 1;

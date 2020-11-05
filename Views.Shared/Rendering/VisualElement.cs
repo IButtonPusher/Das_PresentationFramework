@@ -15,10 +15,10 @@ namespace Das.Views.Rendering
             Id = Interlocked.Increment(ref _currentId);
         }
 
-        public abstract ISize Measure(ISize availableSpace,
+        public abstract ISize Measure(IRenderSize availableSpace,
                                       IMeasureContext measureContext);
 
-        public abstract void Arrange(ISize availableSpace,
+        public abstract void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext);
 
         public virtual IVisualElement DeepCopy()

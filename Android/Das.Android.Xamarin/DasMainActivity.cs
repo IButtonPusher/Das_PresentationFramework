@@ -8,12 +8,14 @@ using Das.Views;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
+using Das.Xamarin.Android.Mvvm;
 using Xamarin.Essentials;
 // ReSharper disable VirtualMemberNeverOverridden.Global
 
 namespace Das.Xamarin.Android
 {
-    public abstract class DasMainActivity : AppCompatActivity, IViewState
+    public abstract class DasMainActivity : AppCompatActivity, 
+                                            IViewState
     {
         protected virtual IStyleContext GetStyleContext()
         {
@@ -31,26 +33,22 @@ namespace Das.Xamarin.Android
 
             var fontProvider = new AndroidFontProvider(displayMetrics);
 
+            var uiProvider = new AndroidUiProvider(this);
+
             var renderKit = new AndroidRenderKit(new BasePerspective(), this, 
                 fontProvider, WindowManager?? throw new NullReferenceException(
-                    "WindowManager cannot be null"));
+                    "WindowManager cannot be null"), uiProvider);
 
-            //await foreach (var view in GetMainViewSequenceAsync(renderKit))
-            //{
-            //    _view = view;
-            //}
+            _view = await GetMainViewAsync(renderKit, uiProvider);
 
-
-            _view = await GetMainViewAsync(renderKit);
-
-            var prov = new AndroidView(_view, Application.Context,
-                renderKit);
+            var prov = new AndroidView(_view, Application.Context, renderKit, uiProvider);
             SetContentView(prov);
         }
 
-        //protected abstract IAsyncEnumerable<IView> GetMainViewSequenceAsync(IRenderKit renderKit);
+        protected abstract Task<IView> GetMainViewAsync(IRenderKit renderKit,
+                                                        IUiProvider uiProvider);
 
-        protected abstract Task<IView> GetMainViewAsync(IRenderKit renderKit);
+        protected abstract Func<Task<Boolean>> BackButtonCommand { get; }
 
         public override void OnRequestPermissionsResult(Int32 requestCode, 
                                                         String[]? permissions, 
@@ -59,6 +57,13 @@ namespace Das.Xamarin.Android
             Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        public override async void OnBackPressed()
+        {
+            var handled = await BackButtonCommand();
+            if (!handled)
+                base.OnBackPressed();
         }
 
         public T GetStyleSetter<T>(StyleSetter setter,

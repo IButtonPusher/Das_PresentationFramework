@@ -15,7 +15,7 @@ namespace Das.Views.Extended.Runtime
     // ReSharper disable once UnusedType.Global
     public class SceneMonitor : BindableElement<ICamera>, IChangeTracking
     {
-        public override ISize Measure(ISize availableSpace, 
+        public override ISize Measure(IRenderSize availableSpace, 
                                       IMeasureContext measureContext)
         {
             if (!TryGetCamera(out var camera))
@@ -53,7 +53,7 @@ namespace Das.Views.Extended.Runtime
             return camera != null;
         }
 
-        public override void Arrange(ISize availableSpace, IRenderContext renderContext)
+        public override void Arrange(IRenderSize availableSpace, IRenderContext renderContext)
         {
             if (!TryGetCamera(out var camera))
                 return;

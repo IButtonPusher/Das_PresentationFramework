@@ -46,14 +46,14 @@ namespace Das.Views.Panels
             return true;
         }
 
-        public override ISize Measure(ISize availableSpace,
+        public override ISize Measure(IRenderSize availableSpace,
                                       IMeasureContext measureContext)
         {
             return Content?.Measure(availableSpace, measureContext) ?? Size.Empty;
         }
 
 
-        public override void Arrange(ISize availableSpace,
+        public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
             var content = Content;

@@ -10,6 +10,7 @@ using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Rendering;
+using Das.Views.Rendering.Geometry;
 using Das.Views.Styles;
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 #pragma warning disable 8618
@@ -19,14 +20,16 @@ namespace Das.Views.DevKit
     // ReSharper disable once ClassNeverInstantiated.Global - via de-serialized
     public class ViewBuilder : IView
     {
-        void IVisualRenderer.Arrange(ISize availableSpace,
+        void IVisualRenderer.Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
             if (Content is {} content)
-                renderContext.DrawElement(content, new Rectangle(0, 0, availableSpace));
+                renderContext.DrawElement(content, new RenderRectangle(0, 0, 
+                    availableSpace.Width, availableSpace.Height, availableSpace.Offset));
         }
 
-        ISize IVisualRenderer.Measure(ISize availableSpace, IMeasureContext measureContext)
+        ISize IVisualRenderer.Measure(IRenderSize availableSpace, 
+                                      IMeasureContext measureContext)
         {
             if (Content is {} content)
                 return measureContext.MeasureElement(content, availableSpace);

@@ -27,7 +27,7 @@ namespace Das.Views.Rendering
         ///     Returns the actual rectangle occupied by the element, including borders etc
         /// </summary>
         Rectangle DrawElement(IVisualElement element, 
-                              IRectangle rect);
+                              IRenderRectangle rect);
 
         void DrawEllipse(IPoint2D center, 
                          Double radius, 

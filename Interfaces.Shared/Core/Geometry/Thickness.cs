@@ -4,7 +4,9 @@ using Das.Extensions;
 
 namespace Das.Views.Core.Geometry
 {
-    public class Thickness : Size, IDeepCopyable<Thickness>, IShape2d
+    public class Thickness : Size, 
+                             IDeepCopyable<Thickness>, 
+                             IShape2d
     {
         public Thickness(Double uniformLength)
         {

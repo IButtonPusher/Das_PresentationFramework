@@ -42,7 +42,8 @@ namespace Das.Gdi
                 if (view == null)
                     return default!;
 
-                var available = _visualHost.AvailableSize;
+                var available = new ValueRenderSize(_visualHost.AvailableSize);
+                
                 
                 var desired = _measureContext.MeasureMainView(view, available, _viewHost);
                 _gdiDevice.Width = Convert.ToInt32(desired.Width);
@@ -54,14 +55,14 @@ namespace Das.Gdi
             }
         }
 
-        public ISize? GetContentSize(ISize available)
+        public IRenderSize? GetContentSize(IRenderSize available)
         {
             var view = _viewHost.View;
             if (view == null)
                 return default;
                 
-            return _measureContext.MeasureMainView(view, 
-                available, _viewHost);
+            return new ValueRenderSize(_measureContext.MeasureMainView(view, 
+                available, _viewHost));
         }
 
         public event EventHandler? Rendering;

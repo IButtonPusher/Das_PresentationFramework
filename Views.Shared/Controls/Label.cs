@@ -39,7 +39,7 @@ namespace Das.Views.Controls
             _currentValue = String.Empty;
         }
 
-        public override void Arrange(ISize availableSpace,
+        public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
             var font = renderContext.GetStyleSetter<Font>(StyleSetter.Font, this)
@@ -57,7 +57,7 @@ namespace Das.Views.Controls
         {
         }
 
-        public override ISize Measure(ISize availableSpace,
+        public override ISize Measure(IRenderSize availableSpace,
                                       IMeasureContext measureContext)
         {
             var font = measureContext.GetStyleSetter<Font>(StyleSetter.Font, this) *

@@ -6,10 +6,10 @@ namespace Das.Views.Rendering
 {
     public interface IVisualRenderer
     {
-        ISize Measure(ISize availableSpace, 
+        ISize Measure(IRenderSize availableSpace, 
                       IMeasureContext measureContext);
 
-        void Arrange(ISize availableSpace, 
+        void Arrange(IRenderSize availableSpace, 
                      IRenderContext renderContext);
     }
 }

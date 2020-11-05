@@ -10,13 +10,9 @@ using Das.Views.Rendering;
 
 namespace Das.Views.Gdi.Controls
 {
-    public class HtmlViewSurrogate : WebBrowser, 
-                                     IVisualSurrogate 
+    public class HtmlViewSurrogate : WebBrowser,
+                                     IVisualSurrogate
     {
-        private readonly Control _hostingControl;
-        private readonly HtmlPanel _htmlPanel;
-        private readonly WebBrowser _browser;
-
         public HtmlViewSurrogate(IVisualElement element,
                                  Control hostingControl)
         {
@@ -27,9 +23,59 @@ namespace Das.Views.Gdi.Controls
             _htmlPanel = valid;
             _browser = this;
             _htmlPanel.PropertyChanged += OnControlPropertyChanged;
+
+            if (valid.Markup != null)
+                DocumentText = valid.Markup;
         }
 
-        private void OnControlPropertyChanged(Object sender, 
+        public Type ReplacesType => typeof(HtmlPanel);
+
+        public ISize Measure(IRenderSize availableSpace,
+                             IMeasureContext measureContext)
+        {
+            return availableSpace;
+        }
+
+        public void Arrange(IRenderSize availableSpace,
+                            IRenderContext renderContext)
+        {
+            var cube = renderContext.TryGetElementBounds(this);
+
+            BeginInvoke((Action) (() =>
+            {
+                _browser.Width = Convert.ToInt32(availableSpace.Width);
+                _browser.Height = Convert.ToInt32(availableSpace.Height);
+                if (cube != null)
+                    _browser.Location = new Point(Convert.ToInt32(cube.Left),
+                        Convert.ToInt32(cube.Top));
+            }));
+        }
+
+        IVisualElement IDeepCopyable<IVisualElement>.DeepCopy()
+        {
+            throw new NotSupportedException();
+        }
+
+        public Int32 Id => -1;
+
+        public new event Action<IVisualElement>? Disposed;
+
+        public void OnParentChanging(IContentContainer? newParent)
+        {
+            if (newParent == null)
+                _hostingControl.Controls.Remove(this);
+            else if (!_hostingControl.Controls.Contains(this))
+                _hostingControl.Controls.Add(this);
+        }
+
+        protected override void Dispose(Boolean disposing)
+        {
+            base.Dispose(disposing);
+
+            Disposed?.Invoke(this);
+        }
+
+        private void OnControlPropertyChanged(Object sender,
                                               PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -44,51 +90,8 @@ namespace Das.Views.Gdi.Controls
             }
         }
 
-        public Type ReplacesType => typeof(HtmlPanel);
-
-        public ISize Measure(ISize availableSpace, 
-                             IMeasureContext measureContext)
-        {
-            return availableSpace;
-        }
-
-        public void Arrange(ISize availableSpace, 
-                                     IRenderContext renderContext)
-        {
-            var cube = renderContext.TryGetElementBounds(this);
-
-            Invoke((Action)(() =>
-            {
-                _browser.Width = Convert.ToInt32(availableSpace.Width);
-                _browser.Height = Convert.ToInt32(availableSpace.Height);
-                if (cube != null)
-                    _browser.Location = new Point(Convert.ToInt32(cube.Left),
-                        Convert.ToInt32(cube.Top));
-            }));
-        }
-
-        public IVisualElement DeepCopy()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void Dispose(Boolean disposing)
-        {
-            base.Dispose(disposing);
-
-            Disposed?.Invoke(this);
-        }
-
-        public Int32 Id => -1;
-
-        public new event Action<IVisualElement>? Disposed;
-
-        public void OnParentChanging(IContentContainer? newParent)
-        {
-            if (newParent == null)
-                _hostingControl.Controls.Remove(this);
-            else if (!_hostingControl.Controls.Contains(this))
-                _hostingControl.Controls.Add(this);
-        }
+        private readonly WebBrowser _browser;
+        private readonly Control _hostingControl;
+        private readonly HtmlPanel _htmlPanel;
     }
 }

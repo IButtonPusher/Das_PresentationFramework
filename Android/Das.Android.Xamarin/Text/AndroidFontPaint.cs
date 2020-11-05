@@ -23,13 +23,6 @@ namespace Das.Xamarin.Android
                 Convert.ToSingle(font.Size),
                 displayMetrics);
 
-            //var px2 = font.Size * displayMetrics.Density + 0.5f;
-
-            //var px3 = font.Size * displayMetrics.ScaledDensity;
-
-            //var px4 = (Single) (font.Size * 4.0f);
-
-
             TextSize = px;
             StrokeWidth = 10;
         }

@@ -5,14 +5,14 @@ using Das.Views.Rendering;
 namespace Das.Gdi.Kits
 {
     // ReSharper disable once UnusedType.Global
-    public class StaticGdiRenderKit : BaseRenderKit, IRenderKit
+    public class StaticGdiRenderKit : BaseRenderKit, 
+                                      IRenderKit
     { 
         public StaticGdiRenderKit(IViewPerspective viewPerspective)
         {
             var defaultSurrogates = new BaseSurrogateProvider();
             MeasureContext = new GdiMeasureContext(defaultSurrogates);
-            RenderContext = new GdiRenderContext(MeasureContext, 
-                viewPerspective, MeasureContext.Graphics, defaultSurrogates);
+            RenderContext = new GdiRenderContext(viewPerspective, MeasureContext.Graphics, defaultSurrogates);
         }
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;

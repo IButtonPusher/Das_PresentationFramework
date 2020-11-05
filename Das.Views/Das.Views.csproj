@@ -48,6 +48,10 @@
     <Folder Include="Kits\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Das.Container" Version="0.0.4-alpha" />
+  </ItemGroup>
+
   <Import Project="..\Views.Shared\Views.Shared.projitems" Label="Shared" />
 
   <Import Project="..\Views.Dynamic\Views.Dynamic.projitems" Label="Shared" />

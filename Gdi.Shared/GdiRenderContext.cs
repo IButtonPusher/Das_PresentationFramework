@@ -20,11 +20,10 @@ namespace Das.Gdi
 {
     public class GdiRenderContext : BaseRenderContext
     {
-        public GdiRenderContext(IMeasureContext measureContext, 
-                                IViewPerspective perspective,
+        public GdiRenderContext(IViewPerspective perspective,
                                 Graphics nullGraphics,
                                 IVisualSurrogateProvider surrogateProvider)
-            : base(measureContext, perspective, surrogateProvider)
+            : base(perspective, surrogateProvider)
         {
             _testPen = new Pen(Color.Yellow, 1);
             Graphics = nullGraphics;
@@ -58,6 +57,8 @@ namespace Das.Gdi
             Graphics.DrawImage(bmp, dest);
         }
 
+        
+
         public override void DrawImage(IImage img, 
                                        IRectangle sourceRect, 
                                        IRectangle destination)
@@ -75,6 +76,11 @@ namespace Das.Gdi
         {
             var bmp = new Bitmap(stream);
             return new GdiBitmap(bmp);
+        }
+
+        public override IImage GetNullImage()
+        {
+            return _emptyImage ??= new GdiBitmap(new Bitmap(1, 1));
         }
 
         public override void DrawLine(IPen pen, IPoint2D pt1, IPoint2D pt2)
@@ -245,5 +251,6 @@ namespace Das.Gdi
         }
 
         private readonly IPen _testPen;
+        private IImage? _emptyImage;
     }
 }

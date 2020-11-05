@@ -44,6 +44,7 @@ namespace Das.Views.Styles
                     {StyleSetter.BorderThickness, StyleSelector.None, 1},
                     {StyleSetter.BorderBrush, StyleSelector.None, SolidColorBrush.Black},
                     {StyleSetter.Background, StyleSelector.Hover, SolidColorBrush.LightGray},
+                    {StyleSetter.Background, StyleSelector.Active, SolidColorBrush.LightGray},
                     {StyleSetter.Padding, StyleSelector.None, new Thickness(5)}
                 }
             };

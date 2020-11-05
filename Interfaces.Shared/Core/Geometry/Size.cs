@@ -11,7 +11,8 @@ namespace Das.Views.Core.Geometry
         {
         }
 
-        public Size(Double width, Double height)
+        public Size(Double width, 
+                    Double height)
         {
             _width = width;
             _height = height;

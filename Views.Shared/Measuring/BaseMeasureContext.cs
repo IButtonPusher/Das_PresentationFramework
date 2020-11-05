@@ -29,7 +29,7 @@ namespace Das.Views.Measuring
         }
 
         public Size MeasureMainView(IVisualElement element,
-                                    ISize availableSpace,
+                                    IRenderSize availableSpace,
                                     IViewState viewState)
         {
             ViewState = viewState;
@@ -38,7 +38,7 @@ namespace Das.Views.Measuring
         }
 
         public Size MeasureElement(IVisualElement element,
-                                   ISize availableSpace)
+                                   IRenderSize availableSpace)
         {
             _surrogateProvider.EnsureSurrogate(ref element);
 

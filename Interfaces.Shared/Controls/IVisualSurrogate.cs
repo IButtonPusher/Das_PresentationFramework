@@ -10,13 +10,5 @@ namespace Das.Views.Controls
     public interface IVisualSurrogate : IVisualElement
     {
         Type ReplacesType { get; }
-
-        //ISize Measure(IVisualElement element,
-        //              ISize availableSpace,
-        //              IMeasureContext measureContext);
-
-        //void Arrange(IVisualElement element,
-        //             ISize availableSpace, 
-        //             IRenderContext renderContext);
     }
 }

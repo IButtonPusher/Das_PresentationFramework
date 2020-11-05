@@ -12,9 +12,9 @@ namespace Das.Views.Core.Geometry
 
         Double Width { get; }
 
-        ISize Reduce(Thickness padding);
-
         ISize Minus(ISize subtract);
+
+        ISize Reduce(Thickness padding);
 
         ///// <summary>
         ///// Gives the Y value needed to show an item centered in this size

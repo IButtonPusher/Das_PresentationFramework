@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 using Das.Views.Input;
 using Das.Views.Rendering;
+using Das.Views.Rendering.Geometry;
 using Das.Views.Styles;
 
 namespace Das.Views.Panels
@@ -87,7 +88,7 @@ namespace Das.Views.Panels
             set => SetValue(ref _verticalOffset, value, OnOffsetChanged);
         }
 
-        public override void Arrange(ISize availableSpace,
+        public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
             if (!(Content is {} content))
@@ -105,18 +106,15 @@ namespace Das.Views.Panels
             if (HorizontalOffset > _maximumXScroll)
                 HorizontalOffset = Convert.ToInt32(_maximumXScroll);
 
-            var dest = new ValueRectangle(HorizontalOffset, 0 - VerticalOffset,
-                availableSpace.Width, availableSpace.Height + VerticalOffset);
+            var dest = new ValueRenderRectangle(HorizontalOffset, 0 - VerticalOffset,
+                availableSpace.Width, availableSpace.Height + VerticalOffset,
+                new ValuePoint2D(HorizontalOffset, VerticalOffset));
 
             renderContext.DrawElement(content, dest);
         }
 
 
-        //public override void Dispose()
-        //{
-        //}
-
-        public override ISize Measure(ISize availableSpace,
+        public override ISize Measure(IRenderSize availableSpace,
                                       IMeasureContext measureContext)
         {
             _lastAvailable = availableSpace;
@@ -124,7 +122,9 @@ namespace Das.Views.Panels
             var h = IsScrollsVertical ? Double.PositiveInfinity : availableSpace.Height;
             var w = IsScrollsHorizontal ? Double.PositiveInfinity : availableSpace.Width;
 
-            _lastNeeded = base.Measure(new ValueSize(w, h), measureContext);
+            _lastNeeded = base.Measure(
+                new ValueRenderSize(w, h,new ValuePoint2D(HorizontalOffset, VerticalOffset)), 
+                measureContext);
 
             var res = new ValueSize(Math.Min(_lastNeeded.Width, availableSpace.Width),
                 Math.Min(_lastNeeded.Height, availableSpace.Height));

@@ -24,14 +24,14 @@ namespace Das.Views.Panels
 
         public Orientations Orientation { get; set; }
 
-        public override ISize Measure(ISize availableSpace, 
+        public override ISize Measure(IRenderSize availableSpace, 
                                       IMeasureContext measureContext)
         {
             return _renderer.Measure(this, GetChildrenToRender(), Orientation,
                 availableSpace, measureContext);
         }
 
-        public override void Arrange(ISize availableSpace, 
+        public override void Arrange(IRenderSize availableSpace, 
                                      IRenderContext renderContext)
         {
             _renderer.Arrange(Orientation, availableSpace, renderContext);

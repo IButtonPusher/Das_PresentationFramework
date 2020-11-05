@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Das.Views.Core.Geometry;
 
 namespace Das.Views.Rendering
 {
@@ -14,7 +13,7 @@ namespace Das.Views.Rendering
     {
         TAsset DoRender();
 
-        ISize? GetContentSize(ISize available);
+        IRenderSize? GetContentSize(IRenderSize available);
 
         event EventHandler? Rendering;
     }

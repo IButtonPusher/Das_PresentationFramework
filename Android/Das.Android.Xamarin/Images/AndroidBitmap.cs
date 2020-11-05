@@ -11,10 +11,12 @@ namespace Das.Xamarin.Android
     public class AndroidBitmap : IImage
     {
         private readonly Bitmap _bmp;
+        private readonly Boolean _isEmpty;
 
         public AndroidBitmap(Bitmap bmp)
         {
             _bmp = bmp;
+            _isEmpty = bmp.Width == 1 && bmp.Height == 1;
         }
 
         private Boolean _isDisposed;
@@ -27,7 +29,7 @@ namespace Das.Xamarin.Android
 
         Double ISize.Height => _bmp.Height;
 
-        Boolean ISize.IsEmpty => false;
+        Boolean ISize.IsEmpty => _isEmpty;
 
         Double ISize.Width => _bmp.Width;
 
@@ -68,7 +70,10 @@ namespace Das.Xamarin.Android
 
         Stream IImage.ToStream()
         {
-            throw new NotImplementedException();
+            var ms = new MemoryStream();
+            _bmp.Compress(Bitmap.CompressFormat.Png, 0, ms);
+            ms.Position = 0;
+            return ms;
         }
 
         Task<Boolean> IImage.TrySave(FileInfo path)

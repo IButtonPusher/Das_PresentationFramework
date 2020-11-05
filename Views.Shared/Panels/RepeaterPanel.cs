@@ -37,13 +37,13 @@ namespace Das.Views.Panels
             else throw new NotImplementedException();
         }
 
-        public override ISize Measure(ISize availableSpace,
+        public override ISize Measure(IRenderSize availableSpace,
                                       IMeasureContext measureContext)
         {
             return _renderer.Measure(this, _controls, Orientation, availableSpace, measureContext);
         }
 
-        public override void Arrange(ISize availableSpace, IRenderContext renderContext)
+        public override void Arrange(IRenderSize availableSpace, IRenderContext renderContext)
         {
             _renderer.Arrange(Orientation, availableSpace, renderContext);
         }

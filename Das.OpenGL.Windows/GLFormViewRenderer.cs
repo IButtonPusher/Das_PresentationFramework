@@ -31,7 +31,7 @@ namespace Das.OpenGL.Windows
             var view = _viewHost.View;
 
             //Measure
-            var available = _context.Size;
+            var available = new ValueRenderSize(_context.Size);
             if (available.IsEmpty)
                 return;
             //_measureContext.ViewState = _viewHost;

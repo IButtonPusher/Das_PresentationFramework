@@ -16,7 +16,7 @@ namespace Das.Views.Controls
                                  IHandleInput<MouseOverEventArgs>,
                                  IButtonBase
     {
-        public override void Arrange(ISize availableSpace,
+        public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
         }
@@ -25,7 +25,7 @@ namespace Das.Views.Controls
         {
         }
 
-        public override ISize Measure(ISize availableSpace,
+        public override ISize Measure(IRenderSize availableSpace,
                                       IMeasureContext measureContext)
         {
             return Size.Empty;

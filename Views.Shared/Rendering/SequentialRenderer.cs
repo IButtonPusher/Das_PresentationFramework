@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
+using Das.Views.Rendering.Geometry;
 using Das.Views.Styles;
 
 namespace Das.Views.Rendering
@@ -15,15 +16,19 @@ namespace Das.Views.Rendering
         public SequentialRenderer(Boolean isWrapContent = false)
         {
             _isWrapContent = isWrapContent;
-            ElementsRendered = new Dictionary<IVisualElement, Rectangle>();
+            ElementsRendered = new Dictionary<IVisualElement, RenderRectangle>();
         }
 
-        public Size Measure(IVisualElement container, IEnumerable<IVisualElement> elements,
-                            Orientations orientation, ISize availableSpace, IMeasureContext measureContext)
+        public Size Measure(IVisualElement container, 
+                            IEnumerable<IVisualElement> elements,
+                            Orientations orientation, 
+                            IRenderSize availableSpace, 
+                            IMeasureContext measureContext)
         {
-            var remainingSize = new Size(availableSpace.Width, availableSpace.Height);
+            var remainingSize = new RenderSize(availableSpace.Width, 
+                availableSpace.Height, availableSpace.Offset);
 
-            var current = new Rectangle();
+            var current = new RenderRectangle();
             var totalHeight = 0.0;
             var totalWidth = 0.0;
 
@@ -89,7 +94,8 @@ namespace Das.Views.Rendering
         }
 
         public void Arrange(Orientations orientation,
-                            ISize availableSpace, IRenderContext renderContext)
+                            IRenderSize availableSpace, 
+                            IRenderContext renderContext)
         {
             foreach (var kvp in ElementsRendered)
             {
@@ -98,12 +104,12 @@ namespace Das.Views.Rendering
                 switch (orientation)
                 {
                     case Orientations.Vertical:
-                        current = new Rectangle(current.X, current.Y, availableSpace.Width,
-                            current.Height);
+                        current = new RenderRectangle(current.X, current.Y, availableSpace.Width,
+                            current.Height, current.Offset);
                         break;
                     case Orientations.Horizontal:
-                        current = new Rectangle(current.X, current.Y, current.Width,
-                            availableSpace.Height);
+                        current = new RenderRectangle(current.X, current.Y, current.Width,
+                            availableSpace.Height, current.Offset);
                         break;
                 }
 
@@ -112,6 +118,6 @@ namespace Das.Views.Rendering
         }
 
         private readonly Boolean _isWrapContent;
-        protected readonly Dictionary<IVisualElement, Rectangle> ElementsRendered;
+        protected readonly Dictionary<IVisualElement, RenderRectangle> ElementsRendered;
     }
 }

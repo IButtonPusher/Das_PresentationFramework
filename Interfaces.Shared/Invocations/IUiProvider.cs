@@ -54,7 +54,5 @@ namespace Das.Views
         Task NotifyErrorAsync(String message);
 
         Task SetCursor(MousePointers cursor);
-
-        Task<IAsyncDisposable> WithCursor(MousePointers cursor);
     }
 }

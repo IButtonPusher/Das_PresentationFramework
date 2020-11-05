@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Extensions;
+using Das.Views.Rendering;
 
 namespace Das.Views.Core.Geometry
 {
     public static class GeometryHelper
     {
-        public static Boolean AreSizesEqual<TSize>(TSize left, ISize? other)
+        public static Boolean AreSizesEqual<TSize>(TSize left,
+                                                   ISize? other)
             where TSize : ISize
         {
             if (ReferenceEquals(null, other)) return false;
@@ -37,13 +39,29 @@ namespace Das.Views.Core.Geometry
                    && y <= rectangle.Bottom;
         }
 
-        public static Boolean IsRectangleContains<TRect>(TRect rectangle, Double x, Double y)
+        public static Boolean IsRectangleContains<TRect>(TRect rectangle,
+                                                         Double x,
+                                                         Double y)
             where TRect : IRectangle
         {
             return x >= rectangle.Left
                    && x <= rectangle.Right
                    && y >= rectangle.Top
                    && y <= rectangle.Bottom;
+        }
+
+        public static ISize Minus(ISize original,
+                                  ISize takeAway)
+        {
+            return new ValueSize(original.Width - takeAway.Width,
+                original.Height - takeAway.Height);
+        }
+
+        public static IRenderSize Minus(IRenderSize original,
+                                        ISize takeAway)
+        {
+            return new ValueRenderSize(original.Width - takeAway.Width,
+                original.Height - takeAway.Height, original.Offset);
         }
 
         public static ISize Reduce(ISize size,
@@ -56,11 +74,14 @@ namespace Das.Views.Core.Geometry
                 size.Height - (margin.Top + margin.Bottom));
         }
 
-        public static ISize Minus(ISize original,
-                                  ISize takeAway)
+        public static IRenderSize Reduce(IRenderSize size,
+                                         Thickness margin)
         {
-            return new ValueSize(original.Width - takeAway.Width,
-                original.Height - takeAway.Height);
+            if (margin == null)
+                return size.DeepCopy();
+
+            return new ValueRenderSize(size.Width - (margin.Left + margin.Right),
+                size.Height - (margin.Top + margin.Bottom), size.Offset);
         }
     }
 }

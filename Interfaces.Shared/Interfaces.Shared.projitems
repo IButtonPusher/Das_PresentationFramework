@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IButtonBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\IVisualSurrogate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IVisualSurrogateProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\HatchBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\HatchStyle.cs" />
@@ -44,11 +45,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ISize3d.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Point2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Rectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\Geometry\RenderRectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\Geometry\RenderSize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\RoundedSize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Size.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Thickness.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValuePoint2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueRectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\Geometry\ValueRenderRectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\Geometry\ValueRenderSize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueSize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Vector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\ClickMode.cs" />
@@ -120,6 +125,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IRenderContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IRenderedVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IRenderRectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IRenderSize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\ISequentialRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IViewPerspective.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IViewState.cs" />

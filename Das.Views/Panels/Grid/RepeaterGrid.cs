@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Rendering;
+using Das.Views.Rendering.Geometry;
 
 namespace Das.Views.Panels.Grid
 {
@@ -22,10 +23,12 @@ namespace Das.Views.Panels.Grid
             _columnWidths = new Dictionary<Int32, Double>();
         }
 
-        public override void Arrange(ISize availableSpace, IRenderContext renderContext)
+        public override void Arrange(IRenderSize availableSpace, 
+                                     IRenderContext renderContext)
         {
             var rowNumbers = _controls.Keys.ToArray();
-            var targetRect = new Rectangle(0, 0, 1, 1);
+            var targetRect = new RenderRectangle(0, 0, 1, 1, 
+                availableSpace.Offset);
 
             foreach (var rowNumber in rowNumbers)
             {
@@ -53,10 +56,11 @@ namespace Das.Views.Panels.Grid
         {
         }
 
-        public override ISize Measure(ISize availableSpace, IMeasureContext measureContext)
+        public override ISize Measure(IRenderSize availableSpace, 
+                                      IMeasureContext measureContext)
         {
             var rowNumbers = _controls.Keys.ToArray();
-            var remainingSize = new Size(availableSpace.Width, availableSpace.Height);
+            var remainingSize = new RenderSize(availableSpace.Width, availableSpace.Height);
 
             foreach (var rowNumber in rowNumbers)
             {

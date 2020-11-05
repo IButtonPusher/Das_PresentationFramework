@@ -24,5 +24,7 @@ namespace Das.Views.Input
 
         ICube? TryGetElementBounds(IVisualElement element);
 
+        ICube? TryGetLastRenderBounds(IVisualElement element);
+
     }
 }

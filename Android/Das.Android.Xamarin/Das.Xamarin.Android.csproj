@@ -51,17 +51,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\HtmlSurrogate2.cs" />
     <Compile Include="DasMainActivity.cs" />
     <Compile Include="Images\AndroidBitmap.cs" />
     <Compile Include="AndroidMeasureKit.cs" />
-    <Compile Include="AndroidRenderContext.cs" />
-    <Compile Include="AndroidRenderKit.cs" />
+    <Compile Include="Rendering\AndroidRenderContext.cs" />
+    <Compile Include="Rendering\AndroidRenderKit.cs" />
     <Compile Include="AndroidStyleProvider.cs" />
-    <Compile Include="AndroidView.cs" />
+    <Compile Include="Rendering\RefreshRenderContext.cs" />
+    <Compile Include="Views\AndroidPaintView.cs" />
+    <Compile Include="Views\AndroidView.cs" />
+    <Compile Include="Mvvm\AndroidUiProvider.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Text\AndroidFontPaint.cs" />
     <Compile Include="Text\AndroidFontProvider.cs" />
+    <Compile Include="Views\AndroidViewState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Das.Xamarin.Android.ruleset" />
@@ -83,6 +88,10 @@
     <ProjectReference Include="..\..\Das.View.Interfaces\Das.Views.Interfaces.csproj">
       <Project>{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}</Project>
       <Name>Das.Views.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Das.ViewModels\Das.ViewModels.csproj">
+      <Project>{4ad8f035-a30f-4d67-8e84-fad46d1b8877}</Project>
+      <Name>Das.ViewModels</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Das.Views\Das.Views.csproj">
       <Project>{a71c8e34-0909-487d-8c50-c02fc2408b8f}</Project>

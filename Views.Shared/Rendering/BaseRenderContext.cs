@@ -11,6 +11,7 @@ using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Input;
 using Das.Views.Panels;
+using Das.Views.Rendering.Geometry;
 using Das.Views.Styles;
 
 namespace Das.Views.Rendering
@@ -18,20 +19,29 @@ namespace Das.Views.Rendering
     public abstract class BaseRenderContext : ContextBase, 
                                               IRenderContext
     {
-        protected BaseRenderContext(IMeasureContext measureContext,
-                                    IViewPerspective perspective,
+       
+        protected BaseRenderContext(IViewPerspective perspective,
                                     IVisualSurrogateProvider surrogateProvider)
+        : this(perspective, surrogateProvider, new Dictionary<IVisualElement, ICube>())
         {
-            RenderPositions = new Dictionary<IVisualElement, ICube>();
+           
+        }
 
-            _measureContext = measureContext;
+        protected BaseRenderContext(IViewPerspective perspective,
+                                    IVisualSurrogateProvider surrogateProvider,
+                                    Dictionary<IVisualElement, ICube> renderPositions)
+        {
+            RenderPositions = renderPositions;
+            LastRenderPositions = new Dictionary<IVisualElement, ICube>();
+
             _surrogateProvider = surrogateProvider;
             _renderLock = new Object();
             Perspective = perspective;
-            CurrentElementRect = new Rectangle();
-            _locations = new Stack<Rectangle>();
+            CurrentElementRect = new RenderRectangle();
+            _locations = new Stack<RenderRectangle>();
             _locations.Push(CurrentElementRect);
         }
+
 
         public IEnumerable<IRenderedVisual> GetElementsAt(IPoint2D point2D)
         {
@@ -86,14 +96,30 @@ namespace Das.Views.Rendering
 
         public ICube? TryGetElementBounds(IVisualElement element)
         {
-            if (RenderPositions.TryGetValue(element, out var c))
-                return c;
+            lock (_renderLock)
+            {
+                if (RenderPositions.TryGetValue(element, out var c))
+                    return c;
 
-            return default;
+                return default;
+            }
+        }
+
+        public ICube? TryGetLastRenderBounds(IVisualElement element)
+        {
+            lock (_renderLock)
+            {
+                if (LastRenderPositions.TryGetValue(element, out var c))
+                    return c;
+
+                return default;
+            }
         }
 
 
         public abstract IImage? GetImage(Stream stream);
+
+        public abstract IImage GetNullImage();
 
         public abstract void DrawImage(IImage img,
                                        IRectangle sourceRest,
@@ -130,18 +156,26 @@ namespace Das.Views.Rendering
 
         public abstract void DrawFrame(IFrame frame);
 
-        public Rectangle DrawMainElement(IVisualElement element, 
-                                         IRectangle rect, 
-                                         IViewState viewState)
+        public virtual Rectangle DrawMainElement(IVisualElement element,
+                                                 IRectangle rect,
+                                                 IViewState viewState)
         {
             lock (_renderLock)
+            {
+                LastRenderPositions.Clear();
+                foreach (var kvp in RenderPositions)
+                {
+                    LastRenderPositions[kvp.Key] = kvp.Value;
+                }
                 RenderPositions.Clear();
+            }
+
             ViewState = viewState;
-            return DrawElement(element, rect);
+            return DrawElement(element, new ValueRenderRectangle(rect));
         }
 
         public Rectangle DrawElement(IVisualElement element,
-                                     IRectangle rect)
+                                     IRenderRectangle rect)
         {
             _surrogateProvider.EnsureSurrogate(ref element);
 
@@ -218,6 +252,8 @@ namespace Das.Views.Rendering
 
         protected Dictionary<IVisualElement, ICube> RenderPositions { get; }
 
+        protected Dictionary<IVisualElement, ICube> LastRenderPositions { get; }
+
         protected virtual IPoint2D GetAbsolutePoint(IPoint2D relativePoint2D)
         {
             return CurrentLocation + relativePoint2D;
@@ -253,7 +289,7 @@ namespace Das.Views.Rendering
         /// <summary>
         ///     Margins + space added due to alignment
         /// </summary>
-        private Rectangle GetOffset(IRectangle rect, 
+        private RenderRectangle GetOffset(IRenderRectangle rect, 
                                     IVisualElement element,
                                     Thickness border)
         {
@@ -262,10 +298,11 @@ namespace Das.Views.Rendering
 
             margin += border;
 
+            // this is wrong - breaks the whole paradigm of the parent deciding child size
             //var totalSize = _measureContext.GetLastMeasure(element);
             var totalSize = rect.Size;
             if (Size.Empty.Equals(totalSize))
-                return new Rectangle(rect, margin);
+                return new RenderRectangle(rect, margin, rect.Offset);
 
             var desiredSize = Size.Subtract(totalSize, margin);
 
@@ -276,7 +313,7 @@ namespace Das.Views.Rendering
                 StyleSetter.HorizontalAlignment, element);
 
             if (valign == VerticalAlignments.Top && halign == HorizontalAlignments.Left)
-                return new Rectangle(rect, margin);
+                return new RenderRectangle(rect, margin, rect.Offset);
 
             var width = desiredSize.Width;
             var height = desiredSize.Height;
@@ -329,7 +366,8 @@ namespace Das.Views.Rendering
             }
 
 
-            return new Rectangle(xGap + rect.X, yGap + rect.Y, width, height);
+            return new RenderRectangle(xGap + rect.X, yGap + rect.Y, 
+                width, height, rect.Offset);
         }
 
         protected void OnDrawBorder(IRectangle rect,
@@ -375,7 +413,7 @@ namespace Das.Views.Rendering
             if (rect.Bottom > 0 || rect.Right > 0)
             {
                 // don't draw it if it's completely off screen
-                element.Arrange(CurrentElementRect.Size, this);
+                element.Arrange(CurrentElementRect, this);
             }
 
             return CurrentElementRect;
@@ -388,19 +426,18 @@ namespace Das.Views.Rendering
             CurrentElementRect = _locations.Peek();
         }
 
-        private void PushRect(Rectangle rect)
+        private void PushRect(RenderRectangle rect)
         {
             _currentZ++;
             _locations.Push(rect);
             CurrentElementRect = rect;
         }
 
-        private readonly Stack<Rectangle> _locations;
+        private readonly Stack<RenderRectangle> _locations;
 
-        private readonly IMeasureContext _measureContext;
         private readonly IVisualSurrogateProvider _surrogateProvider;
         private readonly Object _renderLock;
         private Int32 _currentZ;
-        protected Rectangle CurrentElementRect;
+        protected RenderRectangle CurrentElementRect;
     }
 }

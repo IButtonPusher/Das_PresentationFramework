@@ -26,12 +26,15 @@ namespace Das.Views.Core.Geometry
         {
         }
 
-        public Rectangle(Double x, Double y, ISize size)
+        public Rectangle(Double x, 
+                         Double y, 
+                         ISize size)
             : this(x, y, size.Width, size.Height)
         {
         }
 
-        public Rectangle(IPoint2D location, ISize size)
+        public Rectangle(IPoint2D location, 
+                         ISize size)
             : this(location.X, location.Y, size.Width, size.Height)
         {
         }
@@ -40,14 +43,18 @@ namespace Das.Views.Core.Geometry
         {
         }
 
-        public Rectangle(IRectangle start, Thickness margin)
+        public Rectangle(IRectangle start, 
+                         Thickness margin)
             : this(start.X + margin.Left, start.Y + margin.Top,
                 start.Width - (margin.Left + margin.Right),
                 start.Height - (margin.Top + margin.Bottom))
         {
         }
 
-        public Rectangle(Double x, Double y, Double width, Double height)
+        public Rectangle(Double x, 
+                         Double y, 
+                         Double width, 
+                         Double height)
         {
             Left = x;
             Top = y;

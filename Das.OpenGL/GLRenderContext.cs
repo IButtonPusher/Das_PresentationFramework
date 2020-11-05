@@ -11,12 +11,11 @@ namespace Das.OpenGL
 {
     public class GLRenderContext : BaseRenderContext
     {
-        public GLRenderContext(IMeasureContext measureContext,
-                               IViewPerspective perspective,
+        public GLRenderContext(IViewPerspective perspective,
                                IGLContext openGlContext,
                                IFontProvider fontProvider,
                                IVisualSurrogateProvider surrogateProvider)
-            : base(measureContext, perspective, surrogateProvider)
+            : base(perspective, surrogateProvider)
         {
             _openGlContext = openGlContext;
             _fontProvider = fontProvider;
@@ -26,14 +25,19 @@ namespace Das.OpenGL
         private readonly IFontProvider _fontProvider;
         private const Double TwoPi = 2.0 * Math.PI;
 
-        public override void DrawString(String s, IFont font, IBrush brush, IPoint2D point2D)
+        public override void DrawString(String s, 
+                                        IFont font, 
+                                        IBrush brush, 
+                                        IPoint2D point2D)
         {
             var to = GetAbsolutePoint(point2D);
             var renderer = _fontProvider.GetRenderer(font);
             renderer.DrawString(s, brush, to);
         }
 
-        public override void DrawRoundedRect(IRectangle rect, IPen pen, Double cornerRadius)
+        public override void DrawRoundedRect(IRectangle rect, 
+                                             IPen pen, 
+                                             Double cornerRadius)
         {
             throw new NotImplementedException();
         }
@@ -73,6 +77,11 @@ namespace Das.OpenGL
         }
 
         public override void DrawImage(IImage img, IRectangle rect)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IImage GetNullImage()
         {
             throw new NotImplementedException();
         }

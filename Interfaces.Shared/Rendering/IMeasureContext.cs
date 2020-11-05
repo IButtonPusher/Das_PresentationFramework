@@ -13,15 +13,16 @@ namespace Das.Views.Rendering
         Size GetLastMeasure(IVisualElement element);
 
         Size MeasureMainView(IVisualElement element, 
-                             ISize availableSpace,
+                             IRenderSize availableSpace,
                              IViewState viewState);
 
         Size MeasureElement(IVisualElement element, 
-                            ISize availableSpace);
+                            IRenderSize availableSpace);
 
         Size MeasureImage(IImage img);
 
-        Size MeasureString(String s, IFont font);
+        Size MeasureString(String s, 
+                           IFont font);
 
         /// <summary>
         /// The total amount of space available (e.g. size of the window, screen size of a mobile device)

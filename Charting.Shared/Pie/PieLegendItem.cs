@@ -6,6 +6,7 @@ using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Rendering;
+using Das.Views.Rendering.Geometry;
 
 namespace Das.Views.Charting.Pie
 {
@@ -25,14 +26,15 @@ namespace Das.Views.Charting.Pie
 
         public IBrush? Brush { get; set; }
 
-        public override void Arrange(ISize availableSpace, 
+        public override void Arrange(IRenderSize availableSpace, 
                                      IRenderContext renderContext)
         {
             var h = availableSpace.Height * 0.7;
-            var center = new Point2D(0, h);
+            var center = new ValuePoint2D(0, h);
             if (Brush is {} brush)
                 renderContext.FillPie(center, h, 0, -90, brush);
-            var rect = new Rectangle(_offsetX, 0, availableSpace.Width - _offsetX, h);
+            var rect = new ValueRenderRectangle(_offsetX, 0, 
+                availableSpace.Width - _offsetX, h, Point2D.Empty);
             renderContext.DrawElement(_label, rect);
         }
 
@@ -40,7 +42,7 @@ namespace Das.Views.Charting.Pie
         {
         }
 
-        public override ISize Measure(ISize availableSpace, 
+        public override ISize Measure(IRenderSize availableSpace, 
                                       IMeasureContext measureContext)
         {
             if (!_isStyleSet) _isStyleSet = true;

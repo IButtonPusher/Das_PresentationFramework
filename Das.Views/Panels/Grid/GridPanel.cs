@@ -7,7 +7,7 @@ namespace Das.Views.Panels
 {
     public class GridPanel<T> : BasePanel<T>
     {
-        public override void Arrange(ISize availableSpace, IRenderContext renderContext)
+        public override void Arrange(IRenderSize availableSpace, IRenderContext renderContext)
         {
         }
 
@@ -15,9 +15,10 @@ namespace Das.Views.Panels
         {
         }
 
-        public override ISize Measure(ISize availableSpace, IMeasureContext measureContext)
+        public override ISize Measure(IRenderSize availableSpace, 
+                                      IMeasureContext measureContext)
         {
-            return null!;
+            return Size.Empty;
         }
     }
 }

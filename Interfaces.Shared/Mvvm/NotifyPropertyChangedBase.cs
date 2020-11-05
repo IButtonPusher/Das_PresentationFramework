@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Das.Views.Mvvm
 {
@@ -44,20 +45,33 @@ namespace Das.Views.Mvvm
         }
 
         protected virtual void SetValue<T>(ref T field, T newValue,
+                                           Func<T, Task> handleValueChanged,
+                                           [CallerMemberName] String propertyName = "")
+        {
+            if (Equals(field, newValue))
+                return;
+            //if (field?.Equals(newValue) == true)
+            //    return;
+
+            field = newValue;
+
+            RaisePropertyChanged(propertyName);
+            handleValueChanged(newValue);
+        }
+
+        protected virtual void SetValue<T>(ref T field, 
+                                           T newValue,
                                                 Func<T, T, Boolean> onValueChanging,
                                                 Action<T> handleValueChanged,
                                                 [CallerMemberName] String propertyName = "")
         {
-            if (field?.Equals(newValue) == true)
+            if (Equals(field, newValue))
                 return;
 
             if (!onValueChanging(field, newValue))
                 return;
 
-            if (!SetValue(ref field, newValue, handleValueChanged, propertyName))
-                return;
-
-            handleValueChanged(newValue);
+            SetValue(ref field, newValue, handleValueChanged, propertyName);
         }
 
         protected virtual Boolean SetValue<T>(ref T field,
