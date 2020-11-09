@@ -119,46 +119,72 @@ namespace Das.Views.Rendering
 
         public abstract IImage? GetImage(Stream stream);
 
+        public virtual IImage? GetImage(Byte[] bytes)
+        {
+            var ms = new MemoryStream(bytes);
+            return GetImage(ms);
+        }
+
         public abstract IImage GetNullImage();
 
-        public abstract void DrawImage(IImage img,
-                                       IRectangle sourceRest,
-                                       IRectangle destination);
+       
 
-        public abstract void DrawLine(IPen pen,
-                                      IPoint2D pt1,
-                                      IPoint2D pt2);
+        public abstract void DrawLine<TPen, TPoint1, TPoint2>(TPen pen,
+                                                              TPoint1 pt1,
+                                                              TPoint2 pt2)
+            where TPen : IPen
+            where TPoint1 : IPoint2D
+            where TPoint2 : IPoint2D;
 
         public abstract void DrawLines(IPen pen,
                                        IPoint2D[] points);
 
-        public abstract void FillRectangle(IRectangle rect,
-                                      IBrush brush);
+        public abstract void FillRectangle<TRectangle, TBrush>(TRectangle rect,
+                                                               TBrush brush)
+            where TRectangle : IRectangle
+            where TBrush : IBrush;
 
-        public abstract void FillRoundedRectangle(IRectangle rect, 
-                                             IBrush brush, 
-                                             Double cornerRadius);
+        public abstract void FillRoundedRectangle<TRectangle, TBrush>(TRectangle rect,
+                                                                      TBrush brush,
+                                                                      Double cornerRadius)
+            where TRectangle : IRectangle
+            where TBrush : IBrush;
 
-        public abstract void DrawRect(IRectangle rect,
-                                      IPen pen);
+        public abstract void DrawRect<TRectangle, TPen>(TRectangle rect,
+                                                        TPen pen)
+            where TRectangle : IRectangle
+            where TPen : IPen;
 
-        public abstract void DrawRoundedRect(IRectangle rect, 
-                                             IPen pen, 
-                                             Double cornerRadius);
+        public abstract void DrawRoundedRect<TRectangle, TPen>(TRectangle rect,
+                                                               TPen pen,
+                                                               Double cornerRadius)
+            where TRectangle : IRectangle
+            where TPen : IPen;
 
-        public abstract void FillPie(IPoint2D center,
-                                     Double radius,
-                                     Double startAngle,
-                                     Double endAngle,
-                                     IBrush brush);
+        public abstract void FillPie<TPoint, TBrush>(TPoint center,
+                                                      Double radius,
+                                                      Double startAngle,
+                                                      Double endAngle,
+                                                      TBrush brush)
+            where TPoint : IPoint2D
+            where TBrush : IBrush;
 
-        public abstract void DrawEllipse(IPoint2D center, Double radius, IPen pen);
+        public abstract void DrawEllipse<TPoint, TPen>(TPoint center,
+                                                       Double radius,
+                                                       TPen pen)
+            where TPoint : IPoint2D
+            where TPen : IPen;
 
         public abstract void DrawFrame(IFrame frame);
 
-        public virtual Rectangle DrawMainElement(IVisualElement element,
-                                                 IRectangle rect,
-                                                 IViewState viewState)
+        public abstract void DrawImage<TRectangle>(IImage img, 
+                                                   TRectangle destination) 
+            where TRectangle : IRectangle;
+
+        public virtual Rectangle DrawMainElement<TRectangle>(IVisualElement element,
+                                                             TRectangle rect,
+                                                             IViewState viewState)
+            where TRectangle : IRectangle
         {
             lock (_renderLock)
             {
@@ -174,8 +200,9 @@ namespace Das.Views.Rendering
             return DrawElement(element, new ValueRenderRectangle(rect));
         }
 
-        public Rectangle DrawElement(IVisualElement element,
-                                     IRenderRectangle rect)
+        public  Rectangle DrawElement<TRenderRectangle>(IVisualElement element, 
+                                                        TRenderRectangle rect)
+            where TRenderRectangle : IRenderRectangle
         {
             _surrogateProvider.EnsureSurrogate(ref element);
 
@@ -227,18 +254,29 @@ namespace Das.Views.Rendering
             return drawn;
         }
 
-        public abstract void DrawString(String s,
-                                        IFont font,
-                                        IBrush brush,
-                                        IRectangle location);
+        public abstract void DrawString<TFont, TBrush, TRectangle>(String s,
+                                                                   TFont font,
+                                                                   TRectangle rect,
+                                                                   TBrush brush)
+            where TFont : IFont
+            where TBrush : IBrush
+            where TRectangle : IRectangle;
 
-        public abstract void DrawImage(IImage img,
-                                       IRectangle rect);
+        public abstract void DrawImage<TRectangle1, TRectangle2>(IImage img,
+                                                                 TRectangle1 sourceRect,
+                                                                 TRectangle2 destination)
+            where TRectangle1 : IRectangle
+            where TRectangle2 : IRectangle;
 
-        public abstract void DrawString(String s,
-                                        IFont font,
-                                        IBrush brush,
-                                        IPoint2D point2D);
+
+
+        public abstract void DrawString<TFont, TBrush, TPoint>(String s,
+                                                               TFont font,
+                                                               TBrush brush,
+                                                               TPoint location)
+            where TFont : IFont
+            where TBrush : IBrush
+            where TPoint : IPoint2D;
 
 
         public Double GetZoomLevel()
@@ -370,14 +408,20 @@ namespace Das.Views.Rendering
                 width, height, rect.Offset);
         }
 
-        protected void OnDrawBorder(IRectangle rect,
-                                    IShape2d thickness,
-                                    IBrush brush,
-                                    Double cornerRadius)
+        protected void OnDrawBorder<TRectangle, TShape, TBrush>(TRectangle rect,
+                                                                TShape thickness,
+                                                                TBrush brush,
+                                                                Double cornerRadius)
+            where TRectangle : IRectangle
+            where TShape : IShape2d
+            where TBrush : IBrush
         {
             if (cornerRadius != 0)
             {
-                var scb = (SolidColorBrush) brush;
+                if (!(brush is SolidColorBrush scb))
+                    throw new NotImplementedException();
+
+                //var scb = (SolidColorBrush) brush;
                 var p = new Pen(scb.Color, Convert.ToInt32(thickness.Left));
 
                 DrawRoundedRect(rect, p, cornerRadius);

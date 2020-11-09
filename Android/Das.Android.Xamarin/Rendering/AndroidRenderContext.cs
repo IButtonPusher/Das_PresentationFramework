@@ -27,9 +27,9 @@ namespace Das.Xamarin.Android
 
         public Canvas? Canvas { get; set; }
 
-        public override void DrawEllipse(IPoint2D center,
-                                         Double radius,
-                                         IPen pen)
+        public override void DrawEllipse<TPoint, TPen>(TPoint center,
+                                                       Double radius,
+                                                       TPen pen)
         {
             throw new NotImplementedException();
         }
@@ -39,17 +39,17 @@ namespace Das.Xamarin.Android
             throw new NotImplementedException();
         }
 
-        public override void DrawImage(IImage img,
-                                       IRectangle rect)
+        public override  void DrawImage<TRectangle>(IImage img, 
+                                                    TRectangle destination)
         {
-            DrawImage(img, new ValueRectangle(0, 0, img.Width, img.Height), rect);
+            DrawImage(img, new ValueRectangle(0, 0, img.Width, img.Height), destination);
         }
 
         
 
-        public override void DrawImage(IImage img,
-                                       IRectangle srcRect,
-                                       IRectangle destination)
+        public override void DrawImage<TRectangle1, TRectangle2>(IImage img,
+                                                                 TRectangle1 srcRect,
+                                                                 TRectangle2 destination)
         {
             var bmp = img.Unwrap<Bitmap>();
             var dest = GetAbsoluteAndroidRect(destination);
@@ -62,9 +62,9 @@ namespace Das.Xamarin.Android
             GetCanvas().DrawBitmap(bmp, src, dest, _paint);
         }
 
-        public override void DrawLine(IPen pen,
-                                      IPoint2D pt1,
-                                      IPoint2D pt2)
+        public override void DrawLine<TPen, TPoint1, TPoint2>(TPen pen,
+                                                              TPoint1 pt1,
+                                                              TPoint2 pt2)
         {
             _paint.SetStyle(Paint.Style.Stroke);
             SetColor(pen);
@@ -95,16 +95,17 @@ namespace Das.Xamarin.Android
             }
         }
 
-        public override void DrawRect(IRectangle rect, IPen pen)
+        public override void DrawRect<TRectangle, TPen>(TRectangle rect,
+                                                        TPen pen)
         {
             _paint.SetStyle(Paint.Style.Stroke);
             SetColor(pen);
             GetCanvas().DrawRect(GetAbsoluteAndroidRect(rect), _paint);
         }
 
-        public override void DrawRoundedRect(IRectangle rect,
-                                             IPen pen,
-                                             Double cornerRadius)
+        public override void DrawRoundedRect<TRectangle, TPen>(TRectangle rect,
+                                                               TPen pen,
+                                                               Double cornerRadius)
         {
             _paint.SetStyle(Paint.Style.Stroke);
             SetColor(pen);
@@ -114,50 +115,55 @@ namespace Das.Xamarin.Android
                 _paint);
         }
 
-        public override void DrawString(String s,
-                                        IFont font,
-                                        IBrush brush,
-                                        IPoint2D point2D)
+        public override void DrawString<TFont, TBrush, TPoint>(String s,
+                                                               TFont font,
+                                                               TBrush brush,
+                                                               TPoint location)
         {
             var renderer = _fontProvider.GetRenderer(font);
-            var dest = GetAbsolutePoint(point2D);
+            var dest = GetAbsolutePoint(location);
             renderer.Canvas = GetCanvas();
             renderer.DrawString(s, brush, dest);
         }
 
-        public override void DrawString(String s,
-                                        IFont font,
-                                        IBrush brush,
-                                        IRectangle rect)
+        public override void DrawString<TFont, TBrush, TRectangle>(String s,
+                                                                   TFont font,
+                                                                   TRectangle location,
+                                                                   TBrush brush)
         {
             var renderer = _fontProvider.GetRenderer(font);
-            var dest = GetAbsoluteRect(rect);
+            var dest = GetAbsoluteRect(location);
             renderer.Canvas = GetCanvas();
             renderer.DrawString(s, brush, dest);
         }
 
-        public override void FillPie(IPoint2D center,
-                                     Double radius,
-                                     Double startAngle,
-                                     Double endAngle,
-                                     IBrush brush)
+        public override void FillPie<TPoint, TBrush>(TPoint center,
+                                                     Double radius,
+                                                     Double startAngle,
+                                                     Double endAngle,
+                                                     TBrush brush)
         {
             throw new NotImplementedException();
         }
 
-        public override void FillRectangle(IRectangle rect, 
-                                           IBrush brush)
+        public override void FillRectangle<TRectangle, TBrush>(TRectangle rect,
+                                                               TBrush brush)
         {
             _paint.SetStyle(Paint.Style.Fill);
             SetColor(brush);
             GetCanvas().DrawRect(GetAbsoluteAndroidRect(rect), _paint);
         }
 
-        public override void FillRoundedRectangle(IRectangle rect, 
-                                                  IBrush brush, 
-                                                  Double cornerRadius)
+        public override void FillRoundedRectangle<TRectangle, TBrush>(TRectangle rect,
+                                                                      TBrush brush,
+                                                                      Double cornerRadius)
         {
-            throw new NotImplementedException();
+            _paint.SetStyle(Paint.Style.Fill);
+            SetColor(brush);
+            GetCanvas().DrawRoundRect(GetAbsoluteAndroidRectF(rect),
+                Convert.ToSingle(cornerRadius),
+                Convert.ToSingle(cornerRadius),
+                _paint);
         }
 
         private Point GetAbsoluteAndroidPoint(IPoint2D relativePoint2D)

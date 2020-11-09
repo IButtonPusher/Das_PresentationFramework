@@ -6,6 +6,7 @@ using Das.Serializer;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Rendering;
+using Das.Views.Rendering.Geometry;
 
 namespace Das.Views.Panels
 {
@@ -49,7 +50,13 @@ namespace Das.Views.Panels
         public override ISize Measure(IRenderSize availableSpace,
                                       IMeasureContext measureContext)
         {
-            return Content?.Measure(availableSpace, measureContext) ?? Size.Empty;
+            var content = Content;
+            if (content == null)
+                return Size.Empty;
+
+            return measureContext.MeasureElement(content, availableSpace);
+
+            //return Content?.Measure(availableSpace, measureContext) ?? Size.Empty;
         }
 
 
@@ -57,7 +64,10 @@ namespace Das.Views.Panels
                                      IRenderContext renderContext)
         {
             var content = Content;
-            content?.Arrange(availableSpace, renderContext);
+            if (content != null)
+                renderContext.DrawElement(content, new ValueRenderRectangle(0, 0,
+                    availableSpace, availableSpace.Offset));
+            //content?.Arrange(availableSpace, renderContext);
         }
 
         public override IVisualElement DeepCopy()

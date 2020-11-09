@@ -4,7 +4,6 @@ using System.IO;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
-using Das.Views.Core.Writing;
 using Das.Views.Rendering;
 
 namespace Das.Xamarin.Android.Rendering
@@ -29,19 +28,27 @@ namespace Das.Xamarin.Android.Rendering
             throw new NotSupportedException();
         }
 
-        public override void DrawImage(IImage img, IRectangle rect)
+        public override  void DrawImage<TRectangle>(IImage img, 
+                                                    TRectangle destination)
         {
         }
 
-        public override void DrawString(String s, IFont font, IBrush brush, IPoint2D point2D)
+        public override void DrawString<TFont, TBrush, TPoint>(String s,
+                                                               TFont font,
+                                                               TBrush brush,
+                                                               TPoint location)
         {
         }
 
-        public override void DrawImage(IImage img, IRectangle sourceRest, IRectangle destination)
+        public override  void DrawImage<TRectangle1, TRectangle2>(IImage img,
+                                                                  TRectangle1 sourceRect,
+                                                                  TRectangle2 destination)
         {
         }
 
-        public override void DrawLine(IPen pen, IPoint2D pt1, IPoint2D pt2)
+        public override void DrawLine<TPen, TPoint1, TPoint2>(TPen pen,
+                                                              TPoint1 pt1,
+                                                              TPoint2 pt2)
         {
         }
 
@@ -49,23 +56,35 @@ namespace Das.Xamarin.Android.Rendering
         {
         }
 
-        public override void DrawRect(IRectangle rect, IPen pen)
+        public override void DrawRect<TRectangle, TPen>(TRectangle rect,
+                                                        TPen pen)
         {
         }
 
-        public override void DrawRoundedRect(IRectangle rect, IPen pen, Double cornerRadius)
+        public override void DrawRoundedRect<TRectangle, TPen>(TRectangle rect,
+                                                               TPen pen,
+                                                               Double cornerRadius)
         {
         }
 
-        public override void DrawString(String s, IFont font, IBrush brush, IRectangle location)
+        public override void DrawString<TFont, TBrush, TRectangle>(String s,
+                                                                   TFont font,
+                                                                   TRectangle location,
+                                                                   TBrush brush)
         {
         }
 
-        public override void FillPie(IPoint2D center, Double radius, Double startAngle, Double endAngle, IBrush brush)
+        public override void FillPie<TPoint, TBrush>(TPoint center,
+                                                     Double radius,
+                                                     Double startAngle,
+                                                     Double endAngle,
+                                                     TBrush brush)
         {
         }
 
-        public override void DrawEllipse(IPoint2D center, Double radius, IPen pen)
+        public override void DrawEllipse<TPoint, TPen>(TPoint center,
+                                                       Double radius,
+                                                       TPen pen)
         {
         }
 
@@ -73,11 +92,14 @@ namespace Das.Xamarin.Android.Rendering
         {
         }
 
-        public override void FillRectangle(IRectangle rect, IBrush brush)
+        public override void FillRectangle<TRectangle, TBrush>(TRectangle rect,
+                                                               TBrush brush)
         {
         }
 
-        public override void FillRoundedRectangle(IRectangle rect, IBrush brush, Double cornerRadius)
+        public override void FillRoundedRectangle<TRectangle, TBrush>(TRectangle rect,
+                                                                      TBrush brush,
+                                                                      Double cornerRadius)
         {
         }
     }

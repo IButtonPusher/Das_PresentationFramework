@@ -4,7 +4,8 @@ using Das.Views.Styles;
 
 namespace Das.Views.Panels
 {
-    public class View<T> : ContentPanel<T>, IView<T>
+    public class View<T> : ContentPanel<T>, 
+                           IView<T>
     {
         public View(IStyleContext styleContext)
         {

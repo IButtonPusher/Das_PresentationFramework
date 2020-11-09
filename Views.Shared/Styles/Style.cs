@@ -10,7 +10,6 @@ namespace Das.Views.Styles
         public Style()
         {
             _setters = new Dictionary<AssignedStyle, Object?>();
-            //Setters = new Dictionary<StyleSetter, Object?>();
         }
 
         public virtual Object? this[StyleSetter setter]
@@ -34,10 +33,23 @@ namespace Das.Views.Styles
                                            StyleSelector selector,
                                            out Object val)
         {
-            //var key = (Int32)setter + ((Int32)selector << 16);
-            var key = new AssignedStyle(setter, selector);
+            foreach (var k in GetUniqueFlags<StyleSelector>(selector))
+            {
+                var key = new AssignedStyle(setter, k);
+                if (_setters.TryGetValue(key, out val!))
+                    return true;
+            }
 
-            return _setters.TryGetValue(key, out val!);
+            val = default!;
+            return false;
+        }
+
+        private static IEnumerable<T> GetUniqueFlags<T>(Enum flags)
+            where T : Enum
+        {
+            foreach (Enum value in Enum.GetValues(flags.GetType()))
+                if (flags.HasFlag(value))
+                    yield return (T)value;
         }
 
         public virtual Boolean TryGetValue(StyleSetter setter,
@@ -71,7 +83,6 @@ namespace Das.Views.Styles
                               Object? value)
         {
             var key = new AssignedStyle(setter, selector, value);
-            //var key = (Int32)setter + ((Int32)selector << 16);
             _setters[key] = value;
         }
 
@@ -81,7 +92,6 @@ namespace Das.Views.Styles
             Add(setter, StyleSelector.None, value);
         }
 
-        //private IDictionary<StyleSetter, Object?> Setters { get; protected set; }
         private readonly Dictionary<AssignedStyle, Object?> _setters;
     }
 }

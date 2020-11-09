@@ -11,7 +11,8 @@ using Das.Views.Rendering;
 
 namespace Das.Views.Panels
 {
-    public abstract class BasePanel<T> : BindableElement<T>, IVisualContainer
+    public abstract class BasePanel<T> : BindableElement<T>, 
+                                         IVisualContainer
     {
         protected BasePanel(IDataBinding<T>? binding)
             : base(binding)

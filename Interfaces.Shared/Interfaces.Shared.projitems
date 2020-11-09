@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IButtonBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\IToggleButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IVisualSurrogate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IVisualSurrogateProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\HatchBrush.cs" />

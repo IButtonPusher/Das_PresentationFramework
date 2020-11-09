@@ -8,6 +8,7 @@ using Das.Views.Gdi;
 using Das.Views.Gdi.Controls;
 using Das.Views.Input;
 using Das.Views.Rendering;
+using Das.Views.Styles;
 
 namespace Das.Gdi.Kits
 {
@@ -15,7 +16,8 @@ namespace Das.Gdi.Kits
                                        IRenderKit
     {
         public GdiRenderKit(IViewPerspective viewPerspective,
-                            IWindowProvider<IVisualHost> windowProvider)
+                            IWindowProvider<IVisualHost> windowProvider,
+                            IStyleContext styleContext)
         {
             // ReSharper disable once VirtualMemberCallInConstructor
             RegisterSurrogate<HtmlPanel>(GetHtmlPanelSurrogate);
@@ -23,11 +25,9 @@ namespace Das.Gdi.Kits
             MeasureContext = new GdiMeasureContext(this);
             RenderContext = new GdiRenderContext(viewPerspective, MeasureContext.Graphics, this);
 
-            Resolver.ResolveTo<IImageProvider, GdiRenderContext>(RenderContext);
-            Resolver.ResolveTo<IUiProvider, GdiUiProvider>(new GdiUiProvider());
-
-            //_containedObjects[typeof(IImageProvider)] = RenderContext;
-            //_containedObjects[typeof(IUiProvider)] = new GdiUiProvider();
+            Resolver.ResolveTo<IImageProvider>(RenderContext);
+            Resolver.ResolveTo<IUiProvider>(new GdiUiProvider());
+            Resolver.ResolveTo(styleContext);
 
             windowProvider.WindowShown += OnWindowShown;
         }

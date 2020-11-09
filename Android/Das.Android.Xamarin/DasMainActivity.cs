@@ -35,9 +35,11 @@ namespace Das.Xamarin.Android
 
             var uiProvider = new AndroidUiProvider(this);
 
+            var windowManager = WindowManager ?? throw new NullReferenceException(
+                "WindowManager cannot be null");
+
             var renderKit = new AndroidRenderKit(new BasePerspective(), this, 
-                fontProvider, WindowManager?? throw new NullReferenceException(
-                    "WindowManager cannot be null"), uiProvider);
+                fontProvider, windowManager, uiProvider, _styleContext);
 
             _view = await GetMainViewAsync(renderKit, uiProvider);
 

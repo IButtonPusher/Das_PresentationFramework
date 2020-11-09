@@ -8,7 +8,8 @@ using Das.Views.Rendering;
 
 namespace Das.Views.Panels
 {
-    public abstract class BaseSequentialPanel<T> : BasePanel<T>, ISequentialPanel
+    public abstract class BaseSequentialPanel<T> : BasePanel<T>, 
+                                                   ISequentialPanel
     {
         protected BaseSequentialPanel(IDataBinding<T>? binding,
                                       ISequentialRenderer? renderer = null)

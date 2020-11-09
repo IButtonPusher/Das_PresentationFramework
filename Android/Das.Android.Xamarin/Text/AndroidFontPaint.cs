@@ -66,9 +66,21 @@ namespace Das.Xamarin.Android
 
         public Size MeasureString(String text)
         {
-            var bounds = new Rect();
-            GetTextBounds(text, 0, text.Length, bounds);
-            return new Size(bounds.Width(), bounds.Height());
+            //var bounds = new Rect();
+            var width = MeasureText(text);
+
+            //GetTextBounds(text, 0, text.Length, bounds);
+
+            using (var textLayout = new StaticLayout(text, this,
+                Convert.ToInt32(width),
+                Layout.Alignment.AlignNormal,
+                1, 1, false))
+            {
+                var height = textLayout.Height;
+                return new Size(width, height);
+            }
+
+            //return new Size(bounds.Width(), bounds.Height());
         }
 
         public Canvas? Canvas { get; set; }

@@ -34,7 +34,7 @@ namespace Das.Views.DevKit
             if (gargs.Length == 1)
             {
                 var genericDeferred = typeof(DeferredPropertyNameBinding<>).MakeGenericType(gargs[0]);
-                var ctor = genericDeferred.GetConstructor(new Type[] { typeof(String)});
+                var ctor = genericDeferred.GetConstructor(new[] { typeof(String)});
                 if (ctor == null)
                     goto fail;
 

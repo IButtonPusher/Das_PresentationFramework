@@ -88,7 +88,7 @@ namespace Das.OpenGL.Text.FreeType
             if (!styleDic.TryGetValue(font.FontStyle, out var file))
                 throw new FileNotFoundException($"Font {font} not found");
 
-            var sz = (UInt32)Math.Round(font.Size /** 1.5*/, 0);
+            var sz = (UInt32)Math.Round(font.Size /* * 1.5 */, 0);
 
             var glFont = new GLFont(font, file.FullName, sz, _context);
             _cached[font] = glFont;

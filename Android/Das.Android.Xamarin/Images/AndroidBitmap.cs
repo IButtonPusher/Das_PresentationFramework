@@ -16,7 +16,8 @@ namespace Das.Xamarin.Android
         public AndroidBitmap(Bitmap bmp)
         {
             _bmp = bmp;
-            _isEmpty = bmp.Width == 1 && bmp.Height == 1;
+            _isEmpty = bmp == null || 
+                       (bmp.Width == 1 && bmp.Height == 1);
         }
 
         private Boolean _isDisposed;
@@ -71,7 +72,8 @@ namespace Das.Xamarin.Android
         Stream IImage.ToStream()
         {
             var ms = new MemoryStream();
-            _bmp.Compress(Bitmap.CompressFormat.Png, 0, ms);
+            if (!_isEmpty)
+                _bmp.Compress(Bitmap.CompressFormat.Png, 0, ms);
             ms.Position = 0;
             return ms;
         }

@@ -9,6 +9,8 @@ namespace Das.Views.Core
     {
         IImage? GetImage(Stream stream);
 
+        IImage? GetImage(Byte[] bytes);
+
         IImage GetNullImage();
     }
 }

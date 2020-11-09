@@ -27,6 +27,7 @@ namespace Das.Views
         protected override void Update()
         {
             var asset = _renderer.DoRender();
+
             _viewHost.Asset = asset;
             _viewHost.Invalidate();
 

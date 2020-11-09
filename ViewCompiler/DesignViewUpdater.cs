@@ -74,7 +74,8 @@ namespace ViewCompiler
                 return;
 
 
-            RenderContext.DrawString(_sbSelected.ToString(), _font, SolidColorBrush.White, _rightRectangle);
+            RenderContext.DrawString(_sbSelected.ToString(), _font, 
+                _rightRectangle, SolidColorBrush.White);
         }
 
         public IMeasureContext MeasureContext { get; }

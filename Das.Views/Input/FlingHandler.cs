@@ -65,10 +65,10 @@ namespace Das.Views.Input
             var stepCoefficient = 100.0;
             var decelerateBy = deceleration / stepCoefficient;
 
-
             while (true)
             {
-                //   Debug.WriteLine("Velocities are: " + _velocityX + ", " + _velocityY);
+                
+                //Debug.WriteLine("Velocities are: " + _velocityX + ", " + _velocityY);
 
                 Double stepX;
                 Double stepY;

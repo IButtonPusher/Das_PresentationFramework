@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ButtonBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\PictureFrame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Label.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ToggleButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\BaseBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\BindableElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\ConverterBinding.cs" />

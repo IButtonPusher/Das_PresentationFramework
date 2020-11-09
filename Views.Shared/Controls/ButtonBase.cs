@@ -5,20 +5,34 @@ using Das.Views.Core.Geometry;
 using Das.Views.Input;
 using Das.Views.Panels;
 using Das.Views.Rendering;
+using Das.Views.Rendering.Geometry;
 using Das.Views.Styles;
 
 namespace Das.Views.Controls
 {
-    public class ButtonBase<T> : ContentPanel<T>,
+    public abstract class ButtonBase<T> : ContentPanel<T>,
                                  IHandleInput<MouseClickEventArgs>,
                                  IHandleInput<MouseDownEventArgs>,
                                  IHandleInput<MouseUpEventArgs>,
                                  IHandleInput<MouseOverEventArgs>,
                                  IButtonBase
     {
+        public ButtonBase()
+        {
+            _currentStyleSelector = StyleSelector.None;
+        }
+
         public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
+            if (!(Content is {} content))
+                return;
+
+            var contentCanHave = GetPaddedSpace(renderContext, availableSpace, out var padding);
+            var contentRect = new ValueRenderRectangle(padding.Left, padding.Top, contentCanHave,
+                Point2D.Empty);
+
+            renderContext.DrawElement(content, contentRect);
         }
 
         public override void Dispose()
@@ -28,13 +42,57 @@ namespace Das.Views.Controls
         public override ISize Measure(IRenderSize availableSpace,
                                       IMeasureContext measureContext)
         {
-            return Size.Empty;
+            if (!(Content is {} content))
+                return Size.Empty;
+
+            var contentCanHave = GetPaddedSpace(measureContext, 
+                availableSpace, out var padding);
+
+            var contentWants = measureContext.MeasureElement(content, contentCanHave);
+            var ambition = contentWants + padding;
+            if (ambition.Width > availableSpace.Width ||
+                ambition.Height > availableSpace.Height)
+                return availableSpace;
+            return contentWants + padding;
+        }
+
+        private IRenderSize GetPaddedSpace(IStyleProvider styleContext,
+                                           IRenderSize availableSpace,
+                                           out Thickness padding)
+        {
+            padding = styleContext.GetStyleSetter<Thickness>(StyleSetter.Padding,
+                CurrentStyleSelector, this);
+
+            return padding.IsEmpty
+                ? availableSpace
+                : availableSpace.Reduce(padding);
         }
 
         public StyleSelector CurrentStyleSelector
         {
             get => _currentStyleSelector;
-            set => SetValue(ref _currentStyleSelector, value, OnCurrentSelectorChanged);
+            //set => SetValue(ref _currentStyleSelector, value, OnCurrentSelectorChanged);
+        }
+
+        protected void AddStyleSelector(StyleSelector value)
+        {
+            var val = _currentStyleSelector == StyleSelector.None 
+            ? value : 
+            _currentStyleSelector | value;
+
+            SetValue(ref _currentStyleSelector, val, OnCurrentSelectorChanged,
+                nameof(CurrentStyleSelector));
+        }
+
+        protected void RemoveStyleSelector(StyleSelector value)
+        {
+            var val = _currentStyleSelector & ~value;
+            
+            if (val == 0)
+            {}
+
+            SetValue(ref _currentStyleSelector, val, OnCurrentSelectorChanged,
+                nameof(CurrentStyleSelector));
         }
 
         public virtual Boolean OnInput(MouseClickEventArgs args)
@@ -53,7 +111,7 @@ namespace Das.Views.Controls
 
         public virtual Boolean OnInput(MouseDownEventArgs args)
         {
-            CurrentStyleSelector = StyleSelector.Active;
+            AddStyleSelector(StyleSelector.Active);
 
             if (ClickMode != ClickMode.Press || !(Command is {} cmd))
                 return true;
@@ -64,16 +122,17 @@ namespace Das.Views.Controls
 
         public virtual Boolean OnInput(MouseOverEventArgs args)
         {
-            CurrentStyleSelector = args.IsMouseOver
-                ? StyleSelector.Hover
-                : StyleSelector.None;
+            if (args.IsMouseOver)
+                AddStyleSelector(StyleSelector.Hover);
+            else
+                RemoveStyleSelector(StyleSelector.Hover);
 
             return true;
         }
 
         public virtual Boolean OnInput(MouseUpEventArgs args)
         {
-            CurrentStyleSelector = StyleSelector.Hover;
+            RemoveStyleSelector(StyleSelector.Active);
             return true;
         }
 
@@ -92,8 +151,6 @@ namespace Das.Views.Controls
 
 
         private ClickMode _clickMode;
-
-
         private StyleSelector _currentStyleSelector;
     }
 }

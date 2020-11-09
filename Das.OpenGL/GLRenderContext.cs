@@ -25,24 +25,25 @@ namespace Das.OpenGL
         private readonly IFontProvider _fontProvider;
         private const Double TwoPi = 2.0 * Math.PI;
 
-        public override void DrawString(String s, 
-                                        IFont font, 
-                                        IBrush brush, 
-                                        IPoint2D point2D)
+        public override void DrawString<TFont, TBrush, TPoint>(String s,
+                                                               TFont font,
+                                                               TBrush brush,
+                                                               TPoint location)
         {
-            var to = GetAbsolutePoint(point2D);
+            var to = GetAbsolutePoint(location);
             var renderer = _fontProvider.GetRenderer(font);
             renderer.DrawString(s, brush, to);
         }
 
-        public override void DrawRoundedRect(IRectangle rect, 
-                                             IPen pen, 
-                                             Double cornerRadius)
+        public override void DrawRoundedRect<TRectangle, TPen>(TRectangle rect,
+                                                               TPen pen,
+                                                               Double cornerRadius)
         {
             throw new NotImplementedException();
         }
 
-        public override void FillRectangle(IRectangle orect, IBrush brush)
+        public override void FillRectangle<TRectangle, TBrush>(TRectangle orect,
+                                                               TBrush brush)
         {
             var rect = orect;
             SetOrtho();
@@ -57,7 +58,9 @@ namespace Das.OpenGL
             GL.glFlush();
         }
 
-        public override void FillRoundedRectangle(IRectangle rect, IBrush brush, Double cornerRadius)
+        public override void FillRoundedRectangle<TRectangle, TBrush>(TRectangle rect,
+                                                                      TBrush brush,
+                                                                      Double cornerRadius)
         {
             throw new NotImplementedException();
         }
@@ -71,12 +74,16 @@ namespace Das.OpenGL
             GL.glColor3f(r, g, b);
         }
 
-        public override void DrawString(String s, IFont font, IBrush brush, IRectangle location)
+        public override void DrawString<TFont, TBrush, TRectangle>(String s,
+                                                                   TFont font,
+                                                                   TRectangle location,
+                                                                   TBrush brush)
         {
             throw new NotImplementedException();
         }
 
-        public override void DrawImage(IImage img, IRectangle rect)
+        public override  void DrawImage<TRectangle>(IImage img, 
+                                                    TRectangle destination)
         {
             throw new NotImplementedException();
         }
@@ -86,9 +93,9 @@ namespace Das.OpenGL
             throw new NotImplementedException();
         }
 
-        public override void DrawImage(IImage img, 
-                                       IRectangle sourceRest, 
-                                       IRectangle destination)
+        public override void DrawImage<TRectangle1, TRectangle2>(IImage img,
+                                                                 TRectangle1 sourceRect,
+                                                                 TRectangle2 destination)
         {
             throw new NotImplementedException();
         }
@@ -98,7 +105,9 @@ namespace Das.OpenGL
             throw new NotImplementedException();
         }
 
-        public override void DrawLine(IPen pen, IPoint2D pt1, IPoint2D pt2)
+        public override void DrawLine<TPen, TPoint1, TPoint2>(TPen pen,
+                                                              TPoint1 pt1,
+                                                              TPoint2 pt2)
         {
             SetOrtho();
 
@@ -130,7 +139,8 @@ namespace Das.OpenGL
             GL.glFlush();
         }
 
-        public override void DrawRect(IRectangle rect, IPen pen)
+        public override void DrawRect<TRectangle, TPen>(TRectangle rect,
+                                                        TPen pen)
         {
             var points = new IPoint2D[] { rect.TopLeft, rect.TopRight,
                 rect.BottomRight, rect.BottomLeft };
@@ -152,8 +162,11 @@ namespace Das.OpenGL
             GL.glOrtho(left, right, bottom, top, -1, 1);
         }
 
-        public override void FillPie(IPoint2D center, Double radius, Double startAngle, 
-            Double endAngle, IBrush brush)
+        public override void FillPie<TPoint, TBrush>(TPoint center,
+                                                     Double radius,
+                                                     Double startAngle,
+                                                     Double endAngle,
+                                                     TBrush brush)
         {
             startAngle += 90;
             endAngle += 90;
@@ -187,7 +200,9 @@ namespace Das.OpenGL
             GL.glEnd();
         }
 
-        public override void DrawEllipse(IPoint2D center, Double radius, IPen pen)
+        public override void DrawEllipse<TPoint, TPen>(TPoint center,
+                                                       Double radius,
+                                                       TPen pen)
         {
             const Single halfPie = (Single)(Math.PI / 180f);
 
@@ -224,7 +239,7 @@ namespace Das.OpenGL
         }
 
         private Int32 _wotCount;
-        private static Stopwatch _sw = new Stopwatch();
+        private static readonly Stopwatch _sw = new Stopwatch();
 
         public override void DrawFrame(IFrame frame)
         {

@@ -87,6 +87,11 @@ namespace Das.Views.Gdi.Controls
                 case nameof(HtmlPanel.Markup):
                     DocumentText = _htmlPanel.Markup;
                     break;
+
+                case nameof(HtmlPanel.Uri):
+                    if (_htmlPanel.Uri != null)
+                        Navigate(_htmlPanel.Uri);
+                    break;
             }
         }
 

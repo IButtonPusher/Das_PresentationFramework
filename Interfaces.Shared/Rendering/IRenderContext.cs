@@ -8,77 +8,103 @@ using Das.Views.Core;
 
 namespace Das.Views.Rendering
 {
-    public interface IRenderContext : IVisualContext, 
+    public interface IRenderContext : IVisualContext,
                                       IElementLocator,
                                       IImageProvider
     {
         IViewPerspective Perspective { get; }
 
-        //IDictionary<IVisualElement, ICube> RenderPositions { get; }
-
         IViewState? ViewState { get; }
 
 
-        Rectangle DrawMainElement(IVisualElement element,
-                                  IRectangle rect,
-                                  IViewState viewState);
+        Rectangle DrawMainElement<TRectangle>(IVisualElement element,
+                                              TRectangle rect,
+                                              IViewState viewState)
+            where TRectangle : IRectangle;
 
         /// <summary>
         ///     Returns the actual rectangle occupied by the element, including borders etc
         /// </summary>
-        Rectangle DrawElement(IVisualElement element, 
-                              IRenderRectangle rect);
+        Rectangle DrawElement<TRenderRectangle>(IVisualElement element,
+                                                TRenderRectangle rect)
+            where TRenderRectangle : IRenderRectangle;
 
-        void DrawEllipse(IPoint2D center, 
-                         Double radius, 
-                         IPen pen);
+        void DrawEllipse<TPoint, TPen>(TPoint center,
+                                       Double radius,
+                                       TPen pen)
+            where TPoint : IPoint2D
+            where TPen : IPen;
 
         void DrawFrame(IFrame frame);
 
-        void DrawImage(IImage img, 
-                       IRectangle destination);
+        void DrawImage<TRectangle>(IImage img,
+                                   TRectangle destination)
+            where TRectangle : IRectangle;
 
-        void DrawImage(IImage img, 
-                       IRectangle sourceRest,
-                       IRectangle destination);
+        void DrawImage<TRectangle1, TRectangle2>(IImage img,
+                                                 TRectangle1 sourceRect,
+                                                 TRectangle2 destination)
+            where TRectangle1 : IRectangle
+            where TRectangle2 : IRectangle;
 
-        void DrawLine(IPen pen, IPoint2D pt1, 
-                      IPoint2D pt2);
+        void DrawLine<TPen, TPoint1, TPoint2>(TPen pen,
+                                              TPoint1 pt1,
+                                              TPoint2 pt2)
+            where TPen : IPen
+            where TPoint1 : IPoint2D
+            where TPoint2 : IPoint2D;
 
-        void DrawLines(IPen pen, 
+        void DrawLines(IPen pen,
                        IPoint2D[] points);
 
-        void DrawRect(IRectangle rect, 
-                      IPen pen);
+        void DrawRect<TRectangle, TPen>(TRectangle rect,
+                                        TPen pen)
+            where TRectangle : IRectangle
+            where TPen : IPen;
 
-        void DrawRoundedRect(IRectangle rect, 
-                      IPen pen,
-                      Double cornerRadius);
+        void DrawRoundedRect<TRectangle, TPen>(TRectangle rect,
+                                               TPen pen,
+                                               Double cornerRadius)
+            where TRectangle : IRectangle
+            where TPen : IPen;
 
-        void DrawString(String s, 
-                        IFont font, 
-                        IBrush brush, 
-                        IPoint2D location);
+        void DrawString<TFont, TBrush, TPoint>(String s,
+                                               TFont font,
+                                               TBrush brush,
+                                               TPoint location)
+            where TFont : IFont
+            where TBrush : IBrush
+            where TPoint : IPoint2D;
 
         /// <summary>
         /// Draws the string within the provided rectangle.  Wraps text as needed
         /// </summary>
-        void DrawString(String s, 
-                        IFont font, 
-                        IBrush brush, 
-                        IRectangle rect);
+        void DrawString<TFont, TBrush, TRectangle>(String s,
+                                                   TFont font,
+                                                   TRectangle rect,
+                                                   TBrush brush)
+            where TFont : IFont
+            where TBrush : IBrush
+            where TRectangle : IRectangle;
 
-        void FillPie(IPoint2D center, 
-                     Double radius, 
-                     Double startAngle,
-                     Double endAngle, 
-                     IBrush brush);
 
-        void FillRectangle(IRectangle rect, 
-                      IBrush brush);
+        void FillPie<TPoint, TBrush>(TPoint center,
+                                     Double radius,
+                                     Double startAngle,
+                                     Double endAngle,
+                                     TBrush brush)
+            where TPoint : IPoint2D
+            where TBrush : IBrush;
 
-        void FillRoundedRectangle(IRectangle rect, 
-                             IBrush brush,
-                             Double cornerRadius);
+        void FillRectangle<TRectangle, TBrush>(TRectangle rect,
+                                               TBrush brush)
+            where TRectangle : IRectangle
+            where TBrush : IBrush;
+
+        void FillRoundedRectangle<TRectangle, TBrush>(TRectangle rect,
+                                                      TBrush brush,
+                                                      Double cornerRadius)
+            where TRectangle : IRectangle
+            where TBrush : IBrush;
     }
 }

@@ -91,6 +91,8 @@ namespace Das.Views.Panels
         public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
+            //Debug.WriteLine("Arranging scroll panel");
+
             if (!(Content is {} content))
                 return;
 
@@ -111,6 +113,8 @@ namespace Das.Views.Panels
                 new ValuePoint2D(HorizontalOffset, VerticalOffset));
 
             renderContext.DrawElement(content, dest);
+
+            //Debug.WriteLine("Arranged scroll panel");
         }
 
 
@@ -143,6 +147,8 @@ namespace Das.Views.Panels
 
         private void OnOffsetChanged(Int32 _)
         {
+            //Debug.WriteLine("Scroll offset changed");
+
             IsChanged = true;
         }
 

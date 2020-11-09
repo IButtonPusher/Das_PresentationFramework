@@ -63,10 +63,9 @@ namespace Das.Gdi
                     break;
 
                 case MessageTypes.WM_MOUSEWHEEL:
+
                     var args = new MouseWheelEventArgs(CursorPosition, 
-                        (Int32) m.LParam >> 16 > 0 ? -1 : 1, this);
-                    //var args = new MouseWheelEventArgs(CursorPosition, 
-                    //    (Int32) m.WParam >> 16 > 0 ? -1 : 1, this);
+                        (Int64)m.WParam >= Int32.MaxValue ? 1 : -1, this);
 
                     _inputHandler.OnMouseInput(args, InputAction.MouseWheel);
 
@@ -118,58 +117,13 @@ namespace Das.Gdi
         private ValuePoint2D? _rightButtonWentDown;
         private ValuePoint2D? _lastDragPosition;
 
-        //private static MouseButtons GetMouseButton(MessageTypes messageType)
-        //{
-        //    switch (messageType)
-        //    {
-        //        case MessageTypes.WM_LBUTTONDOWN:
-        //        case MessageTypes.WM_LBUTTONUP:
-        //        case MessageTypes.WM_LBUTTONDBLCLK:
-        //            return MouseButtons.Left;
-
-
-        //        case MessageTypes.WM_RBUTTONDOWN:
-        //        case MessageTypes.WM_RBUTTONUP:
-        //        case MessageTypes.WM_RBUTTONDBLCLK:
-        //            return MouseButtons.Right;
-
-        //        default:
-        //            throw new NotImplementedException();
-        //    }
-        //}
-
-        //private static TArgs GetArgs<TArgs>(MessageTypes messageType) where TArgs: struct, Enum
-        //{
-
-        //    switch (messageType)
-        //    {
-        //        case MessageTypes.WM_LBUTTONUP when MouseButtons.Left is TArgs ta:
-        //            return ta;
-
-        //        default:
-        //            throw new NotImplementedException();
-        //    }
-        //}
-
-        //private MouseDownEventArgs ToArgs(MouseButtons button, IntPtr lParam)
-        //{
-        //    return new MouseDownEventArgs(GetPosition((Int32)lParam), button, this);
-        //}
+       
 
         private static ValuePoint2D GetPosition(IntPtr lParam) => GetPosition((Int32) lParam);
         
 
         private static ValuePoint2D GetPosition(Int32 lParam)
         {
-            //var ox = (Int16) (lParam & Int16.MaxValue);
-            //var oy = (Int16) (lParam >> 16);
-
-            //var nx = (Int16) (lParam);
-
-            //if (nx != ox)
-            //{}
-
-
             return new ValuePoint2D((Int16) lParam,
                 (Int16) (lParam >> 16)); //cast to int16 for overflow-negatives
         }

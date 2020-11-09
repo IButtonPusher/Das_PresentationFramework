@@ -16,6 +16,14 @@ namespace Das.Views.Controls
             set => SetValue(ref _markup, value);
         }
 
+        private Uri? _uri;
+
+        public Uri? Uri
+        {
+            get => _uri;
+            set => SetValue(ref _uri, value);
+        }
+
         public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {

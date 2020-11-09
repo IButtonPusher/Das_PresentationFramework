@@ -7,6 +7,7 @@ using Das.Views;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.ViewModels;
+using Das.Views.Styles;
 
 namespace Das.Gdi
 {
@@ -29,7 +30,8 @@ namespace Das.Gdi
         private static GdiRenderKit GetKit(IWindowProvider<IVisualHost> windowProvider)
         {
             var perspective = new BasePerspective();
-            var kit = new GdiRenderKit(perspective, windowProvider);
+            var kit = new GdiRenderKit(perspective, windowProvider,
+                new BaseStyleContext(new DefaultStyle()));
             return kit;
         }
 

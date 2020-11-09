@@ -31,7 +31,8 @@ namespace Das.Xamarin.Android
                            IWindowManager windowManager,
                            AndroidUiProvider uiProvider)
             : this(view, context, 
-                BuildRenderKit(context, view, windowManager, uiProvider),
+                BuildRenderKit(context, view, windowManager, uiProvider, 
+                    new BaseStyleContext(new DefaultStyle())),
                 uiProvider)
         { }
 
@@ -67,7 +68,7 @@ namespace Das.Xamarin.Android
 
             SetOnTouchListener(this);
 
-            //var _ = RefreshLoop();
+            var _ = RefreshLoop();
         }
 
         private IVisualSurrogate GetHtmlPanelSurrogate(IVisualElement element)
@@ -80,7 +81,7 @@ namespace Das.Xamarin.Android
                     throw new InvalidOperationException();
 
                 //var surrogate = new NullViewSurrogate(Context);
-                var surrogate = new HtmlSurrogate2(pnl, Context, this);
+                var surrogate = new HtmlSurrogate(pnl, Context, this);
                 //var webby = new WebView(Context);
 
                 //var surrogate = new HtmlViewSurrogate(pnl, Context,
@@ -99,7 +100,7 @@ namespace Das.Xamarin.Android
             });
         }
 
-        private void OnSurrogateDispoed(IVisualElement obj)
+        private static void OnSurrogateDispoed(IVisualElement obj)
         {
             throw new NotImplementedException();
         }
@@ -107,7 +108,8 @@ namespace Das.Xamarin.Android
         private static AndroidRenderKit BuildRenderKit(Context context,
                                                        IView view,
                                                        IWindowManager windowManager,
-                                                       AndroidUiProvider uiProvider)
+                                                       AndroidUiProvider uiProvider,
+                                                       IStyleContext styleContext)
         {
             var displayMetrics = context.Resources?.DisplayMetrics ?? throw new NullReferenceException();
 
@@ -115,7 +117,7 @@ namespace Das.Xamarin.Android
 
             var fontProvider = new AndroidFontProvider(displayMetrics);
             return new AndroidRenderKit(new BasePerspective(), viewState,
-                fontProvider, windowManager, uiProvider);
+                fontProvider, windowManager, uiProvider, styleContext);
         }
 
         IPoint2D IInputProvider.CursorPosition { get; } = Point2D.Empty;
@@ -406,8 +408,9 @@ namespace Das.Xamarin.Android
                 if (_view.IsChanged)
                 {
                     _view.AcceptChanges();
-                    RenderKit.MeasureContext.MeasureMainView(_view, 
+                    RenderKit.MeasureContext.MeasureMainView(_view,
                         new ValueRenderSize(_measured), this);
+                    _paintView.Invalidate();
                     Invalidate();
                 }
                 else
@@ -417,7 +420,6 @@ namespace Das.Xamarin.Android
         }
 
         private readonly GestureDetectorCompat _gestureDetector;
-        private readonly AndroidPaintView _paintView;
 
         private readonly BaseInputHandler _inputHandler;
         private readonly Int32 _maximumFlingVelocity;
@@ -431,5 +433,6 @@ namespace Das.Xamarin.Android
         private Boolean _hasSurrogates;
 
         private Size _measured;
+        private AndroidPaintView _paintView;
     }
 }

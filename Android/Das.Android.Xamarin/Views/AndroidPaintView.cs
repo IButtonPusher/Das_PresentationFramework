@@ -22,21 +22,29 @@ namespace Das.Xamarin.Android
             _view = view;
             _viewState = renderKit.RenderContext.ViewState ?? throw new NullReferenceException();
 
-            var _ = RefreshLoop();
+            //var _ = RefreshLoop();
         }
 
         private async Task RefreshLoop()
         {
+            var sleepTime = 0;
+
             while (true)
                 if (_view.IsChanged)
                 {
+                    //System.Diagnostics.Debug.WriteLine("paint changed");
                     _view.AcceptChanges();
                     RenderKit.MeasureContext.MeasureMainView(_view,
                         new ValueRenderSize(_measured), _viewState);
                     Invalidate();
+                    sleepTime = 0;
                 }
                 else
-                    await Task.Delay(50);
+                {
+                    sleepTime = Math.Min(++sleepTime, 50);
+                    await Task.Delay(sleepTime);
+                    //System.Diagnostics.Debug.WriteLine("paint sleeping");
+                }
 
             // ReSharper disable once FunctionNeverReturns
         }
@@ -49,7 +57,7 @@ namespace Das.Xamarin.Android
         protected override void OnMeasure(Int32 widthMeasureSpec,
                                           Int32 heightMeasureSpec)
         {
-            System.Diagnostics.Debug.WriteLine("measure paint view");
+            //System.Diagnostics.Debug.WriteLine("measure paint view");
             base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
             var w = MeasuredWidth;
             var h = MeasuredHeight;
@@ -60,7 +68,7 @@ namespace Das.Xamarin.Android
 
         protected override void OnDraw(Canvas? canvas)
         {
-            System.Diagnostics.Debug.WriteLine("draw paint view");
+            //System.Diagnostics.Debug.WriteLine("draw paint view");
 
             if (canvas == null)
                 return;

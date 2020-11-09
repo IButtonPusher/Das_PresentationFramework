@@ -7,6 +7,7 @@ using Das.Views.Core;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Rendering;
+using Das.Views.Styles;
 using Das.Xamarin.Android.Mvvm;
 using Das.Xamarin.Android.Rendering;
 
@@ -19,7 +20,8 @@ namespace Das.Xamarin.Android
                                 IViewState viewState,
                                 IFontProvider<AndroidFontPaint> fontProvider,
                                 IWindowManager windowManager,
-                                AndroidUiProvider uiProvider)
+                                AndroidUiProvider uiProvider,
+                                IStyleContext styleContext)
         {
             MeasureContext = new AndroidMeasureKit(windowManager, fontProvider, this);
 
@@ -30,11 +32,10 @@ namespace Das.Xamarin.Android
 
             RefreshRenderContext = new RefreshRenderContext(viewPerspective, this, visualPositions);
 
-            Resolver.ResolveTo<IImageProvider, AndroidRenderContext>(RenderContext);
-            Resolver.ResolveTo<IUiProvider, AndroidUiProvider>(uiProvider);
-
-            //_containedObjects[typeof(IImageProvider)] = RenderContext;
-            //_containedObjects[typeof(IUiProvider)] = uiProvider;
+            Resolver.ResolveTo<IImageProvider>(RenderContext);
+            Resolver.ResolveTo<IUiProvider>(uiProvider);
+            Resolver.ResolveTo(styleContext);
+            
         }
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;

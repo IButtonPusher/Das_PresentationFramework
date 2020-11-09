@@ -10,13 +10,13 @@ using Das.Views.Rendering;
 
 namespace Das.Xamarin.Android.Controls
 {
-    public class HtmlSurrogate2 : WebView,
+    public class HtmlSurrogate : WebView,
                                   IVisualSurrogate
     {
         private readonly HtmlPanel _htmlPanel;
         private readonly ViewGroup _viewGroup;
 
-        public HtmlSurrogate2(HtmlPanel htmlPanel, 
+        public HtmlSurrogate(HtmlPanel htmlPanel, 
                               Context? context,
                               ViewGroup viewGroup) 
             : base(context)
@@ -50,7 +50,11 @@ namespace Das.Xamarin.Android.Controls
 
                 case nameof(HtmlPanel.Markup):
                     LoadData(_htmlPanel.Markup, "text/html; charset=utf-8", "UTF-8");
-                    
+                    break;
+
+                case nameof(HtmlPanel.Uri):
+                    if (_htmlPanel.Uri != null)
+                        LoadUrl(_htmlPanel.Uri.AbsoluteUri);
                     break;
             }
         }

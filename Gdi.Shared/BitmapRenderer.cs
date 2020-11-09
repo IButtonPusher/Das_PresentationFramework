@@ -42,6 +42,12 @@ namespace Das.Gdi
                 if (view == null)
                     return default!;
 
+                if (_visualHost.AvailableSize.Width == 0 ||
+                    _visualHost.AvailableSize.Height == 0)
+                {
+                    return null!;
+                }
+
                 var available = new ValueRenderSize(_visualHost.AvailableSize);
                 
                 

@@ -64,7 +64,7 @@ namespace Das.Views.DevKit
         {
             var viewBindingType = Serializer.TypeInferrer.GetTypeFromClearName(Binding);
 
-            _viewModel = value;// as IMutableVm;
+            _viewModel = value;
 
             if (!(Content is IBindableElement setter))
                 return;
@@ -100,7 +100,6 @@ namespace Das.Views.DevKit
                 var rType = GetPropertyBinding(element, parentType);
                 if (rType == null)
                 {
-
                     throw new InvalidOperationException($"Invalid binding on element: {element}");
                 }
 

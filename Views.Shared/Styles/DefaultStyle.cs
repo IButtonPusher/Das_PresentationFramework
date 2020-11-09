@@ -43,9 +43,13 @@ namespace Das.Views.Styles
                     {StyleSetter.BorderRadius, StyleSelector.None, 8},
                     {StyleSetter.BorderThickness, StyleSelector.None, 1},
                     {StyleSetter.BorderBrush, StyleSelector.None, SolidColorBrush.Black},
-                    {StyleSetter.Background, StyleSelector.Hover, SolidColorBrush.LightGray},
+                    //{StyleSetter.Background, StyleSelector.Hover, SolidColorBrush.LightGray},
                     {StyleSetter.Background, StyleSelector.Active, SolidColorBrush.LightGray},
                     {StyleSetter.Padding, StyleSelector.None, new Thickness(5)}
+                },
+                [typeof(IToggleButton)] = new TypeStyle<IToggleButton>
+                {
+                    {StyleSetter.Background, StyleSelector.Checked, SolidColorBrush.LightGray},
                 }
             };
             VisualTypeStyles = typeTypes;

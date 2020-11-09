@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 
 namespace Das.Views.Core.Drawing
 {
-    public class Pen : IPen, IEquatable<IPen>
+    public class Pen : IPen, 
+                       IEquatable<IPen>
     {
         public Pen(Color color, Int32 thickness)
         {
