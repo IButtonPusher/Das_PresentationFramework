@@ -47,8 +47,6 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ViewModels.Shared", "ViewMo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Das.ViewModels", "Das.ViewModels\Das.ViewModels.csproj", "{4AD8F035-A30F-4D67-8E84-FAD46D1B8877}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CSharp8NetFramework", "..\NetFramework\CSharp8NetFramework\CSharp8NetFramework.shproj", "{73AEA84A-7E59-466E-B5B9-CEE436A5ECBC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ViewModels", "ViewModels", "{7CFE084C-2AF2-4206-94A5-8AAF9074C475}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extended", "Extended", "{EB78D6C4-F72A-4476-A7AB-7A8AB746A8FA}"
@@ -81,6 +79,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenGLTests", "Core\OpenGL\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{222D56E5-810B-4B6B-9DED-ADFC893844E8}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CSharp8NetFramework", "Core\CSharp8NetFramework\CSharp8NetFramework.shproj", "{73AEA84A-7E59-466E-B5B9-CEE436A5ECBC}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		WinForms.Shared\WinForms.Shared.projitems*{15783956-b706-41d5-982b-1bcf698ca5b1}*SharedItemsImports = 13
@@ -95,7 +95,7 @@ Global
 		ViewModels.Shared\ViewModels.Shared.projitems*{4ad8f035-a30f-4d67-8e84-fad46d1b8877}*SharedItemsImports = 5
 		Windows.Shared\Windows.Shared.projitems*{6f514769-88cf-4d8a-8aa4-a015919df274}*SharedItemsImports = 13
 		Views.Dynamic\Views.Dynamic.projitems*{71ca5a1a-4398-4d84-afe4-9e5d67194b85}*SharedItemsImports = 13
-		..\NetFramework\CSharp8NetFramework\CSharp8NetFramework.projitems*{73aea84a-7e59-466e-b5b9-cee436a5ecbc}*SharedItemsImports = 13
+		Core\CSharp8NetFramework\CSharp8NetFramework.projitems*{73aea84a-7e59-466e-b5b9-cee436a5ecbc}*SharedItemsImports = 13
 		Views.Shared\Views.Shared.projitems*{778a378f-7a09-4c1d-abd3-634f3d9cc8ab}*SharedItemsImports = 13
 		Charting.Shared\Charting.Shared.projitems*{96070dbd-8d78-4bc7-90ee-c4d545bcd2aa}*SharedItemsImports = 13
 		Gdi.Hosting\Gdi.Hosting.projitems*{9e5f272f-b836-4e04-9e6e-84437ce8be79}*SharedItemsImports = 13
@@ -106,7 +106,7 @@ Global
 		Charting.Shared\Charting.Shared.projitems*{b0a43ae7-19a0-4c0c-b854-d4f77dae7bba}*SharedItemsImports = 5
 		Gdi.Shared\Gdi.Shared.projitems*{ce7e6b63-33e2-44f8-85c9-979a4f6b6f2c}*SharedItemsImports = 13
 		ViewModels.Shared\ViewModels.Shared.projitems*{cec76f49-102d-4f52-9f95-231829c47839}*SharedItemsImports = 13
-		..\NetFramework\CSharp8NetFramework\CSharp8NetFramework.projitems*{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}*SharedItemsImports = 5
+		Core\CSharp8NetFramework\CSharp8NetFramework.projitems*{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}*SharedItemsImports = 5
 		Interfaces.Shared\Interfaces.Shared.projitems*{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -246,7 +246,6 @@ Global
 		{2A2FC2BA-AF07-492D-A438-2239791511F5} = {7D6AF48C-D5E9-4925-A721-E32B78F9534D}
 		{CEC76F49-102D-4F52-9F95-231829C47839} = {7CFE084C-2AF2-4206-94A5-8AAF9074C475}
 		{4AD8F035-A30F-4D67-8E84-FAD46D1B8877} = {7CFE084C-2AF2-4206-94A5-8AAF9074C475}
-		{73AEA84A-7E59-466E-B5B9-CEE436A5ECBC} = {222D56E5-810B-4B6B-9DED-ADFC893844E8}
 		{31AE3419-4992-443D-A702-35797B2B8528} = {C125B97B-471A-4FD9-893E-BE750FDCFC0E}
 		{CC80E792-4142-4624-B02A-FE1CF98B6E7F} = {BE317C9B-5FE9-4F80-985A-DE2B10B33A6F}
 		{ABB838EE-412B-41A4-B658-96A6D9C5389F} = {C0299441-68E4-43A5-85EC-82A6E2AF7787}
@@ -255,6 +254,7 @@ Global
 		{B5D034B4-FE61-4587-9612-827F4A282301} = {BE317C9B-5FE9-4F80-985A-DE2B10B33A6F}
 		{5A2CB073-A942-4F28-9B93-1D811AEB12F5} = {EB78D6C4-F72A-4476-A7AB-7A8AB746A8FA}
 		{3C6BB6B6-8966-402F-A330-7288B6D36888} = {1665C74F-B546-46BC-B3DF-910FFFB5C434}
+		{73AEA84A-7E59-466E-B5B9-CEE436A5ECBC} = {654B3AF3-BE80-4F41-B2A1-B6206C6E670A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FA7878E5-0712-446F-8FC0-4D187CDB5C2F}

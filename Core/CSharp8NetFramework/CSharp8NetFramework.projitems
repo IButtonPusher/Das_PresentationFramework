@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>73aea84a-7e59-466e-b5b9-cee436a5ecbc</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>CSharp8NetFramework</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CancellationTokenEx.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Concurrency\AsyncSemaphore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Concurrency\AsyncWaiter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Concurrency\IReaderWriterAsync.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Concurrency\ReaderWriterAsync.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Concurrency\ReaderWriteSync.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Concurrency\SyncReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Concurrency\WaiterAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\AsyncEnumerable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\AsyncEnumerableWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\AsyncEnumerationCanceledException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\AsyncEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\AsyncEnumeratorWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\ConfiguredAsyncDisposable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\ConfiguredCancelableAsyncEnumerable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\CurrentValueContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\EmptyAsyncEnumerable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\EmptyAsyncEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\EnumerableAdapter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\EnumeratorAdapter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\EnumeratorCancellationAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\IAsyncDisposable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\IAsyncEnumerable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\IAsyncEnumerableExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\IAsyncEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\TaskAsyncEnumerableExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForEach\YieldAwaitable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Nullables\NullableAttributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StackTraceHiddenAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TaskCompletionSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ThrowHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTask\AsyncIteratorMethodBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTask\AsyncIteratorStateMachineAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTask\AsyncMethodBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTask\AsyncValueTaskMethodBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTask\ConfiguredValueTaskAwaitable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTask\ExceptionDispatchInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTask\IValueTaskSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTask\ManualResetValueTaskSourceCore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTask\ManualResetValueTaskSourceCoreShared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTask\ValueTask.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTask\ValueTaskAwaiter.cs" />
+  </ItemGroup>
+</Project>

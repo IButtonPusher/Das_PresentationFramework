@@ -8,18 +8,23 @@ namespace Das.Views.Input
 {
     public interface IElementLocator
     {
-        IEnumerable<IRenderedVisual> GetElementsAt(IPoint2D point2D);
+        IEnumerable<IRenderedVisual> GetElementsAt<TPoint>(TPoint point2D)
+            where TPoint : IPoint2D;
 
-        IEnumerable<T> GetVisualsForInput<T>(IPoint2D point2D, 
-                                           InputAction inputAction) where T : class;
+        IEnumerable<TVisual> GetVisualsForInput<TVisual, TPoint>(TPoint point2D, 
+                                           InputAction inputAction) 
+            where TVisual : class
+            where TPoint : IPoint2D;
 
-        IEnumerable<IHandleInput<T>> GetVisualsForMouseInput<T>(IPoint2D point2D,
+        IEnumerable<IHandleInput<T>> GetVisualsForMouseInput<T, TPoint>(TPoint point2D,
                                                                 InputAction inputAction) 
-            where T : IInputEventArgs;
+            where T : IInputEventArgs
+            where TPoint : IPoint2D;
 
-        IEnumerable<IRenderedVisual<IHandleInput<T>>> GetRenderedVisualsForMouseInput<T>(IPoint2D point2D,
+        IEnumerable<IRenderedVisual<IHandleInput<T>>> GetRenderedVisualsForMouseInput<T, TPoint>(TPoint point2D,
                                                                 InputAction inputAction) 
-            where T : IInputEventArgs;
+            where T : IInputEventArgs
+            where TPoint : IPoint2D;
 
 
         ICube? TryGetElementBounds(IVisualElement element);

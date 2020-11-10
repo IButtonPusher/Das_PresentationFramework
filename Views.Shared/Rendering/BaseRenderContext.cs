@@ -43,7 +43,8 @@ namespace Das.Views.Rendering
         }
 
 
-        public IEnumerable<IRenderedVisual> GetElementsAt(IPoint2D point2D)
+        public IEnumerable<IRenderedVisual> GetElementsAt<TPoint>(TPoint point2D)
+            where TPoint : IPoint2D
         {
             lock (_renderLock)
             {
@@ -58,14 +59,15 @@ namespace Das.Views.Rendering
             }
         }
 
-        public IEnumerable<T> GetVisualsForInput<T>(IPoint2D point2D,
-                                                    InputAction inputAction)
-            where T : class
+        public IEnumerable<TVisual> GetVisualsForInput<TVisual, TPoint>(TPoint point2D,
+                                           InputAction inputAction)
+            where TVisual : class
+            where TPoint : IPoint2D
         {
             foreach (var visual in GetElementsAt(point2D))
             {
                 if (!(visual.Element is IInteractiveView interactive) ||
-                    !(visual.Element is T ofType))
+                    !(visual.Element is TVisual ofType))
                     continue;
 
                 if (interactive.HandlesActions.HasFlag(inputAction))
@@ -73,9 +75,10 @@ namespace Das.Views.Rendering
             }
         }
 
-        public IEnumerable<IHandleInput<T>> GetVisualsForMouseInput<T>(IPoint2D point2D,
+        public IEnumerable<IHandleInput<T>> GetVisualsForMouseInput<T, TPoint>(TPoint point2D,
                                                                        InputAction inputAction)
             where T : IInputEventArgs
+            where TPoint : IPoint2D
         {
             foreach (var visual in GetElementsAt(point2D))
                 if (visual.Element is IInteractiveView interactive &&
@@ -84,9 +87,10 @@ namespace Das.Views.Rendering
                     yield return handler;
         }
 
-        public IEnumerable<IRenderedVisual<IHandleInput<T>>> GetRenderedVisualsForMouseInput<T>(
-            IPoint2D point2D, InputAction inputAction)
+        public IEnumerable<IRenderedVisual<IHandleInput<T>>> GetRenderedVisualsForMouseInput<T, TPoint>(
+            TPoint point2D, InputAction inputAction)
             where T : IInputEventArgs
+            where TPoint : IPoint2D        
         {
             foreach (var visual in GetElementsAt<IHandleInput<T>>(point2D))
                 if (visual.Element is IInteractiveView interactive &&

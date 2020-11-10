@@ -33,7 +33,7 @@ namespace Das.Views.Input
 
             if (handledBy == null)
             {
-                foreach (var clickable in _elementLocator.GetRenderedVisualsForMouseInput<TArgs>(
+                foreach (var clickable in _elementLocator.GetRenderedVisualsForMouseInput<TArgs, IPoint2D>(
                     args.Position, action))
                 {
                     var element = clickable.Element;
@@ -168,7 +168,7 @@ namespace Das.Views.Input
             var wasOverCaptured = false;
             MouseOverEventArgs args;
 
-            foreach (var visual in _elementLocator.GetRenderedVisualsForMouseInput<MouseOverEventArgs>(
+            foreach (var visual in _elementLocator.GetRenderedVisualsForMouseInput<MouseOverEventArgs, TPoint>(
                 position, InputAction.MouseOver))
             {
                 if (visual.Element != capturingVisual)
@@ -204,7 +204,7 @@ namespace Das.Views.Input
             IHandleInput<MouseOverEventArgs>? mouseNoLongerOver = null;
             var wasOverHandled = false;
 
-            foreach (var visual in _elementLocator.GetRenderedVisualsForMouseInput<MouseOverEventArgs>(
+            foreach (var visual in _elementLocator.GetRenderedVisualsForMouseInput<MouseOverEventArgs, TPoint>(
                 position, InputAction.MouseOver))
             {
                 if (_lastMouseOverVisual == visual.Element)

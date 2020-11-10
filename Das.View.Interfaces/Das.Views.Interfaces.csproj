@@ -22,7 +22,8 @@
 
   <Import Project="..\Interfaces.Shared\Interfaces.Shared.projitems" Label="Shared" />
 
-  <Import Project="..\..\NetFramework\CSharp8NetFramework\CSharp8NetFramework.projitems" Label="Shared" />
+  <Import Project="..\Core\CSharp8NetFramework\CSharp8NetFramework.projitems" Label="Shared" />
+
 
   <ItemGroup>
     <PackageReference Include="Das.Container.Interfaces" Version="0.0.6-alpha" />
