@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.ViewModels
+namespace Das.Views.Mvvm
 {
     public interface IVisibilityMutable : IViewModel
     {

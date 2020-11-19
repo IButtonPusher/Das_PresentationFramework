@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
+using Das.Views.Styles;
 
 namespace Das.Views.Input
 {
@@ -80,25 +81,29 @@ namespace Das.Views.Input
         private Boolean HandleButtonAction<TArgs>(TArgs margs,
                                                             IHandleInput<TArgs> element,
                                                             InputAction action)
-            where TArgs : IMouseInputEventArgs<TArgs>
+            where TArgs : IMouseInputEventArgs<TArgs>//, IMouseButtonEventArgs
         {
             var handledActionDirectly = element.OnInput(margs);
 
             switch (action)
             {
                 case InputAction.LeftMouseButtonDown:
-                    if (handledActionDirectly ||
-                        IsHandlesAction(element, InputAction.LeftClick))
+                    if ((handledActionDirectly ||
+                        IsHandlesAction(element, InputAction.LeftClick)) && 
+                        element is IHandleInput<MouseDownEventArgs> leftDowner)
                     {
-                        _handledMouseDown = element;
+                        _handledMouseDown = leftDowner;
+                        if (element.CurrentStyleSelector.Contains(StyleSelector.Active))
+                            _mouseActiveElement = leftDowner;
                     }
 
                     break;
                 case InputAction.RightMouseButtonDown:
-                    if (handledActionDirectly ||
-                        IsHandlesAction(element, InputAction.RightClick))
+                    if ((handledActionDirectly ||
+                        IsHandlesAction(element, InputAction.RightClick)) && 
+                        element is IHandleInput<MouseDownEventArgs> rightDowner)
                     {
-                        _handledMouseDown = element;
+                        _handledMouseDown = rightDowner;
                     }
 
                     break;
@@ -276,8 +281,9 @@ namespace Das.Views.Input
 
         private readonly IElementLocator _elementLocator;
         //private static InputAction 
-        private Object? _handledMouseDown;
+        private IHandleInput<MouseDownEventArgs>? _handledMouseDown;
         private IVisualElement? _inputCapturingMouse;
+        private IHandleInput<MouseDownEventArgs>? _mouseActiveElement;
         private IHandleInput<MouseOverEventArgs>? _lastMouseOverVisual;
     }
 }

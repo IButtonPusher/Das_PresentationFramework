@@ -33,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Panels\Providers\StackPanelProvider.cs" />
     <Compile Remove="SurrogateVisualBase.cs" />
   </ItemGroup>
 
@@ -42,6 +43,7 @@
 
   <ItemGroup>
     <Folder Include="Kits\" />
+    <Folder Include="Panels\Providers\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,6 +52,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
+    <ProjectReference Include="..\Das.ViewModels\Das.ViewModels.csproj" />
   </ItemGroup>
 
   <Import Project="..\Views.Shared\Views.Shared.projitems" Label="Shared" />

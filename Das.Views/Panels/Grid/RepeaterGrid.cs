@@ -16,7 +16,8 @@ namespace Das.Views.Panels.Grid
     // ReSharper disable once UnusedType.Global
     public class RepeaterGrid<T> : BasePanel<IEnumerable<T>>
     {
-        public RepeaterGrid()
+        public RepeaterGrid(IVisualBootStrapper templateResolver) 
+            : base(templateResolver)
         {
             _controls = new Dictionary<Int32, List<IVisualElement>>();
             _sizes = new Dictionary<Int32, List<ISize>>();
@@ -56,8 +57,8 @@ namespace Das.Views.Panels.Grid
         {
         }
 
-        public override ISize Measure(IRenderSize availableSpace, 
-                                      IMeasureContext measureContext)
+        public override ValueSize Measure(IRenderSize availableSpace, 
+                                          IMeasureContext measureContext)
         {
             var rowNumbers = _controls.Keys.ToArray();
             var remainingSize = new RenderSize(availableSpace.Width, availableSpace.Height);
@@ -87,7 +88,7 @@ namespace Das.Views.Panels.Grid
 
             var widthNeeded = _columnWidths.Values.Sum(w => w);
             var heightNeeded = availableSpace.Height - remainingSize.Height;
-            return new Size(widthNeeded, heightNeeded);
+            return new ValueSize(widthNeeded, heightNeeded);
         }
 
         public override void SetBoundValue(IEnumerable<T> value)

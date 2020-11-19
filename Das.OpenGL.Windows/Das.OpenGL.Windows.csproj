@@ -107,6 +107,10 @@
       <Project>{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}</Project>
       <Name>Das.Views.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Das.ViewModels\Das.ViewModels.csproj">
+      <Project>{4ad8f035-a30f-4d67-8e84-fad46d1b8877}</Project>
+      <Name>Das.ViewModels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Das.Views\Das.Views.csproj">
       <Project>{a71c8e34-0909-487d-8c50-c02fc2408b8f}</Project>
       <Name>Das.Views</Name>

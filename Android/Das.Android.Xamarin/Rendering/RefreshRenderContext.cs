@@ -12,13 +12,20 @@ namespace Das.Xamarin.Android.Rendering
     {
         public RefreshRenderContext(IViewPerspective perspective,
                                     IVisualSurrogateProvider surrogateProvider,
-                                    Dictionary<IVisualElement, ICube> renderPositions)
-            : base(perspective, surrogateProvider, renderPositions)
+                                    Dictionary<IVisualElement, ICube> renderPositions,
+                                    Dictionary<IVisualElement, ValueSize> lastMeasurements)
+            : base(perspective, surrogateProvider, renderPositions, lastMeasurements)
         {
             
         }
 
         public override IImage? GetImage(Stream stream)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override IImage? GetImage(Stream stream, 
+                                         Double maximumWidthPct)
         {
             throw new NotSupportedException();
         }

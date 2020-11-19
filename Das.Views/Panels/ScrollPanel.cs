@@ -16,7 +16,8 @@ namespace Das.Views.Panels
                                   IHandleInput<FlingEventArgs>,
                                   IHandleInput<MouseDownEventArgs>
     {
-        public ScrollPanel()
+        public ScrollPanel(IVisualBootStrapper templateResolver)
+        :  base(templateResolver)
         {
             //_flingLock = new Object();
             _lastAvailable = Size.Empty;
@@ -91,7 +92,6 @@ namespace Das.Views.Panels
         public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
-            //Debug.WriteLine("Arranging scroll panel");
 
             if (!(Content is {} content))
                 return;
@@ -118,8 +118,8 @@ namespace Das.Views.Panels
         }
 
 
-        public override ISize Measure(IRenderSize availableSpace,
-                                      IMeasureContext measureContext)
+        public override ValueSize Measure(IRenderSize availableSpace,
+                                          IMeasureContext measureContext)
         {
             _lastAvailable = availableSpace;
 
@@ -145,42 +145,35 @@ namespace Das.Views.Panels
         }
 
 
-        private void OnOffsetChanged(Int32 _)
+        private void OnOffsetChanged(Int32 val)
         {
-            //Debug.WriteLine("Scroll offset changed");
-
             IsChanged = true;
         }
 
         protected virtual void OnScroll(Double x,
                                         Double y)
         {
-            if (x != 0 && IsScrollsHorizontal)
-
-                HorizontalOffset = Convert.ToInt32(
-                    Math.Min(
-                        Math.Max(HorizontalOffset + x, 0),
-                        _maximumXScroll));
 
             if (y != 0 && IsScrollsVertical)
                 VerticalOffset = Convert.ToInt32(
                     Math.Min(
                         Math.Max(VerticalOffset + y, 0),
                         _maximumYScroll));
+
+            if (x != 0 && IsScrollsHorizontal)
+                HorizontalOffset = Convert.ToInt32(
+                    Math.Min(
+                        Math.Max(HorizontalOffset + x, 0),
+                        _maximumXScroll));
         }
 
         private const Int32 _scrollCoefficient = 5;
         private readonly FlingHandler _flingHandler;
-
-
         private Int32 _horizontalOffset;
         private ISize _lastAvailable;
         private ISize _lastNeeded;
-
         private Double _maximumXScroll;
         private Double _maximumYScroll;
-
-
         private ScrollMode _scrollMode;
         private Int32 _verticalOffset;
     }

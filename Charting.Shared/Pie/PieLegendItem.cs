@@ -14,9 +14,10 @@ namespace Das.Views.Charting.Pie
                                                IVisualFinder
         where TValue : IConvertible
     {
-        public PieLegendItem()
+        public PieLegendItem(IVisualBootStrapper templateResolver)
+        : base(templateResolver)
         {
-            _label = new Label<IDataPoint<TKey, TValue>>();
+            _label = new Label<IDataPoint<TKey, TValue>>(templateResolver);
         }
 
         public Boolean Contains(IVisualElement element)
@@ -42,14 +43,14 @@ namespace Das.Views.Charting.Pie
         {
         }
 
-        public override ISize Measure(IRenderSize availableSpace, 
-                                      IMeasureContext measureContext)
+        public override ValueSize Measure(IRenderSize availableSpace, 
+                                          IMeasureContext measureContext)
         {
             if (!_isStyleSet) _isStyleSet = true;
 
             var sz = _label.Measure(availableSpace, measureContext);
             _offsetX = sz.Height + 5;
-            var res = new Size(sz.Width + _offsetX, sz.Height);
+            var res = new ValueSize(sz.Width + _offsetX, sz.Height);
             return res;
         }
 

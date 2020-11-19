@@ -36,6 +36,8 @@ namespace Das.Views.DataBinding
         }
 
         public Object? DataContext { get; set; }
+
+        public abstract void Dispose();
     }
 }
 

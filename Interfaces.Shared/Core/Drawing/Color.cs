@@ -26,6 +26,11 @@ namespace Das.Views.Core.Drawing
 
         public Byte R { get; }
 
+        public SolidColorBrush ToBrush()
+        {
+            return _asBrush ??= new SolidColorBrush(this);
+        }
+
         public Byte G { get; }
 
         public Boolean Equals(Color other)
@@ -109,5 +114,6 @@ namespace Das.Views.Core.Drawing
             => new Color(255, 255, 0, 255));
 
         private readonly Int32 _hash;
+        private SolidColorBrush? _asBrush;
     }
 }

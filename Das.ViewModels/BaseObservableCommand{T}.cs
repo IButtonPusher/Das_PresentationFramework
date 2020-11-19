@@ -39,8 +39,8 @@ namespace Das.ViewModels
         {
             if (paramValue is T fine)
                 await _action(fine);
-
-            throw new InvalidCastException();
+            else
+                throw new InvalidCastException();
         }
 
         public async Task ExecuteAsync(T paramValue)

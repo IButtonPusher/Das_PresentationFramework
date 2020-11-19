@@ -1,5 +1,7 @@
-﻿#if NET40
+﻿using System;
+using System.Threading.Tasks;
 
+#if NET40
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;

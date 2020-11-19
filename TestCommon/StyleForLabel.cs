@@ -8,15 +8,19 @@ namespace TestCommon
 {
     public class StyleForLabel : ElementStyle
     {
-        public StyleForLabel(IVisualElement element) : 
-            this(element, 18, FontStyle.Bold, Color.Orange)
+        public StyleForLabel(IVisualElement element, 
+                             IStyleContext styleContext) : 
+            this(element, 18, FontStyle.Bold, Color.Orange, styleContext)
         {
             
         }
 
-        public StyleForLabel(IVisualElement element, double fontSize, FontStyle fontStyle,
-            Color bg) 
-            : base(element)
+        public StyleForLabel(IVisualElement element, 
+                             double fontSize, 
+                             FontStyle fontStyle,
+            Color bg,
+                             IStyleContext styleContext) 
+            : base(element, styleContext)
         {
             AddSetter(StyleSetter.Background, new SolidColorBrush(bg));
 

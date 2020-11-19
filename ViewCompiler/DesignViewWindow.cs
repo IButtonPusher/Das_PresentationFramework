@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Gdi;
 using Das.Gdi.Controls;
+using Das.Views;
 using Das.Views.Core.Geometry;
 using Das.Views.Panels;
 using Das.Views.Styles;
@@ -19,8 +20,12 @@ namespace ViewCompiler
     /// </summary>
     public class DesignViewWindow : ViewWindow
     {
-        public DesignViewWindow(ViewDeserializer serializer, FileInfo fileDesigning)
-            : this(serializer, fileDesigning, new BaseStyleContext(new DefaultStyle()))
+        public DesignViewWindow(ViewDeserializer serializer, 
+                                FileInfo fileDesigning,
+                                IVisualBootStrapper templateResolver)
+            : this(serializer, fileDesigning, new BaseStyleContext(new DefaultStyle(),
+                    new DefaultColorPalette()),
+                templateResolver)
             //: base(new GdiHostedElement(new BaseStyleContext(new DefaultStyle())))
         {
             
@@ -28,8 +33,9 @@ namespace ViewCompiler
 
         private DesignViewWindow(ViewDeserializer serializer,
                                  FileInfo fileDesigning,
-                                 IStyleContext styleContext)
-            : base(new GdiHostedElement(new View<Object>(styleContext), styleContext))
+                                 IStyleContext styleContext,
+                                 IVisualBootStrapper templateResolver)
+            : base(new GdiHostedElement(new View<Object>(templateResolver), styleContext))
         {
             trackBar1 = new TrackBar();
             _viewBuilderProvider = new ViewBuilderProvider(serializer);

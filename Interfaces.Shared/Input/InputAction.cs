@@ -16,8 +16,9 @@ namespace Das.Views.Input
         LeftClick = 64,
         RightClick = 128,
         MiddleClick = 256,
-        AnyMouseButton = LeftMouseButtonDown | RightMouseButtonDown | 
-                         LeftMouseButtonUp  | RightMouseButtonUp | 
+
+        AnyMouseButton = LeftMouseButtonDown | RightMouseButtonDown |
+                         LeftMouseButtonUp | RightMouseButtonUp |
                          LeftClick | RightClick | MiddleClick,
         MouseDrag = 512,
         MouseWheel = 1024,

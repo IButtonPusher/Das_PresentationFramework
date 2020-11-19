@@ -1,44 +1,70 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
+using Das.Views.Rendering;
 
 namespace Das.Views.Styles
 {
     public enum StyleSetter
     {
-        [StyleType(typeof(Thickness))] Margin,
-        [StyleType(typeof(Thickness))] Padding,
+        [StyleType(typeof(Thickness))]
+        Margin,
 
-        [StyleType(typeof(Thickness))] BorderThickness,
+        [StyleType(typeof(Thickness))]
+        Padding,
 
-        [StyleType(typeof(Int32))] BorderRadius,
+        [StyleType(typeof(Thickness))]
+        BorderThickness,
 
-        [StyleType(typeof(ISize))] Size,
+        [StyleType(typeof(Int32))]
+        BorderRadius,
 
-        [StyleType(typeof(Double))] Height,
+        //[StyleType(typeof(ISize))]
+        //Size,
 
-        [StyleType(typeof(Double))] Width,
+        [StyleType(typeof(Double))]
+        Height,
 
-        [StyleType(typeof(Font))] Font,
-        [StyleType(typeof(String))] FontName,
+        [StyleType(typeof(Double))]
+        Width,
 
-        [StyleType(typeof(IConvertible))] FontSize,
+        [StyleType(typeof(Font))]
+        Font,
 
-        [StyleType(typeof(FontStyle))] FontWeight,
+        [StyleType(typeof(String))]
+        FontName,
 
-        [StyleType(typeof(SolidColorBrush))] Foreground,
+        [StyleType(typeof(IConvertible))]
+        FontSize,
 
-        [StyleType(typeof(SolidColorBrush))] Background,
+        [StyleType(typeof(FontStyle))]
+        FontWeight,
 
-        [StyleType(typeof(SolidColorBrush))] BorderBrush,
+        [StyleType(typeof(SolidColorBrush))]
+        Foreground,
+
+        [StyleType(typeof(SolidColorBrush))]
+        Background,
+
+        [StyleType(typeof(SolidColorBrush))]
+        BorderBrush,
 
         [StyleType(typeof(VerticalAlignments))]
         VerticalAlignment,
 
         [StyleType(typeof(HorizontalAlignments))]
-        HorizontalAlignment
+        HorizontalAlignment,
+
+        [StyleType(typeof(Transition[]))]
+        Transition,
+
+        [StyleType(typeof(Visibility))]
+        Visibility
+
+
     }
 }

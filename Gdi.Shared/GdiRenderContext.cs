@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Gdi.Core;
 using Das.Views.Controls;
+using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
-using Gdi.Shared;
 using Color = Das.Views.Core.Drawing.Color;
 using Pen = Das.Views.Core.Drawing.Pen;
 using Point = System.Drawing.Point;
@@ -19,14 +19,27 @@ namespace Das.Gdi
 {
     public class GdiRenderContext : BaseRenderContext
     {
+        private readonly IImageProvider _imageProvider;
+
         public GdiRenderContext(IViewPerspective perspective,
                                 Graphics nullGraphics,
-                                IVisualSurrogateProvider surrogateProvider)
+                                IVisualSurrogateProvider surrogateProvider,
+                                IImageProvider imageProvider)
             : base(perspective, surrogateProvider)
         {
+            //windowProvider.WindowShown += OnWindowShown;
+
+            
+            _imageProvider = imageProvider;
             _testPen = new Pen(Color.Yellow, 1);
             Graphics = nullGraphics;
         }
+
+        //private void OnWindowShown(IVisualHost window)
+        //{
+        //    //_window = window;
+        //    _windowProvider.WindowShown -= OnWindowShown;
+        //}
 
         internal Graphics Graphics { get; set; }
 
@@ -58,8 +71,6 @@ namespace Das.Gdi
             Graphics.DrawImage(bmp, dest);
         }
 
-        
-
         public override   void DrawImage<TRectangle1, TRectangle2>(IImage img,
                                                                    TRectangle1 sourceRect,
                                                                    TRectangle2 destination)
@@ -75,13 +86,42 @@ namespace Das.Gdi
 
         public override IImage? GetImage(Stream stream)
         {
-            var bmp = new Bitmap(stream);
-            return new GdiBitmap(bmp);
+            return _imageProvider.GetImage(stream);
+        }
+
+        public override IImage? GetImage(Stream stream, 
+                                         Double maximumWidthPct)
+        {
+            return _imageProvider.GetImage(stream, maximumWidthPct);
+
+            //if (!(_window is {} window))
+            //    return GetImage(stream);
+
+            //var bmp = new Bitmap(stream);
+
+            //var maximumWidth = window.AvailableSize.Width * maximumWidthPct;
+
+            //var ratio = bmp.Width / maximumWidth;
+
+            //if (ratio <= maximumWidthPct)
+            //    return new GdiBitmap(bmp, stream);
+
+            //var scaleRatio = maximumWidth / bmp.Width; //maximumWidthPct * maximumWidth;
+
+            //using (stream)
+            //using (bmp)
+            //{
+            //    var scaledBmp = new Bitmap(bmp, Convert.ToInt32(bmp.Width * scaleRatio),
+            //        Convert.ToInt32(bmp.Height * scaleRatio));
+            //    return new GdiBitmap(scaledBmp, null);
+            //}
+
         }
 
         public override IImage GetNullImage()
         {
-            return _emptyImage ??= new GdiBitmap(new Bitmap(1, 1));
+            return _imageProvider.GetNullImage();
+            //return _emptyImage ??= new GdiBitmap(new Bitmap(1, 1), null);
         }
 
         public override void DrawLine<TPen, TPoint1, TPoint2>(TPen pen,
@@ -152,38 +192,42 @@ namespace Das.Gdi
         }
 
         // https://stackoverflow.com/questions/33853434/how-to-draw-a-rounded-rectangle-in-c-sharp
-        private static GraphicsPath RoundedRect(Rectangle bounds, Double cornerRadius)
+        private static GraphicsPath RoundedRect(Rectangle bounds, 
+                                                Double cornerRadius)
         {
             var radius = Convert.ToInt32(cornerRadius);
 
             var diameter = radius * 2;
             var size = new System.Drawing.Size(diameter, diameter);
             var arc = new Rectangle(bounds.Location, size);
+            
+            //don't dispose this here derp
             GraphicsPath path = new GraphicsPath();
-
-            if (radius == 0)
             {
-                path.AddRectangle(bounds);
+                if (radius == 0)
+                {
+                    path.AddRectangle(bounds);
+                    return path;
+                }
+
+                // top left arc  
+                path.AddArc(arc, 180, 90);
+
+                // top right arc  
+                arc.X = bounds.Right - diameter;
+                path.AddArc(arc, 270, 90);
+
+                // bottom right arc  
+                arc.Y = bounds.Bottom - diameter;
+                path.AddArc(arc, 0, 90);
+
+                // bottom left arc 
+                arc.X = bounds.Left;
+                path.AddArc(arc, 90, 90);
+
+                path.CloseFigure();
                 return path;
             }
-
-            // top left arc  
-            path.AddArc(arc, 180, 90);
-
-            // top right arc  
-            arc.X = bounds.Right - diameter;
-            path.AddArc(arc, 270, 90);
-
-            // bottom right arc  
-            arc.Y = bounds.Bottom - diameter;
-            path.AddArc(arc, 0, 90);
-
-            // bottom left arc 
-            arc.X = bounds.Left;
-            path.AddArc(arc, 90, 90);
-
-            path.CloseFigure();
-            return path;
         }
 
         public override void DrawString<TFont, TBrush, TPoint>(String s,
@@ -194,7 +238,8 @@ namespace Das.Gdi
             var loc = GetAbsoluteGdiPoint(location);
 
             if (!(brush is SolidColorBrush scb))
-                throw new NotImplementedException();
+                throw new NotSupportedException(nameof(DrawString) + 
+                                                " - " + brush);
 
             var color = TypeConverter.GetColor(scb.Color);
             var useFont = TypeConverter.GetFont(font);
@@ -264,6 +309,7 @@ namespace Das.Gdi
         }
 
         private readonly IPen _testPen;
-        private IImage? _emptyImage;
+        //private IVisualHost? _window;
+        //private IImage? _emptyImage;
     }
 }

@@ -105,6 +105,11 @@ namespace Das.OpenGL
             throw new NotImplementedException();
         }
 
+        public override IImage? GetImage(Stream stream, Double maximumWidthPct)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void DrawLine<TPen, TPoint1, TPoint2>(TPen pen,
                                                               TPoint1 pt1,
                                                               TPoint2 pt2)

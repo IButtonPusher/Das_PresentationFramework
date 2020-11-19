@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Input
 {
@@ -6,7 +7,6 @@ namespace Das.Views.Input
                                                 IMouseInputEventArgs<T>
         where T : IMouseButtonEventArgs<T>
     {
-        
     }
 
     public interface IMouseButtonEventArgs : IMouseInputEventArgs

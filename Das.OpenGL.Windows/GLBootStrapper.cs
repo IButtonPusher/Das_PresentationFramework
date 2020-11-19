@@ -8,8 +8,8 @@ using Das.Views.Core.Writing;
 using Das.Views.Panels;
 using Das.Views.Updaters;
 using Das.Views.Windows;
-
-using Das.ViewModels;
+using Das.Views.Mvvm;
+using Das.Views.Styles;
 
 namespace Das.OpenGL
 {
@@ -33,6 +33,8 @@ namespace Das.OpenGL
             Application.Run(window);
         }
 
+        public IVisualBootStrapper VisualBootStrapper => throw new NotImplementedException();
+
         public static IFontProvider GetFontProvider(IGLContext context)
         {
             var fontFolder = new DirectoryInfo(Environment.GetFolderPath(
@@ -50,8 +52,10 @@ namespace Das.OpenGL
         {
             var context = GetContext(element);
             var fontProvider = GetFontProvider(context);
+            var styleContext = new BaseStyleContext(new DefaultStyle(),
+                new DefaultColorPalette());
 
-            var kit = new OpenGLRenderKit(fontProvider, context);
+            var kit = new OpenGLRenderKit(fontProvider, context, styleContext);
 
             var renderer = new GLFormViewRenderer(element, kit, context);
             var _ = new LoopViewUpdater(renderer, element, _taskScheduler);

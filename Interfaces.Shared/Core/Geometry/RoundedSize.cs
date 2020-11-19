@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 namespace Das.Views.Core.Geometry
 {
+    // ReSharper disable once UnusedType.Global
     public class RoundedSize : IRoundedSize
     {
         public Int32 Width { get; set; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Das.Views.Core.Geometry;
 using Das.Views.Styles;
 
 namespace Das.Views.Rendering
@@ -8,5 +9,6 @@ namespace Das.Views.Rendering
     {
         Double GetZoomLevel();
 
+        ValueSize GetLastMeasure(IVisualElement element);
     }
 }

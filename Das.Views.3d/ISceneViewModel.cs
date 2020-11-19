@@ -1,4 +1,4 @@
-﻿using Das.ViewModels;
+﻿using Das.Views.Mvvm;
 
 namespace Das.Views.Extended
 {

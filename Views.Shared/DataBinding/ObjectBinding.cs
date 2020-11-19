@@ -21,6 +21,11 @@ namespace Das.Views.DataBinding
         }
 
         private readonly T _bindingObject;
+
+        public override void Dispose()
+        {
+            
+        }
     }
 }
 

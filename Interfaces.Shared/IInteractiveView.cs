@@ -7,8 +7,8 @@ namespace Das.Views
 {
     public interface IInteractiveView
     {
-        InputAction HandlesActions { get; }
-
         StyleSelector CurrentStyleSelector { get; }
+
+        InputAction HandlesActions { get; }
     }
 }

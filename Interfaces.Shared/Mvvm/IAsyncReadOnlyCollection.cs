@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace Das.ViewModels
 {
     public interface IAsyncReadOnlyCollection<out T> : IEnumerable<T>,
-                                                       INotifyCollectionChanged, ICollection
+                                                       INotifyCollectionChanged,
+                                                       ICollection
     {
         T this[Int32 index] { get; }
     }

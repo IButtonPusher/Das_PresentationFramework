@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Das.ViewModels;
 using Das.Views.Charting;
@@ -8,11 +7,12 @@ using Das.Views.Extended.Runtime;
 
 namespace TestCommon.Company
 {
-    public class CompanyViewModel : BaseViewModel, ICompanyViewModel
+    public class CompanyViewModel : BaseViewModel, 
+                                    ICompanyViewModel
     {
         public CompanyViewModel(String name, IScene scene)
         {
-            Employees  = new List<EmployeeViewModel>();
+            Employees = new ObservableRangeCollection<EmployeeViewModel>();
             _scene = scene;
             Name = name;
             Camera = new WireframeCamera(new Vector3(0, 0, 10.0f), Vector3.Zero, Vector3.Zero, scene);
@@ -21,9 +21,18 @@ namespace TestCommon.Company
             _running = Stopwatch.StartNew();
         }
 
+
+        private EmployeeViewModel _selectedEmployee;
+
+        public EmployeeViewModel SelectedEmployee
+        {
+            get => _selectedEmployee;
+            set => SetValue(ref _selectedEmployee, value);
+        }
+
         private readonly IScene _scene;
         public ICompanyViewModel Self => this;
-        public List<EmployeeViewModel> Employees { get; set; }
+        public ObservableRangeCollection<EmployeeViewModel> Employees { get; set; }
         public IPieData<String, Double> SalesReport { get; }
 
         public String Name { get; }

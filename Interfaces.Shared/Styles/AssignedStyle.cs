@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Styles
 {
     public readonly struct AssignedStyle : IEquatable<AssignedStyle>
     {
-        public AssignedStyle(StyleSetter setter, 
-                             StyleSelector selector, 
+        public AssignedStyle(StyleSetter setter,
+                             StyleSelector selector,
                              Object? value = null)
         {
             Setter = setter;

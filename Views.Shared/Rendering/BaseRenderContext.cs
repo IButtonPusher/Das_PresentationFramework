@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,19 +23,24 @@ namespace Das.Views.Rendering
        
         protected BaseRenderContext(IViewPerspective perspective,
                                     IVisualSurrogateProvider surrogateProvider)
-        : this(perspective, surrogateProvider, new Dictionary<IVisualElement, ICube>())
+        : this(perspective, surrogateProvider, 
+            new Dictionary<IVisualElement, ICube>(),
+            new Dictionary<IVisualElement, ValueSize>())
         {
            
         }
 
         protected BaseRenderContext(IViewPerspective perspective,
                                     IVisualSurrogateProvider surrogateProvider,
-                                    Dictionary<IVisualElement, ICube> renderPositions)
+                                    Dictionary<IVisualElement, ICube> renderPositions,
+                                    Dictionary<IVisualElement, ValueSize> lastMeasurements)
+        : base(lastMeasurements)
         {
             RenderPositions = renderPositions;
             LastRenderPositions = new Dictionary<IVisualElement, ICube>();
 
             _surrogateProvider = surrogateProvider;
+            _lastMeasurements = lastMeasurements;
             _renderLock = new Object();
             Perspective = perspective;
             CurrentElementRect = new RenderRectangle();
@@ -122,6 +128,8 @@ namespace Das.Views.Rendering
 
 
         public abstract IImage? GetImage(Stream stream);
+
+        public abstract IImage? GetImage(Stream stream, Double maximumWidthPct);
 
         public virtual IImage? GetImage(Byte[] bytes)
         {
@@ -219,7 +227,7 @@ namespace Das.Views.Rendering
 
             //zb rect = 0,0,1024,768, CurrentLocation = 0,0
             //suppose element measured at 200x200 and is center,center aligned
-            var useRect = GetOffset(rect, element, border);
+            var useRect = GetTargetRect(rect, element, border);
             //=> useRect = {x: 412, y: 284, w: 200, h:200}
 
             //however, if the margin is 10,,, 
@@ -248,6 +256,11 @@ namespace Das.Views.Rendering
             PushRect(useRect);
             lock (_renderLock)
             {
+                //if (!RenderPositions.ContainsKey(element))
+                //{
+                //    element.Disposed += OnElementDisposed;
+                //}
+                
                 RenderPositions[element] = new Cube(useRect, _currentZ);
             }
 
@@ -255,8 +268,19 @@ namespace Das.Views.Rendering
 
             PopRect();
 
+            element.AcceptChanges(ChangeType.Arrange);
+
+            if (element is IChangeTracking changer)
+                changer.AcceptChanges();
+
             return drawn;
         }
+
+        //private void OnElementDisposed(IVisualElement element)
+        //{
+        //    lock (_renderLock)
+        //        RenderPositions.Remove(element);
+        //}
 
         public abstract void DrawString<TFont, TBrush, TRectangle>(String s,
                                                                    TFont font,
@@ -282,11 +306,6 @@ namespace Das.Views.Rendering
             where TBrush : IBrush
             where TPoint : IPoint2D;
 
-
-        public Double GetZoomLevel()
-        {
-            return ViewState?.ZoomLevel ?? 1;
-        }
 
         public IViewPerspective Perspective { get; }
 
@@ -328,15 +347,93 @@ namespace Das.Views.Rendering
             }
         }
 
+        private RenderRectangle GetTargetRect(IRenderRectangle desiredRect,
+                                           IVisualElement element,
+                                           Thickness border)
+        {
+            var margin = GetStyleSetter<Thickness>(StyleSetter.Margin, element)
+                         * Perspective.ZoomLevel;
+
+            var bldr = new RenderRectangle(desiredRect, margin, desiredRect.Offset);
+
+            if (!margin.IsEmpty)
+            {}
+
+            if (!border.IsEmpty)
+            {
+                bldr.Left += border.Left;
+                bldr.Top += border.Top;
+                bldr.Width -= border.Width;
+                bldr.Height -= border.Height;
+            }
+
+            return bldr;
+
+            //var valign = GetStyleSetter<VerticalAlignments>(
+            //    StyleSetter.VerticalAlignment, element);
+            //var halign = GetStyleSetter<HorizontalAlignments>(
+            //    StyleSetter.HorizontalAlignment, element);
+
+            //if (valign == VerticalAlignments.Top && halign == HorizontalAlignments.Left)
+            //    return bldr;
+
+
+            //var xGap = desiredRect.Left - bldr.Left;
+            ////var yGap = desiredRect.Top - bldr.Top;
+            //Double yAdd;
+            //Double xAdd;
+
+            //switch (valign)
+            //{
+            //    case VerticalAlignments.Top:
+            //    case VerticalAlignments.Stretch:
+            //        yAdd = 0;
+            //        break;
+
+            //    case VerticalAlignments.Bottom:
+            //        yAdd = desiredRect.Height - bldr.Height;
+            //        break;
+
+            //    case VerticalAlignments.Center:
+            //        yAdd = (desiredRect.Height - bldr.Height) / 2;
+            //        break;
+            //    default:
+            //        throw new NotImplementedException();
+            //}
+
+            //switch (halign)
+            //{
+            //    case HorizontalAlignments.Left:
+            //    case HorizontalAlignments.Stretch:
+            //        xAdd = 0;
+            //        break;
+
+            //    case HorizontalAlignments.Right:
+            //        yAdd = desiredRect.Height - bldr.Height;
+            //        break;
+
+            //    case VerticalAlignments.Center:
+            //        yAdd = (desiredRect.Height - bldr.Height) / 2;
+            //        break;
+            //    default:
+            //        throw new NotImplementedException();
+            //}
+
+        }
+        
+
         /// <summary>
         ///     Margins + space added due to alignment
         /// </summary>
-        private RenderRectangle GetOffset(IRenderRectangle rect, 
+        private RenderRectangle GetOffset2(IRenderRectangle rect, 
                                     IVisualElement element,
                                     Thickness border)
         {
             var margin = GetStyleSetter<Thickness>(StyleSetter.Margin, element)
                          * Perspective.ZoomLevel;
+
+            if (!margin.IsEmpty)
+            {}
 
             margin += border;
 
@@ -484,6 +581,7 @@ namespace Das.Views.Rendering
         private readonly Stack<RenderRectangle> _locations;
 
         private readonly IVisualSurrogateProvider _surrogateProvider;
+        private readonly Dictionary<IVisualElement, ValueSize> _lastMeasurements;
         private readonly Object _renderLock;
         private Int32 _currentZ;
         protected RenderRectangle CurrentElementRect;

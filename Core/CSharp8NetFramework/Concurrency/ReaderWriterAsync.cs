@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
+
 #endif
 
 namespace System.Threading
@@ -281,7 +281,7 @@ namespace System.Threading
             }
         }
 
-        public Task<Int32> WriteAsync<TParam>(TParam param, 
+        public Task<Int32> WriteAsync<TParam>(TParam param,
                                               Func<TParam, Int32> action)
         {
             if (_isDisposed)
@@ -312,7 +312,7 @@ namespace System.Threading
             }
         }
 
-        public Task<Int32> WriteAsync<TParam>(TParam param, 
+        public Task<Int32> WriteAsync<TParam>(TParam param,
                                               Func<TParam, Task<Int32>> action)
         {
             if (_isDisposed)

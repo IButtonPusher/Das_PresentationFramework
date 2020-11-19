@@ -43,6 +43,11 @@ namespace Das.Views.DataBinding
         //}
 
         private readonly PropertyInfo _prop;
+
+        public override void Dispose()
+        {
+            
+        }
     }
 
     public class DeferredPropertyBinding : BaseBinding
@@ -57,6 +62,11 @@ namespace Das.Views.DataBinding
         public override Object? GetBoundValue(Object? dataContext)
         {
             throw new NotImplementedException();
+        }
+
+        public override void Dispose()
+        {
+            
         }
 
         public override String ToString()

@@ -9,14 +9,18 @@ using Das.Views.Rendering;
 
 namespace Das.Views.Panels
 {
-    public class RepeaterPanel<T> : ContentPanel<IEnumerable<T>>, IRepeaterPanel<T>
+    public class RepeaterPanel<T> : ContentPanel<IEnumerable<T>>, 
+                                    IRepeaterPanel<T>
     {
         // ReSharper disable once UnusedMember.Global
-        public RepeaterPanel() : this(new SequentialRenderer())
+        public RepeaterPanel(IVisualBootStrapper templateResolver) 
+            : this(new SequentialRenderer(), templateResolver)
         {
         }
 
-        public RepeaterPanel(ISequentialRenderer renderer)
+        public RepeaterPanel(ISequentialRenderer renderer,
+                             IVisualBootStrapper templateResolver)
+        : base(templateResolver)
         {
             _controls = new List<IVisualElement>();
             _renderer = EnsureRenderer(renderer);
@@ -24,7 +28,9 @@ namespace Das.Views.Panels
 
         // ReSharper disable once UnusedMember.Global
         public RepeaterPanel(IDataBinding<IEnumerable<T>> binding,
-                             ISequentialRenderer? renderer = null) : base(binding)
+                             IVisualBootStrapper templateResolver,
+                             ISequentialRenderer? renderer = null) 
+            : base(templateResolver, binding)
         {
             _controls = new List<IVisualElement>();
             _renderer = EnsureRenderer(renderer);
@@ -37,8 +43,8 @@ namespace Das.Views.Panels
             else throw new NotImplementedException();
         }
 
-        public override ISize Measure(IRenderSize availableSpace,
-                                      IMeasureContext measureContext)
+        public override ValueSize Measure(IRenderSize availableSpace,
+                                          IMeasureContext measureContext)
         {
             return _renderer.Measure(this, _controls, Orientation, availableSpace, measureContext);
         }

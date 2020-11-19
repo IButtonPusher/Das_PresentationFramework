@@ -1,31 +1,34 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Measuring;
+using Das.Views.Rendering;
 
 namespace Das.OpenGL
 {
     public class GLMeasureContext : BaseMeasureContext
     {
         public GLMeasureContext(IFontProvider fontProvider,
-                                IVisualSurrogateProvider surrogateProvider)
-        : base(surrogateProvider)
+                                IVisualSurrogateProvider surrogateProvider,
+                                Dictionary<IVisualElement, ValueSize> lastMeasurements)
+        : base(surrogateProvider, lastMeasurements)
         {
             _fontProvider = fontProvider;
         }
 
 
-        public override Size MeasureImage(IImage img)
+        public override ValueSize MeasureImage(IImage img)
         {
             throw new NotImplementedException();
         }
 
 
-        public override Size MeasureString(String s,
-                                           IFont font)
+        public override ValueSize MeasureString(String s,
+                                                IFont font)
         {
             var renderer = _fontProvider.GetRenderer(font);
             var res = renderer.MeasureString(s);

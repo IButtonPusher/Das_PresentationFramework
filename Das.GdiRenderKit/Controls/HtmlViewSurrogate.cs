@@ -30,11 +30,25 @@ namespace Das.Views.Gdi.Controls
 
         public Type ReplacesType => typeof(HtmlPanel);
 
-        public ISize Measure(IRenderSize availableSpace,
-                             IMeasureContext measureContext)
+        public ValueSize Measure(IRenderSize availableSpace,
+                                 IMeasureContext measureContext)
         {
-            return availableSpace;
+            return availableSpace.ToValueSize();
         }
+
+        public void InvalidateMeasure()
+        {
+            _htmlPanel.InvalidateMeasure();
+        }
+
+        public void InvalidateArrange()
+        {
+            _htmlPanel.InvalidateArrange();
+        }
+
+        public Boolean IsRequiresMeasure => _htmlPanel.IsRequiresMeasure;
+
+        public Boolean IsRequiresArrange => _htmlPanel.IsRequiresArrange;
 
         public void Arrange(IRenderSize availableSpace,
                             IRenderContext renderContext)
@@ -60,7 +74,7 @@ namespace Das.Views.Gdi.Controls
 
         public new event Action<IVisualElement>? Disposed;
 
-        public void OnParentChanging(IContentContainer? newParent)
+        public void OnParentChanging(IContainerVisual? newParent)
         {
             if (newParent == null)
                 _hostingControl.Controls.Remove(this);
@@ -93,6 +107,13 @@ namespace Das.Views.Gdi.Controls
                         Navigate(_htmlPanel.Uri);
                     break;
             }
+        }
+
+        IControlTemplate IVisualElement.Template => throw new NotSupportedException();
+
+        public void AcceptChanges(ChangeType changeType)
+        {
+            ((IVisualElement) _htmlPanel).AcceptChanges(changeType);
         }
 
         private readonly WebBrowser _browser;

@@ -17,24 +17,26 @@ namespace Das.Views.Controls
     // ReSharper disable once UnusedType.Global
     public class Label : Label<String>
     {
-        public Label(IDataBinding<String> binding) : base(binding)
+        public Label(IDataBinding<String> binding,
+                     IVisualBootStrapper templateResolver) : base(binding, templateResolver)
         {
         }
 
         // ReSharper disable once UnusedMember.Global
-        public Label()
+        public Label(IVisualBootStrapper templateResolver) : base(templateResolver)
         {
         }
     }
 
     public class Label<T> : BindableElement<T>
     {
-        public Label()
+        public Label(IVisualBootStrapper templateResolver) : base(templateResolver)
         {
             _currentValue = String.Empty;
         }
 
-        public Label(IDataBinding<T> binding) : base(binding)
+        public Label(IDataBinding<T> binding,
+                     IVisualBootStrapper templateResolver) : base(binding, templateResolver)
         {
             _currentValue = String.Empty;
         }
@@ -57,8 +59,8 @@ namespace Das.Views.Controls
         {
         }
 
-        public override ISize Measure(IRenderSize availableSpace,
-                                      IMeasureContext measureContext)
+        public override ValueSize Measure(IRenderSize availableSpace,
+                                          IMeasureContext measureContext)
         {
             var font = measureContext.GetStyleSetter<Font>(StyleSetter.Font, this) *
                        measureContext.GetZoomLevel();

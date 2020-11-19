@@ -103,9 +103,7 @@ namespace System.Runtime.CompilerServices
         public void SetResult(TResult result)
         {
             if (_useBuilder)
-            {
                 _methodBuilder.SetResult(result);
-            }
             else
             {
                 _result = result;

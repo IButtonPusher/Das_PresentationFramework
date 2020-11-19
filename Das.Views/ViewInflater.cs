@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Das.Views.DataBinding;
+// ReSharper disable All
 
 namespace Das.Views
 {

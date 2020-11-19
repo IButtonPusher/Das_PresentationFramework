@@ -3,22 +3,28 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Das.ViewModels;
+
 // ReSharper disable UnusedMember.Global
 
-namespace Das.ViewModels
+namespace Das.Views.Mvvm
 {
     // ReSharper disable once UnusedType.Global
-    public interface IAsyncObservableCollection<T> :
-        INotifyCollectionChanged, INotifyPropertyChanged, ICollection<T>,
-        IAsyncCollection<T>, IDisposable
+    public interface IAsyncObservableCollection<T> : INotifyingCollection,
+                                                     INotifyPropertyChanged,
+                                                     ICollection<T>,
+                                                     IAsyncCollection<T>,
+                                                     IDisposable
         where T : IEquatable<T>
     {
         // ReSharper disable once UnusedMember.Global
-        T this[Int32 index] { get; }
+        new T this[Int32 index] { get; }
 
         Task<Boolean> AddOrUpdateAsync(T item);
 
         Task AddRangeAsync(IEnumerable<T> items);
+
+        Task AddRangeAsync(IAsyncEnumerable<T> items);
 
         Task<Boolean> AllAsync(Func<T, Boolean> predicate);
 
@@ -72,10 +78,10 @@ namespace Das.ViewModels
 
         Task Synchronize(IEnumerable<T> items);
 
-        Task<Boolean> TryRemove(T item);
-
         Task TryRemove(IEnumerable<T> item);
 
         Task<Boolean> TryRemove(ICollection<T> item, IProgress<T> progress);
+
+        Task<Boolean> TryRemoveAsync(T item);
     }
 }

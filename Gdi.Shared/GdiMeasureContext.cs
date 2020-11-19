@@ -1,18 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using Das.Gdi.Core;
 using Das.Views.Controls;
+using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Measuring;
-using Size = Das.Views.Core.Geometry.Size;
+using Das.Views.Rendering;
 
 namespace Das.Gdi
 {
     public class GdiMeasureContext : BaseMeasureContext
     {
-        public GdiMeasureContext(IVisualSurrogateProvider surrogateProvider)
-        : base(surrogateProvider)
+        public GdiMeasureContext(IVisualSurrogateProvider surrogateProvider,
+                                 Dictionary<IVisualElement, ValueSize> lastMeasurements)
+        : base(surrogateProvider, lastMeasurements)
         {
             var bmp = new Bitmap(1, 1);
             Graphics = Graphics.FromImage(bmp);
@@ -23,11 +26,11 @@ namespace Das.Gdi
         public Graphics Graphics { get; }
 
 
-        public override Size MeasureString(String s, IFont font)
+        public override ValueSize MeasureString(String s, IFont font)
         {
             var useFont = TypeConverter.GetFont(font);
             var sz = Graphics.MeasureString(s, useFont);
-            return new Size(sz.Width, sz.Height);
+            return new ValueSize(sz.Width, sz.Height);
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using Das.Views.Panels;
 using Das.Views.Styles;
 using System;
+using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 using Das.Views.Windows;
 using Das.Views.Winforms;
-using Das.ViewModels;
+using Das.Views.Mvvm;
 
 
 namespace WinForms.Shared
@@ -72,6 +73,26 @@ namespace WinForms.Shared
         public T GetStyleSetter<T>(StyleSetter setter, StyleSelector selector, IVisualElement element)
         {
             return StyleContext.GetStyleSetter<T>(setter, selector, element);
+        }
+
+        public void RegisterStyleSetter(IVisualElement element, 
+                                        StyleSetter setter, 
+                                        Object value)
+        {
+            StyleContext.RegisterStyleSetter(element, setter, value);
+        }
+
+        public void RegisterStyleSetter(IVisualElement element, 
+                                        StyleSetter setter, 
+                                        StyleSelector selector, 
+                                        Object value)
+        {
+            StyleContext.RegisterStyleSetter(element, setter, selector, value);
+        }
+
+        public IColor GetCurrentAccentColor()
+        {
+            return StyleContext.GetCurrentAccentColor();
         }
 
         public void AcceptChanges()

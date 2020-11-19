@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Das.Views.Controls;
 using Das.Views.Panels;
 
 namespace Das.Views.Rendering
 {
-    public interface IVisualElement : IVisualRenderer, 
-                                      IDeepCopyable<IVisualElement>, 
+    public interface IVisualElement : IVisualRenderer,
+                                      IDeepCopyable<IVisualElement>,
                                       IDisposable
     {
         /// <summary>
@@ -13,8 +14,12 @@ namespace Das.Views.Rendering
         /// </summary>
         Int32 Id { get; }
 
+        void OnParentChanging(IContainerVisual? newParent);
+
         event Action<IVisualElement>? Disposed;
 
-        void OnParentChanging(IContentContainer? newParent);
+        IControlTemplate? Template { get; }
+
+        void AcceptChanges(ChangeType changeType);
     }
 }

@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Das.Views.Input;
 using Das.ViewModels;
+using Das.Views.Core.Geometry;
+using Das.Views.Input;
 
 namespace Das.Views
 {
     public interface IUiProvider : ISingleThreadedInvoker
     {
         void BeginNotify(String text);
+
+        void BrowseToUri(Uri uri);
 
         Task<Boolean> Confirm(String message, String title);
 
@@ -41,7 +44,7 @@ namespace Das.Views
 
         IObservableCommand GetCommand(Func<Task> action);
 
-        //void HandleError(String wasDoing, Exception ex);
+        ValueSize GetMainViewSize();
 
         Task HandleErrorAsync(String wasDoing, Exception ex);
 

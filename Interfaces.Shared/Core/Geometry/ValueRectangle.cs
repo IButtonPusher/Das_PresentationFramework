@@ -91,6 +91,11 @@ namespace Das.Views.Core.Geometry
             return GeometryHelper.IsRectangleContains(this, x, y);
         }
 
+        public ISize PlusVertical(ISize adding)
+        {
+            return GeometryHelper.PlusVertical(this, adding);
+        }
+
         public Boolean Equals(ISize other)
         {
             return GeometryHelper.AreSizesEqual(this, other);

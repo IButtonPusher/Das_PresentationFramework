@@ -11,6 +11,8 @@ using System.Threading.Tasks.Sources;
 // ReSharper disable All
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
+
+#pragma warning disable 8618
 #endif
 #pragma warning disable 8625
 #pragma warning disable 8601

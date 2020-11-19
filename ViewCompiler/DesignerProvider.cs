@@ -9,7 +9,7 @@ namespace ViewCompiler
         public DesignViewWindow Design(FileInfo file)
         {
             var serializer = GetViewDeserializer();
-            var form = new DesignViewWindow(serializer, file);
+            var form = new DesignViewWindow(serializer, file, RenderKit.DataTemplates);
         
             var renderer = new BitmapRenderer(form, RenderKit.MeasureContext,
                 RenderKit.RenderContext);

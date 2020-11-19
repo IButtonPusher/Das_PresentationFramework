@@ -11,11 +11,13 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IButtonBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\IControlTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IToggleButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IVisualSurrogate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IVisualSurrogateProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\HatchBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\HatchStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IColorPalette.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IImageProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\SolidColorBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\Color.cs" />
@@ -30,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Enums\HorizontalAlignments.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Enums\Orientation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Enums\VerticalAlignments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Enums\Visibility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Cube.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\GeometryBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\GeometryHelper.cs" />
@@ -46,6 +49,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ISize3d.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Point2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Rectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExtensionMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\IItemsControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IWindowNotifier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\INotifyingCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\IContainerVisual.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\IContentPresenter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\ChangeType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\Geometry\RenderRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\Geometry\RenderSize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\RoundedSize.cs" />
@@ -142,8 +152,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSetter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleTypeAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Transition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\TransitionTiming.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\IDataTemplate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\IVisualBootStrapper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)ItemsControls\" />
     <Folder Include="$(MSBuildThisFileDirectory)Threading\" />
   </ItemGroup>
 </Project>

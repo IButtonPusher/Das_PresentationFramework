@@ -4,23 +4,15 @@ using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Input;
-using Das.Views.Core;
 
 namespace Das.Views.Rendering
 {
     public interface IRenderContext : IVisualContext,
-                                      IElementLocator,
-                                      IImageProvider
+                                      IElementLocator
     {
         IViewPerspective Perspective { get; }
 
         IViewState? ViewState { get; }
-
-
-        Rectangle DrawMainElement<TRectangle>(IVisualElement element,
-                                              TRectangle rect,
-                                              IViewState viewState)
-            where TRectangle : IRectangle;
 
         /// <summary>
         ///     Returns the actual rectangle occupied by the element, including borders etc
@@ -57,6 +49,12 @@ namespace Das.Views.Rendering
         void DrawLines(IPen pen,
                        IPoint2D[] points);
 
+
+        Rectangle DrawMainElement<TRectangle>(IVisualElement element,
+                                              TRectangle rect,
+                                              IViewState viewState)
+            where TRectangle : IRectangle;
+
         void DrawRect<TRectangle, TPen>(TRectangle rect,
                                         TPen pen)
             where TRectangle : IRectangle
@@ -77,7 +75,7 @@ namespace Das.Views.Rendering
             where TPoint : IPoint2D;
 
         /// <summary>
-        /// Draws the string within the provided rectangle.  Wraps text as needed
+        ///     Draws the string within the provided rectangle.  Wraps text as needed
         /// </summary>
         void DrawString<TFont, TBrush, TRectangle>(String s,
                                                    TFont font,

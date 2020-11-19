@@ -1,29 +1,75 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Das.Views.Core.Drawing;
+using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 
 namespace Das.Views
 {
-    public abstract class ContextBase
+    public abstract class ContextBase : IVisualContext
     {
+        private readonly Dictionary<IVisualElement, ValueSize> _lastMeasurements;
+        protected readonly Object _measureLock;
+        
+
+        public ContextBase(Dictionary<IVisualElement, ValueSize> lastMeasurements)
+        {
+            _measureLock = new Object();
+            _lastMeasurements = lastMeasurements;
+        }
+
         public IViewState? ViewState { get; protected set; }
 
-        public T GetStyleSetter<T>(StyleSetter setter, IVisualElement element)
+        public T GetStyleSetter<T>(StyleSetter setter, 
+                                   IVisualElement element)
         {
-            return GetViewState().GetStyleSetter<T>(setter, element);
+            return GetViewState.GetStyleSetter<T>(setter, element);
         }
 
-        public T GetStyleSetter<T>(StyleSetter setter, StyleSelector selector, IVisualElement element)
+        public T GetStyleSetter<T>(StyleSetter setter, 
+                                   StyleSelector selector, 
+                                   IVisualElement element)
         {
-            return GetViewState().GetStyleSetter<T>(setter, selector, element);
+            return GetViewState.GetStyleSetter<T>(setter, selector, element);
         }
 
-        protected IViewState GetViewState()
+        public void RegisterStyleSetter(IVisualElement element, 
+                                        StyleSetter setter,
+                                        Object value)
         {
-            return ViewState ??
-                   throw new Exception(
-                       "No view state has been set.  Call MeasureMainView");
+            GetViewState.RegisterStyleSetter(element, setter, value);
         }
+
+        public void RegisterStyleSetter(IVisualElement element, 
+                                        StyleSetter setter, 
+                                        StyleSelector selector, 
+                                        Object value)
+        {
+            GetViewState.RegisterStyleSetter(element, setter, selector, value);
+        }
+
+        public IColor GetCurrentAccentColor()
+        {
+            return GetViewState.GetCurrentAccentColor();
+        }
+
+
+        public ValueSize GetLastMeasure(IVisualElement element)
+        {
+            lock (_measureLock)
+                return _lastMeasurements.TryGetValue(element, out var val) ? val : ValueSize.Empty;
+        }
+
+        public Double GetZoomLevel()
+        {
+            return ViewState?.ZoomLevel ?? 1;
+        }
+
+        protected IViewState GetViewState =>
+            ViewState ??
+            throw new Exception(
+                "No view state has been set.  Call MeasureMainView");
     }
 }

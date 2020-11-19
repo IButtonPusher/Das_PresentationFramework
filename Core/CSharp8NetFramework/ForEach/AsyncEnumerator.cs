@@ -1,13 +1,12 @@
-﻿using System;
+﻿// ReSharper disable All
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
-
-// ReSharper disable All
-
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
+
 #endif
 
 #pragma warning disable 8625
@@ -15,6 +14,7 @@ using TaskEx = System.Threading.Tasks.Task;
 #pragma warning disable 8603
 #pragma warning disable 8601
 #pragma warning disable 8618
+#pragma warning disable CS8600
 
 namespace AsyncResults.Enumerable
 {
@@ -38,6 +38,7 @@ namespace AsyncResults.Enumerable
             Func<AsyncEnumerator<TItem>.Yield, TState, Task> enumerationFunction,
             TState state,
             Action<TState> onDispose = null)
+
         {
             _enumerationFunction = enumerationFunction ?? throw new ArgumentNullException(nameof(enumerationFunction));
             _onDisposeAction = onDispose;
@@ -249,17 +250,6 @@ namespace AsyncResults.Enumerable
                 throw new AsyncEnumerationCanceledException();
             }
 
-            internal ValueTask<Boolean> OnMoveNext()
-            {
-                if (!IsComplete)
-                {
-                    TaskCompletionSource.Reset(ref _moveNextCompleteTcs);
-                    _resumeEnumerationTcs?.TrySetResult(true);
-                }
-
-                return new ValueTask<Boolean>(_moveNextCompleteTcs.Task);
-            }
-
 
 #pragma warning disable AsyncMethodMustTakeCancellationToken // Does not take a CancellationToken by design
             public Task ReturnAsync(T item)
@@ -269,6 +259,17 @@ namespace AsyncResults.Enumerable
                 _currentValueContainer.CurrentValue = item;
                 _moveNextCompleteTcs.TrySetResult(true);
                 return _resumeEnumerationTcs.Task;
+            }
+
+            internal ValueTask<Boolean> OnMoveNext()
+            {
+                if (!IsComplete)
+                {
+                    TaskCompletionSource.Reset(ref _moveNextCompleteTcs);
+                    _resumeEnumerationTcs?.TrySetResult(true);
+                }
+
+                return new ValueTask<Boolean>(_moveNextCompleteTcs.Task);
             }
 
             internal void SetCanceled()

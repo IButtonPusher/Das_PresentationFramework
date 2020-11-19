@@ -26,14 +26,14 @@ namespace Das.Views.Core.Geometry
         {
         }
 
-        public Rectangle(Double x, 
-                         Double y, 
+        public Rectangle(Double x,
+                         Double y,
                          ISize size)
             : this(x, y, size.Width, size.Height)
         {
         }
 
-        public Rectangle(IPoint2D location, 
+        public Rectangle(IPoint2D location,
                          ISize size)
             : this(location.X, location.Y, size.Width, size.Height)
         {
@@ -43,17 +43,17 @@ namespace Das.Views.Core.Geometry
         {
         }
 
-        public Rectangle(IRectangle start, 
+        public Rectangle(IRectangle start,
                          Thickness margin)
             : this(start.X + margin.Left, start.Y + margin.Top,
-                start.Width - (margin.Left + margin.Right),
-                start.Height - (margin.Top + margin.Bottom))
+                start.Width - margin.Width,
+                start.Height - margin.Height)
         {
         }
 
-        public Rectangle(Double x, 
-                         Double y, 
-                         Double width, 
+        public Rectangle(Double x,
+                         Double y,
+                         Double width,
                          Double height)
         {
             Left = x;
@@ -173,9 +173,7 @@ namespace Das.Views.Core.Geometry
 
             // We need this check so that the math does not result in NaN
             if (Double.IsPositiveInfinity(rect.Width) || Double.IsPositiveInfinity(Width))
-            {
                 _w = Double.PositiveInfinity;
-            }
             else
             {
                 //  Max with 0 to prevent double weirdness from causing us to be (-epsilon..0)                    
@@ -185,9 +183,7 @@ namespace Das.Views.Core.Geometry
 
             // We need this check so that the math does not result in NaN
             if (Double.IsPositiveInfinity(rect.Height) || Double.IsPositiveInfinity(Height))
-            {
                 _h = Double.PositiveInfinity;
-            }
             else
             {
                 //  Max with 0 to prevent double weirdness from causing us to be (-epsilon..0)

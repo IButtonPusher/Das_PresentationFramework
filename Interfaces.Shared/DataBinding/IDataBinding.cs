@@ -3,14 +3,15 @@ using System.Threading.Tasks;
 
 namespace Das.Views.DataBinding
 {
-    public interface IDataBinding<T> : IDataBinding, IDeepCopyable<IDataBinding<T>>
+    public interface IDataBinding<T> : IDataBinding, 
+                                       IDeepCopyable<IDataBinding<T>>
     {
         T GetValue(Object? dataContext);
 
         Task<T> GetValueAsync(Object? dataContext);
     }
 
-    public interface IDataBinding
+    public interface IDataBinding : IDisposable
     {
         Object? GetBoundValue(Object? dataContext);
 

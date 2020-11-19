@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 
 namespace Das.Views.Input
 {
     public readonly struct MouseClickEventArgs : IMouseInputEventArgs
     {
-        public MouseClickEventArgs(IPoint2D position, 
-                                   MouseButtons button, 
+        public MouseClickEventArgs(IPoint2D position,
+                                   MouseButtons button,
                                    Int32 clickCount,
                                    IInputContext inputContext)
         {
@@ -32,7 +33,6 @@ namespace Das.Views.Input
                 default:
                     throw new NotSupportedException();
             }
-
         }
 
         public readonly MouseButtons Button;

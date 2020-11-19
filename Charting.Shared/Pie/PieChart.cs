@@ -17,9 +17,13 @@ namespace Das.Views.Charting.Pie
                                           IVisualFinder
         where TValue : IConvertible
     {
-        public PieChart()
+        private readonly IVisualBootStrapper _templateResolver;
+
+        public PieChart(IVisualBootStrapper templateResolver) 
+            : base(templateResolver)
         {
-            _desiredSize = new Size(1, 1);
+            _templateResolver = templateResolver;
+            _desiredSize = new ValueSize(1, 1);
             _defaultedColors = new Dictionary<TKey, IBrush>();
             _random = new Random();
             _outline = new Pen(Color.DarkGray, 1);
@@ -137,8 +141,8 @@ namespace Das.Views.Charting.Pie
             return brush;
         }
 
-        public override ISize Measure(IRenderSize availableSpace, 
-                                      IMeasureContext measureContext)
+        public override ValueSize Measure(IRenderSize availableSpace, 
+                                          IMeasureContext measureContext)
         {
             _legendItemSizes.Clear();
             foreach (var item in _legendItems)
@@ -154,7 +158,7 @@ namespace Das.Views.Charting.Pie
 
             var side = Math.Min(availableSpace.Width, availableSpace.Height);
             if (side.IsZero())
-                return Size.Empty;
+                return ValueSize.Empty;
 
 
             _desiredSize.Height = side;
@@ -180,7 +184,7 @@ namespace Das.Views.Charting.Pie
 
                 var brush = GetBrush(value, current);
 
-                var legendItem = new PieLegendItem<TKey, TValue>();
+                var legendItem = new PieLegendItem<TKey, TValue>(_templateResolver);
                 legendItem.SetBoundValue(current);
                 legendItem.Brush = brush;
                 _legendItems.Add(legendItem);

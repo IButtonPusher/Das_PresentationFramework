@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 // ReSharper disable UnusedMember.Global
 
 namespace System.Threading
@@ -13,16 +14,16 @@ namespace System.Threading
 
         IDisposable Read();
 
-        TResult Read<TInput, TResult>(TInput input, 
+        TResult Read<TInput, TResult>(TInput input,
                                       Func<TInput, TResult> action);
 
         Task<TResult> ReadAsync<TResult>(Func<TResult> action);
 
-        Task<TResult> ReadAsync<TParam1, TResult>(TParam1 p1, 
+        Task<TResult> ReadAsync<TParam1, TResult>(TParam1 p1,
                                                   Func<TParam1, TResult> action);
 
-        Task<TResult> ReadAsync<TParam1, TResult>(TParam1 p1, 
-                                                  Func<TParam1, 
+        Task<TResult> ReadAsync<TParam1, TResult>(TParam1 p1,
+                                                  Func<TParam1,
                                                       Task<TResult>> action);
 
         Task<TResult> ReadAsync<TParam1, TParam2, TResult>(TParam1 p1, TParam2 p2,
@@ -40,7 +41,7 @@ namespace System.Threading
 
         Int32 Write(Func<Int32> action);
 
-        Int32 Write<TParam1>(TParam1 p1, 
+        Int32 Write<TParam1>(TParam1 p1,
                              Func<TParam1, Int32> action);
 
         Int32 Write<TParam1, TParam2>(TParam1 p1,
@@ -53,10 +54,10 @@ namespace System.Threading
 
         Task<Int32> WriteAsync(Func<Int32> action);
 
-        Task<Int32> WriteAsync<TParam>(TParam param, 
+        Task<Int32> WriteAsync<TParam>(TParam param,
                                        Func<TParam, Int32> action);
 
-        Task<Int32> WriteAsync<TParam>(TParam param, 
+        Task<Int32> WriteAsync<TParam>(TParam param,
                                        Func<TParam, Task<Int32>> action);
     }
 }

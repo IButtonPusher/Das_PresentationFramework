@@ -87,7 +87,7 @@ namespace System.Threading
 
     public class AsyncWaiter<TResult> : AsyncWaiter
     {
-        public AsyncWaiter(Func<TResult> action, 
+        public AsyncWaiter(Func<TResult> action,
                            WorkerTypes workerType)
             : base(workerType)
         {
@@ -178,8 +178,6 @@ namespace System.Threading
             Status = TaskStatus.Canceled;
         }
     }
-
-    
 
 
     public enum WorkerTypes

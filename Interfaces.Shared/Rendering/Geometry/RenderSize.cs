@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views.Rendering;
+using Das.Views.Rendering.Geometry;
 
 namespace Das.Views.Core.Geometry
 {
@@ -8,17 +10,16 @@ namespace Das.Views.Core.Geometry
     {
         public RenderSize(Double width,
                           Double height,
-                          IPoint2D offset) 
+                          IPoint2D offset)
             : base(width, height)
         {
             Offset = offset;
         }
 
         public RenderSize(Double width,
-                          Double height) 
+                          Double height)
             : this(width, height, Point2D.Empty)
         {
-            
         }
 
         public RenderSize()
@@ -32,6 +33,27 @@ namespace Das.Views.Core.Geometry
         {
             return GeometryHelper.Reduce(this, padding);
         }
+
+        public IRenderSize MinusVertical(ISize subtract)
+        {
+            return GeometryHelper.MinusVertical(this, subtract);
+        }
+
+        public new IRenderSize PlusVertical(ISize adding)
+        {
+            return GeometryHelper.PlusRenderVertical(this, adding);
+        }
+
+        public ValueRenderRectangle ToFullRectangle()
+        {
+            return new ValueRenderRectangle(Point2D.Empty, this, Offset);
+        }
+
+        public ValueSize ToValueSize()
+        {
+            return GeometryHelper.ToValueSize(this);
+        }
+
 
         public new IRenderSize Minus(ISize subtract)
         {

@@ -9,7 +9,8 @@ namespace Das.Views
 
         void Invoke(Action action);
 
-        void Invoke(Action action, Int32 priority);
+        void Invoke(Action action,
+                    Int32 priority);
 
         T Invoke<T>(Func<T> action);
 

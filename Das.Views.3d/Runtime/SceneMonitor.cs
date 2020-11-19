@@ -15,30 +15,30 @@ namespace Das.Views.Extended.Runtime
     // ReSharper disable once UnusedType.Global
     public class SceneMonitor : BindableElement<ICamera>, IChangeTracking
     {
-        public override ISize Measure(IRenderSize availableSpace, 
-                                      IMeasureContext measureContext)
+        public override ValueSize Measure(IRenderSize availableSpace, 
+                                          IMeasureContext measureContext)
         {
             if (!TryGetCamera(out var camera))
-                return Size.Empty;
+                return ValueSize.Empty;
 
             if (availableSpace.Height.AreEqualEnough(0))
-                return availableSpace;
+                return availableSpace.ToValueSize();
 
             var aspect = availableSpace.Width / availableSpace.Height;
             
             if (aspect.AreEqualEnough(camera.AspectRatio))
             {
-                return availableSpace;
+                return availableSpace.ToValueSize();
             }
             if (aspect > camera.AspectRatio) //available is wider
             {
-                var sz = new Size(availableSpace.Height * camera.AspectRatio,
+                var sz = new ValueSize(availableSpace.Height * camera.AspectRatio,
                     availableSpace.Height);
                 return sz;
             }
             else //taller
             {
-                var sz = new Size(availableSpace.Width / camera.AspectRatio,
+                var sz = new ValueSize(availableSpace.Width / camera.AspectRatio,
                     availableSpace.Width);
                 return sz;
             }
@@ -75,5 +75,15 @@ namespace Das.Views.Extended.Runtime
         }
 
         public Boolean IsChanged => true;
+
+        public SceneMonitor(IDataBinding<ICamera>? binding, 
+                            IVisualBootStrapper templateResolver) 
+            : base(binding, templateResolver)
+        {
+        }
+
+        public SceneMonitor(IVisualBootStrapper templateResolver) : base(templateResolver)
+        {
+        }
     }
 }

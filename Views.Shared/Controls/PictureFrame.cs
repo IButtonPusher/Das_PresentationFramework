@@ -12,11 +12,13 @@ namespace Das.Views.Controls
     // ReSharper disable once UnusedMember.Global
     public class PictureFrame : BindableElement<IImage>
     {
-        public PictureFrame()
+        public PictureFrame(IVisualBootStrapper templateResolver) : base(templateResolver)
         {
         }
 
-        public PictureFrame(IDataBinding<IImage> value) : base(value)
+        public PictureFrame(IDataBinding<IImage> value,
+                            IVisualBootStrapper templateResolver) 
+            : base(value, templateResolver)
         {
         }
 
@@ -46,8 +48,8 @@ namespace Das.Views.Controls
             _currentImage?.Dispose();
         }
 
-        public override ISize Measure(IRenderSize availableSpace,
-                                      IMeasureContext measureContext)
+        public override ValueSize Measure(IRenderSize availableSpace,
+                                          IMeasureContext measureContext)
         {
             var zoom = measureContext.ViewState?.ZoomLevel ?? 1;
 
@@ -56,27 +58,27 @@ namespace Das.Views.Controls
 
             _currentImage = GetBoundValue(DataContext!);
             var size = measureContext.MeasureImage(_currentImage);
-            var forced = measureContext.GetStyleSetter<Size>(StyleSetter.Size, this)
-                         * zoom;
-            if (forced != null && !Size.Empty.Equals(forced))
-                return size;
+            //var forced = measureContext.GetStyleSetter<Size>(StyleSetter.Size, this)
+            //             * zoom;
+            //if (forced != null && !Size.Empty.Equals(forced))
+            //    return size;
 
             var width = measureContext.GetStyleSetter<Double>(StyleSetter.Width, this) * zoom;
             var height = measureContext.GetStyleSetter<Double>(StyleSetter.Height, this) * zoom;
 
             if (!Double.IsNaN(width) && !Double.IsNaN(height))
-                return new Size(width, height);
+                return new ValueSize(width, height);
 
             if (!Double.IsNaN(height))
             {
                 var scale = height / size.Height;
-                return new Size(size.Width * scale, height);
+                return new ValueSize(size.Width * scale, height);
             }
 
             if (!Double.IsNaN(width))
             {
                 var scale = width / size.Height;
-                return new Size(height, size.Width * scale);
+                return new ValueSize(height, size.Width * scale);
             }
 
             return size;

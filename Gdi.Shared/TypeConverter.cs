@@ -50,7 +50,6 @@ namespace Das.Gdi.Core
                         GetColor(hb.ForegroundColor),
                         GetColor(hb.BackgroundColor));
 
-                    //found = brush as Brush ?? throw new NotImplementedException();
                     break;
 
                 default:

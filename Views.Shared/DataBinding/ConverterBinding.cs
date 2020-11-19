@@ -40,5 +40,10 @@ namespace Das.Views.DataBinding
 
         private readonly IDataBinding<TInput> _binding;
         private readonly IValueConverter<TInput, TOutput> _converter;
+
+        public override void Dispose()
+        {
+            _binding.Dispose();
+        }
     }
 }

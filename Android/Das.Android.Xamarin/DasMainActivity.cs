@@ -5,6 +5,7 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Support.V7.App;
 using Das.Views;
+using Das.Views.Core.Drawing;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
@@ -19,7 +20,8 @@ namespace Das.Xamarin.Android
     {
         protected virtual IStyleContext GetStyleContext()
         {
-            return new BaseStyleContext(new DefaultStyle());
+            return new BaseStyleContext(new DefaultStyle(),
+                new DefaultColorPalette());
         }
 
         protected sealed override async void OnCreate(Bundle? savedInstanceState)
@@ -33,13 +35,13 @@ namespace Das.Xamarin.Android
 
             var fontProvider = new AndroidFontProvider(displayMetrics);
 
-            var uiProvider = new AndroidUiProvider(this);
+            var uiProvider = new AndroidUiProvider(this, displayMetrics);
 
             var windowManager = WindowManager ?? throw new NullReferenceException(
                 "WindowManager cannot be null");
 
             var renderKit = new AndroidRenderKit(new BasePerspective(), this, 
-                fontProvider, windowManager, uiProvider, _styleContext);
+                fontProvider, windowManager, uiProvider, _styleContext, displayMetrics);
 
             _view = await GetMainViewAsync(renderKit, uiProvider);
 
@@ -61,6 +63,14 @@ namespace Das.Xamarin.Android
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
+        public void RegisterStyleSetter(IVisualElement element, 
+                                        StyleSetter setter, 
+                                        StyleSelector selector, 
+                                        Object value)
+        {
+            CurrentStyleContext.RegisterStyleSetter(element, setter, selector, value);
+        }
+
         public override async void OnBackPressed()
         {
             var handled = await BackButtonCommand();
@@ -76,13 +86,31 @@ namespace Das.Xamarin.Android
                                    StyleSelector selector, 
                                    IVisualElement element)
         {
-            if (_styleContext is {} valid)
-                return valid.GetStyleSetter<T>(setter, selector, element);
+            return CurrentStyleContext.GetStyleSetter<T>(setter, selector, element);
 
-            if (_view?.StyleContext is {} ctx)
-                return ctx.GetStyleSetter<T>(setter, selector, element);
+            //if (_styleContext is {} valid)
+            //    return valid.GetStyleSetter<T>(setter, selector, element);
 
-            throw new NullReferenceException();
+            //if (_view?.StyleContext is {} ctx)
+            //    return ctx.GetStyleSetter<T>(setter, selector, element);
+
+            //throw new NullReferenceException();
+        }
+
+        protected IStyleContext CurrentStyleContext =>
+            _styleContext ?? _view?.StyleContext ?? throw new NullReferenceException();
+        
+
+        public void RegisterStyleSetter(IVisualElement element, 
+                                        StyleSetter setter,
+                                        Object value)
+        {
+            CurrentStyleContext.RegisterStyleSetter(element, setter, value);
+        }
+
+        public IColor GetCurrentAccentColor()
+        {
+            return CurrentStyleContext.GetCurrentAccentColor();
         }
 
         public Double ZoomLevel => 1;

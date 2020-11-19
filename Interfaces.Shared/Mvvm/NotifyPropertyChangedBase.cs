@@ -1,19 +1,29 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
+// ReSharper disable UnusedMember.Global
+// ReSharper disable VirtualMemberNeverOverridden.Global
+
 namespace Das.Views.Mvvm
 {
-    public abstract class NotifyPropertyChangedBase : INotifyPropertyChanged, 
-                                                      IDisposable
+    public abstract class NotifyPropertyChangedBase : IViewModel
     {
         public virtual event PropertyChangedEventHandler? PropertyChanged;
 
         public virtual void Dispose()
         {
             PropertyChanged = null;
+            PropertyChanging = null;
         }
+
+        /// <summary>
+        ///     Sender, Property Name, Old Value, New Value, allow change
+        /// </summary>
+        public event Func<Object, String, Object, Object, Boolean>? PropertyChanging;
 
         protected virtual void RaisePropertyChanged(String propertyName)
         {
@@ -31,27 +41,30 @@ namespace Das.Views.Mvvm
             PropertyChanged?.Invoke(this, args);
         }
 
-        protected virtual Boolean SetValue<T>(ref T field, T value,
+        [DebuggerStepThrough]
+        [DebuggerHidden]
+        protected virtual Boolean SetValue<T>(ref T field,
+                                              T value,
                                               [CallerMemberName] String? propertyName = null)
         {
-            if (Equals(field, value))
+            if (Equals(field, value) ||
+                propertyName != null && !VerifyCanChangeValue(field, value, propertyName))
                 return false;
 
-            field = value;
-
-            if (propertyName != null)
-                RaisePropertyChanged(propertyName);
+            SetValueImpl(ref field, value, propertyName);
             return true;
         }
 
-        protected virtual void SetValue<T>(ref T field, T newValue,
+        [DebuggerStepThrough]
+        [DebuggerHidden]
+        protected virtual void SetValue<T>(ref T field,
+                                           T newValue,
                                            Func<T, Task> handleValueChanged,
                                            [CallerMemberName] String propertyName = "")
         {
-            if (Equals(field, newValue))
+            if (Equals(field, newValue) ||
+                !VerifyCanChangeValue(field, newValue, propertyName))
                 return;
-            //if (field?.Equals(newValue) == true)
-            //    return;
 
             field = newValue;
 
@@ -59,13 +72,31 @@ namespace Das.Views.Mvvm
             handleValueChanged(newValue);
         }
 
-        protected virtual void SetValue<T>(ref T field, 
+        [DebuggerStepThrough]
+        [DebuggerHidden]
+        protected virtual void SetValue<T>(ref T field,
                                            T newValue,
-                                                Func<T, T, Boolean> onValueChanging,
-                                                Action<T> handleValueChanged,
-                                                [CallerMemberName] String propertyName = "")
+                                           Func<T, T, Boolean> onValueChanging,
+                                           [CallerMemberName] String propertyName = "")
         {
-            if (Equals(field, newValue))
+            if (Equals(field, newValue) || !VerifyCanChangeValue(field, newValue, propertyName))
+                return;
+
+            if (!onValueChanging(field, newValue))
+                return;
+
+            SetValueImpl(ref field, newValue, propertyName);
+        }
+
+        [DebuggerStepThrough]
+        [DebuggerHidden]
+        protected virtual void SetValue<T>(ref T field,
+                                           T newValue,
+                                           Func<T, T, Boolean> onValueChanging,
+                                           Action<T> handleValueChanged,
+                                           [CallerMemberName] String propertyName = "")
+        {
+            if (Equals(field, newValue) || !VerifyCanChangeValue(field, newValue, propertyName))
                 return;
 
             if (!onValueChanging(field, newValue))
@@ -74,6 +105,25 @@ namespace Das.Views.Mvvm
             SetValue(ref field, newValue, handleValueChanged, propertyName);
         }
 
+        [DebuggerStepThrough]
+        [DebuggerHidden]
+        protected virtual void SetValue<T>(ref T field,
+                                           T newValue,
+                                           Func<T, T, Boolean> onValueChanging,
+                                           Func<T, Task> handleValueChangedAsync,
+                                           [CallerMemberName] String propertyName = "")
+        {
+            if (Equals(field, newValue) || !VerifyCanChangeValue(field, newValue, propertyName))
+                return;
+
+            if (!onValueChanging(field, newValue))
+                return;
+
+            SetValue(ref field, newValue, handleValueChangedAsync, propertyName);
+        }
+
+        [DebuggerStepThrough]
+        [DebuggerHidden]
         protected virtual Boolean SetValue<T>(ref T field,
                                               T value,
                                               Action<T> onValueChanged,
@@ -90,6 +140,34 @@ namespace Das.Views.Mvvm
         {
             handler = PropertyChanged!;
             return handler != null!;
+        }
+
+        [DebuggerStepThrough]
+        [DebuggerHidden]
+        // ReSharper disable once RedundantAssignment
+        private void SetValueImpl<T>(ref T field,
+                                     T value,
+                                     [CallerMemberName] String? propertyName = null)
+        {
+            field = value;
+
+            if (propertyName != null)
+                RaisePropertyChanged(propertyName);
+        }
+
+        private Boolean VerifyCanChangeValue<T>(T oldValue,
+                                                T newValue,
+                                                String propertyName)
+        {
+            if (!(PropertyChanging is { } valid))
+                return true;
+
+            var listeners = valid.GetInvocationList();
+            foreach (var listener in listeners.OfType<Func<Object, String, Object, Object, Boolean>>())
+                if (!listener(this, propertyName, oldValue!, newValue!))
+                    return false;
+
+            return true;
         }
     }
 }

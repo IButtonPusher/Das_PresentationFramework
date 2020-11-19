@@ -19,11 +19,11 @@ namespace Das.Views.Rendering
             ElementsRendered = new Dictionary<IVisualElement, RenderRectangle>();
         }
 
-        public Size Measure(IVisualElement container, 
-                            IEnumerable<IVisualElement> elements,
-                            Orientations orientation, 
-                            IRenderSize availableSpace, 
-                            IMeasureContext measureContext)
+        public ValueSize Measure(IVisualElement container, 
+                                 IEnumerable<IVisualElement> elements,
+                                 Orientations orientation, 
+                                 IRenderSize availableSpace, 
+                                 IMeasureContext measureContext)
         {
             var remainingSize = new RenderSize(availableSpace.Width, 
                 availableSpace.Height, availableSpace.Offset);
@@ -90,7 +90,7 @@ namespace Das.Views.Rendering
             totalWidth = Math.Max(totalWidth, maxWidth);
             totalHeight = Math.Max(totalHeight, maxHeight);
 
-            return new Size(totalWidth + margin.Width, totalHeight + margin.Height);
+            return new ValueSize(totalWidth + margin.Width, totalHeight + margin.Height);
         }
 
         public void Arrange(Orientations orientation,
@@ -118,6 +118,6 @@ namespace Das.Views.Rendering
         }
 
         private readonly Boolean _isWrapContent;
-        protected readonly Dictionary<IVisualElement, RenderRectangle> ElementsRendered;
+        public Dictionary<IVisualElement, RenderRectangle> ElementsRendered { get; }
     }
 }

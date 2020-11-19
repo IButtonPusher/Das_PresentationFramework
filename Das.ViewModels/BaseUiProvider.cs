@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Das.Views;
+using Das.Views.Core.Geometry;
 using Das.Views.Input;
 
 namespace Das.ViewModels
@@ -14,7 +15,8 @@ namespace Das.ViewModels
             throw new NotImplementedException();
         }
 
-        public virtual Task<Boolean> Confirm(String message, String title)
+        public virtual Task<Boolean> Confirm(String message, 
+                                             String title)
         {
             throw new NotImplementedException();
         }
@@ -29,12 +31,14 @@ namespace Das.ViewModels
             throw new NotImplementedException();
         }
 
-        public virtual IObservableCommand GetCommand(Action action, String description)
+        public virtual IObservableCommand GetCommand(Action action, 
+                                                     String description)
         {
             throw new NotImplementedException();
         }
 
-        public virtual IObservableCommand GetCommand(Func<Task> action, String description)
+        public virtual IObservableCommand GetCommand(Func<Task> action, 
+                                                     String description)
         {
             throw new NotImplementedException();
         }
@@ -49,12 +53,14 @@ namespace Das.ViewModels
             throw new NotImplementedException();
         }
 
-        public virtual IObservableCommand<T> GetCommand<T>(Func<T, Task> action, String description)
+        public virtual IObservableCommand<T> GetCommand<T>(Func<T, Task> action,
+                                                           String description)
         {
             throw new NotImplementedException();
         }
 
-        public virtual IObservableCommand<T> GetCommand<T>(Func<IEnumerable<T>, Task> action, String description)
+        public virtual IObservableCommand<T> GetCommand<T>(Func<IEnumerable<T>, Task> action, 
+                                                           String description)
         {
             throw new NotImplementedException();
         }
@@ -64,12 +70,15 @@ namespace Das.ViewModels
             throw new NotImplementedException();
         }
 
-        public virtual IObservableCommand<T> GetCommand<T>(Func<T[], Task> action, String description)
+        public virtual IObservableCommand<T> GetCommand<T>(Func<T[], Task> action, 
+                                                           String description)
         {
             throw new NotImplementedException();
         }
 
-        public virtual IObservableCommand GetCommand(Action action, INotifyPropertyChanged viewModel, String canExecuteProperty)
+        public virtual IObservableCommand GetCommand(Action action, 
+                                                     INotifyPropertyChanged viewModel, 
+                                                     String canExecuteProperty)
         {
             throw new NotImplementedException();
         }
@@ -109,6 +118,10 @@ namespace Das.ViewModels
             throw new NotImplementedException();
         }
 
+        public abstract void BrowseToUri(Uri uri);
+
+        public abstract ValueSize GetMainViewSize();
+
         public virtual void BeginInvoke(Action action)
         {
             throw new NotImplementedException();
@@ -139,7 +152,8 @@ namespace Das.ViewModels
             throw new NotImplementedException();
         }
 
-        public virtual Task<TOutput> InvokeAsync<TInput, TOutput>(TInput input, Func<TInput, TOutput> action)
+        public virtual Task<TOutput> InvokeAsync<TInput, TOutput>(TInput input, 
+                                                                  Func<TInput, TOutput> action)
         {
             throw new NotImplementedException();
         }

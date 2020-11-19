@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Styles;
 
@@ -58,7 +57,7 @@ namespace Das.Views.Input
             return true;
         }
 
-        private void ProcessPendingFlings(Double deceleration)
+        private async Task ProcessPendingFlings(Double deceleration)
         {
             var swCurrent = Stopwatch.StartNew();
 
@@ -113,9 +112,11 @@ namespace Das.Views.Input
                     }
                 }
 
+                //Debug.WriteLine(System.Threading.Thread.CurrentThread.ManagedThreadId + ": on fling stepping");
                 _onFlingStep(stepX, stepY);
 
-                Thread.Sleep(10);
+                await Task.Delay(10);
+                //Thread.Sleep(10);
 
                 stepCoefficient = 1000.0 / swCurrent.ElapsedMilliseconds;
                 decelerateBy = deceleration / stepCoefficient;

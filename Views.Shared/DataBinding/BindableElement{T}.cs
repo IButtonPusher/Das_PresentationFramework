@@ -1,23 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Das.Views.Rendering;
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
+#pragma warning disable 8618
 #endif
 
 namespace Das.Views.DataBinding
 {
-    public abstract class BindableElement<T> : VisualElement,
+    public abstract class BindableElement<T> : VisualElement, 
                                                IBindableElement<T>
     {
-        protected BindableElement(IDataBinding<T>? binding)
+        protected BindableElement(IDataBinding<T>? binding,
+                                  IVisualBootStrapper templateResolver)
+        : base(templateResolver)
         {
             _binding = binding;
+            _bindings = new List<IDataBinding>();
         }
 
-        protected BindableElement()
+        protected BindableElement(IVisualBootStrapper templateResolver) 
+            : base(templateResolver)
         {
+            _bindings = new List<IDataBinding>();
         }
 
         public virtual Task SetBoundValueAsync(T value)
@@ -26,17 +33,22 @@ namespace Das.Views.DataBinding
             return TaskEx.CompletedTask;
         }
 
+        public void AddBinding(IDataBinding binding)
+        {
+            _bindings.Add(binding);
+        }
+
         public IDataBinding<T>? Binding
         {
             get => _binding;
             set => SetBinding(value);
         }
 
-        //IDataBinding? IBindableElement.Binding
-        //{
-        //    get => Binding;
-        //    set => Binding = value as IDataBinding<T> ?? Binding;
-        //}
+        IDataBinding? IBindableElement.Binding
+        {
+            get => Binding;
+            set => Binding = value as IDataBinding<T> ?? Binding;
+        }
 
         public Object? DataContext { get; set; }
 
@@ -48,8 +60,7 @@ namespace Das.Views.DataBinding
         public virtual void SetBoundValue(T value)
         {
             var binding = _binding;
-            if (binding == null || binding is InstanceBinding<T>) 
-                _binding = new ObjectBinding<T>(value);
+            if (binding == null || binding is InstanceBinding<T>) _binding = new ObjectBinding<T>(value);
 
             BoundValue = value;
         }
@@ -111,13 +122,13 @@ namespace Das.Views.DataBinding
             return newObject;
         }
 
-        //Object? IBindableElement.GetBoundValue(Object dataContext)
-        //{
-        //    if (_binding is {} b)
-        //        return b.GetValue(dataContext);
+        Object? IBindableElement.GetBoundValue(Object dataContext)
+        {
+            if (_binding is {} b)
+                return b.GetValue(dataContext);
 
-        //    return null;
-        //}
+            return null;
+        }
 
         public Object? Value => DataContext;
 
@@ -150,8 +161,18 @@ namespace Das.Views.DataBinding
             return str;
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            foreach (var binding in _bindings)
+                binding.Dispose();
+            
+            _bindings.Clear();
+        }
+
 
         private IDataBinding<T>? _binding;
+        private List<IDataBinding> _bindings;
         protected T BoundValue;
     }
 }

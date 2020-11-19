@@ -2,7 +2,7 @@
 using Das.Views;
 using Das.Views.Panels;
 using Das.Views.Windows;
-using Das.ViewModels;
+using Das.Views.Mvvm;
 
 namespace Das.OpenGL.Windows
 {

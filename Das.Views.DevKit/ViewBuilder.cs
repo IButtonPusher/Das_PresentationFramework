@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Das.Serializer;
+using Das.Views.Controls;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
@@ -28,14 +29,28 @@ namespace Das.Views.DevKit
                     availableSpace.Width, availableSpace.Height, availableSpace.Offset));
         }
 
-        ISize IVisualRenderer.Measure(IRenderSize availableSpace, 
-                                      IMeasureContext measureContext)
+        ValueSize IVisualRenderer.Measure(IRenderSize availableSpace, 
+                                          IMeasureContext measureContext)
         {
             if (Content is {} content)
                 return measureContext.MeasureElement(content, availableSpace);
 
-            return Size.Empty;
+            return ValueSize.Empty;
         }
+
+        public void InvalidateMeasure()
+        {
+            Content?.InvalidateMeasure();
+        }
+
+        public void InvalidateArrange()
+        {
+            Content?.InvalidateArrange();
+        }
+
+        public Boolean IsRequiresMeasure => Content!.IsRequiresMeasure;
+
+        public Boolean IsRequiresArrange => Content!.IsRequiresArrange;
 
         [IgnoreDataMember]
         public ISerializationCore Serializer { get; set; }
@@ -47,7 +62,14 @@ namespace Das.Views.DevKit
 
         public event Action<IVisualElement>? Disposed;
 
-        public void OnParentChanging(IContentContainer? newParent)
+        IControlTemplate IVisualElement.Template => throw new NotSupportedException();
+
+        public void AcceptChanges(ChangeType changeType)
+        {
+            
+        }
+
+        public void OnParentChanging(IContainerVisual? newParent)
         {
             
         }

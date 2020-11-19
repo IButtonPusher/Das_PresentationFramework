@@ -96,7 +96,7 @@ namespace Das.OpenGL
             DrawString(s, brush, location.TopLeft);
         }
 
-        public Size MeasureString(String text) => throw new NotImplementedException();
+        public ValueSize MeasureString(String text) => throw new NotImplementedException();
 
         public void Dispose()
         {

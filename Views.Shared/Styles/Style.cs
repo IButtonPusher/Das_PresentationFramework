@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Das.Views.Rendering;
 
 namespace Das.Views.Styles
 {
@@ -10,6 +11,7 @@ namespace Das.Views.Styles
         public Style()
         {
             _setters = new Dictionary<AssignedStyle, Object?>();
+            _transitions = new Dictionary<AssignedStyle, Transition>();
         }
 
         public virtual Object? this[StyleSetter setter]
@@ -54,7 +56,7 @@ namespace Das.Views.Styles
 
         public virtual Boolean TryGetValue(StyleSetter setter,
                                            StyleSelector selector,
-                                           Object dataContext,
+                                           Object? dataContext,
                                            out Object val)
         {
             return TryGetValue(setter, selector, out val);
@@ -78,7 +80,7 @@ namespace Das.Views.Styles
                     _setters[kvp] = kvp.Value;
         }
 
-        public void Add(StyleSetter setter,
+        public virtual void Add(StyleSetter setter,
                               StyleSelector selector,
                               Object? value)
         {
@@ -86,12 +88,27 @@ namespace Das.Views.Styles
             _setters[key] = value;
         }
 
-        public void AddSetter(StyleSetter setter,
+        protected virtual void UpdateTransition(AssignedStyle style)
+        {
+            _setters[style] = style.Value;
+        }
+
+        public void AddOrUpdate(IStyle style)
+        {
+            foreach (var kvp in style)
+            {
+                var key = new AssignedStyle(kvp.Setter, kvp.Selector, kvp.Value);
+                _setters[key] = kvp;
+            }
+        }
+
+        public virtual void AddSetter(StyleSetter setter,
                               Object? value)
         {
             Add(setter, StyleSelector.None, value);
         }
 
-        private readonly Dictionary<AssignedStyle, Object?> _setters;
+        protected readonly Dictionary<AssignedStyle, Object?> _setters;
+        protected readonly Dictionary<AssignedStyle, Transition> _transitions;
     }
 }

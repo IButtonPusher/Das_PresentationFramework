@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Views.Controls;
+using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
+using Das.Views.Rendering;
 
 namespace Das.Views.Styles
 {
@@ -31,9 +33,11 @@ namespace Das.Views.Styles
             this[StyleSetter.Font] = font;
             this[StyleSetter.HorizontalAlignment] = HorizontalAlignments.Center;
             this[StyleSetter.VerticalAlignment] = VerticalAlignments.Center;
-            this[StyleSetter.Size] = null;
+            //this[StyleSetter.Size] = null;
             this[StyleSetter.Height] = Double.NaN;
             this[StyleSetter.Width] = Double.NaN;
+            this[StyleSetter.Visibility] = Visibility.Visible;
+            this[StyleSetter.Transition] = Transition.EmptyTransitions;
 
 
             var typeTypes = new Dictionary<Type, IStyle>
@@ -43,7 +47,6 @@ namespace Das.Views.Styles
                     {StyleSetter.BorderRadius, StyleSelector.None, 8},
                     {StyleSetter.BorderThickness, StyleSelector.None, 1},
                     {StyleSetter.BorderBrush, StyleSelector.None, SolidColorBrush.Black},
-                    //{StyleSetter.Background, StyleSelector.Hover, SolidColorBrush.LightGray},
                     {StyleSetter.Background, StyleSelector.Active, SolidColorBrush.LightGray},
                     {StyleSetter.Padding, StyleSelector.None, new Thickness(5)}
                 },

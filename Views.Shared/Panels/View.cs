@@ -7,14 +7,18 @@ namespace Das.Views.Panels
     public class View<T> : ContentPanel<T>, 
                            IView<T>
     {
-        public View(IStyleContext styleContext)
+        public View(IVisualBootStrapper templateResolver)
+
+        : base(templateResolver)
         {
-            StyleContext = styleContext;
+            StyleContext = templateResolver.StyleContext;
+            _dataContext = default!;
         }
 
-        public View() : this(new BaseStyleContext(new DefaultStyle()))
-        {
-        }
+        //public View(IVisualBootStrapper templateResolver) 
+        //    : this(new BaseStyleContext(new DefaultStyle()), templateResolver)
+        //{
+        //}
 
         public IStyleContext StyleContext { get; }
 
@@ -24,9 +28,11 @@ namespace Das.Views.Panels
 
         public virtual void SetDataContext(T dataContext)
         {
-            throw new NotImplementedException();
+            _dataContext = dataContext;
         }
 
-        public new virtual T DataContext => throw new NotImplementedException();
+        public new virtual T DataContext => _dataContext;
+
+        private T _dataContext;
     }
 }

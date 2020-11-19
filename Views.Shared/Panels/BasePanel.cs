@@ -14,15 +14,17 @@ namespace Das.Views.Panels
     public abstract class BasePanel<T> : BindableElement<T>, 
                                          IVisualContainer
     {
-        protected BasePanel(IDataBinding<T>? binding)
-            : base(binding)
+        protected BasePanel(IDataBinding<T>? binding,
+                            IVisualBootStrapper templateResolver)
+            : base(binding, templateResolver)
         {
             _lockChildren = new Object();
             _children = new List<IVisualElement>();
         }
 
         // ReSharper disable once UnusedMember.Global
-        protected BasePanel() : this(null)
+        protected BasePanel(IVisualBootStrapper templateResolver) 
+            : this(null, templateResolver)
         {
         }
 

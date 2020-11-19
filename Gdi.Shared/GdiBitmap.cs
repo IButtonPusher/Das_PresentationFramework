@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 using Das.Views;
@@ -11,12 +10,19 @@ namespace Gdi.Shared
 {
     public class GdiBitmap: IImage
     {
-        private readonly Bitmap _bmp;
+        private readonly Image _bmp;
+        private readonly Stream? _stream;
         private readonly Boolean _isEmpty;
 
-        public GdiBitmap(Bitmap bmp)
+        //private static Int32 _count;
+
+        public GdiBitmap(Image bmp,
+                         Stream? stream)
         {
+            //Debug.WriteLine("Create bmp " + (++_count));
+
             _bmp = bmp;
+            _stream = stream;
             _isEmpty = bmp.Width == 1 && bmp.Height == 1;
         }
 
@@ -33,6 +39,11 @@ namespace Gdi.Shared
 
         Double ISize.Width => _bmp.Width;
 
+        public ISize PlusVertical(ISize adding)
+        {
+            return GeometryHelper.PlusVertical(this, adding);
+        }
+
         public ISize Reduce(Thickness padding)
         {
             return GeometryHelper.Reduce(this, padding);
@@ -48,8 +59,13 @@ namespace Gdi.Shared
             if (_isDisposed)
                 return;
 
+            //Debug.WriteLine("Dispose bmp " + (--_count));
+
             _isDisposed = true;
             _bmp.Dispose();
+
+            if (_stream is {} stream)
+                stream.Dispose();
         }
 
         Boolean IImage.IsDisposed => _isDisposed;
@@ -64,12 +80,13 @@ namespace Gdi.Shared
             throw new NotImplementedException();
         }
 
-        Stream IImage.ToStream()
+        Stream? IImage.ToStream()
         {
-            var ms = new MemoryStream();
-            _bmp.Save(ms, ImageFormat.Png);
-            ms.Position = 0;
-            return ms;
+            return _stream;
+            //var ms = new MemoryStream();
+            //_bmp.Save(ms, ImageFormat.Png);
+            //ms.Position = 0;
+            //return ms;
         }
 
         Task<Boolean> IImage.TrySave(FileInfo path)

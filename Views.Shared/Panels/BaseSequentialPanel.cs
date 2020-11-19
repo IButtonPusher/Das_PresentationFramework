@@ -12,21 +12,23 @@ namespace Das.Views.Panels
                                                    ISequentialPanel
     {
         protected BaseSequentialPanel(IDataBinding<T>? binding,
+                                      IVisualBootStrapper templateResolver,
                                       ISequentialRenderer? renderer = null)
-            : base(binding)
+            : base(binding, templateResolver)
         {
             _renderer = EnsureRenderer(renderer);
         }
 
-        protected BaseSequentialPanel(ISequentialRenderer? renderer = null)
-            : this(null, renderer)
+        protected BaseSequentialPanel(IVisualBootStrapper templateResolver, 
+                                      ISequentialRenderer? renderer = null)
+            : this(null, templateResolver, renderer)
         {
         }
 
         public Orientations Orientation { get; set; }
 
-        public override ISize Measure(IRenderSize availableSpace, 
-                                      IMeasureContext measureContext)
+        public override ValueSize Measure(IRenderSize availableSpace, 
+                                          IMeasureContext measureContext)
         {
             return _renderer.Measure(this, GetChildrenToRender(), Orientation,
                 availableSpace, measureContext);

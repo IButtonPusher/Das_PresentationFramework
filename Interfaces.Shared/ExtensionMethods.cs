@@ -1,47 +1,67 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Threading.Tasks;
+using Das.Views.Styles;
 
 namespace Das.Views
 {
     public static class ExtensionMethods
     {
-        //[MethodImpl(256)]
-        //public static Boolean AreEqualEnough(this Double d1, Double d2)
-        //{
-        //    return Math.Abs(d1 - d2) < MyEpsilon;
-        //}
+        public static void Clear<T>(this IProducerConsumerCollection<T> q)
+        {
+            while (q.TryTake(out _))
+            {
+            }
+        }
 
-        //[MethodImpl(256)]
-        //public static Boolean AreEqualEnough(this Double? d1, Double? d2)
-        //{
-        //    return d1.HasValue && d2.HasValue && Math.Abs(d1.Value - d2.Value) < MyEpsilon;
-        //}
+        public static void Clear<T>(this BlockingCollection<T> bloc)
+        {
+            while (bloc.Count > 0) bloc.TryTake(out _);
+        }
 
-        //[MethodImpl(256)]
-        //public static Boolean IsZero(this Double d)
-        //{
-        //    return Math.Abs(d) < MyEpsilon;
-        //}
+        public static void HandleCollectionChange<T>(this NotifyCollectionChangedEventArgs e,
+                                                     Action<T> oldItems,
+                                                     Action<T> newItems)
+        {
+            if (e.OldItems != null)
+            {
+                var olds = e.OldItems.OfType<T>();
+                foreach (var old in olds)
+                    oldItems(old);
+            }
 
-        //public static Boolean Congruent<T>(this IList<T> left, IList<T> right)
-        //{
-        //    if (ReferenceEquals(null, left))
-        //        return ReferenceEquals(null, right);
-        //    if (ReferenceEquals(null, right))
-        //        return false;
+            if (e.NewItems == null)
+                return;
 
-        //    if (right.Count != left.Count)
-        //        return false;
+            var news = e.NewItems.OfType<T>();
+            foreach (var n in news)
+                newItems(n);
+        }
 
-        //    for (var i = 0; i < left.Count; i++)
-        //    {
-        //        if (!Equals(left[i], right[i]))
-        //            return false;
-        //    }
+        public static void HandleCollectionChanges<T>(this NotifyCollectionChangedEventArgs e,
+                                                      Action<IEnumerable<T>> oldItems,
+                                                      Action<IEnumerable<T>> newItems)
+        {
+            if (e.OldItems != null)
+            {
+                var olds = e.OldItems.OfType<T>();
+                oldItems(olds);
+            }
 
-        //    return true;
-        //}
+            if (e.NewItems == null)
+                return;
 
+            var news = e.NewItems.OfType<T>();
+            newItems(news);
+        }
 
-        //private const Double MyEpsilon = 0.00001;
+        public static Boolean Contains(this StyleSelector selector,
+                                       StyleSelector value)
+        {
+            return (selector & value) > StyleSelector.Active;
+        }
     }
 }

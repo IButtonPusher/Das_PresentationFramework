@@ -49,7 +49,7 @@ namespace Das.OpenGL.Text
             DrawString(s, brush, location.TopLeft);
         }
 
-        public Size MeasureString(String text)
+        public ValueSize MeasureString(String text)
         {
             Single w = 0;
             var isUnderrun = false;
@@ -126,7 +126,7 @@ namespace Das.OpenGL.Text
 
             var h = Math.Max(top + bottom, _maxHeight + bottom);
 
-            return new Size(w, h);
+            return new ValueSize(w, h);
         }
 
         public void DrawString(String text, IBrush brush, IPoint2D point2D)

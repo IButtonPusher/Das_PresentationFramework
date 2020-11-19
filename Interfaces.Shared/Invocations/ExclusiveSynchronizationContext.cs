@@ -26,9 +26,7 @@ namespace Das.Views.Invocations
                         throw new AggregateException("AsyncHelpers.Run method threw an exception.", InnerException);
                 }
                 else
-                {
                     workItemsWaiting.WaitOne();
-                }
             }
         }
 

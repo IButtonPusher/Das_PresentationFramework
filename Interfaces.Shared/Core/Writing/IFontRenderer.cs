@@ -17,6 +17,6 @@ namespace Das.Views.Core.Writing
                         IBrush brush,
                         IRectangle bounds);
 
-        Size MeasureString(String text);
+        ValueSize MeasureString(String text);
     }
 }

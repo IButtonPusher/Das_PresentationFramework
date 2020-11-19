@@ -4,23 +4,30 @@ using System.Threading.Tasks;
 using Das.Container;
 using Das.Views.Controls;
 using Das.Views.Rendering;
+using Das.Views.Styles;
+using Das.Views.Templates;
 
 namespace Das.Views
 {
     public abstract class BaseRenderKit : IVisualSurrogateProvider
     {
-        public IResolver Resolver { get; }
+        public IResolver Container { get; }
 
-        protected BaseRenderKit() : this(new BaseResolver())
+        protected BaseRenderKit(IStyleContext styleContext) 
+            : this(new BaseResolver(), styleContext)
         {
 
         }
 
-        protected BaseRenderKit(IResolver resolver)
+        protected BaseRenderKit(IResolver resolver,
+                                IStyleContext styleContext)
         {
-            Resolver = resolver;
+            Container = resolver;
             _surrogateInstances = new Dictionary<IVisualElement, IVisualSurrogate>();
             _surrogateTypeBuilders = new Dictionary<Type, Func<IVisualElement,IVisualSurrogate>>();
+            var templateResolver = new DefaultVisualBootStrapper(resolver, styleContext);
+            DataTemplates = templateResolver;
+            resolver.ResolveTo<IVisualBootStrapper>(templateResolver);
         }
 
         public virtual void RegisterSurrogate<T>(Func<IVisualElement, IVisualSurrogate> builder)
@@ -30,6 +37,8 @@ namespace Das.Views
         }
 
        
+        public virtual IVisualBootStrapper DataTemplates { get; }
+
         private readonly Dictionary<Type, Func<IVisualElement, IVisualSurrogate>> _surrogateTypeBuilders;
         private readonly Dictionary<IVisualElement, IVisualSurrogate> _surrogateInstances;
 

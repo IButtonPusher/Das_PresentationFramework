@@ -8,7 +8,8 @@ namespace Das.Views.Controls
     public class ToggleButton<T> : ButtonBase<T>,
                                    IToggleButton
     {
-        public ToggleButton()
+        public ToggleButton(IVisualBootStrapper templateResolver)
+            : base(templateResolver)
         {
             IsChecked = false;
         }

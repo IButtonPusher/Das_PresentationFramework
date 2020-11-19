@@ -12,17 +12,11 @@ namespace Das.Views
 
         IRenderContext RenderContext { get; }
 
-        IResolver Resolver { get; }
+        IResolver Container { get; }
 
-        //TInterface Resolve<TObject, TInterface>() 
-        //    where TObject : TInterface;
-
-        //void ResolveTo<TInterface, TObject>(TObject obj) 
-        //    where TObject : class, TInterface;
+        IVisualBootStrapper DataTemplates { get; }
 
         void RegisterSurrogate<T>(Func<IVisualElement, IVisualSurrogate> builder)
             where T : IVisualElement;
-
-        //T Resolve<T>();
     }
 }

@@ -76,11 +76,6 @@ namespace Das.Views.Updaters
             return Enumerable.Empty<Task>();
         }
 
-        private static async Task<T> InnerInvokeAsync<T>(Func<Task<T>> action)
-        {
-            return await action();
-        }
-
         protected override void QueueTask(Task task)
         {
             try
@@ -90,6 +85,19 @@ namespace Das.Views.Updaters
             catch (OperationCanceledException)
             {
             }
+        }
+
+        protected override Boolean TryExecuteTaskInline(Task task, Boolean taskWasPreviouslyQueued)
+        {
+            if (taskWasPreviouslyQueued)
+                return false;
+
+            return _isExecuting && TryExecuteTask(task);
+        }
+
+        private static async Task<T> InnerInvokeAsync<T>(Func<Task<T>> action)
+        {
+            return await action();
         }
 
         private void RunOnCurrentThread()
@@ -117,15 +125,8 @@ namespace Das.Views.Updaters
             t.Start();
         }
 
-        protected override Boolean TryExecuteTaskInline(Task task, Boolean taskWasPreviouslyQueued)
-        {
-            if (taskWasPreviouslyQueued)
-                return false;
-
-            return _isExecuting && TryExecuteTask(task);
-        }
-
-        [ThreadStatic] private static Boolean _isExecuting;
+        [ThreadStatic]
+        private static Boolean _isExecuting;
 
         private readonly String _staThreadName;
 

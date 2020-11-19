@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Geometry;
 
 namespace Das.Views.Rendering.Geometry
 {
-    public class RenderRectangle : Rectangle, 
+    public class RenderRectangle : Rectangle,
                                    IRenderRectangle
     {
         public RenderRectangle(Double x,
@@ -28,7 +29,7 @@ namespace Das.Views.Rendering.Geometry
 
         public RenderRectangle(IRectangle start,
                                Thickness margin,
-                               IPoint2D offset) : base(start, margin)
+                               IPoint2D offset) : base(start, margin) 
         {
             Offset = offset;
         }
@@ -36,14 +37,9 @@ namespace Das.Views.Rendering.Geometry
         public RenderRectangle(IPoint2D location,
                                ISize size,
                                IPoint2D offset)
-        : base(location, size)
+            : base(location, size)
         {
             Offset = offset;
-        }
-
-        public Boolean Equals(IRenderSize other)
-        {
-            return false;
         }
 
         public RenderRectangle()
@@ -51,14 +47,24 @@ namespace Das.Views.Rendering.Geometry
             Offset = Point2D.Empty;
         }
 
-        public new RenderRectangle DeepCopy()
+        public Boolean Equals(IRenderSize other)
         {
-            return new RenderRectangle(this, Thickness.Empty, Offset);
+            return false;
         }
 
         public new IRenderSize Minus(ISize subtract)
         {
             return GeometryHelper.Minus(this, subtract);
+        }
+
+        IRenderSize IRenderSize.PlusVertical(ISize adding)
+        {
+            return GeometryHelper.PlusRenderVertical(this, adding);
+        }
+
+        public IRenderSize MinusVertical(ISize subtract)
+        {
+            return GeometryHelper.MinusVertical(this, subtract);
         }
 
         //new IRenderSize IRenderRectangle.Size => new ValueRenderSize(base.Size);
@@ -70,9 +76,26 @@ namespace Das.Views.Rendering.Geometry
             return GeometryHelper.Reduce(this, padding);
         }
 
+        public ValueRenderRectangle ToFullRectangle()
+        {
+            return new ValueRenderRectangle(0,0, Width, Height, Offset);
+        }
+
+        public ValueSize ToValueSize()
+        {
+            return GeometryHelper.ToValueSize(this);
+        }
+
         IRenderSize IRenderSize.DeepCopy()
         {
             return new ValueRenderSize(Width, Height, Offset);
+        }
+
+        IRenderSize IRenderRectangle.Size => new ValueRenderSize(Width, Height, Offset);
+
+        public new RenderRectangle DeepCopy()
+        {
+            return new RenderRectangle(this, Thickness.Empty, Offset);
         }
 
         public static RenderRectangle operator +(RenderRectangle rect, Thickness margin)
@@ -115,7 +138,5 @@ namespace Das.Views.Rendering.Geometry
                 rect.Size.Width * val, rect.Size.Height * val,
                 rect.Offset);
         }
-
-        IRenderSize IRenderRectangle.Size => new ValueRenderSize(Width, Height, Offset);
     }
 }

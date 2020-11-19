@@ -10,7 +10,8 @@ namespace Das.OpenGL.Windows
 {
     public abstract class OpenGLPanel : GLHostedElement
     {
-        public OpenGLPanel(IView view, IStyleContext styleContext)
+        public OpenGLPanel(IView view, 
+                           IStyleContext styleContext)
             : base(view, styleContext)
         {
             var bldr = new GLWindowBuilder("OpenGLSurface");
@@ -18,7 +19,7 @@ namespace Das.OpenGL.Windows
             var context = boot.GetContext(this);
 
             var fontProvider = GLBootStrapper.GetFontProvider(context);
-            var kit = new OpenGLRenderKit(fontProvider, context);
+            var kit = new OpenGLRenderKit(fontProvider, context, styleContext);
 
             var renderer = new PanelRenderer(this, context);
             var _ = new PanelUpdater(Render, kit, renderer, boot.Scheduler);

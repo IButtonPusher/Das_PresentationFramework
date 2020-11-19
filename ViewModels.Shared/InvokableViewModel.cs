@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Das.ViewModels;
 using Das.Views;
 
-namespace ViewModels.Shared
+namespace Das.ViewModels
 {
     public abstract class InvokableViewModel : BaseViewModel
     {

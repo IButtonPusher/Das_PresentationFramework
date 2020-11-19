@@ -33,6 +33,26 @@ namespace Das.Views.Core.Geometry
             return GeometryHelper.Minus(this, subtract);
         }
 
+        public ValueSize PlusVertical(ISize adding)
+        {
+            return GeometryHelper.PlusVertical(this, adding);
+        }
+
+        ISize ISize.PlusVertical(ISize adding)
+        {
+            return GeometryHelper.PlusVertical(this, adding);
+        }
+
+        public static ValueSize operator +(ValueSize size, 
+                                           Thickness margin)
+        {
+            if (margin.IsEmpty)
+                return size;
+
+            return new ValueSize(size.Width + margin.Left + margin.Right,
+                size.Height + margin.Top + margin.Bottom);
+        }
+
         public Double Height { get; }
 
         public Boolean IsEmpty => Width.IsZero() || Height.IsZero();
@@ -41,6 +61,8 @@ namespace Das.Views.Core.Geometry
         {
             return new ValueSize(Width, Height);
         }
+
+        public static readonly ValueSize Empty = new ValueSize(0, 0);
 
         public override String ToString()
         {

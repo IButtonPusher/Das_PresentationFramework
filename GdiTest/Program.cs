@@ -1,17 +1,16 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Gdi;
 using Das.OpenGL;
-using Das.Views;
 using Das.Views.Extended;
 using Das.Views.Panels;
 using TestCommon;
 using ViewCompiler;
 using Das.OpenGL.Windows;
-using Das.Views.Updaters;
-using Das.ViewModels;
+using Das.Views.Mvvm;
 
 namespace GdiTest
 {
@@ -28,12 +27,19 @@ namespace GdiTest
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             
-            Application.Run(new TestBrowser());
+            //Application.Run(new TestBrowser());
 
 //            new StaScheduler("GDI Test");
 
             var _testLauncher = GetGdiLauncher();
             //_testLauncher = GetOpenGLLauncher();
+
+            var vm = new TestCompanyVm();
+            vm.SelectedEmployee = vm.Employees.FirstOrDefault();
+            var view = new TestTabControl(_testLauncher.BootStrapper.VisualBootStrapper);
+            view.SetDataContext(vm);
+
+            _testLauncher.Run(vm, view);
 
             _testLauncher.MvvmTest().Wait();
 
@@ -45,9 +51,9 @@ namespace GdiTest
         // ReSharper disable once UnusedMember.Local
         private static TestLauncher GetGdiLauncher()
         {
-            var boot = new GdiProvider();
+            //var boot = new GdiProvider();
             var viewProvider = new ViewProvider();
-            return new TestLauncher(boot,viewProvider);
+            return new TestLauncher(viewProvider, viewProvider);
         }
 
         // ReSharper disable once UnusedMember.Local

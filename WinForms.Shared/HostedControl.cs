@@ -12,7 +12,8 @@ namespace Das.Views.Winforms
     /// Base type for hosting content in windows forms.  Prevents other painting and propogates load and 
     /// size changed events
     /// </summary>
-    public class HostedControl : Control, IWindowsHost
+    public class HostedControl : Control, 
+                                 IWindowsHost
     {
         public HostedControl()
         {
@@ -34,9 +35,20 @@ namespace Das.Views.Winforms
         public event Action<ISize>? AvailableSizeChanged;
 
         public event Func<Task>? HostCreated;
-       
+
+
+        public void BeginInvoke(Action action)
+        {
+            this.RunBeginInvoke(action);
+        }
 
         public void Invoke(Action action) => base.Invoke(action);
+
+        public void Invoke(Action action, 
+                           Int32 priority)
+        {
+            Invoke(action);
+        }
 
         public T Invoke<T>(Func<T> action)
         {
@@ -44,6 +56,28 @@ namespace Das.Views.Winforms
         }
 
         public Task InvokeAsync(Action action)
+        {
+            return this.RunInvokeAsync(action);
+        }
+
+        public Task<T> InvokeAsync<T>(Func<T> action)
+        {
+            return this.RunInvokeAsync(action);
+        }
+
+        public Task<TOutput> InvokeAsync<TInput, TOutput>(TInput input,
+                                                          Func<TInput, TOutput> action)
+        {
+            return this.RunInvokeAsync(input, action);
+        }
+
+        public Task InvokeAsync<TInput>(TInput input, 
+                                        Func<TInput, Task> action)
+        {
+            return this.RunInvokeAsync(input, action);
+        }
+
+        public Task<T> InvokeAsync<T>(Func<Task<T>> action)
         {
             return this.RunInvokeAsync(action);
         }

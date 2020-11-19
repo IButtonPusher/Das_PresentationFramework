@@ -8,11 +8,14 @@ namespace Das.Views.Panels
 {
     public class StackPanel<T> : BaseSequentialPanel<T>
     {
-        public StackPanel()
+        public StackPanel(IVisualBootStrapper templateResolver)
+        : base(templateResolver)
         {
         }
 
-        public StackPanel(IDataBinding<T> binding) : base(binding)
+        public StackPanel(IDataBinding<T> binding,
+                          IVisualBootStrapper templateResolver) 
+            : base(binding, templateResolver)
         {
         }
 

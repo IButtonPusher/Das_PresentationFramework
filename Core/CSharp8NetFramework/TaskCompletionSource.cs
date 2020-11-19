@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 // ReSharper disable All
 #pragma warning disable 8625
 #pragma warning disable 8618
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 
 namespace AsyncResults
 {
@@ -71,7 +73,9 @@ namespace AsyncResults
         }
 
         [MethodImpl(256)]
-        public static void Reset<T>(ref TaskCompletionSource<T> taskCompletionSource, Object stateObject = null)
+        public static void Reset<T>(ref TaskCompletionSource<T> taskCompletionSource,
+                                    Object stateObject = null)
+
         {
             if (_resetTaskFunc != null && taskCompletionSource != null)
             {

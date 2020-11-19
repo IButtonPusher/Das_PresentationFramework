@@ -3,19 +3,20 @@ using System.Threading.Tasks;
 using Das.Views;
 using Das.Views.Extended;
 using Das.Views.Panels;
-using Das.ViewModels;
+using Das.Views.Mvvm;
 
 namespace TestCommon
 {
     public class TestLauncher
     {
-        private readonly IBootStrapper _windowProvider;
+        public IBootStrapper BootStrapper { get; }
+
         private readonly IViewProvider _viewProvider;
 
-        public TestLauncher(IBootStrapper windowProvider,
+        public TestLauncher(IBootStrapper bootStrapper,
                             IViewProvider viewProvider)
         {
-            _windowProvider = windowProvider;
+            BootStrapper = bootStrapper;
             _viewProvider = viewProvider;
         }
 
@@ -29,9 +30,9 @@ namespace TestCommon
             Run(vm, view);
         }
 
-        protected virtual void Run(IViewModel vm, IView view)
+        public virtual void Run(IViewModel vm, IView view)
         {
-            _windowProvider.Run(vm, view);
+            BootStrapper.Run(vm, view);
         }
 
         // ReSharper disable once UnusedMember.Global

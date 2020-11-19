@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 
 namespace Das.Views.Input
 {
     public readonly struct MouseUpEventArgs : IMouseButtonEventArgs<MouseUpEventArgs>
     {
-        public MouseUpEventArgs(IPoint2D position, 
-                              MouseButtons button, 
-                              IInputContext inputContext)
+        public MouseUpEventArgs(IPoint2D position,
+                                MouseButtons button,
+                                IInputContext inputContext)
         {
             Position = position;
             Button = button;
@@ -29,12 +30,12 @@ namespace Das.Views.Input
         }
 
         public IPoint2D Position { get; }
-        
+
         public MouseButtons Button { get; }
 
         public MouseUpEventArgs Offset(IPoint2D position)
         {
-            return new MouseUpEventArgs(Position.Offset(position), 
+            return new MouseUpEventArgs(Position.Offset(position),
                 Button, InputContext);
         }
 

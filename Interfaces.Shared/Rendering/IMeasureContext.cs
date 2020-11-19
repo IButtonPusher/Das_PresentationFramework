@@ -8,25 +8,30 @@ namespace Das.Views.Rendering
 {
     public interface IMeasureContext : IVisualContext
     {
-        IViewState? ViewState { get; }
-
-        Size GetLastMeasure(IVisualElement element);
-
-        Size MeasureMainView(IVisualElement element, 
-                             IRenderSize availableSpace,
-                             IViewState viewState);
-
-        Size MeasureElement(IVisualElement element, 
-                            IRenderSize availableSpace);
-
-        Size MeasureImage(IImage img);
-
-        Size MeasureString(String s, 
-                           IFont font);
-
         /// <summary>
-        /// The total amount of space available (e.g. size of the window, screen size of a mobile device)
+        ///     The total amount of space available (e.g. size of the window, screen size of a mobile device)
         /// </summary>
         ISize ContextBounds { get; }
+
+        IViewState? ViewState { get; }
+
+        /// <summary>
+        /// Applies the amount needed by styles (margin, border) then
+        /// calls element.Measure with the reduced size, if applicable.
+        /// </summary>
+        /// <returns>The amount needed for margin/borders + what the element asked for</returns>
+        ValueSize MeasureElement(IVisualElement element,
+                            IRenderSize availableSpace);
+
+        ValueSize MeasureImage(IImage img);
+
+        ValueSize MeasureMainView(IVisualElement element,
+                                  IRenderSize availableSpace,
+                                  IViewState viewState);
+
+        ValueSize MeasureString(String s,
+                                IFont font);
+
+        ValueSize GetStyleDesiredSize(IVisualElement element);
     }
 }

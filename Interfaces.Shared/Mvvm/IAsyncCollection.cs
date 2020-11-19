@@ -12,6 +12,9 @@ namespace Das.ViewModels
 
         IAsyncEnumerable<T> EnumerateAsync();
 
+        Task<T> FirstOrDefaultAsync<TDerived>(Func<TDerived, Boolean> predicate)
+            where TDerived : class, T;
+
         Task InsertAsync(Int32 index, T item);
 
         Task RemoveAtAsync(Int32 index);

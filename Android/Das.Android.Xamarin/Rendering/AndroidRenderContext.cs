@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Android.Graphics;
+using Android.Util;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Rendering;
+using static Android.Graphics.BitmapFactory;
 
 namespace Das.Xamarin.Android
 {
@@ -17,10 +19,13 @@ namespace Das.Xamarin.Android
                                     IFontProvider<AndroidFontPaint> fontProvider,
                                     IViewState viewState,
                                     IVisualSurrogateProvider surrogateProvider,
-                                    Dictionary<IVisualElement, ICube> renderPositions)
-            : base(perspective, surrogateProvider, renderPositions)
+                                    Dictionary<IVisualElement, ICube> renderPositions,
+                                    DisplayMetrics displayMetrics,
+                                    Dictionary<IVisualElement, ValueSize> lastMeasurements)
+            : base(perspective, surrogateProvider, renderPositions, lastMeasurements)
         {
             _fontProvider = fontProvider;
+            _displayMetrics = displayMetrics;
             _paint = new Paint();
             ViewState = viewState;
         }
@@ -42,7 +47,19 @@ namespace Das.Xamarin.Android
         public override  void DrawImage<TRectangle>(IImage img, 
                                                     TRectangle destination)
         {
-            DrawImage(img, new ValueRectangle(0, 0, img.Width, img.Height), destination);
+            var bmp = img.Unwrap<Bitmap>();
+            var dest = GetAbsoluteAndroidRect(destination);
+
+
+            if (dest.Width() == bmp.Width && dest.Height() == bmp.Height)
+                GetCanvas().DrawBitmap(bmp, dest.Left, dest.Top, _paint);
+            else
+            {
+                var src = new Rect(0, 0, bmp.Width, bmp.Height);
+                GetCanvas().DrawBitmap(bmp, src, dest, _paint);
+            }
+
+            //DrawImage(img, new ValueRectangle(0, 0, img.Width, img.Height), destination);
         }
 
         
@@ -200,6 +217,66 @@ namespace Das.Xamarin.Android
             return new AndroidBitmap(bmp!);
         }
 
+        private static IImage? GetScaledImage(Bitmap? img,
+                                                   Double imgMaxWidth)
+        {
+            if (img == null || img.Width < imgMaxWidth)
+                return new AndroidBitmap(img);
+
+            var scaleRatio = imgMaxWidth / img.Width;
+
+            var scaledBitmap = Bitmap.CreateScaledBitmap(img, 
+                Convert.ToInt32(img.Width * scaleRatio),
+                Convert.ToInt32(img.Height * scaleRatio), true);
+            img.Dispose();
+            return new AndroidBitmap(scaledBitmap);
+        }
+
+        public override IImage? GetImage(Stream stream, 
+                                         Double maximumWidthPct)
+        {
+            var imgMaxWidth = _displayMetrics.WidthPixels * maximumWidthPct;
+
+            if (!stream.CanSeek)
+            {
+                var img = BitmapFactory.DecodeStream(stream);
+                return GetScaledImage(img, imgMaxWidth);
+            }
+
+
+            var options = new Options
+            {
+                InJustDecodeBounds = true
+            };
+
+            DecodeStream(stream, null, options);
+
+            var scale = 1;
+            while (options.OutWidth * (1 / Math.Pow(scale, 2)) > 
+                   imgMaxWidth) {
+                scale++;
+            }
+
+            if (scale == 1)
+                return GetImage(stream);
+
+            options = new Options
+            {
+                InSampleSize = scale - 1
+            };
+
+            var bmp = BitmapFactory.DecodeStream(stream, null,
+                options);
+
+            return GetScaledImage(bmp, imgMaxWidth);
+        }
+
+        public override IImage? GetImage(Byte[] bytes)
+        {
+            using (var ms = new MemoryStream(bytes))
+                return GetImage(ms);
+        }
+
         public override IImage? GetImage(Stream stream)
         {
             var bmp = BitmapFactory.DecodeStream(stream);
@@ -228,7 +305,9 @@ namespace Das.Xamarin.Android
         }
 
         private readonly IFontProvider<AndroidFontPaint> _fontProvider;
+        private readonly DisplayMetrics _displayMetrics;
 
         private readonly Paint _paint;
+        
     }
 }

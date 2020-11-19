@@ -9,7 +9,7 @@ namespace System.Threading
         private readonly ITaskWaiter _waiter;
         private readonly Action<ITaskWaiter> _execute;
 
-        public WaiterAction(ITaskWaiter waiter, 
+        public WaiterAction(ITaskWaiter waiter,
                             Action<ITaskWaiter> execute)
         {
             _waiter = waiter;

@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
-using Das.ViewModels;
+using Das.Views.Mvvm;
 using WinForms.Shared;
 using Size = Das.Views.Core.Geometry.Size;
 
 namespace Das.Views.Winforms
 {
-    public abstract class ViewForm : Form, IViewHost
+    public abstract class ViewForm : Form, 
+                                     IViewHost
     {
         public ViewForm(HostedViewControl control) //: base(control.View, control)
         {
@@ -61,9 +63,54 @@ namespace Das.Views.Winforms
             _contents.OnResizeEnded(); 
         }
 
+        //public T Invoke<T>(Func<T> action)
+        //{
+        //    return this.RunInvoke(action);
+        //}
+
+        public void BeginInvoke(Action action)
+        {
+            this.RunBeginInvoke(action);
+        }
+
+        public void Invoke(Action action) => base.Invoke(action);
+
+        public void Invoke(Action action, 
+                           Int32 priority)
+        {
+            Invoke(action);
+        }
+
         public T Invoke<T>(Func<T> action)
         {
             return this.RunInvoke(action);
+        }
+
+        public Task InvokeAsync(Action action)
+        {
+            return this.RunInvokeAsync(action);
+        }
+
+        public Task<T> InvokeAsync<T>(Func<T> action)
+        {
+            return this.RunInvokeAsync(action);
+        }
+
+        public Task<TOutput> InvokeAsync<TInput, TOutput>(TInput input,
+                                                          Func<TInput, TOutput> action)
+        {
+            return this.RunInvokeAsync(input, action);
+        }
+
+        public Task InvokeAsync<TInput>(TInput input, 
+                                        Func<TInput, Task> action)
+        {
+            return this.RunInvokeAsync(input, action);
+        }
+
+        public Task<T> InvokeAsync<T>(Func<Task<T>> action)
+        {
+            return this.RunInvokeAsync(action);
         }
 
         private readonly Size _availableSize;
@@ -85,12 +132,12 @@ namespace Das.Views.Winforms
         public event Action<ISize>? AvailableSizeChanged;
         
 
-        public void Invoke(Action action) => base.Invoke(action);
+        //public void Invoke(Action action) => base.Invoke(action);
 
-        public Task InvokeAsync(Action action)
-        {
-            return this.RunInvokeAsync(action);
-        }
+        //public Task InvokeAsync(Action action)
+        //{
+        //    return this.RunInvokeAsync(action);
+        //}
 
         private Boolean _isChanged;
         private readonly Object _changeLock;
@@ -130,6 +177,24 @@ namespace Das.Views.Winforms
                                    StyleSelector selector, 
                                    IVisualElement element)
             => StyleContext.GetStyleSetter<T>(setter, selector, element);
+
+        public void RegisterStyleSetter(IVisualElement element, StyleSetter setter, Object value)
+        {
+            _contents.RegisterStyleSetter(element, setter, value);
+        }
+
+        public void RegisterStyleSetter(IVisualElement element, 
+                                        StyleSetter setter, 
+                                        StyleSelector selector, 
+                                        Object value)
+        {
+            StyleContext.RegisterStyleSetter(element, setter, selector, value);
+        }
+
+        public IColor GetCurrentAccentColor()
+        {
+            return _contents.GetCurrentAccentColor();
+        }
 
         public IView View
         {

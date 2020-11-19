@@ -55,9 +55,10 @@
     <Compile Include="DasMainActivity.cs" />
     <Compile Include="Images\AndroidBitmap.cs" />
     <Compile Include="AndroidMeasureKit.cs" />
+    <Compile Include="Images\AndroidImageProvider.cs" />
+    <Compile Include="Mvvm\InvokeCompletionSource.cs" />
     <Compile Include="Rendering\AndroidRenderContext.cs" />
     <Compile Include="Rendering\AndroidRenderKit.cs" />
-    <Compile Include="AndroidStyleProvider.cs" />
     <Compile Include="Rendering\RefreshRenderContext.cs" />
     <Compile Include="Views\AndroidPaintView.cs" />
     <Compile Include="Views\AndroidView.cs" />

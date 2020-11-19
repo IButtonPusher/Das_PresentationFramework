@@ -13,7 +13,7 @@ namespace Das.Views.Core.Drawing
 
         Task SaveThenDisposeAsync(FileInfo path);
 
-        Stream ToStream();
+        Stream? ToStream();
 
         Task<Boolean> TrySave(FileInfo path);
 

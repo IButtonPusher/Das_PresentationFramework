@@ -10,39 +10,15 @@ namespace Das.Views.Winforms
 {
     public class VisualForm : Form, IVisualHost<Bitmap>
     {
-        private readonly HostedControl<Bitmap> _control;
-
         public VisualForm(IVisualRenderer visual,
-                             HostedControl<Bitmap> control)
+                          HostedControl<Bitmap> control)
         {
             _control = control;
             _availableSize = new Size(Width, Height);
             Visual = visual;
         }
 
-        protected override async void OnHandleCreated(EventArgs e)
-        {
-            base.OnHandleCreated(e);
-
-            await HostCreated.InvokeAsyncEvent(true);
-        }
-
-        public T Invoke<T>(Func<T> action)
-        {
-            return this.RunInvoke(action);
-        }
-
-        protected override void OnSizeChanged(EventArgs e)
-        {
-            base.OnSizeChanged(e);
-            if (_control == null)
-                return;
-
-            _availableSize.Width = _control.Width;
-            _availableSize.Height = _control.Height;
-            //_isChanged = true;
-            AvailableSizeChanged?.Invoke(_availableSize);
-        }
+       
 
         //public Bitmap BackingBitmap
         //{
@@ -58,9 +34,62 @@ namespace Das.Views.Winforms
 
         public virtual Boolean IsLoaded => _control.IsLoaded;
 
+        //public T Invoke<T>(Func<T> action)
+        //{
+        //    return this.RunInvoke(action);
+        //}
+
+        //public void Invoke(Action action)
+        //{
+        //    base.Invoke(action);
+        //}
+
+        //public Task InvokeAsync(Action action)
+        //{
+        //    return this.RunInvokeAsync(action);
+        //}
+
+        public void BeginInvoke(Action action)
+        {
+            this.RunBeginInvoke(action);
+        }
+
         public void Invoke(Action action) => base.Invoke(action);
 
+        public void Invoke(Action action, 
+                           Int32 priority)
+        {
+            Invoke(action);
+        }
+
+        public T Invoke<T>(Func<T> action)
+        {
+            return this.RunInvoke(action);
+        }
+
         public Task InvokeAsync(Action action)
+        {
+            return this.RunInvokeAsync(action);
+        }
+
+        public Task<T> InvokeAsync<T>(Func<T> action)
+        {
+            return this.RunInvokeAsync(action);
+        }
+
+        public Task<TOutput> InvokeAsync<TInput, TOutput>(TInput input,
+                                                          Func<TInput, TOutput> action)
+        {
+            return this.RunInvokeAsync(input, action);
+        }
+
+        public Task InvokeAsync<TInput>(TInput input, 
+                                        Func<TInput, Task> action)
+        {
+            return this.RunInvokeAsync(input, action);
+        }
+
+        public Task<T> InvokeAsync<T>(Func<Task<T>> action)
         {
             return this.RunInvokeAsync(action);
         }
@@ -69,16 +98,39 @@ namespace Das.Views.Winforms
 
         public event Action<ISize>? AvailableSizeChanged;
 
-        public virtual IPoint2D GetOffset(IPoint2D input) => Point2D.Empty;
-
-        public IVisualRenderer Visual { get; }
-
-        private readonly Size _availableSize;
+        public virtual IPoint2D GetOffset(IPoint2D input)
+        {
+            return Point2D.Empty;
+        }
 
         public Bitmap Asset
         {
             get => _control.Asset;
             set => _control.Asset = value;
         }
+
+        public IVisualRenderer Visual { get; }
+
+        protected override async void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+
+            await HostCreated.InvokeAsyncEvent(true);
+        }
+
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+            if (_control == null)
+                return;
+
+            _availableSize.Width = _control.Width;
+            _availableSize.Height = _control.Height;
+            //_isChanged = true;
+            AvailableSizeChanged?.Invoke(_availableSize);
+        }
+
+        private readonly Size _availableSize;
+        private readonly HostedControl<Bitmap> _control;
     }
 }

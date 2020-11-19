@@ -6,8 +6,8 @@ namespace Das.Views.Input
 {
     public readonly struct MouseWheelEventArgs : IMouseInputEventArgs<MouseWheelEventArgs>
     {
-        public MouseWheelEventArgs(IPoint2D position, 
-                                   Int32 delta, 
+        public MouseWheelEventArgs(IPoint2D position,
+                                   Int32 delta,
                                    IInputContext inputContext)
         {
             Position = position;
@@ -15,7 +15,8 @@ namespace Das.Views.Input
             InputContext = inputContext;
         }
 
-        public IPoint2D Position { get;  }
+        public IPoint2D Position { get; }
+
         public readonly Int32 Delta;
 
         public MouseWheelEventArgs Offset(IPoint2D offset)

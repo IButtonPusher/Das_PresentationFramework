@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Das.Views.Mvvm;
 using Das.Views.Panels;
-using Das.ViewModels;
 
 namespace Das.Views
 {
@@ -9,5 +9,7 @@ namespace Das.Views
     {
         void Run<TViewModel>(TViewModel viewModel, IView view)
             where TViewModel : IViewModel;
+
+        IVisualBootStrapper VisualBootStrapper { get; }
     }
 }

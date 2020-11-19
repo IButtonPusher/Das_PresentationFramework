@@ -12,10 +12,13 @@ namespace Das.Xamarin.Android
     {
         private readonly Bitmap _bmp;
         private readonly Boolean _isEmpty;
+        //private static Int32 _count;
 
-        public AndroidBitmap(Bitmap bmp)
+        public AndroidBitmap(Bitmap? bmp)
         {
-            _bmp = bmp;
+          //  Debug.WriteLine("Create bmp " + (++_count));
+
+            _bmp = bmp!;
             _isEmpty = bmp == null || 
                        (bmp.Width == 1 && bmp.Height == 1);
         }
@@ -38,6 +41,8 @@ namespace Das.Xamarin.Android
         {
             if (_isDisposed)
                 return;
+            //Debug.WriteLine("Dispose bmp " + (--_count));
+
             _bmp.Dispose();
             _isDisposed = true;
         }
@@ -76,6 +81,11 @@ namespace Das.Xamarin.Android
                 _bmp.Compress(Bitmap.CompressFormat.Png, 0, ms);
             ms.Position = 0;
             return ms;
+        }
+
+        public ISize PlusVertical(ISize adding)
+        {
+            return GeometryHelper.PlusVertical(this, adding);
         }
 
         Task<Boolean> IImage.TrySave(FileInfo path)

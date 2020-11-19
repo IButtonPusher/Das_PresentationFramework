@@ -42,6 +42,12 @@
     <CodeAnalysisRuleSet>..\Das.Presentation.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Das.Container, Version=0.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Das.Container.0.0.6-alpha\lib\netstandard2.0\Das.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="Das.Container.Interfaces, Version=0.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Das.Container.Interfaces.0.0.6-alpha\lib\netstandard2.0\Das.Container.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -61,12 +67,6 @@
     <Compile Include="TestBrowser.Designer.cs">
       <DependentUpon>TestBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="TestGLPanelForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TestGLPanelForm.Designer.cs">
-      <DependentUpon>TestGLPanelForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="TestOpenGLPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -80,9 +80,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="TestGLPanelForm.resx">
-      <DependentUpon>TestGLPanelForm.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
@@ -118,6 +115,10 @@
     <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj">
       <Project>{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}</Project>
       <Name>Das.Views.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Das.ViewModels\Das.ViewModels.csproj">
+      <Project>{4ad8f035-a30f-4d67-8e84-fad46d1b8877}</Project>
+      <Name>Das.ViewModels</Name>
     </ProjectReference>
     <ProjectReference Include="..\Das.Views.3d\Das.Views.Extended.csproj">
       <Project>{e109ceda-64ef-4674-ac1b-1ea62624519e}</Project>

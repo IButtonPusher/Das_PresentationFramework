@@ -20,7 +20,7 @@ namespace Das.Xamarin.Android
         {
             if (!_fonts.TryGetValue(font, out var painter))
             {
-                painter = new AndroidFontPaint(font, _displayMetrics);
+                painter = new AndroidFontPaint(font, _displayMetrics, true);
                 _fonts[font] = painter;
             }
 

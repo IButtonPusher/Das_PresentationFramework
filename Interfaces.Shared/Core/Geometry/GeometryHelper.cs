@@ -57,6 +57,34 @@ namespace Das.Views.Core.Geometry
                 original.Height - takeAway.Height);
         }
 
+        public static ISize PlusVertical(ISize original,
+                                         ISize takeAway)
+        {
+            return new ValueSize(Math.Max(original.Width, takeAway.Width),
+                original.Height + takeAway.Height);
+        }
+
+        public static ValueSize PlusVertical(ValueSize original,
+                                             ISize takeAway)
+        {
+            return new ValueSize(Math.Max(original.Width, takeAway.Width),
+                original.Height + takeAway.Height);
+        }
+
+        public static IRenderSize PlusRenderVertical(IRenderSize original,
+                                               ISize takeAway)
+        {
+            return new ValueRenderSize(Math.Max(original.Width, takeAway.Width),
+                original.Height + takeAway.Height, original.Offset);
+        }
+
+        public static IRenderSize MinusVertical(IRenderSize original,
+                                               ISize takeAway)
+        {
+            return new ValueRenderSize(Math.Max(original.Width, takeAway.Width),
+                original.Height - takeAway.Height, original.Offset);
+        }
+
         public static IRenderSize Minus(IRenderSize original,
                                         ISize takeAway)
         {
@@ -82,6 +110,11 @@ namespace Das.Views.Core.Geometry
 
             return new ValueRenderSize(size.Width - (margin.Left + margin.Right),
                 size.Height - (margin.Top + margin.Bottom), size.Offset);
+        }
+
+        public static ValueSize ToValueSize(IRenderSize rect)
+        {
+            return new ValueSize(rect.Width, rect.Height);
         }
     }
 }

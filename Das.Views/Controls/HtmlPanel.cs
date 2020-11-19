@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
@@ -13,7 +14,12 @@ namespace Das.Views.Controls
         public String? Markup
         {
             get => _markup;
-            set => SetValue(ref _markup, value);
+            set => SetValue(ref _markup, value, OnMarkupChanged);
+        }
+
+        private void OnMarkupChanged(String? obj)
+        {
+            Debug.WriteLine("changing markup in html surrogater");
         }
 
         private Uri? _uri;
@@ -30,8 +36,8 @@ namespace Das.Views.Controls
             throw new NotSupportedException("A surrogate control is required for this control");
         }
 
-        public override ISize Measure(IRenderSize availableSpace,
-                                      IMeasureContext measureContext)
+        public override ValueSize Measure(IRenderSize availableSpace,
+                                          IMeasureContext measureContext)
         {
             throw new NotSupportedException("A surrogate control is required for this control");
         }

@@ -1,6 +1,9 @@
-﻿using Das.Views;
+﻿using System.Collections.Generic;
+using Das.Views;
+using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Rendering;
+using Das.Views.Styles;
 
 namespace Das.OpenGL
 {
@@ -8,9 +11,13 @@ namespace Das.OpenGL
                                    IRenderKit
                                    
     {
-        public OpenGLRenderKit(IFontProvider fontProvider, IGLContext glContext)
+        public OpenGLRenderKit(IFontProvider fontProvider, 
+                               IGLContext glContext,
+                               IStyleContext styleContext)
+        : base(styleContext)
         {
-            MeasureContext = new GLMeasureContext(fontProvider, this);
+            var lastMeasurements = new Dictionary<IVisualElement, ValueSize>();
+            MeasureContext = new GLMeasureContext(fontProvider, this, lastMeasurements);
             RenderContext = new GLRenderContext(new BasePerspective(),
                  glContext, fontProvider, this);
         }

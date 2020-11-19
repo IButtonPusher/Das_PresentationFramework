@@ -11,17 +11,17 @@ namespace Das.Views.Input
 
         Boolean IsCapsLockOn { get; }
 
-        Boolean AreButtonsPressed(KeyboardButtons button1, 
+        Boolean AreButtonsPressed(KeyboardButtons button1,
                                   KeyboardButtons button2);
 
-        Boolean AreButtonsPressed(KeyboardButtons button1, 
+        Boolean AreButtonsPressed(KeyboardButtons button1,
                                   KeyboardButtons button2,
                                   KeyboardButtons button3);
 
-        Boolean AreButtonsPressed(MouseButtons button1, 
+        Boolean AreButtonsPressed(MouseButtons button1,
                                   MouseButtons button2);
 
-        Boolean AreButtonsPressed(MouseButtons button1, 
+        Boolean AreButtonsPressed(MouseButtons button1,
                                   MouseButtons button2,
                                   MouseButtons button3);
 

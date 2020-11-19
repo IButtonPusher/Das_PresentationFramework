@@ -1,15 +1,14 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 
 namespace Das.Views.Rendering.Geometry
 {
     public readonly struct ValueRenderRectangle : IRenderRectangle
     {
-
         public ValueRenderRectangle(IRectangle r)
-        : this(r.X, r.Y, r.Size, Point2D.Empty)
+            : this(r.X, r.Y, r.Size, Point2D.Empty)
         {
-            
         }
 
         public ValueRenderRectangle(Double x,
@@ -76,9 +75,34 @@ namespace Das.Views.Rendering.Geometry
 
         public IPoint2D Offset { get; }
 
+        public IRenderSize MinusVertical(ISize subtract)
+        {
+            return GeometryHelper.MinusVertical(this, subtract);
+        }
+
+        public ValueSize ToValueSize()
+        {
+            return GeometryHelper.ToValueSize(this);
+        }
+
+        ISize ISize.PlusVertical(ISize adding)
+        {
+            return PlusVertical(adding);
+        }
+
         ISize ISize.Reduce(Thickness padding)
         {
             return GeometryHelper.Reduce(this, padding);
+        }
+
+        public ValueRenderRectangle ToFullRectangle()
+        {
+            return this;
+        }
+
+        public IRenderSize PlusVertical(ISize adding)
+        {
+            return GeometryHelper.PlusRenderVertical(this, adding);
         }
 
         IRenderSize IRenderSize.DeepCopy()

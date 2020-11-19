@@ -12,6 +12,7 @@ using AsyncResults.Enumerable;
 #pragma warning disable 8604
 #pragma warning disable 8603
 #pragma warning disable 8625
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
 
 namespace AsyncResults.ForEach
 {
@@ -1507,6 +1508,7 @@ namespace AsyncResults.ForEach
         public static IAsyncEnumerable<TSource> DefaultIfEmpty<TSource>(this IAsyncEnumerable<TSource> source)
             => DefaultIfEmpty(source, default);
 
+
         /// <summary>
         ///     Returns the elements of the specified sequence or the specified value in a singleton collection if the sequence is
         ///     empty.
@@ -1741,58 +1743,6 @@ namespace AsyncResults.ForEach
 
         internal static class BatchCollectionHelper<TSource>
         {
-            private static void AddToBlockingCollection(BlockingCollection<TSource> blockingCollection, TSource item) =>
-                blockingCollection.Add(item);
-
-            private static void AddToConcurrentBag(ConcurrentBag<TSource> concurrentBag, TSource item) =>
-                concurrentBag.Add(item);
-
-            private static void AddToConcurrentQueue(ConcurrentQueue<TSource> concurrentQueue, TSource item) =>
-                concurrentQueue.Enqueue(item);
-
-            private static void AddToConcurrentStack(ConcurrentStack<TSource> concurrentStack, TSource item) =>
-                concurrentStack.Push(item);
-
-            private static void AddToHashSet(HashSet<TSource> hashSet, TSource item) => hashSet.Add(item);
-
-            private static void AddToLinkedList(LinkedList<TSource> linkedList, TSource item) =>
-                linkedList.AddLast(item);
-
-            private static void AddToList(List<TSource> list, TSource item) => list.Add(item);
-
-            private static void AddToQueue(Queue<TSource> queue, TSource item) => queue.Enqueue(item);
-
-            private static void AddToSortedSet(SortedSet<TSource> sortedSet, TSource item) => sortedSet.Add(item);
-
-            private static void AddToStack(Stack<TSource> stack, TSource item) => stack.Push(item);
-
-            private static BlockingCollection<TSource> CreateBlockingCollection(Int32? capacity) => capacity.HasValue
-                ? new BlockingCollection<TSource>(capacity.Value)
-                : new BlockingCollection<TSource>();
-
-            private static ConcurrentBag<TSource> CreateConcurrentBag(Int32? capacity) => new ConcurrentBag<TSource>();
-
-            private static ConcurrentQueue<TSource> CreateConcurrentQueue(Int32? capacity) =>
-                new ConcurrentQueue<TSource>();
-
-            private static ConcurrentStack<TSource> CreateConcurrentStack(Int32? capacity) =>
-                new ConcurrentStack<TSource>();
-
-            private static HashSet<TSource> CreateHashSet(Int32? capacity) => new HashSet<TSource>();
-
-            private static LinkedList<TSource> CreateLinkedList(Int32? capacity) => new LinkedList<TSource>();
-
-            private static List<TSource> CreateList(Int32? capacity) =>
-                capacity.HasValue ? new List<TSource>(capacity.Value) : new List<TSource>();
-
-            private static Queue<TSource> CreateQueue(Int32? capacity) =>
-                capacity.HasValue ? new Queue<TSource>(capacity.Value) : new Queue<TSource>();
-
-            private static SortedSet<TSource> CreateSortedSet(Int32? capacity) => new SortedSet<TSource>();
-
-            private static Stack<TSource> CreateStack(Int32? capacity) =>
-                capacity.HasValue ? new Stack<TSource>(capacity.Value) : new Stack<TSource>();
-
             public static Action<TCollection, TSource> GetAddToCollectionAction<TCollection>()
             {
                 if (typeof(TCollection) == typeof(List<TSource>))
@@ -1864,6 +1814,58 @@ namespace AsyncResults.ForEach
                 throw new NotSupportedException(
                     $"The collection of type '{typeof(TCollection).FullName}' is not supported.");
             }
+
+            private static void AddToBlockingCollection(BlockingCollection<TSource> blockingCollection, TSource item) =>
+                blockingCollection.Add(item);
+
+            private static void AddToConcurrentBag(ConcurrentBag<TSource> concurrentBag, TSource item) =>
+                concurrentBag.Add(item);
+
+            private static void AddToConcurrentQueue(ConcurrentQueue<TSource> concurrentQueue, TSource item) =>
+                concurrentQueue.Enqueue(item);
+
+            private static void AddToConcurrentStack(ConcurrentStack<TSource> concurrentStack, TSource item) =>
+                concurrentStack.Push(item);
+
+            private static void AddToHashSet(HashSet<TSource> hashSet, TSource item) => hashSet.Add(item);
+
+            private static void AddToLinkedList(LinkedList<TSource> linkedList, TSource item) =>
+                linkedList.AddLast(item);
+
+            private static void AddToList(List<TSource> list, TSource item) => list.Add(item);
+
+            private static void AddToQueue(Queue<TSource> queue, TSource item) => queue.Enqueue(item);
+
+            private static void AddToSortedSet(SortedSet<TSource> sortedSet, TSource item) => sortedSet.Add(item);
+
+            private static void AddToStack(Stack<TSource> stack, TSource item) => stack.Push(item);
+
+            private static BlockingCollection<TSource> CreateBlockingCollection(Int32? capacity) => capacity.HasValue
+                ? new BlockingCollection<TSource>(capacity.Value)
+                : new BlockingCollection<TSource>();
+
+            private static ConcurrentBag<TSource> CreateConcurrentBag(Int32? capacity) => new ConcurrentBag<TSource>();
+
+            private static ConcurrentQueue<TSource> CreateConcurrentQueue(Int32? capacity) =>
+                new ConcurrentQueue<TSource>();
+
+            private static ConcurrentStack<TSource> CreateConcurrentStack(Int32? capacity) =>
+                new ConcurrentStack<TSource>();
+
+            private static HashSet<TSource> CreateHashSet(Int32? capacity) => new HashSet<TSource>();
+
+            private static LinkedList<TSource> CreateLinkedList(Int32? capacity) => new LinkedList<TSource>();
+
+            private static List<TSource> CreateList(Int32? capacity) =>
+                capacity.HasValue ? new List<TSource>(capacity.Value) : new List<TSource>();
+
+            private static Queue<TSource> CreateQueue(Int32? capacity) =>
+                capacity.HasValue ? new Queue<TSource>(capacity.Value) : new Queue<TSource>();
+
+            private static SortedSet<TSource> CreateSortedSet(Int32? capacity) => new SortedSet<TSource>();
+
+            private static Stack<TSource> CreateStack(Int32? capacity) =>
+                capacity.HasValue ? new Stack<TSource>(capacity.Value) : new Stack<TSource>();
 
             private static readonly Func<Int32?, List<TSource>> _createList = CreateList;
             private static readonly Action<List<TSource>, TSource> _addToList = AddToList;

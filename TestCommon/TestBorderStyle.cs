@@ -7,7 +7,8 @@ namespace TestCommon
 {
     public class TestBorderStyle : ElementStyle
     {
-        public TestBorderStyle(IVisualElement element) : base(element)
+        public TestBorderStyle(IVisualElement element) : base(element,
+            new BaseStyleContext(new DefaultStyle(), new DefaultColorPalette()))
         {
             AddSetter(StyleSetter.BorderThickness, new Thickness(1,2,3,4));
             AddSetter(StyleSetter.BorderBrush, SolidColorBrush.Red);

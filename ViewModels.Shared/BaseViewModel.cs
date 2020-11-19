@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Das.ViewModels
 {
-    public abstract class BaseViewModel : NotifyPropertyChangedBase, IViewModel
+    public abstract class BaseViewModel : NotifyPropertyChangedBase
     {
         
     }

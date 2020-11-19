@@ -14,11 +14,15 @@ namespace Das.Views.Styles
 {
     public class BaseStyleContext : IStyleContext
     {
-        public BaseStyleContext(IStyle defaultStyle)
+        public BaseStyleContext(IStyle defaultStyle,
+                                IColorPalette colorPalette)
         {
             AssertStyleValidity(defaultStyle, true);
             _defaultStyle = defaultStyle;
-            _elementStyles = new Dictionary<Int32, List<IStyle>>();
+
+            _accentColor = colorPalette.Accent;
+
+            _elementStyles = new Dictionary<Int32, ElementStyle>();
             _cachedStyles = new Dictionary<IVisualElement, IStyle>();
             _typeStyles = new Dictionary<Type, List<ScopedStyle>>();
 
@@ -29,14 +33,24 @@ namespace Das.Views.Styles
 
         public virtual IEnumerable<IStyle> GetStylesForElement(IVisualElement element)
         {
+            if (_elementStyles.TryGetValue(element.Id, out var elementStyles))
+            {
+                yield return elementStyles;
+                //foreach (var rdrr in elementStyles)
+                //    yield return rdrr;
+            }
+
             if (_cachedStyles.TryGetValue(element, out var known))
             {
                 yield return known;
                 yield break;
             }
 
-            var buildCached = BuildCachedStyle(element);
             element.Disposed += OnElementDisposed;
+
+            var buildCached = BuildCachedStyle(element);
+            
+            
             _cachedStyles[element] = buildCached;
             yield return buildCached;
 
@@ -54,13 +68,51 @@ namespace Das.Views.Styles
             RegisterStyleImpl(style, scope);
         }
 
+        public void SetCurrentAccentColor(IColor color)
+        {
+            _accentColor = color;
+        }
+
         public void RegisterStyleSetter(IVisualElement element,
                                         StyleSetter setter,
                                         Object value)
         {
-            var style = new ElementStyle(element);
+            if (!IsTypeValid(setter, value))
+                throw new ArgumentOutOfRangeException(nameof(value));
+
+            if (!_elementStyles.TryGetValue(element.Id, out var style))
+            {
+                style = new ElementStyle(element, this);
+                _elementStyles[element.Id] = style;
+            }
+
+            //var style = new ElementStyle(element);
             style.AddSetter(setter, value);
-            RegisterStyle(style, element);
+           // RegisterStyle(style, element);
+        }
+
+        public void RegisterStyleSetter(IVisualElement element, 
+                                        StyleSetter setter, 
+                                        StyleSelector selector, 
+                                        Object value)
+        {
+            if (!IsTypeValid(setter, value))
+                throw new ArgumentOutOfRangeException(nameof(value));
+
+            if (!_elementStyles.TryGetValue(element.Id, out var style))
+            {
+                style = new ElementStyle(element, this);
+                _elementStyles[element.Id] = style;
+            }
+
+            
+            style.Add(setter, selector, value);
+            
+        }
+
+        public IColor GetCurrentAccentColor()
+        {
+            return _accentColor;
         }
 
         public void RegisterStyleSetter<T>(StyleSetter setter,
@@ -71,6 +123,11 @@ namespace Das.Views.Styles
             var style = new TypeStyle<T>();
             style[setter] = value;
             RegisterStyle(style, scope);
+        }
+
+        public void CoerceIsChanged()
+        {
+            IsChanged = true;
         }
 
         public T GetStyleSetter<T>(StyleSetter setter,
@@ -180,8 +237,11 @@ namespace Das.Views.Styles
             var res = new Style();
 
             if (_elementStyles.TryGetValue(element.Id, out var styles))
-                for (var c = styles.Count - 1; c >= 0; c--)
-                    res.AddMissingSetters(styles[c]);
+            {
+                res.AddMissingSetters(styles);
+                //for (var c = styles.Count - 1; c >= 0; c--)
+                //    res.AddMissingSetters(styles[c]);
+            }
 
             foreach (var type in GetStylableTypes(element))
             {
@@ -207,8 +267,11 @@ namespace Das.Views.Styles
                     }
 
                     if (styles != default)
-                        for (var c = styles.Count - 1; c >= 0; c--)
-                            res.AddMissingSetters(styles[c]);
+                    {
+                        res.AddMissingSetters(styles);
+                        //for (var c = styles.Count - 1; c >= 0; c--)
+                        //    res.AddMissingSetters(styles[c]);
+                    }
                 }
             }
 
@@ -271,8 +334,8 @@ namespace Das.Views.Styles
                     return value is VerticalAlignments;
                 case StyleSetter.HorizontalAlignment:
                     return value is HorizontalAlignments;
-                case StyleSetter.Size:
-                    return value == null || value is ISize;
+                //case StyleSetter.Size:
+                //    return value == null || value is ISize;
                 case StyleSetter.Height:
                 case StyleSetter.Width:
                     return value == null || value is IConvertible;
@@ -304,11 +367,18 @@ namespace Das.Views.Styles
                 case ElementStyle elementStyle:
                     if (!_elementStyles.TryGetValue(elementStyle.Element.Id, out var forElement))
                     {
-                        forElement = new List<IStyle>();
+                        //forElement = new List<IStyle>();
+                        forElement = elementStyle;
                         _elementStyles.Add(elementStyle.Element.Id, forElement);
+                        //forElement.Add(elementStyle);
+                    }
+                    else
+                    {
+                        forElement.AddOrUpdate(elementStyle);
+                        //forElement[0].AddOrUpdate(elementStyle);
                     }
 
-                    forElement.Add(elementStyle);
+                    //forElement.Add(elementStyle);
                     break;
                 case TypeStyle typeStyle:
                     Type? forType = null;
@@ -341,7 +411,15 @@ namespace Das.Views.Styles
         private readonly Dictionary<IVisualElement, IStyle> _cachedStyles;
 
         private readonly IStyle _defaultStyle;
-        private readonly Dictionary<Int32, List<IStyle>> _elementStyles;
+        private IColor _accentColor;
+        private readonly Dictionary<Int32, ElementStyle> _elementStyles;
         private readonly Dictionary<Type, List<ScopedStyle>> _typeStyles;
+
+        public void AcceptChanges()
+        {
+            IsChanged = false;
+        }
+
+        public Boolean IsChanged { get; private set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.Graphics;
 using Android.Text;
@@ -6,16 +7,20 @@ using Android.Util;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
-using Size = Das.Views.Core.Geometry.Size;
 
 namespace Das.Xamarin.Android
 {
     public class AndroidFontPaint : TextPaint, IFontRenderer
     {
+        private readonly Boolean _isCacheStaticLayouts;
+
         public AndroidFontPaint(IFont font,
-                                DisplayMetrics displayMetrics)
+                                DisplayMetrics displayMetrics,
+                                Boolean isCacheStaticLayouts)
             : base(PaintFlags.AntiAlias)
         {
+            _isCacheStaticLayouts = isCacheStaticLayouts;
+            _layoutCache = new Dictionary<String, StaticLayout>();
             Font = font;
             SetStyle(Style.Fill);
 
@@ -48,6 +53,12 @@ namespace Das.Xamarin.Android
 
             SetColor(brush);
 
+            if (_isCacheStaticLayouts)
+            {
+                DrawStringWithCachedLayout(s, brush, bounds);
+                return;
+            }
+
             using (var textLayout = new StaticLayout(s, this,
                 Convert.ToInt32(bounds.Width),
                 Layout.Alignment.AlignNormal,
@@ -64,12 +75,35 @@ namespace Das.Xamarin.Android
             }
         }
 
-        public Size MeasureString(String text)
+        private void DrawStringWithCachedLayout(String s,
+                                                IBrush brush,
+                                                IRectangle bounds)
         {
-            //var bounds = new Rect();
-            var width = MeasureText(text);
+            var canvas = GetCanvas();
+            SetColor(brush);
 
-            //GetTextBounds(text, 0, text.Length, bounds);
+            if (!_layoutCache.TryGetValue(s, out var textLayout))
+            {
+                textLayout = new StaticLayout(s, this,
+                    Convert.ToInt32(bounds.Width),
+                    Layout.Alignment.AlignNormal,
+                    1, 1, false);
+                _layoutCache.Add(s, textLayout);
+            }
+
+            canvas.Save();
+
+            canvas.Translate(Convert.ToSingle(bounds.X),
+                Convert.ToSingle(bounds.Y));
+
+            textLayout.Draw(canvas);
+
+            canvas.Restore();
+        }
+
+        public ValueSize MeasureString(String text)
+        {
+            var width = MeasureText(text);
 
             using (var textLayout = new StaticLayout(text, this,
                 Convert.ToInt32(width),
@@ -77,10 +111,8 @@ namespace Das.Xamarin.Android
                 1, 1, false))
             {
                 var height = textLayout.Height;
-                return new Size(width, height);
+                return new ValueSize(width, height);
             }
-
-            //return new Size(bounds.Width(), bounds.Height());
         }
 
         public Canvas? Canvas { get; set; }
@@ -112,5 +144,7 @@ namespace Das.Xamarin.Android
         {
             base.SetStyle(style);
         }
+
+        private readonly Dictionary<String, StaticLayout> _layoutCache;
     }
 }

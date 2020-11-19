@@ -7,6 +7,7 @@ using Android.Support.V4.View;
 using Android.Views;
 using Das.Views;
 using Das.Views.Controls;
+using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Input;
 using Das.Views.Input;
@@ -15,6 +16,7 @@ using Das.Views.Rendering;
 using Das.Views.Styles;
 using Das.Xamarin.Android.Controls;
 using Das.Xamarin.Android.Mvvm;
+using Size = Das.Views.Core.Geometry.Size;
 
 namespace Das.Xamarin.Android
 {
@@ -32,7 +34,7 @@ namespace Das.Xamarin.Android
                            AndroidUiProvider uiProvider)
             : this(view, context, 
                 BuildRenderKit(context, view, windowManager, uiProvider, 
-                    new BaseStyleContext(new DefaultStyle())),
+                    new BaseStyleContext(new DefaultStyle(), new DefaultColorPalette())),
                 uiProvider)
         { }
 
@@ -117,7 +119,7 @@ namespace Das.Xamarin.Android
 
             var fontProvider = new AndroidFontProvider(displayMetrics);
             return new AndroidRenderKit(new BasePerspective(), viewState,
-                fontProvider, windowManager, uiProvider, styleContext);
+                fontProvider, windowManager, uiProvider, styleContext, displayMetrics);
         }
 
         IPoint2D IInputProvider.CursorPosition { get; } = Point2D.Empty;
@@ -221,7 +223,9 @@ namespace Das.Xamarin.Android
             var pos = GetPosition(e1);
             var ags = new FlingEventArgs(0 - velocityX * 0.5, 0 - velocityY * 0.5, pos, this);
             if (_inputHandler.OnMouseInput(ags, InputAction.Fling))
-                Invalidate();
+            {
+                //Invalidate();
+            }
 
 
             return true;
@@ -248,7 +252,9 @@ namespace Das.Xamarin.Android
                 _leftButtonWentDown != null ? MouseButtons.Left : MouseButtons.Right,
                 this);
             if (_inputHandler.OnMouseInput(dragArgs, InputAction.MouseDrag))
-                Invalidate();
+            {
+                //Invalidate();
+            }
 
             return true;
         }
@@ -277,7 +283,9 @@ namespace Das.Xamarin.Android
                 var pos = GetPosition(e);
                 if (_inputHandler.OnMouseInput(new MouseUpEventArgs(
                     pos, MouseButtons.Left, this), InputAction.LeftMouseButtonUp))
-                    Invalidate();
+                {
+                    //Invalidate();
+                }
             }
 
             return _gestureDetector.OnTouchEvent(e);
@@ -295,6 +303,25 @@ namespace Das.Xamarin.Android
                                    IVisualElement element)
         {
             return _view.StyleContext.GetStyleSetter<T>(setter, selector, element);
+        }
+
+        public void RegisterStyleSetter(IVisualElement element, 
+                                        StyleSetter setter, 
+                                        Object value)
+        {
+            _view.StyleContext.RegisterStyleSetter(element, setter, value);
+        }
+        public void RegisterStyleSetter(IVisualElement element, 
+                                        StyleSetter setter, 
+                                        StyleSelector selector, 
+                                        Object value)
+        {
+            _view.StyleContext.RegisterStyleSetter(element, setter, selector, value);
+        }
+
+        public IColor GetCurrentAccentColor()
+        {
+            return _view.StyleContext.GetCurrentAccentColor();
         }
 
         public Double ZoomLevel => 1;
@@ -399,15 +426,16 @@ namespace Das.Xamarin.Android
             if (e.PropertyName != nameof(IChangeTracking.IsChanged) || !_view.IsChanged)
                 return;
 
-            Invalidate();
+            //Invalidate();
         }
 
         private async Task RefreshLoop()
         {
             while (true)
-                if (_view.IsChanged)
+                if (_view.IsChanged || _view.StyleContext.IsChanged)
                 {
                     _view.AcceptChanges();
+                    _view.StyleContext.AcceptChanges();
                     RenderKit.MeasureContext.MeasureMainView(_view,
                         new ValueRenderSize(_measured), this);
                     _paintView.Invalidate();

@@ -1,13 +1,18 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Das.Views.Rendering;
 
 namespace Das.Views.DataBinding
 {
-    public interface IBindableElement : IVisualElement, 
-                                        IDataContext, 
-                                        IBindingSetter
+    public interface IBindableElement : IVisualElement,
+                                        IDataContext,
+                                        IBindingSetter,
+                                        INotifyPropertyChanged
     {
+        void AddBinding(IDataBinding binding);
+
+
         IDataBinding? Binding { get; set; }
 
         Object? DataContext { get; set; }

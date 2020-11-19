@@ -11,7 +11,7 @@ namespace Das.Views.Core.Geometry
         {
         }
 
-        public Size(Double width, 
+        public Size(Double width,
                     Double height)
         {
             _width = width;
@@ -52,12 +52,6 @@ namespace Das.Views.Core.Geometry
             return GeometryHelper.AreSizesEqual(this, other);
         }
 
-        //public Rectangle CenteredIn(Size outerRect)
-        //{
-        //    var wDiff = (outerRect.Width - Width) / 2;
-        //    var hDiff = (outerRect.Height - Height) / 2;
-        //    return new Rectangle(wDiff, hDiff, Width, Height);
-        //}
 
         ISize IDeepCopyable<ISize>.DeepCopy()
         {
@@ -85,13 +79,19 @@ namespace Das.Views.Core.Geometry
         }
 
         // ReSharper disable once UnusedMember.Global
-        public static Size Add(ISize size1, ISize size2)
+        public static Size Add(ISize size1, 
+                               ISize size2)
         {
             if (size1 == null || size2 == null)
                 throw new InvalidOperationException();
 
             return new Size(size1.Width + size2.Width,
                 size1.Height + size2.Height);
+        }
+
+        public ISize PlusVertical(ISize adding)
+        {
+            return GeometryHelper.PlusVertical(this, adding);
         }
 
         public override Boolean Equals(Object obj)
@@ -107,13 +107,19 @@ namespace Das.Views.Core.Geometry
             }
         }
 
-        public static Size operator +(Size size, Thickness margin)
+        public static Size operator +(Size size, 
+                                      Thickness margin)
         {
             if (margin == null)
                 return size.DeepCopy();
 
             return new Size(size.Width + margin.Left + margin.Right,
                 size.Height + margin.Top + margin.Bottom);
+        }
+
+        public static implicit operator ValueSize(Size size)
+        {
+            return new ValueSize(size.Width, size.Height);
         }
 
         public static Size operator *(Size size, Double val)
@@ -143,7 +149,7 @@ namespace Das.Views.Core.Geometry
                 throw new InvalidOperationException();
 
             return new Size(size.Width - size2.Width,
-                size.Height - size2.Width);
+                size.Height - size2.Height);
         }
 
         public override String ToString()
@@ -151,6 +157,11 @@ namespace Das.Views.Core.Geometry
             return "Width: " + Width + " Height: " + Height;
             //return Width.ToString("0.00") + ", " +
             //       Height.ToString("0.00");
+        }
+
+        public static implicit operator Size(ValueSize value)
+        {
+            return new Size(value.Width, value.Height);
         }
 
         private Double _height;

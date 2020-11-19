@@ -13,6 +13,16 @@ namespace System
 
     internal static class ThrowHelper
     {
+        internal static void ThrowArgumentNullException(ExceptionArgument argument)
+        {
+            throw GetArgumentNullException(argument);
+        }
+
+        internal static void ThrowArgumentOutOfRangeException(ExceptionArgument argument)
+        {
+            throw GetArgumentOutOfRangeException(argument);
+        }
+
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static String GetArgumentName(ExceptionArgument argument)
         {
@@ -29,16 +39,6 @@ namespace System
             ExceptionArgument argument)
         {
             return new ArgumentOutOfRangeException(GetArgumentName(argument));
-        }
-
-        internal static void ThrowArgumentNullException(ExceptionArgument argument)
-        {
-            throw GetArgumentNullException(argument);
-        }
-
-        internal static void ThrowArgumentOutOfRangeException(ExceptionArgument argument)
-        {
-            throw GetArgumentOutOfRangeException(argument);
         }
     }
 }

@@ -4,12 +4,12 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Das.Serializer;
 using Das.Views.DataBinding;
-using Das.Views.Rendering; //using Das.Serializer;
+using Das.Views.Rendering;
 
 namespace Das.Views.Panels
 {
-    public interface IVisualContainer : IBindableElement, 
-                                        IVisualFinder, 
+    public interface IVisualContainer : IBindableElement,
+                                        IVisualFinder,
                                         IChangeTracking
     {
         IList<IVisualElement> Children { get; }
@@ -18,6 +18,7 @@ namespace Das.Views.Panels
 
         void AddChildren(params IVisualElement[] elements);
 
-        void OnChildDeserialized(IVisualElement element, INode node);
+        void OnChildDeserialized(IVisualElement element,
+                                 INode node);
     }
 }

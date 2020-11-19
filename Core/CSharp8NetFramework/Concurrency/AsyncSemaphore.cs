@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
+
 #endif
 
 
@@ -31,9 +31,7 @@ namespace System.Threading
             lock (_lockObj)
             {
                 if (_waiters.Count > 0)
-                {
                     toRelease = _waiters.Dequeue();
-                }
                 else
                 {
                     ++_availableCount;
@@ -60,10 +58,11 @@ namespace System.Threading
             }
         }
 
+        private readonly Task _completedTask = TaskEx.FromResult(true);
+
         private readonly Int32 _initialCount;
         private readonly Object _lockObj;
         private readonly Queue<TaskCompletionSource<Boolean>> _waiters;
-        private readonly Task _completedTask = TaskEx.FromResult(true);
         private Int32 _availableCount;
     }
 }

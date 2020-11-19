@@ -22,7 +22,7 @@ namespace Das.Views
             Task.Factory.StartNew(GameLoop, TaskCreationOptions.LongRunning);
         }
 
-        protected override Boolean IsChanged => _viewHost.IsChanged;
+        protected override Boolean IsChanged => _viewHost.IsChanged || _viewHost.StyleContext.IsChanged;
 
         protected override void Update()
         {
@@ -32,6 +32,8 @@ namespace Das.Views
             _viewHost.Invalidate();
 
             _viewHost.AcceptChanges();
+            _viewHost.StyleContext.AcceptChanges();
+            
         }
 
         private readonly IRenderer<TAsset> _renderer;
@@ -52,7 +54,7 @@ namespace Das.Views
                 TaskCreationOptions.LongRunning, taskScheduler);
         }
 
-        protected override Boolean IsChanged => _viewHost.IsChanged;
+        protected override Boolean IsChanged => _viewHost.IsChanged || _viewHost.StyleContext.IsChanged;
 
         protected override void Initialize()
         {
