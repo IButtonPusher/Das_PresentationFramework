@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AsyncObservableCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AsyncObservableCollection2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Invocations\PollyAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Invocations\PollyFunc.cs" />

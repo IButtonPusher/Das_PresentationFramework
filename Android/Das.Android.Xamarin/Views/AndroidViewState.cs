@@ -46,6 +46,8 @@ namespace Das.Xamarin.Android
             _view.StyleContext.RegisterStyleSetter(element, setter, selector, value);
         }
 
+        public IColorPalette ColorPalette => _view.StyleContext.ColorPalette;
+
         public Double ZoomLevel => 1;
 
         private readonly IView _view;

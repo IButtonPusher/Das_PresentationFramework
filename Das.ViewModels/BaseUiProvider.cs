@@ -127,10 +127,7 @@ namespace Das.ViewModels
             throw new NotImplementedException();
         }
 
-        public virtual void Invoke(Action action)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void Invoke(Action action);
 
         public virtual void Invoke(Action action, Int32 priority)
         {

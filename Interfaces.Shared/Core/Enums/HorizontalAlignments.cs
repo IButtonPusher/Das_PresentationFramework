@@ -5,6 +5,7 @@ namespace Das.Views.Core.Enums
 {
     public enum HorizontalAlignments
     {
+        Default,
         Left,
         Right,
         Center,

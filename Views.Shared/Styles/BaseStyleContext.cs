@@ -14,9 +14,12 @@ namespace Das.Views.Styles
 {
     public class BaseStyleContext : IStyleContext
     {
+        public IColorPalette ColorPalette { get; }
+
         public BaseStyleContext(IStyle defaultStyle,
                                 IColorPalette colorPalette)
         {
+            ColorPalette = colorPalette;
             AssertStyleValidity(defaultStyle, true);
             _defaultStyle = defaultStyle;
 

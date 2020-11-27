@@ -19,6 +19,58 @@ namespace Das.Views.Rendering.Geometry
         {
         }
 
+        public ValueRenderRectangle(IRenderSize size,
+                                    Thickness? padding)
+            : this(Point2D.Empty, size, size.Offset, padding)
+        {
+        }
+
+        public ValueRenderRectangle(IRenderRectangle rect,
+                                    Thickness? padding)
+        : this(rect.Location, rect.Size, rect.Offset, padding)
+        {
+        }
+
+        public ValueRenderRectangle(IPoint2D position,
+                                    IRenderSize renderSize,
+                                    Thickness? padding)
+        : this(position, renderSize, renderSize.Offset, padding)
+        {
+           
+        }
+
+        public ValueRenderRectangle(ISize size,
+                                    IPoint2D offset,
+                                    Thickness? padding)
+            : this(Point2D.Empty, size, offset, padding)
+        {
+           
+        }
+
+
+        public ValueRenderRectangle(IPoint2D position,
+                                    ISize renderSize,
+                                    IPoint2D offset,
+                                    Thickness? padding)
+        {
+            if (padding?.IsEmpty == false)
+            {
+                X = position.X + padding.Left;
+                Y = position.Y + padding.Top;
+                Width = renderSize.Width - padding.Width;
+                Height = renderSize.Height - padding.Height;
+            }
+            else
+            {
+                X = position.X;
+                Y = position.Y;
+                Width = renderSize.Width;
+                Height = renderSize.Height;
+            }
+
+            Offset = offset;
+        }
+
         public ValueRenderRectangle(IPoint2D position,
                                     ISize size,
                                     IPoint2D offset)
@@ -164,6 +216,16 @@ namespace Das.Views.Rendering.Geometry
         Boolean IEquatable<IRenderSize>.Equals(IRenderSize other)
         {
             return false;
+        }
+
+        public Double CenterY(ISize item)
+        {
+            return GeometryHelper.CenterY(this, item);
+        }
+
+        public Double CenterX(ISize item)
+        {
+            return GeometryHelper.CenterX(this, item);
         }
 
         public override String ToString()

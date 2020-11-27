@@ -38,6 +38,14 @@ namespace Das.Xamarin.Android.Mvvm
                 _displayMetrics.HeightPixels);
         }
 
+        public override void Invoke(Action action)
+        {
+            if (_looper.IsCurrentThread)
+                action();
+            else
+                _activity.RunOnUiThread(action);
+        }
+
         public override T Invoke<T>(Func<T> action)
         {
             T res = default;

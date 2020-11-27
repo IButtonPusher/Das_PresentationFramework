@@ -24,7 +24,7 @@ namespace Das.Views.Panels
         }
 
         public GridPanel(IDataBinding<T>? binding, 
-                         IVisualBootStrapper templateResolver) : base(binding, templateResolver)
+                         IVisualBootStrapper visualBootStrapper) : base(binding, visualBootStrapper)
         {
         }
 

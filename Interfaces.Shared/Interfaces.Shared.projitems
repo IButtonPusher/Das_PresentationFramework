@@ -49,8 +49,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ISize3d.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Point2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Rectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueCube.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueIntRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExtensionMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\IItemsControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ISelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IWindowNotifier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mvvm\INotifyingCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IContainerVisual.cs" />
@@ -158,7 +161,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Templates\IVisualBootStrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)ItemsControls\" />
     <Folder Include="$(MSBuildThisFileDirectory)Threading\" />
   </ItemGroup>
 </Project>

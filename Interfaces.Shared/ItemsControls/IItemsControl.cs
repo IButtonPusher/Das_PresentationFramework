@@ -4,11 +4,10 @@ using Das.Views.Panels;
 
 namespace Das.Views
 {
-    public interface IItemsControl : IContainerVisual
+    public interface IItemsControl : IContainerVisual,
+                                     ISelector
     {
         INotifyingCollection? ItemsSource { get; }
-
-        Object? SelectedItem { get; set; }
 
         IDataTemplate? ItemTemplate { get; }
     }

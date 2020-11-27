@@ -12,8 +12,8 @@ namespace Das.Views.Core.Geometry
                              IRectangle,
                              IRoundedRectangle,
                              IEquatable<Rectangle>,
-                             IEquatable<IRectangle>,
-                             IEquatable<IRoundedRectangle>
+                             IEquatable<IRectangle>
+                             //IEquatable<IRoundedRectangle>
     {
         public Rectangle() : this(0, 0, 0, 0)
         {
@@ -234,35 +234,38 @@ namespace Das.Views.Core.Geometry
             return GeometryHelper.IsRectangleContains(this, x, y);
         }
 
-        public IRoundedRectangle GetUnion(IRoundedRectangle b)
+        public ValueRectangle GetUnion(IRoundedRectangle b)
         {
-            var a = this as IRoundedRectangle;
+            return GeometryHelper.GetUnion(this, b);
+            //var a = this as IRoundedRectangle;
 
-            var x1 = Math.Min(a.X, b.X);
-            var x2 = Math.Max(a.X + a.Width, b.X + b.Width);
-            var y1 = Math.Min(a.Y, b.Y);
-            var y2 = Math.Max(a.Y + a.Height, b.Y + b.Height);
-            return new Rectangle(x1, y1, x2 - x1, y2 - y1);
+            //var x1 = Math.Min(a.X, b.X);
+            //var x2 = Math.Max(a.X + a.Width, b.X + b.Width);
+            //var y1 = Math.Min(a.Y, b.Y);
+            //var y2 = Math.Max(a.Y + a.Height, b.Y + b.Height);
+            //return new Rectangle(x1, y1, x2 - x1, y2 - y1);
         }
 
-        public IRoundedRectangle GetUnion(IEnumerable<IRoundedRectangle> others)
+        public ValueRectangle GetUnion(IEnumerable<IRoundedRectangle> others)
         {
-            var me = this as IRoundedRectangle;
+            return GeometryHelper.GetUnion(this, others);
 
-            var x1 = me.X;
-            var x2 = me.X + me.Width;
-            var y1 = me.Y;
-            var y2 = me.Y + me.Height;
+            //var me = this as IRoundedRectangle;
 
-            foreach (var b in others)
-            {
-                x1 = Math.Min(x1, b.X);
-                x2 = Math.Max(x2, b.X + b.Width);
-                y1 = Math.Min(y1, b.Y);
-                y2 = Math.Max(y2, b.Y + b.Height);
-            }
+            //var x1 = me.X;
+            //var x2 = me.X + me.Width;
+            //var y1 = me.Y;
+            //var y2 = me.Y + me.Height;
 
-            return new Rectangle(x1, y1, x2 - x1, y2 - y1);
+            //foreach (var b in others)
+            //{
+            //    x1 = Math.Min(x1, b.X);
+            //    x2 = Math.Max(x2, b.X + b.Width);
+            //    y1 = Math.Min(y1, b.Y);
+            //    y2 = Math.Max(y2, b.Y + b.Height);
+            //}
+
+            //return new Rectangle(x1, y1, x2 - x1, y2 - y1);
         }
 
 

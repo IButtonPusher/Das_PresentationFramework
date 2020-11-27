@@ -18,11 +18,13 @@ namespace Das.Views.Core.Geometry
 
         ISize Reduce(Thickness padding);
 
-        ///// <summary>
-        ///// Gives the Y value needed to show an item centered in this size
-        ///// </summary>
-        ///// <example>This has a height of 100.  <param name="item" /> has a size of 20,
-        ///// return value would be 40</example>
-        //Double CenterY(ISize item);
+        /// <summary>
+        /// Gives the Y value needed to show an item centered in this size
+        /// </summary>
+        /// <example>This has a height of 100.  <param name="item" /> has a size of 20,
+        /// return value would be 40</example>
+        Double CenterY(ISize item);
+
+        Double CenterX(ISize item);
     }
 }

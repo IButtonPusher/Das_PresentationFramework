@@ -45,21 +45,26 @@ namespace Das.Gdi
                     break;
 
                 case MessageTypes.WM_LBUTTONUP:
-                    _leftButtonWentDown = default;
-                    _lastDragPosition = default;
+                    
                     _inputHandler.OnMouseInput(
                         new MouseUpEventArgs(GetPosition(m.LParam),
+                            _leftButtonWentDown,
                             MouseButtons.Left, this), 
                         InputAction.LeftMouseButtonUp);
+
+                    _leftButtonWentDown = default;
+                    _lastDragPosition = default;
                     break;
 
                 case MessageTypes.WM_RBUTTONUP:
-                    _rightButtonWentDown = default;
-                    _lastDragPosition = default;
+                    
                     _inputHandler.OnMouseInput(
                         new MouseUpEventArgs(GetPosition(m.LParam),
+                            _rightButtonWentDown,
                         MouseButtons.Right, this), 
                         InputAction.RightMouseButtonUp);
+                    _rightButtonWentDown = default;
+                    _lastDragPosition = default;
                     break;
 
                 case MessageTypes.WM_MOUSEWHEEL:
@@ -74,6 +79,14 @@ namespace Das.Gdi
                 case MessageTypes.WM_MOUSEMOVE:
 
                     pos = GetPosition(m.LParam);
+
+                    //shouldn't be needed but stops debugging headaches for now
+                    if (_leftButtonWentDown != null && 
+                        !IsButtonPressed(MouseButtons.Left))
+                        _leftButtonWentDown = default;
+                    if (_rightButtonWentDown != null &&
+                        !IsButtonPressed(MouseButtons.Right))
+                        _rightButtonWentDown = default;
 
                     var letsUse = _leftButtonWentDown ?? _rightButtonWentDown;
                     if (letsUse == null)

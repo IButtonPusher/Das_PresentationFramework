@@ -34,6 +34,16 @@ namespace Das.Views.Core.Geometry
             return GeometryHelper.Reduce(this, padding);
         }
 
+        public Double CenterY(ISize item)
+        {
+            return GeometryHelper.CenterY(this, item);
+        }
+
+        public Double CenterX(ISize item)
+        {
+            return GeometryHelper.CenterX(this, item);
+        }
+
         public ISize Minus(ISize subtract)
         {
             return GeometryHelper.Minus(this, subtract);

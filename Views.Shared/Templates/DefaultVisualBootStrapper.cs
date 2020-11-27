@@ -10,6 +10,7 @@ namespace Das.Views.Templates
     public class DefaultVisualBootStrapper : IVisualBootStrapper
     {
         private readonly IResolver _dependencyResolver;
+        private IUiProvider? _uiProvider;
 
         public DefaultVisualBootStrapper(IResolver dependencyResolver,
                                          IStyleContext styleContext)
@@ -24,13 +25,13 @@ namespace Das.Views.Templates
             throw new NotImplementedException();
         }
 
-        public IView? TryResolve(Object value)
+        public IVisualElement? TryResolveFromContext(Object dataContext)
         {
             return null;
         }
 
-        public IVisualElement Instantiate(Type type, 
-                                                          Int32 styleId)
+        public IVisualElement Instantiate(Type type,
+                                          Int32 styleId)
         {
             throw new NotImplementedException();
         }
@@ -39,6 +40,13 @@ namespace Das.Views.Templates
 
         public TVisualElement Instantiate<TVisualElement>(Type type) 
             where TVisualElement : IVisualElement
+        {
+            throw new NotImplementedException();
+        }
+
+        public TBindableElement Instantiate<TBindableElement>(Type type, 
+                                                              IDataBinding? binding)
+            where TBindableElement : IBindableElement
         {
             throw new NotImplementedException();
         }
@@ -54,5 +62,7 @@ namespace Das.Views.Templates
         {
             throw new NotImplementedException();
         }
+
+        public IUiProvider UiProvider => _uiProvider ??=  _dependencyResolver.Resolve<IUiProvider>();
     }
 }

@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 
 namespace Das.Views.Core.Geometry
 {
-    public interface IRoundedRectangle : IPointContainer
+    public interface IRoundedRectangle : IPointContainer,
+                                         IEquatable<IRoundedRectangle?>
     {
         Int32 Height { get; }
 
@@ -14,8 +15,8 @@ namespace Das.Views.Core.Geometry
 
         Int32 Y { get; }
 
-        IRoundedRectangle GetUnion(IRoundedRectangle other);
+        ValueRectangle GetUnion(IRoundedRectangle other);
 
-        IRoundedRectangle GetUnion(IEnumerable<IRoundedRectangle> others);
+        ValueRectangle GetUnion(IEnumerable<IRoundedRectangle> others);
     }
 }

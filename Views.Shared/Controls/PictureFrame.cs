@@ -12,13 +12,13 @@ namespace Das.Views.Controls
     // ReSharper disable once UnusedMember.Global
     public class PictureFrame : BindableElement<IImage>
     {
-        public PictureFrame(IVisualBootStrapper templateResolver) : base(templateResolver)
+        public PictureFrame(IVisualBootStrapper visualBootStrapper) : base(visualBootStrapper)
         {
         }
 
         public PictureFrame(IDataBinding<IImage> value,
-                            IVisualBootStrapper templateResolver) 
-            : base(value, templateResolver)
+                            IVisualBootStrapper visualBootStrapper) 
+            : base(value, visualBootStrapper)
         {
         }
 

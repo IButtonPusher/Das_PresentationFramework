@@ -10,16 +10,22 @@ namespace Das.Views.Core
         IImage? GetImage(Stream stream);
 
         /// <summary>
-        ///     Scales the image down based on available client viewing area
+        ///     Scales the image down (or up) based on available client viewing area
         ///     (e.g. window size, mobile screen resolution)
         /// </summary>
-        IImage? GetImage(Stream stream,
+        IImage? GetDeviceScaledImage(Stream stream,
                          Double maximumWidthPct);
+
+        IImage GetScaledImage(IImage input,
+                              Double width,
+                              Double height);
 
         IImage? GetImage(Byte[] bytes);
 
         IImage? GetImage(FileInfo file);
 
         IImage GetNullImage();
+
+        Double DeviceEffectiveDpi { get; }
     }
 }

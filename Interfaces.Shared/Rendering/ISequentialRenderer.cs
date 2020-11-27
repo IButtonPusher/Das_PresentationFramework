@@ -9,11 +9,11 @@ namespace Das.Views.Rendering
     public interface ISequentialRenderer
     {
         void Arrange(Orientations orientation,
-                     IRenderSize availableSpace,
+                     IRenderRectangle availableSpace,
                      IRenderContext renderContext);
 
         ValueSize Measure(IVisualElement container,
-                          IEnumerable<IVisualElement> elements,
+                          IList<IVisualElement> elements,
                           Orientations orientation,
                           IRenderSize availableSpace,
                           IMeasureContext measureContext);

@@ -22,7 +22,7 @@ namespace Das.Views.DataBinding
         /// <returns></returns>
         IDataBinding ToSingleBinding();
 
-        //Object GetLastBoundValue();
+        void UpdateDataContext(Object? dataContext);
     }
 }
 

@@ -28,12 +28,16 @@ namespace Das.Views.DataBinding
 
     public abstract class BaseBinding : IDataBinding
     {
+        protected static readonly Object[] EmptyObjectArray = new Object[0];
+
         public abstract Object? GetBoundValue(Object? dataContext);
 
         public virtual IDataBinding ToSingleBinding()
         {
             throw new NotImplementedException();
         }
+
+        public virtual void UpdateDataContext(Object? dataContext) {}
 
         public Object? DataContext { get; set; }
 

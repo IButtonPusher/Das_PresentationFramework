@@ -25,7 +25,8 @@ namespace Das.Gdi.Kits
 
             MeasureContext = new GdiMeasureContext(defaultSurrogates,lastMeasure);
             RenderContext = new GdiRenderContext(viewPerspective, 
-                MeasureContext.Graphics, defaultSurrogates, imageProvider);
+                MeasureContext.Graphics, defaultSurrogates, imageProvider,lastMeasure,
+                new Dictionary<IVisualElement, ValueCube>());
         }
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;

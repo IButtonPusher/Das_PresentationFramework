@@ -71,6 +71,8 @@ namespace Das.Xamarin.Android
             CurrentStyleContext.RegisterStyleSetter(element, setter, selector, value);
         }
 
+        public IColorPalette ColorPalette => CurrentStyleContext.ColorPalette;
+
         public override async void OnBackPressed()
         {
             var handled = await BackButtonCommand();

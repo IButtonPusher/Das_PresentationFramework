@@ -52,12 +52,14 @@ namespace Das.OpenGL.Windows
             }
 
             protected override Boolean IsChanged => true;
-            protected override void Update()
+            protected override Boolean Update()
             {
                 if (!_renderer.PreRender())
-                    return;
+                    return false;
                 _renderAction(_kit.RenderContext);
                 _renderer.PostRender();
+
+                return true;
             }
         }
 

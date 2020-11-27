@@ -12,9 +12,17 @@ namespace Das.Views.DataBinding
     public abstract class BindableElement : VisualElement,
                                             IBindableElement
     {
-        protected BindableElement(IVisualBootStrapper templateResolver) 
-            : base(templateResolver)
+        protected BindableElement(IVisualBootStrapper visualBootStrapper) 
+            : this(null, visualBootStrapper)
         {
+            _bindings = new List<IDataBinding>();
+        }
+
+        protected BindableElement(IDataBinding? binding,
+                                  IVisualBootStrapper visualBootStrapper) 
+            : base(visualBootStrapper)
+        {
+            _binding = binding;
             _bindings = new List<IDataBinding>();
         }
 
@@ -97,6 +105,7 @@ namespace Das.Views.DataBinding
             }
         }
 
+        
         private IDataBinding? _binding;
         private List<IDataBinding> _bindings;
         protected Object? BoundValue;

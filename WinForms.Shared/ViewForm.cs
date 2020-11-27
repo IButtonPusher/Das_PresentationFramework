@@ -19,7 +19,7 @@ namespace Das.Views.Winforms
         {
             _contents = control;
             _availableSize = new Size(Width, Height);
-            _changeLock = new Object();
+            //_changeLock = new Object();
 
             Controls.Add(_contents);
             _contents.Dock = DockStyle.Fill;
@@ -33,7 +33,9 @@ namespace Das.Views.Winforms
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            _isChanged = true;
+            _availableSize.Width = _contents.Width;
+            _availableSize.Height = _contents.Height;
+            //_isChanged = true;
         }
 
         private readonly HostedViewControl _contents;
@@ -46,8 +48,9 @@ namespace Das.Views.Winforms
 
             _availableSize.Width = _contents.Width;
             _availableSize.Height = _contents.Height;
-            _isChanged = true;
+            //_isChanged = true;
             AvailableSizeChanged?.Invoke(_availableSize);
+            _contents.View.InvalidateMeasure();
         }
 
         protected override async void OnHandleCreated(EventArgs e)
@@ -139,27 +142,28 @@ namespace Das.Views.Winforms
         //    return this.RunInvokeAsync(action);
         //}
 
-        private Boolean _isChanged;
-        private readonly Object _changeLock;
+        //private Boolean _isChanged;
+        //private readonly Object _changeLock;
 
         public void AcceptChanges()
         {
-            lock (_changeLock)
-                _isChanged = false;
+            //lock (_changeLock)
+            //    _isChanged = false;
 
             _contents.AcceptChanges();
         }
 
         public virtual Boolean IsChanged
         {
-            get
-            {
-                if (View != null && View.IsChanged)
-                    return true;
+            get => _contents.IsChanged;
+            //get
+            //{
+            //    if (View != null && (View.IsChanged || View.IsRequiresMeasure))
+            //        return true;
 
-                lock (_changeLock)
-                    return _isChanged;
-            }
+            //    lock (_changeLock)
+            //        return _isChanged;
+            //}
         }
 
         public IViewModel? DataContext
@@ -190,6 +194,8 @@ namespace Das.Views.Winforms
         {
             StyleContext.RegisterStyleSetter(element, setter, selector, value);
         }
+
+        public IColorPalette ColorPalette => _contents.ColorPalette;
 
         public IColor GetCurrentAccentColor()
         {

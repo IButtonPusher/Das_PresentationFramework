@@ -7,8 +7,8 @@ namespace Das.Views
     {
         Type? DataType { get; }
 
-        IVisualElement BuildVisual(Object? dataContext);
+        IVisualElement? BuildVisual(Object? dataContext);
 
-        IVisualElement Template { get; }
+        //IVisualElement Template { get; }
     }
 }

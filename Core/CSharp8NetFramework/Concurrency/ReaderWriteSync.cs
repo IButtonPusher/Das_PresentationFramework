@@ -32,6 +32,24 @@ namespace System.Threading
             return new SyncReader(EndReaderImpl);
         }
 
+        public TResult Read<TInput1, TInput2, TResult>(TInput1 input, 
+                                                       TInput2 input2, 
+                                                       Func<TInput1, TInput2, TResult> action)
+        {
+            if (!ObtainSyncReadImpl(action))
+                return default!;
+
+            try
+            {
+                var res = action(input, input2);
+                return res;
+            }
+            finally
+            {
+                EndReaderImpl(action);
+            }
+        }
+
         public TResult Read<TInput, TResult>(TInput input, Func<TInput, TResult> action)
         {
             if (!ObtainSyncReadImpl(action))
@@ -108,10 +126,11 @@ namespace System.Threading
             }
         }
 
-        public Int32 Write<TParam1>(TParam1 p1, Func<TParam1, Int32> action)
+        public TResult Write<TParam1, TResult>(TParam1 p1, 
+                                               Func<TParam1, TResult> action)
         {
             if (!ObtainSyncWriteImpl(action))
-                return 0;
+                return default!;
 
             try
             {
@@ -124,7 +143,26 @@ namespace System.Threading
             }
         }
 
-        public Int32 Write<TParam1, TParam2>(TParam1 p1, TParam2 p2,
+        public void Write<TParam1, TParam2, TParam3>(TParam1 p1, 
+                                                     TParam2 p2, 
+                                                     TParam3 p3, 
+                                                     Action<TParam1, TParam2, TParam3> action)
+        {
+            if (!ObtainSyncWriteImpl(action))
+                return;
+
+            try
+            {
+                action(p1, p2, p3);
+            }
+            finally
+            {
+                EndWriterImpl();
+            }
+        }
+
+        public Int32 Write<TParam1, TParam2>(TParam1 p1, 
+                                             TParam2 p2,
                                              Func<TParam1, TParam2, Int32> action)
         {
             if (!ObtainSyncWriteImpl(action))
@@ -134,6 +172,23 @@ namespace System.Threading
             {
                 var res = action(p1, p2);
                 return res;
+            }
+            finally
+            {
+                EndWriterImpl();
+            }
+        }
+
+        public void Write<TParam1, TParam2>(TParam1 p1, 
+                                            TParam2 p2,
+                                            Action<TParam1, TParam2> action)
+        {
+            if (!ObtainSyncWriteImpl(action))
+                return;
+
+            try
+            {
+                action(p1, p2);
             }
             finally
             {

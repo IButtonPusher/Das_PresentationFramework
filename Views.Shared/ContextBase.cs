@@ -50,6 +50,8 @@ namespace Das.Views
             GetViewState.RegisterStyleSetter(element, setter, selector, value);
         }
 
+        public IColorPalette ColorPalette => GetViewState.ColorPalette;
+
         public IColor GetCurrentAccentColor()
         {
             return GetViewState.GetCurrentAccentColor();

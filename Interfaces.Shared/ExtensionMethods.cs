@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -43,8 +44,17 @@ namespace Das.Views
 
         public static void HandleCollectionChanges<T>(this NotifyCollectionChangedEventArgs e,
                                                       Action<IEnumerable<T>> oldItems,
-                                                      Action<IEnumerable<T>> newItems)
+                                                      Action<IEnumerable<T>> newItems,
+                                                      Action? onClear = null)
         {
+            if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                if (onClear != null)
+                    onClear();
+
+                return;
+            }
+
             if (e.OldItems != null)
             {
                 var olds = e.OldItems.OfType<T>();

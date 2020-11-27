@@ -6,5 +6,7 @@ namespace Das.Views.Core.Drawing
     public interface IBrush : IEquatable<IBrush>
     {
         //IColor Color { get; }
+
+        Boolean IsInvisible { get; }
     }
 }

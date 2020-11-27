@@ -16,9 +16,10 @@ namespace Das.Views.Extended
         }
 
         protected override bool IsChanged => true;
-        protected override void Update()
+        protected override Boolean Update()
         {
             _viewModel.Update();
+            return true;
         }
     }
 }

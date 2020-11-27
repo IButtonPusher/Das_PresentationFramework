@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
@@ -21,8 +20,11 @@ namespace Das.Gdi.Core
     {
         static TypeConverter()
         {
+            _brushLock = new Object();
             _fonts = new ConcurrentDictionary<IFont, Font>();
             _pens = new ConcurrentDictionary<IPen, Pen>();
+            _brushes = new Dictionary<IBrush, Brush>();
+            _colorBrushes = new Dictionary<IColor, Brush>();
         }
 
         public static Boolean Equate(ISize dvSize, Size size)
@@ -33,46 +35,51 @@ namespace Das.Gdi.Core
 
         public static Brush GetBrush(IBrush brush)
         {
-            var brushes = Brushes.Value;
-
-            if (brushes.TryGetValue(brush, out var found))
-                return found;
-
-            switch (brush)
+            lock (_brushLock)
             {
-                case SolidColorBrush scb:
-                    found = GetBrush(scb.Color);
-                    break;
+                //var brushes = Brushes.Value;
 
-                case HatchBrush hb:
-                    found = new System.Drawing.Drawing2D.HatchBrush(
-                        (System.Drawing.Drawing2D.HatchStyle)hb.HatchStyle,
-                        GetColor(hb.ForegroundColor),
-                        GetColor(hb.BackgroundColor));
+                if (_brushes.TryGetValue(brush, out var found))
+                    return found;
 
-                    break;
+                switch (brush)
+                {
+                    case SolidColorBrush scb:
+                        found = GetBrush(scb.Color);
+                        break;
 
-                default:
-                    throw new NotImplementedException();
+                    case HatchBrush hb:
+                        found = new System.Drawing.Drawing2D.HatchBrush(
+                            (System.Drawing.Drawing2D.HatchStyle) hb.HatchStyle,
+                            GetColor(hb.ForegroundColor),
+                            GetColor(hb.BackgroundColor));
+
+                        break;
+
+                    default:
+                        throw new NotImplementedException();
+                }
+
+                //found = GetBrush(brush.Color);
+
+                _brushes.Add(brush, found);
+                return found;
             }
-
-            //found = GetBrush(brush.Color);
-
-            brushes.Add(brush, found);
-            return found;
         }
 
         public static Brush GetBrush(IColor color)
         {
-            var brushes = ColorBrushes.Value;
+            //var brushes = ColorBrushes.Value;
+            lock (_brushLock)
+            {
+                if (_colorBrushes.TryGetValue(color, out var found))
+                    return found;
 
-            if (brushes.TryGetValue(color, out var found))
+                var gcolor = GetColor(color);
+                found = new SolidBrush(gcolor);
+                _colorBrushes.Add(color, found);
                 return found;
-
-            var gcolor = GetColor(color);
-            found = new SolidBrush(gcolor);
-            brushes.Add(color, found);
-            return found;
+            }
         }
 
         public static Color GetColor(IColor color)
@@ -138,12 +145,16 @@ namespace Das.Gdi.Core
         private static readonly ConcurrentDictionary<IFont, Font> _fonts;
         private static readonly ConcurrentDictionary<IPen, Pen> _pens;
 
-        private static readonly ThreadLocal<Dictionary<IBrush, Brush>> Brushes
-            = new ThreadLocal<Dictionary<IBrush, Brush>>(()
-                => new Dictionary<IBrush, Brush>());
+        private static readonly Dictionary<IBrush, Brush> _brushes;
+        private static readonly Dictionary<IColor, Brush> _colorBrushes;
+        private static readonly Object _brushLock;
 
-        private static readonly ThreadLocal<Dictionary<IColor, Brush>> ColorBrushes
-            = new ThreadLocal<Dictionary<IColor, Brush>>(()
-                => new Dictionary<IColor, Brush>());
+        //private static readonly ThreadLocal<Dictionary<IBrush, Brush>> Brushes
+        //    = new ThreadLocal<Dictionary<IBrush, Brush>>(()
+        //        => new Dictionary<IBrush, Brush>());
+
+        //private static readonly ThreadLocal<Dictionary<IColor, Brush>> ColorBrushes
+        //    = new ThreadLocal<Dictionary<IColor, Brush>>(()
+        //        => new Dictionary<IColor, Brush>());
     }
 }

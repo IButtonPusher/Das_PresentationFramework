@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="Das.Container.Interfaces" Version="0.0.6-alpha" />
-    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.11-alpha" />
+    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.12-alpha" />
   </ItemGroup>
 
   <ItemGroup>

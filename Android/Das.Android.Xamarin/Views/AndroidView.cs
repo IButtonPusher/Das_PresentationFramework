@@ -270,7 +270,8 @@ namespace Das.Xamarin.Android
 
             var pos = GetPosition(e);
             if (_inputHandler.OnMouseInput(new MouseUpEventArgs(
-                pos, MouseButtons.Left, this), InputAction.LeftMouseButtonUp))
+                pos, _leftButtonWentDown, MouseButtons.Left, this), 
+                InputAction.LeftMouseButtonUp))
                 Invalidate();
             return false;
         }
@@ -281,8 +282,8 @@ namespace Das.Xamarin.Android
             {
                 // gesture detector not detecting anything for when you lift the finger after dragging
                 var pos = GetPosition(e);
-                if (_inputHandler.OnMouseInput(new MouseUpEventArgs(
-                    pos, MouseButtons.Left, this), InputAction.LeftMouseButtonUp))
+                if (_inputHandler.OnMouseInput(new MouseUpEventArgs(pos, 
+                    _leftButtonWentDown, MouseButtons.Left, this), InputAction.LeftMouseButtonUp))
                 {
                     //Invalidate();
                 }
@@ -318,6 +319,8 @@ namespace Das.Xamarin.Android
         {
             _view.StyleContext.RegisterStyleSetter(element, setter, selector, value);
         }
+
+        public IColorPalette ColorPalette => _view.StyleContext.ColorPalette;
 
         public IColor GetCurrentAccentColor()
         {
@@ -412,7 +415,9 @@ namespace Das.Xamarin.Android
 
                 current?.Measure(widthMeasureSpec, heightMeasureSpec);
             }
-            _measured = RenderKit.MeasureContext.MeasureMainView(_view, sz, this);
+            //_measured = RenderKit.MeasureContext.MeasureMainView(_view, sz, this);
+            _measured = new ValueSize(sz.Width, sz.Height);
+            RenderKit.MeasureContext.MeasureMainView(_view, sz, this);
         }
 
         private static ValuePoint2D GetPosition(MotionEvent eve)
@@ -434,12 +439,17 @@ namespace Das.Xamarin.Android
             while (true)
                 if (_view.IsChanged || _view.StyleContext.IsChanged)
                 {
-                    _view.AcceptChanges();
+                    //_view.AcceptChanges();
                     _view.StyleContext.AcceptChanges();
-                    RenderKit.MeasureContext.MeasureMainView(_view,
+                    var bob = RenderKit.MeasureContext.MeasureMainView(_view,
                         new ValueRenderSize(_measured), this);
                     _paintView.Invalidate();
                     Invalidate();
+
+                    await Task.Yield();
+
+                    //await Task.Delay(5);
+
                 }
                 else
                     await Task.Delay(50);

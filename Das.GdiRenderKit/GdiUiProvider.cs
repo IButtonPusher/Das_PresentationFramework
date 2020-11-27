@@ -35,6 +35,14 @@ namespace Das.Views.Gdi
             return valid.AvailableSize;
         }
 
+        public override void Invoke(Action action)
+        {
+            if (_visualHost is { } host)
+                host.Invoke(action);
+            else
+                action();
+        }
+
         public override T Invoke<T>(Func<T> action)
         {
             if (_visualHost is {} host)

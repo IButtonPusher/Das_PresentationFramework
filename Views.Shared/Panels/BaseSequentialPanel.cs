@@ -12,9 +12,9 @@ namespace Das.Views.Panels
                                                    ISequentialPanel
     {
         protected BaseSequentialPanel(IDataBinding<T>? binding,
-                                      IVisualBootStrapper templateResolver,
+                                      IVisualBootStrapper visualBootStrapper,
                                       ISequentialRenderer? renderer = null)
-            : base(binding, templateResolver)
+            : base(binding, visualBootStrapper)
         {
             _renderer = EnsureRenderer(renderer);
         }
@@ -37,7 +37,7 @@ namespace Das.Views.Panels
         public override void Arrange(IRenderSize availableSpace, 
                                      IRenderContext renderContext)
         {
-            _renderer.Arrange(Orientation, availableSpace, renderContext);
+            _renderer.Arrange(Orientation, availableSpace.ToFullRectangle(), renderContext);
         }
 
         private static ISequentialRenderer EnsureRenderer(ISequentialRenderer? input)
@@ -45,7 +45,7 @@ namespace Das.Views.Panels
             return input ?? new SequentialRenderer();
         }
 
-        protected abstract IEnumerable<IVisualElement> GetChildrenToRender();
+        protected abstract IList<IVisualElement> GetChildrenToRender();
 
         private readonly ISequentialRenderer _renderer;
     }

@@ -17,9 +17,19 @@ namespace Das.Views.Rendering
         /// <summary>
         ///     Returns the actual rectangle occupied by the element, including borders etc
         /// </summary>
-        Rectangle DrawElement<TRenderRectangle>(IVisualElement element,
+        void DrawElement<TRenderRectangle>(IVisualElement element,
                                                 TRenderRectangle rect)
             where TRenderRectangle : IRenderRectangle;
+
+        void DrawContentElement<TSize>(IVisualElement element,
+                                          TSize size)
+            where TSize : ISize;
+
+
+        void DrawElementAt<TPosition>(IVisualElement element,
+                                         TPosition location)
+            where TPosition : IPoint2D;
+
 
         void DrawEllipse<TPoint, TPen>(TPoint center,
                                        Double radius,
@@ -50,7 +60,7 @@ namespace Das.Views.Rendering
                        IPoint2D[] points);
 
 
-        Rectangle DrawMainElement<TRectangle>(IVisualElement element,
+        void DrawMainElement<TRectangle>(IVisualElement element,
                                               TRectangle rect,
                                               IViewState viewState)
             where TRectangle : IRectangle;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
@@ -18,6 +19,8 @@ namespace Das.Views.Styles
 
         protected override void UpdateTransition(AssignedStyle style)
         {
+            //Debug.WriteLine("Updating transition");
+
             base.UpdateTransition(style);
             Element.InvalidateMeasure();
             _styleContext.CoerceIsChanged();

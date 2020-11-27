@@ -29,6 +29,8 @@ namespace Das.Views.Styles
                                  StyleSelector selector,
                                  Object value);
 
+        IColorPalette ColorPalette { get; }
+
         IColor GetCurrentAccentColor();
     }
 }

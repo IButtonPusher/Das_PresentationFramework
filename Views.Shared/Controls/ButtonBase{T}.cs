@@ -20,71 +20,83 @@ namespace Das.Views.Controls
                                  IButtonBase
     {
         private readonly IVisualBootStrapper _visualBootStrapper;
+        private ISize _lastRenderSize;
 
         protected ButtonBase(IVisualBootStrapper visualBootStrapper)
         : base(visualBootStrapper)
         {
             _visualBootStrapper = visualBootStrapper;
             _currentStyleSelector = StyleSelector.None;
+            _lastRenderSize = Size.Empty;
         }
 
-        public override void Arrange(IRenderSize availableSpace,
-                                     IRenderContext renderContext)
-        {
-            var contentCanHave = GetPaddedSpace(renderContext, 
-                availableSpace, out var padding);
-            var contentRect = new ValueRenderRectangle(padding.Left, padding.Top, contentCanHave,
-                availableSpace.Offset);
+        //public override void Arrange(IRenderSize availableSpace,
+        //                             IRenderContext renderContext)
+        //{
+        //    _lastRenderSize = availableSpace;
 
-            if (!(Content is { } content))
-            {
-                if (Value is { } valid && ContentTemplate is { } template)
-                    renderContext.DrawElement(template.Template, contentRect);
-                return;
-            }
+        //    var contentCanHave = GetPaddedSpace(renderContext, 
+        //        availableSpace, out var padding);
+        //    var contentRect = new ValueRenderRectangle(padding.Left, padding.Top, contentCanHave,
+        //        availableSpace.Offset);
 
-            renderContext.DrawElement(content, contentRect);
-        }
+        //    if (!(Content is { } content))
+        //    {
+        //        if (Value is { } valid && ContentTemplate is { } template)
+        //            renderContext.DrawElement(template.Template, contentRect);
+        //        return;
+        //    }
+
+        //    renderContext.DrawElement(content, contentRect);
+        //}
 
         //public override void Dispose()
         //{
         //}
 
-        public override ValueSize Measure(IRenderSize availableSpace,
-                                          IMeasureContext measureContext)
+        //public override ValueSize Measure(IRenderSize availableSpace,
+        //                                  IMeasureContext measureContext)
+        //{
+        //    var contentCanHave = GetPaddedSpace(measureContext, 
+        //        availableSpace, out var padding);
+
+        //    if (!(Content is { } content))
+        //    {
+        //        if (Value is { } valid && ContentTemplate is { } template)
+        //        {
+        //            var res = measureContext.MeasureElement(template.Template, contentCanHave);
+        //            return padding.IsEmpty ? res : res + padding;
+        //        }
+
+        //        return ValueSize.Empty;
+        //    }
+
+        //    var contentWants = measureContext.MeasureElement(content, contentCanHave);
+        //    var ambition = contentWants + padding;
+        //    if (ambition.Width > availableSpace.Width ||
+        //        ambition.Height > availableSpace.Height)
+        //        return availableSpace.ToValueSize();
+        //    return contentWants + padding;
+        //}
+
+        //protected override IRenderSize GetPaddedSpace(IStyleProvider styleContext,
+        //                                   IRenderSize availableSpace,
+        //                                   out Thickness padding)
+        //{
+        //    padding = styleContext.GetStyleSetter<Thickness>(StyleSetter.Padding,
+        //        CurrentStyleSelector, this);
+
+        //    TryGetSize(out var mySize);
+
+        //    return padding.IsEmpty
+        //        ? availableSpace
+        //        : availableSpace.Reduce(padding);
+        //}
+
+        protected override Thickness? GetPadding(IStyleProvider styleContext)
         {
-            var contentCanHave = GetPaddedSpace(measureContext, 
-                availableSpace, out var padding);
-
-            if (!(Content is { } content))
-            {
-                if (Value is { } valid && ContentTemplate is { } template)
-                {
-                    var res = measureContext.MeasureElement(template.Template, contentCanHave);
-                    return padding.IsEmpty ? res : res + padding;
-                }
-
-                return ValueSize.Empty;
-            }
-
-            var contentWants = measureContext.MeasureElement(content, contentCanHave);
-            var ambition = contentWants + padding;
-            if (ambition.Width > availableSpace.Width ||
-                ambition.Height > availableSpace.Height)
-                return availableSpace.ToValueSize();
-            return contentWants + padding;
-        }
-
-        private IRenderSize GetPaddedSpace(IStyleProvider styleContext,
-                                           IRenderSize availableSpace,
-                                           out Thickness padding)
-        {
-            padding = styleContext.GetStyleSetter<Thickness>(StyleSetter.Padding,
+            return styleContext.GetStyleSetter<Thickness>(StyleSetter.Padding,
                 CurrentStyleSelector, this);
-
-            return padding.IsEmpty
-                ? availableSpace
-                : availableSpace.Reduce(padding);
         }
 
         public StyleSelector CurrentStyleSelector
@@ -99,8 +111,11 @@ namespace Das.Views.Controls
             ? value : 
             _currentStyleSelector | value;
 
-            SetValue(ref _currentStyleSelector, val, OnCurrentSelectorChanged,
-                nameof(CurrentStyleSelector));
+            if (SetValue(ref _currentStyleSelector, val, OnCurrentSelectorChanged,
+                nameof(CurrentStyleSelector)))
+            {
+                InvalidateArrange();
+            }
         }
 
         protected void RemoveStyleSelector(StyleSelector value)
@@ -158,6 +173,13 @@ namespace Das.Views.Controls
         {
             RemoveStyleSelector(StyleSelector.Active);
             args.InputContext.TryReleaseMouseCapture(this);
+
+            if (args.PositionWentDown != null && Math.Abs(args.PositionWentDown.X -
+                                                          args.Position.X) > _lastRenderSize.Width)
+            {
+                return false;
+            }
+            
             return true;
         }
 
@@ -173,7 +195,12 @@ namespace Das.Views.Controls
         {
             InvalidateArrange();
 
-            IsChanged = true;
+            //IsChanged = true;
+        }
+
+        public override String ToString()
+        {
+            return base.ToString() + " - " + DataContext?.ToString();
         }
 
 

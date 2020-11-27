@@ -11,7 +11,7 @@ namespace Das.Views
         void ResolveTo<TViewModel, TView>()
             where TView : IView<TViewModel>;
 
-        IView? TryResolve(Object dataContext);
+        IVisualElement? TryResolveFromContext(Object dataContext);
 
         IVisualElement Instantiate(Type type,
                                    Int32 styleId);
@@ -21,10 +21,17 @@ namespace Das.Views
         TVisualElement Instantiate<TVisualElement>(Type type)
             where TVisualElement : IVisualElement;
 
+        TBindableElement Instantiate<TBindableElement>(Type type,
+                                                       IDataBinding? binding)
+            where TBindableElement : IBindableElement;
+
+
         TVisualElement Instantiate<TVisualElement>()
             where TVisualElement : IVisualElement;
 
         IBindableElement Instantiate(Type type,
                                      Object dataContext);
+
+        IUiProvider UiProvider { get; }
     }
 }

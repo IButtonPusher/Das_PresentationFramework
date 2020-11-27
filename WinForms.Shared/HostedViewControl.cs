@@ -90,6 +90,8 @@ namespace WinForms.Shared
             StyleContext.RegisterStyleSetter(element, setter, selector, value);
         }
 
+        public IColorPalette ColorPalette => StyleContext.ColorPalette;
+
         public IColor GetCurrentAccentColor()
         {
             return StyleContext.GetCurrentAccentColor();
@@ -100,7 +102,7 @@ namespace WinForms.Shared
             View.AcceptChanges();
         }
 
-        public virtual Boolean IsChanged => _isChanged;
+        public virtual Boolean IsChanged => View.IsChanged;  //_isChanged;
 
         public IPoint2D GetOffset(IPoint2D input)
         {

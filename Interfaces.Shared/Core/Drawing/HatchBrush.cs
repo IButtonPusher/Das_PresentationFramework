@@ -63,5 +63,6 @@ namespace Das.Views.Core.Drawing
         //{
         //    return b._gdi;
         //}
+        public Boolean IsInvisible => false;
     }
 }

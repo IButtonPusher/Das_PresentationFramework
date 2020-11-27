@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using Das.ViewModels;
 using Das.Views.Controls;
@@ -16,49 +17,72 @@ using Das.Views.Rendering.Geometry;
 
 namespace Das.Views.ItemsControls
 {
-    public class TabControl : BaseContainerVisual,
+    public class TabControl : SelectorVisual,
                               IContentPresenter,
                               IItemsControl
 
     {
-        private readonly IVisualBootStrapper _templateResolver;
+        private readonly IVisualBootStrapper _visualBootStrapper;
 
-        public TabControl(IVisualBootStrapper templateResolver)
-        : base(templateResolver)
+        public TabControl(IVisualBootStrapper visualBootStrapper)
+        : base(visualBootStrapper)
         {
             _headerUses = ValueSize.Empty;
             _contentUses =ValueSize.Empty;
-            _templateResolver = templateResolver;
-            HeaderTemplate = new DefaultTabHeaderTemplate(_templateResolver, this);
+            _visualBootStrapper = visualBootStrapper;
+            
+            TabItems = new AsyncObservableCollection2<IVisualElement>();
+            
+            HeaderTemplate = new DefaultTabHeaderTemplate(_visualBootStrapper, this);
             _headerTemplate = HeaderTemplate;
-            _itemTemplate = new DefaultTabItemTemplate(templateResolver);
-            _contentTemplate = new DefaultContentTemplate(templateResolver, this);
+            _itemTemplate = new DefaultTabItemTemplate(visualBootStrapper);
+            _contentTemplate = new DefaultContentTemplate(visualBootStrapper, this);
 
-            TabItems = new ObservableRangeCollection<IVisualElement>();
+            
         }
 
 
         public override ValueSize Measure(IRenderSize availableSpace, 
                                           IMeasureContext measureContext)
         {
-            _headerUses = measureContext.MeasureElement(_headerTemplate.Template, availableSpace);
+            if (!(_headerPanel is {} header))
+                return ValueSize.Empty;
+
+            _headerUses = measureContext.MeasureElement(header, availableSpace);
             var remaining = availableSpace.Minus(_headerUses);
 
-            _contentUses = measureContext.MeasureElement(_itemTemplate.Template, remaining);
+            if (SelectedTab is { } visual)
+            {
+                //TODO:
+                _contentUses = measureContext.MeasureElement(visual, remaining);
+                //return _headerUses.PlusVertical(_contentUses);
+            }
+            else
+            {
+                _contentUses = ValueSize.Empty;
+                return _headerUses;
+            }
 
-            return _headerUses.PlusVertical(_contentUses);
+            return _headerUses;
+            
         }
 
         public override void Arrange(IRenderSize availableSpace, 
                                      IRenderContext renderContext)
         {
+            if (!(_headerPanel is {} header))
+                return;
 
-            renderContext.DrawElement(_headerTemplate.Template,
+            renderContext.DrawElement(header,
                 new ValueRenderRectangle(0, 0, _headerUses, availableSpace.Offset));
-            
-            renderContext.DrawElement(_contentTemplate.Template,
-                new ValueRenderRectangle(0, _headerUses.Height, _contentUses, 
-                    availableSpace.Offset));
+
+            //TODO: 
+            //if (SelectedTab is { } content)
+            //{
+            //    renderContext.DrawElement(content,
+            //        new ValueRenderRectangle(0, _headerUses.Height, _contentUses,
+            //            availableSpace.Offset));
+            //}
         }
 
         private IDataTemplate _contentTemplate;
@@ -76,7 +100,7 @@ namespace Das.Views.ItemsControls
         {
             get => _itemTemplate;
             set => SetValue(ref _itemTemplate, 
-                value ?? new DefaultTabItemTemplate(_templateResolver));
+                value ?? new DefaultTabItemTemplate(_visualBootStrapper));
         }
 
 
@@ -86,18 +110,34 @@ namespace Das.Views.ItemsControls
         {
             get => _headerTemplate;
             set => SetValue(ref _headerTemplate, 
-                value ?? new DefaultTabHeaderTemplate(_templateResolver, this),
-                OnHeaderTemplateChanging);
+                value ?? new DefaultTabHeaderTemplate(_visualBootStrapper, this),
+                OnHeaderTemplateChanging, OnHeaderTemplateChanged);
+        }
+
+        private void OnHeaderTemplateChanged(IDataTemplate? newValue)
+        {
+            if (newValue is { } valid)
+            {
+                _headerPanel = valid.BuildVisual(DataContext);
+                if (_headerPanel is {} hp)
+                    AddChild(hp);
+            }
         }
 
         private Boolean OnHeaderTemplateChanging(IDataTemplate? oldValue, 
                                                  IDataTemplate? newValue)
         {
-            if (oldValue?.Template is INotifyPropertyChanged oldValid)
-                oldValid.PropertyChanged -= OnChildPropertyChanged;
+            if (_headerPanel is {} oldValid)
+            {
+                Children.Remove(oldValid);
+                //oldValid.PropertyChanged -= OnChildPropertyChanged;
+            }
 
-            if (newValue?.Template is INotifyPropertyChanged newValid)
-                newValid.PropertyChanged += OnChildPropertyChanged;
+            //if (newValue is {} valid)
+            //    valid.BuildVisual(DataContext)
+
+            //if (newValue?.Template is INotifyPropertyChanged newValid)
+            //    newValid.PropertyChanged += OnChildPropertyChanged;
 
             return true;
         }
@@ -125,24 +165,29 @@ namespace Das.Views.ItemsControls
                 dothValid.CollectionChanged += OnItemsChanged;
             }
 
+            InvalidateMeasure();
+
             return true;
         }
 
         private void OnItemsChanged(Object sender, 
                                     NotifyCollectionChangedEventArgs e)
         {
-            e.HandleCollectionChanges<Object>(RemoveOldItems, AddNewItems);
-            
+            e.HandleCollectionChanges<Object>(RemoveOldItems, AddNewItems, ClearTabs);
+            InvalidateMeasure();
         }
 
-        private void AddNewItems(IEnumerable<Object> obj)
+        
+
+        private async void AddNewItems(IEnumerable<Object> items)
         {
-            foreach (var item in obj)
+            foreach (var item in items)
             {
-                var visual = _itemTemplate.BuildVisual(item);
+                var visual = _itemTemplate.BuildVisual(item) ?? throw new NullReferenceException();
+
                 if (visual is INotifyPropertyChanged notifier)
                     notifier.PropertyChanged += OnItemPropertyChanged;
-                TabItems.Add(visual);
+                await TabItems.AddAsync(visual);
             }
         }
 
@@ -153,7 +198,7 @@ namespace Das.Views.ItemsControls
             {
                 case nameof(IToggleButton.IsChecked) when sender is IToggleButton toggle && 
                     sender is IDataContext dc && ItemsSource != null && 
-                    dc.Value != null:
+                    toggle.IsChecked == true && dc.Value != null:
 
                     foreach (var item in ItemsSource)
                     {
@@ -172,10 +217,9 @@ namespace Das.Views.ItemsControls
                     IsRequiresArrange = true;
                     break;
 
-                //case nameof(IChangeTracking.IsChanged) when sender is IChangeTracking changer && 
-                //                                            changer.IsChanged:
-                //    IsChanged = true;
-                //    break;
+                case nameof(IVisualElement.IsRequiresMeasure):
+                    break;
+
             }
         }
 
@@ -196,17 +240,21 @@ namespace Das.Views.ItemsControls
             }
         }
 
-
-        private Object? _selectedItem;
-
-        public Object? SelectedItem
+        private void ClearTabs()
         {
-            get => _selectedItem;
-            set => SetValue(ref _selectedItem, value, OnSelectedItemChanging, 
-                OnSelectedItemChanged);
+            TabItems.Clear();
         }
 
-        private void OnSelectedItemChanged(Object? newValue)
+
+        public override IVisualElement? SelectedVisual
+        {
+            get => SelectedTab;
+            set => SelectedTab = value;
+        }
+
+        protected override void OnSelectedItemChanged(ISelector selector,
+                                                      Object? oldValue,
+                                                      Object? newValue)
         {
             if (newValue != null)
             {
@@ -219,15 +267,15 @@ namespace Das.Views.ItemsControls
                     }
                 }
             }
-
-            OnChanged(newValue);
         }
 
-        private Boolean OnSelectedItemChanging(Object? oldValue, 
+        protected override Boolean OnSelectedItemChanging(ISelector selector,
+            Object? oldValue, 
                                                Object? newValue)
         {
             if (ItemsSource == null) 
                 return true;
+
 
             foreach (var item in TabItems)
             {
@@ -237,35 +285,56 @@ namespace Das.Views.ItemsControls
                     toggle.IsChecked = false;
                     break;
                 }
-                
-               
             }
 
             return true;
         }
 
-        private void OnChanged(Object? obj)
-        {
-            IsChanged = true;
-        }
 
+        //public override void InvalidateMeasure()
+        //{
+        //    base.InvalidateMeasure();
+
+        //    if (SelectedTab is {} tab)
+        //        tab.InvalidateMeasure();
+
+        //    _headerTemplate.Template.InvalidateMeasure();
+
+        //    var _ = TabItems.RunOnEach(v => v.InvalidateMeasure()).ConfigureAwait(false);
+        //}
+
+        //public override Boolean IsRequiresMeasure
+        //{
+        //    get => base.IsRequiresMeasure || _headerTemplate.Template.IsRequiresMeasure;
+        //    protected set => base.IsRequiresMeasure = value;
+        //}
+
+        //public override Boolean IsRequiresArrange
+        //{
+        //    get => base.IsRequiresArrange || _headerTemplate.Template.IsRequiresArrange;
+        //    protected set => base.IsRequiresArrange = value;
+        //}
 
         private IVisualElement? _selectedTab;
 
         public IVisualElement? SelectedTab
         {
             get => _selectedTab;
-            set => SetValue(ref _selectedTab, value);
+            set => SetValue(ref _selectedTab, value, OnSelectedTabChanged);
         }
 
-        public ObservableRangeCollection<IVisualElement> TabItems { get; }
+        private void OnSelectedTabChanged(IVisualElement? newValue)
+        {
+            Debug.WriteLine("selected tab changed: " + newValue);
+            InvalidateMeasure();
+        }
 
-        
+        public AsyncObservableCollection2<IVisualElement> TabItems { get; }
 
 
-        
 
-        
+
+        private IVisualElement? _headerPanel;
         private ValueSize _headerUses;
         private ValueSize _contentUses;
     }

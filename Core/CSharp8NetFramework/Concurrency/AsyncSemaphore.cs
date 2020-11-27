@@ -58,6 +58,11 @@ namespace System.Threading
             }
         }
 
+        public void Wait()
+        {
+            TaskEx.Run(async () => await WaitAsync().ConfigureAwait(false)).Wait();
+        }
+
         private readonly Task _completedTask = TaskEx.FromResult(true);
 
         private readonly Int32 _initialCount;

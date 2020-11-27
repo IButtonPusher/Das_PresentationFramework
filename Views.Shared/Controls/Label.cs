@@ -18,27 +18,37 @@ namespace Das.Views.Controls
     public class Label : Label<String>
     {
         public Label(IDataBinding<String> binding,
-                     IVisualBootStrapper templateResolver) : base(binding, templateResolver)
+                     IVisualBootStrapper visualBootStrapper) : base(binding, visualBootStrapper)
         {
         }
 
         // ReSharper disable once UnusedMember.Global
-        public Label(IVisualBootStrapper templateResolver) : base(templateResolver)
+        public Label(IVisualBootStrapper visualBootStrapper) : base(visualBootStrapper)
         {
         }
     }
 
     public class Label<T> : BindableElement<T>
     {
-        public Label(IVisualBootStrapper templateResolver) : base(templateResolver)
+        public Label(IVisualBootStrapper visualBootStrapper)
+            : base(visualBootStrapper)
         {
             _currentValue = String.Empty;
         }
 
         public Label(IDataBinding<T> binding,
-                     IVisualBootStrapper templateResolver) : base(binding, templateResolver)
+                     IVisualBootStrapper visualBootStrapper)
+            : base(binding, visualBootStrapper)
         {
             _currentValue = String.Empty;
+
+        }
+
+
+        public String Text
+        {
+            get => TextProperty.GetValue(this);
+            set => TextProperty.SetValue(this, value);
         }
 
         public override void Arrange(IRenderSize availableSpace,
@@ -65,7 +75,7 @@ namespace Das.Views.Controls
             var font = measureContext.GetStyleSetter<Font>(StyleSetter.Font, this) *
                        measureContext.GetZoomLevel();
 
-            if (Binding is {} binding)
+            if (Binding is { } binding)
                 _currentValue = binding.GetValue(DataContext)?.ToString() ?? String.Empty;
             else
                 _currentValue = String.Empty;
@@ -92,6 +102,9 @@ namespace Das.Views.Controls
         {
             return "Label: " + _currentValue;
         }
+
+        public static readonly DependencyProperty<Label<T>, String> TextProperty =
+            DependencyProperty<Label<T>, String>.Register(nameof(Text), String.Empty);
 
         private String _currentValue;
     }

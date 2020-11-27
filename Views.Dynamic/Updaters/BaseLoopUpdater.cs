@@ -31,7 +31,12 @@ namespace Das.Views
 
                 if (IsChanged)
                 {
-                    Update();
+                    if (!Update())
+                    {
+                        #if !NET40
+                        await Task.Delay(10);
+                        #endif
+                    }
                     continue;
                 }
 
@@ -53,7 +58,7 @@ namespace Das.Views
         {
         }
 
-        protected abstract void Update();
+        protected abstract Boolean Update();
 
         private readonly Int32 _minDelay;
 

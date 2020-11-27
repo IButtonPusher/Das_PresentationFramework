@@ -19,8 +19,8 @@ namespace Das.Views.Panels
         }
 
         public RepeaterPanel(ISequentialRenderer renderer,
-                             IVisualBootStrapper templateResolver)
-        : base(templateResolver)
+                             IVisualBootStrapper visualBootStrapper)
+        : base(visualBootStrapper)
         {
             _controls = new List<IVisualElement>();
             _renderer = EnsureRenderer(renderer);
@@ -28,9 +28,9 @@ namespace Das.Views.Panels
 
         // ReSharper disable once UnusedMember.Global
         public RepeaterPanel(IDataBinding<IEnumerable<T>> binding,
-                             IVisualBootStrapper templateResolver,
+                             IVisualBootStrapper visualBootStrapper,
                              ISequentialRenderer? renderer = null) 
-            : base(templateResolver, binding)
+            : base(visualBootStrapper, binding)
         {
             _controls = new List<IVisualElement>();
             _renderer = EnsureRenderer(renderer);
@@ -49,9 +49,10 @@ namespace Das.Views.Panels
             return _renderer.Measure(this, _controls, Orientation, availableSpace, measureContext);
         }
 
-        public override void Arrange(IRenderSize availableSpace, IRenderContext renderContext)
+        public override void Arrange(IRenderSize availableSpace, 
+                                     IRenderContext renderContext)
         {
-            _renderer.Arrange(Orientation, availableSpace, renderContext);
+            _renderer.Arrange(Orientation, availableSpace.ToFullRectangle(), renderContext);
         }
 
         public override void Dispose()

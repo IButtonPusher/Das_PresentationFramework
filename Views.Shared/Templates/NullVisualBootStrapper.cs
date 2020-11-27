@@ -23,7 +23,7 @@ namespace Das.Views.Templates
          
         }
 
-        public IView? TryResolve(Object value)
+        public IVisualElement? TryResolveFromContext(Object dataContext)
         {
             return null;
         }
@@ -54,6 +54,11 @@ namespace Das.Views.Templates
             
         }
 
+        public TBindableElement Instantiate<TBindableElement>(Type type, IDataBinding? binding) where TBindableElement : IBindableElement
+        {
+            throw new NotImplementedException();
+        }
+
         private static ConstructorInfo GetConstructor(Type type)
         {
             return type.GetConstructor(_ctorArgTypes) ?? throw new MissingMethodException();
@@ -70,5 +75,7 @@ namespace Das.Views.Templates
         {
             throw new NotImplementedException();
         }
+
+        public IUiProvider UiProvider => throw new NotImplementedException();
     }
 }

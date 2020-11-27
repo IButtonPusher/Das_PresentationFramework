@@ -7,6 +7,8 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Das.Serializer;
 using Das.Views.Controls;
+using Das.Views.Core.Drawing;
+using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
@@ -60,6 +62,8 @@ namespace Das.Views.DevKit
 
         Int32 IVisualElement.Id => -1;
 
+        public Boolean IsClipsContent { get; set; }
+
         public event Action<IVisualElement>? Disposed;
 
         IControlTemplate IVisualElement.Template => throw new NotSupportedException();
@@ -67,6 +71,45 @@ namespace Das.Views.DevKit
         public void AcceptChanges(ChangeType changeType)
         {
             
+        }
+
+        public void RaisePropertyChanged(String propertyName)
+        {
+            
+        }
+
+        public Double? Width { get; set; }
+
+        public Double? Height { get; set; }
+
+        public HorizontalAlignments HorizontalAlignment
+        {
+            get => Content?.HorizontalAlignment ?? HorizontalAlignments.Stretch;
+            set
+            {
+                if (Content is {} content)
+                    content.HorizontalAlignment = value;
+            }
+        }
+
+        public VerticalAlignments VerticalAlignment
+        {
+            get => Content?.VerticalAlignment ?? VerticalAlignments.Stretch;
+            set
+            {
+                if (Content is {} content)
+                    content.VerticalAlignment = value;
+            }
+        }
+
+        public IBrush? Background
+        {
+            get => Content?.Background;
+            set
+            {
+                if (Content  is {} content)
+                    content.Background = value;
+            }
         }
 
         public void OnParentChanging(IContainerVisual? newParent)
@@ -257,6 +300,11 @@ namespace Das.Views.DevKit
         protected virtual void OnPropertyChanged([CallerMemberName] String? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public Boolean Equals(IVisualElement other)
+        {
+            return ReferenceEquals(this, other);
         }
     }
 }

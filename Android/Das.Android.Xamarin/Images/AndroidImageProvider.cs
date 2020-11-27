@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Android.Graphics;
 using Android.Util;
+using Das.Extensions;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
 
@@ -21,7 +22,7 @@ namespace Das.Xamarin.Android.Images
             return bmp == null ? default(IImage?) : new AndroidBitmap(bmp);
         }
 
-        public IImage? GetImage(Stream stream,
+        public IImage? GetDeviceScaledImage(Stream stream,
                                 Double maximumWidthPct)
         {
             var imgMaxWidth = _displayMetrics.WidthPixels * maximumWidthPct;
@@ -31,7 +32,6 @@ namespace Das.Xamarin.Android.Images
                 var img = BitmapFactory.DecodeStream(stream);
                 return GetScaledImage(img, imgMaxWidth);
             }
-
 
             var options = new BitmapFactory.Options
             {
@@ -59,6 +59,14 @@ namespace Das.Xamarin.Android.Images
             return GetScaledImage(bmp, imgMaxWidth);
         }
 
+        public IImage GetScaledImage(IImage input, 
+                                     Double width, 
+                                     Double height)
+        {
+            var bmp = input.Unwrap<Bitmap>();
+            return GetScaledImage(bmp, width);
+        }
+
         public IImage? GetImage(Byte[] bytes)
         {
             using (var ms = new MemoryStream(bytes))
@@ -78,17 +86,23 @@ namespace Das.Xamarin.Android.Images
             return new AndroidBitmap(bmp!);
         }
 
+        public Double DeviceEffectiveDpi => 1.0;
+
         private static IImage? GetScaledImage(Bitmap? img,
-                                              Double imgMaxWidth)
+                                              Double imgDesiredWidth)
         {
-            if (img == null || img.Width < imgMaxWidth)
+            if (img == null || imgDesiredWidth.AreEqualEnough(img.Width))
                 return new AndroidBitmap(img);
 
-            var scaleRatio = imgMaxWidth / img.Width;
+            var scaleRatio = imgDesiredWidth / img.Width;
+
+            var widthWas = img.Width;
+
+            var width = Convert.ToInt32(img.Width * scaleRatio);
+            var height = Convert.ToInt32(img.Height * scaleRatio);
 
             var scaledBitmap = Bitmap.CreateScaledBitmap(img,
-                Convert.ToInt32(img.Width * scaleRatio),
-                Convert.ToInt32(img.Height * scaleRatio), true);
+                width, height, true);
             img.Dispose();
             return new AndroidBitmap(scaledBitmap);
         }

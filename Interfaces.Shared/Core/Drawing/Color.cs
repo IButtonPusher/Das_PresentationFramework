@@ -63,6 +63,8 @@ namespace Das.Views.Core.Drawing
 
         public static Color Yellow => _yellow.Value;
 
+        public static Color Purple => _purple.Value;
+
         public static Color FromRgb(Byte r, Byte g, Byte b)
         {
             return new Color(r, g, b);
@@ -103,6 +105,9 @@ namespace Das.Views.Core.Drawing
 
         private static readonly Lazy<Color> _red = new Lazy<Color>(()
             => new Color(255, 0, 0));
+
+        private static readonly Lazy<Color> _purple = new Lazy<Color>(()
+            => new Color(128, 0, 128));
 
         private static readonly Lazy<Color> _transparent = new Lazy<Color>(()
             => new Color(0, 0, 0, 0));

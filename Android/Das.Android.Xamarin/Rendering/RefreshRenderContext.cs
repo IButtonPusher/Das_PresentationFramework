@@ -12,7 +12,7 @@ namespace Das.Xamarin.Android.Rendering
     {
         public RefreshRenderContext(IViewPerspective perspective,
                                     IVisualSurrogateProvider surrogateProvider,
-                                    Dictionary<IVisualElement, ICube> renderPositions,
+                                    Dictionary<IVisualElement, ValueCube> renderPositions,
                                     Dictionary<IVisualElement, ValueSize> lastMeasurements)
             : base(perspective, surrogateProvider, renderPositions, lastMeasurements)
         {
@@ -72,6 +72,21 @@ namespace Das.Xamarin.Android.Rendering
                                                                TPen pen,
                                                                Double cornerRadius)
         {
+        }
+
+        protected override void PushClip<TRectangle>(TRectangle rect)
+        {
+            
+        }
+
+        protected override void PopClip<TRectangle>(TRectangle rect)
+        {
+            
+        }
+
+        protected override IRectangle GetCurrentClip()
+        {
+            return Rectangle.Empty;
         }
 
         public override void DrawString<TFont, TBrush, TRectangle>(String s,

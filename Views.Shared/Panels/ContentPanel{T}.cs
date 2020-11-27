@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Das.Serializer;
+using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Defaults;
@@ -17,19 +18,50 @@ namespace Das.Views.Panels
                                             IVisualContainer,
                                             IContentPresenter
     {
-        protected ContentPanel(IVisualBootStrapper templateResolver)
-            : base(templateResolver)
+        private readonly IVisualBootStrapper _visualBootStrapper;
+
+        protected ContentPanel(IVisualBootStrapper visualBootStrapper)
+            : base(visualBootStrapper)
         {
-            _contentTemplate = new DefaultContentTemplate(templateResolver, this);
+            _contentMeasured = ValueSize.Empty;
+            _visualBootStrapper = visualBootStrapper;
+            _contentTemplate = new DefaultContentTemplate(visualBootStrapper, this);
         }
 
-        protected ContentPanel(IVisualBootStrapper templateResolver,
+        protected ContentPanel(IVisualBootStrapper visualBootStrapper,
                                IDataBinding<T> binding)
-            : base(templateResolver, binding)
+            : base(visualBootStrapper, binding)
         {
-            _contentTemplate = new DefaultContentTemplate(templateResolver, this);
+            _contentMeasured = ValueSize.Empty;
+            _visualBootStrapper = visualBootStrapper;
+            _contentTemplate = new DefaultContentTemplate(visualBootStrapper, this);
         }
 
+
+        protected TQuery QueryContent<TQuery>(Func<IVisualElement, TQuery> query,
+                                              TQuery defaultValue)
+        {
+            if (!(Content is { } valid))
+                return defaultValue;
+
+            return query(valid);
+        }
+
+        public override Boolean IsChanged => IsRequiresMeasure || IsRequiresArrange || 
+                                             Content is {} valid && 
+                                             (valid.IsRequiresMeasure || valid.IsRequiresArrange);
+
+        public override Boolean IsRequiresMeasure
+        {
+            get => base.IsRequiresMeasure || QueryContent(c => c.IsRequiresMeasure, false);
+            protected set => base.IsRequiresMeasure = value;
+        }
+
+        public override Boolean IsRequiresArrange
+        {
+            get => base.IsRequiresArrange || QueryContent(c => c.IsRequiresArrange, false);
+            protected set => base.IsRequiresArrange = value;
+        }
 
         public virtual IVisualElement? Content
         {
@@ -41,43 +73,240 @@ namespace Das.Views.Panels
         public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
         {
-            var content = GetContent();
-            if (content == null)
-                return ValueSize.Empty;
+            //var content = GetContent();
+            //if (content == null)
+            //    return ValueSize.Empty;
 
-            var padding = measureContext.GetStyleSetter<Thickness>(StyleSetter.Padding, this);
-            var res = measureContext.MeasureElement(content, availableSpace);
+            //TryGetSize(out var mySize);
 
-            IsRequiresMeasure = false;
+            var contentCanHave = GetMeasureSpace(measureContext, availableSpace, 
+                out var padding,
+                out var mySize);
 
-            return padding.IsEmpty ? res : res + padding;
+            _contentMeasured = Content is {} content
+                ? measureContext.MeasureElement(Content, contentCanHave)
+                : ValueSize.Empty;
+
+            //if (!(Content is { } content))
+            //{
+            //    if (Value is { } valid && ContentTemplate is { } template)
+            //    {
+            //        var nres = measureContext.MeasureElement(template.Template, contentCanHave);
+            //        //contentWants =  padding?.IsEmpty != false ? nres : nres + padding;
+            //        contentWants = nres;
+            //    }
+            //    else
+            //        return ValueSize.Empty;
+            //}
+            //else 
+            //contentWants = measureContext.MeasureElement(Content, contentCanHave);
+
+            //var padding = measureContext.GetStyleSetter<Thickness>(StyleSetter.Padding, this);
+
+            //IRenderSize useAvailable;
+            //if (mySize.IsEmpty && padding?.IsEmpty != false)
+            //    useAvailable = availableSpace;
+            //else if (mySize.IsEmpty)
+            //    useAvailable = new ValueRenderSize(availableSpace, availableSpace.Offset, padding);
+            //else
+            //    useAvailable = new ValueRenderSize(mySize, availableSpace.Offset, padding);
+
+
+            
+
+            //IsRequiresMeasure = false;
+
+            var useWidth = HorizontalAlignment == HorizontalAlignments.Stretch
+                ? mySize.Width
+                : Width ?? _contentMeasured.Width;
+            if (Double.IsInfinity(useWidth))
+                useWidth = _contentMeasured.Width;
+
+            var useHeight = VerticalAlignment == VerticalAlignments.Stretch
+                ? mySize.Height
+                : Height ?? _contentMeasured.Height;
+            if (Double.IsInfinity(useHeight))
+                useHeight = _contentMeasured.Height;
+
+            return new ValueSize(useWidth, useHeight);
+        }
+
+        public override void InvalidateMeasure()
+        {
+            if (Content is {} content)
+                content.InvalidateMeasure();
+            
+
+            base.InvalidateMeasure();
+            //IsChanged = true;
+        }
+
+        public override void InvalidateArrange()
+        {
+            if (Content is {} content)
+                content.InvalidateArrange();
+            
+
+            base.InvalidateArrange();
+            //IsChanged = true;
         }
 
         public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
-            var content = GetContent();
-            if (content == null) 
-                return;
+          
 
-            var padding = renderContext.GetStyleSetter<Thickness>(StyleSetter.Padding, this);
-            var contentMargin = renderContext.GetStyleSetter<Thickness>(StyleSetter.Margin, content);
+            //if (!(Content is { } content))
+            //{
+            //    if (Value is { } valid && ContentTemplate is { } template)
+            //    {
+            //        renderContext.DrawElement(template.Template, totalSpace);
+            //    }
 
-            var target = new ValueRenderRectangle(
-                padding.Left + contentMargin.Left,
-                padding.Top + contentMargin.Top,
-                availableSpace.Width - padding.Width - contentMargin.Right,
-                availableSpace.Height - padding.Height - contentMargin.Right,
-                availableSpace.Offset);
+            //    return;
+            //}
 
-            //var target = new ValueRenderRectangle(padding.Left, padding.Top,
-            //        availableSpace.Width - padding.Width,
-            //        availableSpace.Height - padding.Height,
-            //        availableSpace.Offset);
+            if (Content is { } content)
+            {
+                var contentSpace = GetContentArrangeSpace(content, _contentMeasured,
+                    renderContext, availableSpace, 
+                    out var padding,
+                    out var mySize);
+                renderContext.DrawElement(content, contentSpace);
+            }
 
-            renderContext.DrawElement(content, target);
+            //var content = GetContent();
+            //if (content == null) 
+            //    return;
+
+            //var padding = renderContext.GetStyleSetter<Thickness>(StyleSetter.Padding, this);
+            //var contentMargin = renderContext.GetStyleSetter<Thickness>(StyleSetter.Margin, content);
+
+            //var target = new ValueRenderRectangle(
+            //    padding.Left + contentMargin.Left,
+            //    padding.Top + contentMargin.Top,
+            //    availableSpace.Width - padding.Width - contentMargin.Right,
+            //    availableSpace.Height - padding.Height - contentMargin.Right,
+            //    availableSpace.Offset);
+
+           
+
+            //renderContext.DrawElement(content, target);
             IsRequiresArrange = false;
         }
+
+        protected virtual IRenderSize GetMeasureSpace(IStyleProvider styleContext,
+                                                     IRenderSize availableSpace,
+                                                     out Thickness? padding,
+                                                     out ValueSize mySize)
+        {
+            padding = GetPadding(styleContext);
+            TryGetSize(out mySize);
+
+            IRenderSize useAvailable;
+            if (mySize.IsEmpty && padding?.IsEmpty != false)
+                useAvailable = availableSpace;
+            else if (mySize.IsEmpty)
+                useAvailable = new ValueRenderSize(availableSpace, availableSpace.Offset, padding);
+            else
+                useAvailable = new ValueRenderSize(mySize, availableSpace.Offset, padding);
+
+            if (mySize.IsEmpty)
+                mySize = availableSpace.ToValueSize();
+
+            return useAvailable;
+        }
+
+        protected virtual IRenderRectangle GetContentArrangeSpace(IVisualElement content,
+                                                                  ISize contentMeasured,
+            IStyleProvider styleContext,
+                                                           IRenderSize availableSpace,
+                                                           out Thickness? padding,
+                                                           out ValueSize mySize)
+        {
+            padding = GetPadding(styleContext);
+            TryGetSize(out mySize);
+
+
+            Double left = 0, top = 0; 
+            Double width, height;
+
+            if (mySize.IsEmpty)
+            {
+                width = availableSpace.Width;
+                height = availableSpace.Height;
+            }
+            else
+            {
+                width = mySize.Width;
+                height = mySize.Height;
+            }
+
+            if (padding is {} goodPadding && !goodPadding.IsEmpty)
+            {
+                left += goodPadding.Left;
+                top += goodPadding.Top;
+                width -= padding.Width;
+                height -= padding.Height;
+            }
+
+            var valign = content.VerticalAlignment;
+            if (valign == VerticalAlignments.Default)
+                valign = styleContext.GetStyleSetter<VerticalAlignments>(
+                    StyleSetter.VerticalAlignment, content);
+
+            var halign = content.HorizontalAlignment;
+            if (halign == HorizontalAlignments.Default)
+                halign = styleContext.GetStyleSetter<HorizontalAlignments>(
+                    StyleSetter.HorizontalAlignment, content);
+
+            //up to here we are giving content all available minus our padding
+            var xDiff = width - contentMeasured.Width;
+            var yDiff = height - contentMeasured.Height;
+
+
+            switch (halign)
+            {
+                case HorizontalAlignments.Center:
+                    
+                    left += (xDiff / 2);
+                    width = Math.Min(width, contentMeasured.Width);
+                    break;
+
+                case HorizontalAlignments.Right:
+                    left += xDiff;
+                    break;
+            }
+
+            switch (valign)
+            {
+                case VerticalAlignments.Center:
+                    
+                    top += (yDiff / 2);
+                    height = Math.Min(height, contentMeasured.Height);
+                    break;
+
+                case VerticalAlignments.Bottom:
+                    top += yDiff;
+                    break;
+            }
+
+            return new RenderRectangle(left, top, width, height, availableSpace.Offset);
+
+            //if (mySize.IsEmpty && padding?.IsEmpty != false)
+            //    useAvailable = availableSpace.ToFullRectangle();
+            //else if (mySize.IsEmpty)
+            //    useAvailable = new ValueRenderRectangle(availableSpace, padding);
+            //else
+            //    useAvailable = new ValueRenderRectangle(mySize, availableSpace.Offset, padding);
+
+            //return useAvailable;
+        }
+
+        protected virtual Thickness? GetPadding(IStyleProvider styleContext)
+          {
+            return styleContext.GetStyleSetter<Thickness>(StyleSetter.Padding, this);
+          }
 
         public override IVisualElement DeepCopy()
         {
@@ -95,9 +324,10 @@ namespace Das.Views.Panels
             return newObject;
         }
 
+
         public override void AcceptChanges()
         {
-            IsChanged = false;
+            //IsChanged = false;
             if (Content is IChangeTracking ct)
                 ct.AcceptChanges();
         }
@@ -134,6 +364,39 @@ namespace Das.Views.Panels
             throw new NotSupportedException();
         }
 
+        protected override void OnDataContextChanged(Object? newValue)
+        {
+            base.OnDataContextChanged(newValue);
+
+            switch (Content)
+            {
+                case IBindableElement bindable:
+                    bindable.DataContext = newValue;
+                    break;
+
+                case {} _:
+                    return;
+
+                default:
+                    //no content yet
+
+                    if (!(newValue is { } valid))
+                        return;
+                    
+                    if (ContentTemplate is {} template)
+                    {
+                        Content = template.BuildVisual(valid);
+                        return;
+                    }
+
+                    if (_visualBootStrapper.TryResolveFromContext(valid) is { } visual)
+                        Content = visual;
+
+                    break;
+            }
+        }
+
+
         public void OnChildDeserialized(IVisualElement element, INode node)
         {
         }
@@ -156,7 +419,7 @@ namespace Das.Views.Panels
             if (Content is IBindableElement bindable)
                 bindable.SetDataContext(dataContext);
 
-            IsChanged = true;
+            //IsChanged = true;
         }
 
         public override async Task SetDataContextAsync(Object? dataContext)
@@ -166,13 +429,13 @@ namespace Das.Views.Panels
             if (Content is IBindableElement bindable)
                 await bindable.SetDataContextAsync(dataContext);
 
-            IsChanged = true;
+            //IsChanged = true;
         }
 
 
         public override void SetBoundValue(T value)
         {
-            IsChanged = true;
+            //IsChanged = true;
             Binding = new ObjectBinding<T>(value);
 
             if (Content is IBindableElement<T> bindable)
@@ -183,7 +446,7 @@ namespace Das.Views.Panels
 
         public override async Task SetBoundValueAsync(T value)
         {
-            IsChanged = true;
+            //IsChanged = true;
             Binding = new ObjectBinding<T>(value);
 
             if (Content is IBindableElement<T> bindable)
@@ -205,7 +468,8 @@ namespace Das.Views.Panels
 
         protected virtual void OnContentChanged(IVisualElement? obj)
         {
-            IsChanged = true;
+            InvalidateMeasure();
+            //IsChanged = true;
         }
 
         protected virtual Boolean OnContentChanging(IVisualElement? oldValue,
@@ -251,6 +515,7 @@ namespace Das.Views.Panels
 
         private IVisualElement? _content;
         private IDataTemplate _contentTemplate;
+        private ValueSize _contentMeasured;
 
     }
 }

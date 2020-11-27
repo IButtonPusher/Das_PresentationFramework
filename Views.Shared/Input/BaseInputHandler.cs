@@ -113,6 +113,13 @@ namespace Das.Views.Input
                         IsHandlesAction(element, InputAction.LeftClick) && 
                         element is IHandleInput<MouseClickEventArgs> clickMe)
                     {
+                        if (!handledActionDirectly &&
+                            IsHandlesAction(element, InputAction.LeftMouseButtonUp))
+                        {
+                            //handles mouse up but didn't handle this one so don't give him the click
+                            break;
+                        }
+
                         var clickArgs = new MouseClickEventArgs(margs.Position,
                             MouseButtons.Left, 1, margs.InputContext);
                         if (clickMe.OnInput(clickArgs))

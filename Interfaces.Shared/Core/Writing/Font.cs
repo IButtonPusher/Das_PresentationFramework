@@ -8,7 +8,9 @@ namespace Das.Views.Core.Writing
                         IFont,
                         IEquatable<IFont>
     {
-        public Font(Double size, String familyName, FontStyle fontStyle)
+        public Font(Double size, 
+                    String familyName, 
+                    FontStyle fontStyle)
         {
             Size = size;
             FamilyName = familyName;
@@ -50,6 +52,11 @@ namespace Das.Views.Core.Writing
         }
 
         public Double Size { get; }
+
+        public IFont Resize(Double newSize)
+        {
+            return new Font(newSize, FamilyName, FontStyle);
+        }
 
         public String FamilyName { get; }
 

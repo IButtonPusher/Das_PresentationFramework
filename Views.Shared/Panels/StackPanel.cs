@@ -14,8 +14,8 @@ namespace Das.Views.Panels
         }
 
         public StackPanel(IDataBinding<T> binding,
-                          IVisualBootStrapper templateResolver) 
-            : base(binding, templateResolver)
+                          IVisualBootStrapper visualBootStrapper) 
+            : base(binding, visualBootStrapper)
         {
         }
 
@@ -32,7 +32,7 @@ namespace Das.Views.Panels
                 child.Dispose();
         }
 
-        protected override IEnumerable<IVisualElement> GetChildrenToRender()
+        protected override IList<IVisualElement> GetChildrenToRender()
         {
             return Children;
         }

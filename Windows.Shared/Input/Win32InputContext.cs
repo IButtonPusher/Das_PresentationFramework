@@ -36,7 +36,8 @@ namespace Windows.Shared.Input
             }
         }
 
-        public Boolean AreButtonsPressed(KeyboardButtons button1, KeyboardButtons button2)
+        public Boolean AreButtonsPressed(KeyboardButtons button1, 
+                                         KeyboardButtons button2)
         {
             return IsButtonPressed(button1) && IsButtonPressed(button2);
         }
@@ -50,7 +51,18 @@ namespace Windows.Shared.Input
 
         public Boolean IsButtonPressed(MouseButtons mouseButton)
         {
-            return false;
+            switch (mouseButton)
+            {
+                case MouseButtons.Left:
+                    return Native.GetAsyncKeyState(Native.VK_LBUTTON) < 0;
+
+                case MouseButtons.Right:
+                    return Native.GetAsyncKeyState(Native.VK_RBUTTON) < 0;
+
+                default:
+                    throw new NotImplementedException();
+            }
+            
         }
 
         public Boolean AreButtonsPressed(MouseButtons button1, 

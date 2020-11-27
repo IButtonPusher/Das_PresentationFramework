@@ -5,11 +5,11 @@ namespace Das.Views.Panels
 {
     public class ContentPanel : ContentPanel<Object>
     {
-        public ContentPanel(IVisualBootStrapper templateResolver) : base(templateResolver)
+        public ContentPanel(IVisualBootStrapper visualBootStrapper) : base(visualBootStrapper)
         {
         }
 
-        public ContentPanel(IVisualBootStrapper templateResolver, IDataBinding<Object> binding) : base(templateResolver, binding)
+        public ContentPanel(IVisualBootStrapper visualBootStrapper, IDataBinding<Object> binding) : base(visualBootStrapper, binding)
         {
         }
     }

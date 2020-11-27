@@ -15,8 +15,8 @@ namespace Das.Views.Panels
                                          IVisualContainer
     {
         protected BasePanel(IDataBinding<T>? binding,
-                            IVisualBootStrapper templateResolver)
-            : base(binding, templateResolver)
+                            IVisualBootStrapper visualBootStrapper)
+            : base(binding, visualBootStrapper)
         {
             _lockChildren = new Object();
             _children = new List<IVisualElement>();
@@ -59,8 +59,11 @@ namespace Das.Views.Panels
 
         public void AddChildren(params IVisualElement[] elements)
         {
-            foreach (var element in elements)
-                AddChild(element);
+            lock (_lockChildren)
+            {
+                foreach (var element in elements)
+                    _children.Add(element);
+            }
         }
 
         public virtual void OnChildDeserialized(IVisualElement element, INode node)
@@ -112,6 +115,62 @@ namespace Das.Views.Panels
             }
         }
 
+        public override void InvalidateMeasure()
+        {
+            base.InvalidateMeasure();
+
+            foreach (var child in Children)
+            {
+                child.InvalidateMeasure();
+            }
+        }
+
+        public override void InvalidateArrange()
+        {
+            base.InvalidateArrange();
+
+            foreach (var child in Children)
+            {
+                child.InvalidateArrange();
+            }
+        }
+
+        public override Boolean IsRequiresMeasure
+        {
+            get
+            {
+                if (base.IsRequiresMeasure)
+                    return true;
+
+                foreach (var child in Children)
+                {
+                    if (child.IsRequiresMeasure)
+                        return true;
+                }
+
+                return false;
+            }
+            protected set => base.IsRequiresMeasure = value;
+        }
+
+        public override Boolean IsRequiresArrange
+        {
+            get
+            {
+                if (base.IsRequiresArrange)
+                    return true;
+
+                foreach (var child in Children)
+                {
+                    if (child.IsRequiresArrange)
+                        return true;
+                }
+
+                return false;
+            }
+            protected set => base.IsRequiresArrange = value;
+        }
+
         public override void SetBoundValue(T value)
         {
             base.SetBoundValue(value);
@@ -140,6 +199,7 @@ namespace Das.Views.Panels
 
 
         private readonly List<IVisualElement> _children;
+        
         private readonly Object _lockChildren;
     }
 }

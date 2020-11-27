@@ -27,6 +27,28 @@ namespace Das.Views.DataBinding
             
         }
     }
+
+    public class ObjectBinding : BaseBinding
+    {
+        private readonly Object _obj;
+
+        public ObjectBinding(Object obj)
+        {
+            _obj = obj;
+        }
+
+        public override Object? GetBoundValue(Object? dataContext)
+        {
+            return _obj;
+        }
+
+        public override void Dispose()
+        {
+            
+        }
+    }
+
+
 }
 
 //using System;

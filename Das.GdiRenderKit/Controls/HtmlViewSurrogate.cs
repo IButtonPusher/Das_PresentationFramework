@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Views.Controls;
+using Das.Views.Core.Drawing;
+using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Panels;
 using Das.Views.Rendering;
@@ -72,6 +74,12 @@ namespace Das.Views.Gdi.Controls
 
         public Int32 Id => -1;
 
+        public Boolean IsClipsContent
+        {
+            get => ((IVisualElement) _htmlPanel).IsClipsContent;
+            set => ((IVisualElement) _htmlPanel).IsClipsContent = value;
+        }
+
         public new event Action<IVisualElement>? Disposed;
 
         public void OnParentChanging(IContainerVisual? newParent)
@@ -116,8 +124,48 @@ namespace Das.Views.Gdi.Controls
             ((IVisualElement) _htmlPanel).AcceptChanges(changeType);
         }
 
+        public void RaisePropertyChanged(String propertyName)
+        {
+            _htmlPanel.RaisePropertyChanged(propertyName);
+        }
+
+        Double? IVisualElement.Width
+        {
+            get => ((IVisualElement) _htmlPanel).Width;
+            set => ((IVisualElement) _htmlPanel).Width = value;
+        }
+
+        Double? IVisualElement.Height
+        {
+            get => _htmlPanel.Height;
+            set => _htmlPanel.Height = value;
+        }
+
+        public HorizontalAlignments HorizontalAlignment
+        {
+            get => ((IVisualElement) _htmlPanel).HorizontalAlignment;
+            set => ((IVisualElement) _htmlPanel).HorizontalAlignment = value;
+        }
+
+        public VerticalAlignments VerticalAlignment
+        {
+            get => ((IVisualElement) _htmlPanel).VerticalAlignment;
+            set => ((IVisualElement) _htmlPanel).VerticalAlignment = value;
+        }
+
+        public IBrush? Background
+        {
+            get => _htmlPanel.Background;
+            set => _htmlPanel.Background = value;
+        }
+
         private readonly WebBrowser _browser;
         private readonly Control _hostingControl;
         private readonly HtmlPanel _htmlPanel;
+
+        public Boolean Equals(IVisualElement other)
+        {
+            return ReferenceEquals(this, other) ||  _htmlPanel.Equals(other);
+        }
     }
 }

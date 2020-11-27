@@ -62,6 +62,16 @@ namespace Das.Views.Core.Geometry
             return new ValueSize(Width, Height);
         }
 
+        public Double CenterY(ISize item)
+        {
+            return GeometryHelper.CenterY(this, item);
+        }
+
+        public Double CenterX(ISize item)
+        {
+            return GeometryHelper.CenterX(this, item);
+        }
+
         public static readonly ValueSize Empty = new ValueSize(0, 0);
 
         public override String ToString()

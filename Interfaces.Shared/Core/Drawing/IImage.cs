@@ -19,6 +19,8 @@ namespace Das.Views.Core.Drawing
 
         T Unwrap<T>();
 
+        void UnwrapLocked<T>(Action<T> action);
+
         Task<TResult> UseImage<TImage, TParam, TResult>(
             TParam param1, Func<TImage, TParam, TResult> action);
     }

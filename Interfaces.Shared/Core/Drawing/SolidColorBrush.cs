@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 
 namespace Das.Views.Core.Drawing
 {
-    public class SolidColorBrush : IEquatable<SolidColorBrush>, IBrush
+    public class SolidColorBrush : IEquatable<SolidColorBrush>, 
+                                   IBrush
     {
         public SolidColorBrush(Color color)
         {
@@ -35,6 +36,10 @@ namespace Das.Views.Core.Drawing
         public virtual Boolean IsInvisible => Color.A == 0;
 
         public static SolidColorBrush LightGray => _lightGray.Value;
+
+        public static SolidColorBrush Purple => _purple.Value;
+
+        public static SolidColorBrush Pink => _pink.Value;
 
 
         public static SolidColorBrush Red => _red.Value;
@@ -75,5 +80,11 @@ namespace Das.Views.Core.Drawing
 
         private static readonly Lazy<SolidColorBrush> _red = new Lazy<SolidColorBrush>(()
             => new SolidColorBrush(Color.Red));
+
+        private static readonly Lazy<SolidColorBrush> _purple = new Lazy<SolidColorBrush>(()
+            => new SolidColorBrush(Color.Purple));
+
+        private static readonly Lazy<SolidColorBrush> _pink = new Lazy<SolidColorBrush>(()
+            => new SolidColorBrush(Color.Pink));
     }
 }

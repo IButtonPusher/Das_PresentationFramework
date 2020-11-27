@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
@@ -34,15 +35,32 @@ namespace Das.Views.Measuring
                                     IRenderSize availableSpace,
                                     IViewState viewState)
         {
+            //Debug.WriteLine("********** BEGIN MEASURE ***********");
+
             ViewState = viewState;
             _contextBounds = availableSpace;
-            return MeasureElement(element, availableSpace);
+            var res = MeasureElement(element, availableSpace);
+            //Debug.WriteLine("********** END MEASURE ***********");
+            return res;
         }
 
         public ValueSize MeasureElement(IVisualElement element,
                                         IRenderSize availableSpace)
         {
             _surrogateProvider.EnsureSurrogate(ref element);
+
+            if (!element.IsRequiresMeasure)
+            {
+                lock (_measureLock)
+                {
+                    if (_lastMeasurements.TryGetValue(element, out var val))
+                        return val;
+                }
+
+                return ValueSize.Empty;
+            }
+
+            //Debug.WriteLine("measuring " + element);
 
             var viewState = GetViewState;
             var zoom = viewState.ZoomLevel;

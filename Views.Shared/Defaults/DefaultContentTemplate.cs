@@ -1,5 +1,8 @@
 ﻿using System;
+using Das.Extensions;
+using Das.Views.Controls;
 using Das.Views.Core.Drawing;
+using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.DataBinding;
@@ -12,18 +15,32 @@ namespace Das.Views.Defaults
                                           IDataTemplate
                                           
     {
-        public DefaultContentTemplate(IVisualBootStrapper templateResolver,
-                                      IVisualElement? host) : base(templateResolver)
+        public DefaultContentTemplate(IVisualBootStrapper visualBootStrapper,
+                                      IVisualElement? host) : base(visualBootStrapper)
         {
-            _templateResolver = templateResolver;
+            _visualBootStrapper = visualBootStrapper;
             _bindable = host as IBindableElement;
+            _contentMeasured = ValueSize.Empty;
         }
 
         public Type? DataType => null;
 
-        public virtual IVisualElement BuildVisual(Object? dataContext) => throw new NotSupportedException();
+        public virtual IVisualElement? BuildVisual(Object? dataContext)
+        {
+            if (dataContext == null)
+                return default;
 
-        IVisualElement IDataTemplate.Template => GetTemplate() ?? this;
+            var txt = new Label<Object>(
+                new ObjectBinding<Object>(dataContext),
+                _visualBootStrapper);
+            txt.HorizontalAlignment = HorizontalAlignments.Center;
+            txt.VerticalAlignment = VerticalAlignments.Center;
+
+            return txt;
+
+        }
+
+        //IVisualElement IDataTemplate.Template => GetTemplate() ?? this;
 
         public override  ValueSize Measure(IRenderSize availableSpace, 
                                            IMeasureContext measureContext)
@@ -31,17 +48,31 @@ namespace Das.Views.Defaults
             var visual = GetTemplate();
 
             if (visual is { } validVisual)
-                return measureContext.MeasureElement(validVisual, availableSpace);
+                _contentMeasured = measureContext.MeasureElement(validVisual, availableSpace);
 
-            if (GetString() is {} validValue)
+            else if (GetString() is {} validValue)
             {
-                var font = measureContext.GetStyleSetter<IFont>(
-                    StyleSetter.Font, this);
-                return measureContext.MeasureString(validValue, font);
-            }
+                var forStyle = GetStylableElement();
 
-            return ValueSize.Empty;
+                var font = measureContext.GetStyleSetter<IFont>(
+                    StyleSetter.Font, forStyle);
+                var fontSize = measureContext.GetStyleSetter<Double>(
+                    StyleSetter.FontSize, forStyle);
+                if (!Double.IsNaN(fontSize) && fontSize.AreDifferent(font.Size))
+                    font = font.Resize(fontSize);
+
+                _contentMeasured = measureContext.MeasureString(validValue, font);
+            }
+            else _contentMeasured = ValueSize.Empty;
+
+            return _contentMeasured;
         }
+
+        private IVisualElement GetStylableElement()
+        {
+            return _bindable ?? this;
+        }
+
 
         private String? GetString()
         {
@@ -59,7 +90,7 @@ namespace Das.Views.Defaults
             return base.GetBoundValue(dataContext) ?? _bindable?.DataContext;
         }
 
-        private IVisualElement? GetTemplate()
+        protected virtual IVisualElement? GetTemplate()
         {
             if (_resolvedTemplate is { } valid)
                 return valid;
@@ -80,7 +111,7 @@ namespace Das.Views.Defaults
             if (bound == null)
                 return null;
 
-            return _resolvedTemplate = _templateResolver.TryResolve(bound);
+            return _resolvedTemplate = _visualBootStrapper.TryResolveFromContext(bound);
 
         }
 
@@ -94,12 +125,23 @@ namespace Das.Views.Defaults
 
             else if (GetString() is {} validValue)
             {
+                var forStyle = GetStylableElement();
+
                 var color = renderContext.GetStyleSetter<SolidColorBrush>(
                     StyleSetter.Foreground, this);
                 var font = renderContext.GetStyleSetter<IFont>(
-                    StyleSetter.Font, this);
-                renderContext.DrawString(validValue.ToString(), font, color,
-                    Point2D.Empty);
+                    StyleSetter.Font, forStyle);
+                var fontSize = renderContext.GetStyleSetter<Double>(
+                    StyleSetter.FontSize, forStyle);
+                if (!Double.IsNaN(fontSize) && fontSize.AreDifferent(font.Size))
+                    font = font.Resize(fontSize);
+
+                var x = availableSpace.CenterX(_contentMeasured);
+                var y = availableSpace.CenterY(_contentMeasured);
+                
+
+                renderContext.DrawString(validValue, font, color,
+                    new ValuePoint2D(x,y));
             }
         }
 
@@ -107,7 +149,8 @@ namespace Das.Views.Defaults
         private IVisualElement? _resolvedTemplate;
         private Boolean _hasTriedResolvingTemplate;
 
-        private readonly IVisualBootStrapper _templateResolver;
+        private readonly IVisualBootStrapper _visualBootStrapper;
         private readonly IBindableElement? _bindable;
+        private ValueSize _contentMeasured;
     }
 }

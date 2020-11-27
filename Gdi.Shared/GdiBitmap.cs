@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 using Das.Views;
@@ -11,6 +12,7 @@ namespace Gdi.Shared
     public class GdiBitmap: IImage
     {
         private readonly Image _bmp;
+        private Object _unwrapLock;
         private readonly Stream? _stream;
         private readonly Boolean _isEmpty;
 
@@ -20,6 +22,8 @@ namespace Gdi.Shared
                          Stream? stream)
         {
             //Debug.WriteLine("Create bmp " + (++_count));
+
+            _unwrapLock = new Object();
 
             _bmp = bmp;
             _stream = stream;
@@ -82,7 +86,14 @@ namespace Gdi.Shared
 
         Stream? IImage.ToStream()
         {
-            return _stream;
+            if (_stream != null)
+                return _stream;
+
+            var ms = new MemoryStream();
+            _bmp.Save(ms, ImageFormat.Png);
+            ms.Position = 0;
+            return ms;
+
             //var ms = new MemoryStream();
             //_bmp.Save(ms, ImageFormat.Png);
             //ms.Position = 0;
@@ -101,6 +112,29 @@ namespace Gdi.Shared
 
             throw new NotImplementedException();
         }
+
+        public void UnwrapLocked<T>(Action<T> action)
+        {
+            lock (_unwrapLock)
+            {
+                if (_bmp is T good)
+                    action(good);
+                else
+                    throw new NotImplementedException();
+                
+            }
+        }
+
+        public Double CenterY(ISize item)
+        {
+            return GeometryHelper.CenterY(this, item);
+        }
+
+        public Double CenterX(ISize item)
+        {
+            return GeometryHelper.CenterX(this, item);
+        }
+
 
         Task<TResult> IImage.UseImage<TImage, TParam, TResult>(TParam param1, 
                                                                Func<TImage, TParam, TResult> action)

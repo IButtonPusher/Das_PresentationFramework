@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 using Das.Views.Input;
@@ -14,17 +15,26 @@ namespace Das.Views.Panels
                                   IHandleInput<MouseWheelEventArgs>,
                                   IHandleInput<DragEventArgs>,
                                   IHandleInput<FlingEventArgs>,
-                                  IHandleInput<MouseDownEventArgs>
+                                  IHandleInput<MouseDownEventArgs>,
+                                  IHandleInput<MouseUpEventArgs>
     {
-        public ScrollPanel(IVisualBootStrapper templateResolver)
-        :  base(templateResolver)
+        public ScrollPanel(IVisualBootStrapper visualBootStrapper)
+        :  base(visualBootStrapper)
         {
-            //_flingLock = new Object();
             _lastAvailable = Size.Empty;
             _lastNeeded = Size.Empty;
 
             _flingHandler = new FlingHandler(() => IsScrollsHorizontal,
                 () => IsScrollsVertical, OnScroll);
+            _isClipsContent = true;
+        }
+
+        private Boolean _isClipsContent;
+
+        public override Boolean IsClipsContent
+        {
+            get => _isClipsContent;
+            set => _isClipsContent = value;
         }
 
         public virtual Boolean OnInput(DragEventArgs args)
@@ -33,9 +43,15 @@ namespace Das.Views.Panels
                 //todo: only use drag in a touch-only scenario?
                 return false;
 
-            OnScroll(0 - args.LastChange.Width, 0 - args.LastChange.Height);
+            OnScroll(args.LastChange.Width, 0 - args.LastChange.Height);
 
             return true;
+        }
+
+        public Boolean OnInput(MouseUpEventArgs args)
+        {
+            Debug.WriteLine("mouse up: " + args.Position);
+            return false;
         }
 
         /// <summary>
@@ -67,8 +83,10 @@ namespace Das.Views.Panels
         public Int32 HorizontalOffset
         {
             get => _horizontalOffset;
-            set => SetValue(ref _horizontalOffset, value);
+            set => SetValue(ref _horizontalOffset, value, OnOffsetChanged);
         }
+
+       
 
         public Boolean IsScrollsHorizontal => (ScrollMode & ScrollMode.Horizontal) == ScrollMode.Horizontal;
 
@@ -102,17 +120,32 @@ namespace Das.Views.Panels
                 return;
             }
 
+            _maximumXScroll = IsScrollsHorizontal
+                ? Math.Max(_lastNeeded.Width - availableSpace.Width, 0)
+                : 0;
+
+
             if (VerticalOffset > _maximumYScroll)
                 VerticalOffset = Convert.ToInt32(_maximumYScroll);
 
             if (HorizontalOffset > _maximumXScroll)
                 HorizontalOffset = Convert.ToInt32(_maximumXScroll);
 
-            var dest = new ValueRenderRectangle(HorizontalOffset, 0 - VerticalOffset,
-                availableSpace.Width, availableSpace.Height + VerticalOffset,
+            //if (HorizontalOffset != 0)
+            //{
+            //    Debug.WriteLine("Arrange with h-scroll: " + HorizontalOffset);
+            //}
+
+            var dest = new ValueRenderRectangle(
+                0, //HorizontalOffset, 
+                0,
+                availableSpace.Width + HorizontalOffset,
+                availableSpace.Height + VerticalOffset,
                 new ValuePoint2D(HorizontalOffset, VerticalOffset));
 
             renderContext.DrawElement(content, dest);
+
+            IsRequiresArrange = false;
 
             //Debug.WriteLine("Arranged scroll panel");
         }
@@ -121,6 +154,7 @@ namespace Das.Views.Panels
         public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
         {
+
             _lastAvailable = availableSpace;
 
             var h = IsScrollsVertical ? Double.PositiveInfinity : availableSpace.Height;
@@ -141,13 +175,15 @@ namespace Das.Views.Panels
                 ? Math.Max(_lastNeeded.Width - _lastAvailable.Width, 0)
                 : 0;
 
+            IsRequiresMeasure = false;
+
             return res;
         }
 
 
         private void OnOffsetChanged(Int32 val)
         {
-            IsChanged = true;
+            InvalidateMeasure();
         }
 
         protected virtual void OnScroll(Double x,
@@ -163,7 +199,7 @@ namespace Das.Views.Panels
             if (x != 0 && IsScrollsHorizontal)
                 HorizontalOffset = Convert.ToInt32(
                     Math.Min(
-                        Math.Max(HorizontalOffset + x, 0),
+                        Math.Max(HorizontalOffset - x, 0),
                         _maximumXScroll));
         }
 

@@ -11,12 +11,13 @@ namespace Das.Xamarin.Android
     public class AndroidBitmap : IImage
     {
         private readonly Bitmap _bmp;
+        private Object _unwrapLock;
         private readonly Boolean _isEmpty;
         //private static Int32 _count;
 
         public AndroidBitmap(Bitmap? bmp)
         {
-          //  Debug.WriteLine("Create bmp " + (++_count));
+            _unwrapLock = new Object();
 
             _bmp = bmp!;
             _isEmpty = bmp == null || 
@@ -100,6 +101,29 @@ namespace Das.Xamarin.Android
 
             throw new NotImplementedException();
         }
+
+        public void UnwrapLocked<T>(Action<T> action)
+        {
+            lock (_unwrapLock)
+            {
+                if (_bmp is T good)
+                    action(good);
+                else
+                    throw new NotImplementedException();
+                
+            }
+        }
+
+        public Double CenterY(ISize item)
+        {
+            return GeometryHelper.CenterY(this, item);
+        }
+
+        public Double CenterX(ISize item)
+        {
+            return GeometryHelper.CenterX(this, item);
+        }
+
 
         Task<TResult> IImage.UseImage<TImage, TParam, TResult>(TParam param1, 
                                                                Func<TImage, TParam, TResult> action)

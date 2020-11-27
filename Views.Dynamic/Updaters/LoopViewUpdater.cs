@@ -24,16 +24,20 @@ namespace Das.Views
 
         protected override Boolean IsChanged => _viewHost.IsChanged || _viewHost.StyleContext.IsChanged;
 
-        protected override void Update()
+        protected override Boolean Update()
         {
+            //Debug.WriteLine("ran loop update");
             var asset = _renderer.DoRender();
+            if (asset == null)
+                return false;
 
             _viewHost.Asset = asset;
             _viewHost.Invalidate();
 
-            _viewHost.AcceptChanges();
+            //_viewHost.AcceptChanges();
             _viewHost.StyleContext.AcceptChanges();
-            
+
+            return true;
         }
 
         private readonly IRenderer<TAsset> _renderer;
@@ -61,10 +65,12 @@ namespace Das.Views
             _renderer.Initialize();
         }
 
-        protected override void Update()
+        protected override Boolean Update()
         {
             _renderer.DoRender();
             _viewHost.AcceptChanges();
+
+            return true;
         }
 
         private readonly IRenderer _renderer;

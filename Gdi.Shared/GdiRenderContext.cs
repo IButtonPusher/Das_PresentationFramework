@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -24,8 +25,10 @@ namespace Das.Gdi
         public GdiRenderContext(IViewPerspective perspective,
                                 Graphics nullGraphics,
                                 IVisualSurrogateProvider surrogateProvider,
-                                IImageProvider imageProvider)
-            : base(perspective, surrogateProvider)
+                                IImageProvider imageProvider,
+                                Dictionary<IVisualElement, ValueSize> lastMeasures,
+                                Dictionary<IVisualElement, ValueCube> renderPositions)
+            : base(perspective, surrogateProvider, renderPositions, lastMeasures)
         {
             //windowProvider.WindowShown += OnWindowShown;
 
@@ -67,8 +70,11 @@ namespace Das.Gdi
                                                     TRectangle destination)
         {
             var dest = GetAbsoluteGdiRectangleF(destination);
-            var bmp = img.Unwrap<Bitmap>();
-            Graphics.DrawImage(bmp, dest);
+
+            img.UnwrapLocked<Bitmap>(b => Graphics.DrawImage(b, dest));
+
+            //var bmp = img.Unwrap<Bitmap>();
+            //Graphics.DrawImage(bmp, dest);
         }
 
         public override   void DrawImage<TRectangle1, TRectangle2>(IImage img,
@@ -80,8 +86,11 @@ namespace Das.Gdi
                 Convert.ToInt32(sourceRect.Y),
                 Convert.ToInt32(sourceRect.Width),
                 Convert.ToInt32(sourceRect.Height));
-            var bmp = img.Unwrap<Bitmap>();
-            Graphics.DrawImage(bmp, dest, src, GraphicsUnit.Pixel);
+
+            img.UnwrapLocked<Bitmap>(b => Graphics.DrawImage(b, dest, src, GraphicsUnit.Pixel));
+
+            //var bmp = img.Unwrap<Bitmap>();
+            //Graphics.DrawImage(bmp, dest, src, GraphicsUnit.Pixel);
         }
 
         public override IImage? GetImage(Stream stream)
@@ -92,7 +101,7 @@ namespace Das.Gdi
         public override IImage? GetImage(Stream stream, 
                                          Double maximumWidthPct)
         {
-            return _imageProvider.GetImage(stream, maximumWidthPct);
+            return _imageProvider.GetDeviceScaledImage(stream, maximumWidthPct);
 
             //if (!(_window is {} window))
             //    return GetImage(stream);
@@ -246,10 +255,45 @@ namespace Das.Gdi
             TextRenderer.DrawText(Graphics, s, useFont, loc, color);
         }
 
+        protected override void PushClip<TRectangle>(TRectangle rect)
+        {
+            _clipCounter++;
+            var useRect = TypeConverter.GetRect(rect);
+            Graphics.SetClip(useRect);
+        }
+
+        protected override void PopClip<TRectangle>(TRectangle rect)
+        {
+            _clipCounter--;
+
+            if (_clipCounter == 0)
+                Graphics.ResetClip();
+            else
+            {
+                var useRect = GetAbsoluteGdiRectangle(rect);
+                Graphics.ExcludeClip(useRect);
+            }
+        }
+
+        protected override IRectangle GetCurrentClip()
+        {
+            if (_clipCounter == 0)
+                return Das.Views.Core.Geometry.Rectangle.Empty;
+            var clip = Graphics.ClipBounds;
+            if (clip == null)
+                return Das.Views.Core.Geometry.Rectangle.Empty;
+            if (clip.Width == 0 && clip.Height == 0)
+                return Das.Views.Core.Geometry.Rectangle.Empty;
+
+            return new Das.Views.Core.Geometry.Rectangle(clip.Left, clip.Top, 
+                clip.Width, clip.Height);
+
+        }
+
         public override void DrawString<TFont, TBrush, TRectangle>(String s,
-                                                                  TFont font,
-                                                                  TRectangle location,
-                                                                  TBrush brush)
+                                                                   TFont font,
+                                                                   TRectangle location,
+                                                                   TBrush brush)
         {
             var rect = GetAbsoluteGdiRectangle(location);
             
@@ -309,6 +353,8 @@ namespace Das.Gdi
         }
 
         private readonly IPen _testPen;
+
+        private Int32 _clipCounter;
         //private IVisualHost? _window;
         //private IImage? _emptyImage;
     }

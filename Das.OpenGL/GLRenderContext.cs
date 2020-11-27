@@ -74,6 +74,21 @@ namespace Das.OpenGL
             GL.glColor3f(r, g, b);
         }
 
+        protected override void PushClip<TRectangle>(TRectangle rect)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void PopClip<TRectangle>(TRectangle rect)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override IRectangle GetCurrentClip()
+        {
+            throw new NotImplementedException();
+        }
+
         public override void DrawString<TFont, TBrush, TRectangle>(String s,
                                                                    TFont font,
                                                                    TRectangle location,

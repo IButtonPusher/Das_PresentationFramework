@@ -16,7 +16,7 @@ namespace Das.Views.Panels
         {
         }
 
-        protected override IEnumerable<IVisualElement> GetChildrenToRender()
+        protected override IList<IVisualElement> GetChildrenToRender()
         {
             return Children;
         }

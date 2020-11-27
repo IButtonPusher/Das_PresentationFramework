@@ -12,6 +12,7 @@ namespace Das.Xamarin.Android
 {
     public class AndroidFontPaint : TextPaint, IFontRenderer
     {
+        private readonly DisplayMetrics _displayMetrics;
         private readonly Boolean _isCacheStaticLayouts;
 
         public AndroidFontPaint(IFont font,
@@ -19,6 +20,7 @@ namespace Das.Xamarin.Android
                                 Boolean isCacheStaticLayouts)
             : base(PaintFlags.AntiAlias)
         {
+            _displayMetrics = displayMetrics;
             _isCacheStaticLayouts = isCacheStaticLayouts;
             _layoutCache = new Dictionary<String, StaticLayout>();
             Font = font;
@@ -34,15 +36,18 @@ namespace Das.Xamarin.Android
 
         public IFont Font { get; }
 
-
+        [Obsolete("dont forget to fix this!")]
         public void DrawString(String text, 
                                IBrush brush, 
                                IPoint2D point2D)
         {
-            SetColor(brush);
+            //SetColor(brush);
 
-            //GetCanvas().DrawText(text, (Single) point2D.X + 50, (Single) point2D.Y + 50, this);
-            GetCanvas().DrawText(text, (Single) point2D.X, (Single) point2D.Y, this);
+            var size = MeasureString(text);
+            var test = new ValueRectangle(point2D, size.Width, size.Height);
+            DrawString(text, brush, test);
+
+            //GetCanvas().DrawText(text, (Single) point2D.X, (Single) point2D.Y, this);
         }
 
         public void DrawString(String s, 

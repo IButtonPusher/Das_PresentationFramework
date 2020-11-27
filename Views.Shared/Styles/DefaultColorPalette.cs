@@ -6,7 +6,8 @@ namespace Das.Views.Styles
     public class DefaultColorPalette : ColorPalette
     {
         public DefaultColorPalette(
-            ) : base(Color.Green)
+            ) : base(Color.Green,
+            Color.White)
         {
         }
     }

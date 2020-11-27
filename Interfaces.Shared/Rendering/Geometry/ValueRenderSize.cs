@@ -17,6 +17,24 @@ namespace Das.Views.Core.Geometry
             Offset = offset;
         }
 
+        public ValueRenderSize(ISize size,
+                               IPoint2D offset,
+                               Thickness? padDown)
+        {
+            if (padDown == null || padDown.IsEmpty)
+            {
+                Height = size.Height;
+                Width = size.Width;
+            }
+            else
+            {
+                Height = size.Height - padDown.Height;
+                Width = size.Width - padDown.Width;
+            }
+
+            Offset = offset;
+        }
+
         public ValueRenderSize(Double width,
                                Double height)
             : this(width, height, Point2D.Empty)
@@ -94,6 +112,16 @@ namespace Das.Views.Core.Geometry
             return Minus(subtract);
         }
 
+        public Double CenterY(ISize item)
+        {
+            return GeometryHelper.CenterY(this, item);
+        }
+
+        public Double CenterX(ISize item)
+        {
+            return GeometryHelper.CenterX(this, item);
+        }
+
 
         public IPoint2D Offset { get; }
 
@@ -106,5 +134,7 @@ namespace Das.Views.Core.Geometry
         {
             return "Width: " + Width + " Height: " + Height;
         }
+
+        public static readonly ValueRenderSize Empty = new ValueRenderSize(0, 0);
     }
 }

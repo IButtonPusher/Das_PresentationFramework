@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Das.Views;
@@ -60,8 +61,14 @@ namespace Das.Gdi.Controls
             {
                 lock (_lockBmp)
                 {
-                    _backingBitmap?.Dispose();
-                    _backingBitmap = value;
+                    //Debug.WriteLine("updating hosted element bmp " + value?.Width + " " + 
+                    //                 (_backingBitmap != value));
+
+                    if (_backingBitmap != value)
+                    {
+                        _backingBitmap?.Dispose();
+                        _backingBitmap = value;
+                    }
                 }
 
                 Invalidate();

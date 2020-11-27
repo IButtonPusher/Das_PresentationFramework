@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.Threading;
 using System.Threading.Tasks;
+using Das.Extensions;
 using Das.Views;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
@@ -15,14 +18,17 @@ namespace Das.Gdi
                               GdiRenderContext renderContext,
                               Color backgroundColor)
         {
+            _eventLock = new Object();
+
             _lock = new Object();
             _viewHost = viewHost;
             _visualHost = viewHost;
             _measureContext = measureContext;
             _renderContext = renderContext;
             _gdiDevice = new GdiDevice(backgroundColor,
-                Convert.ToInt32(_viewHost.AvailableSize.Width),
-                Convert.ToInt32(_viewHost.AvailableSize.Height));
+                _viewHost.AvailableSize);
+                //Convert.ToInt32(_viewHost.AvailableSize.Width),
+                //Convert.ToInt32(_viewHost.AvailableSize.Height));
             _renderRect = new Rectangle(0, 0, 1, 1);
         }
 
@@ -48,13 +54,31 @@ namespace Das.Gdi
                     return null!;
                 }
 
+                if (_gdiDevice.UpdateSize(_visualHost.AvailableSize))
+                {
+                    view.InvalidateMeasure();
+                    return null!;
+                }
+
+                //if (!_gdiDevice.Width.AreEqualEnough(_visualHost.AvailableSize.Width) ||
+                //    !_gdiDevice.Height.AreEqualEnough(_visualHost.AvailableSize.Height))
+                //{
+                //    Debug.WriteLine("sizes didn't add up");
+                //    _gdiDevice.Width = Convert.ToInt32(_visualHost.AvailableSize.Width);
+                //    _gdiDevice.Height = Convert.ToInt32(_visualHost.AvailableSize.Height);
+                //    view.InvalidateMeasure();
+                //    return null!;
+                //}
+
                 var available = new ValueRenderSize(_visualHost.AvailableSize);
-                
-                
-                var desired = _measureContext.MeasureMainView(view, available, _viewHost);
-                _gdiDevice.Width = Convert.ToInt32(desired.Width);
-                _gdiDevice.Height = Convert.ToInt32(desired.Height);
-                _renderRect.Size = desired;
+
+                if (view.IsRequiresMeasure)
+                {
+                    var desired = _measureContext.MeasureMainView(view, available, _viewHost);
+                    //_gdiDevice.Width = Convert.ToInt32(desired.Width);
+                    //_gdiDevice.Height = Convert.ToInt32(desired.Height);
+                    _renderRect.Size = desired;
+                }
 
                 var bmp = _gdiDevice.Run(view, DoRender);
                 return bmp;
@@ -71,15 +95,47 @@ namespace Das.Gdi
                 available, _viewHost));
         }
 
-        public event EventHandler? Rendering;
+        private event EventHandler? _rendering;
 
-        private void DoRender(Graphics g, IVisualElement view)
+        private Int32 _eventCounter;
+
+        private readonly Object _eventLock;
+
+        public event EventHandler? Rendering
         {
-            _renderContext.Graphics = g;
-            //_renderContext.ViewState = _viewHost;
-            _renderContext.DrawMainElement(view, _renderRect, _viewHost);
+            add
+            {
+                lock (_eventLock)
+                {
+                    _rendering += value;
+                    Interlocked.Add(ref _eventCounter, 1);
+                }
+            }
+            remove
+            {
+                lock (_eventLock)
+                {
+                    Interlocked.Add(ref _eventCounter, -1);
+                    _rendering -= value;
+                }
 
-            Rendering?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        private void DoRender(Graphics g, 
+                              IVisualElement view)
+        {
+            if (view.IsRequiresArrange)
+            {
+                _renderContext.Graphics = g;
+                _renderContext.DrawMainElement(view, _renderRect, _viewHost);
+
+                lock (_eventLock)
+                {
+                    if (_eventCounter > 0)
+                        _rendering!.Invoke(this, EventArgs.Empty);
+                }
+            }
         }
 
         private readonly GdiDevice _gdiDevice;

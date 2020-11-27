@@ -27,10 +27,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\InstanceBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\ObjectBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\PropertyBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\SourceBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\TwoWayBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Defaults\DefaultContentTemplate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Defaults\DefaultTabHeaderPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Defaults\DefaultTabItemTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Defaults\DefaultTabHeaderTemplate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\DependencyProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\BaseInputHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ItemsControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\TabControl.cs" />
@@ -39,6 +42,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BaseContainerVisual{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BasePanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BaseContainerVisual.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\BasePanel2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\BaseSelectorVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BaseSequentialPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\ContentPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\ContentPanel{T}.cs" />

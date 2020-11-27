@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Rendering;
@@ -115,6 +116,58 @@ namespace Das.Views.Core.Geometry
         public static ValueSize ToValueSize(IRenderSize rect)
         {
             return new ValueSize(rect.Width, rect.Height);
+        }
+
+        public static ValueRectangle GetUnion<TRoundedRectangle>(TRoundedRectangle a,
+                                                                     IRoundedRectangle b)
+            where TRoundedRectangle : IRoundedRectangle
+        {
+
+            var x1 = Math.Min(a.X, b.X);
+            var x2 = Math.Max(a.X + a.Width, b.X + b.Width);
+            var y1 = Math.Min(a.Y, b.Y);
+            var y2 = Math.Max(a.Y + a.Height, b.Y + b.Height);
+            return new ValueRectangle(x1, y1, x2 - x1, y2 - y1);
+        }
+
+        public static ValueRectangle GetUnion<TRoundedRectangle>(TRoundedRectangle me,
+            IEnumerable<IRoundedRectangle> others)
+        where TRoundedRectangle : IRoundedRectangle
+        {
+            //var me = this as IRoundedRectangle;
+
+            var x1 = me.X;
+            var x2 = me.X + me.Width;
+            var y1 = me.Y;
+            var y2 = me.Y + me.Height;
+
+            foreach (var b in others)
+            {
+                x1 = Math.Min(x1, b.X);
+                x2 = Math.Max(x2, b.X + b.Width);
+                y1 = Math.Min(y1, b.Y);
+                y2 = Math.Max(y2, b.Y + b.Height);
+            }
+
+            return new ValueRectangle(x1, y1, x2 - x1, y2 - y1);
+        }
+
+        public static Double CenterX(ISize outer,
+                                     ISize inner)
+        {
+            if (inner.Width > outer.Width)
+                return 0;
+
+            return (outer.Width - inner.Width) / 2;
+        }
+
+        public static Double CenterY(ISize outer,
+                                     ISize inner)
+        {
+            if (inner.Height > outer.Height)
+                return 0;
+
+            return (outer.Height - inner.Height) / 2;
         }
     }
 }

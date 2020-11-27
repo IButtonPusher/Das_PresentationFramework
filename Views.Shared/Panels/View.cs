@@ -7,11 +7,11 @@ namespace Das.Views.Panels
     public class View<T> : ContentPanel<T>, 
                            IView<T>
     {
-        public View(IVisualBootStrapper templateResolver)
+        public View(IVisualBootStrapper visualBootStrapper)
 
-        : base(templateResolver)
+        : base(visualBootStrapper)
         {
-            StyleContext = templateResolver.StyleContext;
+            StyleContext = visualBootStrapper.StyleContext;
             _dataContext = default!;
         }
 

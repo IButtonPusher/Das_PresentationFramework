@@ -1,17 +1,37 @@
-﻿using Das.Views.Rendering;
-using System;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
+using Das.Views.Rendering;
 using Das.Views.Styles;
 
 namespace Das.Views
 {
-    public class HorizontalRule : VisualElement
+    public sealed class HorizontalRule : VisualElement
 
     {
-        public override ValueSize Measure(IRenderSize availableSpace, 
+        public HorizontalRule(IVisualBootStrapper visualBootStrapper) 
+            : base(visualBootStrapper)
+        {
+           InvalidateMeasure();
+        }
+
+        public override void Arrange(IRenderSize availableSpace,
+                                     IRenderContext renderContext)
+        {
+            //Debug.WriteLine("arrange hrule");
+
+            var bg = renderContext.GetStyleSetter<SolidColorBrush>(StyleSetter.Background, this);
+
+            renderContext.FillRectangle(availableSpace.ToFullRectangle(), bg);
+        }
+
+        public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
         {
+            //Debug.WriteLine("measure hrule");
+
             if (!(measureContext.ViewState is { } viewState))
                 return new ValueSize(availableSpace.Width, 1);
 
@@ -27,18 +47,6 @@ namespace Das.Views
             specificWidth = Double.IsNaN(specificWidth) ? availableSpace.Width : specificWidth;
 
             return new ValueSize(specificWidth, specificHeight);
-        }
-
-        public override void Arrange(IRenderSize availableSpace, 
-                                     IRenderContext renderContext)
-        {
-            var bg = renderContext.GetStyleSetter<SolidColorBrush>(StyleSetter.Background, this);
-
-            renderContext.FillRectangle(availableSpace.ToFullRectangle(), bg);
-        }
-
-        public HorizontalRule(IVisualBootStrapper templateResolver) : base(templateResolver)
-        {
         }
     }
 }

@@ -34,7 +34,8 @@ namespace Das.Gdi.Kits
 
             MeasureContext = new GdiMeasureContext(this, lastMeasure);
             RenderContext = new GdiRenderContext(viewPerspective, 
-                MeasureContext.Graphics, this, _imageProvider);
+                MeasureContext.Graphics, this, _imageProvider, lastMeasure,
+                new Dictionary<IVisualElement, ValueCube>());
 
             Container.ResolveTo<IImageProvider>(_imageProvider);
             Container.ResolveTo<IUiProvider>(new GdiUiProvider(windowProvider));

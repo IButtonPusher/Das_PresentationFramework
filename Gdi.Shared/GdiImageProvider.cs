@@ -17,7 +17,7 @@ namespace Gdi.Shared
             return new GdiBitmap(img, stream);
         }
 
-        public IImage? GetImage(Stream stream, 
+        public IImage? GetDeviceScaledImage(Stream stream, 
                                 Double maximumWidthPct)
         {
             if (!(_window is {} window))
@@ -30,7 +30,7 @@ namespace Gdi.Shared
             var ratio = bmp.Width / maximumWidth;
 
             if (ratio <= maximumWidthPct)
-                return new GdiBitmap(bmp, stream);
+                return new GdiBitmap(bmp, stream is MemoryStream ? stream : null);
 
             var scaleRatio = maximumWidth / bmp.Width; //maximumWidthPct * maximumWidth;
 
@@ -41,6 +41,16 @@ namespace Gdi.Shared
                     Convert.ToInt32(bmp.Height * scaleRatio));
                 return new GdiBitmap(scaledBmp, null);
             }
+        }
+
+        public IImage GetScaledImage(IImage input, 
+                                     Double width, 
+                                     Double height)
+        {
+            var bmp = input.Unwrap<Bitmap>();
+            bmp = new Bitmap(bmp, Convert.ToInt32(width),
+                Convert.ToInt32(height));
+            return new GdiBitmap(bmp, null);
         }
 
         public IImage? GetImage(Byte[] bytes)
@@ -59,6 +69,8 @@ namespace Gdi.Shared
         {
             return _emptyImage ??= new GdiBitmap(new Bitmap(1, 1), null);
         }
+
+        public Double DeviceEffectiveDpi => 1.0;
 
         public void SetVisualHost(IVisualHost visualHost)
         {

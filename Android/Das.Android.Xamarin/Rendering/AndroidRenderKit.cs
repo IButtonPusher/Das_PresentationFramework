@@ -25,12 +25,13 @@ namespace Das.Xamarin.Android
                                 AndroidUiProvider uiProvider,
                                 IStyleContext styleContext,
                                 DisplayMetrics displayMetrics)
-        : base(styleContext)
+            : base(styleContext)
         {
+            DisplayMetrics = displayMetrics;
             var lastMeasures = new Dictionary<IVisualElement, ValueSize>();
             MeasureContext = new AndroidMeasureKit(windowManager, fontProvider, this, lastMeasures);
 
-            var visualPositions = new Dictionary<IVisualElement, ICube>();
+            var visualPositions = new Dictionary<IVisualElement, ValueCube>();
 
             var imageProvider = new AndroidImageProvider(displayMetrics);
 
@@ -43,12 +44,13 @@ namespace Das.Xamarin.Android
             Container.ResolveTo<IImageProvider>(imageProvider);
             Container.ResolveTo<IUiProvider>(uiProvider);
             Container.ResolveTo(styleContext);
-            
         }
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;
 
         IRenderContext IRenderKit.RenderContext => RenderContext;
+
+        public DisplayMetrics DisplayMetrics { get; }
 
         public AndroidMeasureKit MeasureContext { get; }
 

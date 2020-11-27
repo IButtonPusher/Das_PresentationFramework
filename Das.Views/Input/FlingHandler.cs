@@ -30,7 +30,7 @@ namespace Das.Views.Input
             lock (_flingLock)
             {
                 if (_canFlingHorizontal() && args.VelocityX != 0)
-                    _velocityX = args.VelocityX;
+                    _velocityX = 0 - args.VelocityX;
 
                 if (_canFlingVertical() && args.VelocityY != 0)
                     _velocityY = args.VelocityY;

@@ -7,10 +7,12 @@ namespace Das.Views.Input
     public readonly struct MouseUpEventArgs : IMouseButtonEventArgs<MouseUpEventArgs>
     {
         public MouseUpEventArgs(IPoint2D position,
+                                IPoint2D? positionWentDown,
                                 MouseButtons button,
                                 IInputContext inputContext)
         {
             Position = position;
+            PositionWentDown = positionWentDown;
             Button = button;
             InputContext = inputContext;
 
@@ -31,11 +33,14 @@ namespace Das.Views.Input
 
         public IPoint2D Position { get; }
 
+        public IPoint2D? PositionWentDown { get; }
+
         public MouseButtons Button { get; }
 
         public MouseUpEventArgs Offset(IPoint2D position)
         {
             return new MouseUpEventArgs(Position.Offset(position),
+                PositionWentDown?.Offset(position),
                 Button, InputContext);
         }
 

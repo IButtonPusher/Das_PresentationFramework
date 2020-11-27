@@ -10,5 +10,7 @@ namespace Das.Views.Core.Writing
         FontStyle FontStyle { get; }
 
         Double Size { get; }
+
+        IFont Resize(Double newSize);
     }
 }
