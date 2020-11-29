@@ -8,14 +8,14 @@ namespace Das.Views.Panels
 {
     public class StackPanel<T> : BaseSequentialPanel<T>
     {
-        public StackPanel(IVisualBootStrapper templateResolver)
+        public StackPanel(IVisualBootstrapper templateResolver)
         : base(templateResolver)
         {
         }
 
         public StackPanel(IDataBinding<T> binding,
-                          IVisualBootStrapper visualBootStrapper) 
-            : base(binding, visualBootStrapper)
+                          IVisualBootstrapper visualBootstrapper) 
+            : base(binding, visualBootstrapper)
         {
         }
 
@@ -28,6 +28,8 @@ namespace Das.Views.Panels
 
         public override void Dispose()
         {
+            base.Dispose();
+
             foreach (var child in Children)
                 child.Dispose();
         }

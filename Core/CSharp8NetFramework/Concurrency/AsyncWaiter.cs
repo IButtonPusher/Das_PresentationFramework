@@ -3,6 +3,42 @@ using System.Threading.Tasks;
 
 namespace System.Threading
 {
+    public class AsyncWaiter<TParam1, TParam2, TParam3, TParam4, TResult> : AsyncWaiter<TResult>
+    {
+        public AsyncWaiter(TParam1 p1, 
+                           TParam2 p2,
+                           TParam3 p3,
+                           TParam4 p4,
+                           Func<TParam1, TParam2, TParam3, TParam4, TResult> action, 
+                           WorkerTypes workerType)
+            : base(workerType)
+        {
+            _p1 = p1;
+            _p2 = p2;
+            _p3 = p3;
+            _p4 = p4;
+            _action = action;
+        }
+
+        public override void Execute()
+        {
+            var res = _action(_p1, _p2, _p3, _p4);
+            _completion.TrySetResult(res);
+
+        }
+
+        public static implicit operator Task<TResult>(AsyncWaiter<TParam1, TParam2, TParam3, TParam4, TResult> worker)
+        {
+            return worker._completion.Task;
+        }
+
+        private readonly Func<TParam1, TParam2, TParam3, TParam4, TResult> _action;
+        private readonly TParam1 _p1;
+        private readonly TParam2 _p2;
+        private readonly TParam3 _p3;
+        private readonly TParam4 _p4;
+    }
+
     public class AsyncWaiter<TParam1, TParam2, TParam3, TResult> : AsyncWaiter<TResult>
     {
         public AsyncWaiter(TParam1 p1, 
@@ -62,36 +98,8 @@ namespace System.Threading
         private readonly TParam2 _p2;
     }
 
-    public class AsyncAwaiter<TParam, TResult> : AsyncWaiter<TResult>
-    {
-        public AsyncAwaiter(TParam p1, Func<TParam, Task<TResult>> action, WorkerTypes workerType)
-            : base(workerType)
-        {
-            _p1 = p1;
-            _action = action;
-        }
 
-        public override async void Execute()
-        {
-            try
-            {
-                var res = await _action(_p1);
-                _completion.TrySetResult(res);
-            }
-            catch (Exception ex)
-            {
-                _completion.SetException(ex);
-            }
-        }
-
-        public static implicit operator Task<TResult>(AsyncAwaiter<TParam, TResult> worker)
-        {
-            return worker._completion.Task;
-        }
-
-        private readonly Func<TParam, Task<TResult>> _action;
-        private readonly TParam _p1;
-    }
+   
 
     public class AsyncWaiter<TParam, TResult> : AsyncWaiter<TResult>
     {
@@ -121,7 +129,8 @@ namespace System.Threading
     {
         public AsyncActionWaiter(TParam1 p1, 
                                  TParam2 p2,
-                                 Action<TParam1, TParam2> action, WorkerTypes workerType)
+                                 Action<TParam1, TParam2> action, 
+                                 WorkerTypes workerType)
             : base(workerType)
         {
             _p1 = p1;
@@ -152,6 +161,48 @@ namespace System.Threading
         private readonly Action<TParam1, TParam2> _action;
         private readonly TParam1 _p1;
         private readonly TParam2 _p2;
+        protected readonly TaskCompletionSource<Boolean> _completion;
+    }
+
+    public class AsyncActionWaiter<TParam1, TParam2, TParam3> : AsyncWaiter
+    {
+        public AsyncActionWaiter(TParam1 p1, 
+                                 TParam2 p2,
+                                 TParam3 p3,
+                                 Action<TParam1, TParam2, TParam3> action, 
+                                 WorkerTypes workerType)
+            : base(workerType)
+        {
+            _p1 = p1;
+            _p2 = p2;
+            _p3 = p3;
+            _action = action;
+            _completion = new TaskCompletionSource<Boolean>();
+        }
+
+        public override void Execute()
+        {
+            _action(_p1, _p2, _p3);
+            _completion.TrySetResult(true);
+        }
+
+        public override TaskStatus Status => _completion.Task?.Status ?? TaskStatus.Canceled;
+
+        public override void Cancel()
+        {
+            _completion.TrySetResult(false);
+        }
+
+
+        public static implicit operator Task(AsyncActionWaiter<TParam1, TParam2, TParam3> worker)
+        {
+            return worker._completion.Task;
+        }
+
+        private readonly Action<TParam1, TParam2, TParam3> _action;
+        private readonly TParam1 _p1;
+        private readonly TParam2 _p2;
+        private readonly TParam3 _p3;
         protected readonly TaskCompletionSource<Boolean> _completion;
     }
 

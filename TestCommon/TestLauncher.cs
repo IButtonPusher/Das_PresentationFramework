@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using Das.Serializer;
 using Das.Views;
 using Das.Views.Extended;
 using Das.Views.Panels;
@@ -11,12 +12,20 @@ namespace TestCommon
     {
         public IBootStrapper BootStrapper { get; }
 
+        public IRenderKit RenderKit { get; }
+
+        public ITypeInferrer TypeInferrer { get; }
+
         private readonly IViewProvider _viewProvider;
 
         public TestLauncher(IBootStrapper bootStrapper,
-                            IViewProvider viewProvider)
+                            IViewProvider viewProvider,
+                                IRenderKit renderKit, 
+                            ITypeInferrer typeInferrer)
         {
             BootStrapper = bootStrapper;
+            RenderKit = renderKit;
+            TypeInferrer = typeInferrer;
             _viewProvider = viewProvider;
         }
 

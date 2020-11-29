@@ -135,6 +135,10 @@ namespace Gdi.Shared
             return GeometryHelper.CenterX(this, item);
         }
 
+        ISize ISize.Divide(Double pct)
+        {
+            return new ValueSize(_bmp.Width * pct, _bmp.Height * pct);
+        }
 
         Task<TResult> IImage.UseImage<TImage, TParam, TResult>(TParam param1, 
                                                                Func<TImage, TParam, TResult> action)

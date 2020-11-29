@@ -23,10 +23,12 @@ namespace Das.Views.Rendering
     {
        
         protected BaseRenderContext(IViewPerspective perspective,
-                                    IVisualSurrogateProvider surrogateProvider)
+                                    IVisualSurrogateProvider surrogateProvider,
+                                    IStyleContext styleContext)
         : this(perspective, surrogateProvider, 
             new Dictionary<IVisualElement, ValueCube>(),
-            new Dictionary<IVisualElement, ValueSize>())
+            new Dictionary<IVisualElement, ValueSize>(),
+            styleContext)
         {
            
         }
@@ -34,16 +36,18 @@ namespace Das.Views.Rendering
         protected BaseRenderContext(IViewPerspective perspective,
                                     IVisualSurrogateProvider surrogateProvider,
                                     Dictionary<IVisualElement, ValueCube> renderPositions,
-                                    Dictionary<IVisualElement, ValueSize> lastMeasurements)
-        : base(lastMeasurements)
+                                    Dictionary<IVisualElement, ValueSize> lastMeasurements,
+                                    IStyleContext styleContext)
+        : base(lastMeasurements, styleContext)
         {
-            _fairyRect = new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
+            
 
             RenderPositions = renderPositions;
             LastRenderPositions = new Dictionary<IVisualElement, ValueCube>();
 
             _surrogateProvider = surrogateProvider;
             _lastMeasurements = lastMeasurements;
+            _styleContext = styleContext;
             _renderLock = new Object();
             Perspective = perspective;
             CurrentElementRect = new RenderRectangle();
@@ -97,9 +101,10 @@ namespace Das.Views.Rendering
         }
 
         public IEnumerable<IRenderedVisual<IHandleInput<T>>> GetRenderedVisualsForMouseInput<T, TPoint>(
-            TPoint point2D, InputAction inputAction)
+            TPoint point2D,
+            InputAction inputAction)
             where T : IInputEventArgs
-            where TPoint : IPoint2D        
+            where TPoint : IPoint2D
         {
             foreach (var visual in GetElementsAt<IHandleInput<T>>(point2D))
                 if (visual.Element is IInteractiveView interactive &&
@@ -193,6 +198,8 @@ namespace Das.Views.Rendering
             if (!_lastMeasurements.TryGetValue(element, out var size))
                 return;
 
+            _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
+
             _fairyRect.X = location.X;
             _fairyRect.Y = location.Y;
             _fairyRect.Width = size.Width;
@@ -272,7 +279,7 @@ namespace Das.Views.Rendering
         //    //however, if the margin is 10,,, 
         //    //=> useRect = { x: 422, y: 294, w: 200, h: 200}
 
-        //    System.Diagnostics.Debug.WriteLine(_tabs +  "Draw: " + element + " to " + x + "," + y +
+        //System.Diagnostics.Debug.WriteLine(_tabs +  "Draw: " + element + " to " + x + "," + y +
         //                                       size + " - " + 
         //                                       " using: " + GetAbsoluteRect(useRect));
 
@@ -377,6 +384,8 @@ namespace Das.Views.Rendering
                                                  TSize size) 
             where TSize : ISize
         {
+            _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
+
             _fairyRect.X = 0;
             _fairyRect.Y = 0;
             _fairyRect.Width = size.Width;
@@ -391,19 +400,9 @@ namespace Das.Views.Rendering
                                                         TRenderRectangle rect)
             where TRenderRectangle : IRenderRectangle
         {
-            //return DrawElementImpl(element, rect.Size, rect.X, rect.Y, rect.Offset);
+            _styleContext.PushVisual(element);
 
-             _surrogateProvider.EnsureSurrogate(ref element);
-
-             //if (!element.IsRequiresArrange)
-             //{
-             //    if (RenderPositions.TryGetValue(element, out var pos))
-             //        return new Rectangle(pos, Thickness.Empty);
-
-             //    return Rectangle.Empty;
-             //}
-
-             //Debug.WriteLine("drawing " + element);
+            _surrogateProvider.EnsureSurrogate(ref element);
 
             var selector = element is IInteractiveView interactive
                 ? interactive.CurrentStyleSelector
@@ -412,20 +411,31 @@ namespace Das.Views.Rendering
             var border = GetStyleSetter<Thickness>(StyleSetter.BorderThickness, 
                 selector, element);
 
+            var margin = GetStyleSetter<Thickness>(StyleSetter.Margin, element);
+                         //* Perspective.ZoomLevel;
+
             //zb rect = 0,0,1024,768, CurrentLocation = 0,0
             //suppose element measured at 200x200 and is center,center aligned
-            var useRect = GetTargetRect(rect.X, rect.Y, rect.Size.Width, rect.Size.Height, rect.Offset,
-                element, border);
+
+            _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
+
+            _fairyRect.Update(rect,
+                CurrentElementRect.Offset, margin, border);
+
+            var useRect = _fairyRect;
+
+
+            useRect.Update(rect, CurrentElementRect.Offset, margin, border);
+
+            //SetTargetRect(ref useRect, rect.X, rect.Y, rect.Width, rect.Height,
+            //    rect.Offset, element, border);
+
+            //var useRect = GetTargetRect(rect.X, rect.Y, rect.Size.Width, rect.Size.Height, rect.Offset,
+            //    element, border);
             //=> useRect = {x: 412, y: 284, w: 200, h:200}
 
             //however, if the margin is 10,,, 
             //=> useRect = { x: 422, y: 294, w: 200, h: 200}
-
-            //System.Diagnostics.Debug.WriteLine(_tabs +  "Draw: " + element + " to " + rect.X + "," + rect.Y +
-            //                                   rect.Size + " - " + 
-            //                                   " using: " + GetAbsoluteRect(useRect));
-
-            _tabs += "\t";
 
             var radius = GetStyleSetter<Double>(StyleSetter.BorderRadius, selector, element);
 
@@ -447,19 +457,11 @@ namespace Das.Views.Rendering
             }
 
             useRect += CurrentLocation;
-            
 
             PushRect(useRect);
 
-           
-
             lock (_renderLock)
             {
-                //if (!RenderPositions.ContainsKey(element))
-                //{
-                //    element.Disposed += OnElementDisposed;
-                //}
-
                 var currentClip = GetCurrentClip();
                 
                 if (currentClip.IsEmpty)
@@ -486,13 +488,30 @@ namespace Das.Views.Rendering
                     var width = useRect.Width - (leftOverlap + rightOverlap);
                     var height = useRect.Height - (topOverlap + bottomOverlap);
 
+                   
+
                     RenderPositions[element] = new ValueCube(left, top, width, height,
                         _currentZ);
                 }
             }
 
+            System.Diagnostics.Debug.WriteLine(_tabs + element.GetType().Name + "\t\ttarget rect: (" + rect.X + "," + 
+                                               rect.Y +
+                                               ") [" + rect.Width.ToString("0.0") + "," + rect.Height.ToString("0.0") + "] - \t\t" +
+                                               " effective: " + useRect + " inherited: " + CurrentLocation + 
+                                               " recorded: " + RenderPositions[element]);
+
+            _tabs += "\t";
+
             if (element.IsClipsContent && !useRect.IsEmpty)
-                PushClip(useRect);
+            {
+                if (ZoomLevel.AreDifferent(1.0))
+                {
+                    PushClip(useRect * ZoomLevel);
+                }
+                else
+                    PushClip(useRect);
+            }
 
             //var drawn = OnDrawElement(element, useRect);
 
@@ -511,6 +530,8 @@ namespace Das.Views.Rendering
             PopRect();
             if (element.IsClipsContent && !useRect.IsEmpty)
                 PopClip(useRect);
+
+            _styleContext.PopVisual();
 
             element.AcceptChanges(ChangeType.Arrange);
 
@@ -572,13 +593,36 @@ namespace Das.Views.Rendering
 
         protected virtual IPoint2D GetAbsolutePoint(IPoint2D relativePoint2D)
         {
+            if (ZoomLevel.AreDifferent(1.0))
+                return new ValuePoint2D(
+                    (CurrentLocation.X + relativePoint2D.X) * ZoomLevel,
+                    (CurrentLocation.Y + relativePoint2D.Y) * ZoomLevel);
+
             return CurrentLocation + relativePoint2D;
         }
 
-        protected virtual Rectangle GetAbsoluteRect<TRectangle>(TRectangle relativeRect)
+        protected virtual IPoint2D GetAbsolutePointNoZoom(IPoint2D relativePoint2D)
+        {
+            if (ZoomLevel.AreDifferent(1.0))
+                return new ValuePoint2D(
+                    (CurrentLocation.X + relativePoint2D.X),
+                    (CurrentLocation.Y + relativePoint2D.Y));
+
+            return CurrentLocation + relativePoint2D;
+        }
+
+        protected virtual ValueRectangle GetAbsoluteRect<TRectangle>(TRectangle relativeRect)
             where TRectangle : IRectangle
         {
-            return new Rectangle(relativeRect.TopLeft + CurrentLocation, relativeRect.Size);
+            if (ZoomLevel.AreDifferent(1.0))
+                return new ValueRectangle(
+                    (relativeRect.X + CurrentLocation.X) * ZoomLevel,
+                    (relativeRect.Y + CurrentLocation.Y) * ZoomLevel,
+                    relativeRect.Width * ZoomLevel,
+                    relativeRect.Height * ZoomLevel);
+
+                return new ValueRectangle(relativeRect.TopLeft + CurrentLocation, 
+                    relativeRect.Size);
         }
 
         protected virtual ValueIntRectangle GetAbsoluteIntRect<TRectangle>(TRectangle relativeRect)
@@ -609,108 +653,108 @@ namespace Das.Views.Rendering
             }
         }
 
-        private RenderRectangle GetTargetRect<TPoint>( //IRenderRectangle desiredRect,
-            Double left,
-            Double top,
-            Double width,
-            Double height,
-            TPoint offset,
-            IVisualElement element,
-            Thickness border)
-            where TPoint : IPoint2D
-        {
-            var margin = GetStyleSetter<Thickness>(StyleSetter.Margin, element)
-                         * Perspective.ZoomLevel;
+        //private RenderRectangle GetTargetRect<TPoint>(Double left,
+        //                                              Double top,
+        //                                              Double width,
+        //                                              Double height,
+        //                                              TPoint offset,
+        //                                              IVisualElement element,
+        //                                              Thickness border)
+        //    where TPoint : IPoint2D
+        //{
+        //    var margin = GetStyleSetter<Thickness>(StyleSetter.Margin, element);
+        //                 //* Perspective.ZoomLevel;
 
-            var xOffset = CurrentElementRect.Offset.X;// + desiredRect.Offset.X;
-            var yOffset = CurrentElementRect.Offset.Y;// + desiredRect.Offset.Y;
-
-            //if (desiredRect.Offset.Y != 0 && CurrentElementRect.Offset.Y == 0)
-            //{}
-
-            //else if (xOffset != 0)
-            //{
-            //    Debug.WriteLine("element: " + element + " will draw with x-offset: " + xOffset);
-            //}
-
-            //var bldr = new RenderRectangle(desiredRect, margin, desiredRect.Offset);
-            //var bldr = new RenderRectangle(
-            //    desiredRect.Left + margin.Left - xOffset, // X
-            //    desiredRect.Top + margin.Top - yOffset, // Y
-            //    desiredRect.Width - margin.Width,
-            //    desiredRect.Height - margin.Height, 
-            //    desiredRect.Offset);
-            
-
-            var bldr = new RenderRectangle(
-                left + margin.Left - xOffset, // X
-                top + margin.Top - yOffset, // Y
-                width - margin.Width,
-                height - margin.Height, 
-                offset);
+        //    var xOffset = CurrentElementRect.Offset.X;// + desiredRect.Offset.X;
+        //    var yOffset = CurrentElementRect.Offset.Y;// + desiredRect.Offset.Y;
 
 
-            if (!border.IsEmpty)
-            {
-                bldr.Left += border.Left;
-                bldr.Top += border.Top;
-                bldr.Width -= border.Width;
-                bldr.Height -= border.Height;
-            }
-
-            return bldr;
-
-            //var valign = GetStyleSetter<VerticalAlignments>(
-            //    StyleSetter.VerticalAlignment, element);
-            //var halign = GetStyleSetter<HorizontalAlignments>(
-            //    StyleSetter.HorizontalAlignment, element);
-
-            //if (valign == VerticalAlignments.Top && halign == HorizontalAlignments.Left)
-            //    return bldr;
+        //    var bldr = new RenderRectangle(
+        //        left + margin.Left - xOffset, // X
+        //        top + margin.Top - yOffset, // Y
+        //        width - margin.Width,
+        //        height - margin.Height, 
+        //        offset);
 
 
-            //var xGap = desiredRect.Left - bldr.Left;
-            ////var yGap = desiredRect.Top - bldr.Top;
-            //Double yAdd;
-            //Double xAdd;
+        //    if (!border.IsEmpty)
+        //    {
+        //        bldr.Left += border.Left;
+        //        bldr.Top += border.Top;
+        //        bldr.Width -= border.Width;
+        //        bldr.Height -= border.Height;
+        //    }
 
-            //switch (valign)
-            //{
-            //    case VerticalAlignments.Top:
-            //    case VerticalAlignments.Stretch:
-            //        yAdd = 0;
-            //        break;
+        //    return bldr;
 
-            //    case VerticalAlignments.Bottom:
-            //        yAdd = desiredRect.Height - bldr.Height;
-            //        break;
+        //    //var valign = GetStyleSetter<VerticalAlignments>(
+        //    //    StyleSetter.VerticalAlignment, element);
+        //    //var halign = GetStyleSetter<HorizontalAlignments>(
+        //    //    StyleSetter.HorizontalAlignment, element);
 
-            //    case VerticalAlignments.Center:
-            //        yAdd = (desiredRect.Height - bldr.Height) / 2;
-            //        break;
-            //    default:
-            //        throw new NotImplementedException();
-            //}
+        //    //if (valign == VerticalAlignments.Top && halign == HorizontalAlignments.Left)
+        //    //    return bldr;
 
-            //switch (halign)
-            //{
-            //    case HorizontalAlignments.Left:
-            //    case HorizontalAlignments.Stretch:
-            //        xAdd = 0;
-            //        break;
 
-            //    case HorizontalAlignments.Right:
-            //        yAdd = desiredRect.Height - bldr.Height;
-            //        break;
+        //    //var xGap = desiredRect.Left - bldr.Left;
+        //    ////var yGap = desiredRect.Top - bldr.Top;
+        //    //Double yAdd;
+        //    //Double xAdd;
 
-            //    case VerticalAlignments.Center:
-            //        yAdd = (desiredRect.Height - bldr.Height) / 2;
-            //        break;
-            //    default:
-            //        throw new NotImplementedException();
-            //}
+        //    //switch (valign)
+        //    //{
+        //    //    case VerticalAlignments.Top:
+        //    //    case VerticalAlignments.Stretch:
+        //    //        yAdd = 0;
+        //    //        break;
 
-        }
+        //    //    case VerticalAlignments.Bottom:
+        //    //        yAdd = desiredRect.Height - bldr.Height;
+        //    //        break;
+
+        //    //    case VerticalAlignments.Center:
+        //    //        yAdd = (desiredRect.Height - bldr.Height) / 2;
+        //    //        break;
+        //    //    default:
+        //    //        throw new NotImplementedException();
+        //    //}
+
+        //    //switch (halign)
+        //    //{
+        //    //    case HorizontalAlignments.Left:
+        //    //    case HorizontalAlignments.Stretch:
+        //    //        xAdd = 0;
+        //    //        break;
+
+        //    //    case HorizontalAlignments.Right:
+        //    //        yAdd = desiredRect.Height - bldr.Height;
+        //    //        break;
+
+        //    //    case VerticalAlignments.Center:
+        //    //        yAdd = (desiredRect.Height - bldr.Height) / 2;
+        //    //        break;
+        //    //    default:
+        //    //        throw new NotImplementedException();
+        //    //}
+
+        //}
+
+        // private void SetTargetRect<TPoint>(ref RenderRectangle bldr,
+        //                                    Double left,
+        //                                              Double top,
+        //                                              Double width,
+        //                                              Double height,
+        //                                              TPoint offset,
+        //                                              IVisualElement element,
+        //                                              Thickness border)
+        //    where TPoint : IPoint2D
+        //{
+        //    var margin = GetStyleSetter<Thickness>(StyleSetter.Margin, element)
+        //                 * Perspective.ZoomLevel;
+
+
+        //    bldr.Update(left, top, width, height, CurrentElementRect.Offset, offset, margin, border);
+        //}
 
 
         /// <summary>
@@ -842,19 +886,6 @@ namespace Das.Views.Rendering
             FillRectangle(bottomRect, brush);
         }
 
-        //protected virtual Rectangle OnDrawElement(IVisualElement element,
-        //                                          // ReSharper disable once UnusedParameter.Global
-        //                                          IRectangle rect)
-        //{
-        //    if (rect.Bottom > 0 || rect.Right > 0)
-        //    {
-        //        // don't draw it if it's completely off screen
-        //        element.Arrange(CurrentElementRect, this);
-        //    }
-
-        //    return CurrentElementRect;
-        //}
-
         private void PopRect()
         {
             _currentZ--;
@@ -867,16 +898,21 @@ namespace Das.Views.Rendering
             _currentZ++;
             _locations.Push(rect);
             CurrentElementRect = rect;
+            if (CurrentElementRect.X < 0)
+            {}
         }
 
         private readonly Stack<RenderRectangle> _locations;
 
         private readonly IVisualSurrogateProvider _surrogateProvider;
         private readonly Dictionary<IVisualElement, ValueSize> _lastMeasurements;
+        private readonly IStyleContext _styleContext;
         private readonly Object _renderLock;
         private Int32 _currentZ;
         protected RenderRectangle CurrentElementRect;
         private String _tabs = String.Empty;
-        private readonly RenderRectangle _fairyRect;
+
+        [ThreadStatic]
+        private static RenderRectangle? _fairyRect;
     }
 }

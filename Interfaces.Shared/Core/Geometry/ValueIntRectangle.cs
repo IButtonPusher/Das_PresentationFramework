@@ -71,12 +71,12 @@ namespace Das.Views.Core.Geometry
 
         public Int32 Y { get; }
 
-        public ValueRectangle GetUnion(IRoundedRectangle other)
+        public ValueIntRectangle GetUnion(IRoundedRectangle other)
         {
             return GeometryHelper.GetUnion(this, other);
         }
 
-        public ValueRectangle GetUnion(IEnumerable<IRoundedRectangle> others)
+        public ValueIntRectangle GetUnion(IEnumerable<IRoundedRectangle> others)
         {
             return GeometryHelper.GetUnion(this, others);
         }

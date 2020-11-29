@@ -11,15 +11,16 @@ namespace TestCommon
 {
     public sealed class TestTabControl : View<TestCompanyVm>
     {
-        public TestTabControl(IVisualBootStrapper templateResolver)
+        public TestTabControl(IVisualBootstrapper templateResolver)
 
         : base(templateResolver)
         {
-            _tabControl= new TabControl(templateResolver);
+            _tabControl= new TabControl<EmployeeViewModel>(templateResolver);
             Content = _tabControl;
         }
 
-        public override void Arrange(IRenderSize availableSpace, IRenderContext renderContext)
+        public override void Arrange(IRenderSize availableSpace,
+                                     IRenderContext renderContext)
         {
             Debug.WriteLine("arrange test");
             base.Arrange(availableSpace, renderContext);
@@ -31,7 +32,7 @@ namespace TestCommon
 
             _tabControl.ItemsSource = dataContext.Employees;
             var selectionBinding = new TwoWayBinding(dataContext, nameof(TestCompanyVm.SelectedEmployee),
-                _tabControl, nameof(TabControl.SelectedItem));
+                _tabControl, nameof(TabControl<EmployeeViewModel>.SelectedItem));
             _tabControl.AddBinding(selectionBinding);
             //UpdateSelection().ConfigureAwait(false);
         }
@@ -58,6 +59,6 @@ namespace TestCommon
         //    //protected set => base.IsChanged = value;
         //}
 
-        private readonly TabControl _tabControl;
+        private readonly TabControl<EmployeeViewModel> _tabControl;
     }
 }

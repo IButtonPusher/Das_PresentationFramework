@@ -10,7 +10,8 @@ using Das.ViewModels;
 namespace Das.Views.Mvvm
 {
     // ReSharper disable once UnusedType.Global
-    public interface IAsyncObservableCollection<T> : INotifyingCollection,
+    public interface IAsyncObservableCollection<T> : INotifyingCollection<T>,
+                                                     INotifyingCollection,
                                                      INotifyPropertyChanged,
                                                      ICollection<T>,
                                                      IAsyncCollection<T>,

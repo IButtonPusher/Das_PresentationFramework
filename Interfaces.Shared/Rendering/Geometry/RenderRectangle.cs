@@ -8,6 +8,8 @@ namespace Das.Views.Rendering.Geometry
     public class RenderRectangle : Rectangle,
                                    IRenderRectangle
     {
+        private IPoint2D _offset;
+
         public RenderRectangle(Double x,
                                Double y,
                                Double width,
@@ -15,7 +17,7 @@ namespace Das.Views.Rendering.Geometry
                                IPoint2D offset)
             : base(x, y, width, height)
         {
-            Offset = offset;
+            _offset = offset;
         }
 
         //public RenderRectangle(Double x,
@@ -31,7 +33,7 @@ namespace Das.Views.Rendering.Geometry
                                Thickness margin,
                                IPoint2D offset) : base(start, margin) 
         {
-            Offset = offset;
+            _offset = offset;
         }
 
         public RenderRectangle(IPoint2D location,
@@ -39,13 +41,63 @@ namespace Das.Views.Rendering.Geometry
                                IPoint2D offset)
             : base(location, size)
         {
-            Offset = offset;
+            _offset = offset;
         }
 
         public RenderRectangle()
         {
-            Offset = Point2D.Empty;
+            _offset = Point2D.Empty;
         }
+
+        public void Update<TPoint, TRenderRectangle>(TRenderRectangle rect,
+                                                     TPoint parentOffset,
+                                                     Thickness margin,
+                                                     Thickness border)
+            where TPoint : IPoint2D
+            where TRenderRectangle : IRenderRectangle
+        {
+            _left = rect.Left + margin.Left - parentOffset.X;
+            _top = rect.Top + margin.Top - parentOffset.Y;
+            _w = rect.Width - margin.Width;
+            _h = rect.Height - margin.Height;
+            _offset = rect.Offset;
+
+
+            if (border.IsEmpty) 
+                return;
+
+            _left += border.Left;
+            _top += border.Top;
+            _w -= border.Width;
+            _h -= border.Height;
+        }
+
+        public void Update<TPoint>(Double x,
+                                            Double y,
+                                            Double width,
+                                            Double height,
+                                            TPoint parentOffset,
+                                            TPoint offset,
+                                            Thickness margin,
+                                            Thickness border)
+            where TPoint : IPoint2D
+        {
+            _left = x + margin.Left - parentOffset.X;
+           _top = y + margin.Top - parentOffset.Y;
+           _w = width - margin.Width;
+           _h = height - margin.Height;
+           _offset = offset;
+
+
+           if (border.IsEmpty) 
+               return;
+
+           _left += border.Left;
+           _top += border.Top;
+           _w -= border.Width;
+           _h -= border.Height;
+        }
+
 
         public Boolean Equals(IRenderSize other)
         {
@@ -69,7 +121,11 @@ namespace Das.Views.Rendering.Geometry
 
         //new IRenderSize IRenderRectangle.Size => new ValueRenderSize(base.Size);
 
-        public IPoint2D Offset { get; set; }
+        public IPoint2D Offset  
+        {
+            get => _offset;
+            //set => _offset = value;
+        }
 
         IRenderSize IRenderSize.Reduce(Thickness padding)
         {
@@ -126,17 +182,21 @@ namespace Das.Views.Rendering.Geometry
                 rect.Width, rect.Height, rect.Offset);
         }
 
-        public static RenderRectangle? operator *(RenderRectangle? rect, Double val)
+        public static RenderRectangle operator *(RenderRectangle rect, 
+                                                 Double val)
         {
             if (val.AreEqualEnough(1))
                 return rect;
 
             if (rect == null)
-                return null;
+                return null!;
 
-            return new RenderRectangle(rect.X, rect.Y,
-                rect.Size.Width * val, rect.Size.Height * val,
-                rect.Offset);
+            return new RenderRectangle(rect.X * val,
+                rect.Y * val,
+                rect.Size.Width * val,
+                rect.Size.Height * val,
+                new ValuePoint2D(rect.Offset.X * val,
+                    rect.Offset.Y * val));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+
 using Das.Views.Styles;
 
 namespace Das.Views.Panels
@@ -7,24 +8,21 @@ namespace Das.Views.Panels
     public class View<T> : ContentPanel<T>, 
                            IView<T>
     {
-        public View(IVisualBootStrapper visualBootStrapper)
+        public View(IVisualBootstrapper visualBootstrapper)
 
-        : base(visualBootStrapper)
+            : base(visualBootstrapper)
         {
-            StyleContext = visualBootStrapper.StyleContext;
+            StyleContext = visualBootstrapper.StyleContext;
             _dataContext = default!;
         }
 
-        //public View(IVisualBootStrapper templateResolver) 
-        //    : this(new BaseStyleContext(new DefaultStyle()), templateResolver)
-        //{
-        //}
+       
 
         public IStyleContext StyleContext { get; }
 
-        public override void Dispose()
-        {
-        }
+      
+
+        
 
         public virtual void SetDataContext(T dataContext)
         {

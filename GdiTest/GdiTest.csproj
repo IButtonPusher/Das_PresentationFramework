@@ -42,13 +42,16 @@
     <CodeAnalysisRuleSet>..\Das.Presentation.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Das.Container, Version=0.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Das.Container.0.0.6-alpha\lib\netstandard2.0\Das.Container.dll</HintPath>
+    <Reference Include="Das.Container, Version=0.0.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Das.Container.0.0.9-alpha\lib\netstandard2.0\Das.Container.dll</HintPath>
     </Reference>
-    <Reference Include="Das.Container.Interfaces, Version=0.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Das.Container.Interfaces.0.0.6-alpha\lib\netstandard2.0\Das.Container.Interfaces.dll</HintPath>
+    <Reference Include="Das.Container.Interfaces, Version=0.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Das.Container.Interfaces.0.0.8-alpha\lib\netstandard2.0\Das.Container.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Serializer.Interfaces, Version=0.0.12.0, Culture=neutral, PublicKeyToken=55ec9f54a6117381, processorArchitecture=MSIL">
+      <HintPath>..\packages\Das.Serializer.Interfaces.0.0.12-alpha\lib\net45\Serializer.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />

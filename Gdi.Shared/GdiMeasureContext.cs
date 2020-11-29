@@ -8,14 +8,16 @@ using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Measuring;
 using Das.Views.Rendering;
+using Das.Views.Styles;
 
 namespace Das.Gdi
 {
     public class GdiMeasureContext : BaseMeasureContext
     {
         public GdiMeasureContext(IVisualSurrogateProvider surrogateProvider,
-                                 Dictionary<IVisualElement, ValueSize> lastMeasurements)
-        : base(surrogateProvider, lastMeasurements)
+                                 Dictionary<IVisualElement, ValueSize> lastMeasurements,
+                                 IStyleContext styleContext)
+        : base(surrogateProvider, lastMeasurements, styleContext)
         {
             var bmp = new Bitmap(1, 1);
             Graphics = Graphics.FromImage(bmp);

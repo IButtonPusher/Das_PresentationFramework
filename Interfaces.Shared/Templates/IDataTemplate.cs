@@ -9,6 +9,9 @@ namespace Das.Views
 
         IVisualElement? BuildVisual(Object? dataContext);
 
+        TVisualElement BuildVisual<TVisualElement>(Object? dataContext)
+            where TVisualElement : IVisualElement;
+
         //IVisualElement Template { get; }
     }
 }

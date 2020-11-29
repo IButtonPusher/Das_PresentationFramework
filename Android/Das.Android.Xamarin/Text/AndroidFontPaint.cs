@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.Graphics;
+
 using Android.Text;
 using Android.Util;
 using Das.Views.Core.Drawing;
@@ -57,6 +58,9 @@ namespace Das.Xamarin.Android
             var canvas = GetCanvas();
 
             SetColor(brush);
+
+            System.Diagnostics.Debug.WriteLine("Drawing string " + s + " in rect " + bounds + 
+                                               " brush " + brush);
 
             if (_isCacheStaticLayouts)
             {

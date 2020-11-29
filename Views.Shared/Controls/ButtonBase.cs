@@ -17,7 +17,7 @@ namespace Das.Views.Controls
 
         public new IObservableCommand? Command { get; set; }
 
-        public ButtonBase(IVisualBootStrapper templateResolver) : base(templateResolver)
+        public ButtonBase(IVisualBootstrapper templateResolver) : base(templateResolver)
         {
         }
     }

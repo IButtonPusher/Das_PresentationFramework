@@ -10,7 +10,10 @@ using Das.Views.Panels;
 using TestCommon;
 using ViewCompiler;
 using Das.OpenGL.Windows;
+using Das.Views;
+using Das.Views.DataBinding;
 using Das.Views.Mvvm;
+using TestCommon.Company;
 
 namespace GdiTest
 {
@@ -32,11 +35,21 @@ namespace GdiTest
 //            new StaScheduler("GDI Test");
 
             var _testLauncher = GetGdiLauncher();
+
+            var view = GetTestCompanyTabsView(_testLauncher);
+
+            //_testLauncher.RenderKit.
+
             //_testLauncher = GetOpenGLLauncher();
 
             var vm = new TestCompanyVm();
             vm.SelectedEmployee = vm.Employees.FirstOrDefault();
-            var view = new TestTabControl(_testLauncher.BootStrapper.VisualBootStrapper);
+
+            view.SetDataContext(vm);
+
+            //_testLauncher.r
+
+            //var view = new TestTabControl(_testLauncher.BootStrapper.VisualBootstrapper);
             view.SetDataContext(vm);
 
             _testLauncher.Run(vm, view);
@@ -47,13 +60,32 @@ namespace GdiTest
             ZoomTest();
         }
 
+        private static View<ICompanyViewModel> GetTestCompanyTabsView(TestLauncher testLauncher)
+        {
+            var inflator = new ViewInflater(testLauncher.RenderKit.VisualBootstrapper,
+                testLauncher.TypeInferrer);
+
+            var file = new FileInfo(
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                "company", "TestCompanyTabs.xml"));
+
+            var xml = File.ReadAllText(file.FullName);
+            var view = inflator.InflateXml<IBindableElement<ICompanyViewModel>>(xml);
+
+            return new View<ICompanyViewModel>(testLauncher.RenderKit.VisualBootstrapper)
+            {
+                Content = view
+            };
+        }
+
 
         // ReSharper disable once UnusedMember.Local
         private static TestLauncher GetGdiLauncher()
         {
             //var boot = new GdiProvider();
             var viewProvider = new ViewProvider();
-            return new TestLauncher(viewProvider, viewProvider);
+            return new TestLauncher(viewProvider, viewProvider, viewProvider.RenderKit,
+                viewProvider.TypeInferrer);
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -62,7 +94,8 @@ namespace GdiTest
             var windowBuilder = new GLWindowBuilder("OpenGLSurface");
             var boot = new GLBootStrapper(windowBuilder);
             var viewProvider = new ViewProvider();
-            return new TestLauncher(boot,viewProvider);
+            return new TestLauncher(boot,viewProvider, viewProvider.RenderKit,
+                viewProvider.TypeInferrer);
         }
 
         // ReSharper disable once UnusedMember.Local

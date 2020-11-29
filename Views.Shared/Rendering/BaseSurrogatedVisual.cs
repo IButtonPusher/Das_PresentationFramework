@@ -20,8 +20,9 @@ namespace Das.Views.Rendering
             set => SetValue(ref _parent, value);
         }
 
-        protected BaseSurrogatedVisual() 
-            : base(NullVisualBootStrapper.Instance)
+        protected BaseSurrogatedVisual(IVisualBootstrapper visualBootstrapper) 
+            : base(visualBootstrapper)
+            //: base(NullVisualBootStrapper.Instance)
         {
         }
     }

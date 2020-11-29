@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Android.Graphics;
-using Android.Media;
 using Android.OS;
 using Android.Util;
+using Das.Extensions;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Rendering;
+using Das.Views.Styles;
 using static Android.Graphics.BitmapFactory;
 using Stream = System.IO.Stream;
 
@@ -24,8 +25,9 @@ namespace Das.Xamarin.Android
                                     IVisualSurrogateProvider surrogateProvider,
                                     Dictionary<IVisualElement, ValueCube> renderPositions,
                                     DisplayMetrics displayMetrics,
-                                    Dictionary<IVisualElement, ValueSize> lastMeasurements)
-            : base(perspective, surrogateProvider, renderPositions, lastMeasurements)
+                                    Dictionary<IVisualElement, ValueSize> lastMeasurements,
+                                    IStyleContext styleContext)
+            : base(perspective, surrogateProvider, renderPositions, lastMeasurements, styleContext)
         {
             _fontProvider = fontProvider;
             _displayMetrics = displayMetrics;
@@ -59,6 +61,12 @@ namespace Das.Xamarin.Android
             else
             {
                 var src = new Rect(0, 0, bmp.Width, bmp.Height);
+
+                //var src = ZoomLevel.AreDifferent(1.0) 
+                //    ? new Rect(0, 0, 
+                //        Convert.ToInt32(bmp.Width * ZoomLevel), 
+                //        Convert.ToInt32(bmp.Height * ZoomLevel))
+                //    : new Rect(0, 0, bmp.Width, bmp.Height);
                 GetCanvas().DrawBitmap(bmp, src, dest, _paint);
             }
 
@@ -135,121 +143,22 @@ namespace Das.Xamarin.Android
                 _paint);
         }
 
-        public override void DrawString<TFont, TBrush, TPoint>(String s,
-                                                               TFont font,
-                                                               TBrush brush,
-                                                               TPoint location)
-        {
-            var renderer = _fontProvider.GetRenderer(font);
-            var dest = GetAbsolutePoint(location);
-            renderer.Canvas = GetCanvas();
-            renderer.DrawString(s, brush, dest);
-        }
-
-        //private Boolean _didClip;
-        //private Int32 _clipCount;
-
-
-        //private static void DoClip(Canvas canvas,
-        //                           Int32 left,
-        //                           Int32 top,
-        //                           Int32 width,
-        //                           Int32 height)
-        //{
-        //    System.Diagnostics.Debug.WriteLine("Clipping: " + left + ", " + top + " w: " + width +
-        //                                       "h: " + height);
-
-        //    canvas.ClipRect(left, top, width, height);
-        //}
+        
 
         protected override void PushClip<TRectangle>(TRectangle rect)
         {
-            //_clipCount++;
             var canvas = GetCanvas();
-
-            //var useRect = GetAbsoluteIntRect(rect);
-
-            //var clipLeft = Convert.ToInt32(rect.Left + CurrentLocation.X);
-            //var clipRight = Convert.ToInt32(rect.Right + CurrentLocation.X);
-            //var clipTop = Convert.ToInt32(rect.Top + CurrentLocation.Y);
-            //var clipBottom = Convert.ToInt32(rect.Bottom + CurrentLocation.Y);
-
-
-            //var useRect = GetAbsoluteAndroidRect(rect);
-            //var rdrr = canvas.ClipBounds;
-            //GetCanvas().ClipRect(useRect);
-
-            //if (_didClip)
-            //    return;
-
-            //_didClip = true;
-
-            //canvas.Save();
-
-            //canvas.ClipRect(0,0, 700, 250);
-            //rdrr = canvas.ClipBounds;
-
-            //return;
-
-            ////////////////////////////////
-
-            //System.Diagnostics.Debug.WriteLine("PUSH CLIP: " + rect);
-
-            //System.Diagnostics.Debug.WriteLine("PUSH CLIP: " + clipLeft + ", " + clipTop + " w: " + 
-            //                                   (clipRight - clipLeft) +
-            //                                   " h: " + (clipBottom - clipTop));
-
+            
             canvas.Save();
+
+            System.Diagnostics.Debug.WriteLine("****** PUSH CLIP " + rect);
 
             canvas.ClipRect(
                 Convert.ToInt32(rect.X),
                 Convert.ToInt32(rect.Y),
                 Convert.ToInt32(rect.Right),
                 Convert.ToInt32(rect.Bottom));
-            return;
-            
-
-            //if (clipLeft > 0)
-            //{
-            //    //rect running down left side
-            //    DoClip(canvas, 0, 0, clipLeft, _displayMetrics.HeightPixels);
-
-            //    if (clipTop > 0)
-            //    {
-            //        //top rect across
-            //        DoClip(canvas, clipLeft, 0, _displayMetrics.WidthPixels - clipLeft, 
-            //            clipTop);
-            //    }
-            //    else if (clipRight < _displayMetrics.WidthPixels)
-            //    {
-            //        //top right rectangle
-            //        DoClip(canvas, clipRight, 0, _displayMetrics.WidthPixels - clipRight, 
-            //            clipBottom);
-            //    }
-
-            //    if (clipBottom < _displayMetrics.HeightPixels)
-            //    {
-            //        //top rect all the way across bottom
-            //        DoClip(canvas, clipLeft, clipBottom, _displayMetrics.WidthPixels - clipLeft, 
-            //            _displayMetrics.HeightPixels - clipBottom);
-            //    }
-            //}
-            //else
-            //{
-            //    if (clipRight < _displayMetrics.WidthPixels)
-            //    {
-            //        //rect running down right side
-            //        DoClip(canvas, clipRight, 0, _displayMetrics.WidthPixels - clipRight, 
-            //            _displayMetrics.HeightPixels);
-            //    }
-
-            //    if (clipBottom < _displayMetrics.HeightPixels)
-            //    {
-            //        // rect running across bottom
-            //        DoClip(canvas, 0, clipBottom, _displayMetrics.WidthPixels,
-            //            _displayMetrics.HeightPixels - clipBottom);
-            //    }
-            //}
+          
         }
 
         protected override void PopClip<TRectangle>(TRectangle rect)
@@ -261,6 +170,8 @@ namespace Das.Xamarin.Android
             //var useRect = GetAbsoluteAndroidRect(rect);
 
             canvas.Restore();
+
+            System.Diagnostics.Debug.WriteLine("****** POP CLIP " + rect);
            // GetCanvas().ClipRect(0, 0, 0, 0);
             
         }
@@ -273,8 +184,30 @@ namespace Das.Xamarin.Android
             if (clip.Width() == 0 && clip.Height() == 0)
                 return Rectangle.Empty;
 
-            return new Rectangle(clip.Left, clip.Top, clip.Width(), clip.Height());
+            if (ZoomLevel.AreDifferent(1.0))
+            {
+                return new Rectangle(clip.Left * ZoomLevel, 
+                    clip.Top* ZoomLevel, 
+                    clip.Width()* ZoomLevel, 
+                    clip.Height()* ZoomLevel);
+            }
+            return new Rectangle(clip.Left, 
+                clip.Top, 
+                clip.Width(), 
+                clip.Height());
 
+        }
+        
+
+        public override void DrawString<TFont, TBrush, TPoint>(String s,
+                                                               TFont font,
+                                                               TBrush brush,
+                                                               TPoint location)
+        {
+            var renderer = _fontProvider.GetRenderer(font);
+            var dest = GetAbsolutePoint(location);
+            renderer.Canvas = GetCanvas();
+            renderer.DrawString(s, brush, dest);
         }
 
         public override void DrawString<TFont, TBrush, TRectangle>(String s,
@@ -302,7 +235,10 @@ namespace Das.Xamarin.Android
         {
             _paint.SetStyle(Paint.Style.Fill);
             SetColor(brush);
-            GetCanvas().DrawRect(GetAbsoluteAndroidRect(rect), _paint);
+
+            var letsDraw = GetAbsoluteAndroidRect(rect);
+
+            GetCanvas().DrawRect(letsDraw, _paint);
         }
 
         public override void FillRoundedRectangle<TRectangle, TBrush>(TRectangle rect,
@@ -311,7 +247,9 @@ namespace Das.Xamarin.Android
         {
             _paint.SetStyle(Paint.Style.Fill);
             SetColor(brush);
-            GetCanvas().DrawRoundRect(GetAbsoluteAndroidRectF(rect),
+            var target = GetAbsoluteAndroidRectF(rect);
+
+            GetCanvas().DrawRoundRect(target,
                 Convert.ToSingle(cornerRadius),
                 Convert.ToSingle(cornerRadius),
                 _paint);
@@ -319,23 +257,53 @@ namespace Das.Xamarin.Android
 
         private Point GetAbsoluteAndroidPoint(IPoint2D relativePoint2D)
         {
-            var to = GetAbsolutePoint(relativePoint2D);
-            return new Point(Convert.ToInt32(to.X),
-                Convert.ToInt32(to.Y));
+            if (ZoomLevel.AreDifferent(1.0))
+            {
+                return new Point(
+                    Convert.ToInt32((CurrentLocation.X + relativePoint2D.X) * ZoomLevel),
+                    Convert.ToInt32((CurrentLocation.Y + relativePoint2D.Y) * ZoomLevel));
+            }
+
+            return new Point(
+                Convert.ToInt32(CurrentLocation.X + relativePoint2D.X),
+                Convert.ToInt32(CurrentLocation.Y + relativePoint2D.Y));
+
+            //var to = GetAbsolutePoint(relativePoint2D);
+            //return new Point(Convert.ToInt32(to.X),
+            //    Convert.ToInt32(to.Y));
         }
 
         private RectF GetAbsoluteAndroidRectF<TRectangle>(TRectangle rect)
             where TRectangle : IRectangle
         {
+
+            if (ZoomLevel.AreDifferent(1.0))
+            {
+                return new RectF(
+                    Convert.ToSingle(rect.Left + CurrentLocation.X), // X
+                    Convert.ToSingle(rect.Top + CurrentLocation.Y), // Y
+                    Convert.ToSingle((rect.Right + CurrentLocation.X) * ZoomLevel),
+                    Convert.ToSingle((rect.Bottom + CurrentLocation.Y) * ZoomLevel));
+            }
+
             return new RectF(Convert.ToSingle(rect.Left + CurrentLocation.X),
                 Convert.ToSingle(rect.Top + CurrentLocation.Y),
                 Convert.ToSingle(rect.Right + CurrentLocation.X),
                 Convert.ToSingle(rect.Bottom + CurrentLocation.Y));
+
         }
 
         private Rect GetAbsoluteAndroidRect<TRectangle>(TRectangle rect)
         where TRectangle : IRectangle
         {
+            if (ZoomLevel.AreDifferent(1.0))
+            {
+                return new Rect(Convert.ToInt32((rect.Left + CurrentLocation.X) * ZoomLevel),
+                    Convert.ToInt32((rect.Top + CurrentLocation.Y) * ZoomLevel),
+                    Convert.ToInt32((rect.Right + CurrentLocation.X) * ZoomLevel),
+                    Convert.ToInt32((rect.Bottom + CurrentLocation.Y) * ZoomLevel));
+            }
+
             return new Rect(Convert.ToInt32(rect.Left + CurrentLocation.X),
                 Convert.ToInt32(rect.Top + CurrentLocation.Y),
                 Convert.ToInt32(rect.Right + CurrentLocation.X),

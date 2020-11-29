@@ -16,6 +16,26 @@ namespace Das.Views.Styles
     {
         public IColorPalette ColorPalette { get; }
 
+        static BaseStyleContext()
+        {
+            _setterTypes = new Dictionary<StyleSetter, Type>();
+            _setterCrossInheritance = new Dictionary<StyleSetter, Boolean>();
+
+            var enumType = typeof(StyleSetter);
+
+            foreach (var setter in Enum.GetValues(enumType).OfType<StyleSetter>())
+            {
+                var memberInfos = enumType.GetMember(setter.ToString());
+                var enumValueMemberInfo = memberInfos.First(m => m.DeclaringType == enumType);
+                var valueAttributes = enumValueMemberInfo.
+                    GetCustomAttributes(typeof(StyleTypeAttribute), false);
+
+                var attr = (StyleTypeAttribute)valueAttributes.First(a => a is StyleTypeAttribute);
+                _setterTypes.Add(setter, attr.Type);
+                _setterCrossInheritance.Add(setter, attr.IsCrossTypeInheritable);
+            }
+        }
+
         public BaseStyleContext(IStyle defaultStyle,
                                 IColorPalette colorPalette)
         {
@@ -23,10 +43,13 @@ namespace Das.Views.Styles
             AssertStyleValidity(defaultStyle, true);
             _defaultStyle = defaultStyle;
 
+            _visualStack = new Stack<IVisualElement>();
+            _visualSearchStack = new Stack<IVisualElement>();
+
             _accentColor = colorPalette.Accent;
 
             _elementStyles = new Dictionary<Int32, ElementStyle>();
-            _cachedStyles = new Dictionary<IVisualElement, IStyle>();
+            _cachedStyles = new Dictionary<Int32, IStyle>();
             _typeStyles = new Dictionary<Type, List<ScopedStyle>>();
 
             if (defaultStyle is IStyleSheet sheet)
@@ -43,7 +66,7 @@ namespace Das.Views.Styles
                 //    yield return rdrr;
             }
 
-            if (_cachedStyles.TryGetValue(element, out var known))
+            if (_cachedStyles.TryGetValue(element.Id, out var known))
             {
                 yield return known;
                 yield break;
@@ -54,10 +77,8 @@ namespace Das.Views.Styles
             var buildCached = BuildCachedStyle(element);
             
             
-            _cachedStyles[element] = buildCached;
+            _cachedStyles[element.Id] = buildCached;
             yield return buildCached;
-
-           
         }
 
         public void RegisterStyle(IStyle style)
@@ -133,6 +154,16 @@ namespace Das.Views.Styles
             IsChanged = true;
         }
 
+        public void PushVisual(IVisualElement visual)
+        {
+            _visualStack.Push(visual);
+        }
+
+        public IVisualElement PopVisual()
+        {
+            return _visualStack.Pop();
+        }
+
         public T GetStyleSetter<T>(StyleSetter setter,
                                    IVisualElement element)
         {
@@ -175,22 +206,148 @@ namespace Das.Views.Styles
         //    return _defaultStyle[setter] is T good ? good : default!;
         //}
 
+        private Boolean TryGetStyleSetterForElement<T>(StyleSetter setter,
+                                                 StyleSelector selector,
+                                                 IVisualElement element,
+                                                 out T found)
+        {
+            if (_elementStyles.TryGetValue(element.Id, out var elementStyle) &&
+                TryGetStyleSetterImpl(setter, elementStyle, selector, element, out found))
+                return true;
+
+            if (_cachedStyles.TryGetValue(element.Id, out var known) && 
+                TryGetStyleSetterImpl(setter, known, selector, element, out found))
+                return true;
+
+            found = default!;
+            return false;
+        }
+
         private Boolean TryGetStyleSetterImpl<T>(StyleSetter setter,
                                                  StyleSelector selector,
                                                  IVisualElement element,
                                                  out T found)
         {
+            if (TryGetStyleSetterForElement(setter, selector, element, out found))
+                return true;
+
+            try
+            {
+                var isCrossInheritable = _setterCrossInheritance[setter];
+
+                var allMyScoped = new Dictionary<IVisualElement, IStyle>();
+                    
+                    foreach (var kvp in GetAllScopedStyles(element))
+                    {
+                        if (kvp.Scope == null)
+                        {
+                            if (TryGetStyleSetterImpl(setter, kvp.Style,
+                                selector, element, out found))
+                            {
+                                return true;
+                            }
+                        
+                            continue;
+                        }
+
+                        allMyScoped[kvp.Scope] = kvp.Style;
+                    }
+
+                while (_visualStack.Count > 0)
+                {
+                    var current = _visualStack.Pop();
+                    _visualSearchStack.Push(current);
+
+                    if (allMyScoped.TryGetValue(current, out var scoped) &&
+                        TryGetStyleSetterImpl(setter, scoped, selector, element, out found))
+                        return true;
+
+                    if (isCrossInheritable && 
+                        TryGetStyleSetterForElement(setter, selector, current, out found))
+                        return true;
+                }
+
+                if (_defaultStyle[setter] is T good)
+                {
+                    found = good;
+                    return true;
+                }
+
+                found = default!;
+                return false;
+            }
+            finally
+            {
+                if (!_cachedStyles.TryGetValue(element.Id, out var cachedStyle))
+                {
+                    cachedStyle = new Style();
+                    _cachedStyles[element.Id] = cachedStyle;
+                }
+
+                cachedStyle.Add(setter, selector, found);
+
+                while (_visualSearchStack.Count > 0)
+                {
+                    var current = _visualSearchStack.Pop();
+                    _visualStack.Push(current);
+                }
+            }
+
+            //var styles = GetStylesForElement(element);
+            //foreach (var style in styles)
+            //{
+            //    Object? v = null;
+
+            //    if (asDc == null && !style.TryGetValue(setter, selector, out v))
+            //        continue;
+            //    if (asDc != null && !style.TryGetValue(setter, selector, asDc, out v))
+            //        continue;
+
+            //    switch (v)
+            //    {
+            //        case T val:
+            //            found = val;
+            //            return true;
+
+            //        case IConvertible _ when typeof(IConvertible).IsAssignableFrom(typeof(T)) &&
+            //                                 Convert.ChangeType(v, typeof(T)) is T cval:
+            //            found = cval;
+            //            return true;
+
+            //        case IConvertible _ when Convert.ChangeType(v, typeof(Double)) is Double dbl:
+            //            //yuck
+            //            var ctor = typeof(T).GetConstructor(new[] {typeof(Double)});
+            //            if (ctor != null)
+            //            {
+            //                found =(T) ctor.Invoke(new Object[] {dbl});
+            //                return true;
+            //            }
+
+            //            break;
+            //    }
+            //}
+
+            //found = default!;
+            //return false;
+        }
+
+        private static Boolean TryGetStyleSetterImpl<T>(
+            StyleSetter setter,
+            IStyle style,
+            StyleSelector selector,
+            IVisualElement element,
+            out T found)
+        {
             var asDc = (element as IDataContext)?.Value;
 
-            var styles = GetStylesForElement(element);
-            foreach (var style in styles)
+            //foreach (var style in styles)
             {
                 Object? v = null;
 
                 if (asDc == null && !style.TryGetValue(setter, selector, out v))
-                    continue;
+                    goto failBoat;
                 if (asDc != null && !style.TryGetValue(setter, selector, asDc, out v))
-                    continue;
+                    goto failBoat;
 
                 switch (v)
                 {
@@ -208,13 +365,15 @@ namespace Das.Views.Styles
                         var ctor = typeof(T).GetConstructor(new[] {typeof(Double)});
                         if (ctor != null)
                         {
-                            found =(T) ctor.Invoke(new Object[] {dbl});
+                            found = (T) ctor.Invoke(new Object[] {dbl});
                             return true;
                         }
 
                         break;
                 }
             }
+
+            failBoat:
 
             found = default!;
             return false;
@@ -223,7 +382,9 @@ namespace Das.Views.Styles
         private static void AssertStyleValidity(IStyle style,
                                                 Boolean isRequireExhaustive)
         {
-            foreach (StyleSetter setter in Enum.GetValues(typeof(StyleSetter)))
+            //foreach (StyleSetter setter in Enum.GetValues(typeof(StyleSetter)))
+            foreach (var setter in _setterTypes.Keys)
+            {
                 if (style.TryGetValue(setter, StyleSelector.None, out var val))
                 {
                     if (!IsTypeValid(setter, val))
@@ -233,6 +394,19 @@ namespace Das.Views.Styles
                 {
                     throw new Exception("Default style is missing a setter for " + setter);
                 }
+            }
+        }
+
+        private IEnumerable<ScopedStyle> GetAllScopedStyles(IVisualElement visual)
+        {
+            foreach (var type in GetStylableTypes(visual))
+            {
+                if (!_typeStyles.TryGetValue(type, out var styleCollection))
+                    continue;
+
+                foreach (var style in styleCollection)
+                    yield return style;
+            }
         }
 
         private Style BuildCachedStyle(IVisualElement element)
@@ -344,20 +518,21 @@ namespace Das.Views.Styles
                     return value == null || value is IConvertible;
 
                 default:
-                    var enumType = typeof(StyleSetter);
-                    var memberInfos = enumType.GetMember(setter.ToString());
-                    var enumValueMemberInfo = memberInfos.First(m => m.DeclaringType == enumType);
-                    var valueAttributes =
-                        enumValueMemberInfo.GetCustomAttributes(typeof(StyleTypeAttribute), false);
-                    var description = ((StyleTypeAttribute) valueAttributes[0]).Type;
+                    return value.GetType().IsAssignableFrom(_setterTypes[setter]);
+                    //var enumType = typeof(StyleSetter);
+                    //var memberInfos = enumType.GetMember(setter.ToString());
+                    //var enumValueMemberInfo = memberInfos.First(m => m.DeclaringType == enumType);
+                    //var valueAttributes =
+                    //    enumValueMemberInfo.GetCustomAttributes(typeof(StyleTypeAttribute), false);
+                    //var description = ((StyleTypeAttribute) valueAttributes[0]).Type;
 
-                    return value.GetType().IsAssignableFrom(description);
+                    //return value.GetType().IsAssignableFrom(description);
             }
         }
 
         private void OnElementDisposed(IVisualElement obj)
         {
-            _cachedStyles.Remove(obj);
+            _cachedStyles.Remove(obj.Id);
         }
 
         private void RegisterStyleImpl(IStyle style,
@@ -411,12 +586,19 @@ namespace Das.Views.Styles
             }
         }
 
-        private readonly Dictionary<IVisualElement, IStyle> _cachedStyles;
+        //private readonly Dictionary<IVisualElement, IStyle> _cachedStyles;
+        private readonly Dictionary<Int32, IStyle> _cachedStyles;
 
         private readonly IStyle _defaultStyle;
         private IColor _accentColor;
         private readonly Dictionary<Int32, ElementStyle> _elementStyles;
         private readonly Dictionary<Type, List<ScopedStyle>> _typeStyles;
+
+        private readonly Stack<IVisualElement> _visualStack;
+        private readonly Stack<IVisualElement> _visualSearchStack;
+
+        private static readonly Dictionary<StyleSetter, Type> _setterTypes;
+        private static readonly Dictionary<StyleSetter, Boolean> _setterCrossInheritance;
 
         public void AcceptChanges()
         {

@@ -11,8 +11,8 @@ namespace Das.Views
     public sealed class HorizontalRule : VisualElement
 
     {
-        public HorizontalRule(IVisualBootStrapper visualBootStrapper) 
-            : base(visualBootStrapper)
+        public HorizontalRule(IVisualBootstrapper visualBootstrapper) 
+            : base(visualBootstrapper)
         {
            InvalidateMeasure();
         }
@@ -35,15 +35,12 @@ namespace Das.Views
             if (!(measureContext.ViewState is { } viewState))
                 return new ValueSize(availableSpace.Width, 1);
 
-            var zoom = viewState.ZoomLevel;
-
-            var specificHeight = viewState.GetStyleSetter<Double>(StyleSetter.Height, this)
-                                 * zoom;
+            var specificHeight = viewState.GetStyleSetter<Double>(StyleSetter.Height, this);
 
             specificHeight = Double.IsNaN(specificHeight) ? availableSpace.Height : specificHeight;
 
-            var specificWidth = viewState.GetStyleSetter<Double>(StyleSetter.Width, this)
-                                * zoom;
+            var specificWidth = viewState.GetStyleSetter<Double>(StyleSetter.Width, this);
+                                
             specificWidth = Double.IsNaN(specificWidth) ? availableSpace.Width : specificWidth;
 
             return new ValueSize(specificWidth, specificHeight);

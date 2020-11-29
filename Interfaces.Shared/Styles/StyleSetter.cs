@@ -11,58 +11,58 @@ namespace Das.Views.Styles
 {
     public enum StyleSetter
     {
-        [StyleType(typeof(Thickness))]
+        [StyleType(typeof(Thickness), false)]
         Margin,
 
-        [StyleType(typeof(Thickness))]
+        [StyleType(typeof(Thickness), false)]
         Padding,
 
-        [StyleType(typeof(Thickness))]
+        [StyleType(typeof(Thickness), false)]
         BorderThickness,
 
-        [StyleType(typeof(Int32))]
+        [StyleType(typeof(Int32), false)]
         BorderRadius,
 
-        //[StyleType(typeof(ISize))]
+        //[StyleType(typeof(ISize), false)]
         //Size,
 
-        [StyleType(typeof(Double))]
+        [StyleType(typeof(Double), false)]
         Height,
 
-        [StyleType(typeof(Double))]
+        [StyleType(typeof(Double), false)]
         Width,
 
-        [StyleType(typeof(Font))]
+        [StyleType(typeof(Font), true)]
         Font,
 
-        [StyleType(typeof(String))]
+        [StyleType(typeof(String), true)]
         FontName,
 
-        [StyleType(typeof(IConvertible))]
+        [StyleType(typeof(IConvertible), true)]
         FontSize,
 
-        [StyleType(typeof(FontStyle))]
+        [StyleType(typeof(FontStyle), true)]
         FontWeight,
 
-        [StyleType(typeof(SolidColorBrush))]
+        [StyleType(typeof(SolidColorBrush), false)]
         Foreground,
 
-        [StyleType(typeof(SolidColorBrush))]
+        [StyleType(typeof(SolidColorBrush), false)]
         Background,
 
-        [StyleType(typeof(SolidColorBrush))]
+        [StyleType(typeof(SolidColorBrush), false)]
         BorderBrush,
 
-        [StyleType(typeof(VerticalAlignments))]
+        [StyleType(typeof(VerticalAlignments), false)]
         VerticalAlignment,
 
-        [StyleType(typeof(HorizontalAlignments))]
+        [StyleType(typeof(HorizontalAlignments), false)]
         HorizontalAlignment,
 
-        [StyleType(typeof(Transition[]))]
+        [StyleType(typeof(Transition[]), false)]
         Transition,
 
-        [StyleType(typeof(Visibility))]
+        [StyleType(typeof(Visibility), false)]
         Visibility
 
 

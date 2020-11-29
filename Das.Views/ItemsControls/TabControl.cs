@@ -17,28 +17,56 @@ using Das.Views.Rendering.Geometry;
 
 namespace Das.Views.ItemsControls
 {
-    public class TabControl : SelectorVisual,
-                              IContentPresenter,
-                              IItemsControl
+    public interface ITabControl : IItemsControl
+                                   
+    {
+        INotifyingCollection TabItems { get; }
+
+        //AsyncObservableCollection2<IVisualElement> TabItems { get; }
+
+        IVisualElement? SelectedTab { get; }
+    }
+
+    public interface ITabControl<T> : IItemsControl<T>,
+                                      ITabControl
+    {
+        new AsyncObservableCollection2<IBindableElement<T>> TabItems { get; }
+
+        new IBindableElement<T>? SelectedTab { get; }
+    }
+
+    public class TabControl<T> : SelectorVisual<T>,
+                                 IContentPresenter,
+                                 ITabControl<T> 
+        where T : IEquatable<T>
 
     {
-        private readonly IVisualBootStrapper _visualBootStrapper;
+        private readonly IVisualBootstrapper _visualBootstrapper;
 
-        public TabControl(IVisualBootStrapper visualBootStrapper)
-        : base(visualBootStrapper)
+        public TabControl(IVisualBootstrapper visualBootstrapper)
+        : base(visualBootstrapper)
         {
             _headerUses = ValueSize.Empty;
             _contentUses =ValueSize.Empty;
-            _visualBootStrapper = visualBootStrapper;
-            
-            TabItems = new AsyncObservableCollection2<IVisualElement>();
-            
-            HeaderTemplate = new DefaultTabHeaderTemplate(_visualBootStrapper, this);
-            _headerTemplate = HeaderTemplate;
-            _itemTemplate = new DefaultTabItemTemplate(visualBootStrapper);
-            _contentTemplate = new DefaultContentTemplate(visualBootStrapper, this);
+            _visualBootstrapper = visualBootstrapper;
 
+            TabItems = new AsyncObservableCollection2<IBindableElement<T>>();
+            TabItems.CollectionChanged += OnTabItemsChanged;
             
+            HeaderTemplate = new DefaultTabHeaderTemplate(_visualBootstrapper, this);
+            _headerTemplate = HeaderTemplate;
+            _defaultItemTemplate = new DefaultTabItemTemplate<T>(visualBootstrapper, this);
+            _itemTemplate = _defaultItemTemplate;
+            _contentTemplate = new DefaultContentTemplate(visualBootstrapper, this);
+        }
+
+        private async void OnTabItemsChanged(Object sender, 
+                                       NotifyCollectionChangedEventArgs e)
+        {
+            if (SelectedTab != null)
+                return;
+
+            SelectedTab = await TabItems.FirstOrDefaultAsync();
         }
 
 
@@ -48,23 +76,20 @@ namespace Das.Views.ItemsControls
             if (!(_headerPanel is {} header))
                 return ValueSize.Empty;
 
-            _headerUses = measureContext.MeasureElement(header, availableSpace);
-            var remaining = availableSpace.Minus(_headerUses);
 
             if (SelectedTab is { } visual)
             {
                 //TODO:
-                _contentUses = measureContext.MeasureElement(visual, remaining);
-                //return _headerUses.PlusVertical(_contentUses);
-            }
-            else
-            {
-                _contentUses = ValueSize.Empty;
+                _contentUses = measureContext.MeasureElement(visual, availableSpace);
+                var remaining = availableSpace.Minus(_contentUses);
+                _headerUses = measureContext.MeasureElement(header, remaining);
+
                 return _headerUses;
             }
 
+            _contentUses = ValueSize.Empty;
+            _headerUses = measureContext.MeasureElement(header, availableSpace);
             return _headerUses;
-            
         }
 
         public override void Arrange(IRenderSize availableSpace, 
@@ -74,15 +99,11 @@ namespace Das.Views.ItemsControls
                 return;
 
             renderContext.DrawElement(header,
-                new ValueRenderRectangle(0, 0, _headerUses, availableSpace.Offset));
-
-            //TODO: 
-            //if (SelectedTab is { } content)
-            //{
-            //    renderContext.DrawElement(content,
-            //        new ValueRenderRectangle(0, _headerUses.Height, _contentUses,
-            //            availableSpace.Offset));
-            //}
+                new ValueRenderRectangle(0, 0, 
+                    availableSpace.Width,
+                    availableSpace.Height, 
+                    availableSpace.Offset));
+                //new ValueRenderRectangle(0, 0, _headerUses, availableSpace.Offset));
         }
 
         private IDataTemplate _contentTemplate;
@@ -94,13 +115,16 @@ namespace Das.Views.ItemsControls
                 value ?? _contentTemplate);
         }
 
+        private IDataTemplate _defaultItemTemplate;
         private IDataTemplate _itemTemplate;
+
+        INotifyingCollection? IItemsControl.ItemsSource => ItemsSource;
 
         public IDataTemplate? ItemTemplate
         {
             get => _itemTemplate;
             set => SetValue(ref _itemTemplate, 
-                value ?? new DefaultTabItemTemplate(_visualBootStrapper));
+                value ?? _defaultItemTemplate);
         }
 
 
@@ -110,7 +134,7 @@ namespace Das.Views.ItemsControls
         {
             get => _headerTemplate;
             set => SetValue(ref _headerTemplate, 
-                value ?? new DefaultTabHeaderTemplate(_visualBootStrapper, this),
+                value ?? new DefaultTabHeaderTemplate(_visualBootstrapper, this),
                 OnHeaderTemplateChanging, OnHeaderTemplateChanged);
         }
 
@@ -118,7 +142,9 @@ namespace Das.Views.ItemsControls
         {
             if (newValue is { } valid)
             {
-                _headerPanel = valid.BuildVisual(DataContext);
+                var bob = valid.BuildVisual(DataContext);
+
+                _headerPanel = bob;
                 if (_headerPanel is {} hp)
                     AddChild(hp);
             }
@@ -144,9 +170,9 @@ namespace Das.Views.ItemsControls
 
 
 
-        private INotifyingCollection? _itemsSource;
+        private INotifyingCollection<T>? _itemsSource;
 
-        public INotifyingCollection? ItemsSource
+        public INotifyingCollection<T>? ItemsSource
         {
             get => _itemsSource;
             set => SetValue(ref _itemsSource, value,
@@ -161,7 +187,7 @@ namespace Das.Views.ItemsControls
 
             if (newValue is { } dothValid)
             {
-                AddNewItems(dothValid.OfType<Object>());
+                AddNewItems(dothValid.OfType<T>());
                 dothValid.CollectionChanged += OnItemsChanged;
             }
 
@@ -173,17 +199,17 @@ namespace Das.Views.ItemsControls
         private void OnItemsChanged(Object sender, 
                                     NotifyCollectionChangedEventArgs e)
         {
-            e.HandleCollectionChanges<Object>(RemoveOldItems, AddNewItems, ClearTabs);
+            e.HandleCollectionChanges<T>(RemoveOldItems, AddNewItems, ClearTabs);
             InvalidateMeasure();
         }
 
         
 
-        private async void AddNewItems(IEnumerable<Object> items)
+        private async void AddNewItems(IEnumerable<T> items)
         {
             foreach (var item in items)
             {
-                var visual = _itemTemplate.BuildVisual(item) ?? throw new NullReferenceException();
+                var visual = _itemTemplate.BuildVisual<IBindableElement<T>>(item) ?? throw new NullReferenceException();
 
                 if (visual is INotifyPropertyChanged notifier)
                     notifier.PropertyChanged += OnItemPropertyChanged;
@@ -202,10 +228,11 @@ namespace Das.Views.ItemsControls
 
                     foreach (var item in ItemsSource)
                     {
-                        if (item == dc.Value)
+                        //if (item == dc.Value)
+                        if (Equals(item, dc.Value))
                         {
                             SelectedItem = item;
-                            if (sender is IVisualElement visual)
+                            if (sender is IBindableElement<T> visual)
                                 SelectedTab = visual;
                             break;
                         }
@@ -223,12 +250,12 @@ namespace Das.Views.ItemsControls
             }
         }
 
-        private void RemoveOldItems(IEnumerable<Object> obj)
+        private void RemoveOldItems(IEnumerable<T> obj)
         {
             foreach (var rip in obj)
             {
                 var rem = TabItems.FirstOrDefault(t =>
-                    t is IBindableElement bindable && bindable.DataContext == rip);
+                    t is IBindableElement<T> bindable && Equals(bindable.DataContext, rip));
                 if (rem != null)
                 {
                     if (rem is INotifyPropertyChanged notifier)
@@ -246,21 +273,20 @@ namespace Das.Views.ItemsControls
         }
 
 
-        public override IVisualElement? SelectedVisual
+        public override IBindableElement<T>? SelectedVisual
         {
             get => SelectedTab;
             set => SelectedTab = value;
         }
 
-        protected override void OnSelectedItemChanged(ISelector selector,
-                                                      Object? oldValue,
-                                                      Object? newValue)
+        protected override void OnSelectedItemChanged(T oldValue,
+                                                      T newValue)
         {
             if (newValue != null)
             {
                 foreach (var item in TabItems)
                 {
-                    if (item is IToggleButton toggle && toggle.DataContext == newValue)
+                    if (item is IBindableElement<T> toggle && Equals(toggle.DataContext, newValue))
                     {
                         SelectedTab = toggle;
                         break;
@@ -269,9 +295,8 @@ namespace Das.Views.ItemsControls
             }
         }
 
-        protected override Boolean OnSelectedItemChanging(ISelector selector,
-            Object? oldValue, 
-                                               Object? newValue)
+        protected override Boolean OnSelectedItemChanging(T oldValue, 
+                                                          T newValue)
         {
             if (ItemsSource == null) 
                 return true;
@@ -279,7 +304,7 @@ namespace Das.Views.ItemsControls
 
             foreach (var item in TabItems)
             {
-                if (item is IDataContext dc && dc.Value == oldValue && 
+                if (item is IDataContext dc && Equals(dc.Value, oldValue) && 
                     item is IToggleButton toggle)
                 {
                     toggle.IsChecked = false;
@@ -291,33 +316,14 @@ namespace Das.Views.ItemsControls
         }
 
 
-        //public override void InvalidateMeasure()
-        //{
-        //    base.InvalidateMeasure();
+        private IBindableElement<T>? _selectedTab;
 
-        //    if (SelectedTab is {} tab)
-        //        tab.InvalidateMeasure();
 
-        //    _headerTemplate.Template.InvalidateMeasure();
+        INotifyingCollection ITabControl.TabItems => TabItems;
 
-        //    var _ = TabItems.RunOnEach(v => v.InvalidateMeasure()).ConfigureAwait(false);
-        //}
+        IVisualElement? ITabControl.SelectedTab => SelectedTab;
 
-        //public override Boolean IsRequiresMeasure
-        //{
-        //    get => base.IsRequiresMeasure || _headerTemplate.Template.IsRequiresMeasure;
-        //    protected set => base.IsRequiresMeasure = value;
-        //}
-
-        //public override Boolean IsRequiresArrange
-        //{
-        //    get => base.IsRequiresArrange || _headerTemplate.Template.IsRequiresArrange;
-        //    protected set => base.IsRequiresArrange = value;
-        //}
-
-        private IVisualElement? _selectedTab;
-
-        public IVisualElement? SelectedTab
+        public IBindableElement<T>? SelectedTab
         {
             get => _selectedTab;
             set => SetValue(ref _selectedTab, value, OnSelectedTabChanged);
@@ -329,13 +335,11 @@ namespace Das.Views.ItemsControls
             InvalidateMeasure();
         }
 
-        public AsyncObservableCollection2<IVisualElement> TabItems { get; }
-
-
-
+        public AsyncObservableCollection2<IBindableElement<T>> TabItems { get; }
 
         private IVisualElement? _headerPanel;
         private ValueSize _headerUses;
         private ValueSize _contentUses;
+        
     }
 }

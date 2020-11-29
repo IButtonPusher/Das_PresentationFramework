@@ -67,6 +67,19 @@ namespace Das.Views.Core.Geometry
             return new Rectangle(X, Y, Width, Height);
         }
 
+        public void Update<TPoint, TMargin>(Double x,
+                                            Double y,
+                                            Double width,
+                                            Double height)
+        where TPoint : IPoint2D
+        where TMargin : IShape2d
+        {
+            _left = x;
+            _top = y;
+            _w = width;
+            _h = height;
+        }
+
         public Boolean Equals(IRectangle? other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -101,9 +114,17 @@ namespace Das.Views.Core.Geometry
                    _h.Equals(other._h);
         }
 
-        public Double Top { get; set; }
+        public Double Top
+        {
+            get => _top;
+            set => _top = value;
+        }
 
-        public Double Left { get; set; }
+        public Double Left
+        {
+            get => _left;
+            set => _left = value;
+        }
 
         public Point2D BottomLeft => new Point2D(Left, Top + Height);
 
@@ -234,7 +255,7 @@ namespace Das.Views.Core.Geometry
             return GeometryHelper.IsRectangleContains(this, x, y);
         }
 
-        public ValueRectangle GetUnion(IRoundedRectangle b)
+        public ValueIntRectangle GetUnion(IRoundedRectangle b)
         {
             return GeometryHelper.GetUnion(this, b);
             //var a = this as IRoundedRectangle;
@@ -246,7 +267,7 @@ namespace Das.Views.Core.Geometry
             //return new Rectangle(x1, y1, x2 - x1, y2 - y1);
         }
 
-        public ValueRectangle GetUnion(IEnumerable<IRoundedRectangle> others)
+        public ValueIntRectangle GetUnion(IEnumerable<IRoundedRectangle> others)
         {
             return GeometryHelper.GetUnion(this, others);
 
@@ -363,9 +384,11 @@ namespace Das.Views.Core.Geometry
             return $"x: {Left:0.0}, y: {Top:0.0} w: {_w:0.0} h: {_h:0.0}";
         }
 
-        private Double _h;
+        protected Double _h;
 
         private Int32 _hash;
-        private Double _w;
+        protected Double _w;
+        protected Double _left;
+        protected Double _top;
     }
 }

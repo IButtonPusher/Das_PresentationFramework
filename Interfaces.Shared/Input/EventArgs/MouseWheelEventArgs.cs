@@ -24,6 +24,11 @@ namespace Das.Views.Input
             return new MouseWheelEventArgs(Position.Offset(offset), Delta, InputContext);
         }
 
+        public MouseWheelEventArgs Offset(Double pct)
+        {
+            return new MouseWheelEventArgs(Position.Offset(pct), Delta, InputContext);
+        }
+
         public InputAction Action => InputAction.MouseWheel;
 
         public IInputContext InputContext { get; }

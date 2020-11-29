@@ -10,6 +10,6 @@ namespace Das.Views
         void Run<TViewModel>(TViewModel viewModel, IView view)
             where TViewModel : IViewModel;
 
-        IVisualBootStrapper VisualBootStrapper { get; }
+        IVisualBootstrapper VisualBootstrapper { get; }
     }
 }

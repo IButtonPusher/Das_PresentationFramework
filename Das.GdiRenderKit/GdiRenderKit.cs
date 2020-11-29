@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Das.Container;
 using Das.Views;
 using Das.Views.Controls;
 using Das.Views.Core;
@@ -16,14 +17,16 @@ using Gdi.Shared;
 namespace Das.Gdi.Kits
 {
     public class GdiRenderKit : BaseRenderKit,
-                                       IRenderKit
+                                       IRenderKit,
+                                       IDisplayMetrics
     {
         private readonly IWindowProvider<IVisualHost> _windowProvider;
 
         public GdiRenderKit(IViewPerspective viewPerspective,
                             IWindowProvider<IVisualHost> windowProvider,
-                            IStyleContext styleContext)
-        : base(styleContext)
+                            IStyleContext styleContext,
+                            IResolver container)
+        : base(container, styleContext)
         {
             _windowProvider = windowProvider;
             // ReSharper disable once VirtualMemberCallInConstructor
@@ -32,16 +35,24 @@ namespace Das.Gdi.Kits
             _imageProvider = new GdiImageProvider();
             var lastMeasure = new Dictionary<IVisualElement, ValueSize>();
 
-            MeasureContext = new GdiMeasureContext(this, lastMeasure);
+            MeasureContext = new GdiMeasureContext(this, lastMeasure, styleContext);
             RenderContext = new GdiRenderContext(viewPerspective, 
                 MeasureContext.Graphics, this, _imageProvider, lastMeasure,
-                new Dictionary<IVisualElement, ValueCube>());
+                new Dictionary<IVisualElement, ValueCube>(), styleContext);
 
             Container.ResolveTo<IImageProvider>(_imageProvider);
             Container.ResolveTo<IUiProvider>(new GdiUiProvider(windowProvider));
             Container.ResolveTo(styleContext);
 
             windowProvider.WindowShown += OnWindowShown;
+        }
+
+        public GdiRenderKit(IViewPerspective viewPerspective,
+                            IWindowProvider<IVisualHost> windowProvider,
+                            IStyleContext styleContext)
+        : this(viewPerspective, windowProvider, styleContext, new BaseResolver())
+        {
+           
         }
 
         private IVisualSurrogate GetHtmlPanelSurrogate(IVisualElement element)
@@ -77,7 +88,8 @@ namespace Das.Gdi.Kits
                 _windowControl = ctrl.Controls[0];
             else throw new InvalidOperationException();
 
-            _inputContext = new InputContext(window, new BaseInputHandler(RenderContext));
+            _inputContext = new InputContext(window, new BaseInputHandler(RenderContext,
+                this));
         }
 
       
@@ -87,5 +99,7 @@ namespace Das.Gdi.Kits
         private IVisualHost? _window;
         private Control? _windowControl;
         private readonly GdiImageProvider _imageProvider;
+
+        public Double ZoomLevel => RenderContext.ViewState?.ZoomLevel ?? 1;
     }
 }

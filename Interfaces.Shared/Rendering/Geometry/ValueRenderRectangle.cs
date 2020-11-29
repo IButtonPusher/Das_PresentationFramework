@@ -99,6 +99,9 @@ namespace Das.Views.Rendering.Geometry
             Offset = offset;
         }
 
+        public static readonly ValueRenderRectangle Empty = new ValueRenderRectangle(0, 0, 0, 0,
+            ValuePoint2D.Empty);
+
         public Point2D BottomLeft => new Point2D(Left, Top + Height);
 
         public Point2D BottomRight => new Point2D(Left + Width, Top + Height);
@@ -135,6 +138,11 @@ namespace Das.Views.Rendering.Geometry
         public ValueSize ToValueSize()
         {
             return GeometryHelper.ToValueSize(this);
+        }
+
+        ISize ISize.Divide(Double pct)
+        {
+            return new ValueSize(Width * pct, Height * pct);
         }
 
         ISize ISize.PlusVertical(ISize adding)

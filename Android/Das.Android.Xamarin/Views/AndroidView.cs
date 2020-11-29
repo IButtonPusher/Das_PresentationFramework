@@ -59,11 +59,18 @@ namespace Das.Xamarin.Android
             RenderKit = renderKit;
             RenderKit.RegisterSurrogate<HtmlPanel>(GetHtmlPanelSurrogate);
 
+            ZoomLevel = renderKit.DisplayMetrics.ScaledDensity;
+
+            System.Diagnostics.Debug.WriteLine("Built android view with display w/h: " + 
+                                               renderKit.DisplayMetrics.WidthPixels + ", " + 
+                                               renderKit.DisplayMetrics.HeightPixels + " dpi: " + 
+                                               renderKit.DisplayMetrics.ScaledDensity);
+
             _paintView = new AndroidPaintView(context, renderKit, view);
             // ReSharper disable once VirtualMemberCallInConstructor
             AddView(_paintView);
 
-            _inputHandler = new BaseInputHandler(RenderKit.RenderContext);
+            _inputHandler = new BaseInputHandler(RenderKit.RenderContext, this);
 
             _gestureDetector = new GestureDetectorCompat(context, this);
             _gestureDetector.SetOnDoubleTapListener(this);
@@ -114,8 +121,9 @@ namespace Das.Xamarin.Android
                                                        IStyleContext styleContext)
         {
             var displayMetrics = context.Resources?.DisplayMetrics ?? throw new NullReferenceException();
+            
 
-            var viewState = new AndroidViewState(view);
+            var viewState = new AndroidViewState(view,displayMetrics);
 
             var fontProvider = new AndroidFontProvider(displayMetrics);
             return new AndroidRenderKit(new BasePerspective(), viewState,
@@ -327,7 +335,7 @@ namespace Das.Xamarin.Android
             return _view.StyleContext.GetCurrentAccentColor();
         }
 
-        public Double ZoomLevel => 1;
+        public Double ZoomLevel { get; private set; } = 1;
 
         public AndroidRenderKit RenderKit { get; }
 

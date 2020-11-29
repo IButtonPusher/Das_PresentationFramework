@@ -1,4 +1,5 @@
 ﻿using System;
+using Android.Util;
 using Das.Views.Core.Drawing;
 using Das.Views.Panels;
 using Das.Views.Rendering;
@@ -8,9 +9,11 @@ namespace Das.Xamarin.Android
 {
     public class AndroidViewState : IViewState
     {
-        public AndroidViewState(IView view)
+        public AndroidViewState(IView view,
+                                DisplayMetrics displayMetrics)
         {
             _view = view;
+            ZoomLevel = displayMetrics.ScaledDensity;
         }
 
         public T GetStyleSetter<T>(StyleSetter setter,
@@ -48,7 +51,7 @@ namespace Das.Xamarin.Android
 
         public IColorPalette ColorPalette => _view.StyleContext.ColorPalette;
 
-        public Double ZoomLevel => 1;
+        public Double ZoomLevel { get; }
 
         private readonly IView _view;
     }

@@ -1,31 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Das.Views.DataBinding;
+using Das.Views.Mvvm;
 using Das.Views.Rendering;
 
 namespace Das.Views.Panels
 {
-    public abstract class SelectorVisual : BasePanel,
-                                               ISelector
+    public abstract class SelectorVisual<T> : BasePanel<T>,
+                                               ISelector<T>
+    where T : IEquatable<T>
     {
-        public SelectorVisual(IVisualBootStrapper visualBootStrapper) 
-            : base(visualBootStrapper)
+        public SelectorVisual(IVisualBootstrapper visualBootstrapper) 
+            : base(visualBootstrapper)
         {
         }
 
-        public static readonly DependencyProperty<ISelector, Object?> SelectedItemProperty =
-            DependencyProperty<ISelector, Object?>.Register(nameof(SelectedItem), null);
+        public static readonly DependencyProperty<ISelector<T>, T> SelectedItemProperty =
+            DependencyProperty<ISelector<T>, T>.Register(nameof(SelectedItem), default!);
 
         
 
-        public Object? SelectedItem
+        public T SelectedItem
         {
             get => SelectedItemProperty.GetValue(this);
             set => SelectedItemProperty.SetValue(this, value, OnSelectedItemChanging, 
                 OnSelectedItemChanged);
         }
 
-        public abstract IVisualElement? SelectedVisual { get; set; }
+        public abstract IBindableElement<T>? SelectedVisual { get; set; }
 
 
         //public override Boolean IsRequiresMeasure
@@ -41,16 +42,14 @@ namespace Das.Views.Panels
         //}
 
 
-        protected virtual void OnSelectedItemChanged(ISelector selector,
-                                                     Object? oldValue,
-                                                     Object? newValue)
+        protected virtual void OnSelectedItemChanged(T oldValue,
+                                                     T newValue)
         {
             InvalidateMeasure();
         }
 
-        protected virtual Boolean OnSelectedItemChanging(ISelector selector,
-                                                         Object? oldValue,
-                                               Object? newValue)
+        protected virtual Boolean OnSelectedItemChanging(T oldValue,
+                                                         T newValue)
         {
 
             return true;

@@ -34,12 +34,13 @@ namespace Das.Gdi
 
         //public Int32 Width { get; set; }
 
-        public Boolean UpdateSize(ISize size)
+        public Boolean UpdateSize(Double width,
+                                  Double height)
         {
             lock (_sizeLock)
             {
-                if (size.Width.AreEqualEnough(_width) &&
-                    size.Height.AreEqualEnough(_height))
+                if (width.AreEqualEnough(_width) &&
+                    height.AreEqualEnough(_height))
                     return false;
 
                 if (_currentDib != IntPtr.Zero)
@@ -48,10 +49,10 @@ namespace Das.Gdi
                 if (_memoryDeviceContext != IntPtr.Zero)
                     DeleteDC(_memoryDeviceContext);
 
-                var width = Convert.ToInt32(size.Width);
-                var height = Convert.ToInt32(size.Height);
+                var iwidth = Convert.ToInt32(width);
+                var iheight = Convert.ToInt32(height);
 
-                _memoryDeviceContext = CreateMemoryHdc(IntPtr.Zero, width, height,
+                _memoryDeviceContext = CreateMemoryHdc(IntPtr.Zero, iwidth, iheight,
                     out _currentDib);
 
                 if (_memoryDeviceContext == IntPtr.Zero) 
@@ -59,12 +60,12 @@ namespace Das.Gdi
 
                 _bmp.Dispose();
                 _dcGraphics.Dispose();
-                _bmp = new Bitmap(width, height);
+                _bmp = new Bitmap(iwidth, iheight);
                 using (var g = Graphics.FromImage(_bmp))
                     g.Clear(_backgroundColor);
 
-                _width = width;
-                _height = height;
+                _width = iwidth;
+                _height = iheight;
 
                 _dcGraphics = Graphics.FromHdc(_memoryDeviceContext);
                 _dcGraphics.Clear(_backgroundColor);
@@ -73,6 +74,11 @@ namespace Das.Gdi
 
                 return true;
             }
+        }
+
+        public Boolean UpdateSize(ISize size)
+        {
+            return UpdateSize(size.Width, size.Height);
         }
 
         private static IntPtr CreateMemoryHdc(IntPtr hdc, Int32 width, Int32 height,
@@ -282,7 +288,7 @@ namespace Das.Gdi
             
         }
 
-        private Int32 _testCount;
+        //private Int32 _testCount;
 
 
         [DllImport("gdi32.dll")]

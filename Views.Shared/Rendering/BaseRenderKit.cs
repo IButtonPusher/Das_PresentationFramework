@@ -11,6 +11,8 @@ namespace Das.Views
 {
     public abstract class BaseRenderKit : IVisualSurrogateProvider
     {
+        protected readonly IStyleContext _styleContext;
+
         public IResolver Container { get; }
 
         protected BaseRenderKit(IStyleContext styleContext) 
@@ -22,12 +24,13 @@ namespace Das.Views
         protected BaseRenderKit(IResolver resolver,
                                 IStyleContext styleContext)
         {
+            _styleContext = styleContext;
             Container = resolver;
             _surrogateInstances = new Dictionary<IVisualElement, IVisualSurrogate>();
             _surrogateTypeBuilders = new Dictionary<Type, Func<IVisualElement,IVisualSurrogate>>();
-            var templateResolver = new DefaultVisualBootStrapper(resolver, styleContext);
-            DataTemplates = templateResolver;
-            resolver.ResolveTo<IVisualBootStrapper>(templateResolver);
+            var templateResolver = new DefaultVisualBootstrapper(resolver, styleContext);
+            VisualBootstrapper = templateResolver;
+            resolver.ResolveTo<IVisualBootstrapper>(templateResolver);
         }
 
         public virtual void RegisterSurrogate<T>(Func<IVisualElement, IVisualSurrogate> builder)
@@ -37,7 +40,7 @@ namespace Das.Views
         }
 
        
-        public virtual IVisualBootStrapper DataTemplates { get; }
+        public virtual IVisualBootstrapper VisualBootstrapper { get; }
 
         private readonly Dictionary<Type, Func<IVisualElement, IVisualSurrogate>> _surrogateTypeBuilders;
         private readonly Dictionary<IVisualElement, IVisualSurrogate> _surrogateInstances;

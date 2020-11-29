@@ -11,13 +11,16 @@ namespace Das.Views
     public abstract class ContextBase : IVisualContext
     {
         private readonly Dictionary<IVisualElement, ValueSize> _lastMeasurements;
+        private readonly IStyleContext _styleContext;
         protected readonly Object _measureLock;
         
 
-        public ContextBase(Dictionary<IVisualElement, ValueSize> lastMeasurements)
+        public ContextBase(Dictionary<IVisualElement, ValueSize> lastMeasurements,
+                           IStyleContext styleContext)
         {
             _measureLock = new Object();
             _lastMeasurements = lastMeasurements;
+            _styleContext = styleContext;
         }
 
         public IViewState? ViewState { get; protected set; }
@@ -64,10 +67,8 @@ namespace Das.Views
                 return _lastMeasurements.TryGetValue(element, out var val) ? val : ValueSize.Empty;
         }
 
-        public Double GetZoomLevel()
-        {
-            return ViewState?.ZoomLevel ?? 1;
-        }
+        public Double ZoomLevel => ViewState?.ZoomLevel ?? 1;
+        
 
         protected IViewState GetViewState =>
             ViewState ??

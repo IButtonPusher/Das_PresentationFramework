@@ -22,7 +22,7 @@ namespace ViewCompiler
     {
         public DesignViewWindow(ViewDeserializer serializer, 
                                 FileInfo fileDesigning,
-                                IVisualBootStrapper templateResolver)
+                                IVisualBootstrapper templateResolver)
             : this(serializer, fileDesigning, new BaseStyleContext(new DefaultStyle(),
                     new DefaultColorPalette()),
                 templateResolver)
@@ -34,7 +34,7 @@ namespace ViewCompiler
         private DesignViewWindow(ViewDeserializer serializer,
                                  FileInfo fileDesigning,
                                  IStyleContext styleContext,
-                                 IVisualBootStrapper templateResolver)
+                                 IVisualBootstrapper templateResolver)
             : base(new GdiHostedElement(new View<Object>(templateResolver), styleContext))
         {
             trackBar1 = new TrackBar();

@@ -6,31 +6,38 @@ using Das.Views.Styles;
 
 namespace Das.Views
 {
-    public interface IVisualBootStrapper
+    public interface IVisualBootstrapper
     {
         void ResolveTo<TViewModel, TView>()
             where TView : IView<TViewModel>;
 
-        IVisualElement? TryResolveFromContext(Object dataContext);
+        IDataTemplate? TryResolveFromContext(Object dataContext);
 
-        IVisualElement Instantiate(Type type,
-                                   Int32 styleId);
+        IVisualElement Instantiate(Type type);
 
         IStyleContext StyleContext { get; }
 
         TVisualElement Instantiate<TVisualElement>(Type type)
             where TVisualElement : IVisualElement;
 
-        TBindableElement Instantiate<TBindableElement>(Type type,
-                                                       IDataBinding? binding)
-            where TBindableElement : IBindableElement;
+        //TBindableElement Instantiate<TBindableElement>(Type type,
+        //                                               IDataBinding? binding)
+        //    where TBindableElement : IBindableElement;
 
 
-        TVisualElement Instantiate<TVisualElement>()
+        //TVisualElement Instantiate<TVisualElement>()
+        //    where TVisualElement : IVisualElement;
+
+        //IBindableElement Instantiate(Type type,
+        //                             Object dataContext);
+
+        /// <summary>
+        /// Instantiates a new instance of the provided visual,
+        /// using the supplied data context, if any.  Useful for runtime types
+        /// </summary>
+        TVisualElement InstantiateCopy<TVisualElement>(TVisualElement visual,
+                                                       Object? dataContext)
             where TVisualElement : IVisualElement;
-
-        IBindableElement Instantiate(Type type,
-                                     Object dataContext);
 
         IUiProvider UiProvider { get; }
     }

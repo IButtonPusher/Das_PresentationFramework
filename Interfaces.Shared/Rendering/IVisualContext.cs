@@ -7,7 +7,7 @@ namespace Das.Views.Rendering
 {
     public interface IVisualContext : IStyleProvider
     {
-        Double GetZoomLevel();
+        Double ZoomLevel { get; }
 
         ValueSize GetLastMeasure(IVisualElement element);
     }

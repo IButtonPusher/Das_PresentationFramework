@@ -20,6 +20,13 @@ namespace Das.Views
             _changings = new ConcurrentDictionary<TVisual, List<Func<TVisual, TValue, TValue, Boolean>>>();
             _changeds = new ConcurrentDictionary<TVisual, List<Action<TVisual, TValue, TValue>>>();
             _knownVisuals = new ConcurrentDictionary<TVisual, Byte>();
+            _staticChangeds = new List<Action<TVisual, TValue, TValue>>();
+        }
+
+        public void AddOnChangedHandler(Action<TVisual, TValue, TValue> handler)
+        {
+            lock (_delegateLock)
+                _staticChangeds.Add(handler);
         }
 
         public void AddOnChangedHandler(TVisual forVisual,
@@ -67,9 +74,19 @@ namespace Das.Views
         }
 
         public static DependencyProperty<TVisual, TValue> Register(String propertyName,
+                                                                   TValue defaultValue,
+                                                                   Action<TVisual, TValue, TValue> onChanged)
+        {
+            var res = Register(propertyName, defaultValue);
+            res.AddOnChangedHandler(onChanged);
+            return res;
+        }
+
+        public static DependencyProperty<TVisual, TValue> Register(String propertyName,
             TValue defaultValue)
         {
             return new DependencyProperty<TVisual, TValue>(propertyName, defaultValue);
+            
         }
 
        
@@ -101,6 +118,12 @@ namespace Das.Views
             if (prepend != null)
                 yield return prepend;
 
+            lock (_delegateLock)
+            {
+                foreach (var item in _staticChangeds)
+                    yield return item;
+            }
+
             if (!_changeds.TryGetValue(forVisual, out var interested))
                 yield break;
 
@@ -121,6 +144,34 @@ namespace Das.Views
 
         public void SetValue(TVisual forVisual,
                              TValue value,
+                             Func<TValue, TValue, Boolean> onChanging,
+                             Action<TValue, TValue> onChanged)
+        {
+            SetValueImpl(forVisual, value, 
+                GetOnChanging(forVisual, WrapOnChanging(forVisual, onChanging)),
+                GetOnChanged(forVisual, WrapOnChanged(forVisual, onChanged)));
+        }
+
+        private static Func<TVisual, TValue, TValue, Boolean> WrapOnChanging(TVisual forVisual,
+                                                                             Func<TValue, TValue, Boolean> onChanging)
+        {
+            Boolean Wrapped(TVisual _, TValue oldValue, TValue newValue) 
+                => onChanging(oldValue, newValue);
+
+            return Wrapped;
+        }
+
+        private static Action<TVisual, TValue, TValue> WrapOnChanged(TVisual forVisual,
+                                                                     Action<TValue, TValue> onChanged)
+        {
+            void Wrapped(TVisual _, TValue oldValue, TValue newValue) 
+                => onChanged(oldValue, newValue);
+
+            return Wrapped;
+        }
+
+        public void SetValue(TVisual forVisual,
+                             TValue value,
                              Func<TVisual, TValue, TValue, Boolean> onChanging,
                              Action<TVisual, TValue, TValue> onChanged)
         {
@@ -136,41 +187,6 @@ namespace Das.Views
             SetValueImpl(forVisual, value, 
                 GetOnChanging(forVisual, null),
                 GetOnChanged(forVisual, null));
-
-            //if (_values.TryGetValue(forVisual, out var was))
-            //{
-            //    if (Equals(was, value))
-            //        return;
-            //}
-            //else was = _defaultValue;
-
-
-            //if (_changings.TryGetValue(forVisual, out var interestedParties))
-            //{
-            //    List<Func<TVisual, TValue, TValue, Boolean>> funcs;
-            //    lock (_delegateLock)
-            //    {
-            //        funcs = new List<Func<TVisual, TValue, TValue, Boolean>>(interestedParties);
-            //    }
-
-            //    foreach (var func in funcs)
-            //        if (!func(forVisual, was, value))
-            //            return;
-            //}
-
-            //_values[forVisual] = value;
-
-            //if (!_changeds.TryGetValue(forVisual, out var interested))
-            //    return;
-
-
-            //List<Action<TVisual, TValue, TValue>> actions;
-            //lock (_delegateLock)
-            //{
-            //    actions = new List<Action<TVisual, TValue, TValue>>(interested);
-            //}
-
-            //foreach (var func in actions) func(forVisual, was, value);
         }
 
         private void SetValueImpl(TVisual forVisual,
@@ -199,7 +215,7 @@ namespace Das.Views
                 oc(forVisual, was, value);
             }
 
-            forVisual.RaisePropertyChanged(_propertyName);
+            forVisual.RaisePropertyChanged(_propertyName, value);
 
             //if (!_changeds.TryGetValue(forVisual, out var interested))
             //    return;
@@ -240,9 +256,12 @@ namespace Das.Views
             if (!(visual is TVisual valid))
                 return;
 
+            _knownVisuals.TryRemove(valid, out _);
+
             _values.TryRemove(valid, out _);
             _changeds.TryRemove(valid, out _);
             _changings.TryRemove(valid, out _);
+            
         }
 
         public override String ToString()
@@ -251,6 +270,7 @@ namespace Das.Views
         }
 
         private readonly ConcurrentDictionary<TVisual, List<Action<TVisual, TValue, TValue>>> _changeds;
+        private readonly List<Action<TVisual, TValue, TValue>> _staticChangeds;
         private readonly ConcurrentDictionary<TVisual, List<Func<TVisual, TValue, TValue, Boolean>>> _changings;
         private readonly String _propertyName;
         private readonly TValue _defaultValue;

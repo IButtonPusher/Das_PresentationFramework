@@ -17,9 +17,10 @@ namespace Das.OpenGL
         : base(styleContext)
         {
             var lastMeasurements = new Dictionary<IVisualElement, ValueSize>();
-            MeasureContext = new GLMeasureContext(fontProvider, this, lastMeasurements);
+            MeasureContext = new GLMeasureContext(fontProvider, this, 
+                lastMeasurements, styleContext);
             RenderContext = new GLRenderContext(new BasePerspective(),
-                 glContext, fontProvider, this);
+                 glContext, fontProvider, this, styleContext);
         }
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;

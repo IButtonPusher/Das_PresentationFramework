@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
+using Das.Views.Mvvm;
 using Das.Views.Rendering;
 using Das.Views.Rendering.Geometry;
 
@@ -14,21 +15,23 @@ namespace Das.Views.Panels.Grid
     ///     For each record in the bound collection, a row is created
     /// </summary>
     // ReSharper disable once UnusedType.Global
-    public class RepeaterGrid<T> : BasePanel<IEnumerable<T>>
+    public class RepeaterGrid<TItems, TItem> : ItemsControl<TItems>
+    where TItems : INotifyingCollection<TItem>
     {
-        public RepeaterGrid(IVisualBootStrapper templateResolver) 
+        public RepeaterGrid(IVisualBootstrapper templateResolver)
             : base(templateResolver)
         {
             _controls = new Dictionary<Int32, List<IVisualElement>>();
             _sizes = new Dictionary<Int32, List<ISize>>();
             _columnWidths = new Dictionary<Int32, Double>();
+
         }
 
-        public override void Arrange(IRenderSize availableSpace, 
+        public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
             var rowNumbers = _controls.Keys.ToArray();
-            var targetRect = new RenderRectangle(0, 0, 1, 1, 
+            var targetRect = new RenderRectangle(0, 0, 1, 1,
                 availableSpace.Offset);
 
             foreach (var rowNumber in rowNumbers)
@@ -53,11 +56,22 @@ namespace Das.Views.Panels.Grid
             }
         }
 
-        public override void Dispose()
+        protected override Boolean OnDataContextChanging(Object? oldValue, 
+                                                         Object? newValue)
         {
+            return base.OnDataContextChanging(oldValue, newValue);
         }
 
-        public override ValueSize Measure(IRenderSize availableSpace, 
+        protected override void OnDataContextChanged(Object? newValue)
+        {
+            base.OnDataContextChanged(newValue);
+        }
+
+        //public override void Dispose()
+        //{
+        //}
+
+        public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
         {
             var rowNumbers = _controls.Keys.ToArray();
@@ -91,53 +105,77 @@ namespace Das.Views.Panels.Grid
             return new ValueSize(widthNeeded, heightNeeded);
         }
 
-        public override void SetBoundValue(IEnumerable<T> value)
-        {
-            var content = Children.ToArray();
-            //if (content == null)
-            //    return;
+        //public override void SetBoundValue(IEnumerable<T> value)
+        //{
+        //    var content = Children.ToArray();
+        //    //if (content == null)
+        //    //    return;
 
-            _columnWidths.Clear();
-            for (var c = 0; c < content.Length; c++)
-                _columnWidths.Add(c, 0);
+        //    _columnWidths.Clear();
+        //    for (var c = 0; c < content.Length; c++)
+        //        _columnWidths.Add(c, 0);
 
-            _controls.Clear(); //todo: more efficient
-            var i = 0;
+        //    _controls.Clear(); //todo: more efficient
+        //    var i = 0;
 
-            foreach (var vm in value)
-            {
-                var row = new List<IVisualElement>();
+        //    foreach (var vm in value)
+        //    {
+        //        var row = new List<IVisualElement>();
 
-                foreach (var c in content)
-                {
-                    var ctrl = c.DeepCopy();
-                    if (ctrl is IBindableElement bindable)
-                        bindable.SetDataContext(vm);
+        //        foreach (var c in content)
+        //        {
+        //            var ctrl = c.DeepCopy();
+        //            if (ctrl is IBindableElement bindable)
+        //                bindable.SetDataContext(vm);
 
-                    row.Add(ctrl);
-                }
+        //            row.Add(ctrl);
+        //        }
 
-                _controls.Add(i, row);
-                _sizes.Add(i, new List<ISize>());
+        //        _controls.Add(i, row);
+        //        _sizes.Add(i, new List<ISize>());
 
-                i++;
-            }
-        }
+        //        i++;
+        //    }
+        //}
 
-        public override void SetDataContext(Object? dataContext)
-        {
-            DataContext = dataContext;
+        //public override void SetDataContext(Object? dataContext)
+        //{
+        //    DataContext = dataContext;
 
-            var val = dataContext != null && Binding is {} binding
-                ? binding.GetValue(dataContext)
-                : Enumerable.Empty<T>();
+        //    var val = dataContext != null && Binding is { } binding
+        //        ? binding.GetValue(dataContext)
+        //        : Enumerable.Empty<T>();
 
-            SetBoundValue(val);
-        }
+        //    SetBoundValue(val);
+        //}
 
         private readonly Dictionary<Int32, Double> _columnWidths;
 
         private readonly Dictionary<Int32, List<IVisualElement>> _controls;
         private readonly Dictionary<Int32, List<ISize>> _sizes;
+
+        //private IDataTemplate _itemTemplate;
+
+        //public IDataTemplate? ItemTemplate
+        //{
+        //    get => _itemTemplate;
+        //    set => SetValue(ref _itemTemplate, 
+        //        value ?? new DefaultTabItemTemplate(_visualBootStrapper));
+        //}
+
+        protected override void ClearVisuals()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task AddNewVisualAsync(IVisualElement element)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override IVisualElement? RemoveVisual(Object removing)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

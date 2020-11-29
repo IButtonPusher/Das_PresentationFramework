@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Das.Extensions;
 
 namespace Das.Views.Core.Geometry
 {
-    public class Point2D : IPoint2D, IDeepCopyable<Point2D>
+    public class Point2D : IPoint2D, 
+                           IDeepCopyable<Point2D>
     {
         static Point2D()
         {
@@ -12,12 +14,15 @@ namespace Das.Views.Core.Geometry
 
         public Point2D()
         {
+            IsOrigin = true;
         }
 
-        public Point2D(Double x, Double y)
+        public Point2D(Double x, 
+                       Double y)
         {
             X = x;
             Y = y;
+            IsOrigin = x.IsZero() && y.IsZero();
         }
 
         public Point2D DeepCopy()
@@ -33,6 +38,20 @@ namespace Das.Views.Core.Geometry
         {
             return new ValuePoint2D(X - offset.X, Y - offset.Y);
         }
+
+        public IPoint2D Offset(Double x, 
+                               Double y)
+        {
+            return new ValuePoint2D(X - x, Y - y);
+        }
+
+        public IPoint2D Offset(Double pct)
+        {
+            return GeometryHelper.Offset(this, pct);
+        }
+
+
+        public Boolean IsOrigin { get; }
 
         IPoint2D IDeepCopyable<IPoint2D>.DeepCopy()
         {

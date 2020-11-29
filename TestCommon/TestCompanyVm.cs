@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Das.Views.Extended;
 using Das.Views.Extended.Runtime;
 using TestCommon.Company;
 
 namespace TestCommon
 {
-    public class TestCompanyVm : CompanyViewModel
+    public class TestCompanyVm : CompanyViewModel,
+                                 IEquatable<TestCompanyVm>
     {
         public TestCompanyVm() 
             : base("ACME Inc.", MakeAScene())
@@ -36,6 +38,11 @@ namespace TestCommon
 
             
             
+        }
+
+        public Boolean Equals(TestCompanyVm other)
+        {
+            return ReferenceEquals(this, other);
         }
     }
 }

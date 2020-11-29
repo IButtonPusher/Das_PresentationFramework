@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using Das.Views.Input;
-using Das.Views.Rendering;
 using Das.Views.Styles;
 
 namespace Das.Views.Controls
@@ -10,7 +8,7 @@ namespace Das.Views.Controls
     public class ToggleButton<T> : ButtonBase<T>,
                                    IToggleButton
     {
-        public ToggleButton(IVisualBootStrapper templateResolver)
+        public ToggleButton(IVisualBootstrapper templateResolver)
             : base(templateResolver)
         {
             IsChecked = false;

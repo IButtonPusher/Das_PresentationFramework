@@ -11,5 +11,7 @@ namespace Das.Views.Mvvm
         ///     Sender, Property Name, Old Value, New Value, allow change
         /// </summary>
         event Func<Object, String, Object, Object, Boolean>? PropertyChanging;
+
+        event Action<String, Object?>? PropertyValueChanged;
     }
 }

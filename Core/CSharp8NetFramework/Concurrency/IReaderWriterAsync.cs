@@ -83,9 +83,32 @@ namespace System.Threading
         Task<TResult> WriteAsync<TParam, TResult>(TParam param,
                                                   Func<TParam, Task<TResult>> action);
 
+        Task<TResult> WriteAsync<TParam1, TParam2, TResult>(TParam1 p1,
+                                                            TParam2 p2,
+                                                  Func<TParam1, TParam2, TResult> action);
+
+        Task WriteAsync<TParam1, TParam2>(TParam1 p1,
+                                          TParam2 p2,
+                                          Func<TParam1, TParam2, Task> action);
+
+        Task<TResult> WriteTaskAsync<TParam1, TParam2, TResult>(TParam1 p1,
+                                                            TParam2 p2,
+                                                            Func<TParam1, TParam2, Task<TResult>> action);
+
         Task WriteAsync<TParam1, TParam2>(TParam1 p1,
                                           TParam2 p2,
                                           Action<TParam1, TParam2> action);
+
+        Task WriteAsync<TParam1, TParam2, TParam3>(TParam1 p1,
+                                          TParam2 p2,
+                                          TParam3 p3,
+                                          Action<TParam1, TParam2, TParam3> action);
+
+        Task WriteTaskAsync<TParam1, TParam2, TParam3, TParam4>(TParam1 p1,
+                                                   TParam2 p2,
+                                                   TParam3 p3,
+                                                   TParam4 p4,
+                                                   Func<TParam1, TParam2, TParam3, TParam4, Task> action);
 
         Task<Int32> WriteAsync<TParam>(TParam param,
                                        Func<TParam, Task<Int32>> action);

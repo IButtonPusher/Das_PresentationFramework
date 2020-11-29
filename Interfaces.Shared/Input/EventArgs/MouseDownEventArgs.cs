@@ -38,6 +38,12 @@ namespace Das.Views.Input
                 Button, InputContext);
         }
 
+        public MouseDownEventArgs Offset(Double pct)
+        {
+            return new MouseDownEventArgs(Position.Offset(pct),
+                Button, InputContext);
+        }
+
         public InputAction Action { get; }
 
         public IInputContext InputContext { get; }

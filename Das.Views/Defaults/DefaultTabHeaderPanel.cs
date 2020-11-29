@@ -18,19 +18,19 @@ namespace Das.Views.Defaults
     public class DefaultTabHeaderPanel : BasePanel
     {
         
-        public DefaultTabHeaderPanel(TabControl tabControl,
-                                     IVisualBootStrapper visualBootStrapper) : 
-            base(visualBootStrapper)
+        public DefaultTabHeaderPanel(ITabControl tabControl,
+                                     IVisualBootstrapper visualBootstrapper) : 
+            base(visualBootstrapper)
         {
             _indicatorRect = new RenderRectangle();
             _itemsControl = tabControl;
             _tabsUsed = Size.Empty;
             _indicatord = Size.Empty;
 
-            _indicator = new HorizontalRule(visualBootStrapper);
-            _lastStyleContext = visualBootStrapper.StyleContext;
+            _indicator = new HorizontalRule(visualBootstrapper);
+            _lastStyleContext = visualBootstrapper.StyleContext;
 
-            _separator = new HorizontalRule(visualBootStrapper);
+            _separator = new HorizontalRule(visualBootstrapper);
             _lastStyleContext.RegisterStyleSetter(_indicator,
                 StyleSetter.Transition, new[]
                 {
@@ -43,20 +43,23 @@ namespace Das.Views.Defaults
                 StyleSetter.HorizontalAlignment, HorizontalAlignments.Left);
 
             _lastStyleContext.RegisterStyleSetter(_indicator,
-                StyleSetter.Background, visualBootStrapper.StyleContext.GetCurrentAccentColor().ToBrush());
+                StyleSetter.Background, visualBootstrapper.StyleContext.GetCurrentAccentColor().ToBrush());
             _lastStyleContext.RegisterStyleSetter(_separator,
                 StyleSetter.Background, SolidColorBrush.LightGray);
 
             Background = _lastStyleContext.ColorPalette.Background.ToBrush();
 
-            var stackPanel = new StackPanel<Object>(visualBootStrapper)
+            var stackPanel = new UniformStackPanel<Object>(visualBootstrapper)
             {
                 Orientation = Orientations.Horizontal
             };
-            stackPanel.AddBinding(new SourceBinding(tabControl, nameof(tabControl.TabItems),
-                stackPanel, nameof(StackPanel<Object>.Children)));
 
-            _scrollPanel = new ScrollPanel<Object>(visualBootStrapper)
+            var spBinding = new OneWayCollectionBinding(tabControl, nameof(tabControl.TabItems),
+                stackPanel, nameof(StackPanel<Object>.Children));
+
+            stackPanel.AddBinding(spBinding);
+
+            _scrollPanel = new ScrollPanel<Object>(visualBootstrapper)
             {
                 Content = stackPanel,
                 ScrollMode = ScrollMode.Horizontal,
@@ -64,6 +67,10 @@ namespace Das.Views.Defaults
             };
 
             _scrollPanel.VerticalAlignment = VerticalAlignments.Top;
+            VerticalAlignment = VerticalAlignments.Top;
+
+            Background = SolidColorBrush.Red;
+            
 
             //_scrollPanel.PropertyChanged += OnScrollPropertyChanged;
 
@@ -77,8 +84,9 @@ namespace Das.Views.Defaults
         {
             switch (e.PropertyName)
             {
-                case nameof(TabControl.SelectedTab) when _lastStyleContext is { } styleContext:
-                    if (_itemsControl.SelectedTab is { } valid) MoveIndicatorRect();
+                case nameof(ITabControl.SelectedTab) when _lastStyleContext is { } styleContext:
+                    if (_itemsControl.SelectedTab is { } valid) 
+                        MoveIndicatorRect();
                     break;
             }
         }
@@ -96,11 +104,6 @@ namespace Das.Views.Defaults
                 availableSpace.Offset);
             _tabsUsed = measureContext.MeasureElement(_scrollPanel, tabsAvailable);
 
-            //_tabsUsed = _tabPageRenderer.Measure(valid, _itemsControl.TabItems,
-            //    Orientations.Horizontal, availableSpace, measureContext);
-
-            //_tabWidthDeficit = _tabsUsed.Width - availableSpace.Width;
-
             measureContext.MeasureElement(_separator,
                 new ValueRenderSize(_indicatorRect.Width, SEPARATOR_LINE_HEIGHT,
                     availableSpace.Offset));
@@ -115,7 +118,7 @@ namespace Das.Views.Defaults
 
             return new ValueSize(_tabsUsed.Width, _tabsUsed.Height +
                                                   INDICATOR_LINE_HEIGHT +
-                                                  //SEPARATOR_GAP_TOP + 
+                                                  SEPARATOR_GAP_TOP + 
                                                   SEPARATOR_GAP_BOTTOM);
         }
 
@@ -161,9 +164,12 @@ namespace Das.Views.Defaults
                                                        _scrollPanel.HorizontalOffset,
                     availableSpace.Offset.Y);
 
-                var indicatorRect = new ValueRenderRectangle(0 - _scrollPanel.HorizontalOffset, 
+                var indicatorRect = new ValueRenderRectangle(
+                    0 - _scrollPanel.HorizontalOffset, 
+                    //separatorRect.Y,
                     availableSpace.Height - (SEPARATOR_GAP_BOTTOM + INDICATOR_LINE_HEIGHT),
-                    _indicatord, indicatorOffset);
+                    _indicatord, 
+                    indicatorOffset);
 
                 renderContext.DrawElement(_indicator, indicatorRect);
             }
@@ -198,7 +204,7 @@ namespace Das.Views.Defaults
 
         private Size _tabsUsed;
 
-        private TabControl _itemsControl;
+        private ITabControl _itemsControl;
         private Size _indicatord;
         private IElementLocator? _lastElementLocator;
         private Rectangle _indicatorRect;

@@ -13,24 +13,32 @@ namespace Das.Views.Panels
                                     IRepeaterPanel<T>
     {
         // ReSharper disable once UnusedMember.Global
-        public RepeaterPanel(IVisualBootStrapper templateResolver) 
+        public RepeaterPanel(IVisualBootstrapper templateResolver) 
             : this(new SequentialRenderer(), templateResolver)
         {
         }
 
         public RepeaterPanel(ISequentialRenderer renderer,
-                             IVisualBootStrapper visualBootStrapper)
-        : base(visualBootStrapper)
+                             IVisualBootstrapper visualBootstrapper)
+        : base(visualBootstrapper)
         {
             _controls = new List<IVisualElement>();
             _renderer = EnsureRenderer(renderer);
         }
 
+        public RepeaterPanel(IDataBinding<IEnumerable<T>> binding,
+                             IVisualBootstrapper visualBootstrapper) 
+            // ReSharper disable once IntroduceOptionalParameters.Global
+            : this(binding, visualBootstrapper, null)
+        {
+            
+        }
+
         // ReSharper disable once UnusedMember.Global
         public RepeaterPanel(IDataBinding<IEnumerable<T>> binding,
-                             IVisualBootStrapper visualBootStrapper,
-                             ISequentialRenderer? renderer = null) 
-            : base(visualBootStrapper, binding)
+                             IVisualBootstrapper visualBootstrapper,
+                             ISequentialRenderer? renderer) 
+            : base(visualBootstrapper, binding)
         {
             _controls = new List<IVisualElement>();
             _renderer = EnsureRenderer(renderer);
@@ -46,7 +54,8 @@ namespace Das.Views.Panels
         public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
         {
-            return _renderer.Measure(this, _controls, Orientation, availableSpace, measureContext);
+            var res = _renderer.Measure(this, _controls, Orientation, availableSpace, measureContext);
+            return res;
         }
 
         public override void Arrange(IRenderSize availableSpace, 
@@ -57,6 +66,8 @@ namespace Das.Views.Panels
 
         public override void Dispose()
         {
+            base.Dispose();
+
             for (var c = 0; c < _controls.Count; c++)
                 _controls[c].Dispose();
 
@@ -79,7 +90,7 @@ namespace Das.Views.Panels
 
         public override async Task SetDataContextAsync(Object? dataContext)
         {
-            DataContext = dataContext;
+            //DataContext = dataContext;
             if (!(Binding is {} binding))
                 return;
 

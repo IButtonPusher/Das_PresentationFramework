@@ -26,9 +26,5 @@ namespace Das.Views.DataBinding
             return _propertyName;
         }
 
-        public override void Dispose()
-        {
-            
-        }
     }
 }

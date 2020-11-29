@@ -14,7 +14,7 @@ namespace Das.Views.Charting.Pie
                                                IVisualFinder
         where TValue : IConvertible
     {
-        public PieLegendItem(IVisualBootStrapper templateResolver)
+        public PieLegendItem(IVisualBootstrapper templateResolver)
         : base(templateResolver)
         {
             _label = new Label<IDataPoint<TKey, TValue>>(templateResolver);
@@ -39,9 +39,9 @@ namespace Das.Views.Charting.Pie
             renderContext.DrawElement(_label, rect);
         }
 
-        public override void Dispose()
-        {
-        }
+        //public override void Dispose()
+        //{
+        //}
 
         public override ValueSize Measure(IRenderSize availableSpace, 
                                           IMeasureContext measureContext)

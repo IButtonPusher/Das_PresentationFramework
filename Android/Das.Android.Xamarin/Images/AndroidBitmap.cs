@@ -102,6 +102,11 @@ namespace Das.Xamarin.Android
             throw new NotImplementedException();
         }
 
+        ISize ISize.Divide(Double pct)
+        {
+            return GeometryHelper.Divide(this, pct);
+        }
+
         public void UnwrapLocked<T>(Action<T> action)
         {
             lock (_unwrapLock)

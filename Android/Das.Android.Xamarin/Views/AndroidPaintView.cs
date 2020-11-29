@@ -54,8 +54,8 @@ namespace Das.Xamarin.Android
             _targetRect = new ValueRectangle(
                 0, // X
                 0, // Y
-                sz.Width,
-                sz.Height);
+                sz.Width / _viewState.ZoomLevel,
+                sz.Height/ _viewState.ZoomLevel);
             //_measured.Width, _measured.Height);
 
             //_targetRect = new ValueRectangle(

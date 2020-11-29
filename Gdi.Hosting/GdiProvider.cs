@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Das.Container;
 using Das.Gdi.Controls;
 using Das.Gdi.Kits;
 using Das.Views;
@@ -20,20 +21,27 @@ namespace Das.Gdi
         public GdiProvider(GdiRenderKit renderKit)
         {
             RenderKit = renderKit;
-            VisualBootStrapper = renderKit.DataTemplates;
+            VisualBootstrapper = renderKit.VisualBootstrapper;
         }
 
-        public GdiProvider()
+        public GdiProvider(IResolver container)
         {
-            RenderKit = GetKit(this);
-            VisualBootStrapper = RenderKit.DataTemplates;
+            RenderKit = GetKit(this, container);
+            VisualBootstrapper = RenderKit.VisualBootstrapper;
         }
 
-        private static GdiRenderKit GetKit(IWindowProvider<IVisualHost> windowProvider)
+        public GdiProvider() : this(new BaseResolver())
+        {
+            
+        }
+
+        private static GdiRenderKit GetKit(IWindowProvider<IVisualHost> windowProvider,
+                                           IResolver container)
         {
             var perspective = new BasePerspective();
             var kit = new GdiRenderKit(perspective, windowProvider,
-                new BaseStyleContext(new DefaultStyle(), new DefaultColorPalette()));
+                new BaseStyleContext(new DefaultStyle(), new DefaultColorPalette()),
+                container);
             return kit;
         }
 
@@ -111,7 +119,7 @@ namespace Das.Gdi
             Application.Run(window);
         }
 
-        public IVisualBootStrapper VisualBootStrapper { get; }
+        public IVisualBootstrapper VisualBootstrapper { get; }
 
         // ReSharper disable once UnusedMember.Global
         public GdiHostedElement Host<TViewModel>(TViewModel viewModel, 

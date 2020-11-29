@@ -38,9 +38,6 @@ namespace Das.Views.DataBinding
         private readonly IDataContext? _dataContext;
         private readonly PropertyInfo _prop;
 
-        public override void Dispose()
-        {
-            
-        }
+       
     }
 }

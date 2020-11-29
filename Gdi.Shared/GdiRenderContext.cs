@@ -11,6 +11,7 @@ using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
+using Das.Views.Styles;
 using Color = Das.Views.Core.Drawing.Color;
 using Pen = Das.Views.Core.Drawing.Pen;
 using Point = System.Drawing.Point;
@@ -27,8 +28,10 @@ namespace Das.Gdi
                                 IVisualSurrogateProvider surrogateProvider,
                                 IImageProvider imageProvider,
                                 Dictionary<IVisualElement, ValueSize> lastMeasures,
-                                Dictionary<IVisualElement, ValueCube> renderPositions)
-            : base(perspective, surrogateProvider, renderPositions, lastMeasures)
+                                Dictionary<IVisualElement, ValueCube> renderPositions,
+                                IStyleContext styleContext)
+            : base(perspective, surrogateProvider, renderPositions, 
+                lastMeasures, styleContext)
         {
             //windowProvider.WindowShown += OnWindowShown;
 

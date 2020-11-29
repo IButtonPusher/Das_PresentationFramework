@@ -1,17 +1,21 @@
 ﻿using Das.Gdi;
 using System.IO;
 using System.Threading.Tasks;
+using Das.Serializer;
 using Das.Views.Panels;
 using Das.Views;
 
 namespace ViewCompiler
 {
-    public class ViewProvider : GdiProvider, IViewProvider
+    public class ViewProvider : GdiProvider, 
+                                IViewProvider
     {
         public ViewProvider()
         {
             var serializer = GetViewDeserializer();
             _builder = new ViewBuilderProvider(serializer);
+
+            TypeInferrer = serializer.TypeInferrer;
         }
 
         public async Task<IView> GetView(FileInfo file)
@@ -21,6 +25,7 @@ namespace ViewCompiler
         }
 
         private readonly ViewBuilderProvider _builder;
+        public ITypeInferrer TypeInferrer { get; }
 
         
         public static ViewDeserializer GetViewDeserializer()

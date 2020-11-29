@@ -23,6 +23,11 @@ namespace Das.Views.Core.Geometry
             return new Size(Width, Height);
         }
 
+        ISize ISize.Divide(Double pct)
+        {
+            return GeometryHelper.Divide(this, pct);
+        }
+
         public virtual Double Width
         {
             get => _width;

@@ -11,16 +11,18 @@ namespace Das.Views.Rendering
     /// <summary>
     ///     Renders a collection of elements vertically or horizontally
     /// </summary>
-    public class SequentialRenderer : ISequentialRenderer
+    public class SequentialRenderer : ISequentialRenderer,
+                                      IDisposable
     {
         public SequentialRenderer(Boolean isWrapContent = false)
         {
             _measureLock = new Object();
+            _currentlyRendering = new List<IVisualElement>();
             _isWrapContent = isWrapContent;
-            ElementsRendered = new Dictionary<IVisualElement, RenderRectangle>();
+            ElementsRendered = new Dictionary<IVisualElement, ValueRenderRectangle>();
         }
 
-        public ValueSize Measure(IVisualElement container, 
+        public virtual ValueSize Measure(IVisualElement container, 
                                  IList<IVisualElement> elements,
                                  Orientations orientation, 
                                  IRenderSize availableSpace, 
@@ -28,6 +30,8 @@ namespace Das.Views.Rendering
         {
             lock (_measureLock)
             {
+                _currentlyRendering.Clear();
+
                 var remainingSize = new RenderSize(availableSpace.Width,
                     availableSpace.Height, availableSpace.Offset);
 
@@ -39,13 +43,20 @@ namespace Das.Views.Rendering
                 var maxHeight = 0.0;
 
                 ElementsRendered.Clear();
-
-                //foreach (var child in elements)
+                
                 for (var c = 0; c < elements.Count; c++)
                 {
                     var child = elements[c];
+                    _currentlyRendering.Add(child);
+
                     current.Size = measureContext.MeasureElement(child, remainingSize);
-                    ElementsRendered[child] = current.DeepCopy();
+                    var offset = SetChildSize(child, current);
+                    if (!offset.IsEmpty)
+                    {
+                        current.Width += offset.Width;
+                        current.Height += offset.Height;
+                    }
+                    
 
                     switch (orientation)
                     {
@@ -104,28 +115,81 @@ namespace Das.Views.Rendering
                             IRenderContext renderContext)
         {
 
-            foreach (var kvp in ElementsRendered)
+            foreach (var kvp in GetRenderables(orientation, bounds))
             {
-                var child = kvp.Key;
-                var current = ElementsRendered[child];
-                switch (orientation)
-                {
-                    case Orientations.Vertical:
-                        current = new RenderRectangle(current.X, current.Y, bounds.Width,
-                            current.Height, current.Offset);
-                        break;
-                    case Orientations.Horizontal:
-                        current = new RenderRectangle(current.X + bounds.X, current.Y, current.Width,
-                            bounds.Height, current.Offset);
-                        break;
-                }
+                renderContext.DrawElement(kvp.Key, kvp.Value);
+            }
 
-                renderContext.DrawElement(child, current);
+            //foreach (var kvp in ElementsRendered)
+            //{
+            //    var child = kvp.Key;
+            //    var current = ElementsRendered[child];
+            //    switch (orientation)
+            //    {
+            //        case Orientations.Vertical:
+            //            current = new ValueRenderRectangle(current.X, current.Y, bounds.Width,
+            //                current.Height, current.Offset);
+            //            break;
+            //        case Orientations.Horizontal:
+            //            current = new ValueRenderRectangle(current.X + bounds.X, current.Y, current.Width,
+            //                bounds.Height, current.Offset);
+            //            break;
+            //    }
+
+            //    renderContext.DrawElement(child, current);
+            //}
+        }
+
+        protected virtual ValueSize SetChildSize(IVisualElement child,
+                                            RenderRectangle current)
+        {
+            ElementsRendered[child] = new ValueRenderRectangle(current);
+            return ValueSize.Empty;
+        }
+
+        protected virtual ValueRenderRectangle GetElementBounds(IVisualElement child,
+                                                                ValueRenderRectangle precedingVisualBounds)
+        {
+            return ElementsRendered[child];
+        }
+
+        protected virtual IEnumerable<KeyValuePair<IVisualElement, ValueRenderRectangle>> GetRenderables(
+            Orientations orientation,
+            IRenderRectangle bounds)
+        {
+            lock (_measureLock)
+            {
+                var current = ValueRenderRectangle.Empty;
+
+                foreach (var child in _currentlyRendering)
+                {
+                    current = GetElementBounds(child, current);
+
+                    switch (orientation)
+                    {
+                        case Orientations.Vertical:
+                            current = new ValueRenderRectangle(current.X, current.Y, bounds.Width,
+                                current.Height, current.Offset);
+                            break;
+
+                        case Orientations.Horizontal:
+                            current = new ValueRenderRectangle(current.X + bounds.X, current.Y, current.Width,
+                                bounds.Height, current.Offset);
+                            break;
+                    }
+
+                    yield return new KeyValuePair<IVisualElement, ValueRenderRectangle>(child, current);
+                }
             }
         }
 
+        //protected virtual ValueRenderRectangle GetCoreTargetRect(IVisualElement visual)
+        //{
+        //    return ElementsRendered[visual];
+        //}
+
         public Boolean TryGetRenderedElement(IVisualElement element,
-                                             out RenderRectangle pos)
+                                             out ValueRenderRectangle pos)
         {
             lock (_measureLock)
             {
@@ -133,8 +197,15 @@ namespace Das.Views.Rendering
             }
         }
 
-        private readonly Boolean _isWrapContent;
-        private readonly Object _measureLock;
-        public Dictionary<IVisualElement, RenderRectangle> ElementsRendered { get; }
+        protected readonly Boolean _isWrapContent;
+        protected readonly List<IVisualElement> _currentlyRendering;
+        protected readonly Object _measureLock;
+        private Dictionary<IVisualElement, ValueRenderRectangle> ElementsRendered { get; }
+
+        public virtual void Dispose()
+        {
+            _currentlyRendering.Clear();
+            ElementsRendered.Clear();
+        }
     }
 }

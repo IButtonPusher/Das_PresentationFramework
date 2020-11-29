@@ -19,11 +19,11 @@ namespace Das.Views.Defaults
     public class DefaultTabHeaderTemplate : DefaultContentTemplate
         //, IHandleInput<DragEventArgs>
     {
-        public DefaultTabHeaderTemplate(IVisualBootStrapper visualBootStrapper,
-                                        TabControl tabControl)
-            : base(visualBootStrapper, tabControl)
+        public DefaultTabHeaderTemplate(IVisualBootstrapper visualBootstrapper,
+                                        ITabControl tabControl)
+            : base(visualBootstrapper, tabControl)
         {
-            _visualBootStrapper = visualBootStrapper;
+            _visualBootstrapper = visualBootstrapper;
             _itemsControl = tabControl;
             //tabControl.PropertyChanged += OnTabPropertyChanged;
             //_indicator = new HorizontalRule(visualBootStrapper);
@@ -31,7 +31,7 @@ namespace Das.Views.Defaults
             _tabsUsed = Size.Empty;
             _indicatord = Size.Empty;
 
-            _lastStyleContext = visualBootStrapper.StyleContext;
+            _lastStyleContext = visualBootstrapper.StyleContext;
             //_tabPageRenderer = new SequentialRenderer();
             //_separator = new HorizontalRule(visualBootStrapper);
             //_lastStyleContext.RegisterStyleSetter(_indicator,
@@ -71,7 +71,7 @@ namespace Das.Views.Defaults
 
         public override IVisualElement? BuildVisual(Object? dataContext)
         {
-            return new DefaultTabHeaderPanel(_itemsControl, _visualBootStrapper);
+            return new DefaultTabHeaderPanel(_itemsControl, _visualBootstrapper);
         }
 
         private void OnScrollPropertyChanged(Object sender, PropertyChangedEventArgs e)
@@ -216,7 +216,7 @@ namespace Das.Views.Defaults
         public override void OnParentChanging(IContainerVisual? newParent)
         {
             base.OnParentChanging(newParent);
-            _itemsControl = newParent as TabControl ?? throw new InvalidOperationException();
+            _itemsControl = newParent as ITabControl ?? throw new InvalidOperationException();
         }
 
 
@@ -261,8 +261,8 @@ namespace Das.Views.Defaults
         //private readonly SequentialRenderer _tabPageRenderer;
         private Size _indicatord;
         private Rectangle _indicatorRect;
-        private readonly IVisualBootStrapper _visualBootStrapper;
-        private TabControl _itemsControl;
+        private readonly IVisualBootstrapper _visualBootstrapper;
+        private ITabControl _itemsControl;
 
         private IStyleProvider _lastStyleContext;
         //private IElementLocator? _lastElementLocator;

@@ -73,6 +73,12 @@ namespace Das.Views.DevKit
             
         }
 
+        public void RaisePropertyChanged(String propertyName, 
+                                         Object? value)
+        {
+            
+        }
+
         public void RaisePropertyChanged(String propertyName)
         {
             

@@ -14,6 +14,8 @@ namespace Das.Views.Core.Geometry
 
         ISize Minus(ISize subtract);
 
+        ISize Divide(Double pct);
+
         ISize PlusVertical(ISize adding);
 
         ISize Reduce(Thickness padding);

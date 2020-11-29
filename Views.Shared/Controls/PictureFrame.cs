@@ -12,13 +12,14 @@ namespace Das.Views.Controls
     // ReSharper disable once UnusedMember.Global
     public class PictureFrame : BindableElement<IImage>
     {
-        public PictureFrame(IVisualBootStrapper visualBootStrapper) : base(visualBootStrapper)
+        public PictureFrame(IVisualBootstrapper visualBootstrapper) 
+            : base(visualBootstrapper)
         {
         }
 
         public PictureFrame(IDataBinding<IImage> value,
-                            IVisualBootStrapper visualBootStrapper) 
-            : base(value, visualBootStrapper)
+                            IVisualBootstrapper visualBootstrapper) 
+            : base(value, visualBootstrapper)
         {
         }
 
@@ -45,6 +46,7 @@ namespace Das.Views.Controls
 
         public override void Dispose()
         {
+            base.Dispose();
             _currentImage?.Dispose();
         }
 
@@ -82,6 +84,17 @@ namespace Das.Views.Controls
             }
 
             return size;
+        }
+
+
+        public static DependencyProperty<PictureFrame, IImage?> ImageProperty =
+            DependencyProperty<PictureFrame, IImage?>.Register(nameof(Image),
+                default);
+
+        public IImage? Image
+        {
+            get => ImageProperty.GetValue(this);
+            set => ImageProperty.SetValue(this, value);
         }
 
         private IImage? _currentImage;

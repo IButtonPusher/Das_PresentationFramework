@@ -18,12 +18,24 @@ namespace Das.Views.Mvvm
         {
             PropertyChanged = null;
             PropertyChanging = null;
+            PropertyValueChanged = null;
         }
 
         /// <summary>
         ///     Sender, Property Name, Old Value, New Value, allow change
         /// </summary>
         public event Func<Object, String, Object, Object, Boolean>? PropertyChanging;
+
+        public event Action<String, Object?>? PropertyValueChanged;
+
+        protected virtual void RaisePropertyChanged(String propertyName,
+                                                    Object? newValue)
+        {
+            if (PropertyValueChanged is { } propValChanged)
+                propValChanged(propertyName, newValue);
+
+            RaisePropertyChanged(propertyName);
+        }
 
         protected virtual void RaisePropertyChanged(String propertyName)
         {
@@ -47,11 +59,10 @@ namespace Das.Views.Mvvm
                                               T value,
                                               [CallerMemberName] String? propertyName = null)
         {
-            if (Equals(field, value) ||
-                propertyName != null && !VerifyCanChangeValue(field, value, propertyName))
+            if (propertyName != null && !VerifyCanChangeValue(field, value, null, propertyName))
                 return false;
 
-            SetValueImpl(ref field, value, propertyName);
+            SetValueImpl(ref field, value, null, propertyName);
             return true;
         }
 
@@ -62,14 +73,10 @@ namespace Das.Views.Mvvm
                                            Func<T, Task> handleValueChanged,
                                            [CallerMemberName] String propertyName = "")
         {
-            if (Equals(field, newValue) ||
-                !VerifyCanChangeValue(field, newValue, propertyName))
+            if (!VerifyCanChangeValue(field, newValue, null, propertyName))
                 return;
 
-            field = newValue;
-
-            RaisePropertyChanged(propertyName);
-            handleValueChanged(newValue);
+            SetValueImpl(ref field, newValue, handleValueChanged, propertyName);
         }
 
         [DebuggerStepThrough]
@@ -79,13 +86,13 @@ namespace Das.Views.Mvvm
                                            Func<T, T, Boolean> onValueChanging,
                                            [CallerMemberName] String propertyName = "")
         {
-            if (Equals(field, newValue) || !VerifyCanChangeValue(field, newValue, propertyName))
+            if (!VerifyCanChangeValue(field, newValue, onValueChanging, propertyName))
                 return;
 
-            if (!onValueChanging(field, newValue))
-                return;
+            //if (!onValueChanging(field, newValue))
+            //    return;
 
-            SetValueImpl(ref field, newValue, propertyName);
+            SetValueImpl(ref field, newValue, null, propertyName);
         }
 
         [DebuggerStepThrough]
@@ -96,13 +103,13 @@ namespace Das.Views.Mvvm
                                            Action<T> handleValueChanged,
                                            [CallerMemberName] String propertyName = "")
         {
-            if (Equals(field, newValue) || !VerifyCanChangeValue(field, newValue, propertyName))
+            if (!VerifyCanChangeValue(field, newValue, onValueChanging, propertyName))
                 return;
 
-            if (!onValueChanging(field, newValue))
-                return;
+            //if (!onValueChanging(field, newValue))
+            //    return;
 
-            SetValue(ref field, newValue, handleValueChanged, propertyName);
+            SetValueImpl(ref field, newValue, handleValueChanged, propertyName);
         }
 
         [DebuggerStepThrough]
@@ -113,26 +120,31 @@ namespace Das.Views.Mvvm
                                            Func<T, Task> handleValueChangedAsync,
                                            [CallerMemberName] String propertyName = "")
         {
-            if (Equals(field, newValue) || !VerifyCanChangeValue(field, newValue, propertyName))
+            if (!VerifyCanChangeValue(field, newValue, onValueChanging, propertyName))
                 return;
 
-            if (!onValueChanging(field, newValue))
-                return;
+            //if (!onValueChanging(field, newValue))
+            //    return;
 
-            SetValue(ref field, newValue, handleValueChangedAsync, propertyName);
+            SetValueImpl(ref field, newValue, handleValueChangedAsync, propertyName);
         }
 
         [DebuggerStepThrough]
         [DebuggerHidden]
         protected virtual Boolean SetValue<T>(ref T field,
-                                              T value,
+                                              T newValue,
                                               Action<T> onValueChanged,
-                                              [CallerMemberName] String? propertyName = null)
+                                              [CallerMemberName] String propertyName = "")
         {
-            if (!SetValue(ref field, value, propertyName))
+            if (!VerifyCanChangeValue(field, newValue, null, propertyName))
                 return false;
-            onValueChanged(value);
+
+            SetValueImpl(ref field, newValue, onValueChanged, propertyName);
             return true;
+            //if (!SetValue(ref field, value, propertyName))
+            //    return false;
+            //onValueChanged(value);
+            //return true;
         }
 
         // ReSharper disable once UnusedMember.Global
@@ -147,18 +159,47 @@ namespace Das.Views.Mvvm
         // ReSharper disable once RedundantAssignment
         private void SetValueImpl<T>(ref T field,
                                      T value,
+                                     Func<T, Task>? handleValueChanged,
                                      [CallerMemberName] String? propertyName = null)
         {
             field = value;
 
+            if (handleValueChanged is { } validHandler)
+                validHandler(value);
+
             if (propertyName != null)
-                RaisePropertyChanged(propertyName);
+                RaisePropertyChanged(propertyName, value);
+        }
+
+        [DebuggerStepThrough]
+        [DebuggerHidden]
+        // ReSharper disable once RedundantAssignment
+        private void SetValueImpl<T>(ref T field,
+                                     T value,
+                                     Action<T>? handleValueChanged,
+                                     [CallerMemberName] String? propertyName = null)
+        {
+            field = value;
+
+            if (handleValueChanged is { } validHandler)
+                validHandler(value);
+
+            if (propertyName != null)
+                RaisePropertyChanged(propertyName, value);
         }
 
         private Boolean VerifyCanChangeValue<T>(T oldValue,
                                                 T newValue,
+                                                Func<T, T, Boolean>? handleValueChanging,
                                                 String propertyName)
         {
+            if (Equals(oldValue, newValue))
+                return false;
+
+            if (handleValueChanging is { } validHandler &&
+                !validHandler(oldValue, newValue))
+                return false;
+
             if (!(PropertyChanging is { } valid))
                 return true;
 

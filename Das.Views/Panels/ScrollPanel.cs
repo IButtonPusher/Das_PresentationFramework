@@ -18,11 +18,11 @@ namespace Das.Views.Panels
                                   IHandleInput<MouseDownEventArgs>,
                                   IHandleInput<MouseUpEventArgs>
     {
-        public ScrollPanel(IVisualBootStrapper visualBootStrapper)
-        :  base(visualBootStrapper)
+        public ScrollPanel(IVisualBootstrapper visualBootstrapper)
+        :  base(visualBootstrapper)
         {
-            _lastAvailable = Size.Empty;
-            _lastNeeded = Size.Empty;
+            _lastAvailable = ValueSize.Empty;
+            _lastNeeded = ValueSize.Empty;
 
             _flingHandler = new FlingHandler(() => IsScrollsHorizontal,
                 () => IsScrollsVertical, OnScroll);
@@ -164,8 +164,8 @@ namespace Das.Views.Panels
                 new ValueRenderSize(w, h,new ValuePoint2D(HorizontalOffset, VerticalOffset)), 
                 measureContext);
 
-            var res = new ValueSize(Math.Min(_lastNeeded.Width, availableSpace.Width),
-                Math.Min(_lastNeeded.Height, availableSpace.Height));
+            //var res = new ValueSize(Math.Min(_lastNeeded.Width, availableSpace.Width),
+            //    Math.Min(_lastNeeded.Height, availableSpace.Height));
 
             _maximumYScroll = IsScrollsVertical
                 ? Math.Max(_lastNeeded.Height - _lastAvailable.Height, 0)
@@ -177,7 +177,7 @@ namespace Das.Views.Panels
 
             IsRequiresMeasure = false;
 
-            return res;
+            return _lastNeeded;
         }
 
 
@@ -207,7 +207,7 @@ namespace Das.Views.Panels
         private readonly FlingHandler _flingHandler;
         private Int32 _horizontalOffset;
         private ISize _lastAvailable;
-        private ISize _lastNeeded;
+        private ValueSize _lastNeeded;
         private Double _maximumXScroll;
         private Double _maximumYScroll;
         private ScrollMode _scrollMode;

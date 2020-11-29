@@ -33,7 +33,7 @@ namespace Das.OpenGL
             Application.Run(window);
         }
 
-        public IVisualBootStrapper VisualBootStrapper => throw new NotImplementedException();
+        public IVisualBootstrapper VisualBootstrapper => throw new NotImplementedException();
 
         public static IFontProvider GetFontProvider(IGLContext context)
         {

@@ -114,6 +114,9 @@ namespace Das.ViewModels
         T IAsyncObservableCollection<T>.this[Int32 index]
             => _ui.Invoke(() => _backingCollection[index]);
 
+        T INotifyingCollection<T>.this[Int32 index] 
+            => _ui.Invoke(() => _backingCollection[index]);
+
         public async Task<Boolean> AddAsync(T item)
         {
             return await _ui.InvokeAsync(() => AddImpl(item)).ConfigureAwait(false);
@@ -727,7 +730,7 @@ namespace Das.ViewModels
                 if (args != null)
                     change.Invoke(this, args);
 
-                RaisePropertyChanged(nameof(Count));
+                RaisePropertyChanged(nameof(Count), Count);
                 RaisePropertyChanged(IndexerName);
             });
         }
@@ -742,7 +745,7 @@ namespace Das.ViewModels
                 if (args != null)
                     change.Invoke(this, args);
 
-                RaisePropertyChanged(nameof(Count));
+                RaisePropertyChanged(nameof(Count), Count);
                 RaisePropertyChanged(IndexerName);
             }).ConfigureAwait(false);
         }
@@ -765,7 +768,8 @@ namespace Das.ViewModels
             CollectionChanged?.Invoke(this, e);
         }
 
-        private void OnBackingCollectionPropertyChanged(Object sender, PropertyChangedEventArgs e)
+        private void OnBackingCollectionPropertyChanged(Object sender, 
+                                                        PropertyChangedEventArgs e)
         {
             RaisePropertyChanged(e.PropertyName);
         }
@@ -843,6 +847,8 @@ namespace Das.ViewModels
 
 
         private Int32 _count;
+
+        
     }
 }
 

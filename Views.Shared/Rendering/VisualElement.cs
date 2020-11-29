@@ -18,9 +18,9 @@ namespace Das.Views.Rendering
     public abstract class VisualElement : NotifyPropertyChangedBase,
                                           IVisualElement
     {
-        protected VisualElement(IVisualBootStrapper visualBootStrapper)
+        protected VisualElement(IVisualBootstrapper visualBootstrapper)
         {
-            _visualBootStrapper = visualBootStrapper;
+            _visualBootstrapper = visualBootstrapper;
             Id = Interlocked.Increment(ref _currentId);
         }
 
@@ -89,11 +89,19 @@ namespace Das.Views.Rendering
 
         public virtual Boolean IsRequiresArrange
         {
-            get => _isRequiresArrange;
+            get
+            {
+                if (_isRequiresArrange)
+                {}
+
+                return _isRequiresArrange;
+            }
             protected set
             {
-                if (value)
-                {}
+                //if (value)
+                //{
+                //    Debug.WriteLine("item " + this + " set to needs arrange");
+                //}
 
                 SetValue(ref _isRequiresArrange, value,
                     OnIsRequiresArrangeChanging, OnIsRequiresArrangeChangedAsync);
@@ -109,7 +117,7 @@ namespace Das.Views.Rendering
 
         public virtual IVisualElement DeepCopy()
         {
-            var newObject = _visualBootStrapper.Instantiate<VisualElement>(GetType());
+            var newObject = _visualBootstrapper.Instantiate<VisualElement>(GetType());
             //var newObject = (VisualElement) Activator.CreateInstance(GetType());
             newObject.Id = Id;
             return newObject;
@@ -143,9 +151,10 @@ namespace Das.Views.Rendering
             }
         }
 
-        public new void RaisePropertyChanged(String propertyName)
+        public new void RaisePropertyChanged(String propertyName,
+                                             Object? value)
         {
-            base.RaisePropertyChanged(propertyName);
+            base.RaisePropertyChanged(propertyName, value);
         }
 
         public virtual void OnParentChanging(IContainerVisual? newParent)
@@ -253,7 +262,7 @@ namespace Das.Views.Rendering
         public static readonly DependencyProperty<IVisualElement, IBrush?> BackgroundProperty =
             DependencyProperty<IVisualElement, IBrush?>.Register(nameof(Background), default);
 
-        private readonly IVisualBootStrapper _visualBootStrapper;
+        private readonly IVisualBootstrapper _visualBootstrapper;
 
 
         private Boolean _isEnabled;

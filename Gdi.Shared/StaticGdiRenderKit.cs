@@ -23,10 +23,10 @@ namespace Das.Gdi.Kits
 
             var lastMeasure = new Dictionary<IVisualElement, ValueSize>();
 
-            MeasureContext = new GdiMeasureContext(defaultSurrogates,lastMeasure);
+            MeasureContext = new GdiMeasureContext(defaultSurrogates,lastMeasure, _styleContext);
             RenderContext = new GdiRenderContext(viewPerspective, 
                 MeasureContext.Graphics, defaultSurrogates, imageProvider,lastMeasure,
-                new Dictionary<IVisualElement, ValueCube>());
+                new Dictionary<IVisualElement, ValueCube>(), _styleContext);
         }
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;

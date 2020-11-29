@@ -11,10 +11,10 @@
     <Compile Remove="Company\CompanyViewProvider.cs" />
     <Compile Remove="Scene3d\CubeView.cs" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Das.Serializer.Split" Version="0.0.12-alpha" />
-  </ItemGroup>
+  </ItemGroup> 
 
   <ItemGroup>
     <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
@@ -25,6 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+	<None Update="Company\TestCompanyTabs.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Company\EmployeesView.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

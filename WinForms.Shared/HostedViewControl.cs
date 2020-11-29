@@ -14,7 +14,8 @@ namespace WinForms.Shared
     public abstract class HostedViewControl : HostedControl, 
         IBoundElementContainer, IWindowsViewHost
     {
-        protected HostedViewControl(IView view, IStyleContext styleContext)
+        protected HostedViewControl(IView view, 
+                                    IStyleContext styleContext)
             : this(styleContext)
         {
             View = view;

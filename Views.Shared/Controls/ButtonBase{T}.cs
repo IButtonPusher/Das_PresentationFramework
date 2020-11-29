@@ -19,79 +19,16 @@ namespace Das.Views.Controls
                                  IHandleInput<MouseOverEventArgs>,
                                  IButtonBase
     {
-        private readonly IVisualBootStrapper _visualBootStrapper;
+        private readonly IVisualBootstrapper _visualBootstrapper;
         private ISize _lastRenderSize;
 
-        protected ButtonBase(IVisualBootStrapper visualBootStrapper)
-        : base(visualBootStrapper)
+        protected ButtonBase(IVisualBootstrapper visualBootstrapper)
+        : base(visualBootstrapper)
         {
-            _visualBootStrapper = visualBootStrapper;
+            _visualBootstrapper = visualBootstrapper;
             _currentStyleSelector = StyleSelector.None;
             _lastRenderSize = Size.Empty;
         }
-
-        //public override void Arrange(IRenderSize availableSpace,
-        //                             IRenderContext renderContext)
-        //{
-        //    _lastRenderSize = availableSpace;
-
-        //    var contentCanHave = GetPaddedSpace(renderContext, 
-        //        availableSpace, out var padding);
-        //    var contentRect = new ValueRenderRectangle(padding.Left, padding.Top, contentCanHave,
-        //        availableSpace.Offset);
-
-        //    if (!(Content is { } content))
-        //    {
-        //        if (Value is { } valid && ContentTemplate is { } template)
-        //            renderContext.DrawElement(template.Template, contentRect);
-        //        return;
-        //    }
-
-        //    renderContext.DrawElement(content, contentRect);
-        //}
-
-        //public override void Dispose()
-        //{
-        //}
-
-        //public override ValueSize Measure(IRenderSize availableSpace,
-        //                                  IMeasureContext measureContext)
-        //{
-        //    var contentCanHave = GetPaddedSpace(measureContext, 
-        //        availableSpace, out var padding);
-
-        //    if (!(Content is { } content))
-        //    {
-        //        if (Value is { } valid && ContentTemplate is { } template)
-        //        {
-        //            var res = measureContext.MeasureElement(template.Template, contentCanHave);
-        //            return padding.IsEmpty ? res : res + padding;
-        //        }
-
-        //        return ValueSize.Empty;
-        //    }
-
-        //    var contentWants = measureContext.MeasureElement(content, contentCanHave);
-        //    var ambition = contentWants + padding;
-        //    if (ambition.Width > availableSpace.Width ||
-        //        ambition.Height > availableSpace.Height)
-        //        return availableSpace.ToValueSize();
-        //    return contentWants + padding;
-        //}
-
-        //protected override IRenderSize GetPaddedSpace(IStyleProvider styleContext,
-        //                                   IRenderSize availableSpace,
-        //                                   out Thickness padding)
-        //{
-        //    padding = styleContext.GetStyleSetter<Thickness>(StyleSetter.Padding,
-        //        CurrentStyleSelector, this);
-
-        //    TryGetSize(out var mySize);
-
-        //    return padding.IsEmpty
-        //        ? availableSpace
-        //        : availableSpace.Reduce(padding);
-        //}
 
         protected override Thickness? GetPadding(IStyleProvider styleContext)
         {

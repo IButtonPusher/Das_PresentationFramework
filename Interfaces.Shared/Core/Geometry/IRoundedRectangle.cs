@@ -15,8 +15,8 @@ namespace Das.Views.Core.Geometry
 
         Int32 Y { get; }
 
-        ValueRectangle GetUnion(IRoundedRectangle other);
+        ValueIntRectangle GetUnion(IRoundedRectangle other);
 
-        ValueRectangle GetUnion(IEnumerable<IRoundedRectangle> others);
+        ValueIntRectangle GetUnion(IEnumerable<IRoundedRectangle> others);
     }
 }

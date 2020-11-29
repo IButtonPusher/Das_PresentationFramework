@@ -14,7 +14,7 @@ namespace Das.Views
 
         IResolver Container { get; }
 
-        IVisualBootStrapper DataTemplates { get; }
+        IVisualBootstrapper VisualBootstrapper { get; }
 
         void RegisterSurrogate<T>(Func<IVisualElement, IVisualSurrogate> builder)
             where T : IVisualElement;

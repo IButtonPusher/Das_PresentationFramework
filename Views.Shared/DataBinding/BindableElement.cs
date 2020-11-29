@@ -12,15 +12,15 @@ namespace Das.Views.DataBinding
     public abstract class BindableElement : VisualElement,
                                             IBindableElement
     {
-        protected BindableElement(IVisualBootStrapper visualBootStrapper) 
-            : this(null, visualBootStrapper)
+        protected BindableElement(IVisualBootstrapper visualBootstrapper) 
+            : this(null, visualBootstrapper)
         {
             _bindings = new List<IDataBinding>();
         }
 
         protected BindableElement(IDataBinding? binding,
-                                  IVisualBootStrapper visualBootStrapper) 
-            : base(visualBootStrapper)
+                                  IVisualBootstrapper visualBootstrapper) 
+            : base(visualBootstrapper)
         {
             _binding = binding;
             _bindings = new List<IDataBinding>();
@@ -85,7 +85,8 @@ namespace Das.Views.DataBinding
                 binding.Dispose();
 
             _bindings.Clear();
-            
+
+            Binding = default;
         }
 
         public IDataBinding? Binding { get; set; }

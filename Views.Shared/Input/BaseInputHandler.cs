@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using Das.Extensions;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 using Das.Views.Styles;
@@ -8,9 +10,22 @@ namespace Das.Views.Input
 {
     public class BaseInputHandler : IInputHandler
     {
-        public BaseInputHandler(IElementLocator elementLocator)
+        public BaseInputHandler(IElementLocator elementLocator,
+                                IDisplayMetrics displayMetrics)
         {
             _elementLocator = elementLocator;
+            _displayMetrics = displayMetrics;
+
+            if (displayMetrics.ZoomLevel.AreEqualEnough(1.0))
+            {
+                _offsetMultiplier = 0;
+                _isOffsetPositions = false;
+            }
+            else
+            {
+                _offsetMultiplier = 1 - (1 / displayMetrics.ZoomLevel);
+                _isOffsetPositions = true;
+            }
         }
 
         public void Dispose()
@@ -22,6 +37,23 @@ namespace Das.Views.Input
                                            InputAction action)
             where TArgs : IMouseInputEventArgs<TArgs>
         {
+            if (_isOffsetPositions)
+            {
+                Debug.WriteLine("translated input from " + args.Position + " ...");
+
+                //if (args is DragEventArgs drago)
+                //{
+                //    args = new DragEventArgs(
+                //        drago.StartPosition.Offset(drago.StartPosition.X * _offsetMultiplier,
+                //            drago.StartPosition.Y * _offsetMultiplier),)
+                //}
+
+                
+                args = args.Offset(_offsetMultiplier);
+
+                Debug.WriteLine("... to " + args.Position);
+            }
+
             var isButtonAction = (InputAction.AnyMouseButton & action) > InputAction.None;
             IInteractiveView? handledBy = null;
 
@@ -48,8 +80,6 @@ namespace Das.Views.Input
                         handledBy = element;
                         break;
                     }
-
-                   
                 }
             }
 
@@ -287,6 +317,11 @@ namespace Das.Views.Input
         }
 
         private readonly IElementLocator _elementLocator;
+
+        private readonly IDisplayMetrics _displayMetrics;
+        private readonly Double _offsetMultiplier;
+        private readonly Boolean _isOffsetPositions;
+
         //private static InputAction 
         private IHandleInput<MouseDownEventArgs>? _handledMouseDown;
         private IVisualElement? _inputCapturingMouse;

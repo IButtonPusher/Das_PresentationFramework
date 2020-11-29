@@ -10,5 +10,12 @@ namespace Das.Views.Core.Geometry
         Double Y { get; }
 
         IPoint2D Offset(IPoint2D offset);
+
+        IPoint2D Offset(Double x,
+                        Double y);
+
+        IPoint2D Offset(Double pct);
+
+        Boolean IsOrigin { get; }
     }
 }

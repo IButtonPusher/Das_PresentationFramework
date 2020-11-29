@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Rendering;
@@ -8,6 +9,8 @@ namespace Das.Views.Core.Geometry
 {
     public readonly struct ValueRenderSize : IRenderSize
     {
+        [DebuggerStepThrough]
+        [DebuggerHidden]
         public ValueRenderSize(Double width,
                                Double height,
                                IPoint2D offset)
@@ -17,6 +20,8 @@ namespace Das.Views.Core.Geometry
             Offset = offset;
         }
 
+        [DebuggerStepThrough]
+        [DebuggerHidden]
         public ValueRenderSize(ISize size,
                                IPoint2D offset,
                                Thickness? padDown)
@@ -133,6 +138,11 @@ namespace Das.Views.Core.Geometry
         public override String ToString()
         {
             return "Width: " + Width + " Height: " + Height;
+        }
+
+        ISize ISize.Divide(Double pct)
+        {
+            return new ValueSize(Width * pct, Height * pct);
         }
 
         public static readonly ValueRenderSize Empty = new ValueRenderSize(0, 0);

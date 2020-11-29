@@ -11,7 +11,8 @@ using Das.Views.Styles;
 
 namespace ViewCompiler
 {
-    public class ViewDeserializer : DasSerializer, IViewDeserializer
+    public class ViewDeserializer : DasSerializer, 
+                                    IViewDeserializer
     {
         //public ViewDeserializer(ISerializerSettings settings) : base(settings)
         public ViewDeserializer() : base(GetSettings())

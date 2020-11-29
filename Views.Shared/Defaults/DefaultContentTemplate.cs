@@ -15,10 +15,10 @@ namespace Das.Views.Defaults
                                           IDataTemplate
                                           
     {
-        public DefaultContentTemplate(IVisualBootStrapper visualBootStrapper,
-                                      IVisualElement? host) : base(visualBootStrapper)
+        public DefaultContentTemplate(IVisualBootstrapper visualBootstrapper,
+                                      IVisualElement? host) : base(visualBootstrapper)
         {
-            _visualBootStrapper = visualBootStrapper;
+            _visualBootstrapper = visualBootstrapper;
             _bindable = host as IBindableElement;
             _contentMeasured = ValueSize.Empty;
         }
@@ -30,14 +30,33 @@ namespace Das.Views.Defaults
             if (dataContext == null)
                 return default;
 
+            var dataTemplate = _visualBootstrapper.TryResolveFromContext(dataContext);
+            if (dataTemplate != null)
+                return dataTemplate.BuildVisual(dataContext);
+
             var txt = new Label<Object>(
                 new ObjectBinding<Object>(dataContext),
-                _visualBootStrapper);
-            txt.HorizontalAlignment = HorizontalAlignments.Center;
-            txt.VerticalAlignment = VerticalAlignments.Center;
+                _visualBootstrapper)
+            {
+                HorizontalAlignment = HorizontalAlignments.Center, 
+                VerticalAlignment = VerticalAlignments.Center
+            };
 
             return txt;
 
+        }
+
+        public virtual TVisualElement BuildVisual<TVisualElement>(Object? dataContext) 
+            where TVisualElement : IVisualElement
+        {
+            var bilt = BuildVisual(dataContext);
+            switch (bilt)
+            {
+                case TVisualElement good:
+                    return good;
+            }
+
+            throw new InvalidOperationException();
         }
 
         //IVisualElement IDataTemplate.Template => GetTemplate() ?? this;
@@ -111,7 +130,11 @@ namespace Das.Views.Defaults
             if (bound == null)
                 return null;
 
-            return _resolvedTemplate = _visualBootStrapper.TryResolveFromContext(bound);
+            var dataTemplate = _visualBootstrapper.TryResolveFromContext(bound);
+            if (dataTemplate != null)
+                return _resolvedTemplate = dataTemplate.BuildVisual(bound);
+
+            return default;
 
         }
 
@@ -149,7 +172,7 @@ namespace Das.Views.Defaults
         private IVisualElement? _resolvedTemplate;
         private Boolean _hasTriedResolvingTemplate;
 
-        private readonly IVisualBootStrapper _visualBootStrapper;
+        private readonly IVisualBootstrapper _visualBootstrapper;
         private readonly IBindableElement? _bindable;
         private ValueSize _contentMeasured;
     }

@@ -102,9 +102,9 @@ namespace Das.Xamarin.Android.Controls
             ((IVisualElement) _htmlPanel).AcceptChanges(changeType);
         }
 
-        public void RaisePropertyChanged(String propertyName)
+        public void RaisePropertyChanged(String propertyName, Object? value)
         {
-            _htmlPanel.RaisePropertyChanged(propertyName);
+            _htmlPanel.RaisePropertyChanged(propertyName, value);
         }
 
         Double? IVisualElement.Width

@@ -8,24 +8,54 @@ using Das.Views.Rendering;
 
 namespace Das.Views.Panels
 {
+    /// <summary>
+    /// Renders a collection of visuals in order - with either Vertical or Horizontal orientation
+    /// </summary>
     public abstract class BaseSequentialPanel<T> : BasePanel<T>, 
                                                    ISequentialPanel
     {
         protected BaseSequentialPanel(IDataBinding<T>? binding,
-                                      IVisualBootStrapper visualBootStrapper,
+                                      IVisualBootstrapper visualBootstrapper,
                                       ISequentialRenderer? renderer = null)
-            : base(binding, visualBootStrapper)
+            : base(binding, visualBootstrapper)
         {
             _renderer = EnsureRenderer(renderer);
+
+            VerticalAlignment = VerticalAlignments.Default;
+            HorizontalAlignment = HorizontalAlignments.Default;
         }
 
-        protected BaseSequentialPanel(IVisualBootStrapper templateResolver, 
+        protected BaseSequentialPanel(IVisualBootstrapper templateResolver, 
                                       ISequentialRenderer? renderer = null)
             : this(null, templateResolver, renderer)
         {
         }
 
-        public Orientations Orientation { get; set; }
+        public static readonly DependencyProperty<ISequentialPanel, Orientations> OrientationProperty =
+            DependencyProperty<ISequentialPanel, Orientations>.Register(nameof(Orientation),
+                Orientations.Vertical, OnOrientationChanged);
+
+        private static void OnOrientationChanged(ISequentialPanel panel, 
+                                                 Orientations oldValue, 
+                                                 Orientations newValue)
+        {
+            switch (newValue)
+            {
+                case Orientations.Horizontal:
+                    panel.HorizontalAlignment = HorizontalAlignments.Stretch;
+                    break;
+
+                case Orientations.Vertical:
+                    panel.VerticalAlignment = VerticalAlignments.Stretch;
+                    break;
+            }
+        }
+
+        public Orientations Orientation
+        {
+            get => OrientationProperty.GetValue(this);
+            set => OrientationProperty.SetValue(this, value);
+        }
 
         public override ValueSize Measure(IRenderSize availableSpace, 
                                           IMeasureContext measureContext)

@@ -5,6 +5,7 @@ using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
+using Das.Views.Styles;
 
 namespace Das.Xamarin.Android.Rendering
 {
@@ -13,8 +14,10 @@ namespace Das.Xamarin.Android.Rendering
         public RefreshRenderContext(IViewPerspective perspective,
                                     IVisualSurrogateProvider surrogateProvider,
                                     Dictionary<IVisualElement, ValueCube> renderPositions,
-                                    Dictionary<IVisualElement, ValueSize> lastMeasurements)
-            : base(perspective, surrogateProvider, renderPositions, lastMeasurements)
+                                    Dictionary<IVisualElement, ValueSize> lastMeasurements,
+                                    IStyleContext styleContext)
+            : base(perspective, surrogateProvider, 
+                renderPositions, lastMeasurements, styleContext)
         {
             
         }

@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
-
+using Das.Views.Rendering;
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
 #endif
@@ -28,6 +29,17 @@ namespace Das.Views.DataBinding
 
     public abstract class BaseBinding : IDataBinding
     {
+        public static PropertyInfo GetTypePropertyOrDie(Type declaringType,
+                                                       String propertyName)
+        {
+            return declaringType.GetProperty(propertyName)
+                   ?? throw new MissingMemberException(declaringType.FullName, propertyName);
+        }
+
+        protected static PropertyInfo GetObjectPropertyOrDie(Object declaringInstance,
+                                                       String propertyName)
+            => GetTypePropertyOrDie(declaringInstance.GetType(), propertyName);
+
         protected static readonly Object[] EmptyObjectArray = new Object[0];
 
         public abstract Object? GetBoundValue(Object? dataContext);
@@ -39,9 +51,18 @@ namespace Das.Views.DataBinding
 
         public virtual void UpdateDataContext(Object? dataContext) {}
 
+        public virtual IDataBinding Update(Object? dataContext, 
+                                   IVisualElement targetVisual)
+        {
+            UpdateDataContext(dataContext);
+            return this;
+        }
+
+        public virtual void Evaluate(){}
+
         public Object? DataContext { get; set; }
 
-        public abstract void Dispose();
+        public virtual void Dispose() {}
     }
 }
 

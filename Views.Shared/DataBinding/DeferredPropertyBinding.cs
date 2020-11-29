@@ -1,6 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Reflection;
 using System.Threading.Tasks;
+using Das.Views.Mvvm;
+using Das.Views.Rendering;
 
 namespace Das.Views.DataBinding
 {
@@ -19,9 +22,6 @@ namespace Das.Views.DataBinding
             _prop = prop;
         }
 
-
-
-       
 
         public override IDataBinding<T> DeepCopy()
         {
@@ -44,19 +44,24 @@ namespace Das.Views.DataBinding
 
         private readonly PropertyInfo _prop;
 
-        public override void Dispose()
-        {
-            
-        }
     }
 
     public class DeferredPropertyBinding : BaseBinding
     {
-        private readonly String _propertyName;
+        public String SourcePropertyName { get; }
 
-        public DeferredPropertyBinding(String propertyName)
+        public String? TargetPropertyName { get; }
+
+        public DeferredPropertyBinding(String sourcePropertyName,
+                                       String targetPropertyName)
+            : this(sourcePropertyName)
         {
-            _propertyName = propertyName;
+            TargetPropertyName = targetPropertyName;
+        }
+
+        public DeferredPropertyBinding(String sourcePropertyName)
+        {
+            SourcePropertyName = sourcePropertyName;
         }
 
         public override Object? GetBoundValue(Object? dataContext)
@@ -64,14 +69,55 @@ namespace Das.Views.DataBinding
             throw new NotImplementedException();
         }
 
-        public override void Dispose()
-        {
-            
-        }
+        
 
         public override String ToString()
         {
-            return _propertyName;
+            return SourcePropertyName;
+        }
+
+        public override IDataBinding Update(Object? dataContext, 
+                                            IVisualElement targetVisual)
+        {
+            if (dataContext == null)
+            {
+                UpdateDataContext(dataContext);
+                return this;
+            }
+
+            if (dataContext is INotifyPropertyChanged notifyObject && 
+                targetVisual is IBindableElement bindingVisual && 
+                TargetPropertyName is {} targetPropertyName)
+            {
+                var sourceProperty = GetObjectPropertyOrDie(dataContext, SourcePropertyName);
+                var targetProperty = GetObjectPropertyOrDie(bindingVisual, targetPropertyName);
+
+                var isCollection = typeof(INotifyingCollection).IsAssignableFrom(sourceProperty.PropertyType);
+
+                if (sourceProperty.CanWrite && !isCollection)
+                {
+                    var twoWay = new TwoWayBinding(notifyObject, sourceProperty, bindingVisual, targetProperty);
+                    twoWay.Evaluate();
+                    return twoWay;
+                }
+
+                if (isCollection)
+                {
+                    var collectionBinding = new OneWayCollectionBinding(notifyObject, sourceProperty, 
+                        bindingVisual, targetProperty);
+                    collectionBinding.Evaluate();
+                    return collectionBinding;
+                }
+
+                //don't do two way if the source property is read only or if it's a collection
+                var oneWay = new SourceBinding(notifyObject, sourceProperty, bindingVisual, targetProperty);
+                oneWay.Evaluate();
+                return oneWay;
+            }
+
+            throw new NotImplementedException();
+
+            return base.Update(dataContext, targetVisual);
         }
     }
 }

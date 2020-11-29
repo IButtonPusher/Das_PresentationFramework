@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views;
+using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 using Rectangle = Das.Views.Core.Geometry.Rectangle;
@@ -54,10 +55,15 @@ namespace Das.Gdi
                     return null!;
                 }
 
-                if (_gdiDevice.UpdateSize(_visualHost.AvailableSize))
+                //todo:
+                if (view.VerticalAlignment == VerticalAlignments.Stretch &&
+                    view.HorizontalAlignment == HorizontalAlignments.Stretch)
                 {
-                    view.InvalidateMeasure();
-                    return null!;
+                    if (_gdiDevice.UpdateSize(_visualHost.AvailableSize))
+                    {
+                        view.InvalidateMeasure();
+                     //   return null!;
+                    }
                 }
 
                 //if (!_gdiDevice.Width.AreEqualEnough(_visualHost.AvailableSize.Width) ||
@@ -75,9 +81,19 @@ namespace Das.Gdi
                 if (view.IsRequiresMeasure)
                 {
                     var desired = _measureContext.MeasureMainView(view, available, _viewHost);
+                    _renderRect.Size = desired;
+                    if (view.VerticalAlignment == VerticalAlignments.Default &&
+                        view.HorizontalAlignment == HorizontalAlignments.Default)
+                    {
+                        if (_gdiDevice.UpdateSize(desired))
+                        {
+                            //view.InvalidateMeasure();
+                            //return null!;
+                        }
+                    }
                     //_gdiDevice.Width = Convert.ToInt32(desired.Width);
                     //_gdiDevice.Height = Convert.ToInt32(desired.Height);
-                    _renderRect.Size = desired;
+                    
                 }
 
                 var bmp = _gdiDevice.Run(view, DoRender);

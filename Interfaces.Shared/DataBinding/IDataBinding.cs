@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Das.Views.Rendering;
 
 namespace Das.Views.DataBinding
 {
@@ -9,6 +10,7 @@ namespace Das.Views.DataBinding
         T GetValue(Object? dataContext);
 
         Task<T> GetValueAsync(Object? dataContext);
+
     }
 
     public interface IDataBinding : IDisposable
@@ -23,6 +25,11 @@ namespace Das.Views.DataBinding
         IDataBinding ToSingleBinding();
 
         void UpdateDataContext(Object? dataContext);
+
+        IDataBinding Update(Object? dataContext,
+                    IVisualElement targetVisual);
+
+        void Evaluate();
     }
 }
 

@@ -28,6 +28,12 @@ namespace Das.Views.Input
             return new FlingEventArgs(VelocityX, VelocityY, Position.Offset(offset), InputContext);
         }
 
+        public FlingEventArgs Offset(Double pct)
+        {
+            return new FlingEventArgs(VelocityX, VelocityY, 
+                Position.Offset(pct), InputContext);
+        }
+
         public InputAction Action => InputAction.Fling;
 
         public IInputContext InputContext { get; }

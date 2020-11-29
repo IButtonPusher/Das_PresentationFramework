@@ -13,28 +13,28 @@ using Das.Views.Styles;
 
 namespace Das.Views.Panels
 {
-    public abstract class ContentPanel<T> : BaseContainerVisual<T>,
+    public class ContentPanel<T> : BaseContainerVisual<T>,
                                             IContentContainer,
                                             IVisualContainer,
                                             IContentPresenter
     {
-        private readonly IVisualBootStrapper _visualBootStrapper;
+        private readonly IVisualBootstrapper _visualBootstrapper;
 
-        protected ContentPanel(IVisualBootStrapper visualBootStrapper)
-            : base(visualBootStrapper)
+        public ContentPanel(IVisualBootstrapper visualBootstrapper)
+            : base(visualBootstrapper)
         {
             _contentMeasured = ValueSize.Empty;
-            _visualBootStrapper = visualBootStrapper;
-            _contentTemplate = new DefaultContentTemplate(visualBootStrapper, this);
+            _visualBootstrapper = visualBootstrapper;
+            _contentTemplate = new DefaultContentTemplate(visualBootstrapper, this);
         }
 
-        protected ContentPanel(IVisualBootStrapper visualBootStrapper,
-                               IDataBinding<T> binding)
-            : base(visualBootStrapper, binding)
+        public  ContentPanel(IVisualBootstrapper visualBootstrapper,
+                             IDataBinding<T> binding)
+            : base(visualBootstrapper, binding)
         {
             _contentMeasured = ValueSize.Empty;
-            _visualBootStrapper = visualBootStrapper;
-            _contentTemplate = new DefaultContentTemplate(visualBootStrapper, this);
+            _visualBootstrapper = visualBootstrapper;
+            _contentTemplate = new DefaultContentTemplate(visualBootstrapper, this);
         }
 
 
@@ -73,60 +73,44 @@ namespace Das.Views.Panels
         public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
         {
-            //var content = GetContent();
-            //if (content == null)
-            //    return ValueSize.Empty;
-
-            //TryGetSize(out var mySize);
-
-            var contentCanHave = GetMeasureSpace(measureContext, availableSpace, 
+            var contentCanHave = GetMeasureSpace(measureContext, availableSpace,
                 out var padding,
                 out var mySize);
 
-            _contentMeasured = Content is {} content
-                ? measureContext.MeasureElement(Content, contentCanHave)
+            _contentMeasured = Content is { } content
+                ? measureContext.MeasureElement(content, contentCanHave)
                 : ValueSize.Empty;
 
-            //if (!(Content is { } content))
-            //{
-            //    if (Value is { } valid && ContentTemplate is { } template)
-            //    {
-            //        var nres = measureContext.MeasureElement(template.Template, contentCanHave);
-            //        //contentWants =  padding?.IsEmpty != false ? nres : nres + padding;
-            //        contentWants = nres;
-            //    }
-            //    else
-            //        return ValueSize.Empty;
-            //}
-            //else 
-            //contentWants = measureContext.MeasureElement(Content, contentCanHave);
+            var useHeight = Double.PositiveInfinity;
 
-            //var padding = measureContext.GetStyleSetter<Thickness>(StyleSetter.Padding, this);
+            if (Height.HasValue)
+                useHeight = Height.Value;
+            else if (VerticalAlignment == VerticalAlignments.Stretch)
+                useHeight = mySize.Height;
 
-            //IRenderSize useAvailable;
-            //if (mySize.IsEmpty && padding?.IsEmpty != false)
-            //    useAvailable = availableSpace;
-            //else if (mySize.IsEmpty)
-            //    useAvailable = new ValueRenderSize(availableSpace, availableSpace.Offset, padding);
-            //else
-            //    useAvailable = new ValueRenderSize(mySize, availableSpace.Offset, padding);
-
-
-            
-
-            //IsRequiresMeasure = false;
-
-            var useWidth = HorizontalAlignment == HorizontalAlignments.Stretch
-                ? mySize.Width
-                : Width ?? _contentMeasured.Width;
-            if (Double.IsInfinity(useWidth))
-                useWidth = _contentMeasured.Width;
-
-            var useHeight = VerticalAlignment == VerticalAlignments.Stretch
-                ? mySize.Height
-                : Height ?? _contentMeasured.Height;
-            if (Double.IsInfinity(useHeight))
+            if (Double.IsInfinity(useHeight) || useHeight < _contentMeasured.Height)
+            {
                 useHeight = _contentMeasured.Height;
+                if (padding != null)
+                    useHeight += padding.Height;
+            }
+
+            //////////////////////////////////
+
+            var useWidth = Double.PositiveInfinity;
+
+            if (Width.HasValue)
+                useWidth = Width.Value;
+            else if (HorizontalAlignment == HorizontalAlignments.Stretch)
+                useWidth = mySize.Width;
+
+            if (Double.IsInfinity(useWidth) || useWidth < _contentMeasured.Width)
+            {
+                useWidth = _contentMeasured.Width;
+                if (padding != null)
+                    useWidth += padding.Width;
+            }
+
 
             return new ValueSize(useWidth, useHeight);
         }
@@ -154,44 +138,19 @@ namespace Das.Views.Panels
         public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
-          
-
-            //if (!(Content is { } content))
-            //{
-            //    if (Value is { } valid && ContentTemplate is { } template)
-            //    {
-            //        renderContext.DrawElement(template.Template, totalSpace);
-            //    }
-
-            //    return;
-            //}
-
             if (Content is { } content)
             {
                 var contentSpace = GetContentArrangeSpace(content, _contentMeasured,
                     renderContext, availableSpace, 
-                    out var padding,
-                    out var mySize);
+                    out _,
+                    out _);
+
+                if (contentSpace.Left < 0)
+                {}
+
                 renderContext.DrawElement(content, contentSpace);
             }
 
-            //var content = GetContent();
-            //if (content == null) 
-            //    return;
-
-            //var padding = renderContext.GetStyleSetter<Thickness>(StyleSetter.Padding, this);
-            //var contentMargin = renderContext.GetStyleSetter<Thickness>(StyleSetter.Margin, content);
-
-            //var target = new ValueRenderRectangle(
-            //    padding.Left + contentMargin.Left,
-            //    padding.Top + contentMargin.Top,
-            //    availableSpace.Width - padding.Width - contentMargin.Right,
-            //    availableSpace.Height - padding.Height - contentMargin.Right,
-            //    availableSpace.Offset);
-
-           
-
-            //renderContext.DrawElement(content, target);
             IsRequiresArrange = false;
         }
 
@@ -380,17 +339,21 @@ namespace Das.Views.Panels
                 default:
                     //no content yet
 
-                    if (!(newValue is { } valid))
-                        return;
-                    
-                    if (ContentTemplate is {} template)
-                    {
-                        Content = template.BuildVisual(valid);
-                        return;
-                    }
+                    Content = _contentTemplate.BuildVisual(newValue);
 
-                    if (_visualBootStrapper.TryResolveFromContext(valid) is { } visual)
-                        Content = visual;
+                    //if (!(newValue is { } valid))
+                    //    return;
+                    
+                    //if (ContentTemplate is {} template)
+                    //{
+                    //    Content = template.BuildVisual(valid);
+                    //    return;
+                    //}
+
+                    
+
+                    //if (_visualBootstrapper.TryResolveFromContext(valid) is { } visual)
+                    //    Content = visual;
 
                     break;
             }
@@ -477,19 +440,28 @@ namespace Das.Views.Panels
         {
             if (oldValue is { } old)
             {
-                if (old is INotifyPropertyChanged notifier)
-                    notifier.PropertyChanged -= OnChildPropertyChanged;
+                //if (old is INotifyPropertyChanged notifier)
+                //    notifier.PropertyChanged -= OnChildPropertyChanged;
                 old.OnParentChanging(null);
             }
 
             if (newValue is { } valid)
             {
-                if (valid is INotifyPropertyChanged notifier)
-                    notifier.PropertyChanged += OnChildPropertyChanged;
+                //if (valid is INotifyPropertyChanged notifier)
+                //    notifier.PropertyChanged += OnChildPropertyChanged;
                 valid.OnParentChanging(this);
             }
 
             return true;
+        }
+
+        public override void Dispose()
+        {
+            Content = null;
+            base.Dispose();
+
+            //if (Content is { } content)
+            //    content.Dispose();
         }
 
         //private void OnContentPropertyChanged(Object sender,

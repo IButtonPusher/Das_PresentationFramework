@@ -14,18 +14,18 @@ namespace Das.Views.DataBinding
                                                IBindableElement<T>
     {
         protected BindableElement(IDataBinding<T>? binding,
-                                  IVisualBootStrapper visualBootStrapper)
-        : base(visualBootStrapper)
+                                  IVisualBootstrapper visualBootstrapper)
+        : base(visualBootstrapper)
         {
             Binding = binding;
             _binding = binding;
-            _visualBootStrapper = visualBootStrapper;
+            _visualBootstrapper = visualBootstrapper;
             _bindings = new List<IDataBinding>();
             _lockBindings = new Object();
         }
 
-        protected BindableElement(IVisualBootStrapper visualBootStrapper) 
-            : this(null, visualBootStrapper)
+        protected BindableElement(IVisualBootstrapper visualBootstrapper) 
+            : this(null, visualBootstrapper)
         {
             
         }
@@ -40,6 +40,8 @@ namespace Das.Views.DataBinding
         {
             lock (_lockBindings)
                 _bindings.Add(binding);
+
+            binding.Evaluate();
         }
 
         public IDataBinding<T>? Binding
@@ -56,6 +58,9 @@ namespace Das.Views.DataBinding
         protected virtual Boolean OnBindingChanging(IDataBinding<T>? oldValue, 
                                                     IDataBinding<T>? newValue)
         {
+            if (newValue == null && oldValue != null)
+            {}
+
             if (oldValue is {} old)
                 old.Dispose();
 
@@ -81,6 +86,7 @@ namespace Das.Views.DataBinding
         protected virtual void OnDataContextChanged(Object? newValue)
         {
             RefreshBoundValues(newValue);
+            InvalidateMeasure();
         }
 
         protected virtual  Boolean OnDataContextChanging(Object? oldValue, 
@@ -153,15 +159,22 @@ namespace Das.Views.DataBinding
 
         public override IVisualElement DeepCopy()
         {
-            return _visualBootStrapper.Instantiate<IBindableElement>(GetType(),
-                Binding);
+            var res0 = base.DeepCopy();
+            if (res0 is IBindableElement bindable)
+                bindable.Binding = Binding;
+            return res0;
+            //var res = _visualBootstrapper.Instantiate<IBindableElement>(GetType());
+            //res.Binding = Binding;
+
+            ////res.DataContext = Binding;
+            //return res;
 
 
             //var newObject = base.DeepCopy();
 
             //if (newObject is BindableElement<T> alsoBindable && Binding != null)
             //{
-                
+
             //    var newBinding = Binding.DeepCopy();
             //    alsoBindable.SetBinding(newBinding);
             //}
@@ -195,8 +208,7 @@ namespace Das.Views.DataBinding
 
         protected virtual void RefreshBoundValues(Object? dataContext)
         {
-            var binding = _binding;
-            if (binding != null)
+            if (_binding is {} binding)
             {
                 var val = binding.GetValue(dataContext);
                 SetBoundValue(val);
@@ -204,9 +216,11 @@ namespace Das.Views.DataBinding
 
             lock (_lockBindings)
             {
-                foreach (var b in _bindings)
+                //foreach (var b in _bindings)
+                for (var c = 0; c < _bindings.Count; c++)
                 {
-                    b.UpdateDataContext(dataContext);
+                    var b = _bindings[c];
+                    _bindings[c] = b.Update(dataContext, this);
                 }
             }
         }
@@ -214,6 +228,11 @@ namespace Das.Views.DataBinding
         private void SetBinding(IDataBinding<T>? value)
         {
             _binding = value;
+        }
+
+        public Boolean Equals(IBindableElement<T> other)
+        {
+            return ReferenceEquals(this, other);
         }
 
         public override String ToString()
@@ -237,11 +256,13 @@ namespace Das.Views.DataBinding
 
                 _bindings.Clear();
             }
+
+            Binding = default;
         }
 
 
         private IDataBinding<T>? _binding;
-        private readonly IVisualBootStrapper _visualBootStrapper;
+        private readonly IVisualBootstrapper _visualBootstrapper;
         private readonly List<IDataBinding> _bindings;
         private readonly Object _lockBindings;
         protected T BoundValue;

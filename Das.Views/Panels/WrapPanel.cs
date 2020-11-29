@@ -12,9 +12,9 @@ namespace Das.Views.Panels
         {
         }
 
-        public override void Dispose()
-        {
-        }
+        //public override void Dispose()
+        //{
+        //}
 
         protected override IList<IVisualElement> GetChildrenToRender()
         {

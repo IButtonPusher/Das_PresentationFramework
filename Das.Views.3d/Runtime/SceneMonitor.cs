@@ -64,10 +64,10 @@ namespace Das.Views.Extended.Runtime
             //renderContext.DrawFrame(frame);
         }
 
-        public override void Dispose()
-        {
+        //public override void Dispose()
+        //{
             
-        }
+        //}
 
         public void AcceptChanges()
         {
@@ -77,12 +77,12 @@ namespace Das.Views.Extended.Runtime
         public Boolean IsChanged => true;
 
         public SceneMonitor(IDataBinding<ICamera>? binding, 
-                            IVisualBootStrapper templateResolver) 
+                            IVisualBootstrapper templateResolver) 
             : base(binding, templateResolver)
         {
         }
 
-        public SceneMonitor(IVisualBootStrapper templateResolver) : base(templateResolver)
+        public SceneMonitor(IVisualBootstrapper templateResolver) : base(templateResolver)
         {
         }
     }

@@ -8,21 +8,16 @@ namespace Das.Views.Controls
 {
     public class HtmlPanel : BaseSurrogatedVisual
     {
-
-        private String? _markup;
+        public HtmlPanel(IVisualBootstrapper visualBootstrapper) 
+            : base(visualBootstrapper)
+        {
+        }
 
         public String? Markup
         {
             get => _markup;
             set => SetValue(ref _markup, value, OnMarkupChanged);
         }
-
-        private void OnMarkupChanged(String? obj)
-        {
-            Debug.WriteLine("changing markup in html surrogater");
-        }
-
-        private Uri? _uri;
 
         public Uri? Uri
         {
@@ -41,5 +36,14 @@ namespace Das.Views.Controls
         {
             throw new NotSupportedException("A surrogate control is required for this control");
         }
+
+        private void OnMarkupChanged(String? obj)
+        {
+            Debug.WriteLine("changing markup in html surrogater");
+        }
+
+        private String? _markup;
+
+        private Uri? _uri;
     }
 }

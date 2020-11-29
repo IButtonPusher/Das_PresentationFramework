@@ -32,6 +32,7 @@ namespace Das.Xamarin.Android
             _styleContext = GetStyleContext();
 
             var displayMetrics = Resources?.DisplayMetrics ?? throw new NullReferenceException();
+            ZoomLevel = displayMetrics.ScaledDensity;
 
             var fontProvider = new AndroidFontProvider(displayMetrics);
 
@@ -115,7 +116,7 @@ namespace Das.Xamarin.Android
             return CurrentStyleContext.GetCurrentAccentColor();
         }
 
-        public Double ZoomLevel => 1;
+        public Double ZoomLevel { get; private set; } = 1.0;
 
         private IStyleContext? _styleContext;
         private IView? _view;

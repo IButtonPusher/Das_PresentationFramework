@@ -20,7 +20,8 @@ namespace Das.Views.DataBinding
         Object? GetBoundValue(Object dataContext);
     }
 
-    public interface IBindableElement<T> : IBindableElement
+    public interface IBindableElement<T> : IBindableElement,
+                                           IEquatable<IBindableElement<T>>
     {
         new IDataBinding<T>? Binding { get; set; }
 

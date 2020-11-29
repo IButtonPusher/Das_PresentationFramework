@@ -25,6 +25,11 @@ namespace Das.Views.Core.Geometry
         {
         }
 
+        ISize ISize.Divide(Double pct)
+        {
+            return GeometryHelper.Divide(this, pct);
+        }
+
         public ValueRectangle(Double x,
                               Double y,
                               Double width,

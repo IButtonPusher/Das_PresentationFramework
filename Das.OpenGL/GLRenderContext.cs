@@ -6,6 +6,7 @@ using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
+using Das.Views.Styles;
 
 namespace Das.OpenGL
 {
@@ -14,8 +15,9 @@ namespace Das.OpenGL
         public GLRenderContext(IViewPerspective perspective,
                                IGLContext openGlContext,
                                IFontProvider fontProvider,
-                               IVisualSurrogateProvider surrogateProvider)
-            : base(perspective, surrogateProvider)
+                               IVisualSurrogateProvider surrogateProvider,
+                               IStyleContext styleContext)
+            : base(perspective, surrogateProvider, styleContext)
         {
             _openGlContext = openGlContext;
             _fontProvider = fontProvider;

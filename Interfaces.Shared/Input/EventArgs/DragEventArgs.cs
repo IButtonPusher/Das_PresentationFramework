@@ -35,6 +35,13 @@ namespace Das.Views.Input
                 Position.Offset(offset), LastChange, Button, InputContext);
         }
 
+        public DragEventArgs Offset(Double pct)
+        {
+            return new DragEventArgs(StartPosition.Offset(pct),
+                Position.Offset(pct), 
+                LastChange.Divide(pct), Button, InputContext);
+        }
+
         public InputAction Action => InputAction.MouseDrag;
 
         public IInputContext InputContext { get; }

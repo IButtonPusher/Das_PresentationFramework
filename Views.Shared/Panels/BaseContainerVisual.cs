@@ -8,8 +8,8 @@ namespace Das.Views.Panels
     public abstract class BaseContainerVisual : BindableElement,
                                               IContainerVisual
     {
-        public BaseContainerVisual(IVisualBootStrapper visualBootStrapper) 
-            : base(visualBootStrapper)
+        public BaseContainerVisual(IVisualBootstrapper visualBootstrapper) 
+            : base(visualBootstrapper)
         {
         }
 

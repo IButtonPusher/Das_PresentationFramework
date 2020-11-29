@@ -31,5 +31,9 @@ namespace Das.Views.Styles
             where T : IVisualElement;
 
         void CoerceIsChanged();
+
+        void PushVisual(IVisualElement visual);
+
+        IVisualElement PopVisual();
     }
 }

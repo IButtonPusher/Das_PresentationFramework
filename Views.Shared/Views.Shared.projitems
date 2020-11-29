@@ -10,6 +10,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BaseSurrogateProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\IMarkupNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\MarkupNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\XmlMarkupNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\XmlNodeBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ContextBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ButtonBase.cs" />
@@ -20,27 +24,27 @@
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\BaseBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\BindableElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\BindableElement{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\ConvertedSourceBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\ConverterBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\DeferredConvertedPropertyBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\DeferredPropertyBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\DeferredPropertyNameBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\DynamicBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\InstanceBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\ObjectBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\OneWayCollectionBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\PropertyBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\SourceBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\TwoWayBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Defaults\DefaultContentTemplate.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Defaults\DefaultTabHeaderPanel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Defaults\DefaultTabItemTemplate.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Defaults\DefaultTabHeaderTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\DependencyProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\BaseInputHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ItemsControl{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ItemsControl.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\TabControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\HorizontalRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Measuring\BaseMeasureContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BaseContainerVisual{T}.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Panels\BasePanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\BasePanel{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BaseContainerVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BasePanel2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BaseSelectorVisual.cs" />
@@ -50,6 +54,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Panels\RepeaterPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\ScrollMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\StackPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\UniformStackPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\View.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BasePerspective.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BaseRenderContext.cs" />
@@ -58,6 +63,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BaseVisualRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\RenderedVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\SequentialRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\SequentialUniformRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VisualElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\BaseStyleContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\ColorPalette.cs" />
@@ -71,8 +77,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\BaseTransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\TriggerBoundStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\TypeStyle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Templates\DefaultVisualBootStrapper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Templates\NullVisualBootStrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\DataTemplate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\DefaultVisualBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Updaters\" />

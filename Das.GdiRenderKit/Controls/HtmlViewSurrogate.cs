@@ -124,10 +124,16 @@ namespace Das.Views.Gdi.Controls
             ((IVisualElement) _htmlPanel).AcceptChanges(changeType);
         }
 
-        public void RaisePropertyChanged(String propertyName)
+        public void RaisePropertyChanged(String propertyName, 
+                                         Object? value)
         {
-            _htmlPanel.RaisePropertyChanged(propertyName);
+            _htmlPanel.RaisePropertyChanged(propertyName, value);
         }
+
+        //public void RaisePropertyChanged(String propertyName)
+        //{
+        //    _htmlPanel.RaisePropertyChanged(propertyName);
+        //}
 
         Double? IVisualElement.Width
         {

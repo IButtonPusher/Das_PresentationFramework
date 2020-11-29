@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Das.Extensions;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
@@ -18,12 +19,14 @@ namespace Das.Views.Measuring
         private readonly IVisualSurrogateProvider _surrogateProvider;
 
         protected BaseMeasureContext(IVisualSurrogateProvider surrogateProvider,
-                                     Dictionary<IVisualElement, ValueSize> lastMeasurements)
-        : base(lastMeasurements)
+                                     Dictionary<IVisualElement, ValueSize> lastMeasurements,
+                                     IStyleContext styleContext)
+        : base(lastMeasurements, styleContext)
         {
             _surrogateProvider = surrogateProvider;
             _contextBounds = Size.Empty;
             _lastMeasurements = lastMeasurements;
+            _styleContext = styleContext;
         }
 
         public virtual ValueSize MeasureImage(IImage img)
@@ -38,7 +41,18 @@ namespace Das.Views.Measuring
             //Debug.WriteLine("********** BEGIN MEASURE ***********");
 
             ViewState = viewState;
-            _contextBounds = availableSpace;
+
+            if (viewState.ZoomLevel.AreDifferent(1.0))
+            {
+                _contextBounds = new ValueSize(availableSpace.Width / viewState.ZoomLevel,
+                    availableSpace.Height / viewState.ZoomLevel);
+
+                availableSpace = new RenderSize(availableSpace.Width / viewState.ZoomLevel,
+                    availableSpace.Height / viewState.ZoomLevel, availableSpace.Offset);
+            }
+            else
+                _contextBounds = availableSpace;
+            
             var res = MeasureElement(element, availableSpace);
             //Debug.WriteLine("********** END MEASURE ***********");
             return res;
@@ -60,15 +74,17 @@ namespace Das.Views.Measuring
                 return ValueSize.Empty;
             }
 
+            _styleContext.PushVisual(element);
+
             //Debug.WriteLine("measuring " + element);
 
             var viewState = GetViewState;
-            var zoom = viewState.ZoomLevel;
+            //var zoom = viewState.ZoomLevel;
 
-            var margin = viewState.GetStyleSetter<Thickness>(StyleSetter.Margin, element)
-                         * zoom;
-            var border = viewState.GetStyleSetter<Thickness>(StyleSetter.BorderThickness, element)
-                         * zoom;
+            var margin = viewState.GetStyleSetter<Thickness>(StyleSetter.Margin, element);
+                         //* zoom;
+                         var border = viewState.GetStyleSetter<Thickness>(StyleSetter.BorderThickness, element);
+                         //* zoom;
 
             ValueSize desiredSize;
 
@@ -90,38 +106,20 @@ namespace Das.Views.Measuring
 
             SetLastMeasured(element, desiredSize);
 
+            _styleContext.PopVisual();
+
             element.AcceptChanges(ChangeType.Measure);
 
             return desiredSize;
 
-            //var specificHeight = viewState.GetStyleSetter<Double>(StyleSetter.Height, element)
-            //                     * zoom;
-            //var specificWidth = viewState.GetStyleSetter<Double>(StyleSetter.Width, element)
-            //                    * zoom;
-
-            //var size = specificSize ?? desiredSize;
-            //var size = new Size(Double.IsNaN(specificWidth) ? desiredSize.Width : specificWidth,
-            //    Double.IsNaN(specificHeight) ? desiredSize.Height : specificHeight);
-
-            //var total = Size.Add(size, margin, border);
-
-            //lock (_measureLock)
-            //{
-            //    if (!_lastMeasurements.ContainsKey(element))
-            //    {
-            //        element.Disposed += OnElementDisposed;
-            //        _lastMeasurements.Add(element, total);
-            //    }
-            //    else
-            //        _lastMeasurements[element] = total;
-            //}
-
-            //return total;
+           
         }
 
         private void SetLastMeasured(IVisualElement element,
                                      ValueSize size)
         {
+            Debug.WriteLine("visual " + element + " measured: " + size);
+
             lock (_measureLock)
             {
                 if (!_lastMeasurements.ContainsKey(element))
@@ -167,7 +165,8 @@ namespace Das.Views.Measuring
 
         
         private readonly Dictionary<IVisualElement, ValueSize> _lastMeasurements;
-        
+        private readonly IStyleContext _styleContext;
+
         private ISize _contextBounds;
     }
 }

@@ -63,5 +63,10 @@ namespace TestCommon.Company
 
             //_isChanged = true;
         }
+
+        public Boolean Equals(ICompanyViewModel other)
+        {
+            return ReferenceEquals(this, other);
+        }
     }
 }

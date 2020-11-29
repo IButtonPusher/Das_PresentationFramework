@@ -5,7 +5,8 @@ using Das.Views.Extended;
 
 namespace TestCommon.Company
 {
-    public interface ICompanyViewModel : ISceneViewModel
+    public interface ICompanyViewModel : ISceneViewModel,
+                                         IEquatable<ICompanyViewModel>
     {
         ICompanyViewModel Self { get; }
 

@@ -12,6 +12,11 @@ namespace Das.Views.Core.Geometry
             Height = height;
         }
 
+        ISize ISize.Divide(Double pct)
+        {
+            return GeometryHelper.Divide(this, pct);
+        }
+
         public Boolean Equals(ISize? other)
         {
             if (ReferenceEquals(null, other))
@@ -55,7 +60,7 @@ namespace Das.Views.Core.Geometry
 
         public Double Height { get; }
 
-        public Boolean IsEmpty => Width.IsZero() || Height.IsZero();
+        public Boolean IsEmpty => Width.IsZero() && Height.IsZero();
 
         public ISize DeepCopy()
         {

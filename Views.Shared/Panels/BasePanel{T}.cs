@@ -15,15 +15,14 @@ namespace Das.Views.Panels
                                          IVisualContainer
     {
         protected BasePanel(IDataBinding<T>? binding,
-                            IVisualBootStrapper visualBootStrapper)
-            : base(binding, visualBootStrapper)
+                            IVisualBootstrapper visualBootstrapper)
+            : base(binding, visualBootstrapper)
         {
-            _lockChildren = new Object();
-            _children = new List<IVisualElement>();
+            //_lockChildren = new Object();
         }
 
         // ReSharper disable once UnusedMember.Global
-        protected BasePanel(IVisualBootStrapper templateResolver) 
+        protected BasePanel(IVisualBootstrapper templateResolver) 
             : this(null, templateResolver)
         {
         }
@@ -197,9 +196,7 @@ namespace Das.Views.Panels
             }
         }
 
-
-        private readonly List<IVisualElement> _children;
-        
-        private readonly Object _lockChildren;
+        private readonly List<IVisualElement> _children = new List<IVisualElement>();
+        private readonly Object _lockChildren = new Object();
     }
 }

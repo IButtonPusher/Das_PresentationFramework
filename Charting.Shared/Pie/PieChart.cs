@@ -17,11 +17,13 @@ namespace Das.Views.Charting.Pie
                                           IVisualFinder
         where TValue : IConvertible
     {
-        private readonly IVisualBootStrapper _templateResolver;
+        private readonly IVisualBootstrapper _templateResolver;
 
-        public PieChart(IVisualBootStrapper templateResolver) 
+        public PieChart(IVisualBootstrapper templateResolver) 
             : base(templateResolver)
         {
+            _legendLock = new Object();
+
             _templateResolver = templateResolver;
             _desiredSize = new ValueSize(1, 1);
             _defaultedColors = new Dictionary<TKey, IBrush>();
@@ -35,7 +37,8 @@ namespace Das.Views.Charting.Pie
 
         public Boolean Contains(IVisualElement element)
         {
-            return _legendItems.Any(l => l.Contains(element));
+            lock (_legendLock)
+                return _legendItems.Any(l => l.Contains(element));
         }
 
         public override void Arrange(IRenderSize availableSpace, 
@@ -48,6 +51,9 @@ namespace Das.Views.Charting.Pie
             {
                 return;
             }
+
+            renderContext.FillRectangle(availableSpace.ToFullRectangle(),
+                renderContext.ColorPalette.Background.ToBrush());
 
             var radius = side / 2;
             var center = new Point2D(availableSpace.Width - side + radius,
@@ -92,38 +98,41 @@ namespace Das.Views.Charting.Pie
 
         private void ArrangeLegend(IRenderContext renderContext)
         {
-            if (_legendItems.Count == 0 || _legendItemSizes.Count == 0)
-                return;
-
-            var padding = 20;
-            var rowMargin = 5;
-            var totalRowMargin = _legendItems.Count * rowMargin;
-
-            var w = _legendItemSizes.Max(s => s.Width) + padding;
-            var h = _legendItemSizes.Sum(s => s.Height) + padding + totalRowMargin;
-
-            var rect = new RenderRectangle(0, 0, w, h, Point2D.Empty);
-
-            renderContext.FillRectangle(rect, _legendBackground);
-            renderContext.DrawRect(rect, _legendOutline);
-
-
-            var i = 0;
-            rect.X = 10;
-            rect.Width -= 10;
-            rect.Y = 10;
-            foreach (var item in _legendItems)
+            lock (_legendLock)
             {
-                rect.Height = _legendItemSizes[i].Height;
-                renderContext.DrawElement(item, rect);
+                if (_legendItems.Count == 0 || _legendItemSizes.Count == 0)
+                    return;
 
-                rect.Y += rect.Height + rowMargin;
+                var padding = 20;
+                var rowMargin = 5;
+                var totalRowMargin = _legendItems.Count * rowMargin;
+
+                var w = _legendItemSizes.Max(s => s.Width) + padding;
+                var h = _legendItemSizes.Sum(s => s.Height) + padding + totalRowMargin;
+
+                var rect = new RenderRectangle(0, 0, w, h, Point2D.Empty);
+
+                renderContext.FillRectangle(rect, _legendBackground);
+                renderContext.DrawRect(rect, _legendOutline);
+
+
+                var i = 0;
+                rect.X = 10;
+                rect.Width -= 10;
+                rect.Y = 10;
+                foreach (var item in _legendItems)
+                {
+                    rect.Height = _legendItemSizes[i].Height;
+                    renderContext.DrawElement(item, rect);
+
+                    rect.Y += rect.Height + rowMargin;
+                }
             }
         }
 
-        public override void Dispose()
-        {
-        }
+        //public override void Dispose()
+        //{
+        //}
 
         private IBrush GetBrush(IPieData<TKey, TValue> value, 
                                 IDataPoint<TKey, TValue> current)
@@ -144,17 +153,21 @@ namespace Das.Views.Charting.Pie
         public override ValueSize Measure(IRenderSize availableSpace, 
                                           IMeasureContext measureContext)
         {
-            _legendItemSizes.Clear();
-            foreach (var item in _legendItems)
+            Double widestLegend;
+
+            lock (_legendLock)
             {
-                var sz = item.Measure(availableSpace, measureContext);
-                _legendItemSizes.Add(sz);
+                _legendItemSizes.Clear();
+                foreach (var item in _legendItems)
+                {
+                    var sz = item.Measure(availableSpace, measureContext);
+                    _legendItemSizes.Add(sz);
+                }
+
+                widestLegend = _legendItemSizes.Any()
+                    ? _legendItemSizes.Max(l => l.Width)
+                    : 0;
             }
-
-            var widestLegend = _legendItemSizes.Any()
-                ? _legendItemSizes.Max(l => l.Width)
-                : 0;
-
 
             var side = Math.Min(availableSpace.Width, availableSpace.Height);
             if (side.IsZero())
@@ -172,7 +185,18 @@ namespace Das.Views.Charting.Pie
 
         public override void SetBoundValue(IPieData<TKey, TValue> value)
         {
-            _legendItems.Clear();
+            lock (_legendLock)
+            {
+                foreach (var item in _legendItems)
+                {
+                    item.Dispose();
+                }
+
+                _legendItems.Clear();
+                _legendItemSizes.Clear();
+            }
+
+            
             base.SetBoundValue(value);
 
             var data = value.Items.OrderByDescending(v => v.Value).ToArray();
@@ -187,7 +211,8 @@ namespace Das.Views.Charting.Pie
                 var legendItem = new PieLegendItem<TKey, TValue>(_templateResolver);
                 legendItem.SetBoundValue(current);
                 legendItem.Brush = brush;
-                _legendItems.Add(legendItem);
+                lock (_legendLock)
+                    _legendItems.Add(legendItem);
             }
         }
 
@@ -197,6 +222,7 @@ namespace Das.Views.Charting.Pie
 
         private readonly SolidColorBrush _legendBackground;
         private readonly List<PieLegendItem<TKey, TValue>> _legendItems;
+        private readonly Object _legendLock;
         private readonly List<ISize> _legendItemSizes;
         private readonly Pen _legendOutline;
         private readonly Pen _outline;

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Drawing;
@@ -18,30 +20,36 @@ namespace Das.Views.Controls
     public class Label : Label<String>
     {
         public Label(IDataBinding<String> binding,
-                     IVisualBootStrapper visualBootStrapper) : base(binding, visualBootStrapper)
+                     IVisualBootstrapper visualBootstrapper) : base(binding, visualBootstrapper)
         {
         }
 
         // ReSharper disable once UnusedMember.Global
-        public Label(IVisualBootStrapper visualBootStrapper) : base(visualBootStrapper)
+        public Label(IVisualBootstrapper visualBootstrapper) : base(visualBootstrapper)
         {
         }
     }
 
     public class Label<T> : BindableElement<T>
     {
-        public Label(IVisualBootStrapper visualBootStrapper)
-            : base(visualBootStrapper)
+        //private Int32 _instanceCount;
+        //private Boolean _isDisposed;
+
+        public Label(IVisualBootstrapper visualBootstrapper)
+            : base(visualBootstrapper)
         {
             _currentValue = String.Empty;
+
+            //Interlocked.Add(ref _instanceCount, 1);
         }
 
         public Label(IDataBinding<T> binding,
-                     IVisualBootStrapper visualBootStrapper)
-            : base(binding, visualBootStrapper)
+                     IVisualBootstrapper visualBootstrapper)
+            : base(binding, visualBootstrapper)
         {
             _currentValue = String.Empty;
 
+            //Interlocked.Add(ref _instanceCount, 1);
         }
 
 
@@ -51,29 +59,35 @@ namespace Das.Views.Controls
             set => TextProperty.SetValue(this, value);
         }
 
+        public IBrush? TextBrush
+        {
+            get => TextBrushProperty.GetValue(this);
+            set => TextBrushProperty.SetValue(this, value);
+        }
+
         public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
-            var font = renderContext.GetStyleSetter<Font>(StyleSetter.Font, this)
-                       * renderContext.GetZoomLevel();
+            var font = GetFont(renderContext);
 
-            var useSize = renderContext.GetStyleSetter<Double>(StyleSetter.FontSize, this);
-            if (!useSize.AreEqualEnough(font.Size))
-                font = new Font(useSize, font.FamilyName, font.FontStyle);
-
-            var brush = renderContext.GetStyleSetter<SolidColorBrush>(StyleSetter.Foreground, this);
+            var brush = TextBrush ?? 
+                        renderContext.GetStyleSetter<SolidColorBrush>(StyleSetter.Foreground, this);
             renderContext.DrawString(_currentValue, font, brush, Point2D.Empty);
         }
 
-        public override void Dispose()
-        {
-        }
+        //public override void Dispose()
+        //{
+        //    //_isDisposed = true;
+
+        //    //if (Interlocked.Add(ref _instanceCount, -1) % 10 == 0)
+        //    //    Debug.WriteLine("active labels: " + _instanceCount);
+        //    base.Dispose();
+        //}
 
         public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
         {
-            var font = measureContext.GetStyleSetter<Font>(StyleSetter.Font, this) *
-                       measureContext.GetZoomLevel();
+            var font = GetFont(measureContext);
 
             if (Binding is { } binding)
                 _currentValue = binding.GetValue(DataContext)?.ToString() ?? String.Empty;
@@ -83,6 +97,20 @@ namespace Das.Views.Controls
             //_currentValue = Binding?.GetValue(DataContext)?.ToString() ?? String.Empty;
             var size = measureContext.MeasureString(_currentValue, font);
             return size;
+        }
+
+        private Font GetFont(IStyleProvider context)
+        {
+            if (_font != null)
+                return _font;
+
+            var font = context.GetStyleSetter<Font>(StyleSetter.Font, this);
+            var useSize = context.GetStyleSetter<Double>(StyleSetter.FontSize, this);
+            if (!useSize.AreEqualEnough(font.Size))
+                font = new Font(useSize, font.FamilyName, font.FontStyle);
+
+            _font = font;
+            return _font;
         }
 
         public override void SetBoundValue(Object? value)
@@ -106,6 +134,10 @@ namespace Das.Views.Controls
         public static readonly DependencyProperty<Label<T>, String> TextProperty =
             DependencyProperty<Label<T>, String>.Register(nameof(Text), String.Empty);
 
+        public static readonly DependencyProperty<Label<T>, IBrush?> TextBrushProperty =
+            DependencyProperty<Label<T>, IBrush?>.Register(nameof(TextBrush), default);
+
         private String _currentValue;
+        private Font? _font;
     }
 }

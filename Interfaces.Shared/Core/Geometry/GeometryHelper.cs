@@ -118,8 +118,8 @@ namespace Das.Views.Core.Geometry
             return new ValueSize(rect.Width, rect.Height);
         }
 
-        public static ValueRectangle GetUnion<TRoundedRectangle>(TRoundedRectangle a,
-                                                                     IRoundedRectangle b)
+        public static ValueIntRectangle GetUnion<TRoundedRectangle>(TRoundedRectangle a,
+                                                                    IRoundedRectangle b)
             where TRoundedRectangle : IRoundedRectangle
         {
 
@@ -127,11 +127,11 @@ namespace Das.Views.Core.Geometry
             var x2 = Math.Max(a.X + a.Width, b.X + b.Width);
             var y1 = Math.Min(a.Y, b.Y);
             var y2 = Math.Max(a.Y + a.Height, b.Y + b.Height);
-            return new ValueRectangle(x1, y1, x2 - x1, y2 - y1);
+            return new ValueIntRectangle(x1, y1, x2 - x1, y2 - y1);
         }
 
-        public static ValueRectangle GetUnion<TRoundedRectangle>(TRoundedRectangle me,
-            IEnumerable<IRoundedRectangle> others)
+        public static ValueIntRectangle GetUnion<TRoundedRectangle>(TRoundedRectangle me,
+                                                                    IEnumerable<IRoundedRectangle> others)
         where TRoundedRectangle : IRoundedRectangle
         {
             //var me = this as IRoundedRectangle;
@@ -149,7 +149,7 @@ namespace Das.Views.Core.Geometry
                 y2 = Math.Max(y2, b.Y + b.Height);
             }
 
-            return new ValueRectangle(x1, y1, x2 - x1, y2 - y1);
+            return new ValueIntRectangle(x1, y1, x2 - x1, y2 - y1);
         }
 
         public static Double CenterX(ISize outer,
@@ -168,6 +168,20 @@ namespace Das.Views.Core.Geometry
                 return 0;
 
             return (outer.Height - inner.Height) / 2;
+        }
+
+        public static IPoint2D Offset(IPoint2D point,
+                                      Double pct)
+        {
+            return new ValuePoint2D(point.X - (point.X * pct), 
+                point.Y - (point.Y * pct));
+        }
+
+        public static ISize Divide(ISize size,
+                                   Double pct)
+        {
+            return new ValueSize(size.Width - (size.Width * pct), 
+                size.Height - (size.Height * pct));
         }
     }
 }

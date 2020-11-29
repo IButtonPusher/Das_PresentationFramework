@@ -8,6 +8,8 @@ namespace Das.Views.Input
         where T : IMouseInputEventArgs<T>
     {
         T Offset(IPoint2D offset);
+
+        T Offset(Double pct);
     }
 
 

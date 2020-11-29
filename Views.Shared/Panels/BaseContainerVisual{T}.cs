@@ -8,14 +8,14 @@ namespace Das.Views.Panels
     public abstract class BaseContainerVisual<T> : BindableElement<T>,
                                                 IContainerVisual
     {
-        public BaseContainerVisual(IVisualBootStrapper visualBootStrapper) 
-            : base(visualBootStrapper)
+        public BaseContainerVisual(IVisualBootstrapper visualBootstrapper) 
+            : base(visualBootstrapper)
         {
         }
 
-        protected BaseContainerVisual(IVisualBootStrapper visualBootStrapper,
+        protected BaseContainerVisual(IVisualBootstrapper visualBootstrapper,
                                       IDataBinding<T> binding)
-         : base(binding, visualBootStrapper )
+         : base(binding, visualBootstrapper )
         {
 
         }
@@ -40,28 +40,28 @@ namespace Das.Views.Panels
 
         public abstract Boolean IsChanged { get; }
 
-        protected void OnChildPropertyChanged(Object sender,
-                                              PropertyChangedEventArgs e)
-        {
-            //switch (e.PropertyName)
-            //{
-            //    case nameof(IsChanged) when sender is IChangeTracking content && content.IsChanged:
-            //        IsChanged = true;
-            //        break;
+        //protected void OnChildPropertyChanged(Object sender,
+        //                                      PropertyChangedEventArgs e)
+        //{
+        //    //switch (e.PropertyName)
+        //    //{
+        //    //    case nameof(IsChanged) when sender is IChangeTracking content && content.IsChanged:
+        //    //        IsChanged = true;
+        //    //        break;
 
-            //    case nameof(IsRequiresMeasure) when sender is IVisualRenderer renderer &&
-            //                                        renderer.IsRequiresMeasure:
-            //        IsRequiresMeasure = true;
-            //        IsChanged = true;
-            //        break;
+        //    //    case nameof(IsRequiresMeasure) when sender is IVisualRenderer renderer &&
+        //    //                                        renderer.IsRequiresMeasure:
+        //    //        IsRequiresMeasure = true;
+        //    //        IsChanged = true;
+        //    //        break;
 
-            //    case nameof(IsRequiresArrange) when sender is IVisualRenderer renderer &&
-            //                                        renderer.IsRequiresArrange:
-            //        IsRequiresArrange = true;
-            //        IsChanged = true;
-            //        break;
-            //}
-        }
+        //    //    case nameof(IsRequiresArrange) when sender is IVisualRenderer renderer &&
+        //    //                                        renderer.IsRequiresArrange:
+        //    //        IsRequiresArrange = true;
+        //    //        IsChanged = true;
+        //    //        break;
+        //    //}
+        //}
 
     }
 }

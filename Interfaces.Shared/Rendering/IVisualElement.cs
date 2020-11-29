@@ -28,7 +28,8 @@ namespace Das.Views.Rendering
 
         void AcceptChanges(ChangeType changeType);
 
-        void RaisePropertyChanged(String propertyName);
+        void RaisePropertyChanged(String propertyName,
+                                  Object? value);
 
         Double? Width { get; set; }
 
