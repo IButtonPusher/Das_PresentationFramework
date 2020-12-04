@@ -51,8 +51,7 @@ namespace Das.Views.Styles
                 switch (value)
                 {
                     case Thickness thickness:
-                        var runningThickness = new ThicknessTransition(Element,
-                            existed, transition, this, key, UpdateTransition);
+                        var runningThickness = new ThicknessTransition(existed, transition, key, UpdateTransition);
                         runningThickness.Start();
                         break;
 

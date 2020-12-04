@@ -5,8 +5,11 @@ using Das.Views.Core.Geometry;
 
 namespace Das.Views.Core.Drawing
 {
-    public interface IImage : ISize, IDisposable
+    public interface IImage : ISize, 
+                              IDisposable
     {
+        Boolean IsNullImage { get; }
+
         Boolean IsDisposed { get; }
 
         Task SaveAsync(FileInfo path);

@@ -14,10 +14,24 @@ namespace Das.Views.Panels
     public abstract class BaseSequentialPanel<T> : BasePanel<T>, 
                                                    ISequentialPanel
     {
+        protected BaseSequentialPanel(IVisualBootstrapper visualBootstrapper)
+            : this(null, visualBootstrapper)
+        {
+
+        }
+
+        protected BaseSequentialPanel(IDataBinding<T>? binding,
+                                      IVisualBootstrapper visualBootstrapper)
+        : this(binding, visualBootstrapper, new VisualCollection())
+        {
+
+        }
+
         protected BaseSequentialPanel(IDataBinding<T>? binding,
                                       IVisualBootstrapper visualBootstrapper,
+                                      IVisualCollection children,
                                       ISequentialRenderer? renderer = null)
-            : base(binding, visualBootstrapper)
+            : base(binding, visualBootstrapper, children)
         {
             _renderer = EnsureRenderer(renderer);
 
@@ -26,8 +40,9 @@ namespace Das.Views.Panels
         }
 
         protected BaseSequentialPanel(IVisualBootstrapper templateResolver, 
+                                      IVisualCollection children,
                                       ISequentialRenderer? renderer = null)
-            : this(null, templateResolver, renderer)
+            : this(null, templateResolver, children, renderer)
         {
         }
 
@@ -60,7 +75,8 @@ namespace Das.Views.Panels
         public override ValueSize Measure(IRenderSize availableSpace, 
                                           IMeasureContext measureContext)
         {
-            return _renderer.Measure(this, GetChildrenToRender(), Orientation,
+            return _renderer.Measure(this, //GetChildrenToRender(), 
+                Orientation,
                 availableSpace, measureContext);
         }
 
@@ -70,12 +86,12 @@ namespace Das.Views.Panels
             _renderer.Arrange(Orientation, availableSpace.ToFullRectangle(), renderContext);
         }
 
-        private static ISequentialRenderer EnsureRenderer(ISequentialRenderer? input)
+        private ISequentialRenderer EnsureRenderer(ISequentialRenderer? input)
         {
-            return input ?? new SequentialRenderer();
+            return input ?? new SequentialRenderer(Children);
         }
 
-        protected abstract IList<IVisualElement> GetChildrenToRender();
+        //protected abstract IList<IVisualElement> GetChildrenToRender();
 
         private readonly ISequentialRenderer _renderer;
     }

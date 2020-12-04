@@ -11,9 +11,7 @@ namespace Das.Views.Core.Geometry
     public class Rectangle : Size, IDeepCopyable<Rectangle>,
                              IRectangle,
                              IRoundedRectangle,
-                             IEquatable<Rectangle>,
-                             IEquatable<IRectangle>
-                             //IEquatable<IRoundedRectangle>
+                             IEquatable<Rectangle>
     {
         public Rectangle() : this(0, 0, 0, 0)
         {
@@ -332,9 +330,11 @@ namespace Das.Views.Core.Geometry
             if (_hash != 0)
                 return _hash;
 
-            IRoundedRectangle me = this;
-            _hash = (Byte) me.X + ((Byte) me.Y << 4) +
-                    ((Byte) me.Height << 16) + ((Byte) me.Width << 24);
+            _hash = GeometryHelper.BuildRectHash(this);
+
+            //IRoundedRectangle me = this;
+            //_hash = (Byte) me.X + ((Byte) me.Y << 4) +
+            //        ((Byte) me.Height << 16) + ((Byte) me.Width << 24);
 
             return _hash;
         }

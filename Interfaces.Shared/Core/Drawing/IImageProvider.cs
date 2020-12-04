@@ -9,18 +9,25 @@ namespace Das.Views.Core
     {
         IImage? GetImage(Stream stream);
 
+        IImage? GetImage(Stream stream,
+                         Boolean isPreserveStream);
+
         /// <summary>
         ///     Scales the image down (or up) based on available client viewing area
         ///     (e.g. window size, mobile screen resolution)
         /// </summary>
         IImage? GetDeviceScaledImage(Stream stream,
-                         Double maximumWidthPct);
+                                     Double maximumWidthPct,
+                                     Boolean isPreserveStream);
 
         IImage GetScaledImage(IImage input,
                               Double width,
                               Double height);
 
         IImage? GetImage(Byte[] bytes);
+
+        IImage? GetImage(Byte[] bytes,
+                         Boolean isPreserveStream);
 
         IImage? GetImage(FileInfo file);
 

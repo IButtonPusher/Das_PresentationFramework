@@ -17,8 +17,21 @@ namespace Gdi.Shared
             return new GdiBitmap(img, stream);
         }
 
+        public IImage? GetImage(Stream stream, 
+                                Boolean isPreserveStream)
+        {
+            return GetImage(stream);
+        }
+
         public IImage? GetDeviceScaledImage(Stream stream, 
-                                Double maximumWidthPct)
+                                            Double maximumWidthPct, 
+                                            Boolean isPreserveStream)
+        {
+            return GetDeviceScaledImage(stream, maximumWidthPct);
+        }
+
+        public IImage? GetDeviceScaledImage(Stream stream, 
+                                            Double maximumWidthPct)
         {
             if (!(_window is {} window))
                 return GetImage(stream);
@@ -37,8 +50,21 @@ namespace Gdi.Shared
             using (stream)
             using (bmp)
             {
-                var scaledBmp = new Bitmap(bmp, Convert.ToInt32(bmp.Width * scaleRatio),
+                //var scaledBmp = new Bitmap(bmp, Convert.ToInt32(bmp.Width * scaleRatio),
+                //    Convert.ToInt32(bmp.Height * scaleRatio));
+
+                var scaledBmp = new Bitmap(Convert.ToInt32(bmp.Width * scaleRatio),
                     Convert.ToInt32(bmp.Height * scaleRatio));
+
+                using (var g = Graphics.FromImage(scaledBmp))
+                {
+                    g.DrawImage(bmp, 
+                        new Rectangle(0,0,scaledBmp.Width, scaledBmp.Height),
+                        new Rectangle(0,0,bmp.Width, bmp.Height), 
+                        GraphicsUnit.Pixel);
+                }
+
+
                 return new GdiBitmap(scaledBmp, null);
             }
         }
@@ -48,15 +74,33 @@ namespace Gdi.Shared
                                      Double height)
         {
             var bmp = input.Unwrap<Bitmap>();
-            bmp = new Bitmap(bmp, Convert.ToInt32(width),
+
+            var bmp2 = new Bitmap(Convert.ToInt32(width),
                 Convert.ToInt32(height));
-            return new GdiBitmap(bmp, null);
+
+            using (var g = Graphics.FromImage(bmp2))
+            {
+                g.DrawImage(bmp, 
+                    new Rectangle(0,0,bmp2.Width, bmp2.Height),
+                    new Rectangle(0,0,bmp.Width, bmp.Height), 
+                    GraphicsUnit.Pixel);
+            }
+
+            //bmp = new Bitmap(bmp, Convert.ToInt32(width),
+            //    Convert.ToInt32(height));
+            return new GdiBitmap(bmp2, null);
         }
 
         public IImage? GetImage(Byte[] bytes)
         {
             var ms = new MemoryStream(bytes);
             return GetImage(ms);
+        }
+
+        public IImage? GetImage(Byte[] bytes, 
+                                Boolean isPreserveStream)
+        {
+            return GetImage(bytes);
         }
 
         public IImage? GetImage(FileInfo file)

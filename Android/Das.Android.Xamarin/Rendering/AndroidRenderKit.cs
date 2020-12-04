@@ -32,7 +32,7 @@ namespace Das.Xamarin.Android
             DisplayMetrics = displayMetrics;
             var lastMeasures = new Dictionary<IVisualElement, ValueSize>();
             MeasureContext = new AndroidMeasureKit(windowManager, fontProvider, 
-                this, lastMeasures,styleContext);
+                this, lastMeasures,styleContext, displayMetrics);
 
             var visualPositions = new Dictionary<IVisualElement, ValueCube>();
 

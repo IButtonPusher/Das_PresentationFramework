@@ -11,7 +11,8 @@ using Das.Views.Core.Writing;
 
 namespace Das.Xamarin.Android
 {
-    public class AndroidFontPaint : TextPaint, IFontRenderer
+    public class AndroidFontPaint : TextPaint, 
+                                    IFontRenderer
     {
         private readonly DisplayMetrics _displayMetrics;
         private readonly Boolean _isCacheStaticLayouts;
@@ -23,7 +24,7 @@ namespace Das.Xamarin.Android
         {
             _displayMetrics = displayMetrics;
             _isCacheStaticLayouts = isCacheStaticLayouts;
-            _layoutCache = new Dictionary<String, StaticLayout>();
+            _layoutCache = new Dictionary<IRectangle, StaticLayout>();
             Font = font;
             SetStyle(Style.Fill);
 
@@ -38,29 +39,33 @@ namespace Das.Xamarin.Android
         public IFont Font { get; }
 
         [Obsolete("dont forget to fix this!")]
-        public void DrawString(String text, 
-                               IBrush brush, 
-                               IPoint2D point2D)
+        public void DrawString<TBrush, TPoint>(String text,
+                                               TBrush brush,
+                                               TPoint point2D)
+            where TBrush : IBrush
+            where TPoint : IPoint2D
         {
             //SetColor(brush);
 
             var size = MeasureString(text);
             var test = new ValueRectangle(point2D, size.Width, size.Height);
-            DrawString(text, brush, test);
+            DrawStringInRect(text, brush, test);
 
             //GetCanvas().DrawText(text, (Single) point2D.X, (Single) point2D.Y, this);
         }
 
-        public void DrawString(String s, 
-                               IBrush brush, 
-                               IRectangle bounds)
+        public void DrawStringInRect<TBrush, TRectangle>(String s,
+                                                         TBrush brush,
+                                                         TRectangle bounds)
+            where TBrush : IBrush
+            where TRectangle : IRectangle
         {
             var canvas = GetCanvas();
 
             SetColor(brush);
 
-            System.Diagnostics.Debug.WriteLine("Drawing string " + s + " in rect " + bounds + 
-                                               " brush " + brush);
+            //System.Diagnostics.Debug.WriteLine("Drawing string " + s + " in rect " + bounds + 
+            //                                   " brush " + brush);
 
             if (_isCacheStaticLayouts)
             {
@@ -84,20 +89,22 @@ namespace Das.Xamarin.Android
             }
         }
 
-        private void DrawStringWithCachedLayout(String s,
-                                                IBrush brush,
-                                                IRectangle bounds)
+        private void DrawStringWithCachedLayout<TBrush, TRectangle>(String s,
+                                                                    TBrush brush,
+                                                                    TRectangle bounds)
+            where TBrush : IBrush
+            where TRectangle : IRectangle
         {
             var canvas = GetCanvas();
             SetColor(brush);
 
-            if (!_layoutCache.TryGetValue(s, out var textLayout))
+            if (!_layoutCache.TryGetValue(bounds, out var textLayout))
             {
                 textLayout = new StaticLayout(s, this,
                     Convert.ToInt32(bounds.Width),
                     Layout.Alignment.AlignNormal,
                     1, 1, false);
-                _layoutCache.Add(s, textLayout);
+                _layoutCache.Add(bounds, textLayout);
             }
 
             canvas.Save();
@@ -154,6 +161,6 @@ namespace Das.Xamarin.Android
             base.SetStyle(style);
         }
 
-        private readonly Dictionary<String, StaticLayout> _layoutCache;
+        private readonly Dictionary<IRectangle, StaticLayout> _layoutCache;
     }
 }

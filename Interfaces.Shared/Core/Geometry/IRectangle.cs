@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 namespace Das.Views.Core.Geometry
 {
     public interface IRectangle : IShape2d,
-                                  IPointContainer
+                                  IPointContainer,
+                                  IEquatable<IRectangle>
     {
         Point2D BottomLeft { get; }
 

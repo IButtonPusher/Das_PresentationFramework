@@ -15,7 +15,7 @@ namespace Das.Views.Panels
 {
     public class ContentPanel<T> : BaseContainerVisual<T>,
                                             IContentContainer,
-                                            IVisualContainer,
+                                            //IVisualContainer,
                                             IContentPresenter
     {
         private readonly IVisualBootstrapper _visualBootstrapper;
@@ -286,9 +286,17 @@ namespace Das.Views.Panels
 
         public override void AcceptChanges()
         {
+            base.AcceptChanges();
+
             //IsChanged = false;
             if (Content is IChangeTracking ct)
                 ct.AcceptChanges();
+        }
+
+        public override void AcceptChanges(ChangeType changeType)
+        {
+            base.AcceptChanges(changeType);
+            Content?.AcceptChanges(changeType);
         }
 
 
@@ -299,29 +307,38 @@ namespace Das.Views.Panels
                 value ?? _contentTemplate);
         }
 
-        IList<IVisualElement> IVisualContainer.Children
-        {
-            get
-            {
-                var content = Content;
-                if (content == null)
-                    return new List<IVisualElement>();
-                return new List<IVisualElement> {content};
-            }
-        }
+        //IList<IVisualElement> IVisualContainer.Children
+        //{
+        //    get
+        //    {
+        //        var content = Content;
+        //        if (content == null)
+        //            return new List<IVisualElement>();
+        //        return new List<IVisualElement> {content};
+        //    }
+        //}
 
-        void IVisualContainer.AddChild(IVisualElement element)
-        {
-            if (Content != null)
-                throw new Exception("Content is already set");
+        //void IVisualContainer.AddChild(IVisualElement element)
+        //{
+        //    if (Content != null)
+        //        throw new Exception("Content is already set");
 
-            Content = element;
-        }
+        //    Content = element;
+        //}
 
-        void IVisualContainer.AddChildren(params IVisualElement[] elements)
-        {
-            throw new NotSupportedException();
-        }
+        //Boolean IVisualContainer.RemoveChild(IVisualElement element)
+        //{
+        //    if (!Equals(Content, element))
+        //        return false;
+
+        //    Content = default;
+        //    return true;
+        //}
+
+        //void IVisualContainer.AddChildren(params IVisualElement[] elements)
+        //{
+        //    throw new NotSupportedException();
+        //}
 
         protected override void OnDataContextChanged(Object? newValue)
         {

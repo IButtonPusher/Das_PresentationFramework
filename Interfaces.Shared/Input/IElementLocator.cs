@@ -11,7 +11,8 @@ namespace Das.Views.Input
         IEnumerable<IRenderedVisual> GetElementsAt<TPoint>(TPoint point2D)
             where TPoint : IPoint2D;
 
-        IEnumerable<IRenderedVisual<IHandleInput<T>>> GetRenderedVisualsForMouseInput<T, TPoint>(TPoint point2D,
+        IEnumerable<IRenderedVisual<IHandleInput<T>>> GetRenderedVisualsForMouseInput<T, TPoint>(
+            TPoint point2D,
             InputAction inputAction)
             where T : IInputEventArgs
             where TPoint : IPoint2D;

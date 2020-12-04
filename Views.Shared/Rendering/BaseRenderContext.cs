@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
-using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Input;
@@ -106,10 +103,27 @@ namespace Das.Views.Rendering
             where T : IInputEventArgs
             where TPoint : IPoint2D
         {
-            foreach (var visual in GetElementsAt<IHandleInput<T>>(point2D))
-                if (visual.Element is IInteractiveView interactive &&
-                    (interactive.HandlesActions & inputAction) == inputAction)
-                    yield return visual;
+            lock (_renderLock)
+            {
+                foreach (var kvp in RenderPositions.Where(p => p.Value.Contains(point2D))
+                                                   .OrderByDescending(p => p.Value.Depth))
+                {
+                    if (!(kvp.Key is IInteractiveView interactive) || 
+                        (interactive.HandlesActions & inputAction) != inputAction || 
+                        !(interactive is IHandleInput<T> inputHandler))
+                        continue;
+
+                    //if (kvp.Key is IContentContainer container && container.Content != null)
+                    //    yield return new RenderedVisual(container.Content, kvp.Value);
+
+                    yield return new RenderedVisual<IHandleInput<T>>(inputHandler, kvp.Value);
+                }
+            }
+
+            //foreach (var visual in GetElementsAt<IHandleInput<T>>(point2D))
+            //    if (visual.Element is IInteractiveView interactive &&
+            //        (interactive.HandlesActions & inputAction) == inputAction)
+            //        yield return visual;
         }
 
         public ICube? TryGetElementBounds(IVisualElement element)
@@ -136,17 +150,17 @@ namespace Das.Views.Rendering
         }
 
 
-        public abstract IImage? GetImage(Stream stream);
+        //public abstract IImage? GetImage(Stream stream);
 
-        public abstract IImage? GetImage(Stream stream, Double maximumWidthPct);
+        //public abstract IImage? GetImage(Stream stream, Double maximumWidthPct);
 
-        public virtual IImage? GetImage(Byte[] bytes)
-        {
-            var ms = new MemoryStream(bytes);
-            return GetImage(ms);
-        }
+        //public virtual IImage? GetImage(Byte[] bytes)
+        //{
+        //    var ms = new MemoryStream(bytes);
+        //    return GetImage(ms);
+        //}
 
-        public abstract IImage GetNullImage();
+        //public abstract IImage GetNullImage();
 
        
 
@@ -225,8 +239,6 @@ namespace Das.Views.Rendering
                                                              IViewState viewState)
             where TRectangle : IRectangle
         {
-            //Debug.WriteLine("********** BEGIN RENDER ***********");
-
             lock (_renderLock)
             {
                 LastRenderPositions.Clear();
@@ -235,150 +247,15 @@ namespace Das.Views.Rendering
                     LastRenderPositions[kvp.Key] = kvp.Value;
                 }
                 RenderPositions.Clear();
+
+                ViewState = viewState;
+                DrawElement(element, new ValueRenderRectangle(rect));
             }
 
-            ViewState = viewState;
-            DrawElement(element, new ValueRenderRectangle(rect));
-            //Debug.WriteLine("********** END RENDER ***********");
-            
+            //ViewState = viewState;
+            //DrawElement(element, new ValueRenderRectangle(rect));
         }
 
-        //private Rectangle DrawElementImpl<TSize, TPoint>(IVisualElement element,
-        //                                                 TSize size,
-        //                                                 Double x,
-        //                                                 Double y,
-        //                                                 TPoint offset)
-        //    where TSize : ISize
-        //    where TPoint : IPoint2D
-        //{
-        //     _surrogateProvider.EnsureSurrogate(ref element);
-
-        //     //if (!element.IsRequiresArrange)
-        //     //{
-        //     //    if (RenderPositions.TryGetValue(element, out var pos))
-        //     //        return new Rectangle(pos, Thickness.Empty);
-
-        //     //    return Rectangle.Empty;
-        //     //}
-
-        //     //Debug.WriteLine("drawing " + element);
-
-        //    var selector = element is IInteractiveView interactive
-        //        ? interactive.CurrentStyleSelector
-        //        : StyleSelector.None;
-
-        //    var border = GetStyleSetter<Thickness>(StyleSetter.BorderThickness, 
-        //        selector, element);
-
-        //    //zb rect = 0,0,1024,768, CurrentLocation = 0,0
-        //    //suppose element measured at 200x200 and is center,center aligned
-        //    var useRect = GetTargetRect(x, y, size.Width, size.Height, offset,
-        //        element, border);
-        //    //=> useRect = {x: 412, y: 284, w: 200, h:200}
-
-        //    //however, if the margin is 10,,, 
-        //    //=> useRect = { x: 422, y: 294, w: 200, h: 200}
-
-        //System.Diagnostics.Debug.WriteLine(_tabs +  "Draw: " + element + " to " + x + "," + y +
-        //                                       size + " - " + 
-        //                                       " using: " + GetAbsoluteRect(useRect));
-
-        //    _tabs += "\t";
-
-        //    var radius = GetStyleSetter<Double>(StyleSetter.BorderRadius, selector, element);
-
-        //    var background = element.Background ??
-        //                     GetStyleSetter<SolidColorBrush>(StyleSetter.Background, 
-        //        selector, element);
-        //    if (!background.IsInvisible)
-        //    {
-        //        if (radius.IsZero())
-        //            FillRectangle(useRect, background);
-        //        else
-        //            FillRoundedRectangle(useRect, background, radius);
-        //    }
-
-        //    if (!border.IsEmpty)
-        //    {
-        //        var brush = GetStyleSetter<IBrush>(StyleSetter.BorderBrush, selector, element);
-        //        OnDrawBorder(useRect, border, brush, radius);
-        //    }
-
-        //    useRect += CurrentLocation;
-            
-
-        //    PushRect(useRect);
-
-           
-
-        //    lock (_renderLock)
-        //    {
-        //        //if (!RenderPositions.ContainsKey(element))
-        //        //{
-        //        //    element.Disposed += OnElementDisposed;
-        //        //}
-
-        //        var currentClip = GetCurrentClip();
-                
-        //        if (currentClip.IsEmpty)
-        //        {
-        //            RenderPositions[element] = new ValueCube(useRect, _currentZ);
-        //        }
-        //        else
-        //        {
-        //            var leftOverlap = useRect.Left < currentClip.Left
-        //                ? useRect.Left - currentClip.Left
-        //                : 0;
-        //            var topOverlap = useRect.Top < currentClip.Top
-        //                ? useRect.Top - currentClip.Top
-        //                : 0;
-        //            var rightOverlap = useRect.Right > currentClip.Right
-        //                ? useRect.Right - currentClip.Right
-        //                : 0;
-        //            var bottomOverlap = useRect.Bottom > currentClip.Bottom
-        //                ? useRect.Bottom - currentClip.Bottom
-        //                : 0;
-
-        //            var left = useRect.Left + leftOverlap;
-        //            var top = useRect.Top + topOverlap;
-        //            var width = useRect.Width - (leftOverlap + rightOverlap);
-        //            var height = useRect.Height - (topOverlap + bottomOverlap);
-
-        //            RenderPositions[element] = new ValueCube(left, top, width, height,
-        //                _currentZ);
-        //        }
-        //    }
-
-        //    if (element.IsClipsContent && !useRect.IsEmpty)
-        //        PushClip(useRect);
-
-        //    //var drawn = OnDrawElement(element, useRect);
-
-        //    /////////////////////////////////
-
-        //    if (useRect.Bottom > 0 || useRect.Right > 0)
-        //    {
-        //        // don't draw it if it's completely off screen
-        //        element.Arrange(CurrentElementRect, this);
-        //    }
-
-        //    var drawn = CurrentElementRect;
-
-        //    /////////////////////////////////
-
-        //    PopRect();
-        //    if (element.IsClipsContent && !useRect.IsEmpty)
-        //        PopClip(useRect);
-
-        //    element.AcceptChanges(ChangeType.Arrange);
-
-        //    //if (element is IChangeTracking changer)
-        //    //    changer.AcceptChanges();
-
-        //    _tabs = _tabs.Substring(0, _tabs.Length - 1);
-
-        //    return drawn;
-        //}
 
         public void DrawContentElement<TSize>(IVisualElement element, 
                                                  TSize size) 
@@ -408,14 +285,11 @@ namespace Das.Views.Rendering
                 ? interactive.CurrentStyleSelector
                 : StyleSelector.None;
 
+
             var border = GetStyleSetter<Thickness>(StyleSetter.BorderThickness, 
                 selector, element);
 
             var margin = GetStyleSetter<Thickness>(StyleSetter.Margin, element);
-                         //* Perspective.ZoomLevel;
-
-            //zb rect = 0,0,1024,768, CurrentLocation = 0,0
-            //suppose element measured at 200x200 and is center,center aligned
 
             _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
 
@@ -424,18 +298,7 @@ namespace Das.Views.Rendering
 
             var useRect = _fairyRect;
 
-
             useRect.Update(rect, CurrentElementRect.Offset, margin, border);
-
-            //SetTargetRect(ref useRect, rect.X, rect.Y, rect.Width, rect.Height,
-            //    rect.Offset, element, border);
-
-            //var useRect = GetTargetRect(rect.X, rect.Y, rect.Size.Width, rect.Size.Height, rect.Offset,
-            //    element, border);
-            //=> useRect = {x: 412, y: 284, w: 200, h:200}
-
-            //however, if the margin is 10,,, 
-            //=> useRect = { x: 422, y: 294, w: 200, h: 200}
 
             var radius = GetStyleSetter<Double>(StyleSetter.BorderRadius, selector, element);
 
@@ -460,48 +323,48 @@ namespace Das.Views.Rendering
 
             PushRect(useRect);
 
-            lock (_renderLock)
+            SetElementRenderPosition(useRect, element);
+
+           // lock (_renderLock)
             {
-                var currentClip = GetCurrentClip();
+                //var currentClip = GetCurrentClip();
                 
-                if (currentClip.IsEmpty)
-                {
-                    RenderPositions[element] = new ValueCube(useRect, _currentZ);
-                }
-                else
-                {
-                    var leftOverlap = useRect.Left < currentClip.Left
-                        ? useRect.Left - currentClip.Left
-                        : 0;
-                    var topOverlap = useRect.Top < currentClip.Top
-                        ? useRect.Top - currentClip.Top
-                        : 0;
-                    var rightOverlap = useRect.Right > currentClip.Right
-                        ? useRect.Right - currentClip.Right
-                        : 0;
-                    var bottomOverlap = useRect.Bottom > currentClip.Bottom
-                        ? useRect.Bottom - currentClip.Bottom
-                        : 0;
+                //if (currentClip.IsEmpty)
+                //{
+                //    RenderPositions[element] = new ValueCube(useRect, _currentZ);
+                //}
+                //else
+                //{
+                //    var leftOverlap = useRect.Left < currentClip.Left
+                //        ? useRect.Left - currentClip.Left
+                //        : 0;
+                //    var topOverlap = useRect.Top < currentClip.Top
+                //        ? useRect.Top - currentClip.Top
+                //        : 0;
+                //    var rightOverlap = useRect.Right > currentClip.Right
+                //        ? useRect.Right - currentClip.Right
+                //        : 0;
+                //    var bottomOverlap = useRect.Bottom > currentClip.Bottom
+                //        ? useRect.Bottom - currentClip.Bottom
+                //        : 0;
 
-                    var left = useRect.Left + leftOverlap;
-                    var top = useRect.Top + topOverlap;
-                    var width = useRect.Width - (leftOverlap + rightOverlap);
-                    var height = useRect.Height - (topOverlap + bottomOverlap);
+                //    var left = useRect.Left + leftOverlap;
+                //    var top = useRect.Top + topOverlap;
+                //    var width = useRect.Width - (leftOverlap + rightOverlap);
+                //    var height = useRect.Height - (topOverlap + bottomOverlap);
 
-                   
-
-                    RenderPositions[element] = new ValueCube(left, top, width, height,
-                        _currentZ);
-                }
+                //    RenderPositions[element] = new ValueCube(left, top, width, height,
+                //        _currentZ);
+                //}
             }
 
-            System.Diagnostics.Debug.WriteLine(_tabs + element.GetType().Name + "\t\ttarget rect: (" + rect.X + "," + 
-                                               rect.Y +
-                                               ") [" + rect.Width.ToString("0.0") + "," + rect.Height.ToString("0.0") + "] - \t\t" +
-                                               " effective: " + useRect + " inherited: " + CurrentLocation + 
-                                               " recorded: " + RenderPositions[element]);
+            //System.Diagnostics.Debug.WriteLine(_tabs + element.GetType().Name + "\t\ttarget rect: (" + rect.X + "," + 
+            //                                   rect.Y +
+            //                                   ") [" + rect.Width.ToString("0.0") + "," + rect.Height.ToString("0.0") + "] - \t\t" +
+            //                                   " effective: " + useRect + " inherited: " + CurrentLocation + 
+            //                                   " recorded: " + RenderPositions[element]);
 
-            _tabs += "\t";
+            //_tabs += "\t";
 
             if (element.IsClipsContent && !useRect.IsEmpty)
             {
@@ -513,8 +376,6 @@ namespace Das.Views.Rendering
                     PushClip(useRect);
             }
 
-            //var drawn = OnDrawElement(element, useRect);
-
             /////////////////////////////////
             /////////////////////////////////
             if (useRect.Bottom > 0 || useRect.Right > 0)
@@ -522,8 +383,6 @@ namespace Das.Views.Rendering
                 // don't draw it if it's completely off screen
                 element.Arrange(CurrentElementRect, this);
             }
-
-            //var drawn = CurrentElementRect;
             /////////////////////////////////
             /////////////////////////////////
 
@@ -535,13 +394,41 @@ namespace Das.Views.Rendering
 
             element.AcceptChanges(ChangeType.Arrange);
 
-            //if (element is IChangeTracking changer)
-            //    changer.AcceptChanges();
+            //_tabs = _tabs.Substring(0, _tabs.Length - 1);
+        }
 
-            _tabs = _tabs.Substring(0, _tabs.Length - 1);
+        private void SetElementRenderPosition(RenderRectangle useRect,
+                                              IVisualElement element)
+        {
+            var currentClip = GetCurrentClip();
+                
+            if (currentClip.IsEmpty)
+            {
+                RenderPositions[element] = new ValueCube(useRect, _currentZ);
+            }
+            else
+            {
+                var leftOverlap = useRect.Left < currentClip.Left
+                    ? useRect.Left - currentClip.Left
+                    : 0;
+                var topOverlap = useRect.Top < currentClip.Top
+                    ? useRect.Top - currentClip.Top
+                    : 0;
+                var rightOverlap = useRect.Right > currentClip.Right
+                    ? useRect.Right - currentClip.Right
+                    : 0;
+                var bottomOverlap = useRect.Bottom > currentClip.Bottom
+                    ? useRect.Bottom - currentClip.Bottom
+                    : 0;
 
-            //return drawn;
+                var left = useRect.Left + leftOverlap;
+                var top = useRect.Top + topOverlap;
+                var width = useRect.Width - (leftOverlap + rightOverlap);
+                var height = useRect.Height - (topOverlap + bottomOverlap);
 
+                RenderPositions[element] = new ValueCube(left, top, width, height,
+                    _currentZ);
+            }
         }
 
         protected abstract void PushClip<TRectangle>(TRectangle rect)
@@ -550,7 +437,7 @@ namespace Das.Views.Rendering
         protected abstract void PopClip<TRectangle>(TRectangle rect)
             where TRectangle : IRectangle;
 
-        protected abstract IRectangle GetCurrentClip();
+        protected abstract ValueRectangle GetCurrentClip();
 
         //private void OnElementDisposed(IVisualElement element)
         //{
@@ -653,196 +540,6 @@ namespace Das.Views.Rendering
             }
         }
 
-        //private RenderRectangle GetTargetRect<TPoint>(Double left,
-        //                                              Double top,
-        //                                              Double width,
-        //                                              Double height,
-        //                                              TPoint offset,
-        //                                              IVisualElement element,
-        //                                              Thickness border)
-        //    where TPoint : IPoint2D
-        //{
-        //    var margin = GetStyleSetter<Thickness>(StyleSetter.Margin, element);
-        //                 //* Perspective.ZoomLevel;
-
-        //    var xOffset = CurrentElementRect.Offset.X;// + desiredRect.Offset.X;
-        //    var yOffset = CurrentElementRect.Offset.Y;// + desiredRect.Offset.Y;
-
-
-        //    var bldr = new RenderRectangle(
-        //        left + margin.Left - xOffset, // X
-        //        top + margin.Top - yOffset, // Y
-        //        width - margin.Width,
-        //        height - margin.Height, 
-        //        offset);
-
-
-        //    if (!border.IsEmpty)
-        //    {
-        //        bldr.Left += border.Left;
-        //        bldr.Top += border.Top;
-        //        bldr.Width -= border.Width;
-        //        bldr.Height -= border.Height;
-        //    }
-
-        //    return bldr;
-
-        //    //var valign = GetStyleSetter<VerticalAlignments>(
-        //    //    StyleSetter.VerticalAlignment, element);
-        //    //var halign = GetStyleSetter<HorizontalAlignments>(
-        //    //    StyleSetter.HorizontalAlignment, element);
-
-        //    //if (valign == VerticalAlignments.Top && halign == HorizontalAlignments.Left)
-        //    //    return bldr;
-
-
-        //    //var xGap = desiredRect.Left - bldr.Left;
-        //    ////var yGap = desiredRect.Top - bldr.Top;
-        //    //Double yAdd;
-        //    //Double xAdd;
-
-        //    //switch (valign)
-        //    //{
-        //    //    case VerticalAlignments.Top:
-        //    //    case VerticalAlignments.Stretch:
-        //    //        yAdd = 0;
-        //    //        break;
-
-        //    //    case VerticalAlignments.Bottom:
-        //    //        yAdd = desiredRect.Height - bldr.Height;
-        //    //        break;
-
-        //    //    case VerticalAlignments.Center:
-        //    //        yAdd = (desiredRect.Height - bldr.Height) / 2;
-        //    //        break;
-        //    //    default:
-        //    //        throw new NotImplementedException();
-        //    //}
-
-        //    //switch (halign)
-        //    //{
-        //    //    case HorizontalAlignments.Left:
-        //    //    case HorizontalAlignments.Stretch:
-        //    //        xAdd = 0;
-        //    //        break;
-
-        //    //    case HorizontalAlignments.Right:
-        //    //        yAdd = desiredRect.Height - bldr.Height;
-        //    //        break;
-
-        //    //    case VerticalAlignments.Center:
-        //    //        yAdd = (desiredRect.Height - bldr.Height) / 2;
-        //    //        break;
-        //    //    default:
-        //    //        throw new NotImplementedException();
-        //    //}
-
-        //}
-
-        // private void SetTargetRect<TPoint>(ref RenderRectangle bldr,
-        //                                    Double left,
-        //                                              Double top,
-        //                                              Double width,
-        //                                              Double height,
-        //                                              TPoint offset,
-        //                                              IVisualElement element,
-        //                                              Thickness border)
-        //    where TPoint : IPoint2D
-        //{
-        //    var margin = GetStyleSetter<Thickness>(StyleSetter.Margin, element)
-        //                 * Perspective.ZoomLevel;
-
-
-        //    bldr.Update(left, top, width, height, CurrentElementRect.Offset, offset, margin, border);
-        //}
-
-
-        /// <summary>
-        ///     Margins + space added due to alignment
-        /// </summary>
-        //private RenderRectangle GetOffset2(IRenderRectangle rect,
-        //                            IVisualElement element,
-        //                            Thickness border)
-        //{
-        //    var margin = GetStyleSetter<Thickness>(StyleSetter.Margin, element)
-        //                 * Perspective.ZoomLevel;
-
-        //    if (!margin.IsEmpty)
-        //    { }
-
-        //    margin += border;
-
-        //    // this is wrong - breaks the whole paradigm of the parent deciding child size
-        //    //var totalSize = _measureContext.GetLastMeasure(element);
-        //    var totalSize = rect.Size;
-        //    if (Size.Empty.Equals(totalSize))
-        //        return new RenderRectangle(rect, margin, rect.Offset);
-
-        //    var desiredSize = Size.Subtract(totalSize, margin);
-
-
-        //    var valign = GetStyleSetter<VerticalAlignments>(
-        //        StyleSetter.VerticalAlignment, element);
-        //    var halign = GetStyleSetter<HorizontalAlignments>(
-        //        StyleSetter.HorizontalAlignment, element);
-
-        //    if (valign == VerticalAlignments.Top && halign == HorizontalAlignments.Left)
-        //        return new RenderRectangle(rect, margin, rect.Offset);
-
-        //    var width = desiredSize.Width;
-        //    var height = desiredSize.Height;
-
-
-        //    Double yGap;
-        //    var xGap = rect.Width + margin.Left - (desiredSize.Width + margin.Right);
-
-
-        //    switch (valign)
-        //    {
-        //        case VerticalAlignments.Top:
-        //            yGap = margin.Top;
-        //            break;
-
-        //        case VerticalAlignments.Bottom:
-        //            yGap = rect.Height - (height + margin.Bottom);
-        //            break;
-
-        //        case VerticalAlignments.Center:
-        //            yGap = (rect.Height - height) / 2 + margin.Top - margin.Bottom;
-        //            break;
-
-        //        case VerticalAlignments.Stretch:
-        //            yGap = margin.Top;
-        //            height = rect.Height - margin.Height;
-        //            break;
-        //        default:
-        //            throw new NotImplementedException();
-        //    }
-
-        //    switch (halign)
-        //    {
-        //        case HorizontalAlignments.Left:
-        //            if (xGap > 0)
-        //                xGap = 0;
-        //            break;
-        //        case HorizontalAlignments.Right:
-        //            xGap = rect.Width - (width + margin.Left);
-        //            break;
-        //        case HorizontalAlignments.Center:
-        //            xGap = (rect.Width - width) / 2 + margin.Left - margin.Right;
-        //            break;
-        //        case HorizontalAlignments.Stretch:
-        //            width = rect.Width - margin.Width;
-        //            xGap = margin.Left;
-        //            break;
-        //        default:
-        //            throw new ArgumentOutOfRangeException();
-        //    }
-
-
-        //    return new RenderRectangle(xGap + rect.X, yGap + rect.Y,
-        //        width, height, rect.Offset);
-        //}
 
         protected void OnDrawBorder<TRectangle, TShape, TBrush>(TRectangle rect,
                                                                 TShape thickness,
@@ -910,7 +607,7 @@ namespace Das.Views.Rendering
         private readonly Object _renderLock;
         private Int32 _currentZ;
         protected RenderRectangle CurrentElementRect;
-        private String _tabs = String.Empty;
+        //private String _tabs = String.Empty;
 
         [ThreadStatic]
         private static RenderRectangle? _fairyRect;

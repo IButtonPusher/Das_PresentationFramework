@@ -35,14 +35,21 @@ namespace Das.Views.Controls
                 if (availableSpace.Height < img.Height)
                 {
                     var scale = availableSpace.Height / img.Height;
-                    availableSpace = new ValueRenderSize(img.Width * scale, availableSpace.Height);
+                    availableSpace = new ValueRenderSize(img.Width * scale, availableSpace.Height,
+                        availableSpace.Offset);
                 }
 
             var rect = new Rectangle(Point2D.Empty, availableSpace);
-            var zoom = renderContext.ViewState?.ZoomLevel ?? 1;
+            //var zoom = renderContext.ViewState?.ZoomLevel ?? 1;
 
-            renderContext.DrawImage(img, (rect * zoom)!);
+            renderContext.DrawImage(img, rect);
         }
+
+        //public override IVisualElement DeepCopy()
+        //{
+        //    var res = (PictureFrame)base.DeepCopy();
+            
+        //}
 
         public override void Dispose()
         {
@@ -53,7 +60,7 @@ namespace Das.Views.Controls
         public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
         {
-            var zoom = measureContext.ViewState?.ZoomLevel ?? 1;
+            //var zoom = measureContext.ViewState?.ZoomLevel ?? 1;
 
             //if (!(DataContext is {} dc))
             //    return Size.Empty;
@@ -65,8 +72,8 @@ namespace Das.Views.Controls
             //if (forced != null && !Size.Empty.Equals(forced))
             //    return size;
 
-            var width = measureContext.GetStyleSetter<Double>(StyleSetter.Width, this) * zoom;
-            var height = measureContext.GetStyleSetter<Double>(StyleSetter.Height, this) * zoom;
+            var width = measureContext.GetStyleSetter<Double>(StyleSetter.Width, this);// * zoom;
+            var height = measureContext.GetStyleSetter<Double>(StyleSetter.Height, this);// * zoom;
 
             if (!Double.IsNaN(width) && !Double.IsNaN(height))
                 return new ValueSize(width, height);

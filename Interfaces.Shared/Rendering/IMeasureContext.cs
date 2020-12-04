@@ -11,7 +11,7 @@ namespace Das.Views.Rendering
         /// <summary>
         ///     The total amount of space available (e.g. size of the window, screen size of a mobile device)
         /// </summary>
-        ISize ContextBounds { get; }
+        ValueSize ContextBounds { get; }
 
         IViewState? ViewState { get; }
 

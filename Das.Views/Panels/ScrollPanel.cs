@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Das.Extensions;
 using Das.Views.Core.Geometry;
 using Das.Views.Input;
 using Das.Views.Rendering;
@@ -16,29 +17,68 @@ namespace Das.Views.Panels
                                   IHandleInput<DragEventArgs>,
                                   IHandleInput<FlingEventArgs>,
                                   IHandleInput<MouseDownEventArgs>,
-                                  IHandleInput<MouseUpEventArgs>
+                                  IHandleInput<MouseUpEventArgs>,
+                                  IFlingHost
     {
         public ScrollPanel(IVisualBootstrapper visualBootstrapper)
-        :  base(visualBootstrapper)
+            : base(visualBootstrapper)
         {
             _lastAvailable = ValueSize.Empty;
             _lastNeeded = ValueSize.Empty;
 
-            _flingHandler = new FlingHandler(() => IsScrollsHorizontal,
-                () => IsScrollsVertical, OnScroll);
+            _flingHandler = new FlingHandler(this);
+
             _isClipsContent = true;
         }
 
-        private Boolean _isClipsContent;
 
-        public override Boolean IsClipsContent
+        Boolean IFlingHost.CanFlingVertical => IsScrollsVertical;
+
+        Boolean IFlingHost.CanFlingHorizontal => IsScrollsHorizontal;
+
+        public ValueMinMax GetVerticalMinMaxFling()
         {
-            get => _isClipsContent;
-            set => _isClipsContent = value;
+            return IsScrollsVertical
+                ? new ValueMinMax(0 - VerticalOffset, _maximumYScroll - VerticalOffset)
+                : ValueMinMax.Empty;
+        }
+
+        public ValueMinMax GetHorizontalMinMaxFling()
+        {
+            return IsScrollsHorizontal
+                ? new ValueMinMax(0 - HorizontalOffset, _maximumXScroll - HorizontalOffset)
+                : ValueMinMax.Empty;
+        }
+
+        //Double IFlingHost.MinimumFlingVertical => 0;
+
+        //Double IFlingHost.MinimumFlingHorizontal => 0;
+
+        void IFlingHost.OnFlingStarting(Double totalHorizontalChange,
+                                        Double totalVerticalChange)
+        {
+            Debug.WriteLine("**Starting fling when y scroll: " + VerticalOffset +
+                            " delta: " + totalVerticalChange);
+
+            OnScrollTransitionStarting?.Invoke(totalHorizontalChange, totalVerticalChange);
+        }
+
+        void IFlingHost.OnFlingStep(Double deltaHorizontal,
+                                    Double deltaVertical)
+        {
+            OnScroll(deltaHorizontal, deltaVertical);
+        }
+
+        public void OnFlingEnded(Boolean wasCancelled)
+        {
+            Debug.WriteLine("***end of fling v-offset: " + VerticalOffset + "***");
+            OnScrollTransitionEnded?.Invoke();
         }
 
         public virtual Boolean OnInput(DragEventArgs args)
         {
+            //Debug.WriteLine("scroll Handle drag: " + args.LastChange.Height);
+
             if (args.InputContext.IsMousePresent && !IsScrollWithMouseDrag)
                 //todo: only use drag in a touch-only scenario?
                 return false;
@@ -48,17 +88,6 @@ namespace Das.Views.Panels
             return true;
         }
 
-        public Boolean OnInput(MouseUpEventArgs args)
-        {
-            Debug.WriteLine("mouse up: " + args.Position);
-            return false;
-        }
-
-        /// <summary>
-        /// todo: possibly...
-        /// </summary>
-        public StyleSelector CurrentStyleSelector => StyleSelector.None;
-
         public Boolean OnInput(FlingEventArgs args)
         {
             return _flingHandler.OnInput(args);
@@ -67,8 +96,19 @@ namespace Das.Views.Panels
 
         public Boolean OnInput(MouseDownEventArgs args)
         {
-            return _flingHandler.OnInput(args);
+            return IsScrollWithMouseDrag && _flingHandler.OnInput(args);
         }
+
+        public Boolean OnInput(MouseUpEventArgs args)
+        {
+            //Debug.WriteLine("mouse up: " + args.Position);
+            return false;
+        }
+
+        /// <summary>
+        ///     todo: possibly...
+        /// </summary>
+        public StyleSelector CurrentStyleSelector => StyleSelector.None;
 
         public InputAction HandlesActions => InputAction.MouseDrag |
                                              InputAction.MouseWheel |
@@ -83,10 +123,14 @@ namespace Das.Views.Panels
         public Int32 HorizontalOffset
         {
             get => _horizontalOffset;
-            set => SetValue(ref _horizontalOffset, value, OnOffsetChanged);
+            set => SetValue(ref _horizontalOffset, value, OnHorzOffsetChanged);
         }
 
-       
+        public override Boolean IsClipsContent
+        {
+            get => _isClipsContent;
+            set => _isClipsContent = value;
+        }
 
         public Boolean IsScrollsHorizontal => (ScrollMode & ScrollMode.Horizontal) == ScrollMode.Horizontal;
 
@@ -110,8 +154,7 @@ namespace Das.Views.Panels
         public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
-
-            if (!(Content is {} content))
+            if (!(Content is { } content))
                 return;
 
             if (VerticalOffset == 0 && HorizontalOffset == 0)
@@ -121,20 +164,14 @@ namespace Das.Views.Panels
             }
 
             _maximumXScroll = IsScrollsHorizontal
-                ? Math.Max(_lastNeeded.Width - availableSpace.Width, 0)
+                ? Convert.ToInt32(Math.Max(_lastNeeded.Width - availableSpace.Width, 0))
                 : 0;
-
 
             if (VerticalOffset > _maximumYScroll)
                 VerticalOffset = Convert.ToInt32(_maximumYScroll);
 
             if (HorizontalOffset > _maximumXScroll)
                 HorizontalOffset = Convert.ToInt32(_maximumXScroll);
-
-            //if (HorizontalOffset != 0)
-            //{
-            //    Debug.WriteLine("Arrange with h-scroll: " + HorizontalOffset);
-            //}
 
             var dest = new ValueRenderRectangle(
                 0, //HorizontalOffset, 
@@ -144,72 +181,108 @@ namespace Das.Views.Panels
                 new ValuePoint2D(HorizontalOffset, VerticalOffset));
 
             renderContext.DrawElement(content, dest);
+        }
 
-            IsRequiresArrange = false;
+        public override void Dispose()
+        {
+            base.Dispose();
 
-            //Debug.WriteLine("Arranged scroll panel");
+            OnScrollTransitionStarting = null;
+            OnScrollTransitionEnded = null;
         }
 
 
         public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
         {
-
             _lastAvailable = availableSpace;
 
             var h = IsScrollsVertical ? Double.PositiveInfinity : availableSpace.Height;
             var w = IsScrollsHorizontal ? Double.PositiveInfinity : availableSpace.Width;
 
             _lastNeeded = base.Measure(
-                new ValueRenderSize(w, h,new ValuePoint2D(HorizontalOffset, VerticalOffset)), 
+                new ValueRenderSize(w, h, new ValuePoint2D(HorizontalOffset, VerticalOffset)),
                 measureContext);
 
-            //var res = new ValueSize(Math.Min(_lastNeeded.Width, availableSpace.Width),
-            //    Math.Min(_lastNeeded.Height, availableSpace.Height));
 
             _maximumYScroll = IsScrollsVertical
-                ? Math.Max(_lastNeeded.Height - _lastAvailable.Height, 0)
+                ? Convert.ToInt32(Math.Max(_lastNeeded.Height - _lastAvailable.Height, 0))
                 : 0;
 
             _maximumXScroll = IsScrollsHorizontal
-                ? Math.Max(_lastNeeded.Width - _lastAvailable.Width, 0)
+                ? Convert.ToInt32(Math.Max(_lastNeeded.Width - _lastAvailable.Width, 0))
                 : 0;
 
-            IsRequiresMeasure = false;
-
             return _lastNeeded;
+        }
+
+        protected virtual void OnScroll(Double deltaX,
+                                        Double deltaY)
+        {
+            if (deltaY.IsNotZero() && IsScrollsVertical)
+            {
+
+                var nextYScroll = VerticalOffset + deltaY;
+                if (VerticalOffset < 0)
+                    VerticalOffset = 0;
+                else if (nextYScroll > _maximumYScroll)
+                    VerticalOffset = _maximumYScroll;
+                else
+                    VerticalOffset = Convert.ToInt32(nextYScroll);
+            }
+
+
+            //if (deltaY != 0 && IsScrollsVertical)
+            //    VerticalOffset = Convert.ToInt32(
+            //        Math.Min(
+            //            Math.Max(VerticalOffset + deltaY, 0),
+            //            _maximumYScroll));
+
+            if (!deltaX.IsNotZero() || !IsScrollsHorizontal)
+                return;
+
+            var nextScroll = HorizontalOffset - deltaX;
+            if (nextScroll < 0)
+                HorizontalOffset = 0;
+            else if (nextScroll > _maximumXScroll)
+                HorizontalOffset = _maximumXScroll;
+            else
+                HorizontalOffset = Convert.ToInt32(nextScroll);
+
+        }
+
+        private void OnHorzOffsetChanged(Int32 obj)
+        {
+            //Debug.WriteLine("horz offset is now " + obj);
+
+            InvalidateMeasure();
         }
 
 
         private void OnOffsetChanged(Int32 val)
         {
-            InvalidateMeasure();
+            Debug.WriteLine("vert offset is now " + val);
+
+            InvalidateArrange();
+            //InvalidateMeasure();
         }
 
-        protected virtual void OnScroll(Double x,
-                                        Double y)
-        {
+        /// <summary>
+        ///     Allows for virtualizing panels to better plan ahead
+        /// </summary>
+        public event Action<Double, Double>? OnScrollTransitionStarting;
 
-            if (y != 0 && IsScrollsVertical)
-                VerticalOffset = Convert.ToInt32(
-                    Math.Min(
-                        Math.Max(VerticalOffset + y, 0),
-                        _maximumYScroll));
-
-            if (x != 0 && IsScrollsHorizontal)
-                HorizontalOffset = Convert.ToInt32(
-                    Math.Min(
-                        Math.Max(HorizontalOffset - x, 0),
-                        _maximumXScroll));
-        }
+        public event Action? OnScrollTransitionEnded;
 
         private const Int32 _scrollCoefficient = 5;
         private readonly FlingHandler _flingHandler;
         private Int32 _horizontalOffset;
+
+        private Boolean _isClipsContent;
         private ISize _lastAvailable;
         private ValueSize _lastNeeded;
-        private Double _maximumXScroll;
-        private Double _maximumYScroll;
+        private Int32 _maximumXScroll;
+        private Int32 _maximumYScroll;
         private ScrollMode _scrollMode;
         private Int32 _verticalOffset;
     }

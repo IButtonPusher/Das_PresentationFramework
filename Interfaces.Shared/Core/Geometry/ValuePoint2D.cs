@@ -39,6 +39,19 @@ namespace Das.Views.Core.Geometry
             return new ValuePoint2D(X - x, Y - y);
         }
 
+        public static ValuePoint2D operator -(ValuePoint2D left,
+            ValuePoint2D right)
+        {
+            return new ValuePoint2D(left.X - right.X,
+                left.Y - right.Y);
+        }
+
+        public static ValuePoint2D operator /(ValuePoint2D left,
+                                              Double right)
+        {
+            return new ValuePoint2D(left.X / right, left.Y  / right);
+        }
+
         public override String ToString()
         {
             return GetType().Name + " X: " + X + ", " + Y;

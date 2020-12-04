@@ -44,9 +44,13 @@ namespace Das.OpenGL.Text
 
         public IFont Font { get; }
 
-        public void DrawString(String s, IBrush brush, IRectangle location)
+        public void DrawStringInRect<TBrush, TRectangle>(String s,
+                                                         TBrush brush,
+                                                         TRectangle bounds)
+            where TBrush : IBrush
+            where TRectangle : IRectangle
         {
-            DrawString(s, brush, location.TopLeft);
+            DrawString(s, brush, bounds.TopLeft);
         }
 
         public ValueSize MeasureString(String text)
@@ -129,7 +133,11 @@ namespace Das.OpenGL.Text
             return new ValueSize(w, h);
         }
 
-        public void DrawString(String text, IBrush brush, IPoint2D point2D)
+        public  void DrawString<TBrush, TPoint>(String text,
+                                                TBrush brush,
+                                                TPoint point2D)
+            where TBrush : IBrush
+            where TPoint : IPoint2D
         {
             if (!_wordRects.TryGetValue(text, out var wordRect))
             {

@@ -96,45 +96,23 @@ namespace Das.Gdi
             //Graphics.DrawImage(bmp, dest, src, GraphicsUnit.Pixel);
         }
 
-        public override IImage? GetImage(Stream stream)
-        {
-            return _imageProvider.GetImage(stream);
-        }
+        //public override IImage? GetImage(Stream stream)
+        //{
+        //    return _imageProvider.GetImage(stream);
+        //}
 
-        public override IImage? GetImage(Stream stream, 
-                                         Double maximumWidthPct)
-        {
-            return _imageProvider.GetDeviceScaledImage(stream, maximumWidthPct);
+        //public override IImage? GetImage(Stream stream, 
+        //                                 Double maximumWidthPct)
+        //{
+        //    return _imageProvider.GetDeviceScaledImage(stream, maximumWidthPct);
 
-            //if (!(_window is {} window))
-            //    return GetImage(stream);
+        //}
 
-            //var bmp = new Bitmap(stream);
-
-            //var maximumWidth = window.AvailableSize.Width * maximumWidthPct;
-
-            //var ratio = bmp.Width / maximumWidth;
-
-            //if (ratio <= maximumWidthPct)
-            //    return new GdiBitmap(bmp, stream);
-
-            //var scaleRatio = maximumWidth / bmp.Width; //maximumWidthPct * maximumWidth;
-
-            //using (stream)
-            //using (bmp)
-            //{
-            //    var scaledBmp = new Bitmap(bmp, Convert.ToInt32(bmp.Width * scaleRatio),
-            //        Convert.ToInt32(bmp.Height * scaleRatio));
-            //    return new GdiBitmap(scaledBmp, null);
-            //}
-
-        }
-
-        public override IImage GetNullImage()
-        {
-            return _imageProvider.GetNullImage();
-            //return _emptyImage ??= new GdiBitmap(new Bitmap(1, 1), null);
-        }
+        //public override IImage GetNullImage()
+        //{
+        //    return _imageProvider.GetNullImage();
+        //    //return _emptyImage ??= new GdiBitmap(new Bitmap(1, 1), null);
+        //}
 
         public override void DrawLine<TPen, TPoint1, TPoint2>(TPen pen,
                                                               TPoint1 pt1,
@@ -278,17 +256,17 @@ namespace Das.Gdi
             }
         }
 
-        protected override IRectangle GetCurrentClip()
+        protected override ValueRectangle GetCurrentClip()
         {
             if (_clipCounter == 0)
-                return Das.Views.Core.Geometry.Rectangle.Empty;
+                return ValueRectangle.Empty;
             var clip = Graphics.ClipBounds;
             if (clip == null)
-                return Das.Views.Core.Geometry.Rectangle.Empty;
+                return ValueRectangle.Empty;
             if (clip.Width == 0 && clip.Height == 0)
-                return Das.Views.Core.Geometry.Rectangle.Empty;
+                return ValueRectangle.Empty;
 
-            return new Das.Views.Core.Geometry.Rectangle(clip.Left, clip.Top, 
+            return new ValueRectangle(clip.Left, clip.Top, 
                 clip.Width, clip.Height);
 
         }

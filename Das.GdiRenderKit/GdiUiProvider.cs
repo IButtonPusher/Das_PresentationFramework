@@ -28,12 +28,12 @@ namespace Das.Views.Gdi
             Process.Start(uri.AbsoluteUri);
         }
 
-        public override ValueSize GetMainViewSize()
-        {
-            if (!(_visualHost is { } valid))
-                return ValueSize.Empty;
-            return valid.AvailableSize;
-        }
+        //public override ValueSize GetMainViewSize()
+        //{
+        //    if (!(_visualHost is { } valid))
+        //        return ValueSize.Empty;
+        //    return valid.AvailableSize;
+        //}
 
         public override void Invoke(Action action)
         {

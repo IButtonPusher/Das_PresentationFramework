@@ -32,7 +32,7 @@ namespace WinForms.Shared
 
         public event EventHandler? DataContextChanged;
 
-        private Boolean _isChanged;
+        //private Boolean _isChanged;
         private IViewModel? _dataContext;
 
         public IView View { get; protected set; }
@@ -45,7 +45,7 @@ namespace WinForms.Shared
             {
                 _dataContext = value;
                 View.SetDataContext(value);
-                _isChanged = true;
+                //_isChanged = true;
                 DataContextChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -64,7 +64,7 @@ namespace WinForms.Shared
             set
             {
                 _zoomLevel = value;
-                _isChanged = true;
+                Element.InvalidateMeasure();
             }
         }
 

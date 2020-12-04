@@ -4,6 +4,7 @@ using TaskEx = System.Threading.Tasks.Task;
 
 using System;
 using System.Diagnostics;
+using System.Threading;
 using Das.Views.Rendering;
 using System.Threading.Tasks;
 using Das.Views.Styles.Transitions;
@@ -29,6 +30,7 @@ namespace Das.Views.Styles
                                  IStyle style,
                                  AssignedStyle assignedStyle,
                                  Action<AssignedStyle> updater)
+            : base(Easing.QuadraticOut, transition.Duration, transition.Delay)
         {
             _runningOnVisual = runningOnVisual;
             _initialValue = initialValue is Double d ? d : 0;
@@ -47,32 +49,41 @@ namespace Das.Views.Styles
 
         public void Start()
         {
-            TaskEx.Run(RunUpdates).ConfigureAwait(false);
+            TaskEx.Run(() => RunUpdates(CancellationToken.None)).ConfigureAwait(false);
         }
 
-        private async Task RunUpdates()
-        {
-            await TaskEx.Delay(_transition.Delay);
+        //private async Task RunUpdates()
+        //{
+        //    await TaskEx.Delay(_transition.Delay);
 
-            var running = Stopwatch.StartNew();
-            var runningPct = 0.0;
+        //    var running = Stopwatch.StartNew();
+        //    var runningPct = 0.0;
 
-            while (runningPct < 1)
-            {
-                runningPct = EaseOutQuadratic(runningPct);
+        //    while (runningPct < 1)
+        //    {
+        //        runningPct = EaseOutQuadratic(runningPct);
 
-                var currentValue = _initialValue + (_valueDifference * runningPct);
-                var assigned = new AssignedStyle(_assignedStyle.Setter, _assignedStyle.Selector,
-                    currentValue);
+        //        var currentValue = _initialValue + (_valueDifference * runningPct);
+        //        var assigned = new AssignedStyle(_assignedStyle.Setter, _assignedStyle.Selector,
+        //            currentValue);
 
-                _updater(assigned);
-                //_style.Add(_assignedStyle.Setter, _assignedStyle.Selector, currentValue);
+        //        _updater(assigned);
+        //        //_style.Add(_assignedStyle.Setter, _assignedStyle.Selector, currentValue);
                 
-                await TaskEx.Delay(SIXTY_FPS);
-                runningPct = running.ElapsedMilliseconds / _transition.Duration.TotalMilliseconds;
-            } 
-        }
+        //        await TaskEx.Delay(SIXTY_FPS);
+        //        runningPct = running.ElapsedMilliseconds / _transition.Duration.TotalMilliseconds;
+        //    } 
+        //}
 
         private const Int32 SIXTY_FPS = 1000 / 60;
+
+        protected override void OnUpdate(Double runningPct)
+        {
+            var currentValue = _initialValue + (_valueDifference * runningPct);
+            var assigned = new AssignedStyle(_assignedStyle.Setter, _assignedStyle.Selector,
+                currentValue);
+
+            _updater(assigned);
+        }
     }
 }

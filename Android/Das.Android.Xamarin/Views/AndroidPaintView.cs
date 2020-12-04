@@ -56,37 +56,8 @@ namespace Das.Xamarin.Android
                 0, // Y
                 sz.Width / _viewState.ZoomLevel,
                 sz.Height/ _viewState.ZoomLevel);
-            //_measured.Width, _measured.Height);
-
-            //_targetRect = new ValueRectangle(
-            //    _displayMetrics.WidthPixels - _measured.Width, // X
-            //    _displayMetrics.HeightPixels - _measured.Height, // Y
-            //    _measured.Width, _measured.Height);
         }
 
-        //private async Task RefreshLoop()
-        //{
-        //    var sleepTime = 0;
-
-        //    while (true)
-        //        if (_view.IsChanged)
-        //        {
-        //            //System.Diagnostics.Debug.WriteLine("paint changed");
-        //            _view.AcceptChanges();
-        //            RenderKit.MeasureContext.MeasureMainView(_view,
-        //                new ValueRenderSize(_measured), _viewState);
-        //            Invalidate();
-        //            sleepTime = 0;
-        //        }
-        //        else
-        //        {
-        //            sleepTime = Math.Min(++sleepTime, 50);
-        //            await Task.Delay(sleepTime);
-        //            //System.Diagnostics.Debug.WriteLine("paint sleeping");
-        //        }
-
-        //    // ReSharper disable once FunctionNeverReturns
-        //}
 
         private readonly DisplayMetrics _displayMetrics;
         private readonly IView _view;

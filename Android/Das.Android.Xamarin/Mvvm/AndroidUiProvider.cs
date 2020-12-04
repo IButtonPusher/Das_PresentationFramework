@@ -32,11 +32,11 @@ namespace Das.Xamarin.Android.Mvvm
             _activity.StartActivity(intent);
         }
 
-        public override ValueSize GetMainViewSize()
-        {
-            return new ValueSize(_displayMetrics.WidthPixels,
-                _displayMetrics.HeightPixels);
-        }
+        //public override ValueSize GetMainViewSize()
+        //{
+        //    return new ValueSize(_displayMetrics.WidthPixels,
+        //        _displayMetrics.HeightPixels);
+        //}
 
         public override void Invoke(Action action)
         {

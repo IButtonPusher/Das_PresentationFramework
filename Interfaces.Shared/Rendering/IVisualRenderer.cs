@@ -4,7 +4,7 @@ using Das.Views.Core.Geometry;
 
 namespace Das.Views.Rendering
 {
-    public interface IVisualRenderer
+    public interface IVisualRenderer : IMeasureAndArrange
     {
         void Arrange(IRenderSize availableSpace,
                      IRenderContext renderContext);
@@ -12,12 +12,6 @@ namespace Das.Views.Rendering
         ValueSize Measure(IRenderSize availableSpace,
                           IMeasureContext measureContext);
 
-        void InvalidateMeasure();
-
-        void InvalidateArrange();
-
-        Boolean IsRequiresMeasure { get; }
-
-        Boolean IsRequiresArrange { get; }
+       
     }
 }

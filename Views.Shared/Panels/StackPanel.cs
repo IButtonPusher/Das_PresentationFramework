@@ -29,14 +29,15 @@ namespace Das.Views.Panels
         public override void Dispose()
         {
             base.Dispose();
+            Children.Dispose();
 
-            foreach (var child in Children)
-                child.Dispose();
+            //foreach (var child in Children)
+            //    child.Dispose();
         }
 
-        protected override IList<IVisualElement> GetChildrenToRender()
-        {
-            return Children;
-        }
+        //protected override IList<IVisualElement> GetChildrenToRender()
+        //{
+        //    return Children;
+        //}
     }
 }

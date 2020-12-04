@@ -22,21 +22,21 @@ namespace Das.Xamarin.Android.Rendering
             
         }
 
-        public override IImage? GetImage(Stream stream)
-        {
-            throw new NotSupportedException();
-        }
+        //public override IImage? GetImage(Stream stream)
+        //{
+        //    throw new NotSupportedException();
+        //}
 
-        public override IImage? GetImage(Stream stream, 
-                                         Double maximumWidthPct)
-        {
-            throw new NotSupportedException();
-        }
+        //public override IImage? GetImage(Stream stream, 
+        //                                 Double maximumWidthPct)
+        //{
+        //    throw new NotSupportedException();
+        //}
 
-        public override IImage GetNullImage()
-        {
-            throw new NotSupportedException();
-        }
+        //public override IImage GetNullImage()
+        //{
+        //    throw new NotSupportedException();
+        //}
 
         public override  void DrawImage<TRectangle>(IImage img, 
                                                     TRectangle destination)
@@ -87,9 +87,9 @@ namespace Das.Xamarin.Android.Rendering
             
         }
 
-        protected override IRectangle GetCurrentClip()
+        protected override ValueRectangle GetCurrentClip()
         {
-            return Rectangle.Empty;
+            return ValueRectangle.Empty;
         }
 
         public override void DrawString<TFont, TBrush, TRectangle>(String s,

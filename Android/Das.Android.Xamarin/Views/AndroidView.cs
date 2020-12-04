@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using Android.Content;
 using Android.OS;
@@ -47,9 +46,10 @@ namespace Das.Xamarin.Android
         {
             _loopHandler = new Handler(Looper.MainLooper);
             _measured = Size.Empty;
+            _targetRect = ValueRectangle.Empty;
             _view = view;
             _uiProvider = uiProvider;
-            _view.PropertyChanged += OnViewPropertyChanged;
+            //_view.PropertyChanged += OnViewPropertyChanged;
 
             var viewConfig = ViewConfiguration.Get(context) ?? throw new NotSupportedException();
 
@@ -76,8 +76,6 @@ namespace Das.Xamarin.Android
             _gestureDetector.SetOnDoubleTapListener(this);
 
             SetOnTouchListener(this);
-
-            var _ = RefreshLoop();
         }
 
         private IVisualSurrogate GetHtmlPanelSurrogate(IVisualElement element)
@@ -229,13 +227,23 @@ namespace Das.Xamarin.Android
                 return false;
 
             var pos = GetPosition(e1);
-            var ags = new FlingEventArgs(0 - velocityX * 0.5, 0 - velocityY * 0.5, pos, this);
-            if (_inputHandler.OnMouseInput(ags, InputAction.Fling))
+
+            var vx = 0 - velocityX * 0.5;
+            var vy = 0 - velocityY * 0.5;
+
+            if (Math.Abs(vx) >= MinimumFlingVelocity ||
+                Math.Abs(vy) >= MinimumFlingVelocity)
             {
-                //Invalidate();
+                var flingArgs = new FlingEventArgs(vx, vy, pos, this);
+                _inputHandler.OnMouseInput(flingArgs, InputAction.Fling);
             }
 
-
+            //var ags = new FlingEventArgs(0 - velocityX * 0.5, 0 - velocityY * 0.5, pos, this);
+            //if (_inputHandler.OnMouseInput(ags, InputAction.Fling))
+            //{
+            //    //Invalidate();
+            //}
+            
             return true;
         }
 
@@ -335,7 +343,7 @@ namespace Das.Xamarin.Android
             return _view.StyleContext.GetCurrentAccentColor();
         }
 
-        public Double ZoomLevel { get; private set; } = 1;
+        public Double ZoomLevel { get; }
 
         public AndroidRenderKit RenderKit { get; }
 
@@ -357,17 +365,6 @@ namespace Das.Xamarin.Android
             base.SetOnTouchListener(l);
         }
 
-
-        //protected override void OnDraw(Canvas? canvas)
-        //{
-        //    if (canvas == null)
-        //        return;
-
-        //    RenderKit.RenderContext.Canvas = canvas;
-        //    RenderKit.RenderContext.DrawMainElement(_view, 
-        //        new ValueRectangle(0, 0, _measured), this);
-        //}
-
         protected override void OnLayout(Boolean changed, 
                                          Int32 left, 
                                          Int32 top, 
@@ -375,8 +372,14 @@ namespace Das.Xamarin.Android
                                          Int32 bottom)
         {
             if (_hasSurrogates)
-                RenderKit.RefreshRenderContext.DrawMainElement(_view, 
-                    new ValueRectangle(0, 0, _measured), this);
+            {
+                RenderKit.RefreshRenderContext.DrawMainElement(_view,
+                    new ValueRectangle(0, 0, _targetRect.Width, _targetRect.Height), this);
+
+                //RenderKit.RefreshRenderContext.DrawElement(_view,
+                //    new ValueRenderRectangle(0, 0, _measured.Width, _measured.Height,
+                //        ValuePoint2D.Empty));
+            }
 
             var count = ChildCount;
             for (var c = 0; c < count; c++)
@@ -391,10 +394,10 @@ namespace Das.Xamarin.Android
                     var wants = RenderKit.RenderContext.TryGetElementBounds(surrogate);
                     if (wants != null)
                     {
-                        left = Convert.ToInt32(wants.Left);
-                        top = Convert.ToInt32(wants.Top);
-                        right = Convert.ToInt32(wants.Right);
-                        bottom = Convert.ToInt32(wants.Bottom);
+                        left = Convert.ToInt32(wants.Left * ZoomLevel);
+                        top = Convert.ToInt32(wants.Top * ZoomLevel);
+                        right = Convert.ToInt32(wants.Right * ZoomLevel);
+                        bottom = Convert.ToInt32(wants.Bottom * ZoomLevel);
                     }
                 }
 
@@ -412,20 +415,35 @@ namespace Das.Xamarin.Android
 
             var sz = new ValueRenderSize(w, h);
 
+            _targetRect = new ValueRectangle(
+                0, // X
+                0, // Y
+                sz.Width / ZoomLevel,
+                sz.Height/ ZoomLevel);
+
             var count = ChildCount;
 
             for (var c = 0; c < count; c++)
             {
                 var current = GetChildAt(c);
 
-                if (current == null)
-                    continue;
-
-                current?.Measure(widthMeasureSpec, heightMeasureSpec);
+                if (current is IVisualSurrogate)
+                {
+                    current.Measure(Convert.ToInt32(_targetRect.Width),
+                        Convert.ToInt32(_targetRect.Height));
+                }
+                else
+                    current?.Measure(widthMeasureSpec, heightMeasureSpec);
             }
-            //_measured = RenderKit.MeasureContext.MeasureMainView(_view, sz, this);
+
             _measured = new ValueSize(sz.Width, sz.Height);
             RenderKit.MeasureContext.MeasureMainView(_view, sz, this);
+
+            if (_refreshLoopCount == 0)
+            {
+                _refreshLoopCount++;
+                var _ = RefreshLoop();
+            }
         }
 
         private static ValuePoint2D GetPosition(MotionEvent eve)
@@ -433,34 +451,31 @@ namespace Das.Xamarin.Android
             return new ValuePoint2D(eve.GetX(), eve.GetY());
         }
 
-        private void OnViewPropertyChanged(Object sender,
-                                           PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName != nameof(IChangeTracking.IsChanged) || !_view.IsChanged)
-                return;
-
-            //Invalidate();
-        }
 
         private async Task RefreshLoop()
         {
+            var sleepTime = 0;
+
             while (true)
                 if (_view.IsChanged || _view.StyleContext.IsChanged)
                 {
-                    //_view.AcceptChanges();
                     _view.StyleContext.AcceptChanges();
-                    var bob = RenderKit.MeasureContext.MeasureMainView(_view,
+                    RenderKit.MeasureContext.MeasureMainView(_view,
                         new ValueRenderSize(_measured), this);
+
                     _paintView.Invalidate();
                     Invalidate();
-
+                    sleepTime = 0;
                     await Task.Yield();
-
-                    //await Task.Delay(5);
-
                 }
                 else
-                    await Task.Delay(50);
+                {
+                    sleepTime = Math.Min(++sleepTime, 50);
+
+                    if (sleepTime <= 5)
+                        System.Diagnostics.Debug.WriteLine("SKIP FRAME");
+                    await Task.Delay(sleepTime);
+                }
 
             // ReSharper disable once FunctionNeverReturns
         }
@@ -474,11 +489,14 @@ namespace Das.Xamarin.Android
         private readonly IUiProvider _uiProvider;
         private ValuePoint2D? _leftButtonWentDown;
 
+        private Int32 _refreshLoopCount;
+
         // ReSharper disable once NotAccessedField.Local
         private Handler _loopHandler;
         private Boolean _hasSurrogates;
 
         private Size _measured;
-        private AndroidPaintView _paintView;
+        private ValueRectangle _targetRect;
+        private readonly AndroidPaintView _paintView;
     }
 }

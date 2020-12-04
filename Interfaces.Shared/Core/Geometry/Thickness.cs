@@ -41,7 +41,7 @@ namespace Das.Views.Core.Geometry
 
         public override Double Height => Top + Bottom;
 
-        public override Boolean IsEmpty => Height.IsZero() && Width.IsZero();
+        //public override Boolean IsEmpty => Height.IsZero() && Width.IsZero();
 
         public new static Thickness Empty { get; } = new Thickness(0);
 

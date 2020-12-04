@@ -52,7 +52,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\Rectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueCube.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueIntRectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueMinMax.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExtensionMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\IFlingHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\IItemsControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\IItemsControl{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ISelector.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Mvvm\INotifyingCollection{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IContainerVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IContentPresenter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\IVisualCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\ChangeType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\Geometry\IDisplayMetrics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\Geometry\RenderRectangle.cs" />
@@ -139,6 +142,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IVisualFinder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\OverflowBehavior.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IChangingVisual.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IMeasureAndArrange.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IMeasureContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IMutableViewPerspective.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IRenderContext.cs" />

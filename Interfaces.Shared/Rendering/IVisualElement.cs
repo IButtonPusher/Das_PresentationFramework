@@ -26,7 +26,6 @@ namespace Das.Views.Rendering
 
         IControlTemplate? Template { get; }
 
-        void AcceptChanges(ChangeType changeType);
 
         void RaisePropertyChanged(String propertyName,
                                   Object? value);

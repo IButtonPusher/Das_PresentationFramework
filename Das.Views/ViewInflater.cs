@@ -26,7 +26,7 @@ namespace Das.Views
         //}
 
         public TVisualElement InflateXml<TVisualElement>(String xml)
-        where TVisualElement : IVisualElement
+            where TVisualElement : IVisualElement
         {
             var visual = InflateXml(xml);
             return (TVisualElement) visual;
@@ -157,8 +157,6 @@ namespace Das.Views
                                     throw new NotImplementedException();
 
                                 return srcPropGenerics[0];
-
-                                break;
                         }
 
                         break;

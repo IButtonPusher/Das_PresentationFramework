@@ -6,11 +6,19 @@ namespace Das.Views.Core.Geometry
 {
     public readonly struct ValueSize : ISize
     {
-        public ValueSize(Double width, Double height)
+        public ValueSize(Double width, 
+                         Double height)
         {
             Width = width;
             Height = height;
         }
+
+        public ValueSize(ISize size) 
+            : this(size.Width, size.Height)
+        {
+            
+        }
+
 
         ISize ISize.Divide(Double pct)
         {

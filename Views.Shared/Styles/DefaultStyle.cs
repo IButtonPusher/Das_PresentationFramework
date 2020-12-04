@@ -31,14 +31,13 @@ namespace Das.Views.Styles
             this[StyleSetter.FontSize] = font.Size;
             this[StyleSetter.FontWeight] = font.FontStyle;
             this[StyleSetter.Font] = font;
-            this[StyleSetter.HorizontalAlignment] = HorizontalAlignments.Center;
-            this[StyleSetter.VerticalAlignment] = VerticalAlignments.Center;
+            this[StyleSetter.HorizontalAlignment] = HorizontalAlignments.Default;
+            this[StyleSetter.VerticalAlignment] = VerticalAlignments.Default;
             //this[StyleSetter.Size] = null;
             this[StyleSetter.Height] = Double.NaN;
             this[StyleSetter.Width] = Double.NaN;
             this[StyleSetter.Visibility] = Visibility.Visible;
             this[StyleSetter.Transition] = Transition.EmptyTransitions;
-
 
             var typeTypes = new Dictionary<Type, IStyle>
             {
@@ -48,6 +47,7 @@ namespace Das.Views.Styles
                     {StyleSetter.BorderThickness, StyleSelector.None, 1},
                     {StyleSetter.BorderBrush, StyleSelector.None, SolidColorBrush.Black},
                     {StyleSetter.Background, StyleSelector.Active, SolidColorBrush.LightGray},
+                    {StyleSetter.Background, StyleSelector.Hover, SolidColorBrush.Pink},
                     {StyleSetter.Padding, StyleSelector.None, new Thickness(5)}
                 },
                 [typeof(IToggleButton)] = new TypeStyle<IToggleButton>

@@ -44,7 +44,7 @@ namespace Das.Views
 
         IObservableCommand GetCommand(Func<Task> action);
 
-        ValueSize GetMainViewSize();
+        //ValueSize GetMainViewSize();
 
         Task HandleErrorAsync(String wasDoing, Exception ex);
 

@@ -37,9 +37,9 @@ namespace Das.Views.Controls
             throw new NotSupportedException("A surrogate control is required for this control");
         }
 
-        private void OnMarkupChanged(String? obj)
+        private void OnMarkupChanged(String? newVal)
         {
-            Debug.WriteLine("changing markup in html surrogater");
+            Debug.WriteLine("changing markup in html surrogater:\r\n" + newVal);
         }
 
         private String? _markup;

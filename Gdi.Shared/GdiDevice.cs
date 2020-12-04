@@ -43,6 +43,10 @@ namespace Das.Gdi
                     height.AreEqualEnough(_height))
                     return false;
 
+                if (width.IsZero() ||
+                    height.IsZero())
+                    return false;
+
                 if (_currentDib != IntPtr.Zero)
                     Native.DeleteObject(_currentDib);
                 

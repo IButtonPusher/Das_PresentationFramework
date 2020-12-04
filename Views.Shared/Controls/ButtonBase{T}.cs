@@ -39,7 +39,6 @@ namespace Das.Views.Controls
         public StyleSelector CurrentStyleSelector
         {
             get => _currentStyleSelector;
-            //set => SetValue(ref _currentStyleSelector, value, OnCurrentSelectorChanged);
         }
 
         protected void AddStyleSelector(StyleSelector value)
@@ -78,10 +77,12 @@ namespace Das.Views.Controls
             return true;
         }
 
-        InputAction IInteractiveView.HandlesActions => InputAction.LeftMouseButtonDown |
-                                                       InputAction.LeftMouseButtonUp |
-                                                       InputAction.LeftClick |
-                                                       InputAction.MouseOver;
+        InputAction IInteractiveView.HandlesActions => I_HANDLE_INPUT;
+
+        private const InputAction I_HANDLE_INPUT = InputAction.LeftMouseButtonDown |
+                                             InputAction.LeftMouseButtonUp |
+                                             InputAction.LeftClick |
+                                             InputAction.MouseOver;
 
         public virtual Boolean OnInput(MouseDownEventArgs args)
         {

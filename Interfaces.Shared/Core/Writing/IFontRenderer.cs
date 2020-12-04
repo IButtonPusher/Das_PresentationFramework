@@ -9,13 +9,17 @@ namespace Das.Views.Core.Writing
     {
         IFont Font { get; }
 
-        void DrawString(String text,
-                        IBrush brush,
-                        IPoint2D point2D);
+        void DrawString<TBrush, TPoint>(String text,
+                                        TBrush brush,
+                                        TPoint point2D)
+            where TBrush : IBrush
+            where TPoint : IPoint2D;
 
-        void DrawString(String s,
-                        IBrush brush,
-                        IRectangle bounds);
+        void DrawStringInRect<TBrush, TRectangle>(String s,
+                                        TBrush brush,
+                                        TRectangle bounds)
+            where TBrush : IBrush
+            where TRectangle : IRectangle;
 
         ValueSize MeasureString(String text);
     }

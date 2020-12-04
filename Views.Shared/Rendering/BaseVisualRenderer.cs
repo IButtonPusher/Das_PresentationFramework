@@ -21,5 +21,7 @@ namespace Das.Views
         public abstract Boolean IsRequiresMeasure { get; }
 
         public abstract Boolean IsRequiresArrange { get; }
+
+        public abstract void AcceptChanges(ChangeType changeType);
     }
 }

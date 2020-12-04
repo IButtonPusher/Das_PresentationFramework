@@ -91,6 +91,9 @@ namespace Das.Views.DataBinding
                         list.Add(obj);
                     
                     break;
+
+                default:
+                    throw new NotImplementedException();
             }
         }
 

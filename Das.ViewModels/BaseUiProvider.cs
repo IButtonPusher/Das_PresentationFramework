@@ -120,7 +120,7 @@ namespace Das.ViewModels
 
         public abstract void BrowseToUri(Uri uri);
 
-        public abstract ValueSize GetMainViewSize();
+        //public abstract ValueSize GetMainViewSize();
 
         public virtual void BeginInvoke(Action action)
         {

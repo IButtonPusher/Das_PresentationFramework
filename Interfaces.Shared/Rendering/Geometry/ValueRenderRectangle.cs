@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Das.Extensions;
 using Das.Views.Core.Geometry;
 
 namespace Das.Views.Rendering.Geometry
@@ -69,6 +70,9 @@ namespace Das.Views.Rendering.Geometry
             }
 
             Offset = offset;
+
+            _hash = 0;
+            _hash = GeometryHelper.BuildRectHash(this);
         }
 
         public ValueRenderRectangle(IPoint2D position,
@@ -97,6 +101,9 @@ namespace Das.Views.Rendering.Geometry
             Width = width;
             Height = height;
             Offset = offset;
+
+            _hash = 0;
+            _hash = GeometryHelper.BuildRectHash(this);
         }
 
         public static readonly ValueRenderRectangle Empty = new ValueRenderRectangle(0, 0, 0, 0,
@@ -124,7 +131,7 @@ namespace Das.Views.Rendering.Geometry
 
         public Double Height { get; }
 
-        public Boolean IsEmpty => Width > 0 || Height > 0;
+        public Boolean IsEmpty => Width.IsZero() && Height.IsZero();
 
         public Double Width { get; }
 
@@ -240,5 +247,22 @@ namespace Das.Views.Rendering.Geometry
         {
             return $"x: {Left:0.0}, y: {Top:0.0} w: {Width:0.0} h: {Height:0.0}";
         }
+
+        public Boolean Equals(IRectangle other)
+        {
+            return GeometryHelper.AreRectsEqual(this, other);
+        }
+
+        public override Boolean Equals(Object obj)
+        {
+            return obj is IRectangle r && GeometryHelper.AreRectsEqual(this, r);
+        }
+
+        public override Int32 GetHashCode()
+        {
+            return _hash;
+        }
+
+        private readonly Int32 _hash;
     }
 }

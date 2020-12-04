@@ -60,7 +60,7 @@ namespace Das.Views.Core.Geometry
             set => _height = value;
         }
 
-        public virtual Boolean IsEmpty => Width.IsZero() || Height.IsZero();
+        public Boolean IsEmpty => Width.IsZero() && Height.IsZero();
 
         public Boolean Equals(ISize? other)
         {

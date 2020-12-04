@@ -72,6 +72,8 @@ namespace Gdi.Shared
                 stream.Dispose();
         }
 
+        public Boolean IsNullImage => _isEmpty;
+
         Boolean IImage.IsDisposed => _isDisposed;
 
         Task IImage.SaveAsync(FileInfo path)

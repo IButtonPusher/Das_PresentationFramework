@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Drawing;
@@ -50,6 +48,14 @@ namespace Das.Views.Controls
             _currentValue = String.Empty;
 
             //Interlocked.Add(ref _instanceCount, 1);
+        }
+
+        public override IVisualElement DeepCopy()
+        {
+            var res = (Label<T>)base.DeepCopy();
+            res.TextBrush = TextBrush;
+
+            return res;
         }
 
 

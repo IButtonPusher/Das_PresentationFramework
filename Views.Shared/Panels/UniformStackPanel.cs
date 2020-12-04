@@ -8,20 +8,35 @@ namespace Das.Views.Panels
 {
     public class UniformStackPanel<T> : BaseSequentialPanel<T>
     {
-        public UniformStackPanel(IDataBinding<T>? binding,
-                                 IVisualBootstrapper visualBootstrapper) :
-            base(binding, visualBootstrapper, new SequentialUniformRenderer())
-        {
-        }
-
         public UniformStackPanel(IVisualBootstrapper templateResolver) 
-            : base(templateResolver, new SequentialUniformRenderer())
+            : this(null, templateResolver)
         {
         }
 
-        protected override IList<IVisualElement> GetChildrenToRender()
+        public UniformStackPanel(IDataBinding<T>? binding,
+                                 IVisualBootstrapper visualBootstrapper) 
+            : this(binding, visualBootstrapper, new VisualCollection())
+            //: base(binding, visualBootstrapper, new SequentialUniformRenderer())
         {
-            return Children;
         }
+
+        private UniformStackPanel(IDataBinding<T>? binding,
+                                 IVisualBootstrapper visualBootstrapper,
+                                 IVisualCollection children) :
+            base(binding, visualBootstrapper, children, new SequentialUniformRenderer(children))
+        {
+        }
+
+        //private SequentialUniformRenderer GetRenderer()
+        //{
+        //    return new SequentialUniformRenderer(Children);
+        //}
+
+       
+
+        //protected override IList<IVisualElement> GetChildrenToRender()
+        //{
+        //    return Children;
+        //}
     }
 }

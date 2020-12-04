@@ -67,7 +67,7 @@ namespace ViewCompiler
             switch (current)
             {
                 case IVisualContainer visualContainer
-                when visualContainer.Children.Any():
+                when visualContainer.Children.Count > 0:
                     var pnlLocalVar = BuildVisualContainer(visualContainer, il);
                     return pnlLocalVar;
                 case IContentContainer contentHost:
@@ -88,13 +88,14 @@ namespace ViewCompiler
             if (addChildMeth == null)
                 throw new InvalidOperationException("Can't add child to " + cType);
 
-            foreach (var child in visualContainer.Children)
+            //foreach (var child in visualContainer.Children)
+            visualContainer.Children.RunOnEachChild(child => 
             {
                 var childLocalVar = Reconstruct(child, il);
                 il.Emit(OpCodes.Ldloc, pnlLocalVar);
                 il.Emit(OpCodes.Ldloc, childLocalVar);
                 il.Emit(OpCodes.Callvirt, addChildMeth);
-            }
+            });
 
             return pnlLocalVar;
         }

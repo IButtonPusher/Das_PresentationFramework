@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+
 using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Controls;
@@ -71,6 +71,8 @@ namespace Das.Views.Rendering
 
         public virtual void InvalidateMeasure()
         {
+            //System.Diagnostics.Debug.WriteLine("InvalidateMeasure " + this);
+
             IsRequiresMeasure = true;
             IsRequiresArrange = true;
         }
@@ -119,6 +121,12 @@ namespace Das.Views.Rendering
         {
             var newObject = _visualBootstrapper.Instantiate<VisualElement>(GetType());
             //var newObject = (VisualElement) Activator.CreateInstance(GetType());
+            newObject.VerticalAlignment = VerticalAlignment;
+            newObject.HorizontalAlignment = HorizontalAlignment;
+            newObject.Height = Height;
+            newObject.Width = Width;
+            newObject.Background = Background;
+
             newObject.Id = Id;
             return newObject;
         }
@@ -241,6 +249,12 @@ namespace Das.Views.Rendering
             return true;
         }
 
+        public override String ToString()
+        {
+            return GetType().Name + " req arrange: " + IsRequiresArrange + 
+                   " measure: " + IsRequiresMeasure;
+        }
+
         private static Int32 _currentId;
 
 
@@ -253,11 +267,11 @@ namespace Das.Views.Rendering
 
         public static readonly DependencyProperty<IVisualElement, VerticalAlignments> VerticalAlignmentProperty =
             DependencyProperty<IVisualElement, VerticalAlignments>.Register(nameof(VerticalAlignment),
-                VerticalAlignments.Stretch);
+                VerticalAlignments.Default);
 
         public static readonly DependencyProperty<IVisualElement, HorizontalAlignments> HorizontalAlignmentProperty =
             DependencyProperty<IVisualElement, HorizontalAlignments>.Register(nameof(HorizontalAlignment),
-                HorizontalAlignments.Stretch);
+                HorizontalAlignments.Default);
 
         public static readonly DependencyProperty<IVisualElement, IBrush?> BackgroundProperty =
             DependencyProperty<IVisualElement, IBrush?>.Register(nameof(Background), default);

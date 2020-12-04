@@ -69,7 +69,7 @@ namespace Das.Views.Defaults
             _scrollPanel.VerticalAlignment = VerticalAlignments.Top;
             VerticalAlignment = VerticalAlignments.Top;
 
-            Background = SolidColorBrush.Red;
+            //Background = SolidColorBrush.Red;
             
 
             //_scrollPanel.PropertyChanged += OnScrollPropertyChanged;
@@ -133,8 +133,10 @@ namespace Das.Views.Defaults
             // SCROLL PANEL
             var tabPageRect = new ValueRenderRectangle(
                 tabsLeft, 0,
-                _tabsUsed.Width,
-                _tabsUsed.Height,
+                availableSpace.Width,
+                availableSpace.Height,
+                //_tabsUsed.Width,
+                //_tabsUsed.Height,
                 new ValuePoint2D(0, 0));
             renderContext.DrawElement(_scrollPanel, tabPageRect);
 
@@ -154,8 +156,8 @@ namespace Das.Views.Defaults
             {
                 if (_itemsControl.SelectedTab != null)
                 {
-                    MoveIndicatorRect();
-                    InvalidateMeasure();
+                    if (MoveIndicatorRect())
+                        InvalidateMeasure();
                 }
             }
             else
@@ -175,7 +177,7 @@ namespace Das.Views.Defaults
             }
         }
 
-        private void MoveIndicatorRect()
+        private Boolean MoveIndicatorRect()
         {
             //Debug.WriteLine("#Moving indicator rect");
 
@@ -183,7 +185,7 @@ namespace Das.Views.Defaults
                 //!_tabPageRenderer.TryGetRenderedElement(valid, out var pos))
                 !(_lastElementLocator?.TryGetLastRenderBounds(valid) is {} pos))
                 //Debug.WriteLine("#FAIL");
-                return;
+                return false;
 
             _indicatorRect = new Rectangle(pos.Left + _scrollPanel.HorizontalOffset, 0, pos.Size);
 
@@ -193,6 +195,7 @@ namespace Das.Views.Defaults
             _lastStyleContext.RegisterStyleSetter(_indicator,
                 StyleSetter.Width, pos.Width);
 
+            return true;
             //Debug.WriteLine("#Moved to " + _indicatorRect);
         }
 

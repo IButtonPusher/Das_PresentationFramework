@@ -184,10 +184,16 @@ namespace Das.Views.DevKit
 
                         if (bindable is IVisualContainer cnt)
                         {
-                            foreach (var child in cnt.Children.OfType<IBindableElement>())
+                            cnt.Children.RunOnEachChild(c =>
                             {
-                                SetDataContext(child, repeatingType, parentBinding);
-                            }
+                                if (c is IBindableElement child)
+                                    SetDataContext(child, repeatingType, parentBinding);
+                            });
+
+                            //foreach (var child in cnt.Children.OfType<IBindableElement>())
+                            //{
+                            //    SetDataContext(child, repeatingType, parentBinding);
+                            //}
                         }
 
                         break;
@@ -201,10 +207,15 @@ namespace Das.Views.DevKit
 
                         break;
                     case IVisualContainer container:
-                        foreach (var child in container.Children.OfType<IBindableElement>())
+                        container.Children.RunOnEachChild(c =>
                         {
-                            SetDataContext(child, parentType, parentBinding);
-                        }
+                            if (c is IBindableElement child)
+                                SetDataContext(child, parentType, parentBinding);
+                        });
+                        //foreach (var child in container.Children.OfType<IBindableElement>())
+                        //{
+                        //    SetDataContext(child, parentType, parentBinding);
+                        //}
 
                         break;
                     case IBindingSetter _:

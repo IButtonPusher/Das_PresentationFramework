@@ -1,8 +1,10 @@
 ﻿using System;
+
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Windows.Shared;
 using Windows.Shared.Input;
+using Das.Extensions;
 using Das.Views.Core.Geometry;
 using Das.Views.Input;
 using DragEventArgs = Das.Views.Input.DragEventArgs;
@@ -44,17 +46,7 @@ namespace Das.Gdi
                         InputAction.RightMouseButtonDown);
                     break;
 
-                case MessageTypes.WM_LBUTTONUP:
-                    
-                    _inputHandler.OnMouseInput(
-                        new MouseUpEventArgs(GetPosition(m.LParam),
-                            _leftButtonWentDown,
-                            MouseButtons.Left, this), 
-                        InputAction.LeftMouseButtonUp);
-
-                    _leftButtonWentDown = default;
-                    _lastDragPosition = default;
-                    break;
+               
 
                 case MessageTypes.WM_RBUTTONUP:
                     
@@ -75,6 +67,56 @@ namespace Das.Gdi
                     _inputHandler.OnMouseInput(args, InputAction.MouseWheel);
 
                     break;
+
+
+                case MessageTypes.WM_LBUTTONUP:
+
+                    pos = GetPosition(m.LParam);
+
+                    var dt = _lastDragTimestamp - _nextToLastDragTimestamp;
+
+                    if (_lastDragPosition != null &&
+                        _nextToLastDragPosition != null &&
+                        dt > 0)
+                    {
+                        var ddt = dt / 100000.0;
+
+                        var vx = (_lastDragPosition.Value.X -
+                                  _nextToLastDragPosition.Value.X) / ddt;
+                        var vy = (_nextToLastDragPosition.Value.Y - 
+                                  _lastDragPosition.Value.Y) / ddt;
+
+                        if (vx.IsNotZero() || vy.IsNotZero())
+                        {
+                            vx *= 50;
+                            vy *= 50;
+
+                            if (Math.Abs(vx) >= MinimumFlingVelocity ||
+                                Math.Abs(vy) >= MinimumFlingVelocity)
+                            {
+                                var flingArgs = new FlingEventArgs(vx, vy, pos, this);
+                                _inputHandler.OnMouseInput(flingArgs, InputAction.Fling);
+                            }
+                        }
+                    }
+
+                    var lBtnArgs = new MouseUpEventArgs(pos,
+                        _leftButtonWentDown,
+                        MouseButtons.Left, this);
+
+                    _leftButtonWentDown = default;
+                    _lastDragPosition = default;
+                    _nextToLastDragPosition = default;
+
+                    _nextToLastDragTimestamp = 0;
+                    _lastDragTimestamp = 0;
+
+
+                    _inputHandler.OnMouseInput(lBtnArgs, 
+                        InputAction.LeftMouseButtonUp);
+
+                    break;
+
 
                 case MessageTypes.WM_MOUSEMOVE:
 
@@ -106,11 +148,24 @@ namespace Das.Gdi
                     if (lastDragChange.IsEmpty)
                         break;
 
+                    _nextToLastDragPosition = _lastDragPosition;
                     _lastDragPosition = pos;
+
+                    _nextToLastDragTimestamp = _lastDragTimestamp;
+                    _lastDragTimestamp = DateTime.Now.Ticks;
+
+                    //if (_nextToLastDragPosition != null)
+                    //{
+                    //    Debug.WriteLine("last drag: " + _lastDragPosition + " t: " + _lastDragTimestamp + 
+                    //                    " 2nd: " + _nextToLastDragPosition + " t: " + _nextToLastDragTimestamp);
+                    //}
 
                     var dragArgs = new DragEventArgs(letsUse, pos, lastDragChange,
                         _leftButtonWentDown != null ? MouseButtons.Left : MouseButtons.Right,
                         this);
+
+                    //Debug.WriteLine("Sending drag event: " + dragArgs.LastChange.Height);
+
                     _inputHandler.OnMouseInput(dragArgs, InputAction.MouseDrag);
 
                     break;
@@ -128,8 +183,12 @@ namespace Das.Gdi
 
         private ValuePoint2D? _leftButtonWentDown;
         private ValuePoint2D? _rightButtonWentDown;
+        
         private ValuePoint2D? _lastDragPosition;
-
+        private ValuePoint2D? _nextToLastDragPosition;
+        
+        private Int64 _lastDragTimestamp;
+        private Int64 _nextToLastDragTimestamp;
        
 
         private static ValuePoint2D GetPosition(IntPtr lParam) => GetPosition((Int32) lParam);

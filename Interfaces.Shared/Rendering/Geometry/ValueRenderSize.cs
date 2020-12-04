@@ -42,12 +42,12 @@ namespace Das.Views.Core.Geometry
 
         public ValueRenderSize(Double width,
                                Double height)
-            : this(width, height, Point2D.Empty)
+            : this(width, height, ValuePoint2D.Empty)
         {
         }
 
         public ValueRenderSize(ISize size)
-            : this(size.Width, size.Height, Point2D.Empty)
+            : this(size.Width, size.Height, ValuePoint2D.Empty)
         {
         }
 
@@ -68,7 +68,7 @@ namespace Das.Views.Core.Geometry
 
         public ValueRenderRectangle ToFullRectangle()
         {
-            return new ValueRenderRectangle(Point2D.Empty, this, Offset);
+            return new ValueRenderRectangle(ValuePoint2D.Empty, this, Offset);
         }
 
         public ValueSize ToValueSize()
@@ -88,7 +88,7 @@ namespace Das.Views.Core.Geometry
 
         public Double Height { get; }
 
-        public Boolean IsEmpty => Width.IsZero() || Height.IsZero();
+        public Boolean IsEmpty => Width.IsZero() && Height.IsZero();
 
         public Double Width { get; }
 

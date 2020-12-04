@@ -14,15 +14,24 @@ namespace Das.Views.Panels
     {
         // ReSharper disable once UnusedMember.Global
         public RepeaterPanel(IVisualBootstrapper templateResolver) 
-            : this(new SequentialRenderer(), templateResolver)
+            : this(templateResolver, new VisualCollection())
+            //: this(new SequentialRenderer(), templateResolver)
         {
+        }
+
+        private RepeaterPanel(IVisualBootstrapper templateResolveer,
+                              IVisualCollection children)
+        : this(new SequentialRenderer(children), templateResolveer)
+
+        {
+            _controls = children;
         }
 
         public RepeaterPanel(ISequentialRenderer renderer,
                              IVisualBootstrapper visualBootstrapper)
         : base(visualBootstrapper)
         {
-            _controls = new List<IVisualElement>();
+            _controls = new VisualCollection();
             _renderer = EnsureRenderer(renderer);
         }
 
@@ -40,7 +49,7 @@ namespace Das.Views.Panels
                              ISequentialRenderer? renderer) 
             : base(visualBootstrapper, binding)
         {
-            _controls = new List<IVisualElement>();
+            _controls = new VisualCollection();
             _renderer = EnsureRenderer(renderer);
         }
 
@@ -54,7 +63,7 @@ namespace Das.Views.Panels
         public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
         {
-            var res = _renderer.Measure(this, _controls, Orientation, availableSpace, measureContext);
+            var res = _renderer.Measure(this, Orientation, availableSpace, measureContext);
             return res;
         }
 
@@ -68,13 +77,17 @@ namespace Das.Views.Panels
         {
             base.Dispose();
 
-            for (var c = 0; c < _controls.Count; c++)
-                _controls[c].Dispose();
+            _controls.Dispose();
 
-            _controls.Clear();
+            //for (var c = 0; c < _controls.Count; c++)
+            //    _controls[c].Dispose();
+
+            //_controls.Clear();
         }
 
-        public IList<IVisualElement> Children => _controls;
+        //public IList<IVisualElement> Children => _controls;
+
+       
 
         public override void SetDataContext(Object? dataContext)
         {
@@ -103,17 +116,19 @@ namespace Das.Views.Panels
 
         public override Boolean Contains(IVisualElement element)
         {
-            foreach (var c in _controls)
-            {
-                if (c == element)
-                    return true;
+            return _controls.Contains(element);
 
-                if (c is IVisualContainer container &&
-                    container.Contains(element))
-                    return true;
-            }
+            //foreach (var c in _controls)
+            //{
+            //    if (c == element)
+            //        return true;
 
-            return false;
+            //    if (c is IVisualContainer container &&
+            //        container.Contains(element))
+            //        return true;
+            //}
+
+            //return false;
         }
 
         public Orientations Orientation { get; set; }
@@ -129,17 +144,19 @@ namespace Das.Views.Panels
             if (content == null)
                 return default;
 
-            for (var c = 0; c < _controls.Count; c++)
-                _controls[c].Dispose();
+            _controls.Clear(true);
 
-            _controls.Clear(); //todo: more efficient
+            //for (var c = 0; c < _controls.Count; c++)
+            //    _controls[c].Dispose();
+
+            //_controls.Clear(); //todo: more efficient
 
             return content;
         }
 
-        private static ISequentialRenderer EnsureRenderer(ISequentialRenderer? input)
+        private ISequentialRenderer EnsureRenderer(ISequentialRenderer? input)
         {
-            return input ?? new SequentialRenderer();
+            return input ?? new SequentialRenderer(_controls);
         }
 
         public override void SetBoundValue(IEnumerable<T> value)
@@ -171,7 +188,10 @@ namespace Das.Views.Panels
             }
         }
 
-        private readonly List<IVisualElement> _controls;
+        //private readonly List<IVisualElement> _controls;
         private readonly ISequentialRenderer _renderer;
+        private readonly IVisualCollection _controls;
+
+        IVisualCollection ISequentialPanel.Children => _controls;
     }
 }

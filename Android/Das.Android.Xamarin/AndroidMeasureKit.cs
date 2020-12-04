@@ -19,15 +19,16 @@ namespace Das.Xamarin.Android
                                  IFontProvider<AndroidFontPaint> fontProvider,
                                  IVisualSurrogateProvider surrogateProvider,
                                  Dictionary<IVisualElement, ValueSize> lastMeasurements,
-                                 IStyleContext styleContext)
+                                 IStyleContext styleContext,
+                                 DisplayMetrics displayMetrics)
         : base(surrogateProvider, lastMeasurements, styleContext)
         {
             _windowManager = windowManager;
             _fontProvider = fontProvider;
-            _contextBounds = GetCOntextBounds();
+            _contextBounds = GetCOntextBounds(displayMetrics);
         }
 
-        public override ISize ContextBounds
+        public override ValueSize ContextBounds
         {
             get
             {
@@ -35,13 +36,13 @@ namespace Das.Xamarin.Android
             }
         }
 
-        private ISize GetCOntextBounds()
+        private ValueSize GetCOntextBounds(DisplayMetrics metrics)
         {
             if (!(_windowManager.DefaultDisplay is {} disp))
                 throw new NullReferenceException();
 
-            var metrics = new DisplayMetrics();
-            disp.GetMetrics(metrics);
+            //var metrics = new DisplayMetrics();
+            //disp.GetMetrics(metrics);
 
             return new ValueSize(metrics.WidthPixels / metrics.ScaledDensity,
                 metrics.HeightPixels / metrics.ScaledDensity);
@@ -66,7 +67,7 @@ namespace Das.Xamarin.Android
 
         }
 
-        private ISize _contextBounds;
+        private ValueSize _contextBounds;
         private readonly IWindowManager _windowManager;
         private readonly IFontProvider<AndroidFontPaint> _fontProvider;
     }

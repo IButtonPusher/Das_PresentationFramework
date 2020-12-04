@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Das.Extensions;
 
 namespace Das.Views.Core.Geometry
 {
@@ -76,7 +77,7 @@ namespace Das.Views.Core.Geometry
 
         public Double Height { get; }
 
-        public Boolean IsEmpty => Width > 0 || Height > 0;
+        public Boolean IsEmpty => Width.IsZero() && Height.IsZero();
 
         public Double Width { get; }
 
@@ -127,6 +128,11 @@ namespace Das.Views.Core.Geometry
         ISize IDeepCopyable<ISize>.DeepCopy()
         {
             return new ValueSize(Width, Height);
+        }
+
+        public Boolean Equals(IRectangle other)
+        {
+            return GeometryHelper.AreRectsEqual(this, other);
         }
 
         public override String ToString()

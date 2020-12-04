@@ -30,7 +30,7 @@ namespace Das.Views.Input
 
         public FlingEventArgs Offset(Double pct)
         {
-            return new FlingEventArgs(VelocityX, VelocityY, 
+            return new FlingEventArgs(VelocityX * pct, VelocityY * pct, 
                 Position.Offset(pct), InputContext);
         }
 

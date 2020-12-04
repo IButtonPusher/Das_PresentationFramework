@@ -56,6 +56,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Panels\StackPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\UniformStackPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\View.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\VisualCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BasePerspective.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BaseRenderContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BaseRenderKit.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\DoubleTransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\ScopedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Style.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\Easing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\ThicknessTransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\BaseTransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\TriggerBoundStyle.cs" />

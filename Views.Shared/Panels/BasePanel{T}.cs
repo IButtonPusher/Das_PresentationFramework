@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
+
 using System.Threading.Tasks;
 using Das.Serializer;
 using Das.Views.DataBinding;
@@ -16,8 +16,20 @@ namespace Das.Views.Panels
     {
         protected BasePanel(IDataBinding<T>? binding,
                             IVisualBootstrapper visualBootstrapper)
+            : this(binding, visualBootstrapper, new VisualCollection())
+        {
+            
+
+            //_lockChildren = new Object();
+        }
+
+        protected BasePanel(IDataBinding<T>? binding,
+                            IVisualBootstrapper visualBootstrapper,
+                            IVisualCollection children)
             : base(binding, visualBootstrapper)
         {
+            Children = children;
+
             //_lockChildren = new Object();
         }
 
@@ -27,14 +39,14 @@ namespace Das.Views.Panels
         {
         }
 
-        public IList<IVisualElement> Children
-        {
-            get
-            {
-                lock (_lockChildren)
-                    return _children;
-            }
-        }
+        //public IList<IVisualElement> Children
+        //{
+        //    get
+        //    {
+        //        lock (_lockChildren)
+        //            return _children;
+        //    }
+        //}
 
         //public IEnumerable<IVisualElement> Children
         //{
@@ -48,125 +60,210 @@ namespace Das.Views.Panels
         //    }
         //}
 
+        //public Boolean IsTrueForAnyChild<TInput>(TInput input,
+        //                                         Func<IVisualElement, TInput, Boolean> action)
+        //{
+        //    lock (_lockChildren)
+        //    {
+        //        foreach (var visual in _children)
+        //        {
+        //            if (action(visual, input))
+        //                return true;
+        //        }
+
+        //        return false;
+        //    }
+        //}
+
+        //public Boolean IsTrueForAnyChild(Func<IVisualElement, Boolean> action)
+        //{
+        //    lock (_lockChildren)
+        //    {
+        //        foreach (var visual in _children)
+        //        {
+        //            if (action(visual))
+        //                return true;
+        //        }
+
+        //        return false;
+        //    }
+        //}
+
+        //public IEnumerable<T1> GetFromEachChild<T1>(Func<IVisualElement, T1> action)
+        //{
+        //    lock (_lockChildren)
+        //    {
+        //        foreach (var visual in _children)
+        //        {
+        //            yield return action(visual);
+        //        }
+        //    }
+        //}
+
+        //public void RunOnEachChild(Action<IVisualElement> action)
+        //{
+        //    lock (_lockChildren)
+        //    {
+        //        foreach (var visual in _children)
+        //        {
+        //            action(visual);
+        //        }
+        //    }
+        //}
+
+        //public void RunOnEachChild<TInput>(TInput input, 
+        //                                   Action<TInput, IVisualElement> action)
+        //{
+        //    lock (_lockChildren)
+        //    {
+        //        foreach (var visual in _children)
+        //        {
+        //            action(input, visual);
+        //        }
+        //    }
+        //}
+
+        //public async Task RunOnEachChildAsync<TInput>(TInput input, 
+        //                                        Func<TInput, IVisualElement, Task> action)
+        //{
+        //    var running = new List<Task>();
+
+        //    lock (_lockChildren)
+        //    {
+        //        foreach (var visual in _children)
+        //        {
+        //            running.Add(action(input, visual));
+        //        }
+        //    }
+
+        //    await Task.WhenAll(running);
+        //}
+
+        public IVisualCollection Children { get; }
+
         public void AddChild(IVisualElement element)
         {
-            lock (_lockChildren)
-            {
-                _children.Add(element);
-            }
+            Children.Add(element);
+
+            InvalidateMeasure();
+        }
+
+        public Boolean RemoveChild(IVisualElement element)
+        {
+            var changed = Children.Remove(element);
+
+            if (changed)
+                InvalidateMeasure();
+
+            return changed;
         }
 
         public void AddChildren(params IVisualElement[] elements)
         {
-            lock (_lockChildren)
-            {
-                foreach (var element in elements)
-                    _children.Add(element);
-            }
+            Children.AddRange(elements);
+
+            InvalidateMeasure();
         }
 
-        public virtual void OnChildDeserialized(IVisualElement element, INode node)
+        public virtual void OnChildDeserialized(IVisualElement element, 
+                                                INode node)
         {
         }
 
         public virtual Boolean Contains(IVisualElement element)
         {
-            foreach (var child in Children)
-            {
-                if (child == element)
-                    return true;
+            return Children.Contains(element);
 
-                if (child is IVisualContainer container &&
-                    container.Contains(element))
-                    return true;
-            }
+            //foreach (var child in Children)
+            //{
+            //    if (child == element)
+            //        return true;
 
-            return false;
+            //    if (child is IVisualContainer container &&
+            //        container.Contains(element))
+            //        return true;
+            //}
+
+            //return false;
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            Children.Dispose();
         }
 
         public override IVisualElement DeepCopy()
         {
             var newObject = (BasePanel<T>) base.DeepCopy();
-            foreach (var child in Children)
+
+            Children.RunOnEachChild(newObject, (p, child) =>
             {
                 var stepChild = child.DeepCopy();
-                newObject.AddChild(stepChild);
-            }
+                p.AddChild(stepChild);
+            });
+
+            //foreach (var child in Children)
+            //{
+            //    var stepChild = child.DeepCopy();
+            //    newObject.AddChild(stepChild);
+            //}
 
             return newObject;
         }
 
         public virtual void AcceptChanges()
         {
-            foreach (var changeChild in Children.OfType<IChangeTracking>())
-                changeChild.AcceptChanges();
+            Children.RunOnEachChild(child =>
+            {
+                if (child is IChangeTracking changeTracking)
+                    changeTracking.AcceptChanges();
+            });
+
+            //foreach (var changeChild in Children.OfType<IChangeTracking>())
+            //    changeChild.AcceptChanges();
+
+            AcceptChanges(ChangeType.Measure);
+            AcceptChanges(ChangeType.Arrange);
+        }
+
+        public override void AcceptChanges(ChangeType changeType)
+        {
+            base.AcceptChanges(changeType);
+            Children.AcceptChanges(changeType);
         }
 
         public virtual Boolean IsChanged
         {
-            get
-            {
-                foreach (var changeChild in Children.OfType<IChangeTracking>())
-                    if (changeChild.IsChanged)
-                        return true;
-
-                return false;
-            }
+            get => Children.IsTrueForAnyChild(child => child is IChangeTracking {IsChanged: true});
         }
 
         public override void InvalidateMeasure()
         {
             base.InvalidateMeasure();
-
-            foreach (var child in Children)
-            {
-                child.InvalidateMeasure();
-            }
+            Children.InvalidateMeasure();
         }
 
         public override void InvalidateArrange()
         {
             base.InvalidateArrange();
+            Children.InvalidateArrange();
 
-            foreach (var child in Children)
-            {
-                child.InvalidateArrange();
-            }
+            //foreach (var child in Children)
+            //{
+            //    child.InvalidateArrange();
+            //}
         }
 
         public override Boolean IsRequiresMeasure
         {
-            get
-            {
-                if (base.IsRequiresMeasure)
-                    return true;
-
-                foreach (var child in Children)
-                {
-                    if (child.IsRequiresMeasure)
-                        return true;
-                }
-
-                return false;
-            }
+            get => base.IsRequiresMeasure || Children.IsRequiresMeasure;
             protected set => base.IsRequiresMeasure = value;
         }
 
         public override Boolean IsRequiresArrange
         {
-            get
-            {
-                if (base.IsRequiresArrange)
-                    return true;
-
-                foreach (var child in Children)
-                {
-                    if (child.IsRequiresArrange)
-                        return true;
-                }
-
-                return false;
-            }
+            get => base.IsRequiresArrange || Children.IsRequiresArrange;
             protected set => base.IsRequiresArrange = value;
         }
 
@@ -174,29 +271,43 @@ namespace Das.Views.Panels
         {
             base.SetBoundValue(value);
 
-            foreach (var child in Children)
+            Children.RunOnEachChild(value, (v, child) =>
             {
                 if (!(child is IBindableElement bindable))
-                    continue;
+                    return;
 
-                bindable.SetDataContext(value);
-            }
+                bindable.SetDataContext(v);
+            });
+
+            //foreach (var child in Children)
+            //{
+            //    if (!(child is IBindableElement bindable))
+            //        continue;
+
+            //    bindable.SetDataContext(value);
+            //}
         }
 
         public override async Task SetBoundValueAsync(T value)
         {
-            //await base.SetBoundValueAsync(value);
-
-            foreach (var child in Children)
+            await Children.RunOnEachChildAsync(value, async (v, child) =>
             {
                 if (!(child is IBindableElement bindable))
-                    continue;
+                    return;
 
-                await bindable.SetDataContextAsync(value);
-            }
+                await bindable.SetDataContextAsync(v);
+            });
+
+            //foreach (var child in Children)
+            //{
+            //    if (!(child is IBindableElement bindable))
+            //        continue;
+
+            //    await bindable.SetDataContextAsync(value);
+            //}
         }
 
-        private readonly List<IVisualElement> _children = new List<IVisualElement>();
-        private readonly Object _lockChildren = new Object();
+        //private readonly List<IVisualElement> _children = new List<IVisualElement>();
+        //private readonly Object _lockChildren = new Object();
     }
 }

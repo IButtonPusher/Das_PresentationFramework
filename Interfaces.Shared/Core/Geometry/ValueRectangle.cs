@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Das.Extensions;
 
 namespace Das.Views.Core.Geometry
 {
@@ -39,6 +40,9 @@ namespace Das.Views.Core.Geometry
             Y = y;
             Width = width;
             Height = height;
+
+            _hash = 0;
+            _hash = GeometryHelper.BuildRectHash(this);
         }
 
         public Point2D BottomLeft => new Point2D(Left, Top + Height);
@@ -63,7 +67,7 @@ namespace Das.Views.Core.Geometry
 
         public Double Height { get; }
 
-        public Boolean IsEmpty => Width > 0 || Height > 0;
+        public Boolean IsEmpty => Width.IsZero() && Height.IsZero();
 
         public Double Width { get; }
 
@@ -75,6 +79,21 @@ namespace Das.Views.Core.Geometry
         ISize ISize.Minus(ISize subtract)
         {
             return GeometryHelper.Minus(this, subtract);
+        }
+
+        public Boolean Equals(IRectangle other)
+        {
+            return GeometryHelper.AreRectsEqual(this, other);
+        }
+
+        public override Boolean Equals(Object obj)
+        {
+            return obj is IRectangle r && GeometryHelper.AreRectsEqual(this, r);
+        }
+
+        public override Int32 GetHashCode()
+        {
+            return _hash;
         }
 
         public Point2D Location => TopLeft;
@@ -132,5 +151,6 @@ namespace Das.Views.Core.Geometry
         }
 
         public static ValueRectangle Empty = new ValueRectangle(0, 0, 0, 0);
+        private readonly Int32 _hash;
     }
 }

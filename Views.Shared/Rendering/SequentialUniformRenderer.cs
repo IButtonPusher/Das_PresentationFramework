@@ -4,6 +4,7 @@ using System.Text;
 using Das.Extensions;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
+using Das.Views.Panels;
 using Das.Views.Rendering.Geometry;
 using Das.Views.Styles;
 
@@ -15,8 +16,9 @@ namespace Das.Views.Rendering
     /// </summary>
     public class SequentialUniformRenderer : SequentialRenderer
     {
-        public SequentialUniformRenderer(Boolean isWrapContent = false)
-        : base(isWrapContent)
+        public SequentialUniformRenderer(IVisualCollection visuals,
+            Boolean isWrapContent = false)
+        : base(visuals, isWrapContent)
         {
             _maxHeight = _maxWidth = 0;
             //_currentMax = ValueSize.Empty;
@@ -25,7 +27,7 @@ namespace Das.Views.Rendering
         }
 
         public override ValueSize Measure(IVisualElement container, 
-                                          IList<IVisualElement> elements,
+                                          //IList<IVisualElement> elements,
                                           Orientations orientation, 
                                           IRenderSize availableSpace,
                                           IMeasureContext measureContext)
@@ -49,9 +51,10 @@ namespace Das.Views.Rendering
                 var maxHeight = 0.0;
 
 
-                for (var c = 0; c < elements.Count; c++)
+                //for (var c = 0; c < elements.Count; c++)
+                _visuals.RunOnEachChild(child =>
                 {
-                    var child = elements[c];
+                    // var child = elements[c];
                     _currentlyRendering.Add(child);
 
                     current.Size = measureContext.MeasureElement(child, remainingSize);
@@ -104,7 +107,7 @@ namespace Das.Views.Rendering
                             remainingSize.Height -= current.Height;
                             break;
                     }
-                }
+                });
 
                 var margin = measureContext.GetStyleSetter<Thickness>(StyleSetter.Margin, container);
 

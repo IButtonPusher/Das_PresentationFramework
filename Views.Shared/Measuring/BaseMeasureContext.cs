@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Controls;
@@ -24,7 +24,7 @@ namespace Das.Views.Measuring
         : base(lastMeasurements, styleContext)
         {
             _surrogateProvider = surrogateProvider;
-            _contextBounds = Size.Empty;
+            _contextBounds = ValueSize.Empty;
             _lastMeasurements = lastMeasurements;
             _styleContext = styleContext;
         }
@@ -44,15 +44,23 @@ namespace Das.Views.Measuring
 
             if (viewState.ZoomLevel.AreDifferent(1.0))
             {
-                _contextBounds = new ValueSize(availableSpace.Width / viewState.ZoomLevel,
-                    availableSpace.Height / viewState.ZoomLevel);
+                var zoomWidth = availableSpace.Width / viewState.ZoomLevel;
+                var zoomHeight = availableSpace.Height / viewState.ZoomLevel;
 
-                availableSpace = new RenderSize(availableSpace.Width / viewState.ZoomLevel,
-                    availableSpace.Height / viewState.ZoomLevel, availableSpace.Offset);
+                if (_contextBounds.Width.AreDifferent(zoomWidth) ||
+                    _contextBounds.Height.AreDifferent(zoomHeight))
+                {
+                    _contextBounds = new ValueSize(zoomWidth, zoomHeight);
+                }
+
+                availableSpace = new RenderSize(zoomWidth, zoomHeight, availableSpace.Offset);
             }
-            else
-                _contextBounds = availableSpace;
-            
+            else  if (_contextBounds.Width.AreDifferent(availableSpace.Width) ||
+                      _contextBounds.Height.AreDifferent(availableSpace.Height))
+            {
+                _contextBounds = new ValueSize(availableSpace);
+            }
+
             var res = MeasureElement(element, availableSpace);
             //Debug.WriteLine("********** END MEASURE ***********");
             return res;
@@ -76,7 +84,7 @@ namespace Das.Views.Measuring
 
             _styleContext.PushVisual(element);
 
-            //Debug.WriteLine("measuring " + element);
+            //System.Diagnostics.Debug.WriteLine("measuring " + element);
 
             var viewState = GetViewState;
             //var zoom = viewState.ZoomLevel;
@@ -118,7 +126,7 @@ namespace Das.Views.Measuring
         private void SetLastMeasured(IVisualElement element,
                                      ValueSize size)
         {
-            Debug.WriteLine("visual " + element + " measured: " + size);
+         //   Debug.WriteLine("visual " + element + " measured: " + size);
 
             lock (_measureLock)
             {
@@ -161,12 +169,12 @@ namespace Das.Views.Measuring
                 Double.IsNaN(specificHeight) ? 0 : specificHeight);
         }
 
-        public virtual ISize ContextBounds => _contextBounds;
+        public virtual ValueSize ContextBounds => _contextBounds;
 
         
         private readonly Dictionary<IVisualElement, ValueSize> _lastMeasurements;
         private readonly IStyleContext _styleContext;
 
-        private ISize _contextBounds;
+        private ValueSize _contextBounds;
     }
 }

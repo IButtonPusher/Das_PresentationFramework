@@ -132,7 +132,7 @@ namespace Das.Views.Core.Geometry
 
         public static ValueIntRectangle GetUnion<TRoundedRectangle>(TRoundedRectangle me,
                                                                     IEnumerable<IRoundedRectangle> others)
-        where TRoundedRectangle : IRoundedRectangle
+            where TRoundedRectangle : IRoundedRectangle
         {
             //var me = this as IRoundedRectangle;
 
@@ -150,6 +150,30 @@ namespace Das.Views.Core.Geometry
             }
 
             return new ValueIntRectangle(x1, y1, x2 - x1, y2 - y1);
+        }
+
+        public static Boolean AreRectsEqual<TRect>(TRect left,
+                                                   IRectangle right)
+            where TRect : IRectangle
+        {
+            if (ReferenceEquals(left, right))
+                return true;
+
+            return left.Width.AreEqualEnough(right.Width) &&
+                   left.Height.AreEqualEnough(right.Height) &&
+                   left.Left.AreEqualEnough(right.Left) &&
+                   left.Width.AreEqualEnough(right.Width);
+        }
+
+        public static Int32 BuildRectHash<TRect>(TRect me)
+            where TRect : IRectangle
+        {
+            var x = Convert.ToInt32(me.X);
+            var y = Convert.ToInt32(me.Y);
+            var w = Convert.ToInt32(me.Width);
+            var h = Convert.ToInt32(me.Height);
+
+            return x ^ (y << 13 | (Int32) ((UInt32) y >> 19)) ^ (w << 26 | (Int32) ((UInt32) w >> 6)) ^ (h << 7 | (Int32) ((UInt32) h >> 25));
         }
 
         public static Double CenterX(ISize outer,

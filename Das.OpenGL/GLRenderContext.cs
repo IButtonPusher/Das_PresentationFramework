@@ -86,7 +86,7 @@ namespace Das.OpenGL
             throw new NotImplementedException();
         }
 
-        protected override IRectangle GetCurrentClip()
+        protected override ValueRectangle GetCurrentClip()
         {
             throw new NotImplementedException();
         }
@@ -105,10 +105,10 @@ namespace Das.OpenGL
             throw new NotImplementedException();
         }
 
-        public override IImage GetNullImage()
-        {
-            throw new NotImplementedException();
-        }
+        //public override IImage GetNullImage()
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public override void DrawImage<TRectangle1, TRectangle2>(IImage img,
                                                                  TRectangle1 sourceRect,
@@ -117,15 +117,15 @@ namespace Das.OpenGL
             throw new NotImplementedException();
         }
 
-        public override IImage? GetImage(Stream stream)
-        {
-            throw new NotImplementedException();
-        }
+        //public override IImage? GetImage(Stream stream)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public override IImage? GetImage(Stream stream, Double maximumWidthPct)
-        {
-            throw new NotImplementedException();
-        }
+        //public override IImage? GetImage(Stream stream, Double maximumWidthPct)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public override void DrawLine<TPen, TPoint1, TPoint2>(TPen pen,
                                                               TPoint1 pt1,

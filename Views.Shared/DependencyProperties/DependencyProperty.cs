@@ -199,8 +199,14 @@ namespace Das.Views
                 if (Equals(was, value))
                     return;
             }
-            else was = _defaultValue;
+            else
+            {
+                //was unknown, setting it to default - no point
+                if (Equals(value, _defaultValue))
+                    return;
 
+                was = _defaultValue;
+            }
 
             foreach (var oc in onChangers)
             {

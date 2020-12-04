@@ -267,6 +267,14 @@ namespace Das.Views.Styles
                         return true;
                 }
 
+                if (selector != StyleSelector.None)
+                {
+                    // prefer a style setter that ignores the selector
+                    // rather than a bare bones default style
+                    return TryGetStyleSetterImpl(setter, StyleSelector.None, 
+                        element, out found);
+                }
+
                 if (_defaultStyle[setter] is T good)
                 {
                     found = good;

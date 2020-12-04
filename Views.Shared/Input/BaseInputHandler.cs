@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Geometry;
@@ -39,29 +38,25 @@ namespace Das.Views.Input
         {
             if (_isOffsetPositions)
             {
-                Debug.WriteLine("translated input from " + args.Position + " ...");
-
-                //if (args is DragEventArgs drago)
-                //{
-                //    args = new DragEventArgs(
-                //        drago.StartPosition.Offset(drago.StartPosition.X * _offsetMultiplier,
-                //            drago.StartPosition.Y * _offsetMultiplier),)
-                //}
-
-                
+                //todo: offset values before we get here since it's platform specific
                 args = args.Offset(_offsetMultiplier);
-
-                Debug.WriteLine("... to " + args.Position);
             }
 
             var isButtonAction = (InputAction.AnyMouseButton & action) > InputAction.None;
             IInteractiveView? handledBy = null;
 
-            if (_inputCapturingMouse is IHandleInput<TArgs> capture &&
-                _elementLocator.TryGetElementBounds(_inputCapturingMouse) is {} bounds)
+            if (_inputCapturingMouse is IHandleInput<TArgs> capture)
             {
-                if (TryHandleMouseAction(args, capture, isButtonAction, action, bounds))
-                    handledBy = capture;
+                //if (_elementLocator.TryGetElementBounds(_inputCapturingMouse) is { } bounds)
+                if (_elementLocator.TryGetLastRenderBounds(_inputCapturingMouse) is { } bounds)
+                {
+                    if (TryHandleMouseAction(args, capture, isButtonAction, action, bounds))
+                        handledBy = capture;
+                    else
+                    {}
+                }
+                else
+                {}
             }
 
             if (handledBy == null)
@@ -86,6 +81,9 @@ namespace Das.Views.Input
             if (_handledMouseDown != null && (action == InputAction.LeftMouseButtonUp ||
                                               action == InputAction.RightMouseButtonUp))
                 _handledMouseDown = null;
+
+            if (action == InputAction.MouseDrag && handledBy == null)
+            {}
 
             return handledBy !=null;
         }

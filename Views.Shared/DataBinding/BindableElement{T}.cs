@@ -144,17 +144,6 @@ namespace Das.Views.DataBinding
         {
             DataContext = dataContext;
             return TaskEx.CompletedTask;
-
-            //var binding = _binding;
-            //if (binding == null)
-            //    return;
-
-            //DataContext = dataContext;
-            //if (dataContext == null)
-            //    return;
-
-            //var val = await binding.GetValueAsync(dataContext);
-            //await SetBoundValueAsync(val);
         }
 
         public override IVisualElement DeepCopy()
@@ -163,23 +152,6 @@ namespace Das.Views.DataBinding
             if (res0 is IBindableElement bindable)
                 bindable.Binding = Binding;
             return res0;
-            //var res = _visualBootstrapper.Instantiate<IBindableElement>(GetType());
-            //res.Binding = Binding;
-
-            ////res.DataContext = Binding;
-            //return res;
-
-
-            //var newObject = base.DeepCopy();
-
-            //if (newObject is BindableElement<T> alsoBindable && Binding != null)
-            //{
-
-            //    var newBinding = Binding.DeepCopy();
-            //    alsoBindable.SetBinding(newBinding);
-            //}
-
-            //return newObject;
         }
 
         Object? IBindableElement.GetBoundValue(Object dataContext)
