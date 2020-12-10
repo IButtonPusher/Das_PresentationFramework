@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
+using Das.Views.Hosting;
 using Das.Views.Mvvm;
 using Das.Views.Panels;
 using Das.Views.Rendering;
@@ -20,6 +21,8 @@ namespace Das.Views
         IViewModel? DataContext { get; set; }
 
         Thickness RenderMargin { get; }
+        
+        SizeToContent SizeToContent { get; }
 
         IStyleContext StyleContext { get; }
 
@@ -30,8 +33,9 @@ namespace Das.Views
         void Invalidate();
     }
 
-    public interface IViewHost<TAsset> : IViewHost, IVisualHost<TAsset>
+    public interface IViewHost<TAsset> : IViewHost, 
+                                         IVisualHost<TAsset>
     {
-        //TAsset Asset { get; set; }
+        
     }
 }

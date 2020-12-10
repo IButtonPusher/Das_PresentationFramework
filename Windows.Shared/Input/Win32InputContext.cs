@@ -14,10 +14,12 @@ namespace Windows.Shared.Input
     public abstract class Win32InputContext : IInputContext
     {
         public Win32InputContext(IPositionOffseter offsetter,
-                                 IInputHandler inputHandler)
+                                 IInputHandler inputHandler,
+                                 IntPtr windowHandle)
         {
             _offsetter = offsetter;
             _inputHandler = inputHandler;
+            _windowHandle = windowHandle;
         }
 
         public Boolean IsButtonPressed(KeyboardButtons keyboardButton)
@@ -106,17 +108,25 @@ namespace Windows.Shared.Input
 
         public Boolean TryCaptureMouseInput(IVisualElement view)
         {
+            Native.SetCapture(_windowHandle);
+            
             return _inputHandler.TryCaptureMouseInput(view);
         }
 
         public Boolean TryReleaseMouseCapture(IVisualElement view)
-        {
+        { 
+            Native.ReleaseCapture();
             return _inputHandler.TryReleaseMouseCapture(view);
         }
 
+        public IVisualElement? GetVisualWithMouseCapture()
+        {
+            return _inputHandler.GetVisualWithMouseCapture();
+        }
 
 
         protected readonly IInputHandler _inputHandler;
+        private readonly IntPtr _windowHandle;
         private readonly IPositionOffseter _offsetter;
     }
 }

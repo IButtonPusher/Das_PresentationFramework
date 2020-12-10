@@ -15,8 +15,9 @@ namespace Das.Gdi
     public class InputContext : Win32InputContext, IMessageFilter
     {
         public InputContext(IPositionOffseter offsetter,
-                            IInputHandler inputHandler)
-            : base(offsetter, inputHandler)
+                            IInputHandler inputHandler,
+                            IntPtr windowHandle)
+            : base(offsetter, inputHandler, windowHandle)
         {
             Application.AddMessageFilter(this);
         }
@@ -75,6 +76,8 @@ namespace Das.Gdi
 
                     var dt = _lastDragTimestamp - _nextToLastDragTimestamp;
 
+                    FlingEventArgs? flingArgs = null;
+
                     if (_lastDragPosition != null &&
                         _nextToLastDragPosition != null &&
                         dt > 0)
@@ -94,8 +97,7 @@ namespace Das.Gdi
                             if (Math.Abs(vx) >= MinimumFlingVelocity ||
                                 Math.Abs(vy) >= MinimumFlingVelocity)
                             {
-                                var flingArgs = new FlingEventArgs(vx, vy, pos, this);
-                                _inputHandler.OnMouseInput(flingArgs, InputAction.Fling);
+                                flingArgs = new FlingEventArgs(vx, vy, pos, this);
                             }
                         }
                     }
@@ -115,6 +117,11 @@ namespace Das.Gdi
                     _inputHandler.OnMouseInput(lBtnArgs, 
                         InputAction.LeftMouseButtonUp);
 
+                    if (flingArgs != null)
+                    {
+                        _inputHandler.OnMouseInput(flingArgs.Value, InputAction.Fling);
+                    }
+
                     break;
 
 
@@ -123,11 +130,11 @@ namespace Das.Gdi
                     pos = GetPosition(m.LParam);
 
                     //shouldn't be needed but stops debugging headaches for now
-                    if (_leftButtonWentDown != null && 
-                        !IsButtonPressed(MouseButtons.Left))
-                        _leftButtonWentDown = default;
-                    if (_rightButtonWentDown != null &&
-                        !IsButtonPressed(MouseButtons.Right))
+                    //if (_leftButtonWentDown != null && 
+                    //    !IsButtonPressed(MouseButtons.Left))
+                    //    _leftButtonWentDown = default;
+                    //if (_rightButtonWentDown != null &&
+                    //    !IsButtonPressed(MouseButtons.Right))
                         _rightButtonWentDown = default;
 
                     var letsUse = _leftButtonWentDown ?? _rightButtonWentDown;

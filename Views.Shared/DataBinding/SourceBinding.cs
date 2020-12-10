@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Reflection;
 using System.Threading.Tasks;
+using Das.ViewModels;
 using Das.Views.Mvvm;
 
 
@@ -11,25 +13,33 @@ namespace Das.Views.DataBinding
     /// <summary>
     ///     One way binding vm->ui
     /// </summary>
-    public class SourceBinding : BaseBinding
+    public class SourceBinding : BaseBinding,
+                                 IVisualPropertySetter
     {
-        public SourceBinding(INotifyPropertyChanged source,
+        public IValueConverter? ValueConverter { get; }
+
+        public SourceBinding(Object source,
                              String sourceProperty,
                              IBindableElement target,
-                             String targetProperty)
+                             String targetProperty,
+                             IValueConverter? valueConverter)
         : this(source, 
             GetObjectPropertyOrDie(source, sourceProperty),
             target,
-            GetObjectPropertyOrDie(target, targetProperty)) { }
+            GetObjectPropertyOrDie(target, targetProperty), valueConverter) { }
 
-        public SourceBinding(INotifyPropertyChanged source,
+        public SourceBinding(Object? source,
                              PropertyInfo srcProp,
                              IBindableElement target,
-                             PropertyInfo targetProp)
+                             PropertyInfo targetProp,
+                             IValueConverter? valueConverter)
         {
+            ValueConverter = valueConverter;
             _source = source;
+            _srcProp = srcProp;
             _sourcePropertyName = srcProp.Name;
             _target = target;
+            _targetProp = targetProp;
             _targetPropertyName = targetProp.Name;
 
             _sourceGetter = srcProp.GetGetMethod()
@@ -41,11 +51,8 @@ namespace Das.Views.DataBinding
 
             _targetGetter = targetProp.GetGetMethod()
                             ?? throw new MissingMethodException(_targetPropertyName);
-
-            if (source is IViewModel vm)
-                vm.PropertyValueChanged += OnSourcePropertyValueChanged;
-            else
-                source.PropertyChanged += OnSourcePropertyChanged;
+            
+            AddChangeListenersToSource(source);
 
             if (GetType() == typeof(SourceBinding) && 
                 typeof(INotifyCollectionChanged).IsAssignableFrom(srcProp.PropertyType))
@@ -57,15 +64,43 @@ namespace Das.Views.DataBinding
             }
         }
 
-       
+        private void AddChangeListenersToSource(Object? source)
+        {
+            switch (source)
+            {
+                case IViewModel vm:
+                    vm.PropertyValueChanged += OnSourcePropertyValueChanged;
+                    break;
+                case INotifyPropertyChanged notifier:
+                    notifier.PropertyChanged += OnSourcePropertyChanged;
+                    break;
+            }
+        }
+        
+        
+        private void RemoveChangeListenersFromSource(Object? source)
+        {
+            switch (source)
+            {
+                case IViewModel vm:
+                    vm.PropertyValueChanged -= OnSourcePropertyValueChanged;
+                    break;
+                case INotifyPropertyChanged notifier:
+                    notifier.PropertyChanged -= OnSourcePropertyChanged;
+                    break;
+            }
+        }
+
 
         public override void Dispose()
         {
-            if (_source is {} source)
-                source.PropertyChanged -= OnSourcePropertyChanged;
+            RemoveChangeListenersFromSource(_source);
+        }
 
-            //if (_notifyingCollection is { } valid)
-            //    valid.CollectionChanged -= OnSourceCollectionChanged;
+        public override Object Clone()
+        {
+            return new SourceBinding(_source, _srcProp, _target, _targetProp,
+                ValueConverter);
         }
 
         public override Object? GetBoundValue(Object? dataContext)
@@ -75,33 +110,59 @@ namespace Das.Views.DataBinding
         {
             var value = GetSourceValue();
 
-            //switch (value)
-            //{
-            //    case INotifyCollectionChanged collection:
-            //        if (_notifyingCollection != null)
-            //        {
-            //            _notifyingCollection.CollectionChanged -= OnSourceCollectionChanged;
-            //            if (_notifyingCollection is IEnumerable itar)
-            //                OnRemoveItarItems(itar);
-            //        }
-
-            //        collection.CollectionChanged += OnSourceCollectionChanged;
-            //        _notifyingCollection = collection;
-            //        if (_notifyingCollection is IEnumerable neuItar)
-            //            OnAddItarItems(neuItar);
-            //        break;
-
-            //    case null:
-            //        return; //todo: ?
-
-                
-            //}
 
             SetTargetValue(value);
         }
 
         protected void SetTargetValue(Object? value)
         {
+            if (_targetSetter == null)
+                return;
+
+            var targetType = _targetGetter.ReturnType;
+            
+            if (value is { } valueValue &&
+                // ReSharper disable once UseMethodIsInstanceOfType
+                !targetType.IsAssignableFrom(valueValue.GetType()))
+
+            {
+                //not trivial to set the target value to the source value
+                
+                var valType = valueValue.GetType();
+                
+                if (valueValue is IEnumerable valCollection)
+                {
+                    if (targetType.IsInterface && targetType.IsGenericType &&
+                        targetType.GetGenericTypeDefinition() == typeof(INotifyingCollection<>))
+                    {
+                        //treat the target property type like a concrete version of a notifying collection
+
+                        targetType = typeof(AsyncObservableCollection2<>).MakeGenericType(
+                            targetType.GetGenericArguments()[0]);
+                    }
+
+                    foreach (var targetCtor in targetType.GetConstructors())
+                    {
+                        var ctorParams = targetCtor.GetParameters();
+                        if (ctorParams.Length != 1)
+                            continue;
+
+                        var cp = ctorParams[0];
+                        if (cp.ParameterType.IsAssignableFrom(valType))
+                        {
+                            var newObj = targetCtor.Invoke(new Object[] {valCollection});
+                            _targetSetter?.Invoke(_target, new[] {newObj});
+                            return;
+                        }
+                        
+                        
+                    }
+                }
+            }
+
+            if (targetType == typeof(String) && value is { } validValue && validValue.GetType() != typeof(String))
+                value = validValue.ToString();
+            
             _targetSetter?.Invoke(_target, new[] {value});
         }
 
@@ -120,7 +181,25 @@ namespace Das.Views.DataBinding
             }
         }
 
-        protected virtual Object? GetSourceValue() => _sourceGetter.Invoke(_source, EmptyObjectArray);
+        protected Object? GetSourceValue()
+        {
+            return GetSourceValue(_source);
+            
+            //var val = _sourceGetter.Invoke(_source, EmptyObjectArray);
+            //if (!(ValueConverter is { } converter))
+            //    return val;
+
+            //return converter.Convert(val);
+        }
+        
+        public Object? GetSourceValue(Object? dataContext)
+        {
+            var val = _sourceGetter.Invoke(dataContext, EmptyObjectArray);
+            if (!(ValueConverter is { } converter))
+                return val;
+
+            return converter.Convert(val);
+        }
 
         public override void UpdateDataContext(Object? dataContext)
         {
@@ -129,66 +208,17 @@ namespace Das.Views.DataBinding
             if (ReferenceEquals(dataContext, _source))
                 return;
 
-            if (_source is { } valid)
-            {
-                valid.PropertyChanged -= OnSourcePropertyChanged;
-            }
+            RemoveChangeListenersFromSource(_source);
 
-            switch (dataContext)
-            {
-                case null:
-                    _source = null;
-                    break;
-
-                case INotifyPropertyChanged source:
-                    source.PropertyChanged += OnSourcePropertyChanged;
-                    Evaluate();
-                    break;
-
-                default:
-                    throw new NotSupportedException();
-            }
-
+            _source = dataContext;
+            AddChangeListenersToSource(_source);
+            
+            if (_source is {})
+                Evaluate();
         }
 
 
-        //private void OnSourceCollectionChanged(Object sender,
-        //                                       NotifyCollectionChangedEventArgs e)
-        //{
-        //    e.HandleCollectionChanges<Object>(OnRemoveItems, OnAddItems);
-        //}
-
-        //private void OnAddItems(IEnumerable<Object> objs)
-        //{
-        //    OnAddItarItems(objs);
-        //}
-
-        //private void OnAddItarItems(IEnumerable objs)
-        //{
-        //    var targetVal = GetTargetValue() as IList
-        //                    ?? throw new NullReferenceException(_targetPropertyName);
-
-        //    foreach (var obj in objs)
-        //    {
-        //        targetVal.Add(obj);
-        //    }
-        //}
-
-        //private void OnRemoveItarItems(IEnumerable objs)
-        //{
-        //    var targetVal = GetTargetValue() as IList
-        //                    ?? throw new NullReferenceException(_targetPropertyName);
-
-        //    foreach (var obj in objs)
-        //    {
-        //        targetVal.Remove(obj);
-        //    }
-        //}
-
-        //private void OnRemoveItems(IEnumerable<Object> obj)
-        //{
-        //    OnRemoveItarItems(obj);
-        //}
+       
 
         private void OnSourcePropertyChanged(Object sender,
                                              PropertyChangedEventArgs e)
@@ -208,8 +238,11 @@ namespace Das.Views.DataBinding
             SetTargetValue(newValue);
         }
 
-        protected INotifyPropertyChanged? _source;
+        //protected INotifyPropertyChanged? _source;
+        protected Object? _source;
+        private readonly PropertyInfo _srcProp;
         protected readonly IBindableElement _target;
+        private readonly PropertyInfo _targetProp;
 
         private readonly MethodInfo _sourceGetter;
         private readonly MethodInfo _targetGetter;
@@ -223,7 +256,10 @@ namespace Das.Views.DataBinding
         protected readonly String _targetPropertyName;
         
         //private readonly PropertyInfo _targetProperty;
-        
+
+
+        public String PropertyName => _targetPropertyName;
+
         
     }
 }

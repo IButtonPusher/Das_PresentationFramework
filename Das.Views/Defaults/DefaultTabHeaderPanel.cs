@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
@@ -55,7 +53,7 @@ namespace Das.Views.Defaults
             };
 
             var spBinding = new OneWayCollectionBinding(tabControl, nameof(tabControl.TabItems),
-                stackPanel, nameof(StackPanel<Object>.Children));
+                stackPanel, nameof(StackPanel<Object>.Children), null);
 
             stackPanel.AddBinding(spBinding);
 
@@ -74,7 +72,7 @@ namespace Das.Views.Defaults
 
             //_scrollPanel.PropertyChanged += OnScrollPropertyChanged;
 
-            AddChildren(_scrollPanel, _indicator, _separator);
+            AddChildren(new IVisualElement[] { _scrollPanel, _indicator, _separator });
 
             tabControl.PropertyChanged += OnTabPropertyChanged;
         }
@@ -84,8 +82,8 @@ namespace Das.Views.Defaults
         {
             switch (e.PropertyName)
             {
-                case nameof(ITabControl.SelectedTab) when _lastStyleContext is { } styleContext:
-                    if (_itemsControl.SelectedTab is { } valid) 
+                case nameof(ITabControl.SelectedTab) when _lastStyleContext is { }:
+                    if (_itemsControl.SelectedTab is { }) 
                         MoveIndicatorRect();
                     break;
             }
@@ -207,7 +205,7 @@ namespace Das.Views.Defaults
 
         private Size _tabsUsed;
 
-        private ITabControl _itemsControl;
+        private readonly ITabControl _itemsControl;
         private Size _indicatord;
         private IElementLocator? _lastElementLocator;
         private Rectangle _indicatorRect;

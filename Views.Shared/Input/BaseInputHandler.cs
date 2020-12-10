@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Das.Extensions;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 using Das.Views.Styles;
@@ -9,22 +8,9 @@ namespace Das.Views.Input
 {
     public class BaseInputHandler : IInputHandler
     {
-        public BaseInputHandler(IElementLocator elementLocator,
-                                IDisplayMetrics displayMetrics)
+        public BaseInputHandler(IElementLocator elementLocator)
         {
             _elementLocator = elementLocator;
-            _displayMetrics = displayMetrics;
-
-            if (displayMetrics.ZoomLevel.AreEqualEnough(1.0))
-            {
-                _offsetMultiplier = 0;
-                _isOffsetPositions = false;
-            }
-            else
-            {
-                _offsetMultiplier = 1 - (1 / displayMetrics.ZoomLevel);
-                _isOffsetPositions = true;
-            }
         }
 
         public void Dispose()
@@ -36,46 +22,48 @@ namespace Das.Views.Input
                                            InputAction action)
             where TArgs : IMouseInputEventArgs<TArgs>
         {
-            if (_isOffsetPositions)
-            {
-                //todo: offset values before we get here since it's platform specific
-                args = args.Offset(_offsetMultiplier);
-            }
-
+            //System.Diagnostics.Debug.WriteLine("Input handler received: " + args + " capturing: " + 
+            //                                   _inputCapturingMouse);
+            
             var isButtonAction = (InputAction.AnyMouseButton & action) > InputAction.None;
             IInteractiveView? handledBy = null;
 
-            if (_inputCapturingMouse is IHandleInput<TArgs> capture)
+            if (_inputCapturingMouse is IHandleInput<TArgs> captureHandler && 
+                _inputCapturingMouse is IVisualElement captureElement)
             {
-                //if (_elementLocator.TryGetElementBounds(_inputCapturingMouse) is { } bounds)
-                if (_elementLocator.TryGetLastRenderBounds(_inputCapturingMouse) is { } bounds)
-                {
-                    if (TryHandleMouseAction(args, capture, isButtonAction, action, bounds))
-                        handledBy = capture;
-                    else
-                    {}
-                }
-                else
-                {}
+                OnMouseInputWithCapture(captureHandler, captureElement,
+                    args, action, isButtonAction, out handledBy);
+
+                // smile
             }
+            
+            //if (_inputCapturingMouse is IHandleInput<TArgs> capture)
+            //{
+            //    if (_elementLocator.TryGetLastRenderBounds(_inputCapturingMouse) is { } bounds)
+            //    {
+            //        if (TryHandleMouseAction(args, capture, isButtonAction, action, bounds))
+            //            handledBy = capture;
+            //    }
+            //}
 
             if (handledBy == null)
             {
-                foreach (var clickable in _elementLocator.GetRenderedVisualsForMouseInput<TArgs, IPoint2D>(
-                    args.Position, action))
-                {
-                    var element = clickable.Element;
+                OnMouseInputNoCapture(args, action, isButtonAction, out handledBy);
+                //foreach (var clickable in _elementLocator.GetRenderedVisualsForMouseInput<TArgs, IPoint2D>(
+                //    args.Position, action))
+                //{
+                //    var element = clickable.Element;
 
-                    if (element == _inputCapturingMouse)
-                        continue;
+                //    if (element == _inputCapturingMouse)
+                //        continue;
 
-                    if (TryHandleMouseAction(args, element, isButtonAction, action,
-                        clickable.Position))
-                    {
-                        handledBy = element;
-                        break;
-                    }
-                }
+                //    if (TryHandleMouseAction(args, element, isButtonAction, action,
+                //        clickable.Position))
+                //    {
+                //        handledBy = element;
+                //        break;
+                //    }
+                //}
             }
 
             if (_handledMouseDown != null && (action == InputAction.LeftMouseButtonUp ||
@@ -86,6 +74,58 @@ namespace Das.Views.Input
             {}
 
             return handledBy !=null;
+        }
+
+        private Boolean OnMouseInputWithCapture<TArgs>(IHandleInput<TArgs> capture,
+                                                       IVisualElement captureAsVisual,
+                                                       TArgs args,
+                                                       InputAction action,
+                                                       Boolean isButtonAction,
+                                                       out IInteractiveView handledBy)
+            where TArgs : IMouseInputEventArgs<TArgs>
+        {
+            if (!(_elementLocator.TryGetLastRenderBounds(captureAsVisual) is { } bounds))
+            {
+                handledBy = default!;
+                return false;
+                //todo: this is not good
+            }
+
+            if (TryHandleMouseAction(args, capture, isButtonAction, action, bounds))
+            {
+                handledBy = capture;
+                return true;
+            }
+
+            // if the capture doesn't want it, maybe a parent visual does
+            var argsOverCapture = args.Offset(bounds.TopLeft);
+            return OnMouseInputNoCapture(argsOverCapture, action, isButtonAction, out handledBy);
+        }
+
+        private Boolean OnMouseInputNoCapture<TArgs>(TArgs args,
+                                                     InputAction action,
+                                                     Boolean isButtonAction,
+                                                     out IInteractiveView handledBy)
+            where TArgs : IMouseInputEventArgs<TArgs>
+        {
+            foreach (var clickable in _elementLocator.GetRenderedVisualsForMouseInput<TArgs, IPoint2D>(
+                args.Position, action))
+            {
+                var element = clickable.Element;
+
+                if (element == _inputCapturingMouse)
+                    continue;
+
+                if (TryHandleMouseAction(args, element, isButtonAction, action,
+                    clickable.Position))
+                {
+                    handledBy = element;
+                    return true;
+                }
+            }
+
+            handledBy = default!;
+            return false;
         }
 
         private Boolean TryHandleMouseAction<TArgs>(TArgs args,
@@ -147,6 +187,8 @@ namespace Das.Views.Input
                             //handles mouse up but didn't handle this one so don't give him the click
                             break;
                         }
+                        
+                        
 
                         var clickArgs = new MouseClickEventArgs(margs.Position,
                             MouseButtons.Left, 1, margs.InputContext);
@@ -287,16 +329,19 @@ namespace Das.Views.Input
             }
 
             return false;
-
-            
         }
 
         public Boolean TryCaptureMouseInput(IVisualElement view)
         {
-            if (_inputCapturingMouse != null && _inputCapturingMouse != view)
-                return false;
+            //System.Diagnostics.Debug.WriteLine(view + " wants to capture the mouse. Current capture:" +
+            //                                   _inputCapturingMouse );
+            
+            //if (_inputCapturingMouse != null && _inputCapturingMouse != view)
+            //    return false;
 
             _inputCapturingMouse = view;
+            if (view is IHandleInput<MouseDownEventArgs> downer)
+                _handledMouseDown = downer;
             return true;
         }
 
@@ -309,6 +354,11 @@ namespace Das.Views.Input
             return true;
         }
 
+        public IVisualElement? GetVisualWithMouseCapture()
+        {
+            return _inputCapturingMouse;
+        }
+
         public void OnKeyboardStateChanged()
         {
             //TODO_IMPLEMENT_ME();
@@ -316,9 +366,8 @@ namespace Das.Views.Input
 
         private readonly IElementLocator _elementLocator;
 
-        private readonly IDisplayMetrics _displayMetrics;
-        private readonly Double _offsetMultiplier;
-        private readonly Boolean _isOffsetPositions;
+        //private readonly Double _offsetMultiplier;
+        //private readonly Boolean _isOffsetPositions;
 
         //private static InputAction 
         private IHandleInput<MouseDownEventArgs>? _handledMouseDown;

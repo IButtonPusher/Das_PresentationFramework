@@ -61,6 +61,11 @@ namespace Das.Views.DevKit
             return false;
         }
 
+        public IVisualElement? GetVisualWithMouseCapture()
+        {
+            return default;
+        }
+
         public Boolean OnMouseDown(MouseDownEventArgs args)
         {
             _lastPosition = args.Position;

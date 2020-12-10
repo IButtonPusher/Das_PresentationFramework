@@ -30,9 +30,9 @@ namespace Das.Gdi
             //_lastRunWidth = 0;
         }
 
-        //public Int32 Height { get; set; }
+        public Int32 Height => _height;
 
-        //public Int32 Width { get; set; }
+        public Int32 Width => _width;
 
         public Boolean UpdateSize(Double width,
                                   Double height)
@@ -172,8 +172,16 @@ namespace Das.Gdi
             //}
         }
 
-        public Bitmap Run<TData>(TData data,
-                                 Action<Graphics, TData> action)
+        public void Clear()
+        {
+            _dcGraphics.Clear(_backgroundColor);
+            
+            //using (var g = Graphics.FromImage(_bmp))
+            //    g.Clear(_backgroundColor);
+        }
+        
+        public Bitmap? Run<TData>(TData data,
+                                  Func<Graphics, TData, Boolean> action)
         {
             lock (_sizeLock)
             {
@@ -182,7 +190,9 @@ namespace Das.Gdi
                     return new Bitmap(_bmp);
                 }
 
-                action(_dcGraphics, data);
+                var rendered = action(_dcGraphics, data);
+                if (!rendered)
+                    return default;
 
                 DumpDc();
 

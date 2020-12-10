@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
@@ -56,16 +57,16 @@ namespace Das.Views.Panels.Grid
             }
         }
 
-        protected override Boolean OnDataContextChanging(Object? oldValue, 
-                                                         Object? newValue)
-        {
-            return base.OnDataContextChanging(oldValue, newValue);
-        }
+        //protected override Boolean OnDataContextChanging(Object? oldValue, 
+        //                                                 Object? newValue)
+        //{
+        //    return base.OnDataContextChanging(oldValue, newValue);
+        //}
 
-        protected override void OnDataContextChanged(Object? newValue)
-        {
-            base.OnDataContextChanged(newValue);
-        }
+        //protected override void OnDataContextChanged(Object? newValue)
+        //{
+        //    base.OnDataContextChanged(newValue);
+        //}
 
         //public override void Dispose()
         //{
@@ -163,17 +164,18 @@ namespace Das.Views.Panels.Grid
         //        value ?? new DefaultTabItemTemplate(_visualBootStrapper));
         //}
 
-        protected override void ClearVisuals()
+
+        protected override void OnItemsChanged(Object sender, NotifyCollectionChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            
         }
 
-        protected override Task AddNewVisualAsync(IVisualElement element)
+        protected override void AddNewItems(IEnumerable<TItems> items)
         {
-            throw new NotImplementedException();
+            
         }
 
-        protected override IVisualElement? RemoveVisual(Object removing)
+        protected override void OnDistributeDataContextToChildren(Object? newValue)
         {
             throw new NotImplementedException();
         }

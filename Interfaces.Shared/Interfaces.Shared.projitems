@@ -10,7 +10,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Construction\IViewBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\IBindingBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\IValueConverterProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\IMarkupNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\IViewInflater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IButtonBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IControlTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IToggleButton.cs" />
@@ -53,18 +56,28 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueCube.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueIntRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueMinMax.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IVisualPropertySetter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IDependencyProperty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IDependencyProperty{TT}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExtensionMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hosting\SizeToContent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IFlingHost.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\IMouseCaptureManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\IItemsControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\IItemsControl{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ISelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ISelector{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ITabControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ITabControl{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IWindowNotifier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mvvm\INotifyingCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mvvm\INotifyingCollection{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IContainerVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IContentPresenter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\IPanelElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IVisualCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\IVisualCollection{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\IVisualContainer{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\ChangeType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\Geometry\IDisplayMetrics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\Geometry\RenderRectangle.cs" />
@@ -107,7 +120,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Hosting\IVisualHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IBootStrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDeepCopyable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IInteractiveView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\IInteractiveView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IElementLocator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IHandleInput.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IInputContext.cs" />
@@ -167,6 +180,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\TransitionTiming.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\IDataTemplate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\IMultiDataTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\IVisualBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>

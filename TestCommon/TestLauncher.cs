@@ -16,6 +16,7 @@ namespace TestCommon
 
         public ITypeInferrer TypeInferrer { get; }
 
+
         private readonly IViewProvider _viewProvider;
 
         public TestLauncher(IBootStrapper bootStrapper,

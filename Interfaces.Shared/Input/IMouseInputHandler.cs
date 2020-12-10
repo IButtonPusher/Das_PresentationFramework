@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
-using Das.Views.Rendering;
 
 namespace Das.Views.Input
 {
-    public interface IMouseInputHandler
+    public interface IMouseInputHandler : IMouseCaptureManager
     {
         Boolean OnMouseInput<TArgs>(TArgs args,
                                     InputAction action)
@@ -20,8 +19,10 @@ namespace Das.Views.Input
                                     IInputContext inputContext)
             where TPoint : IPoint2D;
 
-        Boolean TryCaptureMouseInput(IVisualElement view);
+        //Boolean TryCaptureMouseInput(IVisualElement view);
 
-        Boolean TryReleaseMouseCapture(IVisualElement view);
+        //Boolean TryReleaseMouseCapture(IVisualElement view);
+
+        //IVisualElement? GetVisualWithMouseCapture();
     }
 }

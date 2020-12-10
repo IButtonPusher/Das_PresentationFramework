@@ -19,8 +19,8 @@ namespace Das.Views.DataBinding
         {
             Binding = binding;
             _binding = binding;
-            _visualBootstrapper = visualBootstrapper;
             _bindings = new List<IDataBinding>();
+            _openBindings = new List<IDataBinding>();
             _lockBindings = new Object();
         }
 
@@ -39,7 +39,10 @@ namespace Das.Views.DataBinding
         public void AddBinding(IDataBinding binding)
         {
             lock (_lockBindings)
+            {
+                _openBindings.Add(binding);
                 _bindings.Add(binding);
+            }
 
             binding.Evaluate();
         }
@@ -55,8 +58,8 @@ namespace Das.Views.DataBinding
             InvalidateMeasure();
         }
 
-        protected virtual Boolean OnBindingChanging(IDataBinding<T>? oldValue, 
-                                                    IDataBinding<T>? newValue)
+        protected virtual IDataBinding<T>? OnBindingChanging(IDataBinding<T>? oldValue, 
+                                                             IDataBinding<T>? newValue)
         {
             if (newValue == null && oldValue != null)
             {}
@@ -64,7 +67,7 @@ namespace Das.Views.DataBinding
             if (oldValue is {} old)
                 old.Dispose();
 
-            return true;
+            return newValue;
         }
 
         IDataBinding? IBindableElement.Binding
@@ -80,7 +83,7 @@ namespace Das.Views.DataBinding
         {
             get => _dataContext;
             set => SetValue(ref _dataContext, value,
-                OnDataContextChanging, OnDataContextChanged);
+                OnInterceptDataContextChanging, OnDataContextChanged);
         }
 
         protected virtual void OnDataContextChanged(Object? newValue)
@@ -89,10 +92,27 @@ namespace Das.Views.DataBinding
             InvalidateMeasure();
         }
 
-        protected virtual  Boolean OnDataContextChanging(Object? oldValue, 
-                                                         Object? newValue)
+        protected virtual  Object? OnInterceptDataContextChanging(Object? oldValue, 
+                                                                  Object? newValue)
         {
-            return true;
+            if (newValue is { } something)
+            {
+                lock (_lockBindings)
+                {
+                    foreach (var binding in _bindings)
+                    {
+                        if (binding is IVisualPropertySetter 
+                            {PropertyName: nameof(DataContext)} setter)
+                        {
+                            var res = setter.GetSourceValue(something);
+                          //  if (res != null)
+                                return res;
+                        }
+                    }
+                }
+            }
+            
+            return newValue;
         }
 
         //public Object? DataContext { get; set; }
@@ -188,13 +208,33 @@ namespace Das.Views.DataBinding
 
             lock (_lockBindings)
             {
-                //foreach (var b in _bindings)
                 for (var c = 0; c < _bindings.Count; c++)
                 {
-                    var b = _bindings[c];
+                    var b = _openBindings[c];
+                    
+                    if (b is IVisualPropertySetter {PropertyName: nameof(DataContext)} propSetter)
+                        continue;
+                    
                     _bindings[c] = b.Update(dataContext, this);
                 }
             }
+        }
+        
+        public IEnumerable<IDataBinding> GetBindings()
+        {
+            List<IDataBinding> res;
+            
+            lock (_lockBindings)
+            {
+                res = new List<IDataBinding>();
+                foreach (var b in _bindings)
+                {
+                    var bClone = (IDataBinding) b.Clone();
+                    res.Add(bClone);
+                }
+            }
+
+            return res;
         }
 
         private void SetBinding(IDataBinding<T>? value)
@@ -234,8 +274,11 @@ namespace Das.Views.DataBinding
 
 
         private IDataBinding<T>? _binding;
-        private readonly IVisualBootstrapper _visualBootstrapper;
         private readonly List<IDataBinding> _bindings;
+        /// <summary>
+        /// the original state of the bindings before a data context was applied
+        /// </summary>
+        private readonly List<IDataBinding> _openBindings;
         private readonly Object _lockBindings;
         protected T BoundValue;
     }

@@ -98,29 +98,14 @@ namespace Das.Views.Rendering
 
                 return _isRequiresArrange;
             }
-            protected set
-            {
-                //if (value)
-                //{
-                //    Debug.WriteLine("item " + this + " set to needs arrange");
-                //}
-
-                SetValue(ref _isRequiresArrange, value,
+            protected set => SetValue(ref _isRequiresArrange, value,
                     OnIsRequiresArrangeChanging, OnIsRequiresArrangeChangedAsync);
-            }
         }
 
-        //public Boolean IsRequiresMeasure { get; }
-
-        //public Boolean IsRequiresArrange { get; }
-
-
        
-
         public virtual IVisualElement DeepCopy()
         {
             var newObject = _visualBootstrapper.Instantiate<VisualElement>(GetType());
-            //var newObject = (VisualElement) Activator.CreateInstance(GetType());
             newObject.VerticalAlignment = VerticalAlignment;
             newObject.HorizontalAlignment = HorizontalAlignment;
             newObject.Height = Height;
@@ -140,6 +125,7 @@ namespace Das.Views.Rendering
         public virtual IControlTemplate? Template
         {
             get => _template;
+            // ReSharper disable once UnusedMember.Global
             set => SetValue(ref _template, value);
         }
 
@@ -213,6 +199,12 @@ namespace Das.Views.Rendering
             set => BackgroundProperty.SetValue(this, value);
         }
 
+        public Thickness? Margin
+        {
+            get => MarginProperty.GetValue(this);
+            set => MarginProperty.SetValue(this, value);
+        }
+
         // ReSharper disable once UnusedMember.Global
         public virtual Boolean IsEnabled
         {
@@ -228,18 +220,11 @@ namespace Das.Views.Rendering
         protected virtual Boolean OnIsRequiresArrangeChanging(Boolean oldValue,
                                                               Boolean newValue)
         {
-            //if (newValue)
-            //    Debug.WriteLine(this + " will require arrange");
             return true;
         }
 
         protected virtual Task OnIsRequiresMeasureChangedAsync(Boolean value)
         {
-            if (value)
-            {
-                //Debug.WriteLine("item " + this + " set to needs measure");
-            }
-
             return TaskEx.CompletedTask;
         }
 
@@ -276,7 +261,11 @@ namespace Das.Views.Rendering
         public static readonly DependencyProperty<IVisualElement, IBrush?> BackgroundProperty =
             DependencyProperty<IVisualElement, IBrush?>.Register(nameof(Background), default);
 
-        private readonly IVisualBootstrapper _visualBootstrapper;
+        public static readonly DependencyProperty<IVisualElement, Thickness?> MarginProperty =
+            DependencyProperty<IVisualElement, Thickness?>.Register(nameof(Margin),
+                null);
+
+        protected readonly IVisualBootstrapper _visualBootstrapper;
 
 
         private Boolean _isEnabled;

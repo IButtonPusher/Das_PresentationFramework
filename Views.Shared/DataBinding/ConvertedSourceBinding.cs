@@ -11,16 +11,18 @@ namespace Das.Views.DataBinding
         public ConvertedSourceBinding(INotifyPropertyChanged source, 
                                       String sourceProperty, 
                                       IBindableElement target, 
-                                      String targetProperty) 
-            : base(source, sourceProperty, target, targetProperty)
+                                      String targetProperty,
+                                      IValueConverter? valueConverter) 
+            : base(source, sourceProperty, target, targetProperty, valueConverter)
         {
         }
 
         public ConvertedSourceBinding(INotifyPropertyChanged source, 
                                       PropertyInfo srcProp,
                                       IBindableElement target,
-                                      PropertyInfo targetProp) 
-            : base(source, srcProp, target, targetProp)
+                                      PropertyInfo targetProp,
+                                      IValueConverter? valueConverter) 
+            : base(source, srcProp, target, targetProp, valueConverter)
         {
         }
     }

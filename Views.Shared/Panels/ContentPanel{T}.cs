@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Das.Serializer;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
@@ -15,25 +13,20 @@ namespace Das.Views.Panels
 {
     public class ContentPanel<T> : BaseContainerVisual<T>,
                                             IContentContainer,
-                                            //IVisualContainer,
                                             IContentPresenter
     {
-        private readonly IVisualBootstrapper _visualBootstrapper;
-
         public ContentPanel(IVisualBootstrapper visualBootstrapper)
             : base(visualBootstrapper)
         {
             _contentMeasured = ValueSize.Empty;
-            _visualBootstrapper = visualBootstrapper;
             _contentTemplate = new DefaultContentTemplate(visualBootstrapper, this);
         }
 
         public  ContentPanel(IVisualBootstrapper visualBootstrapper,
-                             IDataBinding<T> binding)
+                             IDataBinding<T>? binding)
             : base(visualBootstrapper, binding)
         {
             _contentMeasured = ValueSize.Empty;
-            _visualBootstrapper = visualBootstrapper;
             _contentTemplate = new DefaultContentTemplate(visualBootstrapper, this);
         }
 
@@ -122,7 +115,7 @@ namespace Das.Views.Panels
             
 
             base.InvalidateMeasure();
-            //IsChanged = true;
+            
         }
 
         public override void InvalidateArrange()
@@ -132,7 +125,6 @@ namespace Das.Views.Panels
             
 
             base.InvalidateArrange();
-            //IsChanged = true;
         }
 
         public override void Arrange(IRenderSize availableSpace,
@@ -303,42 +295,10 @@ namespace Das.Views.Panels
         public IDataTemplate? ContentTemplate
         {
             get => _contentTemplate;
+            // ReSharper disable once UnusedMember.Global
             set => SetValue(ref _contentTemplate,
                 value ?? _contentTemplate);
         }
-
-        //IList<IVisualElement> IVisualContainer.Children
-        //{
-        //    get
-        //    {
-        //        var content = Content;
-        //        if (content == null)
-        //            return new List<IVisualElement>();
-        //        return new List<IVisualElement> {content};
-        //    }
-        //}
-
-        //void IVisualContainer.AddChild(IVisualElement element)
-        //{
-        //    if (Content != null)
-        //        throw new Exception("Content is already set");
-
-        //    Content = element;
-        //}
-
-        //Boolean IVisualContainer.RemoveChild(IVisualElement element)
-        //{
-        //    if (!Equals(Content, element))
-        //        return false;
-
-        //    Content = default;
-        //    return true;
-        //}
-
-        //void IVisualContainer.AddChildren(params IVisualElement[] elements)
-        //{
-        //    throw new NotSupportedException();
-        //}
 
         protected override void OnDataContextChanged(Object? newValue)
         {
@@ -357,40 +317,25 @@ namespace Das.Views.Panels
                     //no content yet
 
                     Content = _contentTemplate.BuildVisual(newValue);
-
-                    //if (!(newValue is { } valid))
-                    //    return;
-                    
-                    //if (ContentTemplate is {} template)
-                    //{
-                    //    Content = template.BuildVisual(valid);
-                    //    return;
-                    //}
-
-                    
-
-                    //if (_visualBootstrapper.TryResolveFromContext(valid) is { } visual)
-                    //    Content = visual;
-
                     break;
             }
         }
 
 
-        public void OnChildDeserialized(IVisualElement element, INode node)
-        {
-        }
+        //public void OnChildDeserialized(IVisualElement element, INode node)
+        //{
+        //}
 
-        public virtual Boolean Contains(IVisualElement element)
-        {
-            if (Content == element)
-                return true;
+        //public virtual Boolean Contains(IVisualElement element)
+        //{
+        //    if (Content == element)
+        //        return true;
 
-            if (Content is IVisualContainer container)
-                return container.Contains(element);
+        //    if (Content is IVisualContainer container)
+        //        return container.Contains(element);
 
-            return false;
-        }
+        //    return false;
+        //}
 
         public override void SetDataContext(Object? dataContext)
         {
@@ -415,7 +360,6 @@ namespace Das.Views.Panels
 
         public override void SetBoundValue(T value)
         {
-            //IsChanged = true;
             Binding = new ObjectBinding<T>(value);
 
             if (Content is IBindableElement<T> bindable)
@@ -426,7 +370,6 @@ namespace Das.Views.Panels
 
         public override async Task SetBoundValueAsync(T value)
         {
-            //IsChanged = true;
             Binding = new ObjectBinding<T>(value);
 
             if (Content is IBindableElement<T> bindable)
@@ -435,21 +378,20 @@ namespace Das.Views.Panels
                 await almost.SetDataContextAsync(value);
         }
 
-        protected IVisualElement? GetContent()
-        {
-            if (Content is { } content)
-                return content;
+        //protected IVisualElement? GetContent()
+        //{
+        //    if (Content is { } content)
+        //        return content;
 
-            if (!(Value is { } valid))
-                return null;
+        //    if (!(Value is { } valid))
+        //        return null;
 
-            return Content = _contentTemplate.BuildVisual(valid);
-        }
+        //    return Content = _contentTemplate.BuildVisual(valid);
+        //}
 
         protected virtual void OnContentChanged(IVisualElement? obj)
         {
             InvalidateMeasure();
-            //IsChanged = true;
         }
 
         protected virtual Boolean OnContentChanging(IVisualElement? oldValue,
@@ -457,15 +399,11 @@ namespace Das.Views.Panels
         {
             if (oldValue is { } old)
             {
-                //if (old is INotifyPropertyChanged notifier)
-                //    notifier.PropertyChanged -= OnChildPropertyChanged;
                 old.OnParentChanging(null);
             }
 
             if (newValue is { } valid)
             {
-                //if (valid is INotifyPropertyChanged notifier)
-                //    notifier.PropertyChanged += OnChildPropertyChanged;
                 valid.OnParentChanging(this);
             }
 
@@ -476,32 +414,9 @@ namespace Das.Views.Panels
         {
             Content = null;
             base.Dispose();
-
-            //if (Content is { } content)
-            //    content.Dispose();
         }
 
-        //private void OnContentPropertyChanged(Object sender,
-        //                                      PropertyChangedEventArgs e)
-        //{
-        //    switch (e.PropertyName)
-        //    {
-        //        case nameof(IsChanged) when Content is IChangeTracking content && content.IsChanged:
-        //            IsChanged = true;
-        //            break;
-
-        //        case nameof(IsRequiresMeasure) when Content is IVisualRenderer renderer && 
-        //            renderer.IsRequiresMeasure:
-        //            IsRequiresMeasure = true;
-        //            break;
-
-        //        case nameof(IsRequiresArrange) when Content is IVisualRenderer renderer && 
-        //                                            renderer.IsRequiresArrange:
-        //            IsRequiresArrange = true;
-        //            break;
-        //    }
-        //}
-
+      
         private IVisualElement? _content;
         private IDataTemplate _contentTemplate;
         private ValueSize _contentMeasured;

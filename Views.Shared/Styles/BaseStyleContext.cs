@@ -164,6 +164,13 @@ namespace Das.Views.Styles
             return _visualStack.Pop();
         }
 
+        public IVisualElement? PeekVisual()
+        {
+            if (_visualStack.Count == 0)
+                return default;
+            return _visualStack.Peek();
+        }
+
         public T GetStyleSetter<T>(StyleSetter setter,
                                    IVisualElement element)
         {

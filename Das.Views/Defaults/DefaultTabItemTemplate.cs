@@ -8,9 +8,8 @@ using Das.Views.Styles;
 
 namespace Das.Views.Defaults
 {
-    public class DefaultTabItemTemplate<T> : DefaultContentTemplate
+    public class DefaultTabItemTemplate<T> : DefaultContentTemplate<T>
     {
-        private readonly IVisualBootstrapper _visualBootstrapper;
         private readonly ITabControl<T> _tabControl;
 
 
@@ -18,7 +17,6 @@ namespace Das.Views.Defaults
                                       ITabControl<T> tabControl) 
             : base(visualBootstrapper, null)
         {
-            _visualBootstrapper = visualBootstrapper;
             _tabControl = tabControl;
         }
 

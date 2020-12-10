@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Rendering;
 
@@ -12,15 +10,9 @@ namespace Das.Views.Panels
     {
         Int32 Count { get; }
 
-        void Add(IVisualElement element);
-
-        void AddRange(IEnumerable<IVisualElement> elements);
-
-        Boolean Remove(IVisualElement element);
-
         Boolean Contains(IVisualElement element);
 
-        void Clear(Boolean isDisposeVisuals);
+        IEnumerable<IVisualElement> GetAllChildren();
 
         Boolean IsTrueForAnyChild<TInput>(TInput input,
                                           Func<IVisualElement, TInput, Boolean> action);
@@ -37,4 +29,6 @@ namespace Das.Views.Panels
         Task RunOnEachChildAsync<TInput>(TInput input,
                                          Func<TInput, IVisualElement, Task> action);
     }
+
+   
 }

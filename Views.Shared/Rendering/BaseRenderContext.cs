@@ -289,7 +289,7 @@ namespace Das.Views.Rendering
             var border = GetStyleSetter<Thickness>(StyleSetter.BorderThickness, 
                 selector, element);
 
-            var margin = GetStyleSetter<Thickness>(StyleSetter.Margin, element);
+            var margin =  element.Margin ?? GetStyleSetter<Thickness>(StyleSetter.Margin, element);
 
             _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
 
@@ -508,8 +508,8 @@ namespace Das.Views.Rendering
                     relativeRect.Width * ZoomLevel,
                     relativeRect.Height * ZoomLevel);
 
-                return new ValueRectangle(relativeRect.TopLeft + CurrentLocation, 
-                    relativeRect.Size);
+            return new ValueRectangle(relativeRect.TopLeft + CurrentLocation,
+                relativeRect.Size);
         }
 
         protected virtual ValueIntRectangle GetAbsoluteIntRect<TRectangle>(TRectangle relativeRect)

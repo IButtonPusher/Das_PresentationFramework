@@ -66,7 +66,7 @@ namespace Das.Views.Measuring
             return res;
         }
 
-        public ValueSize MeasureElement(IVisualElement element,
+        public virtual ValueSize MeasureElement(IVisualElement element,
                                         IRenderSize availableSpace)
         {
             _surrogateProvider.EnsureSurrogate(ref element);
@@ -87,23 +87,22 @@ namespace Das.Views.Measuring
             //System.Diagnostics.Debug.WriteLine("measuring " + element);
 
             var viewState = GetViewState;
-            //var zoom = viewState.ZoomLevel;
+            
 
-            var margin = viewState.GetStyleSetter<Thickness>(StyleSetter.Margin, element);
-                         //* zoom;
-                         var border = viewState.GetStyleSetter<Thickness>(StyleSetter.BorderThickness, element);
-                         //* zoom;
+            var margin = element.Margin ?? viewState.GetStyleSetter<Thickness>(StyleSetter.Margin, element);
+                         
+            var border = viewState.GetStyleSetter<Thickness>(StyleSetter.BorderThickness, element);
+                         
 
             ValueSize desiredSize;
 
             if (margin.IsEmpty && border.IsEmpty)
             {
                 desiredSize = element.Measure(availableSpace, this);
+                //System.Diagnostics.Debug.WriteLine(element + " wants " + desiredSize);
             }
             else
             {
-                //var specificSize = viewState.GetStyleSetter<Size>(StyleSetter.Size, element)
-                //* zoom;
                 desiredSize = element.Measure(
                     new ValueRenderSize(availableSpace.Width - (margin.Width - border.Width),
                         availableSpace.Height - (margin.Height + border.Height)), this);
@@ -140,7 +139,7 @@ namespace Das.Views.Measuring
             }
         }
 
-        private void OnElementDisposed(IVisualElement element)
+        protected virtual void OnElementDisposed(IVisualElement element)
         {
             lock (_measureLock)
                 _lastMeasurements.Remove(element);

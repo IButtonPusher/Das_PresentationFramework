@@ -15,7 +15,7 @@ namespace Das.Views.DataBinding
         protected BindableElement(IVisualBootstrapper visualBootstrapper) 
             : this(null, visualBootstrapper)
         {
-            _bindings = new List<IDataBinding>();
+            
         }
 
         protected BindableElement(IDataBinding? binding,
@@ -23,6 +23,7 @@ namespace Das.Views.DataBinding
             : base(visualBootstrapper)
         {
             _binding = binding;
+            _lockBindings = new Object();
             _bindings = new List<IDataBinding>();
         }
 
@@ -35,7 +36,7 @@ namespace Das.Views.DataBinding
             //if (binding == null || binding is InstanceBinding)
             //    _binding = new ObjectBinding(value);
 
-            BoundValue = value;
+//            BoundValue = value;
         }
 
         public virtual Task SetBoundValueAsync(Object? value)
@@ -74,7 +75,25 @@ namespace Das.Views.DataBinding
 
         public void AddBinding(IDataBinding binding)
         {
-            _bindings.Add(binding);
+            lock (_lockBindings)
+                _bindings.Add(binding);
+        }
+
+        public IEnumerable<IDataBinding> GetBindings()
+        {
+            List<IDataBinding> res;
+            
+            lock (_lockBindings)
+            {
+                res = new List<IDataBinding>();
+                foreach (var b in _bindings)
+                {
+                    var bClone = (IDataBinding) b.Clone();
+                    res.Add(bClone);
+                }
+            }
+
+            return res;
         }
 
         public override void Dispose()
@@ -109,6 +128,7 @@ namespace Das.Views.DataBinding
         
         private IDataBinding? _binding;
         private List<IDataBinding> _bindings;
+        private Object _lockBindings;
         protected Object? BoundValue;
     }
 }

@@ -118,6 +118,12 @@ namespace Das.Views.DevKit
             }
         }
 
+        public Thickness? Margin
+        {
+            get => Content?.Margin;
+            set => Content!.Margin = value;
+        }
+
         public void OnParentChanging(IContainerVisual? newParent)
         {
             

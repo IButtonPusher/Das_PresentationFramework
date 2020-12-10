@@ -192,6 +192,11 @@ namespace Das.Views.Rendering.Geometry
             return GeometryHelper.Minus(this, subtract);
         }
 
+        public ValueRenderRectangle Move(IPoint2D point)
+        {
+            return new ValueRenderRectangle(X + point.X, Y + point.Y, Size, Offset);
+        }
+
         public Point2D Location => TopLeft;
 
         public IRenderSize Size => new ValueRenderSize(Width, Height, Offset);

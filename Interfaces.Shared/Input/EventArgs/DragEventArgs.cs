@@ -47,5 +47,10 @@ namespace Das.Views.Input
         public IInputContext InputContext { get; }
 
         public IPoint2D Position { get; }
+
+        public override String ToString()
+        {
+            return "Drag - start: " + StartPosition + " Now: " + Position + " dragged: " + TotalDragged;
+        }
     }
 }

@@ -13,7 +13,8 @@ namespace Das.Views.DataBinding
 
     }
 
-    public interface IDataBinding : IDisposable
+    public interface IDataBinding : IDisposable,
+                                    ICloneable
     {
         Object? GetBoundValue(Object? dataContext);
 

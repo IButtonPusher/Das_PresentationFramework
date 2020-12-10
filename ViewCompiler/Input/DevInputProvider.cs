@@ -1,4 +1,6 @@
 ﻿//using Das.Extensions;
+
+using System;
 using Das.Gdi;
 using Das.Views.Core.Geometry;
 using Das.Views.Input;
@@ -11,8 +13,9 @@ namespace Das.Views.DevKit
         public DevInputProvider(IPositionOffseter offsetter, 
                                 IElementLocator elementLocator,
                                 DesignViewUpdater designViewUpdater,
-                                DevInputHandler inputHandler) 
-            : base(offsetter, inputHandler)
+                                DevInputHandler inputHandler,
+                                IntPtr windowHandle) 
+            : base(offsetter, inputHandler,windowHandle)
         {
             _elementLocator = elementLocator;
             _designViewUpdater = designViewUpdater;

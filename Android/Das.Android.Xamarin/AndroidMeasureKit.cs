@@ -16,7 +16,7 @@ namespace Das.Xamarin.Android
     public class AndroidMeasureKit : BaseMeasureContext
     {
         public AndroidMeasureKit(IWindowManager windowManager,
-                                 IFontProvider<AndroidFontPaint> fontProvider,
+                                 AndroidFontProvider fontProvider,
                                  IVisualSurrogateProvider surrogateProvider,
                                  Dictionary<IVisualElement, ValueSize> lastMeasurements,
                                  IStyleContext styleContext,
@@ -41,14 +41,19 @@ namespace Das.Xamarin.Android
             if (!(_windowManager.DefaultDisplay is {} disp))
                 throw new NullReferenceException();
 
-            //var metrics = new DisplayMetrics();
-            //disp.GetMetrics(metrics);
 
             return new ValueSize(metrics.WidthPixels / metrics.ScaledDensity,
                 metrics.HeightPixels / metrics.ScaledDensity);
         }
 
-        public override ValueSize MeasureString(String s, 
+        public sealed override ValueSize MeasureElement(IVisualElement element, 
+                                                       IRenderSize availableSpace)
+        {
+            _fontProvider.RemoveElement(element);
+            return base.MeasureElement(element, availableSpace);
+        }
+
+        public sealed override ValueSize MeasureString(String s, 
                                                 IFont font)
         {
             var renderer = _fontProvider.GetRenderer(font);
@@ -67,8 +72,14 @@ namespace Das.Xamarin.Android
 
         }
 
-        private ValueSize _contextBounds;
+        protected sealed override void OnElementDisposed(IVisualElement element)
+        {
+            base.OnElementDisposed(element);
+            _fontProvider.RemoveElement(element);
+        }
+
+        private readonly ValueSize _contextBounds;
         private readonly IWindowManager _windowManager;
-        private readonly IFontProvider<AndroidFontPaint> _fontProvider;
+        private readonly AndroidFontProvider _fontProvider;
     }
 }

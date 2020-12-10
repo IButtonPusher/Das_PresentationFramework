@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Das.Extensions;
 
@@ -13,6 +14,12 @@ namespace Das.Views.Core.Geometry
             Left = Right = Top = Bottom = uniformLength;
         }
 
+        public Thickness(Double leftAndRight,
+                         Double topAndBottom)
+            : this(leftAndRight, topAndBottom, leftAndRight, topAndBottom)
+        
+        {}
+        
         public Thickness(Double left,
                          Double top,
                          Double right,

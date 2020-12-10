@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
+using Das.Views.Hosting;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
@@ -125,6 +126,8 @@ namespace Das.Views.Winforms
         }
 
         public Thickness RenderMargin { get; set; } = Thickness.Empty;
+
+        public SizeToContent SizeToContent { get; set; }
 
         public abstract IPoint2D GetOffset(IPoint2D input);
 

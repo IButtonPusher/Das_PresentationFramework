@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Das.Views.Rendering;
 
 namespace Das.Views.Input
 {
-    public interface IInputContext : IInputProvider
+    public interface IInputContext : IInputProvider,
+                                     IMouseCaptureManager
     {
         Boolean IsMousePresent { get; }
 
@@ -12,8 +12,10 @@ namespace Das.Views.Input
 
         Double MinimumFlingVelocity { get; }
 
-        Boolean TryCaptureMouseInput(IVisualElement view);
+        //Boolean TryCaptureMouseInput(IVisualElement view);
 
-        Boolean TryReleaseMouseCapture(IVisualElement view);
+        //Boolean TryReleaseMouseCapture(IVisualElement view);
+
+        //IVisualElement? GetVisualWithMouseCapture();
     }
 }

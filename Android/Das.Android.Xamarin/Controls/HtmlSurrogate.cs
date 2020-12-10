@@ -137,6 +137,12 @@ namespace Das.Xamarin.Android.Controls
             set => _htmlPanel.Background = value;
         }
 
+        public Thickness? Margin
+        {
+            get => _htmlPanel.Margin;
+            set => _htmlPanel.Margin = value;
+        }
+
         protected override void Dispose(Boolean disposing)
         {
             base.Dispose(disposing);

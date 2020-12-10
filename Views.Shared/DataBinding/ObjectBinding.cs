@@ -22,7 +22,11 @@ namespace Das.Views.DataBinding
 
         private readonly T _bindingObject;
 
-      
+
+        public override Object Clone()
+        {
+            return DeepCopy();
+        }
     }
 
     public class ObjectBinding : BaseBinding
@@ -39,7 +43,10 @@ namespace Das.Views.DataBinding
             return _obj;
         }
 
-       
+        public override Object Clone()
+        {
+            return new ObjectBinding(_obj);
+        }
     }
 
 

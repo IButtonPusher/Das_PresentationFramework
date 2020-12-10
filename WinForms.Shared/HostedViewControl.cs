@@ -3,6 +3,7 @@ using Das.Views.Styles;
 using System;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
+using Das.Views.Hosting;
 using Das.Views.Rendering;
 using Das.Views.Windows;
 using Das.Views.Winforms;
@@ -51,6 +52,8 @@ namespace WinForms.Shared
         }
 
         public void SetView(IView view) => View = view;
+
+        public SizeToContent SizeToContent { get; set; }
 
         public IStyleContext StyleContext { get; set; }
 

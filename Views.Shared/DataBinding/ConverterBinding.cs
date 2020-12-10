@@ -33,10 +33,6 @@ namespace Das.Views.DataBinding
             return converted;
         }
 
-        //public override IDataBinding ToSingleBinding()
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         private readonly IDataBinding<TInput> _binding;
         private readonly IValueConverter<TInput, TOutput> _converter;
@@ -44,6 +40,11 @@ namespace Das.Views.DataBinding
         public override void Dispose()
         {
             _binding.Dispose();
+        }
+
+        public override Object Clone()
+        {
+            return new ConverterBinding<TInput, TOutput>(_binding.DeepCopy(), _converter);
         }
     }
 }

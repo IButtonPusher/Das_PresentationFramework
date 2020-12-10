@@ -13,6 +13,10 @@ namespace Das.Views.Input
                                IFlingHost host)
             : base(Easing.QuadraticOut, duration, TimeSpan.Zero)
         {
+            System.Diagnostics.Debug.WriteLine("Created fling transition x,y: " + flingX + 
+                                               "," + flingY + " duration: " + duration + 
+                                               " visual: " + host);
+            
             _flingX = flingX;
             _flingY = flingY;
             _host = host;
@@ -34,9 +38,9 @@ namespace Das.Views.Input
             var currentX = _flingX * runningPct - _flungX;
             var currentY = _flingY * runningPct - _flungY;
 
-            System.Diagnostics.Debug.WriteLine("[OKYN" + Thread.CurrentThread.ManagedThreadId + "] " +
-                            "update fling: " + currentX + "," + currentY +
-                            " total: " + _flungY);
+            //System.Diagnostics.Debug.WriteLine("[OKYN" + Thread.CurrentThread.ManagedThreadId + "] " +
+            //                "update fling: " + currentX + "," + currentY +
+            //                " total: " + _flungY);
 
             _host.OnFlingStep(currentX, currentY);
 

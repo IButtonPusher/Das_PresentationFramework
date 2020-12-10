@@ -1,123 +1,128 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Mvvm;
 using Das.Views.Rendering;
 
 namespace Das.Views.DataBinding
 {
-    public class DeferredPropertyBinding<T> : BaseBinding<T>
+    public class DeferredPropertyBinding : BaseBinding,
+                                           IVisualPropertySetter
     {
-        // ReSharper disable once UnusedMember.Global
-        public DeferredPropertyBinding(Type parentClassType,
-                                       String propertyName)
-        {
-            _prop = parentClassType.GetProperty(propertyName) ??
-                    throw new MissingMemberException(parentClassType.Name, propertyName);
-        }
-
-        public DeferredPropertyBinding(PropertyInfo prop)
-        {
-            _prop = prop;
-        }
-
-
-        public override IDataBinding<T> DeepCopy()
-        {
-            return new DeferredPropertyBinding<T>(_prop);
-        }
-
-        public override T GetValue(Object? dataContext)
-        {
-            if (_prop.GetValue(dataContext, null) is T prop)
-                return prop;
-            return default!;
-        }
-
-        //public override IDataBinding ToSingleBinding()
-        //{
-        //    var argh = _prop.PropertyType.GetGenericArguments().First();
-        //    var itemType = typeof(InstanceBinding<>).MakeGenericType(argh);
-        //    return (IDataBinding) Activator.CreateInstance(itemType, null);
-        //}
-
-        private readonly PropertyInfo _prop;
-
-    }
-
-    public class DeferredPropertyBinding : BaseBinding
-    {
-        public String SourcePropertyName { get; }
-
-        public String? TargetPropertyName { get; }
-
         public DeferredPropertyBinding(String sourcePropertyName,
-                                       String targetPropertyName)
-            : this(sourcePropertyName)
-        {
-            TargetPropertyName = targetPropertyName;
-        }
-
-        public DeferredPropertyBinding(String sourcePropertyName)
+                                       String targetPropertyName,
+                                       IValueConverter? converter = null)
+            //: this(sourcePropertyName)
         {
             SourcePropertyName = sourcePropertyName;
+            TargetPropertyName = targetPropertyName;
+            Converter = converter;
         }
+
+
+        public String SourcePropertyName { get; }
+
+        public String TargetPropertyName { get; }
+        
+        public IValueConverter? Converter { get; }
 
         public override Object? GetBoundValue(Object? dataContext)
         {
             throw new NotImplementedException();
         }
 
-        
 
         public override String ToString()
         {
             return SourcePropertyName;
         }
 
-        public override IDataBinding Update(Object? dataContext, 
+        public override IDataBinding Update(Object? dataContext,
                                             IVisualElement targetVisual)
         {
-            if (dataContext == null)
+            try
             {
-                UpdateDataContext(dataContext);
-                return this;
-            }
+                var count = Interlocked.Add(ref _updateCounter, 1);
+                
+                
+                if (dataContext == null)
+                {
+                    UpdateDataContext(dataContext);
+                    return this;
+                }
 
-            if (dataContext is INotifyPropertyChanged notifyObject && 
-                targetVisual is IBindableElement bindingVisual && 
-                TargetPropertyName is {} targetPropertyName)
-            {
+                if (!(targetVisual is IBindableElement bindingVisual) ||
+                    !(TargetPropertyName is { } targetPropertyName))
+                    throw new NotImplementedException();
+
+                if (targetPropertyName == nameof(IBindableElement.DataContext))
+                {
+
+                }
+
+                if (count > 1)
+                    return this;
+
+
                 var sourceProperty = GetObjectPropertyOrDie(dataContext, SourcePropertyName);
                 var targetProperty = GetObjectPropertyOrDie(bindingVisual, targetPropertyName);
 
+
                 var isCollection = typeof(INotifyingCollection).IsAssignableFrom(sourceProperty.PropertyType);
 
-                if (sourceProperty.CanWrite && !isCollection)
+                if (dataContext is INotifyPropertyChanged notifyObject)
                 {
-                    var twoWay = new TwoWayBinding(notifyObject, sourceProperty, bindingVisual, targetProperty);
-                    twoWay.Evaluate();
-                    return twoWay;
+                    if (sourceProperty.CanWrite && !isCollection)
+                    {
+                        var twoWay = new TwoWayBinding(notifyObject, sourceProperty, 
+                            bindingVisual, targetProperty, Converter);
+                        twoWay.Evaluate();
+                        return twoWay;
+                    }
+
+                    if (isCollection)
+                    {
+                        var collectionBinding = new OneWayCollectionBinding(notifyObject, sourceProperty,
+                            bindingVisual, targetProperty, Converter);
+                        collectionBinding.Evaluate();
+                        return collectionBinding;
+                    }
+
                 }
 
-                if (isCollection)
-                {
-                    var collectionBinding = new OneWayCollectionBinding(notifyObject, sourceProperty, 
-                        bindingVisual, targetProperty);
-                    collectionBinding.Evaluate();
-                    return collectionBinding;
-                }
-
-                //don't do two way if the source property is read only or if it's a collection
-                var oneWay = new SourceBinding(notifyObject, sourceProperty, bindingVisual, targetProperty);
+                // don't do two way if the source property is read only, a collection, or the object 
+                // isn't INotifyPropertyChanged
+                var oneWay = new SourceBinding(dataContext, sourceProperty, bindingVisual, 
+                    targetProperty, Converter);
                 oneWay.Evaluate();
                 return oneWay;
             }
+            finally
+            {
+                Interlocked.Add(ref _updateCounter, -1);
+            }
+        }
 
-            throw new NotImplementedException();
+        public override Object Clone()
+        {
+            return new DeferredPropertyBinding(SourcePropertyName, TargetPropertyName,
+                Converter);
+        }
 
-            return base.Update(dataContext, targetVisual);
+        private Int32 _updateCounter;
+
+        public String PropertyName => TargetPropertyName;
+
+        public Object? GetSourceValue(Object? dataContext)
+        {
+            if (dataContext == null)
+                return null;
+
+            var prop = dataContext.GetType().GetProperty(SourcePropertyName);
+            if (prop == null)
+                return null;
+            return prop.GetValue(dataContext, null);
         }
     }
 }

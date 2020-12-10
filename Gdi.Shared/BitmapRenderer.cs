@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
-using Das.Extensions;
 using Das.Views;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
+using Das.Views.Hosting;
 using Das.Views.Rendering;
 using Rectangle = Das.Views.Core.Geometry.Rectangle;
 
@@ -24,6 +23,9 @@ namespace Das.Gdi
             _lock = new Object();
             _viewHost = viewHost;
             _visualHost = viewHost;
+
+            _visualHost.AvailableSizeChanged += OnHostSizeChanged;
+            
             _measureContext = measureContext;
             _renderContext = renderContext;
             _gdiDevice = new GdiDevice(backgroundColor,
@@ -31,7 +33,11 @@ namespace Das.Gdi
                 //Convert.ToInt32(_viewHost.AvailableSize.Width),
                 //Convert.ToInt32(_viewHost.AvailableSize.Height));
             _renderRect = new Rectangle(0, 0, 1, 1);
+
+            _hostRect = new ValueRectangle(0, 0, viewHost.AvailableSize);
         }
+
+      
 
         public BitmapRenderer(IViewHost<Bitmap> viewHost,
                               GdiMeasureContext measureContext,
@@ -41,6 +47,26 @@ namespace Das.Gdi
         {
         }
 
+        
+        private void OnHostSizeChanged(ISize newValue)
+        {
+            lock (_lock)
+            {
+                if (newValue.IsEmpty)
+                    return;
+
+                _hostRect = new ValueRectangle(0, 0, newValue);
+                
+                _gdiDevice.UpdateSize(newValue);
+                
+                var view = _viewHost.View;
+                if (view == null)
+                    return;
+                
+                view.InvalidateMeasure();
+            }
+        }
+        
         public Bitmap DoRender()
         {
             lock (_lock)
@@ -62,19 +88,9 @@ namespace Das.Gdi
                     if (_gdiDevice.UpdateSize(_visualHost.AvailableSize))
                     {
                         view.InvalidateMeasure();
-                     //   return null!;
+                        //   return null!;
                     }
                 }
-
-                //if (!_gdiDevice.Width.AreEqualEnough(_visualHost.AvailableSize.Width) ||
-                //    !_gdiDevice.Height.AreEqualEnough(_visualHost.AvailableSize.Height))
-                //{
-                //    Debug.WriteLine("sizes didn't add up");
-                //    _gdiDevice.Width = Convert.ToInt32(_visualHost.AvailableSize.Width);
-                //    _gdiDevice.Height = Convert.ToInt32(_visualHost.AvailableSize.Height);
-                //    view.InvalidateMeasure();
-                //    return null!;
-                //}
 
                 var available = new ValueRenderSize(_visualHost.AvailableSize);
 
@@ -82,24 +98,52 @@ namespace Das.Gdi
                 {
                     var desired = _measureContext.MeasureMainView(view, available, _viewHost);
                     _renderRect.Size = desired;
-                    if (view.VerticalAlignment == VerticalAlignments.Default &&
-                        view.HorizontalAlignment == HorizontalAlignments.Default)
+
+                    switch (_viewHost.SizeToContent)
                     {
-                        if (_gdiDevice.UpdateSize(desired))
-                        {
-                            //view.InvalidateMeasure();
-                            //return null!;
-                        }
+                        case SizeToContent.Width | SizeToContent.Height:
+                            _gdiDevice.UpdateSize(desired.Width, desired.Height);
+                            break;
+                        
+                        case SizeToContent.Width:
+                            _gdiDevice.UpdateSize(desired.Width, _gdiDevice.Height);
+                            break;
+                        
+                        case SizeToContent.Height:
+                            _gdiDevice.UpdateSize(_gdiDevice.Width, desired.Height);
+                            break;
                     }
+                    
+                    _gdiDevice.Clear();
+                    
+                    
+                    //if (view.VerticalAlignment == VerticalAlignments.Default &&
+                    //    view.HorizontalAlignment == HorizontalAlignments.Default)
+                    //{
+                    //    if (_gdiDevice.UpdateSize(desired))
+                    //    {
+                    //        //view.InvalidateMeasure();
+                    //        //return null!;
+                    //    }
+                    //}
+
                     //_gdiDevice.Width = Convert.ToInt32(desired.Width);
                     //_gdiDevice.Height = Convert.ToInt32(desired.Height);
-                    
                 }
 
                 var bmp = _gdiDevice.Run(view, DoRender);
-                return bmp;
+
+                //if (bmp != null)
+                //{
+                //    _dumpIndex++;
+                //    bmp.Save("dump\\img_" + _dumpIndex + ".png");
+                //}
+
+                return bmp!;
             }
         }
+
+        //private Int32 _dumpIndex;
 
         public IRenderSize? GetContentSize(IRenderSize available)
         {
@@ -138,20 +182,27 @@ namespace Das.Gdi
             }
         }
 
-        private void DoRender(Graphics g, 
-                              IVisualElement view)
+        private Boolean DoRender(Graphics g,
+                                 IVisualElement view)
         {
-            if (view.IsRequiresArrange)
-            {
-                _renderContext.Graphics = g;
-                _renderContext.DrawMainElement(view, _renderRect, _viewHost);
+            if (!view.IsRequiresArrange)
+                return false;
 
-                lock (_eventLock)
-                {
-                    if (_eventCounter > 0)
-                        _rendering!.Invoke(this, EventArgs.Empty);
-                }
+            var renderTo = new ValueRectangle(0, 0,
+                Math.Min(_hostRect.Width, _renderRect.Width),
+                Math.Min(_hostRect.Height, _renderRect.Height));
+            
+            _renderContext.Graphics = g;
+            _renderContext.DrawMainElement(view, renderTo, _viewHost);
+            //_renderContext.DrawMainElement(view, _renderRect, _viewHost);
+
+            lock (_eventLock)
+            {
+                if (_eventCounter > 0)
+                    _rendering!.Invoke(this, EventArgs.Empty);
             }
+
+            return true;
         }
 
         private readonly GdiDevice _gdiDevice;
@@ -159,6 +210,7 @@ namespace Das.Gdi
         private readonly GdiMeasureContext _measureContext;
         private readonly GdiRenderContext _renderContext;
         private readonly Rectangle _renderRect;
+        private ValueRectangle _hostRect;
         private readonly IViewHost<Bitmap> _viewHost;
         private readonly IVisualHost<Bitmap> _visualHost;
     }

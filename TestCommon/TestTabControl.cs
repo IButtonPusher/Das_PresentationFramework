@@ -32,7 +32,7 @@ namespace TestCommon
 
             _tabControl.ItemsSource = dataContext.Employees;
             var selectionBinding = new TwoWayBinding(dataContext, nameof(TestCompanyVm.SelectedEmployee),
-                _tabControl, nameof(TabControl<EmployeeViewModel>.SelectedItem));
+                _tabControl, nameof(TabControl<EmployeeViewModel>.SelectedItem), null);
             _tabControl.AddBinding(selectionBinding);
             //UpdateSelection().ConfigureAwait(false);
         }

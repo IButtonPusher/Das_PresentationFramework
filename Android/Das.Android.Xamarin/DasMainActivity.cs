@@ -34,7 +34,7 @@ namespace Das.Xamarin.Android
             var displayMetrics = Resources?.DisplayMetrics ?? throw new NullReferenceException();
             ZoomLevel = displayMetrics.ScaledDensity;
 
-            var fontProvider = new AndroidFontProvider(displayMetrics);
+            var fontProvider = new AndroidFontProvider(displayMetrics, _styleContext);
 
             var uiProvider = new AndroidUiProvider(this, displayMetrics);
 

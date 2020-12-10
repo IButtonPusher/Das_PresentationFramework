@@ -15,7 +15,11 @@ namespace Das.Views.DataBinding
             return dataContext == null ? default! : (T) dataContext;
         }
 
-       
+
+        public override Object Clone()
+        {
+            return new InstanceBinding<T>();
+        }
     }
 }
 

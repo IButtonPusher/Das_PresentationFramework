@@ -27,7 +27,7 @@ namespace Das.Views.DevKit
 
             if (gargs.Length == 0)
             {
-                value = new DeferredPropertyBinding(attributeText);
+                value = new DeferredPropertyBinding(attributeText, "Binding", null);
                 return true;
             }
 

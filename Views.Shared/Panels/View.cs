@@ -20,9 +20,6 @@ namespace Das.Views.Panels
 
         public IStyleContext StyleContext { get; }
 
-      
-
-        
 
         public virtual void SetDataContext(T dataContext)
         {

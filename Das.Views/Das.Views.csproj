@@ -47,7 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Das.Container" Version="0.0.9-alpha" />
+    <PackageReference Include="Das.Container" Version="0.0.11-alpha" />
   </ItemGroup>
 
   <ItemGroup>

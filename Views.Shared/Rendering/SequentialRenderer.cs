@@ -25,9 +25,8 @@ namespace Das.Views.Rendering
             ElementsRendered = new Dictionary<IVisualElement, ValueRenderRectangle>();
         }
 
-        public virtual ValueSize Measure(IVisualElement container, 
-                                 //IList<IVisualElement> elements,
-                                 Orientations orientation, 
+        public virtual ValueSize Measure(IVisualElement container,
+                                         Orientations orientation, 
                                  IRenderSize availableSpace, 
                                  IMeasureContext measureContext)
         {
@@ -113,34 +112,28 @@ namespace Das.Views.Rendering
             }
         }
 
-        public void Arrange(Orientations orientation,
+        public virtual void Arrange(Orientations orientation,
                             IRenderRectangle bounds, 
                             IRenderContext renderContext)
         {
+            var offset = bounds.Location;
+            if (!offset.IsOrigin)
+            {}
+
+            //foreach (var kvp in GetRenderables(orientation, bounds, renderContext))
+            //{
+            //    renderContext.DrawElement(kvp.Key, kvp.Value);
+            //}
+
+
 
             foreach (var kvp in GetRenderables(orientation, bounds, renderContext))
             {
-                renderContext.DrawElement(kvp.Key, kvp.Value);
+                if (offset.IsOrigin)
+                    renderContext.DrawElement(kvp.Key, kvp.Value);
+                else
+                    renderContext.DrawElement(kvp.Key, kvp.Value.Move(offset));
             }
-
-            //foreach (var kvp in ElementsRendered)
-            //{
-            //    var child = kvp.Key;
-            //    var current = ElementsRendered[child];
-            //    switch (orientation)
-            //    {
-            //        case Orientations.Vertical:
-            //            current = new ValueRenderRectangle(current.X, current.Y, bounds.Width,
-            //                current.Height, current.Offset);
-            //            break;
-            //        case Orientations.Horizontal:
-            //            current = new ValueRenderRectangle(current.X + bounds.X, current.Y, current.Width,
-            //                bounds.Height, current.Offset);
-            //            break;
-            //    }
-
-            //    renderContext.DrawElement(child, current);
-            //}
         }
 
         protected virtual ValueSize SetChildSize(IVisualElement child,
@@ -163,6 +156,7 @@ namespace Das.Views.Rendering
         {
             lock (_measureLock)
             {
+
                 var current = ValueRenderRectangle.Empty;
 
                 foreach (var child in _currentlyRendering)
@@ -172,32 +166,16 @@ namespace Das.Views.Rendering
                     current = GetElementRenderBounds(child, current, orientation,
                         bounds, context);
 
-                    //switch (orientation)
-                    //{
-                    //    case Orientations.Vertical:
-                    //        current = new ValueRenderRectangle(current.X, current.Y, 
-                    //            //bounds.Width, //this draws things (picture frame) too wide
-                    //            current.Width,
-                    //            current.Height, current.Offset);
-                    //        break;
-
-                    //    case Orientations.Horizontal:
-                    //        current = new ValueRenderRectangle(current.X + bounds.X, current.Y, current.Width,
-                    //            bounds.Height, 
-                    //            current.Offset);
-                    //        break;
-                    //}
-
                     yield return new KeyValuePair<IVisualElement, ValueRenderRectangle>(child, current);
                 }
             }
         }
 
-        private ValueRenderRectangle GetElementRenderBounds(IVisualElement child,
-            ValueRenderRectangle current,
-                                                            Orientations orientation,
-                                                            IRenderRectangle bounds,
-            IVisualContext context)
+        private static ValueRenderRectangle GetElementRenderBounds(IVisualElement child,
+                                                                   ValueRenderRectangle current,
+                                                                   Orientations orientation,
+                                                                   IRenderRectangle bounds,
+                                                                   IVisualContext context)
         {
             var useX = current.X;
             var useY = current.Y;
@@ -237,6 +215,8 @@ namespace Das.Views.Rendering
 
                 case Orientations.Horizontal:
 
+                    //useY = 0;
+                    
                     var useVertAlign = child.VerticalAlignment != VerticalAlignments.Default
                         ? child.VerticalAlignment
                         : context.GetStyleSetter<VerticalAlignments>(StyleSetter.VerticalAlignment, child);
@@ -276,14 +256,14 @@ namespace Das.Views.Rendering
         //    return ElementsRendered[visual];
         //}
 
-        public Boolean TryGetRenderedElement(IVisualElement element,
-                                             out ValueRenderRectangle pos)
-        {
-            lock (_measureLock)
-            {
-                return ElementsRendered.TryGetValue(element, out pos);
-            }
-        }
+        //public Boolean TryGetRenderedElement(IVisualElement element,
+        //                                     out ValueRenderRectangle pos)
+        //{
+        //    lock (_measureLock)
+        //    {
+        //        return ElementsRendered.TryGetValue(element, out pos);
+        //    }
+        //}
 
         protected readonly IVisualCollection _visuals;
         protected readonly Boolean _isWrapContent;

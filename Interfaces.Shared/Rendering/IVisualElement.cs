@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
+using Das.Views.Core.Geometry;
 using Das.Views.Panels;
 
 namespace Das.Views.Rendering
@@ -39,6 +40,8 @@ namespace Das.Views.Rendering
         VerticalAlignments VerticalAlignment { get; set; }
 
         IBrush? Background { get; set; }
+        
+        Thickness? Margin { get; set; }
 
     }
 }

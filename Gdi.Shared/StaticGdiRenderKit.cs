@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Das.Serializer;
 using Das.Views;
+
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 using Das.Views.Styles;
@@ -14,9 +16,11 @@ namespace Das.Gdi.Kits
     public class StaticGdiRenderKit : BaseRenderKit, 
                                       IRenderKit 
     { 
-        public StaticGdiRenderKit(IViewPerspective viewPerspective)
+        public StaticGdiRenderKit(IViewPerspective viewPerspective,
+                                  IStringPrimitiveScanner attributeScanner,
+                                  ITypeInferrer typeInferrer)
         : base(new BaseStyleContext(new DefaultStyle(),
-            new DefaultColorPalette()))
+            new DefaultColorPalette()), attributeScanner, typeInferrer)
         {
             var defaultSurrogates = new BaseSurrogateProvider();
             var imageProvider = new GdiImageProvider();

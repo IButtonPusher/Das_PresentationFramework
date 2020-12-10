@@ -28,6 +28,8 @@ namespace Das.Views.Mvvm
 
         public event Action<String, Object?>? PropertyValueChanged;
 
+        [DebuggerStepThrough]
+        [DebuggerHidden]
         protected virtual void RaisePropertyChanged(String propertyName,
                                                     Object? newValue)
         {
@@ -37,6 +39,8 @@ namespace Das.Views.Mvvm
             RaisePropertyChanged(propertyName);
         }
 
+        [DebuggerStepThrough]
+        [DebuggerHidden]
         protected virtual void RaisePropertyChanged(String propertyName)
         {
             var handler = PropertyChanged;
@@ -47,7 +51,8 @@ namespace Das.Views.Mvvm
             handler(this, args);
         }
 
-        // ReSharper disable once UnusedMember.Global
+        [DebuggerStepThrough]
+        [DebuggerHidden]
         protected void RaisePropertyChanged(PropertyChangedEventArgs args)
         {
             PropertyChanged?.Invoke(this, args);
@@ -89,8 +94,7 @@ namespace Das.Views.Mvvm
             if (!VerifyCanChangeValue(field, newValue, onValueChanging, propertyName))
                 return;
 
-            //if (!onValueChanging(field, newValue))
-            //    return;
+           
 
             SetValueImpl(ref field, newValue, null, propertyName);
         }
@@ -106,11 +110,27 @@ namespace Das.Views.Mvvm
             if (!VerifyCanChangeValue(field, newValue, onValueChanging, propertyName))
                 return;
 
-            //if (!onValueChanging(field, newValue))
-            //    return;
-
             SetValueImpl(ref field, newValue, handleValueChanged, propertyName);
         }
+        
+        //[DebuggerStepThrough]
+        //[DebuggerHidden]
+        protected virtual void SetValue<T>(ref T field,
+                                           T newValue,
+                                           Func<T, T, T> interceptValueChanging,
+                                           Action<T> handleValueChanged,
+                                           [CallerMemberName] String propertyName = "")
+        {
+            var newerValue = interceptValueChanging(field, newValue);
+            
+            if (!VerifyCanChangeValue(field, newerValue, null, propertyName))
+                return;
+            
+            
+
+            SetValueImpl(ref field, newerValue, handleValueChanged, propertyName);
+        }
+        
 
         [DebuggerStepThrough]
         [DebuggerHidden]
@@ -122,9 +142,6 @@ namespace Das.Views.Mvvm
         {
             if (!VerifyCanChangeValue(field, newValue, onValueChanging, propertyName))
                 return;
-
-            //if (!onValueChanging(field, newValue))
-            //    return;
 
             SetValueImpl(ref field, newValue, handleValueChangedAsync, propertyName);
         }
@@ -141,10 +158,7 @@ namespace Das.Views.Mvvm
 
             SetValueImpl(ref field, newValue, onValueChanged, propertyName);
             return true;
-            //if (!SetValue(ref field, value, propertyName))
-            //    return false;
-            //onValueChanged(value);
-            //return true;
+           
         }
 
         // ReSharper disable once UnusedMember.Global
@@ -188,6 +202,8 @@ namespace Das.Views.Mvvm
                 RaisePropertyChanged(propertyName, value);
         }
 
+        [DebuggerStepThrough]
+        [DebuggerHidden]
         private Boolean VerifyCanChangeValue<T>(T oldValue,
                                                 T newValue,
                                                 Func<T, T, Boolean>? handleValueChanging,
@@ -196,14 +212,14 @@ namespace Das.Views.Mvvm
             if (Equals(oldValue, newValue))
                 return false;
 
-            if (handleValueChanging is { } validHandler &&
-                !validHandler(oldValue, newValue))
+            if (handleValueChanging is { } simpleHandler &&
+                !simpleHandler(oldValue, newValue))
                 return false;
 
-            if (!(PropertyChanging is { } valid))
+            if (!(PropertyChanging is { } detailedHandler))
                 return true;
 
-            var listeners = valid.GetInvocationList();
+            var listeners = detailedHandler.GetInvocationList();
             foreach (var listener in listeners.OfType<Func<Object, String, Object, Object, Boolean>>())
                 if (!listener(this, propertyName, oldValue!, newValue!))
                     return false;

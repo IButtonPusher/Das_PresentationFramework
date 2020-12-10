@@ -14,54 +14,19 @@ namespace Das.Views.Panels
         }
 
         protected BaseContainerVisual(IVisualBootstrapper visualBootstrapper,
-                                      IDataBinding<T> binding)
+                                      IDataBinding<T>? binding)
          : base(binding, visualBootstrapper )
         {
 
         }
-
         
-
-        //public virtual Boolean IsChanged
-        //{
-        //    get => IsRequiresMeasure || IsRequiresArrange;
-        //    //get => _isChanged;
-        //    //protected set => SetValue(ref _isChanged, value);
-        //}
-
-        //private Boolean _isChanged;
-
         public virtual void AcceptChanges()
         {
             AcceptChanges(ChangeType.Measure);
             AcceptChanges(ChangeType.Arrange);
-            //IsChanged = false;
         }
 
         public abstract Boolean IsChanged { get; }
-
-        //protected void OnChildPropertyChanged(Object sender,
-        //                                      PropertyChangedEventArgs e)
-        //{
-        //    //switch (e.PropertyName)
-        //    //{
-        //    //    case nameof(IsChanged) when sender is IChangeTracking content && content.IsChanged:
-        //    //        IsChanged = true;
-        //    //        break;
-
-        //    //    case nameof(IsRequiresMeasure) when sender is IVisualRenderer renderer &&
-        //    //                                        renderer.IsRequiresMeasure:
-        //    //        IsRequiresMeasure = true;
-        //    //        IsChanged = true;
-        //    //        break;
-
-        //    //    case nameof(IsRequiresArrange) when sender is IVisualRenderer renderer &&
-        //    //                                        renderer.IsRequiresArrange:
-        //    //        IsRequiresArrange = true;
-        //    //        IsChanged = true;
-        //    //        break;
-        //    //}
-        //}
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Das.Views.Rendering;
@@ -11,6 +12,8 @@ namespace Das.Views.DataBinding
                                         INotifyPropertyChanged
     {
         void AddBinding(IDataBinding binding);
+
+        IEnumerable<IDataBinding> GetBindings();
 
 
         IDataBinding? Binding { get; set; }

@@ -13,16 +13,18 @@ namespace Das.Views.DataBinding
         public OneWayCollectionBinding(INotifyPropertyChanged source, 
                                        String sourceProperty, 
                                        IBindableElement target, 
-                                       String targetProperty) 
-            : base(source, sourceProperty, target, targetProperty)
+                                       String targetProperty,
+                                       IValueConverter? converter) 
+            : base(source, sourceProperty, target, targetProperty, converter)
         {
         }
 
         public OneWayCollectionBinding(INotifyPropertyChanged source, 
                                        PropertyInfo srcProp, 
                                        IBindableElement target, 
-                                       PropertyInfo targetProp) 
-            : base(source, srcProp, target, targetProp)
+                                       PropertyInfo targetProp,
+                                       IValueConverter? converter) 
+            : base(source, srcProp, target, targetProp, converter)
         {
         }
 

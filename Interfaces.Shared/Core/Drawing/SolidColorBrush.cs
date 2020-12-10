@@ -54,7 +54,9 @@ namespace Das.Views.Core.Drawing
             return false;
         }
 
-        public static SolidColorBrush FromRgb(Byte r, Byte g, Byte b)
+        public static SolidColorBrush FromRgb(Byte r, 
+                                              Byte g, 
+                                              Byte b)
         {
             return new SolidColorBrush(new Color(r, g, b));
         }

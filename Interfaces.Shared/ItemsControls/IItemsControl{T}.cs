@@ -1,7 +1,4 @@
-﻿using Das.Views.Panels;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using Das.Views.Mvvm;
 
 namespace Das.Views

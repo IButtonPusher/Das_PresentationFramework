@@ -36,7 +36,7 @@ namespace Das.Views.Controls
         public Label(IVisualBootstrapper visualBootstrapper)
             : base(visualBootstrapper)
         {
-            _currentValue = String.Empty;
+            //_currentValue = String.Empty;
 
             //Interlocked.Add(ref _instanceCount, 1);
         }
@@ -45,7 +45,7 @@ namespace Das.Views.Controls
                      IVisualBootstrapper visualBootstrapper)
             : base(binding, visualBootstrapper)
         {
-            _currentValue = String.Empty;
+            //_currentValue = String.Empty;
 
             //Interlocked.Add(ref _instanceCount, 1);
         }
@@ -71,6 +71,16 @@ namespace Das.Views.Controls
             set => TextBrushProperty.SetValue(this, value);
         }
 
+        protected override void OnBindingChanged(IDataBinding<T>? obj)
+        {
+            base.OnBindingChanged(obj);
+
+            if (obj is { } binding)
+                Text = binding.GetValue(DataContext)?.ToString() ?? String.Empty;
+            else
+                Text = String.Empty;
+        }
+
         public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
@@ -78,7 +88,7 @@ namespace Das.Views.Controls
 
             var brush = TextBrush ?? 
                         renderContext.GetStyleSetter<SolidColorBrush>(StyleSetter.Foreground, this);
-            renderContext.DrawString(_currentValue, font, brush, Point2D.Empty);
+            renderContext.DrawString(Text, font, brush, Point2D.Empty);
         }
 
         //public override void Dispose()
@@ -95,13 +105,13 @@ namespace Das.Views.Controls
         {
             var font = GetFont(measureContext);
 
-            if (Binding is { } binding)
-                _currentValue = binding.GetValue(DataContext)?.ToString() ?? String.Empty;
-            else
-                _currentValue = String.Empty;
+            //if (Binding is { } binding)
+            //    _currentValue = binding.GetValue(DataContext)?.ToString() ?? String.Empty;
+            //else
+            //    _currentValue = String.Empty;
 
             //_currentValue = Binding?.GetValue(DataContext)?.ToString() ?? String.Empty;
-            var size = measureContext.MeasureString(_currentValue, font);
+            var size = measureContext.MeasureString(Text, font);
             return size;
         }
 
@@ -132,18 +142,33 @@ namespace Das.Views.Controls
             return TaskEx.CompletedTask;
         }
 
+        protected override void RefreshBoundValues(Object? dataContext)
+        {
+            base.RefreshBoundValues(dataContext);
+            
+            if (BoundValue is String {} str)
+                Text = str;
+        }
+
         public override String ToString()
         {
-            return "Label: " + _currentValue;
+            return "Label: " + Text;
         }
 
         public static readonly DependencyProperty<Label<T>, String> TextProperty =
-            DependencyProperty<Label<T>, String>.Register(nameof(Text), String.Empty);
+            DependencyProperty<Label<T>, String>.Register(nameof(Text), String.Empty, 
+                OnTextChanged);
+
+        private static void OnTextChanged(Label<T> sender, 
+                                          String oldValue, String newValue)
+        {
+            sender.InvalidateMeasure();
+        }
 
         public static readonly DependencyProperty<Label<T>, IBrush?> TextBrushProperty =
             DependencyProperty<Label<T>, IBrush?>.Register(nameof(TextBrush), default);
 
-        private String _currentValue;
+        //private String _currentValue;
         private Font? _font;
     }
 }

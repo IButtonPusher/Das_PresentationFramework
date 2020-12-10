@@ -10,17 +10,19 @@ namespace Das.Views.DataBinding
         public TwoWayBinding(INotifyPropertyChanged source,
                              String sourceProperty,
                              IBindableElement target,
-                             String targetProperty)
+                             String targetProperty,
+                             IValueConverter? valueConverter)
             : this(source,
                 GetObjectPropertyOrDie(source, sourceProperty),
                 target,
-                GetObjectPropertyOrDie(target, targetProperty)) { }
+                GetObjectPropertyOrDie(target, targetProperty), valueConverter) { }
 
         public TwoWayBinding(INotifyPropertyChanged source,
                              PropertyInfo srcProp,
                              IBindableElement target,
-                             PropertyInfo targetProp)
-        : base(source, srcProp, target, targetProp)
+                             PropertyInfo targetProp,
+                             IValueConverter? valueConverter)
+        : base(source, srcProp, target, targetProp, valueConverter)
         {
             _sourceSetter = srcProp.GetSetMethod()
                             ?? throw new MissingMethodException(srcProp.Name);
@@ -47,7 +49,19 @@ namespace Das.Views.DataBinding
             //_sourceSetter.Invoke(_source, new[] {val});
         }
 
-        protected void SetSourceValue(Object? value) => _sourceSetter.Invoke(_source, new[] {value});
+        protected void SetSourceValue(Object? value)
+        {
+            var sourceType = _sourceSetter.GetParameters()[0].ParameterType;
+
+            if (value is { } valueValue && !sourceType.IsAssignableFrom(valueValue.GetType()))
+                return; //TODO: Can't incompatible types
+            
+            //if (sourceType == typeof(String) && value is { } validValue &&
+            //    validValue.GetType() != typeof(String))
+            //    value = validValue.ToString();
+            
+            _sourceSetter.Invoke(_source, new[] {value});
+        }
 
         private readonly MethodInfo _sourceSetter;
     }

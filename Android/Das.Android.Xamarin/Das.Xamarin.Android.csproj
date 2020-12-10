@@ -56,6 +56,7 @@
     <Compile Include="Images\AndroidBitmap.cs" />
     <Compile Include="AndroidMeasureKit.cs" />
     <Compile Include="Images\AndroidImageProvider.cs" />
+    <Compile Include="Input\AndroidInputContext.cs" />
     <Compile Include="Mvvm\InvokeCompletionSource.cs" />
     <Compile Include="Rendering\AndroidRenderContext.cs" />
     <Compile Include="Rendering\AndroidRenderKit.cs" />
@@ -74,16 +75,18 @@
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Das.Serializer.Split">
+      <Version>0.0.13-alpha</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Essentials">
-      <Version>1.6.0-pre4</Version>
+      <Version>1.6.0-pre5</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Input\" />
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>

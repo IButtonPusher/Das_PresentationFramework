@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Das.Serializer;
+using Das.Views.Collections;
 using Das.Views.DataBinding;
 using Das.Views.Rendering;
 
@@ -9,12 +11,13 @@ namespace Das.Views.Panels
 {
    public abstract class BasePanel : BindableElement,
                                          IVisualContainer
+                                         
     {
         protected BasePanel(IDataBinding? binding,
                             IVisualBootstrapper visualBootstrapper)
             : base(binding, visualBootstrapper)
         {
-            Children = new VisualCollection();
+            _children = new VisualCollection();
         }
 
         // ReSharper disable once UnusedMember.Global
@@ -23,38 +26,19 @@ namespace Das.Views.Panels
         {
         }
 
-        //public IList<IVisualElement> Children
-        //{
-        //    get
-        //    {
-        //        lock (_lockChildren)
-        //            return _children;
-        //    }
-        //}
+        private readonly VisualCollection _children;
 
-        //public IEnumerable<IVisualElement> Children
-        //{
-        //    get
-        //    {
-        //        lock (_lockChildren)
-        //        {
-        //            for (var c = 0; c < _children.Count; c++)
-        //                yield return _children[c];
-        //        }
-        //    }
-        //}
-
-        public IVisualCollection Children { get; }
+        public IVisualCollection Children => _children;
 
         public void AddChild(IVisualElement element)
         {
-            Children.Add(element);
+            _children.Add(element);
             InvalidateMeasure();
         }
 
         public Boolean RemoveChild(IVisualElement element)
         {
-            var changed = Children.Remove(element);
+            var changed = _children.Remove(element);
 
             if (changed)
                 InvalidateMeasure();
@@ -62,9 +46,9 @@ namespace Das.Views.Panels
             return changed;
         }
 
-        public void AddChildren(params IVisualElement[] elements)
+        public void AddChildren(IEnumerable<IVisualElement> elements)
         {
-            Children.AddRange(elements);
+            _children.AddRange(elements);
             InvalidateMeasure();
         }
 
@@ -74,7 +58,7 @@ namespace Das.Views.Panels
 
         public virtual Boolean Contains(IVisualElement element)
         {
-            return Children.IsTrueForAnyChild(element, (child, e) =>
+            return _children.IsTrueForAnyChild(element, (child, e) =>
             {
                 if (child == element)
                     return true;
@@ -87,7 +71,7 @@ namespace Das.Views.Panels
         public override IVisualElement DeepCopy()
         {
             var newObject = (BasePanel) base.DeepCopy();
-            Children.RunOnEachChild(newObject, (p, child) =>
+            _children.RunOnEachChild(newObject, (p, child) =>
             {
                 var stepChild = child.DeepCopy();
                 p.AddChild(stepChild);
@@ -98,7 +82,7 @@ namespace Das.Views.Panels
 
         public virtual void AcceptChanges()
         {
-            Children.RunOnEachChild(child =>
+            _children.RunOnEachChild(child =>
             {
                 if (child is IChangeTracking changeTracking)
                     changeTracking.AcceptChanges();
@@ -110,34 +94,34 @@ namespace Das.Views.Panels
 
         public virtual Boolean IsChanged
         {
-            get => Children.IsTrueForAnyChild(child => child is IChangeTracking {IsChanged: true});
+            get => _children.IsTrueForAnyChild(child => child is IChangeTracking {IsChanged: true});
         }
 
         public override void InvalidateMeasure()
         {
             base.InvalidateMeasure();
 
-            Children.RunOnEachChild(child => child.InvalidateMeasure());
+            _children.RunOnEachChild(child => child.InvalidateMeasure());
         }
 
         public override void InvalidateArrange()
         {
             base.InvalidateArrange();
 
-            Children.RunOnEachChild(child => child.InvalidateArrange());
+            _children.RunOnEachChild(child => child.InvalidateArrange());
         }
 
         public override Boolean IsRequiresMeasure
         {
             get => base.IsRequiresMeasure || 
-                   Children.IsTrueForAnyChild(child => child.IsRequiresMeasure);
+                   _children.IsTrueForAnyChild(child => child.IsRequiresMeasure);
             protected set => base.IsRequiresMeasure = value;
         }
 
         public override Boolean IsRequiresArrange
         {
             get => base.IsRequiresArrange || 
-                   Children.IsTrueForAnyChild(child => child.IsRequiresArrange);
+                   _children.IsTrueForAnyChild(child => child.IsRequiresArrange);
             protected set => base.IsRequiresArrange = value;
         }
 
@@ -145,7 +129,7 @@ namespace Das.Views.Panels
         {
             base.SetBoundValue(value);
 
-            Children.RunOnEachChild(value, (v, child) =>
+            _children.RunOnEachChild(value, (v, child) =>
             {
                 if (!(child is IBindableElement bindable))
                     return;
@@ -157,12 +141,12 @@ namespace Das.Views.Panels
         public override void Dispose()
         {
             base.Dispose();
-            Children.Dispose();
+            _children.Dispose();
         }
 
         public override async Task SetBoundValueAsync(Object? value)
         {
-            await Children.RunOnEachChildAsync(value, async (v, child) =>
+            await _children.RunOnEachChildAsync(value, async (v, child) =>
             {
                 if (!(child is IBindableElement bindable))
                     return;

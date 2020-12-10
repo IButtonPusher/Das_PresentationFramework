@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Das.Views.Collections;
 using Das.Views.Rendering;
 
 namespace Das.Views.Panels
@@ -28,5 +29,9 @@ namespace Das.Views.Panels
         //{
         //    return Children;
         //}
+        protected override void OnDistributeDataContextToChildren(Object? newValue)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

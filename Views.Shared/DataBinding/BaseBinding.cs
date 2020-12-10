@@ -63,6 +63,8 @@ namespace Das.Views.DataBinding
         public Object? DataContext { get; set; }
 
         public virtual void Dispose() {}
+
+        public abstract Object Clone();
     }
 }
 

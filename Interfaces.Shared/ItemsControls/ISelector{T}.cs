@@ -1,9 +1,5 @@
 ﻿using Das.Views.DataBinding;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Das.Views.Mvvm;
-using Das.Views.Rendering;
 
 namespace Das.Views
 {

@@ -5,7 +5,6 @@ using Das.Views.Core.Geometry;
 using Das.Views.Input;
 using Das.Views.Panels;
 using Das.Views.Rendering;
-using Das.Views.Rendering.Geometry;
 using Das.Views.Styles;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -19,13 +18,11 @@ namespace Das.Views.Controls
                                  IHandleInput<MouseOverEventArgs>,
                                  IButtonBase
     {
-        private readonly IVisualBootstrapper _visualBootstrapper;
         private ISize _lastRenderSize;
 
         protected ButtonBase(IVisualBootstrapper visualBootstrapper)
         : base(visualBootstrapper)
         {
-            _visualBootstrapper = visualBootstrapper;
             _currentStyleSelector = StyleSelector.None;
             _lastRenderSize = Size.Empty;
         }
@@ -107,6 +104,13 @@ namespace Das.Views.Controls
             return true;
         }
 
+        public override void Arrange(IRenderSize availableSpace, 
+                                     IRenderContext renderContext)
+        {
+            _lastRenderSize = availableSpace;
+            base.Arrange(availableSpace, renderContext);
+        }
+
         public virtual Boolean OnInput(MouseUpEventArgs args)
         {
             RemoveStyleSelector(StyleSelector.Active);
@@ -138,7 +142,7 @@ namespace Das.Views.Controls
 
         public override String ToString()
         {
-            return base.ToString() + " - " + DataContext?.ToString();
+            return base.ToString() + " - " + DataContext;
         }
 
 

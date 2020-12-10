@@ -19,15 +19,16 @@ namespace Das.Views.Panels
         //{
         //}
 
-        protected override Boolean OnDataContextChanging(Object? oldValue, 
-                                                         Object? newValue)
-        {
-            return base.OnDataContextChanging(oldValue, newValue);
-        }
+        //protected override Boolean OnDataContextChanging(Object? oldValue, 
+        //                                                 Object? newValue)
+        //{
+        //    return base.OnDataContextChanging(oldValue, newValue);
+        //}
 
-        protected override void OnDataContextChanged(Object? newValue)
+        protected override void OnDistributeDataContextToChildren(Object? newValue)
         {
-            base.OnDataContextChanged(newValue);
+            throw new NotImplementedException();
+            //base.OnDataContextChanged(newValue);
         }
 
         public override ValueSize Measure(IRenderSize availableSpace,

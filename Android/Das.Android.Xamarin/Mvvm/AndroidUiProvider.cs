@@ -5,7 +5,6 @@ using Android.Content;
 using Android.OS;
 using Android.Util;
 using Das.ViewModels;
-using Das.Views.Core.Geometry;
 using bob = System.Uri;
 
 namespace Das.Xamarin.Android.Mvvm

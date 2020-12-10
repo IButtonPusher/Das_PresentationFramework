@@ -57,6 +57,11 @@ namespace Das.Views.Controls
             _currentImage?.Dispose();
         }
 
+        protected override void OnDataContextChanged(Object? newValue)
+        {
+            base.OnDataContextChanged(newValue);
+        }
+
         public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
         {
@@ -65,15 +70,19 @@ namespace Das.Views.Controls
             //if (!(DataContext is {} dc))
             //    return Size.Empty;
 
-            _currentImage = GetBoundValue(DataContext!);
+            _currentImage = Image ??  GetBoundValue(DataContext!);
+            if (_currentImage == null || _currentImage.IsEmpty)
+                return ValueSize.Empty;
+            
             var size = measureContext.MeasureImage(_currentImage);
             //var forced = measureContext.GetStyleSetter<Size>(StyleSetter.Size, this)
             //             * zoom;
             //if (forced != null && !Size.Empty.Equals(forced))
             //    return size;
 
-            var width = measureContext.GetStyleSetter<Double>(StyleSetter.Width, this);// * zoom;
-            var height = measureContext.GetStyleSetter<Double>(StyleSetter.Height, this);// * zoom;
+
+            var width = Width ?? measureContext.GetStyleSetter<Double>(StyleSetter.Width, this);// * zoom;
+            var height = Height ?? measureContext.GetStyleSetter<Double>(StyleSetter.Height, this);// * zoom;
 
             if (!Double.IsNaN(width) && !Double.IsNaN(height))
                 return new ValueSize(width, height);
@@ -94,7 +103,7 @@ namespace Das.Views.Controls
         }
 
 
-        public static DependencyProperty<PictureFrame, IImage?> ImageProperty =
+        public static readonly DependencyProperty<PictureFrame, IImage?> ImageProperty =
             DependencyProperty<PictureFrame, IImage?>.Register(nameof(Image),
                 default);
 

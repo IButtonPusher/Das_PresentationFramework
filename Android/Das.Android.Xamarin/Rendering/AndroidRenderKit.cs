@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using Android.Util;
 using Android.Views;
 using Das.Container;
+using Das.Serializer;
 using Das.Views;
 using Das.Views.Core;
 using Das.Views.Core.Geometry;
-using Das.Views.Core.Writing;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 using Das.Xamarin.Android.Images;
@@ -21,13 +21,13 @@ namespace Das.Xamarin.Android
     {
         public AndroidRenderKit(IViewPerspective viewPerspective,
                                 IViewState viewState,
-                                IFontProvider<AndroidFontPaint> fontProvider,
+                                AndroidFontProvider fontProvider,
                                 IWindowManager windowManager,
-                                AndroidUiProvider uiProvider,
+                                IUiProvider uiProvider,
                                 IStyleContext styleContext,
                                 DisplayMetrics displayMetrics,
                                 IResolver container)
-        : base(container, styleContext)
+        : base(container, styleContext, Serializer.AttributeParser, Serializer.TypeInferrer)
         {
             DisplayMetrics = displayMetrics;
             var lastMeasures = new Dictionary<IVisualElement, ValueSize>();
@@ -46,13 +46,13 @@ namespace Das.Xamarin.Android
                 lastMeasures, styleContext);
 
             Container.ResolveTo<IImageProvider>(imageProvider);
-            Container.ResolveTo<IUiProvider>(uiProvider);
+            Container.ResolveTo(uiProvider);
             Container.ResolveTo(styleContext);
         }
 
         public AndroidRenderKit(IViewPerspective viewPerspective,
                                 IViewState viewState,
-                                IFontProvider<AndroidFontPaint> fontProvider,
+                                AndroidFontProvider fontProvider,
                                 IWindowManager windowManager,
                                 AndroidUiProvider uiProvider,
                                 IStyleContext styleContext,
@@ -62,6 +62,8 @@ namespace Das.Xamarin.Android
         {
             
         }
+        
+        protected static readonly DasSerializer Serializer = new DasSerializer();
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;
 

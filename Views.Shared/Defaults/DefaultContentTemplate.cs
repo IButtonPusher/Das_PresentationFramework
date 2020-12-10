@@ -18,7 +18,6 @@ namespace Das.Views.Defaults
         public DefaultContentTemplate(IVisualBootstrapper visualBootstrapper,
                                       IVisualElement? host) : base(visualBootstrapper)
         {
-            _visualBootstrapper = visualBootstrapper;
             _bindable = host as IBindableElement;
             _contentMeasured = ValueSize.Empty;
         }
@@ -34,6 +33,12 @@ namespace Das.Views.Defaults
             if (dataTemplate != null)
                 return dataTemplate.BuildVisual(dataContext);
 
+            return GetToStringLabel(dataContext);
+          
+        }
+
+        protected virtual IVisualElement GetToStringLabel(Object dataContext)
+        {
             var txt = new Label<Object>(
                 new ObjectBinding<Object>(dataContext),
                 _visualBootstrapper)
@@ -43,7 +48,6 @@ namespace Das.Views.Defaults
             };
 
             return txt;
-
         }
 
         public virtual TVisualElement BuildVisual<TVisualElement>(Object? dataContext) 
@@ -172,7 +176,6 @@ namespace Das.Views.Defaults
         private IVisualElement? _resolvedTemplate;
         private Boolean _hasTriedResolvingTemplate;
 
-        private readonly IVisualBootstrapper _visualBootstrapper;
         private readonly IBindableElement? _bindable;
         private ValueSize _contentMeasured;
     }

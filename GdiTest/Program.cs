@@ -29,12 +29,18 @@ namespace GdiTest
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
+
+
             //Application.Run(new TestBrowser());
 
 //            new StaScheduler("GDI Test");
 
             var _testLauncher = GetGdiLauncher();
+            
+            var urp = new UniformRepeaterPanel<IBindableElement<TestCompanyVm>, TestCompanyVm>(
+                _testLauncher.RenderKit.VisualBootstrapper);
+            
+            
 
             var view = GetTestCompanyTabsView(_testLauncher);
 
@@ -62,15 +68,17 @@ namespace GdiTest
 
         private static View<ICompanyViewModel> GetTestCompanyTabsView(TestLauncher testLauncher)
         {
-            var inflator = new ViewInflater(testLauncher.RenderKit.VisualBootstrapper,
-                testLauncher.TypeInferrer);
+            var inflater = testLauncher.RenderKit.ViewInflater;
+            
+            //var inflator = new ViewInflater(testLauncher.RenderKit.VisualBootstrapper,
+            //    testLauncher.TypeInferrer);
 
             var file = new FileInfo(
                 Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                 "company", "TestCompanyTabs.xml"));
 
             var xml = File.ReadAllText(file.FullName);
-            var view = inflator.InflateXml<IBindableElement<ICompanyViewModel>>(xml);
+            var view = inflater.InflateXml<IBindableElement<ICompanyViewModel>>(xml);
 
             return new View<ICompanyViewModel>(testLauncher.RenderKit.VisualBootstrapper)
             {

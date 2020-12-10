@@ -14,17 +14,14 @@ using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 using Das.Xamarin.Android.Controls;
+using Das.Xamarin.Android.Input;
 using Das.Xamarin.Android.Mvvm;
 using Size = Das.Views.Core.Geometry.Size;
 
 namespace Das.Xamarin.Android
 {
     public class AndroidView : ViewGroup,
-                                      IViewState,
-                                      IInputContext,
-                                      GestureDetector.IOnGestureListener,
-                                      GestureDetector.IOnDoubleTapListener,
-                                      View.IOnTouchListener
+                                      IViewState
     {
         // ReSharper disable once UnusedMember.Global
         public AndroidView(IView view,
@@ -49,12 +46,11 @@ namespace Das.Xamarin.Android
             _targetRect = ValueRectangle.Empty;
             _view = view;
             _uiProvider = uiProvider;
-            //_view.PropertyChanged += OnViewPropertyChanged;
 
-            var viewConfig = ViewConfiguration.Get(context) ?? throw new NotSupportedException();
+            //var viewConfig = ViewConfiguration.Get(context) ?? throw new NotSupportedException();
 
-            _maximumFlingVelocity = viewConfig.ScaledMaximumFlingVelocity;
-            _minimumFlingVelocity = viewConfig.ScaledMinimumFlingVelocity;
+            //_maximumFlingVelocity = viewConfig.ScaledMaximumFlingVelocity;
+            //_minimumFlingVelocity = viewConfig.ScaledMinimumFlingVelocity;
 
             RenderKit = renderKit;
             RenderKit.RegisterSurrogate<HtmlPanel>(GetHtmlPanelSurrogate);
@@ -70,12 +66,14 @@ namespace Das.Xamarin.Android
             // ReSharper disable once VirtualMemberCallInConstructor
             AddView(_paintView);
 
-            _inputHandler = new BaseInputHandler(RenderKit.RenderContext, this);
+            var inputHandler = new BaseInputHandler(RenderKit.RenderContext);
 
-            _gestureDetector = new GestureDetectorCompat(context, this);
-            _gestureDetector.SetOnDoubleTapListener(this);
+            _inputContext = new AndroidInputContext(this, context, inputHandler, this);
 
-            SetOnTouchListener(this);
+            //_gestureDetector = new GestureDetectorCompat(context, this);
+            //_gestureDetector.SetOnDoubleTapListener(this);
+
+            //SetOnTouchListener(inputContext);
         }
 
         private IVisualSurrogate GetHtmlPanelSurrogate(IVisualElement element)
@@ -123,190 +121,190 @@ namespace Das.Xamarin.Android
 
             var viewState = new AndroidViewState(view,displayMetrics);
 
-            var fontProvider = new AndroidFontProvider(displayMetrics);
+            var fontProvider = new AndroidFontProvider(displayMetrics, styleContext);
             return new AndroidRenderKit(new BasePerspective(), viewState,
                 fontProvider, windowManager, uiProvider, styleContext, displayMetrics);
         }
 
-        IPoint2D IInputProvider.CursorPosition { get; } = Point2D.Empty;
+        //IPoint2D IInputProvider.CursorPosition { get; } = Point2D.Empty;
 
-        Boolean IInputProvider.IsCapsLockOn => false;
+        //Boolean IInputProvider.IsCapsLockOn => false;
 
-        Boolean IInputProvider.AreButtonsPressed(KeyboardButtons button1,
-                                                 KeyboardButtons button2)
-        {
-            return false;
-        }
+        //Boolean IInputProvider.AreButtonsPressed(KeyboardButtons button1,
+        //                                         KeyboardButtons button2)
+        //{
+        //    return false;
+        //}
 
-        Boolean IInputProvider.AreButtonsPressed(KeyboardButtons button1,
-                                                 KeyboardButtons button2,
-                                                 KeyboardButtons button3)
-        {
-            return false;
-        }
+        //Boolean IInputProvider.AreButtonsPressed(KeyboardButtons button1,
+        //                                         KeyboardButtons button2,
+        //                                         KeyboardButtons button3)
+        //{
+        //    return false;
+        //}
 
-        Boolean IInputProvider.AreButtonsPressed(MouseButtons button1,
-                                                 MouseButtons button2)
-        {
-            return false;
-        }
+        //Boolean IInputProvider.AreButtonsPressed(MouseButtons button1,
+        //                                         MouseButtons button2)
+        //{
+        //    return false;
+        //}
 
-        Boolean IInputProvider.AreButtonsPressed(MouseButtons button1,
-                                                 MouseButtons button2,
-                                                 MouseButtons button3)
-        {
-            return false;
-        }
+        //Boolean IInputProvider.AreButtonsPressed(MouseButtons button1,
+        //                                         MouseButtons button2,
+        //                                         MouseButtons button3)
+        //{
+        //    return false;
+        //}
 
-        Boolean IInputProvider.IsButtonPressed(KeyboardButtons keyboardButton)
-        {
-            return false;
-        }
+        //Boolean IInputProvider.IsButtonPressed(KeyboardButtons keyboardButton)
+        //{
+        //    return false;
+        //}
 
-        Boolean IInputProvider.IsButtonPressed(MouseButtons mouseButton)
-        {
-            return false;
-        }
+        //Boolean IInputProvider.IsButtonPressed(MouseButtons mouseButton)
+        //{
+        //    return false;
+        //}
 
-        Boolean IInputContext.IsMousePresent => false;
+        //Boolean IInputContext.IsMousePresent => false;
 
-        public Double MaximumFlingVelocity => _maximumFlingVelocity;
+        //public Double MaximumFlingVelocity => _maximumFlingVelocity;
 
-        public Double MinimumFlingVelocity => _minimumFlingVelocity;
+        //public Double MinimumFlingVelocity => _minimumFlingVelocity;
 
-        public Boolean TryCaptureMouseInput(IVisualElement view)
-        {
-            return _inputHandler.TryCaptureMouseInput(view);
-        }
+        //public Boolean TryCaptureMouseInput(IVisualElement view)
+        //{
+        //    return _inputHandler.TryCaptureMouseInput(view);
+        //}
 
-        public Boolean TryReleaseMouseCapture(IVisualElement view)
-        {
-            return _inputHandler.TryReleaseMouseCapture(view);
-        }
+        //public Boolean TryReleaseMouseCapture(IVisualElement view)
+        //{
+        //    return _inputHandler.TryReleaseMouseCapture(view);
+        //}
 
-        public Boolean OnDoubleTap(MotionEvent? e)
-        {
-            return false;
-        }
+        //public Boolean OnDoubleTap(MotionEvent? e)
+        //{
+        //    return false;
+        //}
 
-        public Boolean OnDoubleTapEvent(MotionEvent? e)
-        {
-            return false;
-        }
+        //public Boolean OnDoubleTapEvent(MotionEvent? e)
+        //{
+        //    return false;
+        //}
 
-        public Boolean OnSingleTapConfirmed(MotionEvent? e)
-        {
-            return false;
-        }
+        //public Boolean OnSingleTapConfirmed(MotionEvent? e)
+        //{
+        //    return false;
+        //}
 
 
-        public Boolean OnDown(MotionEvent? e)
-        {
-            if (!(e is {} eve))
-                return false;
+        //public Boolean OnDown(MotionEvent? e)
+        //{
+        //    if (!(e is {} eve))
+        //        return false;
 
-            var pos = new ValuePoint2D(eve.GetX(), eve.GetY());
-            _leftButtonWentDown = pos;
+        //    var pos = new ValuePoint2D(eve.GetX(), eve.GetY());
+        //    _leftButtonWentDown = pos;
 
-            if (_inputHandler.OnMouseInput(new MouseDownEventArgs(
-                pos, MouseButtons.Left, this), InputAction.LeftMouseButtonDown))
-            {
-                Invalidate();
-                return true;
-            }
+        //    if (_inputHandler.OnMouseInput(new MouseDownEventArgs(
+        //        pos, MouseButtons.Left, this), InputAction.LeftMouseButtonDown))
+        //    {
+        //        Invalidate();
+        //        return true;
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        public Boolean OnFling(MotionEvent? e1,
-                               MotionEvent? e2,
-                               Single velocityX,
-                               Single velocityY)
-        {
-            if (e1 == null)
-                return false;
+        //public Boolean OnFling(MotionEvent? e1,
+        //                       MotionEvent? e2,
+        //                       Single velocityX,
+        //                       Single velocityY)
+        //{
+        //    if (e1 == null)
+        //        return false;
 
-            var pos = GetPosition(e1);
+        //    var pos = GetPosition(e1);
 
-            var vx = 0 - velocityX * 0.5;
-            var vy = 0 - velocityY * 0.5;
+        //    var vx = 0 - velocityX * 0.5;
+        //    var vy = 0 - velocityY * 0.5;
 
-            if (Math.Abs(vx) >= MinimumFlingVelocity ||
-                Math.Abs(vy) >= MinimumFlingVelocity)
-            {
-                var flingArgs = new FlingEventArgs(vx, vy, pos, this);
-                _inputHandler.OnMouseInput(flingArgs, InputAction.Fling);
-            }
+        //    if (Math.Abs(vx) >= MinimumFlingVelocity ||
+        //        Math.Abs(vy) >= MinimumFlingVelocity)
+        //    {
+        //        var flingArgs = new FlingEventArgs(vx, vy, pos, this);
+        //        _inputHandler.OnMouseInput(flingArgs, InputAction.Fling);
+        //    }
 
-            //var ags = new FlingEventArgs(0 - velocityX * 0.5, 0 - velocityY * 0.5, pos, this);
-            //if (_inputHandler.OnMouseInput(ags, InputAction.Fling))
-            //{
-            //    //Invalidate();
-            //}
+        //    //var ags = new FlingEventArgs(0 - velocityX * 0.5, 0 - velocityY * 0.5, pos, this);
+        //    //if (_inputHandler.OnMouseInput(ags, InputAction.Fling))
+        //    //{
+        //    //    //Invalidate();
+        //    //}
             
-            return true;
-        }
+        //    return true;
+        //}
 
-        public void OnLongPress(MotionEvent? e)
-        {
-        }
+        //public void OnLongPress(MotionEvent? e)
+        //{
+        //}
 
-        public Boolean OnScroll(MotionEvent? e1,
-                                MotionEvent? e2,
-                                Single distanceX,
-                                Single distanceY)
-        {
-            if (e1 == null || e2 == null)
-                return false;
+        //public Boolean OnScroll(MotionEvent? e1,
+        //                        MotionEvent? e2,
+        //                        Single distanceX,
+        //                        Single distanceY)
+        //{
+        //    if (e1 == null || e2 == null)
+        //        return false;
 
-            var start = GetPosition(e1);
-            var last = GetPosition(e2);
+        //    var start = GetPosition(e1);
+        //    var last = GetPosition(e2);
 
-            var delta = new ValueSize(0 - distanceX, 0 - distanceY);
+        //    var delta = new ValueSize(0 - distanceX, 0 - distanceY);
 
-            var dragArgs = new Das.Views.Input.DragEventArgs(start, last, delta,
-                _leftButtonWentDown != null ? MouseButtons.Left : MouseButtons.Right,
-                this);
-            if (_inputHandler.OnMouseInput(dragArgs, InputAction.MouseDrag))
-            {
-                //Invalidate();
-            }
+        //    var dragArgs = new Das.Views.Input.DragEventArgs(start, last, delta,
+        //        _leftButtonWentDown != null ? MouseButtons.Left : MouseButtons.Right,
+        //        this);
+        //    if (_inputHandler.OnMouseInput(dragArgs, InputAction.MouseDrag))
+        //    {
+        //        //Invalidate();
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        public void OnShowPress(MotionEvent? e)
-        {
-        }
+        //public void OnShowPress(MotionEvent? e)
+        //{
+        //}
 
-        public Boolean OnSingleTapUp(MotionEvent? e)
-        {
-            if (e == null)
-                return false;
+        //public Boolean OnSingleTapUp(MotionEvent? e)
+        //{
+        //    if (e == null)
+        //        return false;
 
-            var pos = GetPosition(e);
-            if (_inputHandler.OnMouseInput(new MouseUpEventArgs(
-                pos, _leftButtonWentDown, MouseButtons.Left, this), 
-                InputAction.LeftMouseButtonUp))
-                Invalidate();
-            return false;
-        }
+        //    var pos = GetPosition(e);
+        //    if (_inputHandler.OnMouseInput(new MouseUpEventArgs(
+        //        pos, _leftButtonWentDown, MouseButtons.Left, this), 
+        //        InputAction.LeftMouseButtonUp))
+        //        Invalidate();
+        //    return false;
+        //}
 
-        public Boolean OnTouch(View? v, MotionEvent? e)
-        {
-            if (e?.Action == MotionEventActions.Up)
-            {
-                // gesture detector not detecting anything for when you lift the finger after dragging
-                var pos = GetPosition(e);
-                if (_inputHandler.OnMouseInput(new MouseUpEventArgs(pos, 
-                    _leftButtonWentDown, MouseButtons.Left, this), InputAction.LeftMouseButtonUp))
-                {
-                    //Invalidate();
-                }
-            }
+        //public Boolean OnTouch(View? v, MotionEvent? e)
+        //{
+        //    if (e?.Action == MotionEventActions.Up)
+        //    {
+        //        // gesture detector not detecting anything for when you lift the finger after dragging
+        //        var pos = GetPosition(e);
+        //        if (_inputHandler.OnMouseInput(new MouseUpEventArgs(pos, 
+        //            _leftButtonWentDown, MouseButtons.Left, this), InputAction.LeftMouseButtonUp))
+        //        {
+        //            //Invalidate();
+        //        }
+        //    }
 
-            return _gestureDetector.OnTouchEvent(e);
-        }
+        //    return _gestureDetector.OnTouchEvent(e);
+        //}
 
 
         public T GetStyleSetter<T>(StyleSetter setter,
@@ -349,21 +347,21 @@ namespace Das.Xamarin.Android
 
         public override Boolean OnGenericMotionEvent(MotionEvent? e)
         {
-            _gestureDetector.OnTouchEvent(e);
+            _inputContext.OnGenericMotionEvent(e);
             return base.OnGenericMotionEvent(e);
         }
 
         public override Boolean OnTouchEvent(MotionEvent? e)
         {
-            _gestureDetector.OnTouchEvent(e);
+            _inputContext.OnTouchEvent(e);
             return base.OnTouchEvent(e);
         }
 
 
-        public sealed override void SetOnTouchListener(IOnTouchListener? l)
-        {
-            base.SetOnTouchListener(l);
-        }
+        //public sealed override void SetOnTouchListener(IOnTouchListener? l)
+        //{
+        //    base.SetOnTouchListener(l);
+        //}
 
         protected override void OnLayout(Boolean changed, 
                                          Int32 left, 
@@ -446,10 +444,10 @@ namespace Das.Xamarin.Android
             }
         }
 
-        private static ValuePoint2D GetPosition(MotionEvent eve)
-        {
-            return new ValuePoint2D(eve.GetX(), eve.GetY());
-        }
+        //private static ValuePoint2D GetPosition(MotionEvent eve)
+        //{
+        //    return new ValuePoint2D(eve.GetX(), eve.GetY());
+        //}
 
 
         private async Task RefreshLoop()
@@ -472,22 +470,20 @@ namespace Das.Xamarin.Android
                 {
                     sleepTime = Math.Min(++sleepTime, 50);
 
-                    if (sleepTime <= 5)
-                        System.Diagnostics.Debug.WriteLine("SKIP FRAME");
                     await Task.Delay(sleepTime);
                 }
 
             // ReSharper disable once FunctionNeverReturns
         }
 
-        private readonly GestureDetectorCompat _gestureDetector;
+        //private readonly GestureDetectorCompat _gestureDetector;
 
-        private readonly BaseInputHandler _inputHandler;
-        private readonly Int32 _maximumFlingVelocity;
-        private readonly Int32 _minimumFlingVelocity;
+        //private readonly BaseInputHandler _inputHandler;
+        //private readonly Int32 _maximumFlingVelocity;
+        //private readonly Int32 _minimumFlingVelocity;
         private readonly IView _view;
         private readonly IUiProvider _uiProvider;
-        private ValuePoint2D? _leftButtonWentDown;
+        //private ValuePoint2D? _leftButtonWentDown;
 
         private Int32 _refreshLoopCount;
 
@@ -498,5 +494,6 @@ namespace Das.Xamarin.Android
         private Size _measured;
         private ValueRectangle _targetRect;
         private readonly AndroidPaintView _paintView;
+        private readonly AndroidInputContext _inputContext;
     }
 }

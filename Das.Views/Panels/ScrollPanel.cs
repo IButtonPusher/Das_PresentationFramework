@@ -50,15 +50,17 @@ namespace Das.Views.Panels
                 : ValueMinMax.Empty;
         }
 
-        //Double IFlingHost.MinimumFlingVertical => 0;
-
-        //Double IFlingHost.MinimumFlingHorizontal => 0;
 
         void IFlingHost.OnFlingStarting(Double totalHorizontalChange,
                                         Double totalVerticalChange)
         {
-            Debug.WriteLine("**Starting fling when y scroll: " + VerticalOffset +
-                            " delta: " + totalVerticalChange);
+            if (totalVerticalChange.IsNotZero())
+                Debug.WriteLine("**Starting fling when y scroll: " + VerticalOffset +
+                                " delta: " + totalVerticalChange);
+
+            if (totalHorizontalChange.IsNotZero())
+                Debug.WriteLine("**Starting fling when x scroll: " + HorizontalOffset +
+                                " delta: " + totalHorizontalChange);
 
             OnScrollTransitionStarting?.Invoke(totalHorizontalChange, totalVerticalChange);
         }
@@ -72,6 +74,10 @@ namespace Das.Views.Panels
         public void OnFlingEnded(Boolean wasCancelled)
         {
             Debug.WriteLine("***end of fling v-offset: " + VerticalOffset + "***");
+
+            if (_inputContext is { } inputContext)
+                inputContext.TryReleaseMouseCapture(this);
+
             OnScrollTransitionEnded?.Invoke();
         }
 
@@ -83,6 +89,15 @@ namespace Das.Views.Panels
                 //todo: only use drag in a touch-only scenario?
                 return false;
 
+            var isCapture = (IsScrollsHorizontal && Math.Abs(args.TotalDragged.X) > MOUSE_CAPTURE_THRESHOLD) ||
+                            (IsScrollsVertical && Math.Abs(args.TotalDragged.Y) > MOUSE_CAPTURE_THRESHOLD);
+
+            if (isCapture)
+            {
+                _inputContext = args.InputContext;
+                _inputContext.TryCaptureMouseInput(this);
+            }
+
             OnScroll(args.LastChange.Width, 0 - args.LastChange.Height);
 
             return true;
@@ -90,7 +105,18 @@ namespace Das.Views.Panels
 
         public Boolean OnInput(FlingEventArgs args)
         {
-            return _flingHandler.OnInput(args);
+            if (!IsScrollWithMouseDrag)
+                return false;
+
+            var working = _flingHandler.OnInput(args);
+
+            //if (working)
+            //{
+            //    _inputContext = args.InputContext;
+            //    _inputContext.TryCaptureMouseInput(this);
+            //}
+
+            return working;
         }
 
 
@@ -101,6 +127,24 @@ namespace Das.Views.Panels
 
         public Boolean OnInput(MouseUpEventArgs args)
         {
+            if (args.PositionWentDown == null ||
+                args.InputContext.GetVisualWithMouseCapture() != this)
+                return false;
+
+            if (IsScrollsHorizontal)
+            {
+                var diffX = args.PositionWentDown.X - args.Position.X;
+                if (Math.Abs(diffX) >= MOUSE_UP_MOVE_THRESHOLD)
+                    return true;
+            }
+
+            if (IsScrollsVertical)
+            {
+                var diffY = args.PositionWentDown.Y - args.Position.Y;
+                if (Math.Abs(diffY) >= MOUSE_UP_MOVE_THRESHOLD)
+                    return true;
+            }
+
             //Debug.WriteLine("mouse up: " + args.Position);
             return false;
         }
@@ -213,7 +257,13 @@ namespace Das.Views.Panels
                 ? Convert.ToInt32(Math.Max(_lastNeeded.Width - _lastAvailable.Width, 0))
                 : 0;
 
+            //GetMeasureSpace(measureContext, availableSpace,
+            //    out _,
+            //    out var mySize);
+
             return _lastNeeded;
+
+            //return _lastNeeded;
         }
 
         protected virtual void OnScroll(Double deltaX,
@@ -221,7 +271,6 @@ namespace Das.Views.Panels
         {
             if (deltaY.IsNotZero() && IsScrollsVertical)
             {
-
                 var nextYScroll = VerticalOffset + deltaY;
                 if (VerticalOffset < 0)
                     VerticalOffset = 0;
@@ -230,13 +279,6 @@ namespace Das.Views.Panels
                 else
                     VerticalOffset = Convert.ToInt32(nextYScroll);
             }
-
-
-            //if (deltaY != 0 && IsScrollsVertical)
-            //    VerticalOffset = Convert.ToInt32(
-            //        Math.Min(
-            //            Math.Max(VerticalOffset + deltaY, 0),
-            //            _maximumYScroll));
 
             if (!deltaX.IsNotZero() || !IsScrollsHorizontal)
                 return;
@@ -261,7 +303,7 @@ namespace Das.Views.Panels
 
         private void OnOffsetChanged(Int32 val)
         {
-            Debug.WriteLine("vert offset is now " + val);
+            //Debug.WriteLine("vert offset is now " + val);
 
             InvalidateArrange();
             //InvalidateMeasure();
@@ -285,5 +327,11 @@ namespace Das.Views.Panels
         private Int32 _maximumYScroll;
         private ScrollMode _scrollMode;
         private Int32 _verticalOffset;
+
+        private IInputContext? _inputContext;
+
+        private const Double MOUSE_UP_MOVE_THRESHOLD = 10.0;
+
+        private const Double MOUSE_CAPTURE_THRESHOLD = 50.0;
     }
 }

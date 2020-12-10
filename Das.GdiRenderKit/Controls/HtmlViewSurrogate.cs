@@ -165,6 +165,12 @@ namespace Das.Views.Gdi.Controls
             set => _htmlPanel.Background = value;
         }
 
+        Thickness? IVisualElement.Margin
+        {
+            get => _htmlPanel.Margin;
+            set => _htmlPanel.Margin = value;
+        }
+
         private readonly WebBrowser _browser;
         private readonly Control _hostingControl;
         private readonly HtmlPanel _htmlPanel;

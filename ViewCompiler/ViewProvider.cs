@@ -16,6 +16,7 @@ namespace ViewCompiler
             _builder = new ViewBuilderProvider(serializer);
 
             TypeInferrer = serializer.TypeInferrer;
+            ViewDeserializer = serializer;
         }
 
         public async Task<IView> GetView(FileInfo file)
@@ -26,9 +27,10 @@ namespace ViewCompiler
 
         private readonly ViewBuilderProvider _builder;
         public ITypeInferrer TypeInferrer { get; }
+        public ViewDeserializer ViewDeserializer { get; }
 
         
-        public static ViewDeserializer GetViewDeserializer()
+        protected static ViewDeserializer GetViewDeserializer()
         {
             //var settings = DasSettings.Default;
             //settings.TypeSearchNameSpaces = new[]

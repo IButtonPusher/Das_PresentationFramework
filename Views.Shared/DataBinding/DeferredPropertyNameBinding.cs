@@ -26,5 +26,9 @@ namespace Das.Views.DataBinding
             return _propertyName;
         }
 
+        public override Object Clone()
+        {
+            return new DeferredPropertyNameBinding<T>(_propertyName);
+        }
     }
 }

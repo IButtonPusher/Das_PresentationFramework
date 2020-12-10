@@ -11,7 +11,5 @@ namespace Das.Views
 
         TVisualElement BuildVisual<TVisualElement>(Object? dataContext)
             where TVisualElement : IVisualElement;
-
-        //IVisualElement Template { get; }
     }
 }

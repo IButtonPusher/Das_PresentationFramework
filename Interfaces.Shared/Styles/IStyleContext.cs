@@ -35,5 +35,7 @@ namespace Das.Views.Styles
         void PushVisual(IVisualElement visual);
 
         IVisualElement PopVisual();
+
+        IVisualElement? PeekVisual();
     }
 }

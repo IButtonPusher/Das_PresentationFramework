@@ -19,17 +19,9 @@ namespace Das.Views
 
         TVisualElement Instantiate<TVisualElement>(Type type)
             where TVisualElement : IVisualElement;
-
-        //TBindableElement Instantiate<TBindableElement>(Type type,
-        //                                               IDataBinding? binding)
-        //    where TBindableElement : IBindableElement;
-
-
-        //TVisualElement Instantiate<TVisualElement>()
-        //    where TVisualElement : IVisualElement;
-
-        //IBindableElement Instantiate(Type type,
-        //                             Object dataContext);
+        
+        TVisualElement Instantiate<TVisualElement>()
+            where TVisualElement : IVisualElement;
 
         /// <summary>
         /// Instantiates a new instance of the provided visual,
@@ -38,6 +30,11 @@ namespace Das.Views
         TVisualElement InstantiateCopy<TVisualElement>(TVisualElement visual,
                                                        Object? dataContext)
             where TVisualElement : IVisualElement;
+        
+        TVisualElement InstantiateCopy<TVisualElement, TViewModel>(TVisualElement visual,
+                                                                   TViewModel dataContext)
+            where TVisualElement : IBindableElement<TViewModel>;
+        
 
         IUiProvider UiProvider { get; }
     }

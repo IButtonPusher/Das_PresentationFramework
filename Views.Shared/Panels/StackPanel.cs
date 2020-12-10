@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Views.DataBinding;
 using Das.Views.Rendering;
@@ -26,10 +25,11 @@ namespace Das.Views.Panels
             return pnl;
         }
 
+      
         public override void Dispose()
         {
             base.Dispose();
-            Children.Dispose();
+            _children.Dispose();
 
             //foreach (var child in Children)
             //    child.Dispose();

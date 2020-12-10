@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Das.Extensions;
 
 namespace Das.Views.Core.Geometry

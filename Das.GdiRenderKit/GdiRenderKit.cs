@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Container;
+using Das.Serializer;
 using Das.Views;
 using Das.Views.Controls;
 using Das.Views.Core;
@@ -26,7 +27,7 @@ namespace Das.Gdi.Kits
                             IWindowProvider<IVisualHost> windowProvider,
                             IStyleContext styleContext,
                             IResolver container)
-        : base(container, styleContext)
+        : base(container, styleContext, Serializer.AttributeParser, Serializer.TypeInferrer)
         {
             _windowProvider = windowProvider;
             // ReSharper disable once VirtualMemberCallInConstructor
@@ -88,8 +89,7 @@ namespace Das.Gdi.Kits
                 _windowControl = ctrl.Controls[0];
             else throw new InvalidOperationException();
 
-            _inputContext = new InputContext(window, new BaseInputHandler(RenderContext,
-                this));
+            _inputContext = new InputContext(window, new BaseInputHandler(RenderContext), ctrl.Handle);
         }
 
       
@@ -99,6 +99,8 @@ namespace Das.Gdi.Kits
         private IVisualHost? _window;
         private Control? _windowControl;
         private readonly GdiImageProvider _imageProvider;
+
+        protected static readonly DasSerializer Serializer = new DasSerializer();
 
         public Double ZoomLevel => RenderContext.ViewState?.ZoomLevel ?? 1;
     }
