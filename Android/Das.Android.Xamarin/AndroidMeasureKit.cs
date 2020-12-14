@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Android.Util;
 using Android.Views;
 using Das.Extensions;
+using Das.Views;
 using Das.Views.Controls;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;

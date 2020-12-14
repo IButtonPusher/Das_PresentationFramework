@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Das.Views.DataBinding;
 using Das.Views.Mvvm;
 using Das.Views.Panels;
 
@@ -69,6 +70,23 @@ namespace Das.Views.Collections
 
             changed.Invoke(this, new NotifyCollectionChangedEventArgs
                 (NotifyCollectionChangedAction.Reset));
+        }
+
+        public void DistributeDataContext(Object? dataContext)
+        {
+            lock (_lockChildren)
+            {
+                foreach (var child in _children)
+                {
+                    if (!(child is IBindableElement bindable))
+                        continue;
+
+                    //if (bindable.TryGetDataContextBinding(out var dbBinding))
+                    //    dbBinding.UpdateDataContext(dataContext);
+                    //else
+                        bindable.DataContext = dataContext;
+                }
+            }
         }
 
         public void AddRange(IEnumerable<TVisual> elements)

@@ -4,8 +4,7 @@
   <TabControl ItemsSource="{Binding Employees}"
               SelectedItem="{Binding SelectedEmployee}">
     <ContentTemplate>
-      <UniformRepeaterPanel VisualConstraint="IBindableElement[AddressVm]"
-                            ItemsSource="{Binding Addresses}">
+      <UniformRepeaterPanel ItemsSource="{Binding Addresses}">
         <Label Text="{Binding HouseNumber}" />
         <Label Text="{Binding Street}" />
         <Label Text="{Binding City}" />

@@ -4,6 +4,7 @@ using Android.Content;
 using Android.Support.V4.View;
 using Android.Views;
 using Das.Extensions;
+using Das.Views;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Input;
 using Das.Views.Input;

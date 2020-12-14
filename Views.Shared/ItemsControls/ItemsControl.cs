@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Das.Views.Defaults;
 using Das.Views.Mvvm;
 using Das.Views.Panels;
-using Das.Views.Rendering;
 
 namespace Das.Views
 {
@@ -17,7 +16,7 @@ namespace Das.Views
         public ItemsControl(IVisualBootstrapper visualBootstrapper) 
             : base(visualBootstrapper)
         {
-            _defaultTemplate = new DefaultContentTemplate(visualBootstrapper, null);
+            _defaultTemplate = new DefaultContentTemplate(visualBootstrapper);
             _itemTemplate = _defaultTemplate;
         }
 
@@ -63,42 +62,46 @@ namespace Das.Views
             e.HandleCollectionChanges<Object>(RemoveOldItems, AddNewItems, ClearVisuals);
             InvalidateMeasure();
         }
+        
+        protected abstract void AddNewItems(IEnumerable<Object> items);
 
-        protected virtual async void AddNewItems(IEnumerable<Object> items)
-        {
-            foreach (var item in items)
-            {
-                var visual = _itemTemplate.BuildVisual(item) ?? throw new NullReferenceException();
+        //protected virtual void AddNewItems(IEnumerable<Object> items)
+        //{
+        //    foreach (var item in items)
+        //    {
+        //        var visual = _itemTemplate.BuildVisual(item) ?? throw new NullReferenceException();
 
-                if (visual is INotifyPropertyChanged notifier)
-                    notifier.PropertyChanged += OnVisualChildPropertyChanged;
-                await AddNewVisualAsync(visual);
-            }
-        }
+        //        if (visual is INotifyPropertyChanged notifier)
+        //            notifier.PropertyChanged += OnVisualChildPropertyChanged;
+        //        await AddNewVisualAsync(visual);
+        //    }
+        //}
 
         protected abstract void ClearVisuals();
 
-        protected abstract Task AddNewVisualAsync(IVisualElement element);
+        protected abstract void RemoveOldItems(IEnumerable<Object> obj);
 
-        protected abstract IVisualElement? RemoveVisual(Object removing);
+        //protected abstract Task AddNewVisualAsync(IVisualElement element);
 
-        protected virtual void RemoveOldItems(IEnumerable<Object> obj)
-        {
-            foreach (var rip in obj)
-            {
-                var rem = RemoveVisual(rip);
+        //protected abstract IVisualElement? RemoveVisual(Object removing);
 
-                //var rem = TabItems.FirstOrDefault(t =>
-                //    t is IBindableElement bindable && bindable.DataContext == rip);
-                if (rem != null)
-                {
-                    if (rem is INotifyPropertyChanged notifier)
-                        notifier.PropertyChanged -= OnVisualChildPropertyChanged;
-                    //TabItems.Remove(rem);
-                    rem.Dispose();
-                }
-            }
-        }
+        //protected virtual void RemoveOldItems(IEnumerable<Object> obj)
+        //{
+        //    foreach (var rip in obj)
+        //    {
+        //        var rem = RemoveVisual(rip);
+
+        //        //var rem = TabItems.FirstOrDefault(t =>
+        //        //    t is IBindableElement bindable && bindable.DataContext == rip);
+        //        if (rem != null)
+        //        {
+        //            if (rem is INotifyPropertyChanged notifier)
+        //                notifier.PropertyChanged -= OnVisualChildPropertyChanged;
+        //            //TabItems.Remove(rem);
+        //            rem.Dispose();
+        //        }
+        //    }
+        //}
 
         protected void OnVisualChildPropertyChanged(Object sender, 
                                            PropertyChangedEventArgs e)

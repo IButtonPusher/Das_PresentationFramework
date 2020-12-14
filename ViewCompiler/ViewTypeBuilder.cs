@@ -45,10 +45,10 @@ namespace ViewCompiler
         private TypeBuilder GetBuilder(ViewBuilder viewBuilder, String viewName)
         {
             var bindingType = _serializer.TypeInferrer.GetTypeFromClearName(viewBuilder.Binding);
-            var viewInterface = typeof(View<>).MakeGenericType(bindingType);
+            //var viewInterface = typeof(View<>).MakeGenericType(bindingType);
 
             var typeBuilder = _codeGenerator.GetTypeBuilder(viewName);
-            typeBuilder.SetParent(viewInterface);
+            typeBuilder.SetParent(typeof(View));
             return typeBuilder;
         }
 

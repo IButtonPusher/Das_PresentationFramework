@@ -3,38 +3,37 @@ using Das.Views.DataBinding;
 
 namespace Das.Views.Panels
 {
-    public abstract class SelectorVisual<T> : ItemsControl<T>,
-                                              ISelector<T>
-    where T : IEquatable<T>
+    public abstract class SelectorVisual : ItemsControl,
+                                              ISelector
     {
         public SelectorVisual(IVisualBootstrapper visualBootstrapper) 
             : base(visualBootstrapper)
         {
         }
 
-        public static readonly DependencyProperty<ISelector<T>, T> SelectedItemProperty =
-            DependencyProperty<ISelector<T>, T>.Register(nameof(SelectedItem), default!);
+        public static readonly DependencyProperty<ISelector, Object?> SelectedItemProperty =
+            DependencyProperty<ISelector, Object?>.Register(nameof(SelectedItem), default);
 
         
 
-        public T SelectedItem
+        public Object? SelectedItem
         {
             get => SelectedItemProperty.GetValue(this);
             set => SelectedItemProperty.SetValue(this, value, OnSelectedItemChanging, 
                 OnSelectedItemChanged);
         }
 
-        public abstract IBindableElement<T>? SelectedVisual { get; set; }
+        public abstract IVisualElement? SelectedVisual { get; set; }
 
 
-        protected virtual void OnSelectedItemChanged(T oldValue,
-                                                     T newValue)
+        protected virtual void OnSelectedItemChanged(Object? oldValue,
+                                                     Object? newValue)
         {
             InvalidateMeasure();
         }
 
-        protected virtual Boolean OnSelectedItemChanging(T oldValue,
-                                                         T newValue)
+        protected virtual Boolean OnSelectedItemChanging(Object? oldValue,
+                                                         Object? newValue)
         {
 
             return true;

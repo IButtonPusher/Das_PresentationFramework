@@ -15,7 +15,8 @@ namespace Das.OpenGL
         public OpenGLRenderKit(IFontProvider fontProvider, 
                                IGLContext glContext,
                                IStyleContext styleContext)
-        : base(styleContext, Serializer.AttributeParser, Serializer.TypeInferrer)
+        : base(styleContext, Serializer.AttributeParser, 
+            Serializer.TypeInferrer, Serializer.TypeManipulator)
         {
             var lastMeasurements = new Dictionary<IVisualElement, ValueSize>();
             MeasureContext = new GLMeasureContext(fontProvider, this, 

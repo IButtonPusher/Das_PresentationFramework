@@ -353,16 +353,16 @@ namespace Das.Views.Styles
             IVisualElement element,
             out T found)
         {
-            var asDc = (element as IDataContext)?.Value;
+            //var asDc = (element as IBindable)?.DataContext;
 
             //foreach (var style in styles)
             {
                 Object? v = null;
 
-                if (asDc == null && !style.TryGetValue(setter, selector, out v))
+                if (!style.TryGetValue(setter, selector, out v))
                     goto failBoat;
-                if (asDc != null && !style.TryGetValue(setter, selector, asDc, out v))
-                    goto failBoat;
+                //if (asDc != null && !style.TryGetValue(setter, selector, out v))
+                //    goto failBoat;
 
                 switch (v)
                 {

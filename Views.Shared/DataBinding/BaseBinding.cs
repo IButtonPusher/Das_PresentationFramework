@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using Das.Serializer;
 using Das.Views.Rendering;
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
@@ -29,18 +30,79 @@ namespace Das.Views.DataBinding
 
     public abstract class BaseBinding : IDataBinding
     {
+        //public static IPropertyAccessor GetPropertyAccessorOrDie(Type declaringType,
+        //                                                         String propertyName)
+        //{
+
+        //}
+        
         public static PropertyInfo GetTypePropertyOrDie(Type declaringType,
                                                        String propertyName)
         {
-            return declaringType.GetProperty(propertyName)
-                   ?? throw new MissingMemberException(declaringType.FullName, propertyName);
+            return GetBindingProperty(declaringType, propertyName)
+                   ?? GetMissingProperty(declaringType, propertyName);
+        }
+        
+        public static PropertyInfo? GetBindingProperty(Type declaringType,
+                                                 String propName)
+        {
+            if (!propName.Contains(".")) 
+                return declaringType.GetProperty(propName);
+            
+            var subPropTokens = propName.Split('.');
+            var propInfo = declaringType.GetProperty(subPropTokens[0]);
+            if (propInfo == null)
+                return null;
+
+            for (var c = 1; c < subPropTokens.Length; c++)
+            {
+                propInfo =  propInfo.PropertyType.GetProperty(subPropTokens[c]);
+                if (propInfo == null)
+                    return null;
+            }
+
+            return propInfo;
         }
 
+        private static PropertyInfo GetMissingProperty(Type declaringType,
+                                                       String propName)
+        {
+            throw new MissingMemberException(declaringType.FullName, propName);
+        }
+        
+        public static Object? GetPropertyValue(Type declaringType,
+                                               String propName,
+                                               Object dataContext)
+        {
+            if (!propName.Contains("."))
+            {
+                var prop = GetTypePropertyOrDie(declaringType, propName);
+                return prop.GetValue(dataContext, null);
+            }
+
+            var subPropTokens = propName.Split('.');
+            var propInfo = GetTypePropertyOrDie(declaringType, subPropTokens[0]);
+
+            dataContext = propInfo.GetValue(dataContext, null);
+
+            for (var c = 1; c < subPropTokens.Length; c++)
+            {
+                propInfo = GetTypePropertyOrDie(propInfo.PropertyType, subPropTokens[c]);
+                dataContext = propInfo.GetValue(dataContext, null);
+            }
+
+            return dataContext;
+        }
+
+        
+        
         protected static PropertyInfo GetObjectPropertyOrDie(Object declaringInstance,
                                                        String propertyName)
             => GetTypePropertyOrDie(declaringInstance.GetType(), propertyName);
 
         protected static readonly Object[] EmptyObjectArray = new Object[0];
+
+        public virtual Boolean IsDataContextBinding => throw new NotImplementedException();
 
         public abstract Object? GetBoundValue(Object? dataContext);
 
@@ -51,8 +113,13 @@ namespace Das.Views.DataBinding
 
         public virtual void UpdateDataContext(Object? dataContext) {}
 
+        public virtual void UpdateSource(Object? source)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual IDataBinding Update(Object? dataContext, 
-                                   IVisualElement targetVisual)
+                                           IVisualElement targetVisual)
         {
             UpdateDataContext(dataContext);
             return this;

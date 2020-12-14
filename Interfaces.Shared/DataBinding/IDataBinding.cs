@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Das.Views.Rendering;
 
 namespace Das.Views.DataBinding
 {
@@ -16,6 +15,11 @@ namespace Das.Views.DataBinding
     public interface IDataBinding : IDisposable,
                                     ICloneable
     {
+        /// <summary>
+        /// Returns whether this binding sets the target's DataContext.
+        /// </summary>
+        Boolean IsDataContextBinding { get; }
+        
         Object? GetBoundValue(Object? dataContext);
 
         /// <summary>
@@ -27,6 +31,9 @@ namespace Das.Views.DataBinding
 
         void UpdateDataContext(Object? dataContext);
 
+        void UpdateSource(Object? source);
+        
+        
         IDataBinding Update(Object? dataContext,
                     IVisualElement targetVisual);
 

@@ -5,24 +5,26 @@ using Das.Views.Rendering;
 
 namespace Das.Views.Panels
 {
-    public class UniformStackPanel<T> : BaseSequentialPanel<T>
+    public class UniformStackPanel : BaseSequentialPanel
     {
-        public UniformStackPanel(IVisualBootstrapper templateResolver) 
-            : this(null, templateResolver)
-        {
-        }
+        //public UniformStackPanel(IVisualBootstrapper templateResolver) 
+        //    : this(null, templateResolver)
+        //{
+        //}
 
-        public UniformStackPanel(IDataBinding<T>? binding,
+        public UniformStackPanel(//IDataBinding<T>? binding,
                                  IVisualBootstrapper visualBootstrapper) 
-            : this(binding, visualBootstrapper, new VisualCollection())
-            //: base(binding, visualBootstrapper, new SequentialUniformRenderer())
+            //: this(binding, visualBootstrapper, new VisualCollection())
+                : this(visualBootstrapper, new VisualCollection())
+            
         {
         }
 
-        private UniformStackPanel(IDataBinding<T>? binding,
+        private UniformStackPanel(//IDataBinding<T>? binding,
                                  IVisualBootstrapper visualBootstrapper,
-                                 IVisualCollection children) :
-            base(binding, visualBootstrapper, children, new SequentialUniformRenderer(children))
+                                 IVisualCollection children)
+            //: base(binding, visualBootstrapper, children, new SequentialUniformRenderer(children))
+                : base(visualBootstrapper, children, new SequentialUniformRenderer(children))
         {
         }
 

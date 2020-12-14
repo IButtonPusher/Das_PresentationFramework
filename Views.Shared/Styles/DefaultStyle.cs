@@ -11,10 +11,15 @@ using Das.Views.Rendering;
 
 namespace Das.Views.Styles
 {
-    public class DefaultStyle : Style, IStyleSheet
+    public sealed class DefaultStyle : StyleBase, //Style, 
+                                IStyleSheet
     {
-        public DefaultStyle()
+        public static DefaultStyle Instance = new DefaultStyle();
+        
+        private DefaultStyle()
         {
+            //_setters = new Dictionary<AssignedStyle, Object?>()
+            
             var font = new Font(10, FontName, FontStyle.Regular);
 
             this[StyleSetter.Margin] = new Thickness(0);
@@ -61,5 +66,42 @@ namespace Das.Views.Styles
         public IDictionary<Type, IStyle> VisualTypeStyles { get; }
 
         public const String FontName = "Segoe UI";
+
+        public Object? this[StyleSetter setter]
+        {
+            get => TryGetValue(setter, StyleSelector.None, out var found)
+                ? found
+                : default;
+            private set => AddSetterImpl(setter, value);
+        }
+
+        public Object? this[StyleSetter setter,
+                                    StyleSelector selector]
+        {
+            get => TryGetValue(setter, selector, out var found)
+                ? found
+                : default;
+            private set => AddImpl(setter, selector, value);
+        }
+
+
+        void IStyle.Add(StyleSetter setter, 
+                        StyleSelector selector, 
+                        Object? value)
+        {
+            throw new NotSupportedException();
+        }
+
+        void IStyle.AddOrUpdate(IStyle style)
+        {
+            throw new NotSupportedException();
+        }
+
+        void IStyle.AddSetter(StyleSetter setter, Object? value)
+        {
+            throw new NotSupportedException();
+        }
+        
+        //protected readonly Dictionary<AssignedStyle, Object?> _setters;
     }
 }

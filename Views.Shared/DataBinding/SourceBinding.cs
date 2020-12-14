@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Reflection;
 using System.Threading.Tasks;
+using Das.Serializer;
 using Das.ViewModels;
 using Das.Views.Mvvm;
 
@@ -20,19 +21,22 @@ namespace Das.Views.DataBinding
 
         public SourceBinding(Object source,
                              String sourceProperty,
-                             IBindableElement target,
+                             IVisualElement target,
                              String targetProperty,
-                             IValueConverter? valueConverter)
+                             IValueConverter? valueConverter,
+                             IPropertyAccessor sourcePropertyAccessor)
         : this(source, 
             GetObjectPropertyOrDie(source, sourceProperty),
             target,
-            GetObjectPropertyOrDie(target, targetProperty), valueConverter) { }
+            GetObjectPropertyOrDie(target, targetProperty), 
+            valueConverter, sourcePropertyAccessor) { }
 
         public SourceBinding(Object? source,
                              PropertyInfo srcProp,
-                             IBindableElement target,
+                             IVisualElement target,
                              PropertyInfo targetProp,
-                             IValueConverter? valueConverter)
+                             IValueConverter? valueConverter,
+                             IPropertyAccessor sourcePropertyAccessor)
         {
             ValueConverter = valueConverter;
             _source = source;
@@ -40,6 +44,7 @@ namespace Das.Views.DataBinding
             _sourcePropertyName = srcProp.Name;
             _target = target;
             _targetProp = targetProp;
+            _sourcePropertyAccessor = sourcePropertyAccessor;
             _targetPropertyName = targetProp.Name;
 
             _sourceGetter = srcProp.GetGetMethod()
@@ -100,7 +105,7 @@ namespace Das.Views.DataBinding
         public override Object Clone()
         {
             return new SourceBinding(_source, _srcProp, _target, _targetProp,
-                ValueConverter);
+                ValueConverter, _sourcePropertyAccessor);
         }
 
         public override Object? GetBoundValue(Object? dataContext)
@@ -114,6 +119,23 @@ namespace Das.Views.DataBinding
             SetTargetValue(value);
         }
 
+        private Boolean TryGetGenericCollectionArgument(Type valueType,
+                                                               out Type germane)
+        {
+            if (valueType.IsGenericType)
+            {
+                var gargs = valueType.GetGenericArguments();
+                if (gargs.Length == 1)
+                {
+                    germane = gargs[0];
+                    return true;
+                }
+            }
+
+            germane = default!;
+            return false;
+        }
+        
         protected void SetTargetValue(Object? value)
         {
             if (_targetSetter == null)
@@ -132,14 +154,29 @@ namespace Das.Views.DataBinding
                 
                 if (valueValue is IEnumerable valCollection)
                 {
-                    if (targetType.IsInterface && targetType.IsGenericType &&
-                        targetType.GetGenericTypeDefinition() == typeof(INotifyingCollection<>))
+                    if (targetType.IsInterface)
                     {
-                        //treat the target property type like a concrete version of a notifying collection
-
-                        targetType = typeof(AsyncObservableCollection2<>).MakeGenericType(
-                            targetType.GetGenericArguments()[0]);
+                        if (TryGetGenericCollectionArgument(valType, out var germane) ||
+                            TryGetGenericCollectionArgument(_srcProp.PropertyType, out germane))
+                        {
+                            targetType = typeof(AsyncObservableCollection2<>).MakeGenericType(germane);
+                        }
                     }
+                    
+                    //if (targetType.IsInterface &&
+                    //    targetType == typeof(INotifyingCollection) &&
+                    //    valType.IsGenericType)
+                    //    //targetType.GetGenericTypeDefinition() == typeof(INotifyingCollection))
+                    //{
+                    //    //treat the target property type like a concrete version of a notifying collection
+
+                    //    var gargs = valType.GetGenericArguments();
+                    //    if (gargs.Length == 1)
+                    //    {
+
+                    //        targetType = typeof(AsyncObservableCollection2<>).MakeGenericType(gargs[0]);
+                    //    }
+                    //}
 
                     foreach (var targetCtor in targetType.GetConstructors())
                     {
@@ -194,7 +231,10 @@ namespace Das.Views.DataBinding
         
         public Object? GetSourceValue(Object? dataContext)
         {
-            var val = _sourceGetter.Invoke(dataContext, EmptyObjectArray);
+            var val = dataContext != null 
+                ? _sourcePropertyAccessor.GetPropertyValue(dataContext)
+                : default;
+            //var val = _sourceGetter.Invoke(dataContext, EmptyObjectArray);
             if (!(ValueConverter is { } converter))
                 return val;
 
@@ -241,8 +281,9 @@ namespace Das.Views.DataBinding
         //protected INotifyPropertyChanged? _source;
         protected Object? _source;
         private readonly PropertyInfo _srcProp;
-        protected readonly IBindableElement _target;
+        protected readonly IVisualElement _target;
         private readonly PropertyInfo _targetProp;
+        private readonly IPropertyAccessor _sourcePropertyAccessor;
 
         private readonly MethodInfo _sourceGetter;
         private readonly MethodInfo _targetGetter;

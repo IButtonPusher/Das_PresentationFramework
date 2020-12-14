@@ -1,8 +1,10 @@
 ﻿using System;
 using Das.Views;
+using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Windows;
 using Das.Views.Mvvm;
+using Das.Views.Styles;
 
 namespace Das.OpenGL.Windows
 {
@@ -20,15 +22,17 @@ namespace Das.OpenGL.Windows
         }
 
         public GLForm Show<TViewModel>(TViewModel viewModel, 
-                                       IView view)
-            where TViewModel : IViewModel
+                                       IBindableElement view)
+            //where TViewModel : IViewModel
         {
-            var styleContext = view.StyleContext;
+            //var styleContext = view.StyleContext;
+            var styleContext = new DefaultStyleContext();
 
             var control = new GLHostedElement(view, styleContext);
             var form = new GLForm(control);
 
-            view.SetDataContext(viewModel);
+            view.DataContext = viewModel;
+            //view.SetDataContext(viewModel);
 
             WindowShown?.Invoke(form);
 
@@ -36,23 +40,24 @@ namespace Das.OpenGL.Windows
         }
 
         public GLForm Show<TViewModel>(TViewModel viewModel, 
-                                       IView<TViewModel> view) 
-            where TViewModel : IViewModel
+                                       IView view) 
+            //where TViewModel : IViewModel
         {
             var styleContext = view.StyleContext;
 
             var control = new GLHostedElement(view, styleContext);
             var form = new GLForm(control);
 
-            view.SetDataContext(viewModel);
+            view.DataContext = viewModel;
+            //view.SetDataContext(viewModel);
 
             WindowShown?.Invoke(form);
 
             return form;
         }
 
-        public GLForm Show<TViewModel>(IView<TViewModel> view) 
-            where TViewModel : IViewModel
+        public GLForm Show<TViewModel>(IView view) 
+            //where TViewModel : IViewModel
         {
             return Show(view.DataContext, view);
         }

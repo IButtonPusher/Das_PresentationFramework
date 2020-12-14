@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IViewInflater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IButtonBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IControlTemplate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ILabel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IToggleButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IVisualSurrogate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IVisualSurrogateProvider.cs" />
@@ -56,6 +57,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueCube.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueIntRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueMinMax.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IBindable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IBindableContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IBindableElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IVisualPropertySetter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IDependencyProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IDependencyProperty{TT}.cs" />
@@ -64,15 +68,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Input\IFlingHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IMouseCaptureManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\IItemsControl.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\IItemsControl{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ISelector.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ISelector{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ITabControl.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ITabControl{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IWindowNotifier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mvvm\INotifyingCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mvvm\INotifyingCollection{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IContainerVisual.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\IContentContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IContentPresenter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IPanelElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IVisualCollection.cs" />
@@ -110,10 +112,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\IFontProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\IFontRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\IStringRenderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IBindableElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IBindingSetter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IDataBinding.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IDataContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataBinding\IValueConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hosting\IHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hosting\IViewHost.cs" />
@@ -146,7 +146,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IVisibilityMutable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mvvm\NotifyPropertyChangedBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IBoundElementContainer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Panels\IContentContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IRepeaterPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\ISequentialPanel.cs" />

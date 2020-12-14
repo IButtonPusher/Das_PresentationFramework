@@ -1,45 +1,47 @@
-﻿using Das.Views.Rendering;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
 using Das.Views.Collections;
-using Das.Views.DataBinding;
 using Das.Views.Defaults;
 using Das.Views.Mvvm;
+using Das.Views.Templates;
 
 namespace Das.Views.Panels
 {
-    public abstract class ItemsControl<TVisual, TDataContext> : BasePanel<TVisual, TDataContext>,
+    public abstract class ItemsControl<TVisual, TDataContext> : BasePanel<TDataContext>,
                                                                 IItemsControl<TVisual>
-        where TVisual : IVisualElement
+        //where TVisual : IVisualElement
     {
         
-        protected ItemsControl(IDataBinding<TDataContext>? binding, 
+        protected ItemsControl(//IDataBinding<TDataContext>? binding, 
                                IVisualBootstrapper visualBootstrapper,
-                               IVisualCollection<TVisual> children) 
-            : base(binding, visualBootstrapper, children)
+                               IVisualCollection children) 
+            : base(//binding, 
+                visualBootstrapper, children)
         {
-            _defaultTemplate = new DefaultContentTemplate(visualBootstrapper, this);
+            _defaultTemplate = new DefaultContentTemplate<TVisual>(visualBootstrapper);//, this);
             _itemTemplate = _defaultTemplate;
         }
 
-        protected ItemsControl(IDataBinding<TDataContext>? binding,
+        protected ItemsControl(//IDataBinding<TDataContext>? binding,
                                IVisualBootstrapper visualBootstrapper)
-            : this(binding, visualBootstrapper, new VisualCollection<TVisual>())
+            : this(//binding, 
+                visualBootstrapper, new VisualCollection())
         {
 
         }
         
         
-        protected ItemsControl(IVisualBootstrapper visualBootstrapper) 
-            : this(null, visualBootstrapper)
-        {
+        //protected ItemsControl(IVisualBootstrapper visualBootstrapper) 
+        //    : this(null, visualBootstrapper)
+        //{
             
-        }
+        //}
 
         INotifyingCollection? IItemsControl.ItemsSource => ItemsSource;
+
+        IDataTemplate? IItemsControl.ItemTemplate => ItemTemplate;
 
         public INotifyingCollection<TVisual>? ItemsSource
         {
@@ -48,7 +50,7 @@ namespace Das.Views.Panels
                 OnItemsSourceChanging);
         }
 
-        public IDataTemplate? ItemTemplate
+        public IDataTemplate<TVisual>? ItemTemplate
         {
             get => _itemTemplate;
             set => SetValue(ref _itemTemplate,
@@ -79,7 +81,7 @@ namespace Das.Views.Panels
         
         
         private INotifyingCollection<TVisual>? _itemsSource;
-        private IDataTemplate _itemTemplate;
-        private readonly IDataTemplate _defaultTemplate;
+        private IDataTemplate<TVisual> _itemTemplate;
+        private readonly IDataTemplate<TVisual> _defaultTemplate;
     }
 }

@@ -5,7 +5,8 @@ using Das.Views.Core.Drawing;
 
 namespace Das.Views.Charting
 {
-    public interface IPieData<TKey, out TValue> where TValue : IConvertible
+    public interface IPieData<TKey, out TValue> 
+        where TValue : IConvertible
     {
         IDictionary<TKey, IBrush> ItemColors { get; }
 

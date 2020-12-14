@@ -28,6 +28,10 @@ namespace Das.Views.Panels
 
         Task RunOnEachChildAsync<TInput>(TInput input,
                                          Func<TInput, IVisualElement, Task> action);
+
+
+        void DistributeDataContext(Object? dataContext);
+
     }
 
    

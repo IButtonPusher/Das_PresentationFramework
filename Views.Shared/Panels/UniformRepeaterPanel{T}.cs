@@ -1,8 +1,9 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
-
+using System.Linq;
 using Das.Extensions;
 using Das.Views.Collections;
 using Das.Views.Core.Enums;
@@ -18,20 +19,20 @@ namespace Das.Views.Panels
     /// Panel where each child visual is displayed as a column and a row is generated
     /// for each T in the Data Context
     /// </summary>
-    /// <typeparam name="T">The type of the data context</typeparam>
-    /// <typeparam name="TVisual">The visual type that inherits from IBindableElement </typeparam>
-    public class UniformRepeaterPanel<TVisual, T> : ItemsControl<T>
-    where TVisual : IBindableElement<T>
+    /// <typeparam name="TDataContext">The type of the data context</typeparam>
+    // ReSharper disable once UnusedType.Global
+    public class UniformRepeaterPanel : ItemsControl
     {
-        public UniformRepeaterPanel(IDataBinding<T>? binding, 
+        public UniformRepeaterPanel(//IDataBinding<T>? binding, 
                                     IVisualBootstrapper visualBootstrapper, 
                                     IVisualCollection children) 
-            : base(binding, visualBootstrapper, children)
+            : base(//binding, 
+                visualBootstrapper)//, children)
         {
             _rows = new List<VisualCollection>();
             _columns = new List<VisualCollection>();
             
-            _dataContextRows = new Dictionary<T, VisualCollection>();
+            _dataContextRows = new Dictionary<Object, VisualCollection>();
             _columnRenderers = new Dictionary<IVisualElement, ColumnRenderer>();
             _columnIndexRenderers = new Dictionary<Int32, ColumnRenderer>();
             _rendererColumns = new Dictionary<ColumnRenderer, Int32>();
@@ -48,25 +49,24 @@ namespace Das.Views.Panels
 
        
 
-        public UniformRepeaterPanel(IDataBinding<T>? binding, 
+        public UniformRepeaterPanel(//IDataBinding<T>? binding, 
                                     IVisualBootstrapper visualBootstrapper) 
-            : this(binding, visualBootstrapper, 
+            : this(//binding, 
+                visualBootstrapper, 
                 new VisualCollection())
         {
             
         }
 
-        
-
-        public UniformRepeaterPanel(IVisualBootstrapper templateResolver) 
-            : this(null, templateResolver)
-        {
-        }
+        //public UniformRepeaterPanel(IVisualBootstrapper templateResolver) 
+        //    : this(null, templateResolver)
+        //{
+        //}
 
         protected override Object?  OnInterceptDataContextChanging(Object? oldValue, 
                                                                    Object? newValue)
         {
-            if (oldValue is INotifyingCollection<T> notifyingCollection)
+            if (oldValue is INotifyingCollection notifyingCollection)
                 notifyingCollection.CollectionChanged -= OnDataContextCollectionChanged;
             
             _children.RunOnEachChild(c =>
@@ -74,10 +74,10 @@ namespace Das.Views.Panels
                 if (!(c is IBindableElement b))
                     return;
 
-                b.DataContext = default;
+                b.DataContext = default!;
             });
 
-           DisposeRows();
+            ClearVisuals();
             
             return base.OnInterceptDataContextChanging(oldValue, newValue);
         }
@@ -85,7 +85,7 @@ namespace Das.Views.Panels
         private void OnDataContextCollectionChanged(Object sender, 
                                                     NotifyCollectionChangedEventArgs e)
         {
-            e.HandleCollectionChanges<T>(RemoveOldVms, AddNewRows, DisposeRows);
+            e.HandleCollectionChanges<Object>(RemoveOldItems, AddNewRows, ClearVisuals);
         }
 
         
@@ -128,8 +128,7 @@ namespace Das.Views.Panels
             InvalidateMeasure();
         }
 
-
-        private void RemoveOldVms(IEnumerable<T> removing)
+        protected override void RemoveOldItems(IEnumerable<Object> removing)
         {
             lock (_cellLock)
             {
@@ -149,12 +148,13 @@ namespace Das.Views.Panels
         
        
 
-        private void BuildCell(T vm,
-                                Int32 columnIndex,
-                                Int32 rowIndex)
+        private void BuildCell(Object vm,
+                               Int32 columnIndex,
+                               Int32 rowIndex)
         {
             switch (_children[columnIndex])
             {
+
                 case IVisualElement template:
                     var ctrl = _visualBootstrapper.InstantiateCopy(template, vm);
                     //var ctrl = (TVisual) template.DeepCopy();
@@ -205,15 +205,17 @@ namespace Das.Views.Panels
                 var newCol = new VisualCollection();
                 _columns.Add(newCol);
 
-                var renderer = new ColumnRenderer(newCol, GetRowHeight);
+                var renderer = new ColumnRenderer(newCol, 
+                    //GetRowHeight, 
+                    _rowHeights);
                 _columnRenderers[newItem] = renderer;
                 _columnIndexRenderers.Add(columnIndex, renderer);
                 _rendererColumns.Add(renderer, columnIndex);
                 _columnVisuals.Add(newItem, new VisualCollection());
 
-                if (DataContext is IEnumerable<T> valid)
+                if (DataContext is IEnumerable<Object> valid)
                 {
-                    var vms = new List<T>(valid);
+                    var vms = new List<Object>(valid);
 
                     for (var v = 0; v < vms.Count; v++)
                     {
@@ -235,7 +237,7 @@ namespace Das.Views.Panels
         /// 2. add each clone to the appropriate columns' control collection
         /// 3. add each clone to the new row's control collection
         /// </summary>
-        private void AddNewRows(IEnumerable<T> vmsAdding)
+        private void AddNewRows(IEnumerable<Object> vmsAdding)
         {
             lock (_cellLock)
             {
@@ -249,7 +251,7 @@ namespace Das.Views.Panels
 
                             var addControls = multi.BuildVisuals(null);
                             _children.AddRange(addControls);
-                            //AddNewColumns(addColumns, false);
+                            
                             break;
                         
                         case IDataTemplate dataTemplate:
@@ -271,8 +273,6 @@ namespace Das.Views.Panels
                     var newRow = new VisualCollection();
                     _rows.Add(newRow);
 
-                  
-                    
 
                     for (var c = 0; c < _children.Count; c++)
                     {
@@ -291,16 +291,17 @@ namespace Das.Views.Panels
 
         public override void Dispose()
         {
-            if (DataContext is INotifyingCollection<T> notifyingCollection)
+            if (DataContext is INotifyingCollection notifyingCollection)
                 notifyingCollection.CollectionChanged -= OnDataContextCollectionChanged;
             
             base.Dispose();
 
-            DisposeRows();
+            ClearVisuals();
         }
 
-        private void DisposeRows()
+        protected override void ClearVisuals()
         {
+            
             lock (_cellLock)
             {
                 foreach (var row in _rows)
@@ -311,6 +312,12 @@ namespace Das.Views.Panels
                 _dataContextRows.Clear();
                 
                 _rows.Clear();
+                
+                foreach (var colCollection in _columns)
+                {
+                    colCollection.Clear(true);
+                }
+                
                 _columnWidths.Clear();
                 _rowHeights.Clear();
             }
@@ -318,19 +325,17 @@ namespace Das.Views.Panels
 
         protected override void OnDistributeDataContextToChildren(Object? newValue)
         {
-            //base.OnDataContextChanged(newValue);
-
             switch (newValue)
             {
                 case null:
                     return;
                 
-                case INotifyingCollection<T> notifyingCollection:
+                case INotifyingCollection notifyingCollection:
                     notifyingCollection.CollectionChanged += OnDataContextCollectionChanged;
-                    AddNewRows(notifyingCollection);
+                    AddNewRows(notifyingCollection.OfType<Object>());
                     break;
                 
-                case IEnumerable<T> otherCollection:
+                case IEnumerable<Object> otherCollection:
                     AddNewRows(otherCollection);
                     break;
             }
@@ -433,7 +438,7 @@ namespace Das.Views.Panels
         private readonly Dictionary<IVisualElement, VisualCollection> _columnVisuals;
         
         private Double _totalWidthMeasured;
-        private readonly Dictionary<T, VisualCollection> _dataContextRows;
+        private readonly Dictionary<Object, VisualCollection> _dataContextRows;
         private readonly Dictionary<IVisualElement, ColumnRenderer> _columnRenderers;
         private readonly Dictionary<Int32, ColumnRenderer> _columnIndexRenderers;
         private readonly Dictionary<ColumnRenderer, Int32> _rendererColumns;
@@ -445,20 +450,15 @@ namespace Das.Views.Panels
         private readonly Dictionary<Int32, Double> _rowHeights;
 
 
-        protected override void OnItemsChanged(Object sender, 
-                                               NotifyCollectionChangedEventArgs e)
-        {
+        //protected override void OnItemsChanged(Object sender, 
+        //                                       NotifyCollectionChangedEventArgs e)
+        //{
             
-        }
+        //}
 
-        protected override void AddNewItems(IEnumerable<T> items)
+        protected override void AddNewItems(IEnumerable<Object> items)
         {
             AddNewRows(items);
         }
-
-        //protected override void AddNewItems(IEnumerable<T> items)
-        //{
-        //    //AddNewColumns(items);
-        //}
     }
 }

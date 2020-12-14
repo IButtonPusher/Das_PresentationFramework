@@ -47,17 +47,20 @@ namespace Das.Views.Defaults
 
             Background = _lastStyleContext.ColorPalette.Background.ToBrush();
 
-            var stackPanel = new UniformStackPanel<Object>(visualBootstrapper)
+            var stackPanel = new UniformStackPanel(visualBootstrapper)
             {
                 Orientation = Orientations.Horizontal
             };
 
+            var sourcePropertyAccessor = visualBootstrapper.GetPropertyAccessor(
+                tabControl.GetType(), nameof(tabControl.TabItems));
+
             var spBinding = new OneWayCollectionBinding(tabControl, nameof(tabControl.TabItems),
-                stackPanel, nameof(StackPanel<Object>.Children), null);
+                stackPanel, nameof(Children), null, sourcePropertyAccessor);
 
             stackPanel.AddBinding(spBinding);
 
-            _scrollPanel = new ScrollPanel<Object>(visualBootstrapper)
+            _scrollPanel = new ScrollPanel(visualBootstrapper)
             {
                 Content = stackPanel,
                 ScrollMode = ScrollMode.Horizontal,
@@ -209,9 +212,14 @@ namespace Das.Views.Defaults
         private Size _indicatord;
         private IElementLocator? _lastElementLocator;
         private Rectangle _indicatorRect;
-        private readonly ScrollPanel<Object> _scrollPanel;
+        private readonly ScrollPanel _scrollPanel;
         private readonly HorizontalRule _indicator;
         private IStyleProvider _lastStyleContext;
         private readonly HorizontalRule _separator;
+
+        //protected override void OnDistributeDataContextToChildren(Object? newValue)
+        //{
+        //    Children.a
+        //}
     }
 }

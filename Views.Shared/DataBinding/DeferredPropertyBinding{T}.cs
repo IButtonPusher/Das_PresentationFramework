@@ -11,8 +11,10 @@ namespace Das.Views.DataBinding
         public DeferredPropertyBinding(Type parentClassType,
                                        String propertyName)
         {
-            _prop = parentClassType.GetProperty(propertyName) ??
-                    throw new MissingMemberException(parentClassType.Name, propertyName);
+            _prop = GetTypePropertyOrDie(parentClassType, propertyName);
+                
+                //parentClassType.GetProperty(propertyName) ??
+                //    throw new MissingMemberException(parentClassType.Name, propertyName);
         }
 
         public DeferredPropertyBinding(PropertyInfo prop)

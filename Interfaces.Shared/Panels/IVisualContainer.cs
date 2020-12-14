@@ -13,7 +13,7 @@ namespace Das.Views.Panels
         
     //}
 
-    public interface IVisualContainer : IBindableElement,
+    public interface IVisualContainer : //IBindableElement,
                                         IVisualFinder,
                                         IChangeTracking,
                                         IPanelElement

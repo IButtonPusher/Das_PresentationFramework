@@ -4,10 +4,12 @@ using Android.Content;
 using Android.Graphics;
 using Android.Util;
 using Android.Views;
+using Das.Views;
 using Das.Views.Core.Geometry;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Size = Das.Views.Core.Geometry.Size;
+using View = Android.Views.View;
 
 namespace Das.Xamarin.Android
 {
@@ -15,7 +17,7 @@ namespace Das.Xamarin.Android
     {
         public AndroidPaintView(Context? context,
                                 AndroidRenderKit renderKit,
-                                IView view)
+                                IVisualElement view)
             : base(context)
         {
             RenderKit = renderKit;
@@ -60,7 +62,7 @@ namespace Das.Xamarin.Android
 
 
         private readonly DisplayMetrics _displayMetrics;
-        private readonly IView _view;
+        private readonly IVisualElement _view;
         private readonly IViewState _viewState;
         private Size _measured;
         private ValueRectangle _targetRect;

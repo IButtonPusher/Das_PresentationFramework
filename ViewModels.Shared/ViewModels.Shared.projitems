@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)BaseViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\AsyncObservableCollection2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\AsyncObservableCollectionBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\DoubleConcurrentDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Invocations\PollyAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Invocations\PollyFunc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InvokableViewModel.cs" />

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using Das.Views.Mvvm;
+using Das.Views.Templates;
 
 namespace Das.Views.ItemsControls
 {
-    public class ItemsControlHelper<T> : ItemsControlHelperBase
+    public class ItemsControlHelper<T> : NotifyPropertyChangedBase
     {
         private readonly Action<IEnumerable<T>> _onNewItems;
         private readonly Action<IEnumerable<T>> _onRemovedItems;
@@ -15,15 +16,28 @@ namespace Das.Views.ItemsControls
                                   Action<IEnumerable<T>> onRemovedItems,
                                   Action onClearItems,
                                   Func<INotifyingCollection<T>?, INotifyingCollection<T>?, Boolean>? onItemsSourceChanging,
-                                  Action<IDataTemplate?>? onItemTemplateChanged)
-        : base(onItemTemplateChanged)
+                                  Action<IDataTemplate<T>?>? onItemTemplateChanged)
+        
         {
             _onNewItems = onNewItems;
             _onRemovedItems = onRemovedItems;
             _onClearItems = onClearItems;
             
+            _onItemTemplateChanged = onItemTemplateChanged ?? DefaultOnItemTemplateChanged;
             _onItemsSourceChanging = onItemsSourceChanging ?? DefaultOnItemsSourceChanging;
         }
+        
+        private static void DefaultOnItemTemplateChanged(IDataTemplate? newValue) {}
+        
+        
+        public virtual IDataTemplate<T>? ItemTemplate
+        {
+            get => _itemTemplate;
+            set => SetValue(ref _itemTemplate, value, _onItemTemplateChanged);
+        }
+        
+        private readonly Action<IDataTemplate<T>?> _onItemTemplateChanged;
+        private IDataTemplate<T>? _itemTemplate;
         
         
         //public ItemsControlHelper(
@@ -69,5 +83,4 @@ namespace Das.Views.ItemsControls
         private INotifyingCollection<T>? _itemsSource;
         private static Boolean DefaultOnItemsSourceChanging(INotifyingCollection<T>? oldValue,
                                                             INotifyingCollection<T>? newValue) => true;
-    }
-}
+    } }

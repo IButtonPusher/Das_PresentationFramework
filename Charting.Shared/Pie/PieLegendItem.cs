@@ -10,14 +10,14 @@ using Das.Views.Rendering.Geometry;
 
 namespace Das.Views.Charting.Pie
 {
-    public class PieLegendItem<TKey, TValue> : BindableElement<IDataPoint<TKey, TValue>>,
+    public class PieLegendItem<TKey, TValue> : BindableElement,
                                                IVisualFinder
         where TValue : IConvertible
     {
         public PieLegendItem(IVisualBootstrapper templateResolver)
         : base(templateResolver)
         {
-            _label = new Label<IDataPoint<TKey, TValue>>(templateResolver);
+            _label = new Label(templateResolver);
         }
 
         public Boolean Contains(IVisualElement element)
@@ -54,13 +54,19 @@ namespace Das.Views.Charting.Pie
             return res;
         }
 
-        public override void SetBoundValue(IDataPoint<TKey, TValue> value)
+        protected override void OnDataContextChanged(Object newValue)
         {
-            base.SetBoundValue(value);
-            _label.SetBoundValue(value);
+            base.OnDataContextChanged(newValue);
+            _label.Text = newValue.ToString();
         }
 
-        private readonly Label<IDataPoint<TKey, TValue>> _label;
+        //public override void SetBoundValue(IDataPoint<TKey, TValue> value)
+        //{
+        //    base.SetBoundValue(value);
+        //    _label.SetBoundValue(value);
+        //}
+
+        private readonly Label _label;
         private Boolean _isStyleSet;
         private Double _offsetX;
     }

@@ -6,14 +6,17 @@ using Das.Views.Styles;
 namespace Das.Views.Panels
 {
     // ReSharper disable once UnusedTypeParameter
-    public interface IView<T> : IView,
-                                IBindingSetter<T>
-    {
-    }
-
     public interface IView : IContentContainer,
-                             IBindingSetter
+        IBindableElement
+        //,IBindingSetter<T>
     {
         IStyleContext StyleContext { get; }
     }
+
+    //public interface IView : IContentContainer,
+    //                         IBindableElement
+    //                         //,IBindingSetter
+    //{
+    //    IStyleContext StyleContext { get; }
+    //}
 }

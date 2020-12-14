@@ -5,15 +5,15 @@ using Das.Views.Styles;
 
 namespace Das.Views.Panels
 {
-    public class View<T> : ContentPanel<T>, 
-                           IView<T>
+    public class View : ContentPanel, 
+                           IView
     {
         public View(IVisualBootstrapper visualBootstrapper)
 
             : base(visualBootstrapper)
         {
             StyleContext = visualBootstrapper.StyleContext;
-            _dataContext = default!;
+            //_dataContext = default!;
         }
 
        
@@ -21,13 +21,13 @@ namespace Das.Views.Panels
         public IStyleContext StyleContext { get; }
 
 
-        public virtual void SetDataContext(T dataContext)
-        {
-            _dataContext = dataContext;
-        }
+        //public virtual void SetDataContext(T dataContext)
+        //{
+        //    _dataContext = dataContext;
+        //}
 
-        public new virtual T DataContext => _dataContext;
+        //public new virtual T DataContext => _dataContext;
 
-        private T _dataContext;
+        //private T _dataContext;
     }
 }

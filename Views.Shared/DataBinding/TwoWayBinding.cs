@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Reflection;
 using System.Threading.Tasks;
+using Das.Serializer;
 
 namespace Das.Views.DataBinding
 {
@@ -9,20 +10,23 @@ namespace Das.Views.DataBinding
     {
         public TwoWayBinding(INotifyPropertyChanged source,
                              String sourceProperty,
-                             IBindableElement target,
+                             IVisualElement target,
                              String targetProperty,
-                             IValueConverter? valueConverter)
+                             IValueConverter? valueConverter,
+                             IPropertyAccessor sourcePropertyAccessor)
             : this(source,
                 GetObjectPropertyOrDie(source, sourceProperty),
                 target,
-                GetObjectPropertyOrDie(target, targetProperty), valueConverter) { }
+                GetObjectPropertyOrDie(target, targetProperty), 
+                valueConverter, sourcePropertyAccessor) { }
 
         public TwoWayBinding(INotifyPropertyChanged source,
                              PropertyInfo srcProp,
-                             IBindableElement target,
+                             IVisualElement target,
                              PropertyInfo targetProp,
-                             IValueConverter? valueConverter)
-        : base(source, srcProp, target, targetProp, valueConverter)
+                             IValueConverter? valueConverter,
+                             IPropertyAccessor sourcePropertyAccessor)
+        : base(source, srcProp, target, targetProp, valueConverter, sourcePropertyAccessor)
         {
             _sourceSetter = srcProp.GetSetMethod()
                             ?? throw new MissingMethodException(srcProp.Name);

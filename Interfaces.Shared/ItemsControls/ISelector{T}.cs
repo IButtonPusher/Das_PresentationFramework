@@ -3,11 +3,18 @@ using System;
 
 namespace Das.Views
 {
-    public interface ISelector<T> : IBindableElement<T>
-        where T : IEquatable<T>
+    public interface ISelector<TDataContext, TItems> : IBindableElement<TDataContext>,
+                                                       ISelector<TItems>
+        where TItems : IEquatable<TItems>
     {
-        T SelectedItem { get; set; }
+        
+    }
 
-        IBindableElement<T>? SelectedVisual { get; set; }
+    public interface ISelector<TItems> : IVisualElement
+        where TItems : IEquatable<TItems>
+    {
+        TItems SelectedItem { get; set; }
+
+        IBindableElement<TItems>? SelectedVisual { get; set; }
     }
 }

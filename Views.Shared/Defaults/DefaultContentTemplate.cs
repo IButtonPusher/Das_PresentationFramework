@@ -37,14 +37,14 @@ namespace Das.Views.Defaults
           
         }
 
-        protected virtual IVisualElement GetToStringLabel(Object dataContext)
+        protected virtual IBindableElement GetToStringLabel(Object dataContext)
         {
-            var txt = new Label<Object>(
-                new ObjectBinding<Object>(dataContext),
-                _visualBootstrapper)
+            var txt = new Label(_visualBootstrapper)
+                //(new ObjectBinding<TLabel>(dataContext))
             {
                 HorizontalAlignment = HorizontalAlignments.Center, 
-                VerticalAlignment = VerticalAlignments.Center
+                VerticalAlignment = VerticalAlignments.Center,
+                Text = dataContext.ToString()
             };
 
             return txt;
@@ -99,8 +99,8 @@ namespace Das.Views.Defaults
 
         private String? GetString()
         {
-            if (BoundValue != null)
-                return BoundValue.ToString();
+            //if (BoundValue != null)
+            //    return BoundValue.ToString();
 
             if (_bindable?.DataContext is { } ok)
                 return ok.ToString();
@@ -108,10 +108,10 @@ namespace Das.Views.Defaults
             return null;
         }
 
-        public override Object? GetBoundValue(Object dataContext)
-        {
-            return base.GetBoundValue(dataContext) ?? _bindable?.DataContext;
-        }
+        //public override Object? GetBoundValue(Object dataContext)
+        //{
+        //    return base.GetBoundValue(dataContext) ?? _bindable?.DataContext;
+        //}
 
         protected virtual IVisualElement? GetTemplate()
         {
@@ -121,7 +121,8 @@ namespace Das.Views.Defaults
             if (_hasTriedResolvingTemplate)
                 return _resolvedTemplate;
 
-            var bound = BoundValue ?? _bindable?.DataContext;
+            var bound = //BoundValue ?? 
+                        _bindable?.DataContext;
 
 
             //if (_hasTriedResolvingTemplate || 

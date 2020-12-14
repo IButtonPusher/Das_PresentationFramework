@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Views.Collections;
 using Das.Views.Rendering;
 
 namespace Das.Views.Panels
 {
-    public class WrapPanel<T> : BaseSequentialPanel<T>
+    public class WrapPanel : BaseSequentialPanel
     {
         public WrapPanel(IVisualBootstrapper visualBootstrapper) 
             : this(visualBootstrapper, new VisualCollection())
@@ -16,7 +15,7 @@ namespace Das.Views.Panels
 
         private WrapPanel(IVisualBootstrapper visualBootstrapper,
                           IVisualCollection children) :
-            base(null, visualBootstrapper, children, new SequentialUniformRenderer(children))
+            base(visualBootstrapper, children, new SequentialUniformRenderer(children))
         {
         }
 

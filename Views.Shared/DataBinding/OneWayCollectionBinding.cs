@@ -5,33 +5,44 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Reflection;
 using System.Text;
+using Das.Serializer;
 
 namespace Das.Views.DataBinding
 {
     public class OneWayCollectionBinding : SourceBinding
     {
-        public OneWayCollectionBinding(INotifyPropertyChanged source, 
-                                       String sourceProperty, 
-                                       IBindableElement target, 
+        public OneWayCollectionBinding(INotifyPropertyChanged source,
+                                       String sourceProperty,
+                                       IVisualElement target,
                                        String targetProperty,
-                                       IValueConverter? converter) 
-            : base(source, sourceProperty, target, targetProperty, converter)
+                                       IValueConverter? converter,
+                                       IPropertyAccessor sourcePropertyAccessor)
+            : this(source,
+                GetObjectPropertyOrDie(source, sourceProperty),
+                target,
+                GetObjectPropertyOrDie(target, targetProperty),
+                converter, sourcePropertyAccessor)
         {
         }
 
         public OneWayCollectionBinding(INotifyPropertyChanged source, 
                                        PropertyInfo srcProp, 
-                                       IBindableElement target, 
+                                       IVisualElement target, 
                                        PropertyInfo targetProp,
-                                       IValueConverter? converter) 
-            : base(source, srcProp, target, targetProp, converter)
+                                       IValueConverter? converter,
+                                       IPropertyAccessor sourcePropertyAccessor) 
+            : base(source, srcProp, target, targetProp, converter,sourcePropertyAccessor)
         {
+            Evaluate();
         }
 
         public override void Evaluate()
         {
             var sourceValue = GetSourceValue();
 
+            if (_notifyingCollection == sourceValue)
+                return;
+            
             switch (sourceValue)
             {
                 case INotifyCollectionChanged collection:
@@ -47,7 +58,10 @@ namespace Das.Views.DataBinding
 
                     var targetValue = GetTargetValue();
                     if (targetValue == null)
+                    {
                         SetTargetValue(sourceValue);
+                    }
+
                     else if (_notifyingCollection is IEnumerable neuItar)
                         OnAddItarItems(neuItar);
                     break;

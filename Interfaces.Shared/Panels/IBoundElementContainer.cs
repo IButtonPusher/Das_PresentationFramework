@@ -11,7 +11,7 @@ namespace Das.Views.Panels
     {
         Size AvailableSize { get; }
 
-        IViewModel? DataContext { get; set; }
+        //IViewModel? DataContext { get; set; }
 
         IVisualElement Element { get; set; }
 

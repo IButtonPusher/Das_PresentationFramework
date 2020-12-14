@@ -1,4 +1,5 @@
 ﻿using System;
+using Das.Views.DataBinding;
 using Das.Views.Rendering;
 
 namespace Das.Views
@@ -17,6 +18,11 @@ namespace Das.Views
         }
 
         public Type? DataType { get; }
+
+        public IVisualElement BuildVisual()
+        {
+            return _visualBootstrapper.InstantiateCopy(Content);
+        }
 
         public IVisualElement? BuildVisual(Object? dataContext)
         {

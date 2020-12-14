@@ -4,11 +4,21 @@ using Das.Views.Mvvm;
 
 namespace Das.Views.ItemsControls
 {
-   public interface ITabControl<T> : IItemsControl<T>,
-                                      ITabControl
+    public interface ITabControl<TDataContext, TItems> : ITabControl<TDataContext>
+                                                         
     {
-        new IAsyncObservableCollection<IBindableElement<T>> TabItems { get; }
+        new IAsyncObservableCollection<IBindableElement<TItems>> TabItems { get; }
 
-        new IBindableElement<T>? SelectedTab { get; }
+        new IBindableElement<TItems>? SelectedTab { get; }
     }
+
+    public interface ITabControl<TDataContext> : IBindableElement<TDataContext>,
+                                                 ITabControl
+    {
+        //new IAsyncObservableCollection<IBindableElement<TItems>> TabItems { get; }
+
+        //new IBindableElement<TItems>? SelectedTab { get; }
+    }
+
+
 }

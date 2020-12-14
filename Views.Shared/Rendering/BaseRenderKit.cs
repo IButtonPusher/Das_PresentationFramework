@@ -15,25 +15,28 @@ namespace Das.Views
     {
         protected BaseRenderKit(IStyleContext styleContext,
                                 IStringPrimitiveScanner attributeScanner,
-                                ITypeInferrer typeInferrer)
-            : this(new BaseResolver(), styleContext, attributeScanner, typeInferrer)
+                                ITypeInferrer typeInferrer,
+                                IPropertyProvider propertyProvider)
+            : this(new BaseResolver(), styleContext, attributeScanner,
+                typeInferrer, propertyProvider)
         {
         }
 
         protected BaseRenderKit(IResolver resolver,
                                 IStyleContext styleContext,
                                 IStringPrimitiveScanner attributeScanner,
-                                ITypeInferrer typeInferrer)
+                                ITypeInferrer typeInferrer,
+                                IPropertyProvider propertyProvider)
         {
             _styleContext = styleContext;
             Container = resolver;
             
             _surrogateInstances = new Dictionary<IVisualElement, IVisualSurrogate>();
             _surrogateTypeBuilders = new Dictionary<Type, Func<IVisualElement, IVisualSurrogate>>();
-            var templateResolver = new DefaultVisualBootstrapper(resolver, styleContext);
+            var templateResolver = new DefaultVisualBootstrapper(resolver, styleContext, propertyProvider);
             VisualBootstrapper = templateResolver;
 
-            var bindingBuilder = new BindingBuilder(typeInferrer);
+            var bindingBuilder = new BindingBuilder(typeInferrer, propertyProvider);
             var converterProvider = new DefaultValueConverterProvider();
             
             

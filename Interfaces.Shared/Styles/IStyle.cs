@@ -14,10 +14,10 @@ namespace Das.Views.Styles
                             StyleSelector selector,
                             out Object val);
 
-        Boolean TryGetValue(StyleSetter setter,
-                            StyleSelector selector,
-                            Object? dataContext,
-                            out Object val);
+        //Boolean TryGetValue(StyleSetter setter,
+        //                    StyleSelector selector,
+        //                    Object? dataContext,
+        //                    out Object val);
 
         void Add(StyleSetter setter,
                  StyleSelector selector,

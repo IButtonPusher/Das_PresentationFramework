@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Das.Views.Rendering;
 
 namespace Das.Views.Construction
@@ -27,10 +27,10 @@ namespace Das.Views.Construction
                                                   IDictionary<String, String> namespaceHints)
             where TVisualElement : IVisualElement;
 
-        TVisualElement InflateResourceXml<TVisualElement>(String resourceName)
+        Task<TVisualElement> InflateResourceXmlAsync<TVisualElement>(String resourceName)
             where TVisualElement : IVisualElement;
 
-        //IVisualElement InflateResourceXml(String resourceName);
+        Task<IVisualElement> InflateResourceXmlAsync(String resourceName);
 
         IVisualElement InflateXml(String xml);
         

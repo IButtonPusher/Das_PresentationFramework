@@ -146,5 +146,8 @@ namespace Das.Views.Core.Geometry
         }
 
         public static readonly ValueRenderSize Empty = new ValueRenderSize(0, 0);
+
+        public static readonly ValueRenderSize Infinite = new ValueRenderSize(Double.PositiveInfinity,
+            Double.PositiveInfinity);
     }
 }

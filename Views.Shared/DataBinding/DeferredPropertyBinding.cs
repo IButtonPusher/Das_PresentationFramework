@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using Das.Serializer;
 using Das.Views.Mvvm;
 using Das.Views.Rendering;
 
@@ -10,11 +11,15 @@ namespace Das.Views.DataBinding
     public class DeferredPropertyBinding : BaseBinding,
                                            IVisualPropertySetter
     {
+        private readonly IPropertyAccessor _propertyAccessor;
+
         public DeferredPropertyBinding(String sourcePropertyName,
                                        String targetPropertyName,
+                                       IPropertyAccessor propertyAccessor,
                                        IValueConverter? converter = null)
             //: this(sourcePropertyName)
         {
+            _propertyAccessor = propertyAccessor;
             SourcePropertyName = sourcePropertyName;
             TargetPropertyName = targetPropertyName;
             Converter = converter;
@@ -56,10 +61,10 @@ namespace Das.Views.DataBinding
                     !(TargetPropertyName is { } targetPropertyName))
                     throw new NotImplementedException();
 
-                if (targetPropertyName == nameof(IBindableElement.DataContext))
-                {
+                //if (targetPropertyName == nameof(IBindableElement.DataContext))
+                //{
 
-                }
+                //}
 
                 if (count > 1)
                     return this;
@@ -76,7 +81,7 @@ namespace Das.Views.DataBinding
                     if (sourceProperty.CanWrite && !isCollection)
                     {
                         var twoWay = new TwoWayBinding(notifyObject, sourceProperty, 
-                            bindingVisual, targetProperty, Converter);
+                            bindingVisual, targetProperty, Converter, _propertyAccessor);
                         twoWay.Evaluate();
                         return twoWay;
                     }
@@ -84,7 +89,7 @@ namespace Das.Views.DataBinding
                     if (isCollection)
                     {
                         var collectionBinding = new OneWayCollectionBinding(notifyObject, sourceProperty,
-                            bindingVisual, targetProperty, Converter);
+                            bindingVisual, targetProperty, Converter, _propertyAccessor);
                         collectionBinding.Evaluate();
                         return collectionBinding;
                     }
@@ -94,7 +99,7 @@ namespace Das.Views.DataBinding
                 // don't do two way if the source property is read only, a collection, or the object 
                 // isn't INotifyPropertyChanged
                 var oneWay = new SourceBinding(dataContext, sourceProperty, bindingVisual, 
-                    targetProperty, Converter);
+                    targetProperty, Converter, _propertyAccessor);
                 oneWay.Evaluate();
                 return oneWay;
             }
@@ -107,7 +112,7 @@ namespace Das.Views.DataBinding
         public override Object Clone()
         {
             return new DeferredPropertyBinding(SourcePropertyName, TargetPropertyName,
-                Converter);
+                _propertyAccessor, Converter);
         }
 
         private Int32 _updateCounter;
@@ -119,10 +124,15 @@ namespace Das.Views.DataBinding
             if (dataContext == null)
                 return null;
 
-            var prop = dataContext.GetType().GetProperty(SourcePropertyName);
-            if (prop == null)
-                return null;
-            return prop.GetValue(dataContext, null);
+            return _propertyAccessor.GetPropertyValue(dataContext);
+
+            //var prop = dataContext.GetType().GetProperty(SourcePropertyName);
+            //var prop = GetBindingProperty(dataContext.GetType(), SourcePropertyName);
+            //if (prop == null)
+            //    return null;
+            //return prop.GetValue(dataContext, null);
+
+            //return GetPropertyValue(dataContext.GetType(), SourcePropertyName, dataContext);
         }
     }
 }

@@ -148,32 +148,32 @@ namespace Das.Views.Winforms
         //private Boolean _isChanged;
         //private readonly Object _changeLock;
 
-        public void AcceptChanges()
-        {
-            //lock (_changeLock)
-            //    _isChanged = false;
+        //public void AcceptChanges()
+        //{
+        //    //lock (_changeLock)
+        //    //    _isChanged = false;
 
-            _contents.AcceptChanges();
-        }
+        //    _contents.AcceptChanges();
+        //}
 
-        public virtual Boolean IsChanged
-        {
-            get => _contents.IsChanged;
-            //get
-            //{
-            //    if (View != null && (View.IsChanged || View.IsRequiresMeasure))
-            //        return true;
+        //public virtual Boolean IsChanged
+        //{
+        //    get => _contents.IsChanged;
+        //    //get
+        //    //{
+        //    //    if (View != null && (View.IsChanged || View.IsRequiresMeasure))
+        //    //        return true;
 
-            //    lock (_changeLock)
-            //        return _isChanged;
-            //}
-        }
+        //    //    lock (_changeLock)
+        //    //        return _isChanged;
+        //    //}
+        //}
 
-        public IViewModel? DataContext
-        {
-            get => _contents.DataContext;
-            set => _contents.DataContext = value;
-        }
+        //public IViewModel? DataContext
+        //{
+        //    get => _contents.DataContext;
+        //    set => _contents.DataContext = value;
+        //}
 
         public Size AvailableSize => _availableSize;
         public T GetStyleSetter<T>(StyleSetter setter, 
@@ -205,7 +205,7 @@ namespace Das.Views.Winforms
             return _contents.GetCurrentAccentColor();
         }
 
-        public IView View
+        public IVisualElement View
         {
             get => _contents.View;
             // ReSharper disable once UnusedMember.Global
@@ -220,5 +220,11 @@ namespace Das.Views.Winforms
             set => _contents.ZoomLevel = value;
         }
 
+        public void AcceptChanges()
+        {
+            ((System.ComponentModel.IChangeTracking) _contents).AcceptChanges();
+        }
+
+        public Boolean IsChanged => _contents.IsChanged;
     }
 }

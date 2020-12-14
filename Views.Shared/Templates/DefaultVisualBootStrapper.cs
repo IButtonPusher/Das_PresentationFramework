@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Das.Container;
-using Das.Views.Construction;
+using Das.Serializer;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
-using Das.Views.Rendering;
 using Das.Views.Styles;
 
 namespace Das.Views.Templates
@@ -14,10 +13,12 @@ namespace Das.Views.Templates
     public class DefaultVisualBootstrapper : IVisualBootstrapper
     {
         public DefaultVisualBootstrapper(IResolver dependencyResolver,
-                                         IStyleContext styleContext)
+                                         IStyleContext styleContext,
+                                         IPropertyProvider propertyProvider)
         {
             StyleContext = styleContext;
             _dependencyResolver = dependencyResolver;
+            _propertyProvider = propertyProvider;
 
             _bindingConstructorLock = new Object();
             _defaultConstructorLock = new Object();
@@ -27,19 +28,22 @@ namespace Das.Views.Templates
         }
 
         public void ResolveTo<TViewModel, TView>()
-            where TView : IView<TViewModel>
+            where TView : IView
         {
             throw new NotImplementedException();
         }
 
         public IDataTemplate? TryResolveFromContext(Object dataContext)
         {
-            if (_dependencyResolver.TryResolve<IDataTemplate>(dataContext.GetType(),
-                out var dataTemplate))
-                return dataTemplate;
-
-            return null;
+            return _dependencyResolver.TryResolve<IDataTemplate>(dataContext.GetType(),
+                out var dataTemplate) ? dataTemplate : null;
         }
+
+        //public IDataTemplate? TryResolveFromContext<T>(T dataContext)
+        //{
+        //    return _dependencyResolver.TryResolve<IDataTemplate<T>>(typeof(T),
+        //        out var dataTemplate) ? dataTemplate : null;
+        //}
 
         public IVisualElement Instantiate(Type type)
         {
@@ -81,41 +85,48 @@ namespace Das.Views.Templates
             return Instantiate<TVisualElement>(typeof(TVisualElement));
         }
 
-        public TVisualElement InstantiateCopy<TVisualElement>(TVisualElement visual,
-                                                              Object? dataContext)
-            where TVisualElement : IVisualElement
+        public IBindableElement InstantiateCopy<TVisualElement>(TVisualElement visual,
+                                                                Object? dataContext)
+            where TVisualElement : IBindableElement
         {
-            //var obj = Instantiate<TVisualElement>();
-
-            //RunOnBoth<IPanelElement>(visual, obj, (o, c) => 
-            //    c.AddChildren(o.Children.GetFromEachChild(l => l)));
-
-
-            //RunOnBoth<IContentPresenter>(visual, obj, (o, c) =>
-            //    c.ContentTemplate = o.ContentTemplate);
-
             var obj = InstantiateCopyBase(visual);
 
-            if (dataContext != null && obj is IBindableElement bindable)
+            if (dataContext != null)
+            {
+                throw new NotImplementedException();
+                //if (dataContext != null && obj is IBindableElement bindable)
+                //    bindable.DataContext = dataContext;
+            }
+            
+
+           
+
+            return obj;
+        }
+
+        public TVisualElement InstantiateCopy<TVisualElement>(TVisualElement visual) 
+            where TVisualElement : IVisualElement
+        {
+            return InstantiateCopyBase(visual);
+        }
+
+        public IVisualElement InstantiateCopy(IVisualElement visual, 
+                                              Object? dataContext)
+        {
+            var obj = InstantiateCopyBase(visual);
+            if (obj is IBindableElement bindable)
                 bindable.DataContext = dataContext;
 
             return obj;
-
-
-            //var copy = (TVisualElement)visual.DeepCopy();
-            //if (dataContext != null && copy is IBindableElement bindable)
-            //    bindable.DataContext = dataContext;
-
-            //return copy;
         }
 
         public TVisualElement InstantiateCopy<TVisualElement, TViewModel>(TVisualElement visual,
                                                                           TViewModel dataContext)
-            where TVisualElement : IBindableElement<TViewModel>
+            where TVisualElement : IBindableElement
         {
             var obj = InstantiateCopyBase(visual);
 
-            if (dataContext != null && obj is IBindableElement<TViewModel> bindable)
+            if (dataContext != null && obj is IBindableElement bindable)
                 bindable.DataContext = dataContext;
 
             return obj;
@@ -247,6 +258,14 @@ namespace Das.Views.Templates
         private readonly Object _defaultConstructorLock;
         private readonly Dictionary<Type, ConstructorInfo> _defaultConstructors;
         private readonly IResolver _dependencyResolver;
+        private readonly IPropertyProvider _propertyProvider;
         private IUiProvider? _uiProvider;
+
+
+        public IPropertyAccessor GetPropertyAccessor(Type declaringType, 
+                                                     String propertyName)
+        {
+            return _propertyProvider.GetPropertyAccessor(declaringType, propertyName);
+        }
     }
 }

@@ -13,7 +13,7 @@ using Das.Views.Rendering.Geometry;
 namespace Das.Views.Charting.Pie
 {
     // ReSharper disable once UnusedType.Global
-    public class PieChart<TKey, TValue> : BindableElement<IPieData<TKey, TValue>>,
+    public class PieChart<TKey, TValue> : BindableElement,
                                           IVisualFinder
         where TValue : IConvertible
     {
@@ -46,7 +46,8 @@ namespace Das.Views.Charting.Pie
         {
             var side = Math.Min(availableSpace.Width, availableSpace.Height);
             if (side.IsZero() ||
-                !(Binding is {} binding))
+                //!(Binding is {} binding))
+                !(DataContext is {} binding))
                 //|| !(DataContext is {} dc))
             {
                 return;
@@ -58,7 +59,11 @@ namespace Das.Views.Charting.Pie
             var radius = side / 2;
             var center = new Point2D(availableSpace.Width - side + radius,
                 availableSpace.Height - side + side / 2);
-            var currentValue = binding.GetValue(DataContext);
+            //var currentValue = binding.GetValue(DataContext);
+            var currentValue = binding as IPieData<TKey, TValue>;
+            if (currentValue == null)
+                return;
+            
             var data = currentValue.Items.ToArray();
 
             var pntCnt = data.Length;
@@ -183,7 +188,9 @@ namespace Das.Views.Charting.Pie
             return _desiredSize;
         }
 
-        public override void SetBoundValue(IPieData<TKey, TValue> value)
+        //override datac
+
+        protected override void OnDataContextChanged(Object? newValue)
         {
             lock (_legendLock)
             {
@@ -197,24 +204,63 @@ namespace Das.Views.Charting.Pie
             }
 
             
-            base.SetBoundValue(value);
+            base.OnDataContextChanged(newValue);
 
-            var data = value.Items.OrderByDescending(v => v.Value).ToArray();
+            if (!(newValue is IPieData<TKey, TValue> currentValue))
+                return;
+
+            var data = currentValue.Items.OrderByDescending(v => v.Value).ToArray();
             var pntCnt = data.Length;
 
             for (var c = 0; c < pntCnt; c++)
             {
                 var current = data[c];
 
-                var brush = GetBrush(value, current);
+                var brush = GetBrush(currentValue, current);
 
                 var legendItem = new PieLegendItem<TKey, TValue>(_templateResolver);
-                legendItem.SetBoundValue(current);
+                //legendItem.SetBoundValue(current);
+                legendItem.DataContext = current;
                 legendItem.Brush = brush;
                 lock (_legendLock)
                     _legendItems.Add(legendItem);
             }
+            
+            
         }
+
+        //public override void SetBoundValue(IPieData<TKey, TValue> value)
+        //{
+        //    lock (_legendLock)
+        //    {
+        //        foreach (var item in _legendItems)
+        //        {
+        //            item.Dispose();
+        //        }
+
+        //        _legendItems.Clear();
+        //        _legendItemSizes.Clear();
+        //    }
+
+            
+        //    base.SetBoundValue(value);
+
+        //    var data = value.Items.OrderByDescending(v => v.Value).ToArray();
+        //    var pntCnt = data.Length;
+
+        //    for (var c = 0; c < pntCnt; c++)
+        //    {
+        //        var current = data[c];
+
+        //        var brush = GetBrush(value, current);
+
+        //        var legendItem = new PieLegendItem<TKey, TValue>(_templateResolver);
+        //        legendItem.SetBoundValue(current);
+        //        legendItem.Brush = brush;
+        //        lock (_legendLock)
+        //            _legendItems.Add(legendItem);
+        //    }
+        //}
 
         private readonly Dictionary<TKey, IBrush> _defaultedColors;
 

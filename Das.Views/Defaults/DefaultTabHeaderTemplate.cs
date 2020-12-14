@@ -20,7 +20,7 @@ namespace Das.Views.Defaults
     {
         public DefaultTabHeaderTemplate(IVisualBootstrapper visualBootstrapper,
                                         ITabControl tabControl)
-            : base(visualBootstrapper, tabControl)
+            : base(visualBootstrapper)
         {
             _itemsControl = tabControl;
         }
@@ -30,12 +30,12 @@ namespace Das.Views.Defaults
             return new DefaultTabHeaderPanel(_itemsControl, _visualBootstrapper);
         }
 
-        public override void OnParentChanging(IContainerVisual? newParent)
-        {
-            base.OnParentChanging(newParent);
-            _itemsControl = newParent as ITabControl ?? throw new InvalidOperationException();
-        }
+        //public override void OnParentChanging(IContainerVisual? newParent)
+        //{
+        //    base.OnParentChanging(newParent);
+        //    _itemsControl = newParent as ITabControl ?? throw new InvalidOperationException();
+        //}
 
-        private ITabControl _itemsControl;
+        private readonly ITabControl _itemsControl;
     }
 }

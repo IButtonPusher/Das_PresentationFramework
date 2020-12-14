@@ -101,6 +101,11 @@ namespace Das.Views.Collections
             return _collectionHelper.RunOnEachChildAsync(input, action);
         }
 
+        public void DistributeDataContext(Object? dataContext)
+        {
+            _collectionHelper.DistributeDataContext(dataContext);
+        }
+
         public void InvalidateMeasure()
         {
             RunOnEachChild(child => child.InvalidateMeasure());

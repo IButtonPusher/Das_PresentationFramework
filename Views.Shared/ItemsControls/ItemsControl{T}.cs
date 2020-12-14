@@ -9,30 +9,32 @@ using Das.Views.Mvvm;
 
 namespace Das.Views.Panels
 {
-    public abstract class ItemsControl<T> : BasePanel<T>,
-                                   IItemsControl<T>
+    public abstract class ItemsControl<TDataContext, TItems> : BasePanel<TDataContext>,
+                                   IItemsControl<TItems>
     {
-        protected ItemsControl(IDataBinding<T>? binding, 
+        protected ItemsControl(
                                IVisualBootstrapper visualBootstrapper,
                                IVisualCollection children) 
-            : base(binding, visualBootstrapper, children)
+            : base(//binding, 
+                visualBootstrapper, children)
         {
             _defaultTemplate = new DefaultContentTemplate(visualBootstrapper, this);
             _itemTemplate = _defaultTemplate;
         }
 
-        protected ItemsControl(IDataBinding<T>? binding,
-                               IVisualBootstrapper visualBootstrapper)
-            : this(binding, visualBootstrapper, new VisualCollection())
-        {
+        //protected ItemsControl(//IDataBinding<T>? binding,
+        //                       IVisualBootstrapper visualBootstrapper)
+        //    : this(//binding, 
+        //        visualBootstrapper, new VisualCollection())
+        //{
 
-        }
+        //}
         
         protected ItemsControl(IVisualBootstrapper visualBootstrapper) 
-            : base(visualBootstrapper)
+            : this(visualBootstrapper, new VisualCollection())
         {
-            _defaultTemplate = new DefaultContentTemplate<T>(visualBootstrapper, this);
-            _itemTemplate = _defaultTemplate;
+            //_defaultTemplate = new DefaultContentTemplate<T>(visualBootstrapper, this);
+            //_itemTemplate = _defaultTemplate;
         }
 
         INotifyingCollection? IItemsControl.ItemsSource => ItemsSource;

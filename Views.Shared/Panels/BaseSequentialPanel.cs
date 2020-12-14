@@ -11,37 +11,42 @@ namespace Das.Views.Panels
     /// <summary>
     ///     Renders a collection of visuals in order - with either Vertical or Horizontal orientation
     /// </summary>
-    public abstract class BaseSequentialPanel<T> : BasePanel<T>,
-                                                   ISequentialPanel
+    public abstract class BaseSequentialPanel : BasePanel,
+                                                             ISequentialPanel
     {
         protected BaseSequentialPanel(IVisualBootstrapper visualBootstrapper)
-            : this(null, visualBootstrapper)
+            : this(visualBootstrapper, new VisualCollection())
         {
         }
 
-        protected BaseSequentialPanel(IDataBinding<T>? binding,
-                                      IVisualBootstrapper visualBootstrapper)
-            : this(binding, visualBootstrapper, new VisualCollection())
-        {
-        }
+        //protected BaseSequentialPanel(IDataBinding<T>? binding,
+        //                              IVisualBootstrapper visualBootstrapper)
+        //    : this(binding, visualBootstrapper, new VisualCollection())
+        //{
+        //}
 
-        protected BaseSequentialPanel(IDataBinding<T>? binding,
-                                      IVisualBootstrapper visualBootstrapper,
+        //protected BaseSequentialPanel(IDataBinding<T>? binding,
+        //                              IVisualBootstrapper visualBootstrapper,
+        //                              IVisualCollection children,
+        //                              ISequentialRenderer? renderer = null)
+        //    : base(binding, visualBootstrapper, children)
+        //{
+        //    _renderer = EnsureRenderer(renderer);
+
+        //    VerticalAlignment = VerticalAlignments.Default;
+        //    HorizontalAlignment = HorizontalAlignments.Default;
+        //}
+
+        protected BaseSequentialPanel(IVisualBootstrapper templateResolver,
                                       IVisualCollection children,
                                       ISequentialRenderer? renderer = null)
-            : base(binding, visualBootstrapper, children)
+            //: this(null, templateResolver, children, renderer)
+        : base(templateResolver, children)
         {
             _renderer = EnsureRenderer(renderer);
 
             VerticalAlignment = VerticalAlignments.Default;
             HorizontalAlignment = HorizontalAlignments.Default;
-        }
-
-        protected BaseSequentialPanel(IVisualBootstrapper templateResolver,
-                                      IVisualCollection children,
-                                      ISequentialRenderer? renderer = null)
-            : this(null, templateResolver, children, renderer)
-        {
         }
 
         IVisualCollection ISequentialPanel.Children => _children;
@@ -94,11 +99,16 @@ namespace Das.Views.Panels
             _children.RunOnEachChild(newValue, (nv, child) =>
             {
                 if (child is IBindableElement bindable)
-                    bindable.DataContext = nv;
+                {
+                    //if (bindable.TryGetDataContextBinding(out var dcBinding))
+                    //{
+                    //    dcBinding.UpdateDataContext(nv);
+                    //}
+                    //else
+                        bindable.DataContext = nv;
+                }
             });
         }
-
-
 
         public static readonly DependencyProperty<ISequentialPanel, Orientations> OrientationProperty =
             DependencyProperty<ISequentialPanel, Orientations>.Register(nameof(Orientation),

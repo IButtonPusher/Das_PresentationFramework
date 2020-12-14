@@ -117,14 +117,6 @@ namespace Das.Views.Rendering
                             IRenderContext renderContext)
         {
             var offset = bounds.Location;
-            if (!offset.IsOrigin)
-            {}
-
-            //foreach (var kvp in GetRenderables(orientation, bounds, renderContext))
-            //{
-            //    renderContext.DrawElement(kvp.Key, kvp.Value);
-            //}
-
 
 
             foreach (var kvp in GetRenderables(orientation, bounds, renderContext))

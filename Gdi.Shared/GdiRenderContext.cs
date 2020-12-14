@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Gdi.Core;
+using Das.Views;
 using Das.Views.Controls;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;

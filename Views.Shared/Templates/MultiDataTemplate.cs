@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 
@@ -18,9 +19,19 @@ namespace Das.Views
         
         public Type? DataType { get; }
 
+        public IVisualElement BuildVisual()
+        {
+            var sp = new StackPanel(_visualBootstrapper);
+            
+            foreach (var vis in BuildVisuals())
+                sp.AddChild(vis);
+
+            return sp;
+        }
+
         IVisualElement? IDataTemplate.BuildVisual(Object? dataContext)
         {
-            var sp = new StackPanel<Object>(_visualBootstrapper);
+            var sp = new StackPanel(_visualBootstrapper);
             
             foreach (var vis in BuildVisuals(dataContext))
                 sp.AddChild(vis);
@@ -28,26 +39,26 @@ namespace Das.Views
             return sp;
         }
 
-        public TVisualElement BuildVisual<TVisualElement>(Object? dataContext) 
-            where TVisualElement : IVisualElement
-        {
-            foreach (var visual in _visualElements)
-            {
-                if (visual is TVisualElement)
-                {
-                    var res = _visualBootstrapper.InstantiateCopy(visual, dataContext);
+        //public TVisualElement BuildVisual<TVisualElement>(Object? dataContext) 
+        //    where TVisualElement : IVisualElement
+        //{
+        //    foreach (var visual in _visualElements)
+        //    {
+        //        if (visual is TVisualElement)
+        //        {
+        //            var res = _visualBootstrapper.InstantiateCopy(visual, dataContext);
                     
-                    switch (res)
-                    {
-                        case TVisualElement good:
-                            return good;
-                    }
-                }
-            }
+        //            switch (res)
+        //            {
+        //                case TVisualElement good:
+        //                    return good;
+        //            }
+        //        }
+        //    }
             
             
-            throw new InvalidOperationException();
-        }
+        //    throw new InvalidOperationException();
+        //}
 
         public IEnumerable<IVisualElement> BuildVisuals(Object? dataContext)
         {
@@ -56,7 +67,15 @@ namespace Das.Views
                 yield return _visualBootstrapper.InstantiateCopy(visual, dataContext);
             }
         }
-        
+
+        public IEnumerable<IVisualElement> BuildVisuals()
+        {
+            foreach (var visual in _visualElements)
+            {
+                yield return _visualBootstrapper.InstantiateCopy(visual);
+            }
+        }
+
         private readonly IVisualBootstrapper _visualBootstrapper;
         private readonly List<IVisualElement> _visualElements;
     }

@@ -71,8 +71,6 @@ namespace Das.Views
         
 
         protected IViewState GetViewState =>
-            ViewState ??
-            throw new Exception(
-                "No view state has been set.  Call MeasureMainView");
+            ViewState ?? throw new Exception("No view state has been set.  Call MeasureMainView");
     }
 }

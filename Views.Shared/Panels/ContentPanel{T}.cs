@@ -4,34 +4,25 @@ using System.Threading.Tasks;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
-using Das.Views.Defaults;
 using Das.Views.Rendering;
 using Das.Views.Rendering.Geometry;
 using Das.Views.Styles;
 
 namespace Das.Views.Panels
 {
-    public class ContentPanel<T> : BaseContainerVisual<T>,
-                                            IContentContainer,
-                                            IContentPresenter
+    public class ContentPanel<TDataContext> : BindableElement<TDataContext>
+                                   //IBindableContainer<TDataContext>
     {
         public ContentPanel(IVisualBootstrapper visualBootstrapper)
             : base(visualBootstrapper)
         {
-            _contentMeasured = ValueSize.Empty;
-            _contentTemplate = new DefaultContentTemplate(visualBootstrapper, this);
+          //  _bindingHelper = new BindingHelper<T>(this, null, OnDataContextChanged);
+
+            //_contentMeasured = ValueSize.Empty;
+            //_contentTemplate = new DefaultContentTemplate(visualBootstrapper, this);
         }
 
-        public  ContentPanel(IVisualBootstrapper visualBootstrapper,
-                             IDataBinding<T>? binding)
-            : base(visualBootstrapper, binding)
-        {
-            _contentMeasured = ValueSize.Empty;
-            _contentTemplate = new DefaultContentTemplate(visualBootstrapper, this);
-        }
-
-
-        protected TQuery QueryContent<TQuery>(Func<IVisualElement, TQuery> query,
+         protected TQuery QueryContent<TQuery>(Func<IVisualElement, TQuery> query,
                                               TQuery defaultValue)
         {
             if (!(Content is { } valid))
@@ -40,9 +31,9 @@ namespace Das.Views.Panels
             return query(valid);
         }
 
-        public override Boolean IsChanged => IsRequiresMeasure || IsRequiresArrange || 
-                                             Content is {} valid && 
-                                             (valid.IsRequiresMeasure || valid.IsRequiresArrange);
+        //public override Boolean IsChanged => IsRequiresMeasure || IsRequiresArrange || 
+        //                                     Content is {} valid && 
+        //                                     (valid.IsRequiresMeasure || valid.IsRequiresArrange);
 
         public override Boolean IsRequiresMeasure
         {
@@ -259,31 +250,31 @@ namespace Das.Views.Panels
             return styleContext.GetStyleSetter<Thickness>(StyleSetter.Padding, this);
           }
 
-        public override IVisualElement DeepCopy()
-        {
-            var newObject = (IContentContainer) base.DeepCopy();
+        //public override IVisualElement DeepCopy()
+        //{
+        //    var newObject = (IContentContainer) base.DeepCopy();
 
-            var content = Content;
-            if (content == null)
-                return newObject;
+        //    var content = Content;
+        //    if (content == null)
+        //        return newObject;
 
-            var newContent = content.DeepCopy();
-            newObject.Content = newContent;
-            if (newObject is BindableElement<T> bindable)
-                bindable.Binding = Binding;
+        //    var newContent = content.DeepCopy();
+        //    newObject.Content = newContent;
+        //    if (newObject is BindableElement<T> bindable)
+        //        bindable.Binding = Binding;
 
-            return newObject;
-        }
+        //    return newObject;
+        //}
 
 
-        public override void AcceptChanges()
-        {
-            base.AcceptChanges();
+        //public override void AcceptChanges()
+        //{
+        //    base.AcceptChanges();
 
-            //IsChanged = false;
-            if (Content is IChangeTracking ct)
-                ct.AcceptChanges();
-        }
+        //    //IsChanged = false;
+        //    if (Content is IChangeTracking ct)
+        //        ct.AcceptChanges();
+        //}
 
         public override void AcceptChanges(ChangeType changeType)
         {
@@ -300,16 +291,23 @@ namespace Das.Views.Panels
                 value ?? _contentTemplate);
         }
 
-        protected override void OnDataContextChanged(Object? newValue)
+        protected override void OnDataContextChanged(TDataContext newValue)
         {
             base.OnDataContextChanged(newValue);
 
             switch (Content)
             {
-                case IBindableElement bindable:
-                    bindable.DataContext = newValue;
+                case IBindableElement<TDataContext> dcBindable:
+                    dcBindable.DataContext = newValue;
                     break;
 
+                case IBindable bindable:
+                    if (bindable.TryGetDataContextBinding(out var dcBinding))
+                    {
+                        dcBinding.UpdateSource(newValue);
+                    }
+                    break;
+                
                 case {} _:
                     return;
 
@@ -337,46 +335,46 @@ namespace Das.Views.Panels
         //    return false;
         //}
 
-        public override void SetDataContext(Object? dataContext)
-        {
-            DataContext = dataContext;
+        //public override void SetDataContext(Object? dataContext)
+        //{
+        //    DataContext = dataContext;
 
-            if (Content is IBindableElement bindable)
-                bindable.SetDataContext(dataContext);
+        //    if (Content is IBindableElement bindable)
+        //        bindable.SetDataContext(dataContext);
 
-            //IsChanged = true;
-        }
+        //    //IsChanged = true;
+        //}
 
-        public override async Task SetDataContextAsync(Object? dataContext)
-        {
-            DataContext = dataContext;
+        //public override async Task SetDataContextAsync(Object? dataContext)
+        //{
+        //    DataContext = dataContext;
 
-            if (Content is IBindableElement bindable)
-                await bindable.SetDataContextAsync(dataContext);
+        //    if (Content is IBindableElement bindable)
+        //        await bindable.SetDataContextAsync(dataContext);
 
-            //IsChanged = true;
-        }
+        //    //IsChanged = true;
+        //}
 
 
-        public override void SetBoundValue(T value)
-        {
-            Binding = new ObjectBinding<T>(value);
+        //public override void SetBoundValue(T value)
+        //{
+        //    Binding = new ObjectBinding<T>(value);
 
-            if (Content is IBindableElement<T> bindable)
-                bindable.SetBoundValue(value);
-            else if (Content is IBindableElement almost)
-                almost.SetDataContext(value);
-        }
+        //    if (Content is IBindableElement<T> bindable)
+        //        bindable.SetBoundValue(value);
+        //    else if (Content is IBindableElement almost)
+        //        almost.SetDataContext(value);
+        //}
 
-        public override async Task SetBoundValueAsync(T value)
-        {
-            Binding = new ObjectBinding<T>(value);
+        //public override async Task SetBoundValueAsync(T value)
+        //{
+        //    Binding = new ObjectBinding<T>(value);
 
-            if (Content is IBindableElement<T> bindable)
-                await bindable.SetBoundValueAsync(value);
-            else if (Content is IBindableElement almost)
-                await almost.SetDataContextAsync(value);
-        }
+        //    if (Content is IBindableElement<T> bindable)
+        //        await bindable.SetBoundValueAsync(value);
+        //    else if (Content is IBindableElement almost)
+        //        await almost.SetDataContextAsync(value);
+        //}
 
         //protected IVisualElement? GetContent()
         //{
@@ -421,5 +419,13 @@ namespace Das.Views.Panels
         private IDataTemplate _contentTemplate;
         private ValueSize _contentMeasured;
 
+        //public Boolean Equals(IBindableElement<T> other)
+        //{
+        //    return ReferenceEquals(this, other);
+        //}
+        //public void UpdateContentDataContext(TDataContext newValue)
+        //{
+        //    TODO_IMPLEMENT_ME();
+        //}
     }
 }

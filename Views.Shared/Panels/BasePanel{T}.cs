@@ -12,29 +12,31 @@ using Das.Views.Rendering;
 
 namespace Das.Views.Panels
 {
-    public abstract class BasePanel<T> : BindableElement<T>, 
+    public abstract class BasePanel<TDataContext> : BindableElement<TDataContext>, 
                                          IVisualContainer
     {
-        protected BasePanel(IDataBinding<T>? binding,
+        protected BasePanel(//IDataBinding<T>? binding,
                             IVisualBootstrapper visualBootstrapper)
-            : this(binding, visualBootstrapper, new VisualCollection())
+            //: this(binding, visualBootstrapper, new VisualCollection())
+            : this(visualBootstrapper, new VisualCollection())
         {
 
         }
 
-        protected BasePanel(IDataBinding<T>? binding,
+        protected BasePanel(//IDataBinding<T>? binding,
                             IVisualBootstrapper visualBootstrapper,
                             IVisualCollection children)
-            : base(binding, visualBootstrapper)
+            //: base(binding, visualBootstrapper)
+            : base(visualBootstrapper)
         {
             _children = children is VisualCollection good ? good : new VisualCollection(children);
         }
 
-        // ReSharper disable once UnusedMember.Global
-        protected BasePanel(IVisualBootstrapper templateResolver) 
-            : this(null, templateResolver)
-        {
-        }
+        //// ReSharper disable once UnusedMember.Global
+        //protected BasePanel(IVisualBootstrapper templateResolver) 
+        //    : this(null, templateResolver)
+        //{
+        //}
 
 
 
@@ -74,7 +76,7 @@ namespace Das.Views.Panels
         /// <summary>
         /// sealed so inheritors of BasePanel have to override 
         /// </summary>
-        protected sealed override void OnDataContextChanged(Object? newValue)
+        protected sealed override void OnDataContextChanged(TDataContext newValue)
         {
             base.OnDataContextChanged(newValue);
             OnDistributeDataContextToChildren(newValue);
@@ -86,7 +88,7 @@ namespace Das.Views.Panels
             //});
         }
 
-        protected abstract void OnDistributeDataContextToChildren(Object? newValue);
+        protected abstract void OnDistributeDataContextToChildren(TDataContext newValue);
         
 
         public virtual void OnChildDeserialized(IVisualElement element, 
@@ -106,20 +108,20 @@ namespace Das.Views.Panels
             _children.Dispose();
         }
 
-        public override IVisualElement DeepCopy()
-        {
-            var newObject = (BasePanel<T>) base.DeepCopy();
+        //public override IVisualElement DeepCopy()
+        //{
+        //    var newObject = (BasePanel<T>) base.DeepCopy();
 
-            _children.RunOnEachChild(newObject, (p, child) =>
-            {
-                var stepChild = child.DeepCopy();
-                p.AddChild(stepChild);
-            });
+        //    _children.RunOnEachChild(newObject, (p, child) =>
+        //    {
+        //        var stepChild = child.DeepCopy();
+        //        p.AddChild(stepChild);
+        //    });
 
            
 
-            return newObject;
-        }
+        //    return newObject;
+        //}
 
         public virtual void AcceptChanges()
         {
@@ -175,28 +177,28 @@ namespace Das.Views.Panels
             protected set => base.IsRequiresArrange = value;
         }
 
-        public override void SetBoundValue(T value)
-        {
-            base.SetBoundValue(value);
+        //public override void SetBoundValue(T value)
+        //{
+        //    base.SetBoundValue(value);
 
-            _children.RunOnEachChild(value, (v, child) =>
-            {
-                if (!(child is IBindableElement bindable))
-                    return;
+        //    _children.RunOnEachChild(value, (v, child) =>
+        //    {
+        //        if (!(child is IBindableElement bindable))
+        //            return;
 
-                bindable.SetDataContext(v);
-            });
-        }
+        //        bindable.SetDataContext(v);
+        //    });
+        //}
 
-        public override async Task SetBoundValueAsync(T value)
-        {
-            await _children.RunOnEachChildAsync(value, async (v, child) =>
-            {
-                if (!(child is IBindableElement bindable))
-                    return;
+        //public override async Task SetBoundValueAsync(T value)
+        //{
+        //    await _children.RunOnEachChildAsync(value, async (v, child) =>
+        //    {
+        //        if (!(child is IBindableElement bindable))
+        //            return;
 
-                await bindable.SetDataContextAsync(v);
-            });
-        }
+        //        await bindable.SetDataContextAsync(v);
+        //    });
+        //}
     }
 }

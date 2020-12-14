@@ -23,7 +23,7 @@ namespace ViewCompiler
         public DesignViewWindow(ViewDeserializer serializer, 
                                 FileInfo fileDesigning,
                                 IVisualBootstrapper templateResolver)
-            : this(serializer, fileDesigning, new BaseStyleContext(new DefaultStyle(),
+            : this(serializer, fileDesigning, new BaseStyleContext(DefaultStyle.Instance,
                     new DefaultColorPalette()),
                 templateResolver)
             //: base(new GdiHostedElement(new BaseStyleContext(new DefaultStyle())))
@@ -35,7 +35,7 @@ namespace ViewCompiler
                                  FileInfo fileDesigning,
                                  IStyleContext styleContext,
                                  IVisualBootstrapper templateResolver)
-            : base(new GdiHostedElement(new View<Object>(templateResolver), styleContext))
+            : base(new GdiHostedElement(new Das.Views.Panels.View(templateResolver), styleContext))
         {
             trackBar1 = new TrackBar();
             _viewBuilderProvider = new ViewBuilderProvider(serializer);
@@ -57,7 +57,7 @@ namespace ViewCompiler
             trackBar1.BringToFront();
         }
 
-        public override Boolean IsChanged => _isChanged || base.IsChanged;
+        //public override Boolean IsChanged => _isChanged || base.IsChanged;
 
         public override IStyleContext StyleContext
             => _styleContext ?? base.StyleContext;
@@ -106,7 +106,8 @@ namespace ViewCompiler
 
             _styleContext = bldr.StyleContext;
 
-            await bldr.SetDataContextAsync(vm);
+            bldr.DataContext = vm!;
+            //await bldr.SetDataContextAsync(vm);
 
             View = bldr;
 

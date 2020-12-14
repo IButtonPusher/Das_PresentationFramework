@@ -24,18 +24,18 @@ namespace Das.Xamarin.Android
                                       IViewState
     {
         // ReSharper disable once UnusedMember.Global
-        public AndroidView(IView view,
+        public AndroidView(IVisualElement view,
                            Context context,
                            IWindowManager windowManager,
                            AndroidUiProvider uiProvider)
             : this(view, context, 
                 BuildRenderKit(context, view, windowManager, uiProvider, 
-                    new BaseStyleContext(new DefaultStyle(), new DefaultColorPalette())),
+                    new BaseStyleContext(DefaultStyle.Instance, new DefaultColorPalette())),
                 uiProvider)
         { }
 
 
-        public AndroidView(IView view,
+        public AndroidView(IVisualElement view,
                            Context context,
                            AndroidRenderKit renderKit,
                            IUiProvider uiProvider)
@@ -54,6 +54,7 @@ namespace Das.Xamarin.Android
 
             RenderKit = renderKit;
             RenderKit.RegisterSurrogate<HtmlPanel>(GetHtmlPanelSurrogate);
+            
 
             ZoomLevel = renderKit.DisplayMetrics.ScaledDensity;
 
@@ -111,7 +112,7 @@ namespace Das.Xamarin.Android
         }
 
         private static AndroidRenderKit BuildRenderKit(Context context,
-                                                       IView view,
+                                                       IVisualElement view,
                                                        IWindowManager windowManager,
                                                        AndroidUiProvider uiProvider,
                                                        IStyleContext styleContext)
@@ -119,7 +120,7 @@ namespace Das.Xamarin.Android
             var displayMetrics = context.Resources?.DisplayMetrics ?? throw new NullReferenceException();
             
 
-            var viewState = new AndroidViewState(view,displayMetrics);
+            var viewState = new AndroidViewState(displayMetrics, styleContext);
 
             var fontProvider = new AndroidFontProvider(displayMetrics, styleContext);
             return new AndroidRenderKit(new BasePerspective(), viewState,
@@ -310,35 +311,35 @@ namespace Das.Xamarin.Android
         public T GetStyleSetter<T>(StyleSetter setter,
                                    IVisualElement element)
         {
-            return _view.StyleContext.GetStyleSetter<T>(setter, element);
+            return RenderKit.StyleContext.GetStyleSetter<T>(setter, element);
         }
 
         public T GetStyleSetter<T>(StyleSetter setter,
                                    StyleSelector selector,
                                    IVisualElement element)
         {
-            return _view.StyleContext.GetStyleSetter<T>(setter, selector, element);
+            return RenderKit.StyleContext.GetStyleSetter<T>(setter, selector, element);
         }
 
         public void RegisterStyleSetter(IVisualElement element, 
                                         StyleSetter setter, 
                                         Object value)
         {
-            _view.StyleContext.RegisterStyleSetter(element, setter, value);
+            RenderKit.StyleContext.RegisterStyleSetter(element, setter, value);
         }
         public void RegisterStyleSetter(IVisualElement element, 
                                         StyleSetter setter, 
                                         StyleSelector selector, 
                                         Object value)
         {
-            _view.StyleContext.RegisterStyleSetter(element, setter, selector, value);
+            RenderKit.StyleContext.RegisterStyleSetter(element, setter, selector, value);
         }
 
-        public IColorPalette ColorPalette => _view.StyleContext.ColorPalette;
+        public IColorPalette ColorPalette => RenderKit.StyleContext.ColorPalette;
 
         public IColor GetCurrentAccentColor()
         {
-            return _view.StyleContext.GetCurrentAccentColor();
+            return RenderKit.StyleContext.GetCurrentAccentColor();
         }
 
         public Double ZoomLevel { get; }
@@ -455,23 +456,38 @@ namespace Das.Xamarin.Android
             var sleepTime = 0;
 
             while (true)
-                if (_view.IsChanged || _view.StyleContext.IsChanged)
+            {
+                if (_view.IsRequiresMeasure)
                 {
-                    _view.StyleContext.AcceptChanges();
+                    RenderKit.StyleContext.AcceptChanges();
                     RenderKit.MeasureContext.MeasureMainView(_view,
                         new ValueRenderSize(_measured), this);
-
+                    
                     _paintView.Invalidate();
                     Invalidate();
                     sleepTime = 0;
                     await Task.Yield();
                 }
+                
+                
+                //if (_view.IsChanged || RenderKit.StyleContext.IsChanged)
+                //{
+                //    _view.StyleContext.AcceptChanges();
+                //    RenderKit.MeasureContext.MeasureMainView(_view,
+                //        new ValueRenderSize(_measured), this);
+
+                //    _paintView.Invalidate();
+                //    Invalidate();
+                //    sleepTime = 0;
+                //    await Task.Yield();
+                //}
                 else
                 {
                     sleepTime = Math.Min(++sleepTime, 50);
 
                     await Task.Delay(sleepTime);
                 }
+            }
 
             // ReSharper disable once FunctionNeverReturns
         }
@@ -481,7 +497,7 @@ namespace Das.Xamarin.Android
         //private readonly BaseInputHandler _inputHandler;
         //private readonly Int32 _maximumFlingVelocity;
         //private readonly Int32 _minimumFlingVelocity;
-        private readonly IView _view;
+        private readonly IVisualElement _view;
         private readonly IUiProvider _uiProvider;
         //private ValuePoint2D? _leftButtonWentDown;
 

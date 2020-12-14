@@ -7,7 +7,7 @@ using Das.Views.Rendering;
 
 namespace Das.Views.Panels
 {
-    public interface IVisualContainer<TVisual> : IBindableElement,
+    public interface IVisualContainer<TVisual> : //IBindableElement,
                                                  IVisualFinder,
                                                  IChangeTracking,
                                                  IPanelElement

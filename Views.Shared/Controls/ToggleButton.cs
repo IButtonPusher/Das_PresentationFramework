@@ -5,7 +5,7 @@ using Das.Views.Styles;
 namespace Das.Views.Controls
 {
     // ReSharper disable once UnusedType.Global
-    public class ToggleButton<T> : ButtonBase<T>,
+    public class ToggleButton : ButtonBase,
                                    IToggleButton
     {
         public ToggleButton(IVisualBootstrapper templateResolver)

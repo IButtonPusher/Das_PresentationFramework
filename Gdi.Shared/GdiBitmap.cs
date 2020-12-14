@@ -12,7 +12,7 @@ namespace Gdi.Shared
     public class GdiBitmap: IImage
     {
         private readonly Image _bmp;
-        private Object _unwrapLock;
+        private readonly Object _unwrapLock;
         private readonly Stream? _stream;
         private readonly Boolean _isEmpty;
 

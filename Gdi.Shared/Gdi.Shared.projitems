@@ -9,6 +9,7 @@
     <Import_RootNamespace>Gdi.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BaseGdiDevice.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BitmapRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GdiBitmap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GdiDevice.cs" />
@@ -16,7 +17,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)GdiMeasureContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GdiRenderContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InputContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StaticBitmapRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StaticGdiRenderKit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Static\StaticViewState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeConverter.cs" />
   </ItemGroup>
 </Project>

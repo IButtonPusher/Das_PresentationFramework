@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Text;
+using Das.Serializer;
 
 namespace Das.Views.DataBinding
 {
@@ -12,8 +13,10 @@ namespace Das.Views.DataBinding
                                       String sourceProperty, 
                                       IBindableElement target, 
                                       String targetProperty,
-                                      IValueConverter? valueConverter) 
-            : base(source, sourceProperty, target, targetProperty, valueConverter)
+                                      IValueConverter? valueConverter,
+                                      IPropertyAccessor sourcePropertyAccessor) 
+            : base(source, sourceProperty, target, targetProperty, 
+                valueConverter, sourcePropertyAccessor)
         {
         }
 
@@ -21,8 +24,9 @@ namespace Das.Views.DataBinding
                                       PropertyInfo srcProp,
                                       IBindableElement target,
                                       PropertyInfo targetProp,
-                                      IValueConverter? valueConverter) 
-            : base(source, srcProp, target, targetProp, valueConverter)
+                                      IValueConverter? valueConverter,
+                                      IPropertyAccessor sourcePropertyAccessor) 
+            : base(source, srcProp, target, targetProp, valueConverter, sourcePropertyAccessor)
         {
         }
     }

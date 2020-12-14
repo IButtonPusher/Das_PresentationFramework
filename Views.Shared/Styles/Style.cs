@@ -1,25 +1,22 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Das.Views.Rendering;
 
 namespace Das.Views.Styles
 {
-    public class Style : IStyle
+    public class Style : StyleBase, IStyle
     {
-        public Style()
-        {
-            _setters = new Dictionary<AssignedStyle, Object?>();
-            _transitions = new Dictionary<AssignedStyle, Transition>();
-        }
+        //public Style()
+        //{
+        //    _setters = new Dictionary<AssignedStyle, Object?>();
+        //    _transitions = new Dictionary<AssignedStyle, Transition>();
+        //}
 
         public virtual Object? this[StyleSetter setter]
         {
             get => TryGetValue(setter, StyleSelector.None, out var found)
                 ? found
                 : default;
-            set => AddSetter(setter, value);
+            set => AddSetterImpl(setter, value);
         }
 
         public virtual Object? this[StyleSetter setter,
@@ -28,50 +25,50 @@ namespace Das.Views.Styles
             get => TryGetValue(setter, selector, out var found)
                 ? found
                 : default;
-            set => Add(setter, selector, value);
+            set => AddImpl(setter, selector, value);
         }
 
-        public virtual Boolean TryGetValue(StyleSetter setter,
-                                           StyleSelector selector,
-                                           out Object val)
-        {
-            foreach (var k in GetUniqueFlags<StyleSelector>(selector))
-            {
-                var key = new AssignedStyle(setter, k);
-                if (_setters.TryGetValue(key, out val!))
-                    return true;
-            }
+        //public virtual Boolean TryGetValue(StyleSetter setter,
+        //                                   StyleSelector selector,
+        //                                   out Object val)
+        //{
+        //    foreach (var k in GetUniqueFlags<StyleSelector>(selector))
+        //    {
+        //        var key = new AssignedStyle(setter, k);
+        //        if (_setters.TryGetValue(key, out val!))
+        //            return true;
+        //    }
 
-            val = default!;
-            return false;
-        }
+        //    val = default!;
+        //    return false;
+        //}
 
-        private static IEnumerable<T> GetUniqueFlags<T>(Enum flags)
-            where T : Enum
-        {
-            foreach (Enum value in Enum.GetValues(flags.GetType()))
-                if (flags.HasFlag(value))
-                    yield return (T)value;
-        }
+        //private static IEnumerable<T> GetUniqueFlags<T>(Enum flags)
+        //    where T : Enum
+        //{
+        //    foreach (Enum value in Enum.GetValues(flags.GetType()))
+        //        if (flags.HasFlag(value))
+        //            yield return (T)value;
+        //}
 
-        public virtual Boolean TryGetValue(StyleSetter setter,
-                                           StyleSelector selector,
-                                           Object? dataContext,
-                                           out Object val)
-        {
-            return TryGetValue(setter, selector, out val);
-        }
+        //public virtual Boolean TryGetValue(StyleSetter setter,
+        //                                   StyleSelector selector,
+        //                                   Object? dataContext,
+        //                                   out Object val)
+        //{
+        //    return TryGetValue(setter, selector, out val);
+        //}
 
 
-        public virtual IEnumerator<AssignedStyle> GetEnumerator()
-        {
-            return _setters.Keys.GetEnumerator();
-        }
+        //public virtual IEnumerator<AssignedStyle> GetEnumerator()
+        //{
+        //    return _setters.Keys.GetEnumerator();
+        //}
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        //IEnumerator IEnumerable.GetEnumerator()
+        //{
+        //    return GetEnumerator();
+        //}
 
         public void AddMissingSetters(IStyle fromStyle)
         {
@@ -84,8 +81,9 @@ namespace Das.Views.Styles
                               StyleSelector selector,
                               Object? value)
         {
-            var key = new AssignedStyle(setter, selector, value);
-            _setters[key] = value;
+            AddImpl(setter, selector, value);
+            //var key = new AssignedStyle(setter, selector, value);
+            //_setters[key] = value;
         }
 
         protected virtual void UpdateTransition(AssignedStyle style)
@@ -108,7 +106,7 @@ namespace Das.Views.Styles
             Add(setter, StyleSelector.None, value);
         }
 
-        protected readonly Dictionary<AssignedStyle, Object?> _setters;
-        protected readonly Dictionary<AssignedStyle, Transition> _transitions;
+        //protected readonly Dictionary<AssignedStyle, Object?> _setters;
+        //protected readonly Dictionary<AssignedStyle, Transition> _transitions;
     }
 }

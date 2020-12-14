@@ -133,6 +133,8 @@ namespace Das.Gdi
 
                 var bmp = _gdiDevice.Run(view, DoRender);
 
+
+
                 //if (bmp != null)
                 //{
                 //    _dumpIndex++;
@@ -142,6 +144,63 @@ namespace Das.Gdi
                 return bmp!;
             }
         }
+
+        public Bitmap DoRender(IViewHost<Bitmap> viewHost)
+        {
+            var view = viewHost.View;
+
+            lock (_lock)
+            {
+                if (viewHost.AvailableSize.Width == 0 ||
+                    viewHost.AvailableSize.Height == 0)
+                {
+                    return null!;
+                }
+
+                //todo:
+                if (view.VerticalAlignment == VerticalAlignments.Stretch &&
+                    view.HorizontalAlignment == HorizontalAlignments.Stretch)
+                {
+                    if (_gdiDevice.UpdateSize(viewHost.AvailableSize))
+                    {
+                        view.InvalidateMeasure();
+                        //   return null!;
+                    }
+                }
+
+                var available = new ValueRenderSize(viewHost.AvailableSize);
+
+                if (view.IsRequiresMeasure)
+                {
+                    var desired = _measureContext.MeasureMainView(view, available, viewHost);
+                    _renderRect.Size = desired;
+
+                    switch (viewHost.SizeToContent)
+                    {
+                        case SizeToContent.Width | SizeToContent.Height:
+                            _gdiDevice.UpdateSize(desired.Width, desired.Height);
+                            break;
+
+                        case SizeToContent.Width:
+                            _gdiDevice.UpdateSize(desired.Width, _gdiDevice.Height);
+                            break;
+
+                        case SizeToContent.Height:
+                            _gdiDevice.UpdateSize(_gdiDevice.Width, desired.Height);
+                            break;
+                    }
+
+                    _gdiDevice.Clear();
+                }
+
+                var bmp = _gdiDevice.Run(view, DoRender);
+
+
+                return bmp!;
+            }
+        }
+
+
 
         //private Int32 _dumpIndex;
 
@@ -213,5 +272,10 @@ namespace Das.Gdi
         private ValueRectangle _hostRect;
         private readonly IViewHost<Bitmap> _viewHost;
         private readonly IVisualHost<Bitmap> _visualHost;
+
+        public void Dispose()
+        {
+            _gdiDevice.Dispose();
+        }
     }
 }

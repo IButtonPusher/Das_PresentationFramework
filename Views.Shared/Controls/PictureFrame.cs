@@ -10,23 +10,23 @@ using Das.Views.Styles;
 namespace Das.Views.Controls
 {
     // ReSharper disable once UnusedMember.Global
-    public class PictureFrame : BindableElement<IImage>
+    public class PictureFrame : BindableElement
     {
         public PictureFrame(IVisualBootstrapper visualBootstrapper) 
             : base(visualBootstrapper)
         {
         }
 
-        public PictureFrame(IDataBinding<IImage> value,
-                            IVisualBootstrapper visualBootstrapper) 
-            : base(value, visualBootstrapper)
-        {
-        }
+        //public PictureFrame(IDataBinding<IImage> value,
+        //                    IVisualBootstrapper visualBootstrapper) 
+        //    : base(value, visualBootstrapper)
+        //{
+        //}
 
         public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
-            var img = _currentImage;
+            var img = Image;
             if (img == null)
                 return;
 
@@ -54,13 +54,18 @@ namespace Das.Views.Controls
         public override void Dispose()
         {
             base.Dispose();
-            _currentImage?.Dispose();
+
+            if (!(Image is { } img)) return;
+            img.Dispose();
+            Image = null;
+
+            //_currentImage?.Dispose();
         }
 
-        protected override void OnDataContextChanged(Object? newValue)
-        {
-            base.OnDataContextChanged(newValue);
-        }
+        //protected override void OnDataContextChanged(Object? newValue)
+        //{
+        //    base.OnDataContextChanged(newValue);
+        //}
 
         public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
@@ -70,11 +75,16 @@ namespace Das.Views.Controls
             //if (!(DataContext is {} dc))
             //    return Size.Empty;
 
-            _currentImage = Image ??  GetBoundValue(DataContext!);
-            if (_currentImage == null || _currentImage.IsEmpty)
-                return ValueSize.Empty;
             
-            var size = measureContext.MeasureImage(_currentImage);
+            if (!(Image is {} currentImage))
+                return ValueSize.Empty;
+            var size = measureContext.MeasureImage(currentImage);
+            
+            //_currentImage = Image ??  GetBoundValue(DataContext!);
+            //if (_currentImage == null || _currentImage.IsEmpty)
+            //    return ValueSize.Empty;
+            
+            //var size = measureContext.MeasureImage(_currentImage);
             //var forced = measureContext.GetStyleSetter<Size>(StyleSetter.Size, this)
             //             * zoom;
             //if (forced != null && !Size.Empty.Equals(forced))
@@ -113,6 +123,6 @@ namespace Das.Views.Controls
             set => ImageProperty.SetValue(this, value);
         }
 
-        private IImage? _currentImage;
+        //private IImage? _currentImage;
     }
 }

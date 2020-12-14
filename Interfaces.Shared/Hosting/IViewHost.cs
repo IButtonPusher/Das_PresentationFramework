@@ -16,9 +16,12 @@ namespace Das.Views
     /// </summary>
     public interface IViewHost : IVisualHost,
                                  IViewState,
-                                 IChangeTracking
+                                 IChangeTracking,
+                                 IDisposable
     {
-        IViewModel? DataContext { get; set; }
+        
+        
+        //IViewModel? DataContext { get; set; }
 
         Thickness RenderMargin { get; }
         
@@ -26,7 +29,7 @@ namespace Das.Views
 
         IStyleContext StyleContext { get; }
 
-        IView View { get; }
+        IVisualElement View { get; }
 
         new Double ZoomLevel { get; set; }
 

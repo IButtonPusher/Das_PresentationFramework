@@ -2,11 +2,12 @@
 using System.IO;
 using System.Threading.Tasks;
 using Das.Views.Panels;
+using Das.Views.Rendering;
 
 namespace Das.Views
 {
     public interface IViewProvider
     {
-        Task<IView> GetView(FileInfo file);
+        Task<IVisualElement> GetView(FileInfo file);
     }
 }

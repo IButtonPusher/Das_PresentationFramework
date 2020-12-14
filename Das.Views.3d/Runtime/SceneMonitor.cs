@@ -13,7 +13,7 @@ namespace Das.Views.Extended.Runtime
     /// </summary>
     // ReSharper disable once UnusedMember.Global
     // ReSharper disable once UnusedType.Global
-    public class SceneMonitor : BindableElement<ICamera>, IChangeTracking
+    public class SceneMonitor : BindableElement, IChangeTracking
     {
         public override ValueSize Measure(IRenderSize availableSpace, 
                                           IMeasureContext measureContext)
@@ -46,11 +46,14 @@ namespace Das.Views.Extended.Runtime
 
         private Boolean TryGetCamera(out ICamera camera)
         {
-            if (!(Binding is {} binding) || !(DataContext is {} dc))
-                camera = default!;
-            else camera = binding.GetValue(dc);
-
+            camera = (DataContext as ICamera)!;
             return camera != null;
+
+            //if (!(DataContext is { } binding) || !(DataContext is { } dc))
+            //    camera = default!;
+            //else camera = binding.GetValue(dc);
+
+            //return camera != null;
         }
 
         public override void Arrange(IRenderSize availableSpace, IRenderContext renderContext)
@@ -76,11 +79,11 @@ namespace Das.Views.Extended.Runtime
 
         public Boolean IsChanged => true;
 
-        public SceneMonitor(IDataBinding<ICamera>? binding, 
-                            IVisualBootstrapper templateResolver) 
-            : base(binding, templateResolver)
-        {
-        }
+        //public SceneMonitor(IDataBinding<ICamera>? binding, 
+        //                    IVisualBootstrapper templateResolver) 
+        //    : base(binding, templateResolver)
+        //{
+        //}
 
         public SceneMonitor(IVisualBootstrapper templateResolver) : base(templateResolver)
         {

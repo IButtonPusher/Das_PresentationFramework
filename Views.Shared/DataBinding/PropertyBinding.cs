@@ -18,8 +18,10 @@ namespace Das.Views.DataBinding
                                String propertyName)
         {
             _dataContext = dataContext;
-            _prop = dataContext.GetType().GetProperty(propertyName) ??
+            _prop = GetBindingProperty(dataContext.GetType(), propertyName) ??
                     throw new MissingMemberException(dataContext.GetType().Name, propertyName);
+            //_prop = dataContext.GetType().GetProperty(propertyName) ??
+            //        throw new MissingMemberException(dataContext.GetType().Name, propertyName);
         }
 
         public override IDataBinding<T> DeepCopy()

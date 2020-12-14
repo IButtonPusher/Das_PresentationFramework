@@ -67,10 +67,7 @@ namespace Das.Views.Gdi.Controls
             }));
         }
 
-        IVisualElement IDeepCopyable<IVisualElement>.DeepCopy()
-        {
-            throw new NotSupportedException();
-        }
+        
 
         public Int32 Id => -1;
 
@@ -82,7 +79,7 @@ namespace Das.Views.Gdi.Controls
 
         public new event Action<IVisualElement>? Disposed;
 
-        public void OnParentChanging(IContainerVisual? newParent)
+        public void OnParentChanging(IVisualElement? newParent)
         {
             if (newParent == null)
                 _hostingControl.Controls.Remove(this);
@@ -178,6 +175,12 @@ namespace Das.Views.Gdi.Controls
         public Boolean Equals(IVisualElement other)
         {
             return ReferenceEquals(this, other) ||  _htmlPanel.Equals(other);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add => _htmlPanel.PropertyChanged += value;
+            remove => _htmlPanel.PropertyChanged -= value;
         }
     }
 }

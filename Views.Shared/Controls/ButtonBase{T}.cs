@@ -68,7 +68,8 @@ namespace Das.Views.Controls
                 return true;
 
             //todo: this is not good
-            var boundValue = BoundValue ?? Binding?.GetBoundValue(DataContext);
+            //var boundValue = BoundValue ?? Binding?.GetBoundValue(DataContext);
+            var boundValue = DataContext;
 
             cmd.ExecuteAsync(boundValue!).ConfigureAwait(false);
             return true;
@@ -90,7 +91,9 @@ namespace Das.Views.Controls
             if (ClickMode != ClickMode.Press || !(Command is {} cmd))
                 return true;
 
-            cmd.ExecuteAsync(BoundValue).ConfigureAwait(false);
+            var boundValue = DataContext;
+            
+            cmd.ExecuteAsync(boundValue).ConfigureAwait(false);
             return true;
         }
 

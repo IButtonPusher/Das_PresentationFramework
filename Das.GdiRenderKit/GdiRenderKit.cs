@@ -21,14 +21,18 @@ namespace Das.Gdi.Kits
                                        IRenderKit,
                                        IDisplayMetrics
     {
+        public IStyleContext StyleContext { get; }
+
         private readonly IWindowProvider<IVisualHost> _windowProvider;
 
         public GdiRenderKit(IViewPerspective viewPerspective,
                             IWindowProvider<IVisualHost> windowProvider,
                             IStyleContext styleContext,
                             IResolver container)
-        : base(container, styleContext, Serializer.AttributeParser, Serializer.TypeInferrer)
+        : base(container, styleContext, Serializer.AttributeParser, Serializer.TypeInferrer,
+            Serializer.TypeManipulator)
         {
+            StyleContext = styleContext;
             _windowProvider = windowProvider;
             // ReSharper disable once VirtualMemberCallInConstructor
             RegisterSurrogate<HtmlPanel>(GetHtmlPanelSurrogate);

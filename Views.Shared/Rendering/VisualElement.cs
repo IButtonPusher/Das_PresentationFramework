@@ -7,13 +7,13 @@ using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Mvvm;
-using Das.Views.Panels;
+using Das.Views.Rendering;
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
 
 #endif
 
-namespace Das.Views.Rendering
+namespace Das.Views
 {
     public abstract class VisualElement : NotifyPropertyChangedBase,
                                           IVisualElement
@@ -103,18 +103,18 @@ namespace Das.Views.Rendering
         }
 
        
-        public virtual IVisualElement DeepCopy()
-        {
-            var newObject = _visualBootstrapper.Instantiate<VisualElement>(GetType());
-            newObject.VerticalAlignment = VerticalAlignment;
-            newObject.HorizontalAlignment = HorizontalAlignment;
-            newObject.Height = Height;
-            newObject.Width = Width;
-            newObject.Background = Background;
+        //public virtual IVisualElement DeepCopy()
+        //{
+        //    var newObject = _visualBootstrapper.Instantiate<VisualElement>(GetType());
+        //    newObject.VerticalAlignment = VerticalAlignment;
+        //    newObject.HorizontalAlignment = HorizontalAlignment;
+        //    newObject.Height = Height;
+        //    newObject.Width = Width;
+        //    newObject.Background = Background;
 
-            newObject.Id = Id;
-            return newObject;
-        }
+        //    newObject.Id = Id;
+        //    return newObject;
+        //}
 
         public virtual Int32 Id { get; private set; }
 
@@ -151,7 +151,7 @@ namespace Das.Views.Rendering
             base.RaisePropertyChanged(propertyName, value);
         }
 
-        public virtual void OnParentChanging(IContainerVisual? newParent)
+        public virtual void OnParentChanging(IVisualElement? newParent)
         {
         }
 

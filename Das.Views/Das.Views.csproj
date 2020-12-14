@@ -33,7 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Panels\Grid\GridPanel.cs" />
+    <Compile Remove="Panels\Grid\RepeaterGrid.cs" />
     <Compile Remove="Panels\Providers\StackPanelProvider.cs" />
+    <Compile Remove="Panels\WrapPanel.cs" />
     <Compile Remove="SurrogateVisualBase.cs" />
   </ItemGroup>
 
@@ -43,11 +46,13 @@
 
   <ItemGroup>
     <Folder Include="Kits\" />
+    <Folder Include="Panels\Grid\" />
     <Folder Include="Panels\Providers\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Das.Container" Version="0.0.11-alpha" />
+    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.15-alpha" />
   </ItemGroup>
 
   <ItemGroup>

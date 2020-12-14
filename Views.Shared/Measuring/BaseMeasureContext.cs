@@ -118,8 +118,29 @@ namespace Das.Views.Measuring
             element.AcceptChanges(ChangeType.Measure);
 
             return desiredSize;
+        }
 
-           
+        protected virtual Boolean TryGetElementSpecifiedSize(IVisualElement visual,
+                                                             out ValueSize size)
+        {
+            var width = visual.Width ?? GetStyleSetter<Double>(StyleSetter.Width, visual);
+
+            if (Double.IsNaN(width))
+            {
+                size = ValueSize.Empty;
+                return false;
+            }
+
+            var height = visual.Height ?? GetStyleSetter<Double>(StyleSetter.Height, visual);
+            
+            if (Double.IsNaN(height))
+            {
+                size = ValueSize.Empty;
+                return false;
+            }
+
+            size = new ValueSize(width, height);
+            return true;
         }
 
         private void SetLastMeasured(IVisualElement element,

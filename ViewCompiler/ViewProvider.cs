@@ -1,4 +1,5 @@
-﻿using Das.Gdi;
+﻿using System;
+using Das.Gdi;
 using System.IO;
 using System.Threading.Tasks;
 using Das.Serializer;
@@ -19,7 +20,7 @@ namespace ViewCompiler
             ViewDeserializer = serializer;
         }
 
-        public async Task<IView> GetView(FileInfo file)
+        public async Task<IVisualElement> GetView(FileInfo file)
         {
             var bldr = await _builder.GetViewBuilder(file);
             return bldr;

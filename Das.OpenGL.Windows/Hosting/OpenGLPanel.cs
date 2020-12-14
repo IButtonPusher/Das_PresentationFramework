@@ -10,7 +10,7 @@ namespace Das.OpenGL.Windows
 {
     public abstract class OpenGLPanel : GLHostedElement
     {
-        public OpenGLPanel(IView view, 
+        public OpenGLPanel(IVisualElement view, 
                            IStyleContext styleContext)
             : base(view, styleContext)
         {

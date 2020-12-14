@@ -5,6 +5,7 @@ using Das.Container;
 using Das.Gdi.Controls;
 using Das.Gdi.Kits;
 using Das.Views;
+using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Mvvm;
@@ -40,16 +41,16 @@ namespace Das.Gdi
         {
             var perspective = new BasePerspective();
             var kit = new GdiRenderKit(perspective, windowProvider,
-                new BaseStyleContext(new DefaultStyle(), new DefaultColorPalette()),
+                new BaseStyleContext(DefaultStyle.Instance, new DefaultColorPalette()),
                 container);
             return kit;
         }
 
         public ViewWindow Show<TViewModel>(TViewModel viewModel, 
-                                           IView view)
-            where TViewModel : IViewModel
+                                           IBindableElement view)
+            //where TViewModel : IViewModel
         {
-            var styleContext = view.StyleContext;
+            var styleContext = RenderKit.StyleContext;
 
             var control = new GdiHostedElement(view, styleContext);
             var form = new ViewWindow(control);
@@ -64,8 +65,8 @@ namespace Das.Gdi
             //var hwnd = new WindowInteropHelper( this ).EnsureHandle();
             //var monitor = NativeMethods.MonitorFromWindow( hwnd, NativeMethods.MONITOR_DEFAULTTONEAREST );
 
-
-            view.SetDataContext(viewModel);
+            view.DataContext = viewModel;
+            //view.SetDataContext(viewModel);
 
             WindowShown?.Invoke(form);
 
@@ -73,8 +74,8 @@ namespace Das.Gdi
         }
 
         public ViewWindow Show<TViewModel>(TViewModel viewModel, 
-                                           IView<TViewModel> view) 
-            where TViewModel : IViewModel
+                                           IView view) 
+            //where TViewModel : IViewModel
         {
             var styleContext = view.StyleContext;
 
@@ -86,15 +87,16 @@ namespace Das.Gdi
 
             //renderer.GetContentSize()
 
-            view.SetDataContext(viewModel);
+           // view.DataContext = viewModel;
+            //view.SetDataContext(viewModel);
 
             WindowShown?.Invoke(form);
 
             return form;
         }
 
-        public ViewWindow Show<TViewModel>(IView<TViewModel> view) 
-            where TViewModel : IViewModel
+        public ViewWindow Show<TViewModel>(IView view) 
+            //where TViewModel : IViewModel
         {
             return Show(view.DataContext, view);
         }
@@ -111,8 +113,7 @@ namespace Das.Gdi
         public event Action<ViewWindow>? WindowShown;
 
         public void Run<TViewModel>(TViewModel viewModel, 
-                                    IView view) 
-            where TViewModel : IViewModel
+                                    IView view)
         {
             var window = Show(viewModel, view);
             
@@ -123,28 +124,31 @@ namespace Das.Gdi
 
         // ReSharper disable once UnusedMember.Global
         public GdiHostedElement Host<TViewModel>(TViewModel viewModel, 
-                                                 IView<TViewModel> view)
+                                                 IView view)
             where TViewModel : IViewModel
         {
             var styleContext = view.StyleContext;
             var control = new GdiHostedElement(view, styleContext);
-            control.DataContext = viewModel;
+            //control.DataContext = viewModel;
             Cook(control);
 
-            view.SetDataContext(viewModel);
+            view.DataContext = viewModel;
+            //view.SetDataContext(viewModel);
 
             return control;
         }
 
         // ReSharper disable once UnusedMember.Global
-        public GdiHostedElement HostStatic<TViewModel>(TViewModel viewModel, IView<TViewModel> view)
+        public GdiHostedElement HostStatic<TViewModel>(TViewModel viewModel
+                                                       , IView view)
         {
             var styleContext = view.StyleContext;
             var control = new GdiHostedElement(view, styleContext);
             var renderer = new BitmapRenderer(control,
                 RenderKit.MeasureContext, RenderKit.RenderContext);
 
-            view.SetDataContext(viewModel);
+            view.DataContext = viewModel;
+            //view.SetDataContext(viewModel);
 
             control.BackingBitmap = renderer.DoRender();
             control.DataContextChanged += (o, e) => { control.BackingBitmap = renderer.DoRender(); };

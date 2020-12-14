@@ -6,11 +6,15 @@ namespace Das.Views.Core.Geometry
 {
     public readonly struct ValueSize : ISize
     {
-        public ValueSize(Double width, 
+        public ValueSize(Double width,
                          Double height)
         {
             Width = width;
             Height = height;
+
+            IsEmpty = Width.IsZero() && Height.IsZero();
+            IsValid = Width.IsNotZero() && Height.IsNotZero() &&
+                      !Double.IsInfinity(Width) && !Double.IsInfinity(Height);
         }
 
         public ValueSize(ISize size) 
@@ -68,7 +72,13 @@ namespace Das.Views.Core.Geometry
 
         public Double Height { get; }
 
-        public Boolean IsEmpty => Width.IsZero() && Height.IsZero();
+        public Boolean IsEmpty { get; }
+        
+        /// <summary>
+        /// A ValueSize is valid if the height and width are greater than 0 and neither are positive
+        /// or negative infinity
+        /// </summary>
+        public Boolean IsValid { get; }
 
         public ISize DeepCopy()
         {

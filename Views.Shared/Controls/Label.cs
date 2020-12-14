@@ -15,20 +15,20 @@ using TaskEx = System.Threading.Tasks.Task;
 namespace Das.Views.Controls
 {
     // ReSharper disable once UnusedType.Global
-    public class Label : Label<String>
-    {
-        public Label(IDataBinding<String> binding,
-                     IVisualBootstrapper visualBootstrapper) : base(binding, visualBootstrapper)
-        {
-        }
+    //public class Label : Label<String>
+    //{
+    //    //public Label(IDataBinding<String> binding,
+    //    //             IVisualBootstrapper visualBootstrapper) : base(binding, visualBootstrapper)
+    //    //{
+    //    //}
 
-        // ReSharper disable once UnusedMember.Global
-        public Label(IVisualBootstrapper visualBootstrapper) : base(visualBootstrapper)
-        {
-        }
-    }
+    //    // ReSharper disable once UnusedMember.Global
+    //    public Label(IVisualBootstrapper visualBootstrapper) : base(visualBootstrapper)
+    //    {
+    //    }
+    //}
 
-    public class Label<T> : BindableElement<T>
+    public class Label : BindableElement //BindableElement<T>
     {
         //private Int32 _instanceCount;
         //private Boolean _isDisposed;
@@ -41,22 +41,22 @@ namespace Das.Views.Controls
             //Interlocked.Add(ref _instanceCount, 1);
         }
 
-        public Label(IDataBinding<T> binding,
-                     IVisualBootstrapper visualBootstrapper)
-            : base(binding, visualBootstrapper)
-        {
-            //_currentValue = String.Empty;
+        //public Label(IDataBinding<T> binding,
+        //             IVisualBootstrapper visualBootstrapper)
+        //    : base(binding, visualBootstrapper)
+        //{
+        //    //_currentValue = String.Empty;
 
-            //Interlocked.Add(ref _instanceCount, 1);
-        }
+        //    //Interlocked.Add(ref _instanceCount, 1);
+        //}
 
-        public override IVisualElement DeepCopy()
-        {
-            var res = (Label<T>)base.DeepCopy();
-            res.TextBrush = TextBrush;
+        //public override IVisualElement DeepCopy()
+        //{
+        //    var res = (Label<T>)base.DeepCopy();
+        //    res.TextBrush = TextBrush;
 
-            return res;
-        }
+        //    return res;
+        //}
 
 
         public String Text
@@ -71,15 +71,15 @@ namespace Das.Views.Controls
             set => TextBrushProperty.SetValue(this, value);
         }
 
-        protected override void OnBindingChanged(IDataBinding<T>? obj)
-        {
-            base.OnBindingChanged(obj);
+        //protected override void OnBindingChanged(IDataBinding<T>? obj)
+        //{
+        //    base.OnBindingChanged(obj);
 
-            if (obj is { } binding)
-                Text = binding.GetValue(DataContext)?.ToString() ?? String.Empty;
-            else
-                Text = String.Empty;
-        }
+        //    if (obj is { } binding)
+        //        Text = binding.GetValue(DataContext)?.ToString() ?? String.Empty;
+        //    else
+        //        Text = String.Empty;
+        //}
 
         public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
@@ -129,44 +129,44 @@ namespace Das.Views.Controls
             return _font;
         }
 
-        public override void SetBoundValue(Object? value)
-        {
-            DataContext = value;
-            if (Binding == null && value is T val)
-                Binding = new ObjectBinding<T>(val);
-        }
+        //public override void SetBoundValue(Object? value)
+        //{
+        //    DataContext = value;
+        //    if (Binding == null && value is T val)
+        //        Binding = new ObjectBinding<T>(val);
+        //}
 
-        public override Task SetBoundValueAsync(Object? value)
-        {
-            SetBoundValue(value);
-            return TaskEx.CompletedTask;
-        }
+        //public override Task SetBoundValueAsync(Object? value)
+        //{
+        //    SetBoundValue(value);
+        //    return TaskEx.CompletedTask;
+        //}
 
-        protected override void RefreshBoundValues(Object? dataContext)
-        {
-            base.RefreshBoundValues(dataContext);
+        //protected override void RefreshBoundValues(Object? dataContext)
+        //{
+        //    base.RefreshBoundValues(dataContext);
             
-            if (BoundValue is String {} str)
-                Text = str;
-        }
+        //    if (BoundValue is String {} str)
+        //        Text = str;
+        //}
 
         public override String ToString()
         {
             return "Label: " + Text;
         }
 
-        public static readonly DependencyProperty<Label<T>, String> TextProperty =
-            DependencyProperty<Label<T>, String>.Register(nameof(Text), String.Empty, 
+        public static readonly DependencyProperty<Label, String> TextProperty =
+            DependencyProperty<Label, String>.Register(nameof(Text), String.Empty, 
                 OnTextChanged);
 
-        private static void OnTextChanged(Label<T> sender, 
+        private static void OnTextChanged(Label sender, 
                                           String oldValue, String newValue)
         {
             sender.InvalidateMeasure();
         }
 
-        public static readonly DependencyProperty<Label<T>, IBrush?> TextBrushProperty =
-            DependencyProperty<Label<T>, IBrush?>.Register(nameof(TextBrush), default);
+        public static readonly DependencyProperty<Label, IBrush?> TextBrushProperty =
+            DependencyProperty<Label, IBrush?>.Register(nameof(TextBrush), default);
 
         //private String _currentValue;
         private Font? _font;

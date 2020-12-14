@@ -12,7 +12,7 @@ namespace Das.Views.Panels
 {
     // ReSharper disable once UnusedType.Global
     // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-    public class ScrollPanel<T> : ContentPanel<T>,
+    public class ScrollPanel : ContentPanel,
                                   IHandleInput<MouseWheelEventArgs>,
                                   IHandleInput<DragEventArgs>,
                                   IHandleInput<FlingEventArgs>,

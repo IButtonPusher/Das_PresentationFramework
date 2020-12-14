@@ -1,6 +1,7 @@
 ﻿using Das.Views.Panels;
 using Das.Views.Styles;
 using System;
+using Das.Views;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Hosting;
@@ -15,7 +16,7 @@ namespace WinForms.Shared
     public abstract class HostedViewControl : HostedControl, 
         IBoundElementContainer, IWindowsViewHost
     {
-        protected HostedViewControl(IView view, 
+        protected HostedViewControl(IVisualElement view, 
                                     IStyleContext styleContext)
             : this(styleContext)
         {
@@ -36,22 +37,23 @@ namespace WinForms.Shared
         //private Boolean _isChanged;
         private IViewModel? _dataContext;
 
-        public IView View { get; protected set; }
+        public IVisualElement View { get; protected set; }
 
         public IVisualElement Element { get; set; }
-        public IViewModel? DataContext
-        {
-            get => _dataContext;
-            set
-            {
-                _dataContext = value;
-                View.SetDataContext(value);
-                //_isChanged = true;
-                DataContextChanged?.Invoke(this, EventArgs.Empty);
-            }
-        }
+        //public IViewModel? DataContext
+        //{
+        //    get => _dataContext;
+        //    set
+        //    {
+        //        _dataContext = value;
+        //        View.DataContext = value;
+        //        //View.SetDataContext(value);
+        //        //_isChanged = true;
+        //        DataContextChanged?.Invoke(this, EventArgs.Empty);
+        //    }
+        //}
 
-        public void SetView(IView view) => View = view;
+        public void SetView(IVisualElement view) => View = view;
 
         public SizeToContent SizeToContent { get; set; }
 
@@ -103,10 +105,11 @@ namespace WinForms.Shared
 
         public void AcceptChanges()
         {
-            View.AcceptChanges();
+            View.AcceptChanges(ChangeType.Measure);
+            View.AcceptChanges(ChangeType.Arrange);
         }
 
-        public virtual Boolean IsChanged => View.IsChanged;  //_isChanged;
+        public virtual Boolean IsChanged => View.IsRequiresMeasure || View.IsRequiresArrange;  //_isChanged;
 
         public IPoint2D GetOffset(IPoint2D input)
         {

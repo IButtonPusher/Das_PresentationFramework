@@ -9,33 +9,34 @@ using Das.Views.DataBinding;
 using Das.Views.ItemsControls;
 using Das.Views.Mvvm;
 using Das.Views.Rendering;
+using Das.Views.Templates;
 
 namespace Das.Views.Panels
 {
-    public class RepeaterPanel<T> : ContentPanel<IEnumerable<T>>, 
-                                    IRepeaterPanel<T>,
-                                    IItemsControl<T>
+    public class RepeaterPanel : ContentPanel, 
+                                    IRepeaterPanel,
+                                    IItemsControl
     {
         public RepeaterPanel(IVisualBootstrapper visualBootstrapper)
-            : this(null, visualBootstrapper, null, null)
+            : this(visualBootstrapper, null, null)
         {
 
         }
         
-        public RepeaterPanel(IDataBinding<IEnumerable<T>>? binding,
-                             IVisualBootstrapper visualBootstrapper)
-        : this(binding, visualBootstrapper, null, null)
-        {
+        //public RepeaterPanel(IDataBinding<IEnumerable<T>>? binding,
+        //                     IVisualBootstrapper visualBootstrapper)
+        //: this(binding, visualBootstrapper, null, null)
+        //{
 
-        }
+        //}
         
         
         // ReSharper disable once UnusedMember.Global
-        public RepeaterPanel(IDataBinding<IEnumerable<T>>? binding,
+        public RepeaterPanel(//IDataBinding<IEnumerable<T>>? binding,
                              IVisualBootstrapper visualBootstrapper,
                              ISequentialRenderer? renderer,
                              IVisualCollection? children) 
-            : base(visualBootstrapper, binding)
+            : base(visualBootstrapper)//, binding)
         {
             switch (children)
             {
@@ -54,8 +55,8 @@ namespace Das.Views.Panels
 
             _controlsLock = new Object();
             _renderer = EnsureRenderer(renderer);
-            _visualsByVm = new Dictionary<T, IVisualElement>();
-            _itemsControlHelper = new ItemsControlHelper<T>(AddNewItems, RemoveItems, ClearItems,
+            _visualsByVm = new Dictionary<Object, IVisualElement>();
+            _itemsControlHelper = new ItemsControlHelper(AddNewItems, RemoveItems, ClearItems,
                 null, null);
             
         }
@@ -112,10 +113,17 @@ namespace Das.Views.Panels
         //    else throw new NotImplementedException();
         //}
 
-        protected override void OnDataContextChanged(Object? newValue)
+        protected override Object? OnInterceptDataContextChanging(Object? oldValue, 
+                                                                  Object? newValue)
         {
             ClearBeforeSet();
-            
+            return base.OnInterceptDataContextChanging(oldValue, newValue);
+        }
+
+        protected override void OnDataContextChanged(Object? newValue)
+        {
+
+
             RefreshBoundValues(newValue);
             InvalidateMeasure();
 
@@ -123,40 +131,40 @@ namespace Das.Views.Panels
             //    return;
         }
 
-        public override void SetBoundValue(Object? oValue)
-        {
-            if (!(ClearBeforeSet() is {} content))
-                return;
+        //public override void SetBoundValue(Object? oValue)
+        //{
+        //    if (!(ClearBeforeSet() is {} content))
+        //        return;
 
-            if (oValue is IEnumerable<T> value)
-            {
-                foreach (var vm in value)
-                {
-                    var ctrl = content.DeepCopy();
-                    if (ctrl is IBindableElement bindable) bindable.SetBoundValue(vm!);
+        //    if (oValue is IEnumerable<T> value)
+        //    {
+        //        foreach (var vm in value)
+        //        {
+        //            var ctrl = content.DeepCopy();
+        //            if (ctrl is IBindableElement bindable) bindable.SetBoundValue(vm!);
 
-                    _controls.Add(ctrl);
-                }
-            }
-        }
-        
-        public override async Task SetBoundValueAsync(Object? oValue)
-        {
-            if (!(ClearBeforeSet() is {} content))
-                return;
+        //            _controls.Add(ctrl);
+        //        }
+        //    }
+        //}
 
-            if (oValue is IEnumerable<T> value)
-            {
-                foreach (var vm in value)
-                {
-                    var ctrl = content.DeepCopy();
-                    if (ctrl is IBindableElement bindable)
-                        await bindable.SetBoundValueAsync(vm!);
+        //public override async Task SetBoundValueAsync(Object? oValue)
+        //{
+        //    if (!(ClearBeforeSet() is {} content))
+        //        return;
 
-                    _controls.Add(ctrl);
-                }
-            }
-        }
+        //    if (oValue is IEnumerable<T> value)
+        //    {
+        //        foreach (var vm in value)
+        //        {
+        //            var ctrl = content.DeepCopy();
+        //            if (ctrl is IBindableElement bindable)
+        //                await bindable.SetBoundValueAsync(vm!);
+
+        //            _controls.Add(ctrl);
+        //        }
+        //    }
+        //}
 
         private void ClearItems()
         {
@@ -167,7 +175,7 @@ namespace Das.Views.Panels
 
         }
 
-        private void RemoveItems(IEnumerable<T> value)
+        private void RemoveItems(IEnumerable<Object> value)
         {
             lock (_controlsLock)
             {
@@ -189,7 +197,7 @@ namespace Das.Views.Panels
             }
         }
         
-        private void AddNewItems(IEnumerable<T> value)
+        private void AddNewItems(IEnumerable<Object> value)
         {
             if (!(Content is { } content))
                 return;
@@ -239,36 +247,36 @@ namespace Das.Views.Panels
 
        
 
-        public override void SetDataContext(Object? dataContext)
-        {
-            DataContext = dataContext;
-            if (!(Binding is {} binding))
-                return;
+        //public override void SetDataContext(Object? dataContext)
+        //{
+        //    DataContext = dataContext;
+        //    if (!(Binding is {} binding))
+        //        return;
 
-            if (!(dataContext is {} dc))
-                SetBoundValue(Enumerable.Empty<T>());
-            else
-                SetBoundValue(binding.GetValue(dc));
-        }
+        //    if (!(dataContext is {} dc))
+        //        SetBoundValue(Enumerable.Empty<T>());
+        //    else
+        //        SetBoundValue(binding.GetValue(dc));
+        //}
 
-        public override async Task SetDataContextAsync(Object? dataContext)
-        {
-            //DataContext = dataContext;
-            if (!(Binding is {} binding))
-                return;
+        //public override async Task SetDataContextAsync(Object? dataContext)
+        //{
+        //    //DataContext = dataContext;
+        //    if (!(Binding is {} binding))
+        //        return;
 
-            if (!(dataContext is {} dc))
-                await SetBoundValueAsync(Enumerable.Empty<T>());
-            else
-                await SetBoundValueAsync(await binding.GetValueAsync(dc));
-        }
+        //    if (!(dataContext is {} dc))
+        //        await SetBoundValueAsync(Enumerable.Empty<T>());
+        //    else
+        //        await SetBoundValueAsync(await binding.GetValueAsync(dc));
+        //}
 
         public Orientations Orientation { get; set; }
 
         public override IVisualElement? Content { get; set; }
 
-        IBindableElement<IEnumerable<T>>? IRepeaterPanel<T>.Content =>
-            Content as IBindableElement<IEnumerable<T>>;
+        //IBindableElement<IEnumerable<T>>? IRepeaterPanel<T>.Content =>
+        //    Content as IBindableElement<IEnumerable<T>>;
 
         
         
@@ -293,39 +301,39 @@ namespace Das.Views.Panels
             return input ?? new SequentialRenderer(_controls);
         }
 
-        public override void SetBoundValue(IEnumerable<T> value)
-        {
-            if (!(ClearBeforeSet() is { } content))
-                return;
+        //public override void SetBoundValue(IEnumerable<T> value)
+        //{
+        //    if (!(ClearBeforeSet() is { } content))
+        //        return;
 
-            foreach (var vm in value)
-            {
-                var ctrl = content.DeepCopy();
-                if (ctrl is IBindableElement bindable) bindable.SetBoundValue(vm!);
+        //    foreach (var vm in value)
+        //    {
+        //        var ctrl = content.DeepCopy();
+        //        if (ctrl is IBindableElement bindable) bindable.SetBoundValue(vm!);
 
-                _controls.Add(ctrl);
-            }
-        }
+        //        _controls.Add(ctrl);
+        //    }
+        //}
 
-        public override async Task SetBoundValueAsync(IEnumerable<T> value)
-        {
-            if (!(ClearBeforeSet() is { } content))
-                return;
+        //public override async Task SetBoundValueAsync(IEnumerable<T> value)
+        //{
+        //    if (!(ClearBeforeSet() is { } content))
+        //        return;
 
-            foreach (var vm in value)
-            {
-                var ctrl = content.DeepCopy();
-                if (ctrl is IBindableElement bindable)
-                    await bindable.SetBoundValueAsync(vm!);
+        //    foreach (var vm in value)
+        //    {
+        //        var ctrl = content.DeepCopy();
+        //        if (ctrl is IBindableElement bindable)
+        //            await bindable.SetBoundValueAsync(vm!);
 
-                _controls.Add(ctrl);
-            }
-        }
+        //        _controls.Add(ctrl);
+        //    }
+        //}
 
         //private readonly List<IVisualElement> _controls;
         private readonly ISequentialRenderer _renderer;
         private readonly VisualCollection _controls;
-        private readonly Dictionary<T, IVisualElement> _visualsByVm;
+        private readonly Dictionary<Object, IVisualElement> _visualsByVm;
         private readonly Object _controlsLock;
 
         IVisualCollection ISequentialPanel.Children => _controls;
@@ -353,11 +361,13 @@ namespace Das.Views.Panels
         //}
         
         
-        private readonly ItemsControlHelper<T> _itemsControlHelper;
+        private readonly ItemsControlHelper _itemsControlHelper;
 
         INotifyingCollection? IItemsControl.ItemsSource => ItemsSource;
 
-        public INotifyingCollection<T>? ItemsSource
+        IDataTemplate? IItemsControl.ItemTemplate => ItemTemplate;
+
+        public INotifyingCollection? ItemsSource
         {
             get => _itemsControlHelper.ItemsSource;
             set => _itemsControlHelper.ItemsSource = value;

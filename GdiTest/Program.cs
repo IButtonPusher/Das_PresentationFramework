@@ -37,9 +37,7 @@ namespace GdiTest
 
             var _testLauncher = GetGdiLauncher();
             
-            var urp = new UniformRepeaterPanel<IBindableElement<TestCompanyVm>, TestCompanyVm>(
-                _testLauncher.RenderKit.VisualBootstrapper);
-            
+           
             
 
             var view = GetTestCompanyTabsView(_testLauncher);
@@ -48,15 +46,16 @@ namespace GdiTest
 
             //_testLauncher = GetOpenGLLauncher();
 
-            var vm = new TestCompanyVm();
+            ICompanyViewModel vm = new TestCompanyVm();
             vm.SelectedEmployee = vm.Employees.FirstOrDefault();
 
-            view.SetDataContext(vm);
+            view.DataContext = vm;
+            //view.SetDataContext(vm);
 
             //_testLauncher.r
 
             //var view = new TestTabControl(_testLauncher.BootStrapper.VisualBootstrapper);
-            view.SetDataContext(vm);
+            //view.SetDataContext(vm);
 
             _testLauncher.Run(vm, view);
 
@@ -66,7 +65,7 @@ namespace GdiTest
             ZoomTest();
         }
 
-        private static View<ICompanyViewModel> GetTestCompanyTabsView(TestLauncher testLauncher)
+        private static IView GetTestCompanyTabsView(TestLauncher testLauncher)
         {
             var inflater = testLauncher.RenderKit.ViewInflater;
             
@@ -78,9 +77,10 @@ namespace GdiTest
                 "company", "TestCompanyTabs.xml"));
 
             var xml = File.ReadAllText(file.FullName);
-            var view = inflater.InflateXml<IBindableElement<ICompanyViewModel>>(xml);
+            var view = inflater.InflateXml<IBindableElement>(xml);
 
-            return new View<ICompanyViewModel>(testLauncher.RenderKit.VisualBootstrapper)
+            //return view;
+            return new Das.Views.Panels.View(testLauncher.RenderKit.VisualBootstrapper)
             {
                 Content = view
             };
@@ -131,7 +131,8 @@ namespace GdiTest
             return view;
         }
 
-        private static Form Show<TViewModel>(TViewModel viewModel, IView view)
+        private static Form Show<TViewModel>(TViewModel viewModel, 
+                                             IBindableElement view)
             where TViewModel : IViewModel
         {
             var provider = new GdiProvider();
@@ -139,15 +140,15 @@ namespace GdiTest
         }
 
         // ReSharper disable once UnusedMember.Local
-        private static async Task CubeTest()
-        {
-            var viewProvider = new ViewProvider();
-            var provider = new CubeSceneProvider(viewProvider);
-            var vm = provider.BuildViewModel();
-            var v = await provider.GetView();
-            var _ = new SceneUpdater(vm, 15);
-            var form = Show(vm, v);
-            Application.Run(form);
-        }
+        //private static async Task CubeTest()
+        //{
+        //    var viewProvider = new ViewProvider();
+        //    var provider = new CubeSceneProvider(viewProvider);
+        //    var vm = provider.BuildViewModel();
+        //    var v = await provider.GetView();
+        //    var _ = new SceneUpdater(vm, 15);
+        //    var form = Show(vm, v);
+        //    Application.Run(form);
+        //}
     }
 }

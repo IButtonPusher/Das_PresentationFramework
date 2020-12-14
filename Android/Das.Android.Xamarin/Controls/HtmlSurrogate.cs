@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Android.Content;
 using Android.Views;
 using Android.Webkit;
+using Das.Views;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
@@ -155,7 +156,7 @@ namespace Das.Xamarin.Android.Controls
             set => ((IVisualElement) _htmlPanel).IsClipsContent = value;
         }
 
-        public void OnParentChanging(IContainerVisual? newParent)
+        public void OnParentChanging(IVisualElement? newParent)
         {
             if (newParent == null)
             {
@@ -169,6 +170,12 @@ namespace Das.Xamarin.Android.Controls
         public Boolean Equals(IVisualElement other)
         {
             return ReferenceEquals(this, other) ||  _htmlPanel.Equals(other);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add => _htmlPanel.PropertyChanged += value;
+            remove => _htmlPanel.PropertyChanged -= value;
         }
     }
 }

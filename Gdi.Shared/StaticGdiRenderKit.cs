@@ -18,9 +18,10 @@ namespace Das.Gdi.Kits
     { 
         public StaticGdiRenderKit(IViewPerspective viewPerspective,
                                   IStringPrimitiveScanner attributeScanner,
-                                  ITypeInferrer typeInferrer)
-        : base(new BaseStyleContext(new DefaultStyle(),
-            new DefaultColorPalette()), attributeScanner, typeInferrer)
+                                  ITypeInferrer typeInferrer,
+                                  IPropertyProvider propertyProvider)
+        : base(new BaseStyleContext(DefaultStyle.Instance,
+            new DefaultColorPalette()), attributeScanner, typeInferrer, propertyProvider)
         {
             var defaultSurrogates = new BaseSurrogateProvider();
             var imageProvider = new GdiImageProvider();

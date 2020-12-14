@@ -10,10 +10,11 @@
     <Compile Remove="Company\CompanyView.cs" />
     <Compile Remove="Company\CompanyViewProvider.cs" />
     <Compile Remove="Scene3d\CubeView.cs" />
+    <Compile Remove="TestTabControl.cs" />
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Das.Serializer.Split" Version="0.0.13-alpha" />
+    <PackageReference Include="Das.Serializer.Split" Version="0.0.16-alpha" />
   </ItemGroup> 
 
   <ItemGroup>

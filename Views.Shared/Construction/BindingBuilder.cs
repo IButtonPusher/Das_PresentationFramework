@@ -2,16 +2,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using Das.Serializer;
+using Das.ViewModels.Collections;
 using Das.Views.DataBinding;
 
 namespace Das.Views.Construction
 {
     public class BindingBuilder : IBindingBuilder
     {
-        public Dictionary<String, IDataBinding> GetBindingsDictionary(
-            IMarkupNode node, 
-            Type? dataContextType, Dictionary<String, String> nameSpaceAssemblySearch)
+        public BindingBuilder(ITypeInferrer typeInferrer,
+                              IPropertyProvider propertyProvider)
+        {
+            _typeInferrer = typeInferrer;
+            _propertyProvider = propertyProvider;
+            _cachedPropertyAccessors = new DoubleConcurrentDictionary<Type, String, IPropertyAccessor>();
+        }
+
+        public Dictionary<String, IDataBinding> GetBindingsDictionary(IMarkupNode node,
+                                                                      Type? dataContextType, 
+                                                                      Dictionary<String, String> nameSpaceAssemblySearch)
         {
             Dictionary<String, IDataBinding> bindings;
 
@@ -19,9 +29,7 @@ namespace Das.Views.Construction
             {
                 bindings = new Dictionary<String, IDataBinding>();
                 foreach (var kvp in GetBindings(dataContextType, node, nameSpaceAssemblySearch))
-                {
                     bindings.Add(kvp.Key, kvp.Value);
-                }
             }
             else bindings = _emptyBindings;
 
@@ -29,7 +37,7 @@ namespace Das.Views.Construction
         }
 
         public Type? InferDataContextTypeFromBindings(IEnumerable<IDataBinding> bindings,
-                                                              Type? currentGenericArg)
+                                                      Type? currentGenericArg)
         {
             Type? genericChild;
 
@@ -43,11 +51,9 @@ namespace Das.Views.Construction
                         genericChild = childArgs[0];
                     else throw new NotImplementedException();
                 }
-
             }
 
             foreach (var binding in bindings)
-            {
                 switch (binding)
                 {
                     case DeferredPropertyBinding deferredPropertyBinding:
@@ -55,11 +61,15 @@ namespace Das.Views.Construction
                         switch (deferredPropertyBinding.TargetPropertyName)
                         {
                             case nameof(IItemsControl.ItemsSource) when currentGenericArg != null:
-                                var sourceProp = currentGenericArg.GetProperty(
+                                //var sourceProp = currentGenericArg.GetProperty(
+                                //    deferredPropertyBinding.SourcePropertyName);
+
+                                var sourceProp = BaseBinding.GetBindingProperty(currentGenericArg,
                                     deferredPropertyBinding.SourcePropertyName);
 
-                                if (!(sourceProp?.PropertyType is {} sourcePropType) || 
-                                    !typeof(IEnumerable).IsAssignableFrom(sourcePropType) || 
+
+                                if (!(sourceProp?.PropertyType is { } sourcePropType) ||
+                                    !typeof(IEnumerable).IsAssignableFrom(sourcePropType) ||
                                     !sourcePropType.IsGenericType)
                                     continue;
 
@@ -71,28 +81,55 @@ namespace Das.Views.Construction
                                     throw new NotImplementedException();
 
                                 return srcPropGenerics[0];
-                            
+
                             case nameof(IBindableElement.DataContext):
-                                
-                                var dcProp = currentGenericArg?.GetProperty(
+
+                                if (currentGenericArg == null)
+                                    break;
+
+                                var dcProp = BaseBinding.GetBindingProperty(currentGenericArg,
                                     deferredPropertyBinding.SourcePropertyName);
+
+                                //var dcProp = currentGenericArg?.GetProperty(
+                                //    deferredPropertyBinding.SourcePropertyName);
 
                                 if (dcProp is { } validProp)
                                     return validProp.PropertyType;
-                                
+
                                 break;
                         }
 
                         break;
                 }
-            }
 
             return currentGenericArg;
         }
 
+        //private static PropertyInfo? GetProperty(Type declaringType,
+        //                                         String propName)
+        //{
+        //    if (!propName.Contains(".")) 
+        //        return declaringType.GetProperty(propName);
+
+        //    var subPropTokens = propName.Split('.');
+        //    var propInfo = declaringType.GetProperty(subPropTokens[0]);
+        //    if (propInfo == null)
+        //        return null;
+
+        //    for (var c = 1; c < subPropTokens.Length; c++)
+        //    {
+        //        propInfo = BaseBinding.GetTypePropertyOrDie(propInfo.PropertyType, subPropTokens[c]);
+        //        if (propInfo == null)
+        //            return null;
+        //    }
+
+        //    return propInfo;
+        //}
+
         private IEnumerable<KeyValuePair<String, IDataBinding>> GetBindings(Type dataContextType,
                                                                             IMarkupNode node,
-                                                                            Dictionary<String, String> nameSpaceAssemblySearch)
+                                                                            Dictionary<String, String>
+                                                                                nameSpaceAssemblySearch)
         {
             foreach (var kvp in node.GetAllAttributes())
             {
@@ -104,7 +141,7 @@ namespace Das.Views.Construction
                 var valExpression = valTrim.Substring(1, valTrim.Length - 2);
 
                 var expressionGroups = valExpression.Split(',');
-                
+
                 var expressionTokens = expressionGroups[0].Split();
 
                 String propName;
@@ -114,22 +151,20 @@ namespace Das.Views.Construction
                     case 2 when expressionTokens[0] == "Binding":
                         propName = expressionTokens[1];
                         break;
-                    
+
                     case 1:
                         propName = expressionTokens[0];
                         break;
-                    
+
                     default:
                         throw new NotImplementedException();
                 }
 
-               
 
                 IValueConverter? converter = null;
 
 
                 if (expressionGroups.Length > 1)
-                {
                     for (var c = 1; c < expressionGroups.Length; c++)
                     {
                         var groupTokens = expressionGroups[c].Split('=');
@@ -149,39 +184,32 @@ namespace Das.Views.Construction
                                     BindingFlags.Public);
 
                                 converter = staticProp?.GetValue(null, null) as IValueConverter;
-
                             }
-
-
                         }
                         else
                             throw new NotImplementedException();
-
                     }
-                }
 
                 if (propName == ".")
                 {
-                    var dcBinding = new DataContextBinding( kvp.Key, converter);
+                    var dcBinding = new DataContextBinding(kvp.Key, converter);
                     yield return new KeyValuePair<String, IDataBinding>(kvp.Key, dcBinding);
                     continue;
                 }
 
+                if (BaseBinding.GetBindingProperty(dataContextType, propName) == null)
+                    throw new MissingMemberException(dataContextType.Name, propName);
 
-                var propInfo = dataContextType.GetProperty(propName);
-                if (propInfo == null)
-                    throw new NotImplementedException();
+                var propAccessor = _cachedPropertyAccessors.GetOrAdd(dataContextType, propName, (d, p) =>
+                    _propertyProvider.GetPropertyAccessor(d, p));
                 
-                var binding = new DeferredPropertyBinding(propName, kvp.Key, converter);
+                //var propAccessor = _propertyProvider.GetPropertyAccessor(dataContextType, propName);
+                
+                var binding = new DeferredPropertyBinding(propName, kvp.Key, propAccessor, converter);
                 yield return new KeyValuePair<String, IDataBinding>(kvp.Key, binding);
-
-                //if (typeof(INotifyPropertyChanged).IsAssignableFrom(dataContextType))
-                //{
-
-                //}
             }
         }
-        
+
         private Type GetType(String name,
                              String? genericArgName,
                              Dictionary<String, String> nameSpaceAssemblySearch)
@@ -192,21 +220,17 @@ namespace Das.Views.Construction
                 var found = _typeInferrer.GetTypeFromClearName(letsTry, nameSpaceAssemblySearch, true);
                 if (found != null)
                     return found;
-
             }
 
             return _typeInferrer.GetTypeFromClearName(name, nameSpaceAssemblySearch)
                    ?? throw new TypeLoadException(name);
         }
-        
-        private readonly ITypeInferrer _typeInferrer;
-        
+
         private static readonly Dictionary<String, IDataBinding> _emptyBindings =
             new Dictionary<String, IDataBinding>();
 
-        public BindingBuilder(ITypeInferrer typeInferrer)
-        {
-            _typeInferrer = typeInferrer;
-        }
+        private readonly ITypeInferrer _typeInferrer;
+        private readonly IPropertyProvider _propertyProvider;
+        private readonly DoubleConcurrentDictionary<Type, String, IPropertyAccessor> _cachedPropertyAccessors;
     }
 }

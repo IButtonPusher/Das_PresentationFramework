@@ -2,29 +2,34 @@
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
+using Das.Views.DataBinding;
 using Das.Views.ItemsControls;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 
 namespace Das.Views.Defaults
 {
-    public class DefaultTabItemTemplate<T> : DefaultContentTemplate<T>
+    public class DefaultTabItemTemplate : DefaultContentTemplate
     {
-        private readonly ITabControl<T> _tabControl;
+        //private readonly ITabControl<TDataContext> _tabControl;
 
 
-        public DefaultTabItemTemplate(IVisualBootstrapper visualBootstrapper,
-                                      ITabControl<T> tabControl) 
-            : base(visualBootstrapper, null)
+        public DefaultTabItemTemplate(IVisualBootstrapper visualBootstrapper)
+                                      //ITabControl<TDataContext> tabControl) 
+            : base(visualBootstrapper)
         {
-            _tabControl = tabControl;
+          //  _tabControl = tabControl;
         }
 
-       
+        //public override TVisualElement BuildVisual<TVisualElement>(TDataContext dataContext)
+        //{
+        //    return ((DefaultContentTemplate) this).BuildVisual<TVisualElement>(dataContext);
+        //}
+
 
         public override IVisualElement BuildVisual(Object? dataContext)
         {
-            var btn = new ToggleButton<T>(_visualBootstrapper)
+            var btn = new ToggleButton(_visualBootstrapper)
             {
                 DataContext = dataContext
             };

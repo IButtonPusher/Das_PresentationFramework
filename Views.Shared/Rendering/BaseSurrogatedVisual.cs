@@ -6,15 +6,15 @@ namespace Das.Views.Rendering
 {
     public abstract class BaseSurrogatedVisual : VisualElement
     {
-        public override void OnParentChanging(IContainerVisual? newParent)
+        public override void OnParentChanging(IVisualElement? newParent)
         {
             base.OnParentChanging(newParent);
             Parent = newParent;
         }
 
-        private IContainerVisual? _parent;
+        private IVisualElement? _parent;
 
-        public IContainerVisual? Parent
+        public IVisualElement? Parent
         {
             get => _parent;
             set => SetValue(ref _parent, value);

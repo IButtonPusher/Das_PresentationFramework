@@ -45,7 +45,7 @@ namespace Das.Gdi
             }
         }
 
-        public override Boolean IsChanged => base.IsChanged || _isChanged;
+        //public override Boolean IsChanged => base.IsChanged || _isChanged;
 
         public Bitmap Asset
         {

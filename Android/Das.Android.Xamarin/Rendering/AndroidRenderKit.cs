@@ -27,8 +27,10 @@ namespace Das.Xamarin.Android
                                 IStyleContext styleContext,
                                 DisplayMetrics displayMetrics,
                                 IResolver container)
-        : base(container, styleContext, Serializer.AttributeParser, Serializer.TypeInferrer)
+        : base(container, styleContext, Serializer.AttributeParser, 
+            Serializer.TypeInferrer, Serializer.TypeManipulator)
         {
+            StyleContext = styleContext;
             DisplayMetrics = displayMetrics;
             var lastMeasures = new Dictionary<IVisualElement, ValueSize>();
             MeasureContext = new AndroidMeasureKit(windowManager, fontProvider, 
@@ -68,6 +70,8 @@ namespace Das.Xamarin.Android
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;
 
         IRenderContext IRenderKit.RenderContext => RenderContext;
+
+        public IStyleContext StyleContext { get; }
 
         public DisplayMetrics DisplayMetrics { get; }
 

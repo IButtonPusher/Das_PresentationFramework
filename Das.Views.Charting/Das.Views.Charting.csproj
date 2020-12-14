@@ -10,6 +10,7 @@
   <ItemGroup>
     <Compile Remove="IDataPoint.cs" />
     <Compile Remove="Pie\IPieData.cs" />
+    <Compile Remove="Pie\LegendItemStyle.cs" />
     <Compile Remove="Pie\PieChart.cs" />
     <Compile Remove="Pie\PieLegendItem.cs" />
   </ItemGroup>
@@ -17,6 +18,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
     <ProjectReference Include="..\Das.Views\Das.Views.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pie\" />
   </ItemGroup>
 
   

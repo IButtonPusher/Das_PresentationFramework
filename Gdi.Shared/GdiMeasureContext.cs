@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using Das.Gdi.Core;
+using Das.Views;
 using Das.Views.Controls;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;

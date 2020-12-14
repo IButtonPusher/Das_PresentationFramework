@@ -15,7 +15,7 @@ namespace Das.Gdi.Controls
     public class GdiHostedElement : HostedViewControl, 
         IViewHost<Bitmap>
     {
-        public GdiHostedElement(IView view, 
+        public GdiHostedElement(IVisualElement view, 
                                 IStyleContext styleContext)
             : base(view, styleContext)
         {
@@ -83,7 +83,7 @@ namespace Das.Gdi.Controls
 
         //todo: base on IView after changing element to IView type _
         // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-        public override Boolean IsChanged => View != null && (_isChanged || View.IsChanged 
+        public override Boolean IsChanged => View != null && (_isChanged //|| View.IsChanged 
                                                                          || base.IsChanged);
     }
 }

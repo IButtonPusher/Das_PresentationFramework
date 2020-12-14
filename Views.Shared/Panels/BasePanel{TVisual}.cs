@@ -14,28 +14,29 @@ namespace Das.Views.Panels
                                                              IPanelElement
         where TVisual : IVisualElement
     {
-        protected BasePanel(IDataBinding<TDataContext>? binding, 
+        protected BasePanel(//IDataBinding<TDataContext>? binding, 
                             IVisualBootstrapper visualBootstrapper,
                             IVisualCollection<TVisual> children) 
-            : base(binding, visualBootstrapper)
+            : base(visualBootstrapper)
         {
             _children = children is VisualCollection<TVisual> good 
                 ? good 
                 : new VisualCollection<TVisual>(children);
         }
 
-        protected BasePanel(IDataBinding<TDataContext>? binding,
+        protected BasePanel(//IDataBinding<TDataContext>? binding,
                             IVisualBootstrapper visualBootstrapper)
-            : this(binding, visualBootstrapper, new VisualCollection<TVisual>())
+            //: this(binding, visualBootstrapper, new VisualCollection<TVisual>())
+            : this(visualBootstrapper, new VisualCollection<TVisual>())
         {
 
         }
         
         
-        protected BasePanel(IVisualBootstrapper visualBootstrapper) 
-            : this(null, visualBootstrapper)
-        {
-        }
+        //protected BasePanel(IVisualBootstrapper visualBootstrapper) 
+        //    : this(null, visualBootstrapper)
+        //{
+        //}
 
         public Boolean Contains(IVisualElement element)
         {
@@ -88,14 +89,14 @@ namespace Das.Views.Panels
             InvalidateMeasure();
         }
 
-        public override IVisualElement DeepCopy()
-        {
-            var panel = base.DeepCopy() as BasePanel<TVisual, TDataContext>
-                           ?? throw new Exception(nameof(DeepCopy) + " failed");
+        //public override IVisualElement DeepCopy()
+        //{
+        //    var panel = base.DeepCopy() as BasePanel<TVisual, TDataContext>
+        //                   ?? throw new Exception(nameof(DeepCopy) + " failed");
             
-            panel.AddChildren(Children.GetAllChildren());
-            return panel;
-        }
+        //    panel.AddChildren(Children.GetAllChildren());
+        //    return panel;
+        //}
 
         public virtual void OnChildDeserialized(TVisual element, 
                                                 INode node)

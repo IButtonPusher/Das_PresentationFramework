@@ -49,8 +49,8 @@
       <HintPath>..\packages\Das.Container.Interfaces.0.0.8-alpha\lib\netstandard2.0\Das.Container.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Serializer.Interfaces, Version=0.0.13.0, Culture=neutral, PublicKeyToken=55ec9f54a6117381, processorArchitecture=MSIL">
-      <HintPath>..\packages\Das.Serializer.Interfaces.0.0.13-alpha\lib\net45\Serializer.Interfaces.dll</HintPath>
+    <Reference Include="Serializer.Interfaces, Version=0.0.15.0, Culture=neutral, PublicKeyToken=55ec9f54a6117381, processorArchitecture=MSIL">
+      <HintPath>..\packages\Das.Serializer.Interfaces.0.0.15-alpha\lib\net45\Serializer.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

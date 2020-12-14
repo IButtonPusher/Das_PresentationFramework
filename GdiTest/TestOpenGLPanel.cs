@@ -1,6 +1,7 @@
 ﻿using System;
 using Das.OpenGL;
 using Das.OpenGL.Windows;
+using Das.Views;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
@@ -17,7 +18,8 @@ namespace GdiTest
         private readonly Single[] _zoo1PieData;
         private const Double TwoPi = 2.0 * Math.PI;
 
-        public TestOpenGLPanel(IView view, IStyleContext styleContext)
+        public TestOpenGLPanel(IVisualElement view, 
+                               IStyleContext styleContext)
             : base(view, styleContext)
         {
             _font = new Font(18, "Segoe UI", FontStyle.Regular);

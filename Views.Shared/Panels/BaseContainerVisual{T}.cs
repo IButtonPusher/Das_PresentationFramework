@@ -13,12 +13,12 @@ namespace Das.Views.Panels
         {
         }
 
-        protected BaseContainerVisual(IVisualBootstrapper visualBootstrapper,
-                                      IDataBinding<T>? binding)
-         : base(binding, visualBootstrapper )
-        {
+        //protected BaseContainerVisual(IVisualBootstrapper visualBootstrapper,
+        //                              IDataBinding<T>? binding)
+        // : base(binding, visualBootstrapper )
+        //{
 
-        }
+        //}
         
         public virtual void AcceptChanges()
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using Android.Util;
+using Das.Views;
 using Das.Views.Core.Drawing;
 using Das.Views.Panels;
 using Das.Views.Rendering;
@@ -9,36 +10,37 @@ namespace Das.Xamarin.Android
 {
     public class AndroidViewState : IViewState
     {
-        public AndroidViewState(IView view,
-                                DisplayMetrics displayMetrics)
+        public AndroidViewState(DisplayMetrics displayMetrics,
+                                IStyleContext styleContext)
         {
-            _view = view;
+            
+            _styleContext = styleContext;
             ZoomLevel = displayMetrics.ScaledDensity;
         }
 
         public T GetStyleSetter<T>(StyleSetter setter,
                                    IVisualElement element)
         {
-            return _view.StyleContext.GetStyleSetter<T>(setter, element);
+            return _styleContext.GetStyleSetter<T>(setter, element);
         }
 
         public void RegisterStyleSetter(IVisualElement element, 
                                         StyleSetter setter, 
                                         Object value)
         {
-            _view.StyleContext.RegisterStyleSetter(element, setter, value);
+            _styleContext.RegisterStyleSetter(element, setter, value);
         }
 
         public IColor GetCurrentAccentColor()
         {
-            return _view.StyleContext.GetCurrentAccentColor();
+            return _styleContext.GetCurrentAccentColor();
         }
 
         public T GetStyleSetter<T>(StyleSetter setter,
                                    StyleSelector selector,
                                    IVisualElement element)
         {
-            return _view.StyleContext.GetStyleSetter<T>(setter, selector, element);
+            return _styleContext.GetStyleSetter<T>(setter, selector, element);
         }
 
         public void RegisterStyleSetter(IVisualElement element, 
@@ -46,13 +48,14 @@ namespace Das.Xamarin.Android
                                         StyleSelector selector, 
                                         Object value)
         {
-            _view.StyleContext.RegisterStyleSetter(element, setter, selector, value);
+            _styleContext.RegisterStyleSetter(element, setter, selector, value);
         }
 
-        public IColorPalette ColorPalette => _view.StyleContext.ColorPalette;
+        public IColorPalette ColorPalette => _styleContext.ColorPalette;
 
         public Double ZoomLevel { get; }
 
-        private readonly IView _view;
+        
+        private readonly IStyleContext _styleContext;
     }
 }

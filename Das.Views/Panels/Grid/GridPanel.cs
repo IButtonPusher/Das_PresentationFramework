@@ -37,11 +37,11 @@ namespace Das.Views.Panels
             return ValueSize.Empty;
         }
 
-        public GridPanel(IDataBinding<TItemsSource>? binding,
-                         IVisualBootstrapper visualBootstrapper)
-            : base(binding, visualBootstrapper)
-        {
-        }
+        //public GridPanel(IDataBinding<TItemsSource>? binding,
+        //                 IVisualBootstrapper visualBootstrapper)
+        //    : base(binding, visualBootstrapper)
+        //{
+        //}
 
         public GridPanel(IVisualBootstrapper templateResolver)
             : base(templateResolver)

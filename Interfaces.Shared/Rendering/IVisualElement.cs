@@ -1,16 +1,18 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Panels;
+using Das.Views.Rendering;
 
-namespace Das.Views.Rendering
+namespace Das.Views
 {
     public interface IVisualElement : IVisualRenderer,
-                                      IDeepCopyable<IVisualElement>,
                                       IDisposable,
+                                      INotifyPropertyChanged,
                                       IEquatable<IVisualElement>
 
     {
@@ -21,12 +23,11 @@ namespace Das.Views.Rendering
 
         Boolean IsClipsContent { get; set; }
 
-        void OnParentChanging(IContainerVisual? newParent);
+        void OnParentChanging(IVisualElement? newParent);
 
         event Action<IVisualElement>? Disposed;
 
         IControlTemplate? Template { get; }
-
 
         void RaisePropertyChanged(String propertyName,
                                   Object? value);
