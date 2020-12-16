@@ -1,18 +1,21 @@
 ﻿using System;
+using Das.Views;
 using Das.Views.Controls;
 using Das.Views.DataBinding;
 
 namespace XamarinAndroidTest
 {
-    public sealed class TestView: Das.Views.Panels.View<TestVm>
+    public sealed class TestView: Das.Views.Panels.View
     {
-        public TestView()
+        public TestView(IVisualBootstrapper visualBootstrapper)
+        : base(visualBootstrapper)
         {
             var streetIntro = typeof(TestVm);
 
             var playerCountBinding = new DeferredPropertyBinding<String>
                 (streetIntro, nameof(TestVm.Name));
-            var lblPlayersCount = new Label(playerCountBinding);
+            var lblPlayersCount = new Label(visualBootstrapper);
+            lblPlayersCount.AddBinding(playerCountBinding);
             Content = lblPlayersCount;
         }
     }

@@ -115,21 +115,17 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.6.0-rc1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Das.View.Interfaces\Das.Views.Interfaces.csproj">
-      <Project>{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}</Project>
+    <ProjectReference Include="..\..\Core\Das.View.Interfaces\Das.Views.Interfaces.csproj">
+      <Project>{694f0d45-3e66-40f3-be93-1aac0921befb}</Project>
       <Name>Das.Views.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Das.ViewModels\Das.ViewModels.csproj">
-      <Project>{4ad8f035-a30f-4d67-8e84-fad46d1b8877}</Project>
+    <ProjectReference Include="..\..\ViewModels\Das.ViewModels\Das.ViewModels.csproj">
+      <Project>{e8ed9ca5-6316-4f1a-9c58-35334be1cb5e}</Project>
       <Name>Das.ViewModels</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Das.Views\Das.Views.csproj">
-      <Project>{a71c8e34-0909-487d-8c50-c02fc2408b8f}</Project>
+    <ProjectReference Include="..\..\Views\Das.Views\Das.Views.csproj">
+      <Project>{bb6f35ef-5375-44d1-8398-0480a61d2bd6}</Project>
       <Name>Das.Views</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\TestCommon\TestCommon.csproj">
-      <Project>{e227e4eb-e9cb-447e-9a6f-275c174e6425}</Project>
-      <Name>TestCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\Das.Android.Xamarin\Das.Xamarin.Android.csproj">
       <Project>{cc80e792-4142-4624-b02a-fe1cf98b6e7f}</Project>

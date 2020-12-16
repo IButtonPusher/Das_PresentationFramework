@@ -21,31 +21,31 @@ namespace TestCommon
         public ITypeInferrer TypeInferrer { get; }
 
 
-        private readonly IViewProvider _viewProvider;
+        //private readonly IViewProvider _viewProvider;
 
         public TestLauncher(IBootStrapper bootStrapper,
-                            IViewProvider viewProvider,
+                            //IViewProvider viewProvider,
                                 IRenderKit renderKit, 
                             ITypeInferrer typeInferrer)
         {
             BootStrapper = bootStrapper;
             RenderKit = renderKit;
             TypeInferrer = typeInferrer;
-            _viewProvider = viewProvider;
+            //_viewProvider = viewProvider;
         }
 
-        public async Task MvvmTest()
-        {
-            var file = new FileInfo("company\\EmployeesView.json");
-            var view = await _viewProvider.GetView(file);
+        //public async Task MvvmTest()
+        //{
+        //    var file = new FileInfo("company\\EmployeesView.json");
+        //    var view = await _viewProvider.GetView(file);
 
-            if (!(view is IView valid))
-                throw new InvalidCastException();
+        //    if (!(view is IView valid))
+        //        throw new InvalidCastException();
 
-            var vm = new TestCompanyVm();
-            var _ = new SceneUpdater(vm, 50);
-            Run(vm, valid);
-        }
+        //    var vm = new TestCompanyVm();
+        //    var _ = new SceneUpdater(vm, 50);
+        //    Run(vm, valid);
+        //}
 
         public virtual void Run<TViewModel>(TViewModel vm, 
                                             IView view)

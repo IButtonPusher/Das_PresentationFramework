@@ -9,7 +9,8 @@
     <Import_RootNamespace>Das.Views</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IDeepCopyable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IBindingBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IValueConverterProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IMarkupNode.cs" />
@@ -120,7 +121,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Hosting\IViewHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hosting\IVisualHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IBootStrapper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IDeepCopyable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IInteractiveView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IElementLocator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IHandleInput.cs" />
@@ -145,7 +145,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)IViewProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IWindowProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IVisibilityMutable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\NotifyPropertyChangedBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IBoundElementContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IRepeaterPanel.cs" />
@@ -182,8 +181,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)Templates\IDataTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\IMultiDataTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\IVisualBootstrapper.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Threading\" />
   </ItemGroup>
 </Project>

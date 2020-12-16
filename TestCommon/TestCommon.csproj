@@ -15,15 +15,16 @@
   
   <ItemGroup>
     <PackageReference Include="Das.Serializer.Split" Version="0.0.16-alpha" />
-  </ItemGroup> 
-
-  <ItemGroup>
-    <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
-    <ProjectReference Include="..\Das.ViewModels\Das.ViewModels.csproj" />
-    <ProjectReference Include="..\Das.Views.3d\Das.Views.Extended.csproj" />
-    <ProjectReference Include="..\Das.Views.Charting\Das.Views.Charting.csproj" />
-    <ProjectReference Include="..\Das.Views\Das.Views.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\3D\Das.Views.3d\Das.Views.3d.csproj" />
+    <ProjectReference Include="..\Charting\Das.Views.Charting\Das.Views.Charting.csproj" />
+    <ProjectReference Include="..\Core\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
+    <ProjectReference Include="..\ViewModels\Das.ViewModels\Das.ViewModels.csproj" />
+    <ProjectReference Include="..\Views\Das.Views\Das.Views.csproj" />
+  </ItemGroup>
+  
 
   <ItemGroup>
 	<None Update="Company\TestCompanyTabs.xml">
