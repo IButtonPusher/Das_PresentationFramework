@@ -10,24 +10,21 @@ namespace Das.Xamarin.Android
 {
     public class AndroidBitmap : IImage
     {
-        private readonly Bitmap _bmp;
-        private readonly Boolean _isEmpty;
         //private static Int32 _count;
 
-        public AndroidBitmap(Bitmap? bmp)
+        public AndroidBitmap(Bitmap bmp,
+                             Stream? stream)
         {
-          //  Debug.WriteLine("Create bmp " + (++_count));
+            _unwrapLock = new Object();
 
             _bmp = bmp!;
-            _isEmpty = bmp == null || 
-                       (bmp.Width == 1 && bmp.Height == 1);
+            _stream = stream;
+            _isEmpty = bmp.Width == 1 && bmp.Height == 1;
         }
-
-        private Boolean _isDisposed;
 
         Boolean IEquatable<ISize>.Equals(ISize other)
         {
-            return _bmp.Width == Convert.ToInt32(other.Width) && 
+            return _bmp.Width == Convert.ToInt32(other.Width) &&
                    _bmp.Height == Convert.ToInt32(other.Height);
         }
 
@@ -41,9 +38,9 @@ namespace Das.Xamarin.Android
         {
             if (_isDisposed)
                 return;
-            //Debug.WriteLine("Dispose bmp " + (--_count));
 
-            _bmp.Dispose();
+            if (_bmp != null)
+                _bmp.Dispose();
             _isDisposed = true;
         }
 
@@ -62,6 +59,8 @@ namespace Das.Xamarin.Android
             return GeometryHelper.Minus(this, subtract);
         }
 
+        public Boolean IsNullImage => _isEmpty;
+
         Boolean IImage.IsDisposed => _isDisposed;
 
         Task IImage.SaveAsync(FileInfo path)
@@ -76,6 +75,11 @@ namespace Das.Xamarin.Android
 
         Stream IImage.ToStream()
         {
+            if (_stream != null && _stream.CanRead)
+            {
+                return _stream;
+            }
+
             var ms = new MemoryStream();
             if (!_isEmpty)
                 _bmp.Compress(Bitmap.CompressFormat.Png, 0, ms);
@@ -101,10 +105,44 @@ namespace Das.Xamarin.Android
             throw new NotImplementedException();
         }
 
-        Task<TResult> IImage.UseImage<TImage, TParam, TResult>(TParam param1, 
+        ISize ISize.Divide(Double pct)
+        {
+            return GeometryHelper.Divide(this, pct);
+        }
+
+        public void UnwrapLocked<T>(Action<T> action)
+        {
+            lock (_unwrapLock)
+            {
+                if (_bmp is T good)
+                    action(good);
+                else
+                    throw new NotImplementedException();
+            }
+        }
+
+        public Double CenterY(ISize item)
+        {
+            return GeometryHelper.CenterY(this, item);
+        }
+
+        public Double CenterX(ISize item)
+        {
+            return GeometryHelper.CenterX(this, item);
+        }
+
+
+        Task<TResult> IImage.UseImage<TImage, TParam, TResult>(TParam param1,
                                                                Func<TImage, TParam, TResult> action)
         {
             throw new NotImplementedException();
         }
+
+        private readonly Bitmap _bmp;
+        private readonly Stream? _stream;
+        private readonly Boolean _isEmpty;
+        private readonly Object _unwrapLock;
+
+        private Boolean _isDisposed;
     }
 }

@@ -28,7 +28,7 @@ namespace TestCommon
             return vm;
         }
 
-        public async Task<IView> GetView()
+        public async Task<IVisualElement> GetView()
         {
             var file = new FileInfo("Scene3d\\3dTest.json");
             var view = await _viewProvider.GetView(file);

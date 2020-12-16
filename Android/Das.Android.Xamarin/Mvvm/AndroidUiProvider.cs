@@ -5,7 +5,6 @@ using Android.Content;
 using Android.OS;
 using Android.Util;
 using Das.ViewModels;
-using Das.Views.Core.Geometry;
 using bob = System.Uri;
 
 namespace Das.Xamarin.Android.Mvvm
@@ -32,10 +31,18 @@ namespace Das.Xamarin.Android.Mvvm
             _activity.StartActivity(intent);
         }
 
-        public override ValueSize GetMainViewSize()
+        //public override ValueSize GetMainViewSize()
+        //{
+        //    return new ValueSize(_displayMetrics.WidthPixels,
+        //        _displayMetrics.HeightPixels);
+        //}
+
+        public override void Invoke(Action action)
         {
-            return new ValueSize(_displayMetrics.WidthPixels,
-                _displayMetrics.HeightPixels);
+            if (_looper.IsCurrentThread)
+                action();
+            else
+                _activity.RunOnUiThread(action);
         }
 
         public override T Invoke<T>(Func<T> action)

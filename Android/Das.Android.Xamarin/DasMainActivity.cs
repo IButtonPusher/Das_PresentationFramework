@@ -20,7 +20,7 @@ namespace Das.Xamarin.Android
     {
         protected virtual IStyleContext GetStyleContext()
         {
-            return new BaseStyleContext(new DefaultStyle(),
+            return new BaseStyleContext(DefaultStyle.Instance,
                 new DefaultColorPalette());
         }
 
@@ -32,8 +32,9 @@ namespace Das.Xamarin.Android
             _styleContext = GetStyleContext();
 
             var displayMetrics = Resources?.DisplayMetrics ?? throw new NullReferenceException();
+            ZoomLevel = displayMetrics.ScaledDensity;
 
-            var fontProvider = new AndroidFontProvider(displayMetrics);
+            var fontProvider = new AndroidFontProvider(displayMetrics, _styleContext);
 
             var uiProvider = new AndroidUiProvider(this, displayMetrics);
 
@@ -49,8 +50,8 @@ namespace Das.Xamarin.Android
             SetContentView(prov);
         }
 
-        protected abstract Task<IView> GetMainViewAsync(IRenderKit renderKit,
-                                                        IUiProvider uiProvider);
+        protected abstract Task<IVisualElement> GetMainViewAsync(IRenderKit renderKit,
+                                                                 IUiProvider uiProvider);
 
         protected abstract Func<Task<Boolean>> BackButtonCommand { get; }
 
@@ -70,6 +71,8 @@ namespace Das.Xamarin.Android
         {
             CurrentStyleContext.RegisterStyleSetter(element, setter, selector, value);
         }
+
+        public IColorPalette ColorPalette => CurrentStyleContext.ColorPalette;
 
         public override async void OnBackPressed()
         {
@@ -98,7 +101,8 @@ namespace Das.Xamarin.Android
         }
 
         protected IStyleContext CurrentStyleContext =>
-            _styleContext ?? _view?.StyleContext ?? throw new NullReferenceException();
+            _styleContext //?? _view?.StyleContext 
+            ?? throw new NullReferenceException();
         
 
         public void RegisterStyleSetter(IVisualElement element, 
@@ -113,9 +117,9 @@ namespace Das.Xamarin.Android
             return CurrentStyleContext.GetCurrentAccentColor();
         }
 
-        public Double ZoomLevel => 1;
+        public Double ZoomLevel { get; private set; } = 1.0;
 
         private IStyleContext? _styleContext;
-        private IView? _view;
+        private IVisualElement? _view;
     }
 }

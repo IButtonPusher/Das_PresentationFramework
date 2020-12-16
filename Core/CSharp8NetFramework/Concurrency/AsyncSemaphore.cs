@@ -39,7 +39,40 @@ namespace System.Threading
                 }
             }
 
-            toRelease.SetResult(true);
+            toRelease.TrySetResult(true);
+        }
+
+        public Task WaitAsync(CancellationToken cancellationToken)
+        {
+            lock (_lockObj)
+            {
+                if (_availableCount > 0)
+                {
+                    --_availableCount;
+                    return _completedTask;
+                }
+
+                var waiter = new TaskCompletionSource<Boolean>();
+                _waiters.Enqueue(waiter);
+
+                cancellationToken.Register(
+                    OnCancelled, waiter);
+
+                return waiter.Task;
+            }
+        }
+
+        private static void OnCancelled(Object state)
+        {
+            if (!(state is TaskCompletionSource<Boolean> valid))
+                return;
+
+            if (valid.Task.Status == TaskStatus.Faulted ||
+                valid.Task.Status == TaskStatus.RanToCompletion ||
+                valid.Task.Status == TaskStatus.Canceled)
+                return;
+
+            valid.TrySetCanceled();
         }
 
         public Task WaitAsync()
@@ -58,8 +91,39 @@ namespace System.Threading
             }
         }
 
-        private readonly Task _completedTask = TaskEx.FromResult(true);
+        public void Wait()
+        { 
+            lock (_lockObj)
+            {
+                if (_availableCount > 0)
+                {
+                    --_availableCount;
+                    return;
+                }
+            }
 
+            var waiter = new TaskCompletionSource<Boolean>();
+            _waiters.Enqueue(waiter);
+
+            var waited = 2;
+
+            //waiter.Task.ContinueWith(OnSynchronousWaiterFinished, new Object());
+
+            while (waiter.Task.Status == TaskStatus.Running)
+            {
+                Thread.Sleep(waited);
+
+                waited = Math.Min(MAX_SYNCH_THREAD_SLEEP, waited * waited);
+            }
+
+
+            //TaskEx.Run(async () => await WaitAsync().ConfigureAwait(false)).Wait();
+        }
+
+
+        private const Int32 MAX_SYNCH_THREAD_SLEEP = 256;
+
+        private readonly Task _completedTask = TaskEx.FromResult(true);
         private readonly Int32 _initialCount;
         private readonly Object _lockObj;
         private readonly Queue<TaskCompletionSource<Boolean>> _waiters;

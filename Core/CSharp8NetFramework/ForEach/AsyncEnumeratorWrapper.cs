@@ -1,8 +1,10 @@
-﻿#if !NET40
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
+#if !NET40
+
 using TaskEx = System.Threading.Tasks.Task;
 
 #pragma warning disable 8603

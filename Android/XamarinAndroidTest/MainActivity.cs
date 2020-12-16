@@ -38,14 +38,14 @@ namespace XamarinAndroidTest
         //    //navigation.SetOnNavigationItemSelectedListener(this);
         //}
 
-        protected override Task<IView> GetMainViewAsync(IRenderKit renderKit, 
+        protected override Task<IVisualElement> GetMainViewAsync(IRenderKit renderKit, 
                                                         IUiProvider uiProvider)
         {
             var vm = new TestVm();
             vm.Name = "hello world";
-            IView view = new TestView();
-            view.SetBoundValue(vm);
-            return Task.FromResult(view);
+            IView view = new TestView(renderKit.VisualBootstrapper);
+            view .DataContext = vm;
+            return Task.FromResult<IVisualElement>(view);
         }
 
         protected override Func<Task<Boolean>> BackButtonCommand => () => Task.FromResult(false);

@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CancellationTokenEx.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Concurrency\AsyncAwaiter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\AsyncSemaphore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\AsyncWaiter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\IReaderWriterAsync.cs" />

@@ -1,4 +1,5 @@
-﻿using Das.Views.Core.Drawing;
+﻿using Das.Views;
+using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Rendering;

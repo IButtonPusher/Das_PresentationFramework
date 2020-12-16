@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.Graphics;
+
 using Android.Text;
 using Android.Util;
 using Das.Views.Core.Drawing;
@@ -10,7 +11,8 @@ using Das.Views.Core.Writing;
 
 namespace Das.Xamarin.Android
 {
-    public class AndroidFontPaint : TextPaint, IFontRenderer
+    public class AndroidFontPaint : TextPaint, 
+                                    IFontRenderer
     {
         private readonly Boolean _isCacheStaticLayouts;
 
@@ -34,30 +36,41 @@ namespace Das.Xamarin.Android
 
         public IFont Font { get; }
 
-
-        public void DrawString(String text, 
-                               IBrush brush, 
-                               IPoint2D point2D)
+        public void DrawString<TBrush, TPoint>(String text,
+                                               TBrush brush,
+                                               TPoint point2D)
+            where TBrush : IBrush
+            where TPoint : IPoint2D
         {
-            SetColor(brush);
+            if (_isCacheStaticLayouts)
+            {
+                var layout = GetOrCreateStaticLayout(text);
+                DrawStringWithCachedLayout(brush, point2D.X, point2D.Y, layout);
+                return;
+            }
 
-            //GetCanvas().DrawText(text, (Single) point2D.X + 50, (Single) point2D.Y + 50, this);
-            GetCanvas().DrawText(text, (Single) point2D.X, (Single) point2D.Y, this);
+            var size = MeasureString(text);
+            var test = new ValueRectangle(point2D, size.Width, size.Height);
+            DrawStringInRect(text, brush, test);
         }
 
-        public void DrawString(String s, 
-                               IBrush brush, 
-                               IRectangle bounds)
+        public void DrawStringInRect<TBrush, TRectangle>(String s,
+                                                         TBrush brush,
+                                                         TRectangle bounds)
+            where TBrush : IBrush
+            where TRectangle : IRectangle
         {
-            var canvas = GetCanvas();
-
-            SetColor(brush);
 
             if (_isCacheStaticLayouts)
             {
-                DrawStringWithCachedLayout(s, brush, bounds);
+                var layout = GetOrCreateStaticLayout(s, txt => Convert.ToSingle(bounds.Width));
+                DrawStringWithCachedLayout(brush, bounds.X, bounds.Y, layout);
                 return;
             }
+
+            var canvas = GetCanvas();
+
+            SetColor(brush);
 
             using (var textLayout = new StaticLayout(s, this,
                 Convert.ToInt32(bounds.Width),
@@ -75,26 +88,28 @@ namespace Das.Xamarin.Android
             }
         }
 
-        private void DrawStringWithCachedLayout(String s,
-                                                IBrush brush,
-                                                IRectangle bounds)
+        private void DrawStringWithCachedLayout<TBrush>(TBrush brush,
+                                                        Double x,
+                                                        Double y,
+                                                        StaticLayout textLayout)
+            where TBrush : IBrush
         {
             var canvas = GetCanvas();
             SetColor(brush);
 
-            if (!_layoutCache.TryGetValue(s, out var textLayout))
-            {
-                textLayout = new StaticLayout(s, this,
-                    Convert.ToInt32(bounds.Width),
-                    Layout.Alignment.AlignNormal,
-                    1, 1, false);
-                _layoutCache.Add(s, textLayout);
-            }
+            //if (!_layoutCache.TryGetValue(s, out var textLayout))
+            //{
+            //    textLayout = new StaticLayout(s, this,
+            //        Convert.ToInt32(width),
+            //        Layout.Alignment.AlignNormal,
+            //        1, 1, false);
+            //    _layoutCache.Add(s, textLayout);
+            //}
 
             canvas.Save();
 
-            canvas.Translate(Convert.ToSingle(bounds.X),
-                Convert.ToSingle(bounds.Y));
+            canvas.Translate(Convert.ToSingle(x),
+                Convert.ToSingle(y));
 
             textLayout.Draw(canvas);
 
@@ -105,6 +120,12 @@ namespace Das.Xamarin.Android
         {
             var width = MeasureText(text);
 
+            if (_isCacheStaticLayouts)
+            {
+                var layout = GetOrCreateStaticLayout(text);
+                return new ValueSize(layout.Width, layout.Height);
+            }
+
             using (var textLayout = new StaticLayout(text, this,
                 Convert.ToInt32(width),
                 Layout.Alignment.AlignNormal,
@@ -113,6 +134,40 @@ namespace Das.Xamarin.Android
                 var height = textLayout.Height;
                 return new ValueSize(width, height);
             }
+        }
+
+        private StaticLayout GetOrCreateStaticLayout(String text)
+        {
+            return GetOrCreateStaticLayout(text, MeasureText);
+            //if (!_layoutCache.TryGetValue(text, out var textLayout))
+            //{
+            //    var width = MeasureText(text);
+            //    textLayout = new StaticLayout(text, this,
+            //        Convert.ToInt32(width),
+            //        Layout.Alignment.AlignNormal,
+            //        1, 1, false);
+
+            //    _layoutCache.Add(text, textLayout);
+            //}
+
+            //return textLayout;
+        }
+
+        private StaticLayout GetOrCreateStaticLayout(String text,
+                                                     Func<String, Single> getWidth)
+        {
+            if (!_layoutCache.TryGetValue(text, out var textLayout))
+            {
+                var width = getWidth(text);
+                textLayout = new StaticLayout(text, this,
+                    Convert.ToInt32(width),
+                    Layout.Alignment.AlignNormal,
+                    1, 1, false);
+
+                _layoutCache.Add(text, textLayout);
+            }
+
+            return textLayout;
         }
 
         public Canvas? Canvas { get; set; }
@@ -145,6 +200,7 @@ namespace Das.Xamarin.Android
             base.SetStyle(style);
         }
 
-        private readonly Dictionary<String, StaticLayout> _layoutCache;
+//        private readonly Dictionary<IRectangle, StaticLayout> _layoutCache;
+private readonly Dictionary<String, StaticLayout> _layoutCache;
     }
 }

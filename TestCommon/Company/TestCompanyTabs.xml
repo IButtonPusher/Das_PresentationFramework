@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPanel xmlns:data="clr-namespace:TestCommon.Company;assembly=TestCommon"
+                 ContextType="ICompanyViewModel">
+  <TabControl ItemsSource="{Binding Employees}"
+              SelectedItem="{Binding SelectedEmployee}">
+    <ContentTemplate>
+      <UniformRepeaterPanel ItemsSource="{Binding Addresses}">
+        <Label Text="{Binding HouseNumber}" />
+        <Label Text="{Binding Street}" />
+        <Label Text="{Binding City}" />
+        <Label Text="{Binding State}" />
+        <Label Text="{Binding ZipCode}" />
+      </UniformRepeaterPanel>
+    </ContentTemplate>
+  </TabControl>
+
+</ContentPanel>

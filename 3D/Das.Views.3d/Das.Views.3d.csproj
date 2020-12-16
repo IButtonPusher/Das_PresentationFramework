@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Das.Views.Extended</RootNamespace>
+	 <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>    
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Core\_ICamera.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Das.Serializer.Split" Version="0.0.16-alpha" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Views\Das.Views\Das.Views.csproj" />
+  </ItemGroup> 
+
+</Project>

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Das.Views;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
+using Das.Views.Styles;
 
 namespace Das.Xamarin.Android.Rendering
 {
@@ -12,28 +14,30 @@ namespace Das.Xamarin.Android.Rendering
     {
         public RefreshRenderContext(IViewPerspective perspective,
                                     IVisualSurrogateProvider surrogateProvider,
-                                    Dictionary<IVisualElement, ICube> renderPositions,
-                                    Dictionary<IVisualElement, ValueSize> lastMeasurements)
-            : base(perspective, surrogateProvider, renderPositions, lastMeasurements)
+                                    Dictionary<IVisualElement, ValueCube> renderPositions,
+                                    Dictionary<IVisualElement, ValueSize> lastMeasurements,
+                                    IStyleContext styleContext)
+            : base(perspective, surrogateProvider, 
+                renderPositions, lastMeasurements, styleContext)
         {
             
         }
 
-        public override IImage? GetImage(Stream stream)
-        {
-            throw new NotSupportedException();
-        }
+        //public override IImage? GetImage(Stream stream)
+        //{
+        //    throw new NotSupportedException();
+        //}
 
-        public override IImage? GetImage(Stream stream, 
-                                         Double maximumWidthPct)
-        {
-            throw new NotSupportedException();
-        }
+        //public override IImage? GetImage(Stream stream, 
+        //                                 Double maximumWidthPct)
+        //{
+        //    throw new NotSupportedException();
+        //}
 
-        public override IImage GetNullImage()
-        {
-            throw new NotSupportedException();
-        }
+        //public override IImage GetNullImage()
+        //{
+        //    throw new NotSupportedException();
+        //}
 
         public override  void DrawImage<TRectangle>(IImage img, 
                                                     TRectangle destination)
@@ -72,6 +76,21 @@ namespace Das.Xamarin.Android.Rendering
                                                                TPen pen,
                                                                Double cornerRadius)
         {
+        }
+
+        protected override void PushClip<TRectangle>(TRectangle rect)
+        {
+            
+        }
+
+        protected override void PopClip<TRectangle>(TRectangle rect)
+        {
+            
+        }
+
+        protected override ValueRectangle GetCurrentClip()
+        {
+            return ValueRectangle.Empty;
         }
 
         public override void DrawString<TFont, TBrush, TRectangle>(String s,

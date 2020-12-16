@@ -1,0 +1,193 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{701B1CF6-E6C1-458C-A2A2-DA79B937FBD2}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Views.Interfaces.Shared", "Core\Views.Interfaces.Shared\Views.Interfaces.Shared.shproj", "{2E14D9EA-BFC7-439C-8E84-156D1437C6A8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Das.Views.Interfaces", "Core\Das.View.Interfaces\Das.Views.Interfaces.csproj", "{694F0D45-3E66-40F3-BE93-1AAC0921BEFB}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CSharp8NetFramework", "Core\CSharp8NetFramework\CSharp8NetFramework.shproj", "{73AEA84A-7E59-466E-B5B9-CEE436A5ECBC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ViewModels", "ViewModels", "{0E1DC686-DCA4-4926-9B42-9904E08BDDF8}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ViewModels.Shared", "ViewModels\ViewModels.Shared\ViewModels.Shared.shproj", "{CEC76F49-102D-4F52-9F95-231829C47839}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Das.ViewModels", "ViewModels\Das.ViewModels\Das.ViewModels.csproj", "{E8ED9CA5-6316-4F1A-9C58-35334BE1CB5E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Views", "Views", "{47A3E7CB-FB2D-4F27-A851-3D8A2F68895E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Views.Shared", "Views\Views.Shared\Views.Shared.shproj", "{778A378F-7A09-4C1D-ABD3-634F3D9CC8AB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Das.Views", "Views\Das.Views\Das.Views.csproj", "{BB6F35EF-5375-44D1-8398-0480A61D2BD6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dev", "Dev", "{AC6A1DA4-64B6-4185-8FF6-7B9A88DFA489}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Das.Views.DevKit", "Dev\Das.Views.DevKit\Das.Views.DevKit.csproj", "{3E6B415E-62A4-46EA-A718-4AA5C33263AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewCompiler", "Dev\ViewCompiler\ViewCompiler.csproj", "{2A2FC2BA-AF07-492D-A438-2239791511F5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Das.OpenGL", "Core\Das.OpenGL\Das.OpenGL.csproj", "{F48CB532-2A19-46C5-9404-E059434425C6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{BD8F3AA8-45E9-4752-BDFA-FCF15896DA27}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Windows.Shared", "Windows\Windows.Shared\Windows.Shared.shproj", "{6F514769-88CF-4D8A-8AA4-A015919DF274}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gdi", "Gdi", "{F08355B5-CB30-4814-A920-EA369C95D515}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Gdi.Shared", "Windows\Gdi\Gdi.Shared\Gdi.Shared.shproj", "{CE7E6B63-33E2-44F8-85C9-979A4F6B6F2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Das.Gdi", "Windows\Gdi\Das.GdiRenderKit\Das.Gdi.csproj", "{23274743-B205-4C69-BB7E-B3FB5CF979CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GdiTest", "Windows\Gdi\GdiTest\GdiTest.csproj", "{3F841198-E67C-49A7-9F96-D72548084538}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3d", "3d", "{98BC71BD-A33C-4DFE-81E1-90AB04F68CB7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Das.Views.3d", "3D\Das.Views.3d\Das.Views.3d.csproj", "{38DA919C-2399-4E7C-885A-02E71C785851}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenGL", "OpenGL", "{8926FBB5-AC0C-4F5C-8073-7A572DB6008E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Das.OpenGL.Windows", "Windows\OpenGL\Das.OpenGL.Windows\Das.OpenGL.Windows.csproj", "{AA3E511B-3696-46D8-81AE-98F547B0B43C}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinForms.Shared", "Windows\WinForms.Shared\WinForms.Shared.shproj", "{15783956-B706-41D5-982B-1BCF698CA5B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenGLTests", "Windows\OpenGL\OpenGLTests\OpenGLTests.csproj", "{3C6BB6B6-8966-402F-A330-7288B6D36888}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Android", "Android", "{225D062A-7759-4B85-AFF6-6798DC5E22E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Das.Xamarin.Android", "Android\Das.Android.Xamarin\Das.Xamarin.Android.csproj", "{CC80E792-4142-4624-B02A-FE1CF98B6E7F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamarinAndroidTest", "Android\XamarinAndroidTest\XamarinAndroidTest.csproj", "{B5D034B4-FE61-4587-9612-827F4A282301}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCommon", "TestCommon\TestCommon.csproj", "{7AC6CE98-B845-430D-920C-AD8D4AC74300}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Charting", "Charting", "{CEB5CD80-077C-418F-86C1-0432BF663763}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Charting.Shared", "Charting\Charting.Shared\Charting.Shared.shproj", "{96070DBD-8D78-4BC7-90EE-C4D545BCD2AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Das.Views.Charting", "Charting\Das.Views.Charting\Das.Views.Charting.csproj", "{2BF5A71D-F514-4B2C-A8B3-0450CAE673BA}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Windows\WinForms.Shared\WinForms.Shared.projitems*{15783956-b706-41d5-982b-1bcf698ca5b1}*SharedItemsImports = 13
+		Windows\Gdi\Gdi.Shared\Gdi.Shared.projitems*{23274743-b205-4c69-bb7e-b3fb5cf979cf}*SharedItemsImports = 4
+		Windows\Windows.Shared\Windows.Shared.projitems*{23274743-b205-4c69-bb7e-b3fb5cf979cf}*SharedItemsImports = 4
+		Windows\WinForms.Shared\WinForms.Shared.projitems*{23274743-b205-4c69-bb7e-b3fb5cf979cf}*SharedItemsImports = 4
+		Charting\Charting.Shared\Charting.Shared.projitems*{2bf5a71d-f514-4b2c-a8b3-0450cae673ba}*SharedItemsImports = 5
+		Core\Views.Interfaces.Shared\Views.Interfaces.Shared.projitems*{2e14d9ea-bfc7-439c-8e84-156d1437c6a8}*SharedItemsImports = 13
+		Core\CSharp8NetFramework\CSharp8NetFramework.projitems*{694f0d45-3e66-40f3-be93-1aac0921befb}*SharedItemsImports = 5
+		Core\Views.Interfaces.Shared\Views.Interfaces.Shared.projitems*{694f0d45-3e66-40f3-be93-1aac0921befb}*SharedItemsImports = 5
+		Windows\Windows.Shared\Windows.Shared.projitems*{6f514769-88cf-4d8a-8aa4-a015919df274}*SharedItemsImports = 13
+		Core\CSharp8NetFramework\CSharp8NetFramework.projitems*{73aea84a-7e59-466e-b5b9-cee436a5ecbc}*SharedItemsImports = 13
+		Views\Views.Shared\Views.Shared.projitems*{778a378f-7a09-4c1d-abd3-634f3d9cc8ab}*SharedItemsImports = 13
+		Charting\Charting.Shared\Charting.Shared.projitems*{96070dbd-8d78-4bc7-90ee-c4d545bcd2aa}*SharedItemsImports = 13
+		Windows\Windows.Shared\Windows.Shared.projitems*{aa3e511b-3696-46d8-81ae-98f547b0b43c}*SharedItemsImports = 4
+		Windows\WinForms.Shared\WinForms.Shared.projitems*{aa3e511b-3696-46d8-81ae-98f547b0b43c}*SharedItemsImports = 4
+		Views\Views.Shared\Views.Shared.projitems*{bb6f35ef-5375-44d1-8398-0480a61d2bd6}*SharedItemsImports = 5
+		Windows\Gdi\Gdi.Shared\Gdi.Shared.projitems*{ce7e6b63-33e2-44f8-85c9-979a4f6b6f2c}*SharedItemsImports = 13
+		ViewModels\ViewModels.Shared\ViewModels.Shared.projitems*{cec76f49-102d-4f52-9f95-231829c47839}*SharedItemsImports = 13
+		ViewModels\ViewModels.Shared\ViewModels.Shared.projitems*{e8ed9ca5-6316-4f1a-9c58-35334be1cb5e}*SharedItemsImports = 5
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{694F0D45-3E66-40F3-BE93-1AAC0921BEFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{694F0D45-3E66-40F3-BE93-1AAC0921BEFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{694F0D45-3E66-40F3-BE93-1AAC0921BEFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{694F0D45-3E66-40F3-BE93-1AAC0921BEFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8ED9CA5-6316-4F1A-9C58-35334BE1CB5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8ED9CA5-6316-4F1A-9C58-35334BE1CB5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8ED9CA5-6316-4F1A-9C58-35334BE1CB5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8ED9CA5-6316-4F1A-9C58-35334BE1CB5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB6F35EF-5375-44D1-8398-0480A61D2BD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB6F35EF-5375-44D1-8398-0480A61D2BD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB6F35EF-5375-44D1-8398-0480A61D2BD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB6F35EF-5375-44D1-8398-0480A61D2BD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E6B415E-62A4-46EA-A718-4AA5C33263AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E6B415E-62A4-46EA-A718-4AA5C33263AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E6B415E-62A4-46EA-A718-4AA5C33263AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E6B415E-62A4-46EA-A718-4AA5C33263AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A2FC2BA-AF07-492D-A438-2239791511F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A2FC2BA-AF07-492D-A438-2239791511F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A2FC2BA-AF07-492D-A438-2239791511F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A2FC2BA-AF07-492D-A438-2239791511F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F48CB532-2A19-46C5-9404-E059434425C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F48CB532-2A19-46C5-9404-E059434425C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F48CB532-2A19-46C5-9404-E059434425C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F48CB532-2A19-46C5-9404-E059434425C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23274743-B205-4C69-BB7E-B3FB5CF979CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23274743-B205-4C69-BB7E-B3FB5CF979CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23274743-B205-4C69-BB7E-B3FB5CF979CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23274743-B205-4C69-BB7E-B3FB5CF979CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F841198-E67C-49A7-9F96-D72548084538}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F841198-E67C-49A7-9F96-D72548084538}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F841198-E67C-49A7-9F96-D72548084538}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F841198-E67C-49A7-9F96-D72548084538}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38DA919C-2399-4E7C-885A-02E71C785851}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38DA919C-2399-4E7C-885A-02E71C785851}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38DA919C-2399-4E7C-885A-02E71C785851}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38DA919C-2399-4E7C-885A-02E71C785851}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA3E511B-3696-46D8-81AE-98F547B0B43C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA3E511B-3696-46D8-81AE-98F547B0B43C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA3E511B-3696-46D8-81AE-98F547B0B43C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA3E511B-3696-46D8-81AE-98F547B0B43C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C6BB6B6-8966-402F-A330-7288B6D36888}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C6BB6B6-8966-402F-A330-7288B6D36888}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C6BB6B6-8966-402F-A330-7288B6D36888}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C6BB6B6-8966-402F-A330-7288B6D36888}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC80E792-4142-4624-B02A-FE1CF98B6E7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC80E792-4142-4624-B02A-FE1CF98B6E7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC80E792-4142-4624-B02A-FE1CF98B6E7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC80E792-4142-4624-B02A-FE1CF98B6E7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5D034B4-FE61-4587-9612-827F4A282301}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5D034B4-FE61-4587-9612-827F4A282301}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5D034B4-FE61-4587-9612-827F4A282301}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{B5D034B4-FE61-4587-9612-827F4A282301}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5D034B4-FE61-4587-9612-827F4A282301}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5D034B4-FE61-4587-9612-827F4A282301}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{7AC6CE98-B845-430D-920C-AD8D4AC74300}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AC6CE98-B845-430D-920C-AD8D4AC74300}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AC6CE98-B845-430D-920C-AD8D4AC74300}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AC6CE98-B845-430D-920C-AD8D4AC74300}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BF5A71D-F514-4B2C-A8B3-0450CAE673BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BF5A71D-F514-4B2C-A8B3-0450CAE673BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BF5A71D-F514-4B2C-A8B3-0450CAE673BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BF5A71D-F514-4B2C-A8B3-0450CAE673BA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2E14D9EA-BFC7-439C-8E84-156D1437C6A8} = {701B1CF6-E6C1-458C-A2A2-DA79B937FBD2}
+		{694F0D45-3E66-40F3-BE93-1AAC0921BEFB} = {701B1CF6-E6C1-458C-A2A2-DA79B937FBD2}
+		{73AEA84A-7E59-466E-B5B9-CEE436A5ECBC} = {701B1CF6-E6C1-458C-A2A2-DA79B937FBD2}
+		{CEC76F49-102D-4F52-9F95-231829C47839} = {0E1DC686-DCA4-4926-9B42-9904E08BDDF8}
+		{E8ED9CA5-6316-4F1A-9C58-35334BE1CB5E} = {0E1DC686-DCA4-4926-9B42-9904E08BDDF8}
+		{778A378F-7A09-4C1D-ABD3-634F3D9CC8AB} = {47A3E7CB-FB2D-4F27-A851-3D8A2F68895E}
+		{BB6F35EF-5375-44D1-8398-0480A61D2BD6} = {47A3E7CB-FB2D-4F27-A851-3D8A2F68895E}
+		{3E6B415E-62A4-46EA-A718-4AA5C33263AC} = {AC6A1DA4-64B6-4185-8FF6-7B9A88DFA489}
+		{2A2FC2BA-AF07-492D-A438-2239791511F5} = {AC6A1DA4-64B6-4185-8FF6-7B9A88DFA489}
+		{F48CB532-2A19-46C5-9404-E059434425C6} = {701B1CF6-E6C1-458C-A2A2-DA79B937FBD2}
+		{6F514769-88CF-4D8A-8AA4-A015919DF274} = {BD8F3AA8-45E9-4752-BDFA-FCF15896DA27}
+		{F08355B5-CB30-4814-A920-EA369C95D515} = {BD8F3AA8-45E9-4752-BDFA-FCF15896DA27}
+		{CE7E6B63-33E2-44F8-85C9-979A4F6B6F2C} = {F08355B5-CB30-4814-A920-EA369C95D515}
+		{23274743-B205-4C69-BB7E-B3FB5CF979CF} = {F08355B5-CB30-4814-A920-EA369C95D515}
+		{3F841198-E67C-49A7-9F96-D72548084538} = {F08355B5-CB30-4814-A920-EA369C95D515}
+		{38DA919C-2399-4E7C-885A-02E71C785851} = {98BC71BD-A33C-4DFE-81E1-90AB04F68CB7}
+		{8926FBB5-AC0C-4F5C-8073-7A572DB6008E} = {BD8F3AA8-45E9-4752-BDFA-FCF15896DA27}
+		{AA3E511B-3696-46D8-81AE-98F547B0B43C} = {8926FBB5-AC0C-4F5C-8073-7A572DB6008E}
+		{15783956-B706-41D5-982B-1BCF698CA5B1} = {BD8F3AA8-45E9-4752-BDFA-FCF15896DA27}
+		{3C6BB6B6-8966-402F-A330-7288B6D36888} = {8926FBB5-AC0C-4F5C-8073-7A572DB6008E}
+		{CC80E792-4142-4624-B02A-FE1CF98B6E7F} = {225D062A-7759-4B85-AFF6-6798DC5E22E2}
+		{B5D034B4-FE61-4587-9612-827F4A282301} = {225D062A-7759-4B85-AFF6-6798DC5E22E2}
+		{96070DBD-8D78-4BC7-90EE-C4D545BCD2AA} = {CEB5CD80-077C-418F-86C1-0432BF663763}
+		{2BF5A71D-F514-4B2C-A8B3-0450CAE673BA} = {CEB5CD80-077C-418F-86C1-0432BF663763}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3DFC00A6-1CD7-4B08-ADD9-F102FBD088BC}
+	EndGlobalSection
+EndGlobal

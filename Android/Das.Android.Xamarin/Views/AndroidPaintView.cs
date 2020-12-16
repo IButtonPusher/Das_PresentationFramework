@@ -2,82 +2,74 @@
 using System.Threading.Tasks;
 using Android.Content;
 using Android.Graphics;
-using Android.Views;
+using Das.Views;
 using Das.Views.Core.Geometry;
-using Das.Views.Panels;
 using Das.Views.Rendering;
-using Size = Das.Views.Core.Geometry.Size;
+using View = Android.Views.View;
 
 namespace Das.Xamarin.Android
 {
+    /// <summary>
+    /// Android view that measures and arranges 
+    /// </summary>
     public class AndroidPaintView : View
     {
-        public AndroidPaintView(Context? context, 
-                                AndroidRenderKit renderKit, 
-                                IView view) 
+        public AndroidPaintView(Context? context,
+                                AndroidRenderKit renderKit,
+                                IVisualElement view)
             : base(context)
         {
-            RenderKit = renderKit;
-            _measured = Size.Empty;
+            //RenderKit = renderKit;
+
+            _renderContext = renderKit.RenderContext;
+            _measureContext = renderKit.MeasureContext;
+            
+            //_measured = Size.Empty;
+            _targetRect = ValueRectangle.Empty;
             _view = view;
+            //_displayMetrics = renderKit.DisplayMetrics;
             _viewState = renderKit.RenderContext.ViewState ?? throw new NullReferenceException();
 
             //var _ = RefreshLoop();
         }
 
-        private async Task RefreshLoop()
+        //public AndroidRenderKit RenderKit { get; }
+
+        protected override void OnDraw(Canvas? canvas)
         {
-            var sleepTime = 0;
+            if (canvas == null)
+                return;
 
-            while (true)
-                if (_view.IsChanged)
-                {
-                    //System.Diagnostics.Debug.WriteLine("paint changed");
-                    _view.AcceptChanges();
-                    RenderKit.MeasureContext.MeasureMainView(_view,
-                        new ValueRenderSize(_measured), _viewState);
-                    Invalidate();
-                    sleepTime = 0;
-                }
-                else
-                {
-                    sleepTime = Math.Min(++sleepTime, 50);
-                    await Task.Delay(sleepTime);
-                    //System.Diagnostics.Debug.WriteLine("paint sleeping");
-                }
-
-            // ReSharper disable once FunctionNeverReturns
+            _renderContext.Canvas = canvas;
+            _renderContext.DrawMainElement(_view,
+                _targetRect, _viewState);
         }
-
-        public AndroidRenderKit RenderKit { get; }
-        private readonly IView _view;
-        private readonly IViewState _viewState;
-        private Size _measured;
 
         protected override void OnMeasure(Int32 widthMeasureSpec,
                                           Int32 heightMeasureSpec)
         {
-            //System.Diagnostics.Debug.WriteLine("measure paint view");
             base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
             var w = MeasuredWidth;
             var h = MeasuredHeight;
 
             var sz = new ValueRenderSize(w, h);
-            _measured = RenderKit.MeasureContext.MeasureMainView(_view, sz, _viewState);
+            //_measured = 
+            _measureContext.MeasureMainView(_view, sz, _viewState);
+
+            _targetRect = new ValueRectangle(
+                0, // X
+                0, // Y
+                sz.Width / _viewState.ZoomLevel,
+                sz.Height/ _viewState.ZoomLevel);
         }
 
-        protected override void OnDraw(Canvas? canvas)
-        {
-            //System.Diagnostics.Debug.WriteLine("draw paint view");
+        private readonly AndroidMeasureKit _measureContext;
+        private readonly AndroidRenderContext _renderContext;
 
-            if (canvas == null)
-                return;
-
-            RenderKit.RenderContext.Canvas = canvas;
-            RenderKit.RenderContext.DrawMainElement(_view, 
-                new ValueRectangle(0, 0, _measured), _viewState);
-        }
-
-       
+        //private readonly DisplayMetrics _displayMetrics;
+        private readonly IVisualElement _view;
+        private readonly IViewState _viewState;
+        //private Size _measured;
+        private ValueRectangle _targetRect;
     }
 }

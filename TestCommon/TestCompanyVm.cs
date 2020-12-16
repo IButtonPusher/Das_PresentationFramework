@@ -1,20 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Das.Views.Extended;
 using Das.Views.Extended.Runtime;
 using TestCommon.Company;
 
 namespace TestCommon
 {
-    public class TestCompanyVm : CompanyViewModel
+    public class TestCompanyVm : CompanyViewModel,
+                                 IEquatable<TestCompanyVm>
     {
         public TestCompanyVm() 
             : base("ACME Inc.", MakeAScene())
         {
-            var larry = new EmployeeViewModel { FirstName = "larry", LastName = "larry" };
+            var address1 = new AddressVm
+            {
+                HouseNumber = "11280",
+                Street = "NW 35th Court",
+                City = "Coral Springs",
+                State = "FL",
+                ZipCode = 33065
+            };
+
+            var address2 = new AddressVm
+            {
+                HouseNumber = "8546",
+                Street = "NW 28th Court",
+                City = "North Lauderdale",
+                State = "Florida",
+                ZipCode = 33068
+            };
+
+            var addies = new List<AddressVm> {address1, address2};
+            
+            var larry = new EmployeeViewModel { FirstName = "larry", LastName = "larry", Addresses = addies};
             var curly = new EmployeeViewModel { FirstName = "curly", LastName = "sue" };
-            var moe = new EmployeeViewModel { FirstName = "moe", LastName = "money" };
+            var moe = new EmployeeViewModel { FirstName = "moe", LastName = "money", Addresses = addies };
             var bob = new EmployeeViewModel { FirstName = "bob", LastName = "ooo" };
-            var john = new EmployeeViewModel { FirstName = "john", LastName = "doe" };
+            var john = new EmployeeViewModel { FirstName = "john", LastName = "doe", Addresses = addies };
             var bobJr = new EmployeeViewModel { FirstName = "bob", LastName = "jones" };
 
             Employees.AddRange(new List<EmployeeViewModel>{ larry, curly, moe, bob, john, bobJr });
@@ -36,6 +58,11 @@ namespace TestCommon
 
             
             
+        }
+
+        public Boolean Equals(TestCompanyVm other)
+        {
+            return ReferenceEquals(this, other);
         }
     }
 }

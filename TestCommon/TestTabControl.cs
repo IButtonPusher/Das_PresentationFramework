@@ -1,20 +1,29 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Views;
 using Das.Views.DataBinding;
 using Das.Views.ItemsControls;
 using Das.Views.Panels;
+using Das.Views.Rendering;
 
 namespace TestCommon
 {
     public sealed class TestTabControl : View<TestCompanyVm>
     {
-        public TestTabControl(IVisualBootStrapper templateResolver)
+        public TestTabControl(IVisualBootstrapper templateResolver)
 
         : base(templateResolver)
         {
-            _tabControl= new TabControl(templateResolver);
+            _tabControl= new TabControl<EmployeeViewModel>(templateResolver);
             Content = _tabControl;
+        }
+
+        public override void Arrange(IRenderSize availableSpace,
+                                     IRenderContext renderContext)
+        {
+            Debug.WriteLine("arrange test");
+            base.Arrange(availableSpace, renderContext);
         }
 
         public override void SetDataContext(TestCompanyVm dataContext)
@@ -23,9 +32,9 @@ namespace TestCommon
 
             _tabControl.ItemsSource = dataContext.Employees;
             var selectionBinding = new TwoWayBinding(dataContext, nameof(TestCompanyVm.SelectedEmployee),
-                _tabControl, nameof(TabControl.SelectedItem));
+                _tabControl, nameof(TabControl<EmployeeViewModel>.SelectedItem), null);
             _tabControl.AddBinding(selectionBinding);
-            UpdateSelection().ConfigureAwait(false);
+            //UpdateSelection().ConfigureAwait(false);
         }
 
         private async Task UpdateSelection()
@@ -44,12 +53,12 @@ namespace TestCommon
             }
         }
 
-        public override Boolean IsChanged
-        {
-            get => IsRequiresMeasure || IsRequiresArrange;
-            protected set => base.IsChanged = value;
-        }
+        //public override Boolean IsChanged
+        //{
+        //    get => IsRequiresMeasure || IsRequiresArrange;
+        //    //protected set => base.IsChanged = value;
+        //}
 
-        private readonly TabControl _tabControl;
+        private readonly TabControl<EmployeeViewModel> _tabControl;
     }
 }

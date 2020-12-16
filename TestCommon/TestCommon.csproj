@@ -10,21 +10,26 @@
     <Compile Remove="Company\CompanyView.cs" />
     <Compile Remove="Company\CompanyViewProvider.cs" />
     <Compile Remove="Scene3d\CubeView.cs" />
+    <Compile Remove="TestTabControl.cs" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Das.Serializer.Split" Version="0.0.16-alpha" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\3D\Das.Views.3d\Das.Views.3d.csproj" />
+    <ProjectReference Include="..\Charting\Das.Views.Charting\Das.Views.Charting.csproj" />
+    <ProjectReference Include="..\Core\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
+    <ProjectReference Include="..\ViewModels\Das.ViewModels\Das.ViewModels.csproj" />
+    <ProjectReference Include="..\Views\Das.Views\Das.Views.csproj" />
+  </ItemGroup>
+  
 
   <ItemGroup>
-    <PackageReference Include="Das.Serializer.Split" Version="0.0.11-alpha" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
-    <ProjectReference Include="..\Das.ViewModels\Das.ViewModels.csproj" />
-    <ProjectReference Include="..\Das.Views.3d\Das.Views.Extended.csproj" />
-    <ProjectReference Include="..\Das.Views.Charting\Das.Views.Charting.csproj" />
-    <ProjectReference Include="..\Das.Views\Das.Views.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
+	<None Update="Company\TestCompanyTabs.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Company\EmployeesView.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
