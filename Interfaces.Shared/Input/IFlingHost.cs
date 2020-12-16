@@ -8,6 +8,10 @@ namespace Das.Views.Input
         Boolean CanFlingVertical { get; }
 
         Boolean CanFlingHorizontal { get; }
+        
+        Double CurrentX { get; }
+        
+        Double CurrentY { get; }
 
         ValueMinMax GetVerticalMinMaxFling();
         

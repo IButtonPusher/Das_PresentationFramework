@@ -85,36 +85,20 @@ namespace Das.Views
         public virtual Boolean IsRequiresMeasure
         {
             get => _isRequiresMeasure;
-            protected set => SetValue(ref _isRequiresMeasure, value,
-                    OnIsRequiresMeasureChanging, OnIsRequiresMeasureChangedAsync);
+            protected set => SetValue(ref _isRequiresMeasure, value);
+                    //OnIsRequiresMeasureChanging, OnIsRequiresMeasureChanged);
         }
 
         public virtual Boolean IsRequiresArrange
         {
             get
             {
-                if (_isRequiresArrange)
-                {}
-
                 return _isRequiresArrange;
             }
-            protected set => SetValue(ref _isRequiresArrange, value,
-                    OnIsRequiresArrangeChanging, OnIsRequiresArrangeChangedAsync);
+            protected set => SetValue(ref _isRequiresArrange, value);
+                    //OnIsRequiresArrangeChanging, OnIsRequiresArrangeChangedAsync);
         }
 
-       
-        //public virtual IVisualElement DeepCopy()
-        //{
-        //    var newObject = _visualBootstrapper.Instantiate<VisualElement>(GetType());
-        //    newObject.VerticalAlignment = VerticalAlignment;
-        //    newObject.HorizontalAlignment = HorizontalAlignment;
-        //    newObject.Height = Height;
-        //    newObject.Width = Width;
-        //    newObject.Background = Background;
-
-        //    newObject.Id = Id;
-        //    return newObject;
-        //}
 
         public virtual Int32 Id { get; private set; }
 
@@ -212,27 +196,27 @@ namespace Das.Views
             set => SetValue(ref _isEnabled, value);
         }
 
-        protected virtual Task OnIsRequiresArrangeChangedAsync(Boolean value)
-        {
-            return TaskEx.CompletedTask;
-        }
+        //protected virtual Task OnIsRequiresArrangeChangedAsync(Boolean value)
+        //{
+        //    return TaskEx.CompletedTask;
+        //}
 
-        protected virtual Boolean OnIsRequiresArrangeChanging(Boolean oldValue,
-                                                              Boolean newValue)
-        {
-            return true;
-        }
+        //protected virtual Boolean OnIsRequiresArrangeChanging(Boolean oldValue,
+        //                                                      Boolean newValue)
+        //{
+        //    return true;
+        //}
 
-        protected virtual Task OnIsRequiresMeasureChangedAsync(Boolean value)
-        {
-            return TaskEx.CompletedTask;
-        }
+        //protected virtual void OnIsRequiresMeasureChanged(Boolean value)
+        //{
+            
+        //}
 
-        protected virtual Boolean OnIsRequiresMeasureChanging(Boolean oldValue,
-                                                              Boolean newValue)
-        {
-            return true;
-        }
+        //protected virtual Boolean OnIsRequiresMeasureChanging(Boolean oldValue,
+        //                                                      Boolean newValue)
+        //{
+        //    return true;
+        //}
 
         public override String ToString()
         {

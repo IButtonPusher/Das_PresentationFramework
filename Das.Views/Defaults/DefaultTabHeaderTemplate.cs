@@ -30,11 +30,6 @@ namespace Das.Views.Defaults
             return new DefaultTabHeaderPanel(_itemsControl, _visualBootstrapper);
         }
 
-        //public override void OnParentChanging(IContainerVisual? newParent)
-        //{
-        //    base.OnParentChanging(newParent);
-        //    _itemsControl = newParent as ITabControl ?? throw new InvalidOperationException();
-        //}
 
         private readonly ITabControl _itemsControl;
     }

@@ -105,12 +105,12 @@ namespace Das.OpenGL
 
         public static Int32 GetAttribLocation (UInt32 program, String name)
         {
-            return (Int32)GetDelegateFor<glGetAttribLocation>()(program, name);
+            return GetDelegateFor<glGetAttribLocation>()(program, name);
         }
 
         public static UInt32 CreateProgram ()
         {
-            return (UInt32)GetDelegateFor<glCreateProgram>()();
+            return GetDelegateFor<glCreateProgram>()();
         }
 
         public static void GetProgram (UInt32 program, UInt32 pname, Int32[] parameters)
@@ -159,7 +159,7 @@ namespace Das.OpenGL
 
         public static Int32 GetUniformLocation (UInt32 program, String name)
         {
-            return (Int32)GetDelegateFor<glGetUniformLocation>()(program, name);
+            return GetDelegateFor<glGetUniformLocation>()(program, name);
         }
 
         public static void BufferData(UInt32 target, UInt16[] data, UInt32 usage)
@@ -208,7 +208,7 @@ namespace Das.OpenGL
 
         private delegate void glUniformMatrix4fv (Int32 location, Int32 count, Boolean transpose, Single[] value);
         
-        private static Dictionary<String, Delegate> extensionFunctions = new Dictionary<String, Delegate>();
+        private static readonly Dictionary<String, Delegate> _extensionFunctions = new Dictionary<String, Delegate>();
         [DllImport(LIBRARY_OPENGL, SetLastError = true)]
         public static extern IntPtr wglGetProcAddress(String name);
         
@@ -227,7 +227,7 @@ namespace Das.OpenGL
             String name = delegateType.Name;
 
             // ftlPhysicsGuy - Better way
-            if (extensionFunctions.TryGetValue(name, out Delegate del) == false)
+            if (_extensionFunctions.TryGetValue(name, out Delegate del) == false)
             {
                 IntPtr proc = wglGetProcAddress(name);
                 if (proc == IntPtr.Zero)
@@ -237,7 +237,7 @@ namespace Das.OpenGL
                 del = Marshal.GetDelegateForFunctionPointer(proc, delegateType);
 
                 //  Add to the dictionary.
-                extensionFunctions.Add(name, del);
+                _extensionFunctions.Add(name, del);
             }
 
             return (T)del;

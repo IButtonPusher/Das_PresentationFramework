@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
-using Das.Views.Rendering;
 using Das.Views.Styles;
 
 namespace Das.Views.Input
@@ -22,6 +21,8 @@ namespace Das.Views.Input
                                            InputAction action)
             where TArgs : IMouseInputEventArgs<TArgs>
         {
+            _lastInputContext = args.InputContext;
+            
             //System.Diagnostics.Debug.WriteLine("Input handler received: " + args + " capturing: " + 
             //                                   _inputCapturingMouse);
             
@@ -36,46 +37,23 @@ namespace Das.Views.Input
 
                 // smile
             }
-            
-            //if (_inputCapturingMouse is IHandleInput<TArgs> capture)
-            //{
-            //    if (_elementLocator.TryGetLastRenderBounds(_inputCapturingMouse) is { } bounds)
-            //    {
-            //        if (TryHandleMouseAction(args, capture, isButtonAction, action, bounds))
-            //            handledBy = capture;
-            //    }
-            //}
 
             if (handledBy == null)
             {
                 OnMouseInputNoCapture(args, action, isButtonAction, out handledBy);
-                //foreach (var clickable in _elementLocator.GetRenderedVisualsForMouseInput<TArgs, IPoint2D>(
-                //    args.Position, action))
-                //{
-                //    var element = clickable.Element;
-
-                //    if (element == _inputCapturingMouse)
-                //        continue;
-
-                //    if (TryHandleMouseAction(args, element, isButtonAction, action,
-                //        clickable.Position))
-                //    {
-                //        handledBy = element;
-                //        break;
-                //    }
-                //}
             }
 
             if (_handledMouseDown != null && (action == InputAction.LeftMouseButtonUp ||
                                               action == InputAction.RightMouseButtonUp))
                 _handledMouseDown = null;
 
-            if (action == InputAction.MouseDrag && handledBy == null)
-            {}
+            //if (action == InputAction.MouseDrag && handledBy == null)
+            //{}
 
             return handledBy !=null;
         }
 
+        // ReSharper disable once UnusedMethodReturnValue.Local
         private Boolean OnMouseInputWithCapture<TArgs>(IHandleInput<TArgs> capture,
                                                        IVisualElement captureAsVisual,
                                                        TArgs args,
@@ -333,6 +311,14 @@ namespace Das.Views.Input
 
         public Boolean TryCaptureMouseInput(IVisualElement view)
         {
+            if (ReferenceEquals(_inputCapturingMouse, view))
+                return true;
+
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            if (_inputCapturingMouse is IHandleInput<LostCaptureEventArgs> lost &&
+                _lastInputContext is { })
+                lost.OnInput(new LostCaptureEventArgs(_lastInputContext));
+            
             //System.Diagnostics.Debug.WriteLine(view + " wants to capture the mouse. Current capture:" +
             //                                   _inputCapturingMouse );
             
@@ -374,5 +360,6 @@ namespace Das.Views.Input
         private IVisualElement? _inputCapturingMouse;
         private IHandleInput<MouseDownEventArgs>? _mouseActiveElement;
         private IHandleInput<MouseOverEventArgs>? _lastMouseOverVisual;
+        private IInputContext? _lastInputContext;
     }
 }

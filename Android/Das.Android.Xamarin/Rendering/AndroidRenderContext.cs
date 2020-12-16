@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Android.Graphics;
 
@@ -13,8 +12,6 @@ using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Rendering;
 using Das.Views.Styles;
-using static Android.Graphics.BitmapFactory;
-using Stream = System.IO.Stream;
 
 namespace Das.Xamarin.Android
 {

@@ -19,6 +19,10 @@ namespace Das.Views.Input
             
             _flingX = flingX;
             _flingY = flingY;
+
+            _startX = host.CurrentX;
+            _startY = host.CurrentY;
+            
             _host = host;
             _cancellationSource = new CancellationTokenSource();
         }
@@ -35,17 +39,13 @@ namespace Das.Views.Input
 
         protected override void OnUpdate(Double runningPct)
         {
-            var currentX = _flingX * runningPct - _flungX;
-            var currentY = _flingY * runningPct - _flungY;
-
-            //System.Diagnostics.Debug.WriteLine("[OKYN" + Thread.CurrentThread.ManagedThreadId + "] " +
-            //                "update fling: " + currentX + "," + currentY +
-            //                " total: " + _flungY);
+            var flungX = _host.CurrentX - _startX;
+            var flungY = _host.CurrentY - _startY;
+            
+            var currentX = _flingX * runningPct - flungX;
+            var currentY = _flingY * runningPct - flungY;
 
             _host.OnFlingStep(currentX, currentY);
-
-            _flungX += currentX;
-            _flungY += currentY;
         }
 
         protected override void OnFinished(Boolean wasCancelled)
@@ -55,11 +55,13 @@ namespace Das.Views.Input
         }
 
         private readonly CancellationTokenSource _cancellationSource;
+
         private readonly Double _flingX;
         private readonly Double _flingY;
+        
+        private readonly Double _startX;
+        private readonly Double _startY;
+        
         private readonly IFlingHost _host;
-
-        private Double _flungX;
-        private Double _flungY;
     }
 }

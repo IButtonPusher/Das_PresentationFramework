@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
@@ -15,9 +16,8 @@ namespace Das.Views.Defaults
 {
     public class DefaultTabHeaderPanel : BasePanel
     {
-        
         public DefaultTabHeaderPanel(ITabControl tabControl,
-                                     IVisualBootstrapper visualBootstrapper) : 
+                                     IVisualBootstrapper visualBootstrapper) :
             base(visualBootstrapper)
         {
             _indicatorRect = new RenderRectangle();
@@ -70,25 +70,57 @@ namespace Das.Views.Defaults
             _scrollPanel.VerticalAlignment = VerticalAlignments.Top;
             VerticalAlignment = VerticalAlignments.Top;
 
-            //Background = SolidColorBrush.Red;
-            
 
-            //_scrollPanel.PropertyChanged += OnScrollPropertyChanged;
-
-            AddChildren(new IVisualElement[] { _scrollPanel, _indicator, _separator });
+            AddChildren(_scrollPanel, _indicator, _separator);
 
             tabControl.PropertyChanged += OnTabPropertyChanged;
         }
 
-        private void OnTabPropertyChanged(Object sender,
-                                          PropertyChangedEventArgs e)
+        public override void Arrange(IRenderSize availableSpace,
+                                     IRenderContext renderContext)
         {
-            switch (e.PropertyName)
+            _lastStyleContext = renderContext;
+            _lastElementLocator = renderContext;
+
+            // SCROLL PANEL
+            var tabPageRect = new ValueRenderRectangle(
+                tabsLeft, 0,
+                availableSpace.Width,
+                availableSpace.Height,
+                new ValuePoint2D(0, 0));
+            renderContext.DrawElement(_scrollPanel, tabPageRect);
+
+            // BOTTOM SEPARATOR
+            var separatorRect = new ValueRenderRectangle(
+                /* X */ tabsLeft,
+                /* Y */ _tabsUsed.Height + SEPARATOR_GAP_TOP,
+                /* W */ _tabsUsed.Width,
+                /* H */ SEPARATOR_LINE_HEIGHT,
+                availableSpace.Offset);
+
+            renderContext.DrawElement(_separator, separatorRect);
+
+
+            // INDICATOR
+            if (_indicatorRect.IsEmpty)
             {
-                case nameof(ITabControl.SelectedTab) when _lastStyleContext is { }:
-                    if (_itemsControl.SelectedTab is { }) 
-                        MoveIndicatorRect();
-                    break;
+                if (_itemsControl.SelectedTab != null)
+                    if (MoveIndicatorRect())
+                        InvalidateMeasure();
+            }
+            else
+            {
+                var indicatorOffset = new ValuePoint2D(availableSpace.Offset.X +
+                                                       _scrollPanel.HorizontalOffset,
+                    availableSpace.Offset.Y);
+
+                var indicatorRect = new ValueRenderRectangle(
+                    0 - _scrollPanel.HorizontalOffset,
+                    availableSpace.Height - (SEPARATOR_GAP_BOTTOM + INDICATOR_LINE_HEIGHT),
+                    _indicatord,
+                    indicatorOffset);
+
+                renderContext.DrawElement(_indicator, indicatorRect);
             }
         }
 
@@ -109,9 +141,9 @@ namespace Das.Views.Defaults
                 new ValueRenderSize(_indicatorRect.Width, SEPARATOR_LINE_HEIGHT,
                     availableSpace.Offset));
 
-            var indicatorRect = new ValueRenderRectangle(0, 
+            var indicatorRect = new ValueRenderRectangle(0,
                 availableSpace.Height - INDICATOR_LINE_HEIGHT,
-                _indicatorRect.Width, INDICATOR_LINE_HEIGHT, 
+                _indicatorRect.Width, INDICATOR_LINE_HEIGHT,
                 availableSpace.Offset);
 
             _indicatord = measureContext.MeasureElement(_indicator, indicatorRect);
@@ -119,73 +151,14 @@ namespace Das.Views.Defaults
 
             return new ValueSize(_tabsUsed.Width, _tabsUsed.Height +
                                                   INDICATOR_LINE_HEIGHT +
-                                                  SEPARATOR_GAP_TOP + 
+                                                  SEPARATOR_GAP_TOP +
                                                   SEPARATOR_GAP_BOTTOM);
-        }
-
-        private const Int32 tabsLeft = 0;
-
-        public override void Arrange(IRenderSize availableSpace,
-                                     IRenderContext renderContext)
-        {
-            _lastStyleContext = renderContext;
-            _lastElementLocator = renderContext;
-
-            // SCROLL PANEL
-            var tabPageRect = new ValueRenderRectangle(
-                tabsLeft, 0,
-                availableSpace.Width,
-                availableSpace.Height,
-                //_tabsUsed.Width,
-                //_tabsUsed.Height,
-                new ValuePoint2D(0, 0));
-            renderContext.DrawElement(_scrollPanel, tabPageRect);
-
-            // BOTTOM SEPARATOR
-            var separatorRect = new ValueRenderRectangle(
-                /* X */ tabsLeft,
-                /* Y */ _tabsUsed.Height + SEPARATOR_GAP_TOP,  //availableSpace.Height - (SEPARATOR_GAP_BOTTOM + SEPARATOR_LINE_HEIGHT),
-                /* W */ _tabsUsed.Width,
-                /* H */ SEPARATOR_LINE_HEIGHT,
-                availableSpace.Offset);
-
-            renderContext.DrawElement(_separator,separatorRect);
-
-
-            // INDICATOR
-            if (_indicatorRect.IsEmpty)
-            {
-                if (_itemsControl.SelectedTab != null)
-                {
-                    if (MoveIndicatorRect())
-                        InvalidateMeasure();
-                }
-            }
-            else
-            {
-                var indicatorOffset = new ValuePoint2D(availableSpace.Offset.X +
-                                                       _scrollPanel.HorizontalOffset,
-                    availableSpace.Offset.Y);
-
-                var indicatorRect = new ValueRenderRectangle(
-                    0 - _scrollPanel.HorizontalOffset, 
-                    //separatorRect.Y,
-                    availableSpace.Height - (SEPARATOR_GAP_BOTTOM + INDICATOR_LINE_HEIGHT),
-                    _indicatord, 
-                    indicatorOffset);
-
-                renderContext.DrawElement(_indicator, indicatorRect);
-            }
         }
 
         private Boolean MoveIndicatorRect()
         {
-            //Debug.WriteLine("#Moving indicator rect");
-
             if (!(_itemsControl.SelectedTab is { } valid) ||
-                //!_tabPageRenderer.TryGetRenderedElement(valid, out var pos))
-                !(_lastElementLocator?.TryGetLastRenderBounds(valid) is {} pos))
-                //Debug.WriteLine("#FAIL");
+                !(_lastElementLocator?.TryGetLastRenderBounds(valid) is { } pos))
                 return false;
 
             _indicatorRect = new Rectangle(pos.Left + _scrollPanel.HorizontalOffset, 0, pos.Size);
@@ -197,29 +170,37 @@ namespace Das.Views.Defaults
                 StyleSetter.Width, pos.Width);
 
             return true;
-            //Debug.WriteLine("#Moved to " + _indicatorRect);
         }
+
+        private void OnTabPropertyChanged(Object sender,
+                                          PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ITabControl.SelectedTab) when _lastStyleContext is { }:
+                    if (_itemsControl.SelectedTab is { })
+                        MoveIndicatorRect();
+                    break;
+            }
+        }
+
+        private const Int32 tabsLeft = 0;
 
         private const Int32 SEPARATOR_LINE_HEIGHT = 1;
         private const Int32 INDICATOR_LINE_HEIGHT = 3;
         private const Int32 SEPARATOR_GAP_TOP = 10;
         private const Int32 SEPARATOR_GAP_BOTTOM = 5;
+        private readonly HorizontalRule _indicator;
+
+        private readonly ITabControl _itemsControl;
+        private readonly ScrollPanel _scrollPanel;
+        private readonly HorizontalRule _separator;
+        private Size _indicatord;
+        private Rectangle _indicatorRect;
+        private IElementLocator? _lastElementLocator;
+        private IStyleProvider _lastStyleContext;
 
 
         private Size _tabsUsed;
-
-        private readonly ITabControl _itemsControl;
-        private Size _indicatord;
-        private IElementLocator? _lastElementLocator;
-        private Rectangle _indicatorRect;
-        private readonly ScrollPanel _scrollPanel;
-        private readonly HorizontalRule _indicator;
-        private IStyleProvider _lastStyleContext;
-        private readonly HorizontalRule _separator;
-
-        //protected override void OnDistributeDataContextToChildren(Object? newValue)
-        //{
-        //    Children.a
-        //}
     }
 }

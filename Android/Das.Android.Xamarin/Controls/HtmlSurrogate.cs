@@ -89,11 +89,6 @@ namespace Das.Xamarin.Android.Controls
             }
         }
 
-        public IVisualElement DeepCopy()
-        {
-            throw new NotImplementedException();
-        }
-
         public event Action<IVisualElement>? Disposed;
 
         IControlTemplate IVisualElement.Template => throw new NotSupportedException();

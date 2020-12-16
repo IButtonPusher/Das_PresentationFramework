@@ -65,6 +65,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IDependencyProperty{TT}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExtensionMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hosting\SizeToContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\EventArgs\LostCaptureEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IFlingHost.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IMouseCaptureManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\IItemsControl.cs" />

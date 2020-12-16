@@ -382,6 +382,9 @@ namespace Das.Views.Panels
         protected virtual void OnContentChanged(IVisualElement? obj)
         {
             InvalidateMeasure();
+            
+            if (obj is {} content)
+                content.InvalidateMeasure();
         }
 
         protected virtual Boolean OnContentChanging(IVisualElement? oldValue,

@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\AndroidSurrogateProvider.cs" />
     <Compile Include="Controls\HtmlSurrogate.cs" />
     <Compile Include="DasMainActivity.cs" />
     <Compile Include="Images\AndroidBitmap.cs" />

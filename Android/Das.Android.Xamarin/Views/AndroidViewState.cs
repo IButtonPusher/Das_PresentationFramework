@@ -2,7 +2,6 @@
 using Android.Util;
 using Das.Views;
 using Das.Views.Core.Drawing;
-using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 

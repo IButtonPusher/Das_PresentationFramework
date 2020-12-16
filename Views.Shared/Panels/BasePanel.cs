@@ -13,13 +13,6 @@ namespace Das.Views.Panels
                                          IVisualContainer
                                          
     {
-        //protected BasePanel(IDataBinding? binding,
-        //                    IVisualBootstrapper visualBootstrapper)
-        //    : base(binding, visualBootstrapper)
-        //{
-        //    _children = new VisualCollection();
-        //}
-
         // ReSharper disable once UnusedMember.Global
         protected BasePanel(IVisualBootstrapper visualBootstrapper)
             //: this(null, visualBootstrapper)
@@ -75,6 +68,12 @@ namespace Das.Views.Panels
             _children.AddRange(elements);
             InvalidateMeasure();
         }
+        
+        public void AddChildren(params IVisualElement[] elements)
+        {
+            _children.AddRange(elements);
+            InvalidateMeasure();
+        }
 
         public virtual void OnChildDeserialized(IVisualElement element, INode node)
         {
@@ -92,17 +91,7 @@ namespace Das.Views.Panels
             });
         }
 
-        //public override IVisualElement DeepCopy()
-        //{
-        //    var newObject = (BasePanel) base.DeepCopy();
-        //    _children.RunOnEachChild(newObject, (p, child) =>
-        //    {
-        //        var stepChild = child.DeepCopy();
-        //        p.AddChild(stepChild);
-        //    });
-
-        //    return newObject;
-        //}
+        
 
         public virtual void AcceptChanges()
         {
@@ -132,7 +121,7 @@ namespace Das.Views.Panels
         {
             base.InvalidateArrange();
 
-            _children.RunOnEachChild(child => child.InvalidateArrange());
+            //_children.RunOnEachChild(child => child.InvalidateArrange());
         }
 
         public override Boolean IsRequiresMeasure

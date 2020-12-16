@@ -12,7 +12,8 @@ using MouseButtons = Das.Views.Input.MouseButtons;
 
 namespace Das.Gdi
 {
-    public class InputContext : Win32InputContext, IMessageFilter
+    public class InputContext : Win32InputContext, 
+                                IMessageFilter
     {
         public InputContext(IPositionOffseter offsetter,
                             IInputHandler inputHandler,

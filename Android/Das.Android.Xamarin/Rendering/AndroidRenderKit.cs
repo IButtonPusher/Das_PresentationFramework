@@ -30,6 +30,7 @@ namespace Das.Xamarin.Android
         : base(container, styleContext, Serializer.AttributeParser, 
             Serializer.TypeInferrer, Serializer.TypeManipulator)
         {
+            ViewState = viewState;
             StyleContext = styleContext;
             DisplayMetrics = displayMetrics;
             var lastMeasures = new Dictionary<IVisualElement, ValueSize>();
@@ -70,6 +71,8 @@ namespace Das.Xamarin.Android
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;
 
         IRenderContext IRenderKit.RenderContext => RenderContext;
+
+        public IViewState ViewState { get; }
 
         public IStyleContext StyleContext { get; }
 

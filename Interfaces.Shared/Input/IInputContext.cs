@@ -11,11 +11,5 @@ namespace Das.Views.Input
         Double MaximumFlingVelocity { get; }
 
         Double MinimumFlingVelocity { get; }
-
-        //Boolean TryCaptureMouseInput(IVisualElement view);
-
-        //Boolean TryReleaseMouseCapture(IVisualElement view);
-
-        //IVisualElement? GetVisualWithMouseCapture();
     }
 }

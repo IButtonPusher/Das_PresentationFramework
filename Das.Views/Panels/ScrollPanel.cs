@@ -36,6 +36,10 @@ namespace Das.Views.Panels
 
         Boolean IFlingHost.CanFlingHorizontal => IsScrollsHorizontal;
 
+        Double IFlingHost.CurrentX => HorizontalOffset;
+
+        Double IFlingHost.CurrentY => VerticalOffset;
+
         public ValueMinMax GetVerticalMinMaxFling()
         {
             return IsScrollsVertical
@@ -73,7 +77,8 @@ namespace Das.Views.Panels
 
         public void OnFlingEnded(Boolean wasCancelled)
         {
-            Debug.WriteLine("***end of fling v-offset: " + VerticalOffset + "***");
+            Debug.WriteLine("***end of fling v-offset: " + VerticalOffset + 
+                            " h: " + HorizontalOffset + "***");
 
             if (_inputContext is { } inputContext)
                 inputContext.TryReleaseMouseCapture(this);
@@ -109,12 +114,6 @@ namespace Das.Views.Panels
                 return false;
 
             var working = _flingHandler.OnInput(args);
-
-            //if (working)
-            //{
-            //    _inputContext = args.InputContext;
-            //    _inputContext.TryCaptureMouseInput(this);
-            //}
 
             return working;
         }
@@ -257,18 +256,14 @@ namespace Das.Views.Panels
                 ? Convert.ToInt32(Math.Max(_lastNeeded.Width - _lastAvailable.Width, 0))
                 : 0;
 
-            //GetMeasureSpace(measureContext, availableSpace,
-            //    out _,
-            //    out var mySize);
-
             return _lastNeeded;
-
-            //return _lastNeeded;
         }
 
         protected virtual void OnScroll(Double deltaX,
                                         Double deltaY)
         {
+            //Debug.WriteLine(Environment.TickCount + " scrolling Y " + deltaY + " WAS: " + VerticalOffset);
+            
             if (deltaY.IsNotZero() && IsScrollsVertical)
             {
                 var nextYScroll = VerticalOffset + deltaY;

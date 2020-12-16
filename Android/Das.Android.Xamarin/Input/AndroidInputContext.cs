@@ -34,14 +34,12 @@ namespace Das.Xamarin.Android.Input
             
             if (displayMetrics.ZoomLevel.AreEqualEnough(1.0))
             {
-                _offsetMultiplier = 0;
                 _dpiRatio = 1;
                 _isOffsetPositions = false;
             }
             else
             {
                 _dpiRatio = 1 / displayMetrics.ZoomLevel;
-                _offsetMultiplier = 1 - (1 / displayMetrics.ZoomLevel);
                 _isOffsetPositions = true;
             }
             
@@ -103,7 +101,8 @@ namespace Das.Xamarin.Android.Input
             if (!(e is { } eve))
                 return false;
 
-            //var pos = new ValuePoint2D(eve.GetX(), eve.GetY());
+            IsInteracting = true;
+
             var pos = GetPosition(eve);
             
             _leftButtonWentDown = pos;
@@ -128,7 +127,7 @@ namespace Das.Xamarin.Android.Input
 
             var pos = GetPosition(e1);
 
-            var vx = 0 - velocityX * 0.5;
+            var vx = velocityX * 0.5;
             var vy = 0 - velocityY * 0.5;
 
             if (Math.Abs(vx) >= MinimumFlingVelocity ||
@@ -144,6 +143,7 @@ namespace Das.Xamarin.Android.Input
 
         public void OnLongPress(MotionEvent? e)
         {
+            
         }
 
         public Boolean OnScroll(MotionEvent? e1,
@@ -157,11 +157,8 @@ namespace Das.Xamarin.Android.Input
             var start = GetPosition(e1);
             var last = GetPosition(e2);
 
-            Double x = (0 - distanceX) * _dpiRatio;
-            Double y = (0 - distanceY)* _dpiRatio;
-
-            //x -= (x *_offsetMultiplier);
-            //y -= (y *_offsetMultiplier);
+            var x = (0 - distanceX) * _dpiRatio;
+            var y = (0 - distanceY)* _dpiRatio;
 
             var delta = new ValueSize(x, y);
 
@@ -169,7 +166,7 @@ namespace Das.Xamarin.Android.Input
             var dragArgs = new DragEventArgs(start, last, delta,
                 _leftButtonWentDown != null ? MouseButtons.Left : MouseButtons.Right,
                 this);
-            //System.Diagnostics.Debug.WriteLine("android send drag: " + dragArgs);
+            
             _inputHandler.OnMouseInput(dragArgs, InputAction.MouseDrag);
             
 
@@ -178,6 +175,7 @@ namespace Das.Xamarin.Android.Input
 
         public void OnShowPress(MotionEvent? e)
         {
+            
         }
 
         public Boolean OnSingleTapUp(MotionEvent? e)
@@ -189,7 +187,11 @@ namespace Das.Xamarin.Android.Input
             if (_inputHandler.OnMouseInput(new MouseUpEventArgs(
                     pos, _leftButtonWentDown, MouseButtons.Left, this),
                 InputAction.LeftMouseButtonUp))
-                _hostView.Invalidate();
+            {
+                //_hostView.Invalidate();
+            }
+            IsInteracting = false;
+
             return false;
         }
 
@@ -199,7 +201,8 @@ namespace Das.Xamarin.Android.Input
         }
 
        
-        public Boolean OnTouch(View? v, MotionEvent? e)
+        public Boolean OnTouch(View? v, 
+                               MotionEvent? e)
         {
             if (e?.Action == MotionEventActions.Up)
             {
@@ -208,6 +211,8 @@ namespace Das.Xamarin.Android.Input
                 if (_inputHandler.OnMouseInput(new MouseUpEventArgs(pos,
                     _leftButtonWentDown, MouseButtons.Left, this), InputAction.LeftMouseButtonUp))
                 {
+                    IsInteracting = false;
+                    SleepTime = 0;
                     //Invalidate();
                 }
             }
@@ -215,6 +220,8 @@ namespace Das.Xamarin.Android.Input
             return _gestureDetector.OnTouchEvent(e);
         }
 
+        public Int32 SleepTime;
+        
         IPoint2D IInputProvider.CursorPosition { get; } = Point2D.Empty;
 
         Boolean IInputProvider.IsCapsLockOn => false;
@@ -261,18 +268,15 @@ namespace Das.Xamarin.Android.Input
         {
             if (_isOffsetPositions)
             {
-                //var x = eve.GetX() - eve.GetX() * _offsetMultiplier;
                 var x = eve.GetX() * _dpiRatio;
-                
-                //var y = eve.GetY() - eve.GetY() * _offsetMultiplier;
                 var y = eve.GetY() * _dpiRatio;
                 return new ValuePoint2D(x, y);
             }
-            else
-            {
-                return new ValuePoint2D(eve.GetX(), eve.GetY());
-            }
+
+            return new ValuePoint2D(eve.GetX(), eve.GetY());
         }
+        
+        public Boolean IsInteracting { get; private set; }
 
         private readonly GestureDetectorCompat _gestureDetector;
         private readonly View _hostView;
@@ -282,8 +286,7 @@ namespace Das.Xamarin.Android.Input
         private readonly Int32 _minimumFlingVelocity;
 
         private ValuePoint2D? _leftButtonWentDown;
-        
-        private readonly Double _offsetMultiplier;
+
         private readonly Double _dpiRatio;
         private readonly Boolean _isOffsetPositions;
     }

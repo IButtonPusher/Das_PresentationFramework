@@ -76,7 +76,7 @@ namespace Das.Gdi
 
         public Bitmap? ToBitmap(Color backgroundColor)
         {
-            if (_width.IsZero() || _height.IsZero())
+            if (_width== 0 || _height == 0)
                 return default;
             
             var bmp = new Bitmap(_width, _height);

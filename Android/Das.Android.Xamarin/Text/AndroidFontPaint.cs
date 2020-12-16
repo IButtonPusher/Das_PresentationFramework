@@ -36,15 +36,12 @@ namespace Das.Xamarin.Android
 
         public IFont Font { get; }
 
-        [Obsolete("dont forget to fix this!")]
         public void DrawString<TBrush, TPoint>(String text,
                                                TBrush brush,
                                                TPoint point2D)
             where TBrush : IBrush
             where TPoint : IPoint2D
         {
-            //SetColor(brush);
-
             if (_isCacheStaticLayouts)
             {
                 var layout = GetOrCreateStaticLayout(text);
@@ -55,8 +52,6 @@ namespace Das.Xamarin.Android
             var size = MeasureString(text);
             var test = new ValueRectangle(point2D, size.Width, size.Height);
             DrawStringInRect(text, brush, test);
-
-            //GetCanvas().DrawText(text, (Single) point2D.X, (Single) point2D.Y, this);
         }
 
         public void DrawStringInRect<TBrush, TRectangle>(String s,
@@ -65,10 +60,6 @@ namespace Das.Xamarin.Android
             where TBrush : IBrush
             where TRectangle : IRectangle
         {
-           
-
-            //System.Diagnostics.Debug.WriteLine("Drawing string " + s + " in rect " + bounds + 
-            //                                   " brush " + brush);
 
             if (_isCacheStaticLayouts)
             {

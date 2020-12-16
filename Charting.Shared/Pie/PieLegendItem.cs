@@ -54,10 +54,10 @@ namespace Das.Views.Charting.Pie
             return res;
         }
 
-        protected override void OnDataContextChanged(Object newValue)
+        protected override void OnDataContextChanged(Object? newValue)
         {
             base.OnDataContextChanged(newValue);
-            _label.Text = newValue.ToString();
+            _label.Text = newValue?.ToString() ?? String.Empty;
         }
 
         //public override void SetBoundValue(IDataPoint<TKey, TValue> value)

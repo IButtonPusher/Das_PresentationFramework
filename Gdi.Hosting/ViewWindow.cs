@@ -33,16 +33,10 @@ namespace Das.Gdi
 
         private readonly GdiHostedElement _contents;
 
-        private Boolean _isChanged;
-
         public Bitmap BackingBitmap
         {
             get => _contents.BackingBitmap!;
-            set
-            {
-                _contents.BackingBitmap = value;
-                _isChanged = false;
-            }
+            set => _contents.BackingBitmap = value;
         }
 
         //public override Boolean IsChanged => base.IsChanged || _isChanged;

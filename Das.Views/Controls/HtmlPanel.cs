@@ -16,7 +16,7 @@ namespace Das.Views.Controls
         public String? Markup
         {
             get => _markup;
-            set => SetValue(ref _markup, value, OnMarkupChanged);
+            set => SetValue(ref _markup, value);
         }
 
         public Uri? Uri
@@ -35,11 +35,6 @@ namespace Das.Views.Controls
                                           IMeasureContext measureContext)
         {
             throw new NotSupportedException("A surrogate control is required for this control");
-        }
-
-        private void OnMarkupChanged(String? newVal)
-        {
-            Debug.WriteLine("changing markup in html surrogater:\r\n" + newVal);
         }
 
         private String? _markup;

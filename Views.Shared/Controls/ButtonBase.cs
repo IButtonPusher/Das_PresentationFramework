@@ -106,9 +106,12 @@ namespace Das.Views.Controls
             if (ClickMode != ClickMode.Press || !(Command is {} cmd))
                 return true;
 
-            var boundValue = DataContext;
+            //var boundValue = DataContext;
             
-            cmd.ExecuteAsync(boundValue).ConfigureAwait(false);
+            if (DataContext is {} boundValue)
+                cmd.ExecuteAsync(boundValue).ConfigureAwait(false);
+            else
+                cmd.ExecuteAsync().ConfigureAwait(false);
             return true;
         }
 
@@ -149,7 +152,7 @@ namespace Das.Views.Controls
             set => SetValue(ref _clickMode, value);
         }
 
-        public IObservableCommand<Object>? Command { get; set; }
+        public IObservableCommand? Command { get; set; }
 
         private void OnCurrentSelectorChanged(StyleSelector value)
         {

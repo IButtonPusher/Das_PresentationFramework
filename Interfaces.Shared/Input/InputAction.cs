@@ -22,6 +22,7 @@ namespace Das.Views.Input
                          LeftClick | RightClick | MiddleClick,
         MouseDrag = 512,
         MouseWheel = 1024,
-        Fling = 2048
+        Fling = 2048,
+        LostCapture = 4096
     }
 }
