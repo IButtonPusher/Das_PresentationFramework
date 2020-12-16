@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
-  <Import Project="..\Interfaces.Shared\Interfaces.Shared.projitems" Label="Shared" />
+  <Import Project="..\Core\Views.Interfaces.Shared\Views.Interfaces.Shared.projitems" Label="Shared" />
 
   <Import Project="..\Core\CSharp8NetFramework\CSharp8NetFramework.projitems" Label="Shared" />
 

@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfTest", "Tests\WpfTest\Wp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Das.Views.Charting", "Das.Views.Charting\Das.Views.Charting.csproj", "{B0A43AE7-19A0-4C0C-B854-D4F77DAE7BBA}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ViewInterfaces.Shared", "Interfaces.Shared\ViewInterfaces.Shared.shproj", "{2E14D9EA-BFC7-439C-8E84-156D1437C6A8}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Das.Views.Interfaces.Shared", "Core\Interfaces.Shared\ViewInterfaces.Shared.shproj", "{2E14D9EA-BFC7-439C-8E84-156D1437C6A8}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Views.Shared", "Views.Shared\Views.Shared.shproj", "{778A378F-7A09-4C1D-ABD3-634F3D9CC8AB}"
 EndProject
@@ -107,7 +107,7 @@ Global
 		Gdi.Shared\Gdi.Shared.projitems*{ce7e6b63-33e2-44f8-85c9-979a4f6b6f2c}*SharedItemsImports = 13
 		ViewModels.Shared\ViewModels.Shared.projitems*{cec76f49-102d-4f52-9f95-231829c47839}*SharedItemsImports = 13
 		Core\CSharp8NetFramework\CSharp8NetFramework.projitems*{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}*SharedItemsImports = 5
-		Interfaces.Shared\Interfaces.Shared.projitems*{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}*SharedItemsImports = 5
+		Core\Views.Interfaces.Shared\Views.Interfaces.Shared.projitems*{fb1bb75e-f5d9-4dff-a882-6de1eab96dfe}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
