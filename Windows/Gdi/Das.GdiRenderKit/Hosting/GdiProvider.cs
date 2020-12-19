@@ -1,10 +1,14 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using Das.Container;
+using Das.Extensions;
 using Das.Gdi.Controls;
+using Das.Gdi.Core;
 using Das.Gdi.Kits;
 using Das.Views;
+using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Rendering;
@@ -31,6 +35,7 @@ namespace Das.Gdi
             VisualBootstrapper = RenderKit.VisualBootstrapper;
         }
 
+        // ReSharper disable once UnusedMember.Global
         public GdiProvider() : this(new BaseResolver())
         {
             
@@ -73,9 +78,32 @@ namespace Das.Gdi
             return form;
         }
 
-        public ViewWindow Show<TViewModel>(TViewModel viewModel, 
-                                           IView view) 
-            //where TViewModel : IViewModel
+        //public ViewWindow Show<TViewModel>(TViewModel viewModel, 
+        //                                   IView view) 
+        //    //where TViewModel : IViewModel
+        //{
+        //    var styleContext = view.StyleContext;
+
+        //    var control = new GdiHostedElement(view, styleContext);
+        //    var form = new ViewWindow(control);
+        //    Cook(form);
+
+        //    //System.Windows.SystemParameters.PrimaryScreenWidth System.Windows.SystemParameters.PrimaryScreenHeight
+
+        //    //renderer.GetContentSize()
+
+        //   // view.DataContext = viewModel;
+        //    //view.SetDataContext(viewModel);
+
+        //    WindowShown?.Invoke(form);
+
+        //    return form;
+        //}
+
+
+        public ViewWindow Show<TRectangle>(IView view,
+                                           TRectangle rect)
+            where TRectangle : IRectangle
         {
             var styleContext = view.StyleContext;
 
@@ -83,22 +111,32 @@ namespace Das.Gdi
             var form = new ViewWindow(control);
             Cook(form);
 
-            //System.Windows.SystemParameters.PrimaryScreenWidth System.Windows.SystemParameters.PrimaryScreenHeight
-
-            //renderer.GetContentSize()
-
-           // view.DataContext = viewModel;
-            //view.SetDataContext(viewModel);
+            form.Bounds = GdiTypeConverter.GetRect(rect);
 
             WindowShown?.Invoke(form);
 
             return form;
         }
 
-        public ViewWindow Show<TViewModel>(IView view) 
-            //where TViewModel : IViewModel
+        public ViewWindow Show(IView view)
         {
-            return Show(view.DataContext, view);
+            var styleContext = view.StyleContext;
+
+            var control = new GdiHostedElement(view, styleContext);
+            var form = new ViewWindow(control);
+            Cook(form);
+
+            var viewWidth = view.Width ?? 0;
+            var viewHeight = view.Height ?? 0;
+
+            if (viewWidth.IsNotZero() && viewHeight.IsNotZero())
+                form.Size = GdiTypeConverter.GetSize(viewWidth, viewHeight);
+            
+            WindowShown?.Invoke(form);
+
+            return form;
+
+            //return Show(view.DataContext, view);
         }
 
         //public VisualForm Show(IVisualRenderer visual)
@@ -112,13 +150,20 @@ namespace Das.Gdi
 
         public event Action<ViewWindow>? WindowShown;
 
-        public void Run<TViewModel>(TViewModel viewModel, 
-                                    IView view)
+        public void Run(IView view)
         {
-            var window = Show(viewModel, view);
+            var window = Show(view);
             
             Application.Run(window);
         }
+        
+        //public void Run<TViewModel>(TViewModel viewModel, 
+        //                            IView view)
+        //{
+        //    var window = Show(viewModel, view);
+            
+        //    Application.Run(window);
+        //}
 
         public IVisualBootstrapper VisualBootstrapper { get; }
 
@@ -148,13 +193,23 @@ namespace Das.Gdi
                 RenderKit.MeasureContext, RenderKit.RenderContext);
 
             view.DataContext = viewModel;
+            //view.PropertyChanged += (o, e) =
             //view.SetDataContext(viewModel);
 
             control.BackingBitmap = renderer.DoRender();
-            control.DataContextChanged += (o, e) => { control.BackingBitmap = renderer.DoRender(); };
+            //control.DataContextChanged += (o, e) => { control.BackingBitmap = renderer.DoRender(); };
 
             return control;
         }
+
+        //private void OnViewPropertyChanged(Object sender, 
+        //                                   PropertyChangedEventArgs e)
+        //{
+        //    switch (e.PropertyName)
+        //    {
+        //        nameof(IBindableElement.DataContext)
+        //    }
+        //}
 
         // ReSharper disable once UnusedMethodReturnValue.Local
         private IRenderer<Bitmap> Cook(IViewHost<Bitmap> form)
@@ -165,5 +220,7 @@ namespace Das.Gdi
             return renderer;
 
         }
+
+       
     }
 }

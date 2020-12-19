@@ -33,15 +33,15 @@ namespace Das.Views.Defaults
             {
                 DataContext = dataContext
             };
-            _visualBootstrapper.StyleContext.RegisterStyleSetter(btn, StyleSetter.BorderBrush,
+            _visualBootstrapper.StyleContext.RegisterStyleSetter(btn, StyleSetterType.BorderBrush,
                 SolidColorBrush.Tranparent);
-            _visualBootstrapper.StyleContext.RegisterStyleSetter(btn, StyleSetter.Background,
+            _visualBootstrapper.StyleContext.RegisterStyleSetter(btn, StyleSetterType.Background,
                 StyleSelector.Active, SolidColorBrush.Tranparent);
-            _visualBootstrapper.StyleContext.RegisterStyleSetter(btn, StyleSetter.Background,
+            _visualBootstrapper.StyleContext.RegisterStyleSetter(btn, StyleSetterType.Background,
                 StyleSelector.Checked, SolidColorBrush.Tranparent);
 
 
-            _visualBootstrapper.StyleContext.RegisterStyleSetter(btn, StyleSetter.Background,
+            _visualBootstrapper.StyleContext.RegisterStyleSetter(btn, StyleSetterType.Background,
                 StyleSelector.None, SolidColorBrush.White);
 
             //btn.Width = 80;
@@ -50,7 +50,7 @@ namespace Das.Views.Defaults
             //    StyleSelector.None, 150);
             //_visualBootStrapper.StyleContext.RegisterStyleSetter(btn, StyleSetter.Padding,
             //    StyleSelector.None, new Thickness(15, 5, 15, 15));
-            _visualBootstrapper.StyleContext.RegisterStyleSetter(btn, StyleSetter.FontSize,
+            _visualBootstrapper.StyleContext.RegisterStyleSetter(btn, StyleSetterType.FontSize,
                 StyleSelector.None, 15);
 
             btn.VerticalAlignment = VerticalAlignments.Default;

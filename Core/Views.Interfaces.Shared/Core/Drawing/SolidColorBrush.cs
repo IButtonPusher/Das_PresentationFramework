@@ -30,6 +30,8 @@ namespace Das.Views.Core.Drawing
         public Color Color { get; }
 
         public static SolidColorBrush DarkGray => _darkGray.Value;
+        
+        public static SolidColorBrush Green => _green.Value;
 
         public static SolidColorBrush Tranparent => _transparent.Value;
 
@@ -73,6 +75,9 @@ namespace Das.Views.Core.Drawing
 
         private static readonly Lazy<SolidColorBrush> _darkGray = new Lazy<SolidColorBrush>(()
             => new SolidColorBrush(Color.DarkGray));
+        
+        private static readonly Lazy<SolidColorBrush> _green = new Lazy<SolidColorBrush>(()
+            => new SolidColorBrush(Color.Green));
 
         private static readonly Lazy<SolidColorBrush> _transparent = new Lazy<SolidColorBrush>(()
             => new SolidColorBrush(Color.Transparent));

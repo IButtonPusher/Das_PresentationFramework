@@ -4,8 +4,8 @@ namespace Das.Views.Core.Drawing
 {
     public interface IColorPalette
     {
-        IColor Accent { get; }
+        IBrush Accent { get; }
 
-        IColor Background { get; }
+        IBrush Background { get; }
     }
 }

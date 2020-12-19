@@ -22,7 +22,7 @@ namespace Das.Views
         {
             //Debug.WriteLine("arrange hrule");
 
-            var bg = renderContext.GetStyleSetter<SolidColorBrush>(StyleSetter.Background, this);
+            var bg = renderContext.GetStyleSetter<SolidColorBrush>(StyleSetterType.Background, this);
 
             renderContext.FillRectangle(availableSpace.ToFullRectangle(), bg);
         }
@@ -35,11 +35,11 @@ namespace Das.Views
             if (!(measureContext.ViewState is { } viewState))
                 return new ValueSize(availableSpace.Width, 1);
 
-            var specificHeight = viewState.GetStyleSetter<Double>(StyleSetter.Height, this);
+            var specificHeight = viewState.GetStyleSetter<Double>(StyleSetterType.Height, this);
 
             specificHeight = Double.IsNaN(specificHeight) ? availableSpace.Height : specificHeight;
 
-            var specificWidth = viewState.GetStyleSetter<Double>(StyleSetter.Width, this);
+            var specificWidth = viewState.GetStyleSetter<Double>(StyleSetterType.Width, this);
                                 
             specificWidth = Double.IsNaN(specificWidth) ? availableSpace.Width : specificWidth;
 

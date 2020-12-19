@@ -9,12 +9,14 @@ namespace Das.Views.Input
         public MouseUpEventArgs(IPoint2D position,
                                 IPoint2D? positionWentDown,
                                 MouseButtons button,
-                                IInputContext inputContext)
+                                IInputContext inputContext, 
+                                Boolean isValidForClick)
         {
             Position = position;
             PositionWentDown = positionWentDown;
             Button = button;
             InputContext = inputContext;
+            IsValidForClick = isValidForClick;
 
             switch (button)
             {
@@ -31,6 +33,8 @@ namespace Das.Views.Input
             }
         }
 
+        public readonly Boolean IsValidForClick;
+        
         public IPoint2D Position { get; }
 
         public IPoint2D? PositionWentDown { get; }
@@ -41,14 +45,7 @@ namespace Das.Views.Input
         {
             return new MouseUpEventArgs(Position.Offset(position),
                 PositionWentDown?.Offset(position),
-                Button, InputContext);
-        }
-
-        public MouseUpEventArgs Offset(Double pct)
-        {
-            return new MouseUpEventArgs(Position.Offset(pct),
-                PositionWentDown?.Offset(pct),
-                Button, InputContext);
+                Button, InputContext, IsValidForClick);
         }
 
         public InputAction Action { get; }

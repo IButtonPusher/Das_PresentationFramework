@@ -8,7 +8,6 @@ using Das.Views.Controls;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Measuring;
-using Das.Views.Rendering;
 using Das.Views.Styles;
 
 namespace Das.Gdi
@@ -31,7 +30,7 @@ namespace Das.Gdi
 
         public override ValueSize MeasureString(String s, IFont font)
         {
-            var useFont = TypeConverter.GetFont(font);
+            var useFont = GdiTypeConverter.GetFont(font);
             var sz = Graphics.MeasureString(s, useFont);
             return new ValueSize(sz.Width, sz.Height);
         }

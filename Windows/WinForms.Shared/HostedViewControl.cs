@@ -32,10 +32,10 @@ namespace WinForms.Shared
         }
      
 
-        public event EventHandler? DataContextChanged;
+        //public event EventHandler? DataContextChanged;
 
         //private Boolean _isChanged;
-        private IViewModel? _dataContext;
+        //private IViewModel? _dataContext;
 
         public IVisualElement View { get; protected set; }
 
@@ -55,6 +55,7 @@ namespace WinForms.Shared
 
         public void SetView(IVisualElement view) => View = view;
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public SizeToContent SizeToContent { get; set; }
 
         public IStyleContext StyleContext { get; set; }
@@ -73,35 +74,30 @@ namespace WinForms.Shared
             }
         }
 
-        public T GetStyleSetter<T>(StyleSetter setter, IVisualElement element)
-            => StyleContext.GetStyleSetter<T>(setter, element);
+        public T GetStyleSetter<T>(StyleSetterType setterType, IVisualElement element)
+            => StyleContext.GetStyleSetter<T>(setterType, element);
 
-        public T GetStyleSetter<T>(StyleSetter setter, StyleSelector selector, IVisualElement element)
+        public T GetStyleSetter<T>(StyleSetterType setterType, StyleSelector selector, IVisualElement element)
         {
-            return StyleContext.GetStyleSetter<T>(setter, selector, element);
+            return StyleContext.GetStyleSetter<T>(setterType, selector, element);
         }
 
         public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetter setter, 
+                                        StyleSetterType setterType, 
                                         Object value)
         {
-            StyleContext.RegisterStyleSetter(element, setter, value);
+            StyleContext.RegisterStyleSetter(element, setterType, value);
         }
 
         public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetter setter, 
+                                        StyleSetterType setterType, 
                                         StyleSelector selector, 
                                         Object value)
         {
-            StyleContext.RegisterStyleSetter(element, setter, selector, value);
+            StyleContext.RegisterStyleSetter(element, setterType, selector, value);
         }
 
         public IColorPalette ColorPalette => StyleContext.ColorPalette;
-
-        public IColor GetCurrentAccentColor()
-        {
-            return StyleContext.GetCurrentAccentColor();
-        }
 
         public void AcceptChanges()
         {

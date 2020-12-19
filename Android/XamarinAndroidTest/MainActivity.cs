@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Android.App;
+using Android.OS;
 using Android.Runtime;
 using Android.Support.Design.Widget;
 using Android.Views;
@@ -14,7 +15,7 @@ namespace XamarinAndroidTest
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : DasMainActivity, BottomNavigationView.IOnNavigationItemSelectedListener
     {
-        TextView textMessage;
+        //TextView textMessage;
 
         //protected override void OnCreate(Bundle savedInstanceState)
         //{
@@ -60,18 +61,18 @@ namespace XamarinAndroidTest
         }
         public Boolean OnNavigationItemSelected(IMenuItem item)
         {
-            switch (item.ItemId)
-            {
-                case Resource.Id.navigation_home:
-                    textMessage.SetText(Resource.String.title_home);
-                    return true;
-                case Resource.Id.navigation_dashboard:
-                    textMessage.SetText(Resource.String.title_dashboard);
-                    return true;
-                case Resource.Id.navigation_notifications:
-                    textMessage.SetText(Resource.String.title_notifications);
-                    return true;
-            }
+        //    switch (item.ItemId)
+        //    {
+        //        case Resource.Id.navigation_home:
+        //            textMessage.SetText(Resource.String.title_home);
+        //            return true;
+        //        case Resource.Id.navigation_dashboard:
+        //            textMessage.SetText(Resource.String.title_dashboard);
+        //            return true;
+        //        case Resource.Id.navigation_notifications:
+        //            textMessage.SetText(Resource.String.title_notifications);
+        //            return true;
+        //    }
             return false;
         }
     }

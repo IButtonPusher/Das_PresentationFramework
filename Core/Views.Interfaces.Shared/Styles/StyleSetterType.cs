@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Das.Views.Controls;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
@@ -9,7 +10,7 @@ using Das.Views.Rendering;
 
 namespace Das.Views.Styles
 {
-    public enum StyleSetter
+    public enum StyleSetterType
     {
         [StyleType(typeof(Thickness), false)]
         Margin,
@@ -22,9 +23,6 @@ namespace Das.Views.Styles
 
         [StyleType(typeof(Int32), false)]
         BorderRadius,
-
-        //[StyleType(typeof(ISize), false)]
-        //Size,
 
         [StyleType(typeof(Double), false)]
         Height,
@@ -63,7 +61,10 @@ namespace Das.Views.Styles
         Transition,
 
         [StyleType(typeof(Visibility), false)]
-        Visibility
+        Visibility,
+        
+        [StyleType(typeof(IVisualTemplate), default)]
+        Template
 
 
     }

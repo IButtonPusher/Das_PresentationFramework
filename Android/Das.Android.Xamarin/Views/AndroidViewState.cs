@@ -17,37 +17,37 @@ namespace Das.Xamarin.Android
             ZoomLevel = displayMetrics.ScaledDensity;
         }
 
-        public T GetStyleSetter<T>(StyleSetter setter,
+        public T GetStyleSetter<T>(StyleSetterType setterType,
                                    IVisualElement element)
         {
-            return _styleContext.GetStyleSetter<T>(setter, element);
+            return _styleContext.GetStyleSetter<T>(setterType, element);
         }
 
         public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetter setter, 
+                                        StyleSetterType setterType, 
                                         Object value)
         {
-            _styleContext.RegisterStyleSetter(element, setter, value);
+            _styleContext.RegisterStyleSetter(element, setterType, value);
         }
 
-        public IColor GetCurrentAccentColor()
-        {
-            return _styleContext.GetCurrentAccentColor();
-        }
+        //public IColor GetCurrentAccentColor()
+        //{
+        //    return _styleContext.GetCurrentAccentColor();
+        //}
 
-        public T GetStyleSetter<T>(StyleSetter setter,
+        public T GetStyleSetter<T>(StyleSetterType setterType,
                                    StyleSelector selector,
                                    IVisualElement element)
         {
-            return _styleContext.GetStyleSetter<T>(setter, selector, element);
+            return _styleContext.GetStyleSetter<T>(setterType, selector, element);
         }
 
         public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetter setter, 
+                                        StyleSetterType setterType, 
                                         StyleSelector selector, 
                                         Object value)
         {
-            _styleContext.RegisterStyleSetter(element, setter, selector, value);
+            _styleContext.RegisterStyleSetter(element, setterType, selector, value);
         }
 
         public IColorPalette ColorPalette => _styleContext.ColorPalette;

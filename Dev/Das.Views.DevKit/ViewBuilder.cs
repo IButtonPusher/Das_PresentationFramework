@@ -8,6 +8,8 @@ using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Rendering.Geometry;
 using Das.Views.Styles;
+using Das.Views.Templates;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 #pragma warning disable 8618
 
@@ -61,7 +63,7 @@ namespace Das.Views.DevKit
 
         //public event Action<IVisualElement>? Disposed;
 
-        IControlTemplate IVisualElement.Template => throw new NotSupportedException();
+        IVisualTemplate ITemplatableVisual.Template => throw new NotSupportedException();
 
         //public void AcceptChanges(ChangeType changeType)
         //{

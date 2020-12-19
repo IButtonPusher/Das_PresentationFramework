@@ -6,6 +6,8 @@ namespace Das.Views.Styles
 {
     public interface IStyleSheet : IStyle
     {
-        IDictionary<Type, IStyle> VisualTypeStyles { get; }
+        IDictionary<Type, IStyleSheet> VisualTypeStyles { get; }
+        
+        IEnumerable<IStyleSetter> StyleSetters { get; }
     }
 }

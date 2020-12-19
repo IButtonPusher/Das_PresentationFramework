@@ -1,6 +1,4 @@
 ﻿using System;
-using Das.Views.DataBinding;
-using Das.Views.Rendering;
 
 namespace Das.Views
 {
@@ -11,8 +9,5 @@ namespace Das.Views
         IVisualElement BuildVisual();
 
         IVisualElement? BuildVisual(Object? dataContext);
-
-        //TVisualElement BuildVisual<TVisualElement>(Object? dataContext)
-        //    where TVisualElement : IVisualElement;
     }
 }

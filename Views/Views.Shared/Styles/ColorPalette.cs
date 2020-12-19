@@ -5,15 +5,15 @@ namespace Das.Views.Styles
 {
     public class ColorPalette : IColorPalette
     {
-        public ColorPalette(IColor accent, 
-                            IColor background)
+        public ColorPalette(IBrush accent, 
+                            IBrush background)
         {
             Accent = accent;
             Background = background;
         }
 
-        public IColor Accent { get; }
+        public IBrush Accent { get; }
 
-        public IColor Background { get; }
+        public IBrush Background { get; }
     }
 }

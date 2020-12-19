@@ -24,7 +24,7 @@ namespace Das.Views
             return _visualBootstrapper.InstantiateCopy(Content);
         }
 
-        public IVisualElement? BuildVisual(Object? dataContext)
+        public IVisualElement BuildVisual(Object? dataContext)
         {
             return _visualBootstrapper.InstantiateCopy(Content, dataContext);
         }

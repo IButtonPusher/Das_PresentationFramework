@@ -26,20 +26,20 @@ namespace Das.Views.Styles
             _styleContext.CoerceIsChanged();
         }
 
-        public override void Add(StyleSetter setter, 
+        public override void Add(StyleSetterType setterType, 
                                  StyleSelector selector, 
                                  Object? value)
         {
-            var key = new AssignedStyle(setter, selector, value);
+            var key = new AssignedStyle(setterType, selector, value);
 
-            if (setter == StyleSetter.Transition)
+            if (setterType == StyleSetterType.Transition)
             {
                 var transitions = value as Transition[] 
                                   ?? throw new ArgumentOutOfRangeException(nameof(value));
 
                 foreach (var trans in transitions)
                 {
-                    var tranqui = new AssignedStyle(trans.Setter, selector, trans);
+                    var tranqui = new AssignedStyle(trans.SetterType, selector, trans);
                     _transitions[tranqui] = trans;
                 }
             }
@@ -67,7 +67,7 @@ namespace Das.Views.Styles
 
                 
             }
-            else base.Add(setter, selector, value);
+            else base.Add(setterType, selector, value);
         }
 
         public IVisualElement Element { get; }

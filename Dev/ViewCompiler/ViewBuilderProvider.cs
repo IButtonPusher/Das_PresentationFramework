@@ -17,7 +17,7 @@ namespace ViewCompiler
         /// <summary>
         /// Turns a file containing valid json markup into a ViewBuilder object
         /// </summary>
-        public async Task<ViewBuilder> GetViewBuilder(FileInfo file)
+        public async Task<ViewBuilder?> GetViewBuilder(FileInfo file)
         {
             ViewBuilder bldr;
 

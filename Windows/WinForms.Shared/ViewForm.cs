@@ -1,26 +1,24 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Das.Extensions;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Hosting;
-using Das.Views.Panels;
-using Das.Views.Rendering;
 using Das.Views.Styles;
-using Das.Views.Mvvm;
 using WinForms.Shared;
-using Size = Das.Views.Core.Geometry.Size;
 
 namespace Das.Views.Winforms
 {
-    public abstract class ViewForm : Form, 
+    public abstract class ViewForm : Form,
                                      IViewHost
     {
-        public ViewForm(HostedViewControl control) //: base(control.View, control)
+        public ViewForm(HostedViewControl control)
         {
+            _availableSize = ValueSize.Empty;
             _contents = control;
-            _availableSize = new Size(Width, Height);
-            //_changeLock = new Object();
+            //_availableSize = new ValueSize(Width, Height);
 
             Controls.Add(_contents);
             _contents.Dock = DockStyle.Fill;
@@ -29,57 +27,21 @@ namespace Das.Views.Winforms
                      ControlStyles.OptimizedDoubleBuffer |
                      ControlStyles.ResizeRedraw,
                 true);
+
+            //SynchronizeSizeToContent();
         }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            _availableSize.Width = _contents.Width;
-            _availableSize.Height = _contents.Height;
-            //_isChanged = true;
-        }
-
-        private readonly HostedViewControl _contents;
-
-        protected override void OnSizeChanged(EventArgs e)
-        {
-            base.OnSizeChanged(e);
-            if (_contents == null)
-                return;
-
-            _availableSize.Width = _contents.Width;
-            _availableSize.Height = _contents.Height;
-            //_isChanged = true;
-            AvailableSizeChanged?.Invoke(_availableSize);
-            _contents.View.InvalidateMeasure();
-        }
-
-        protected override async void OnHandleCreated(EventArgs e)
-        {
-            base.OnHandleCreated(e);
-
-            await HostCreated.InvokeAsyncEvent(true);
-        }
-
-        protected override void OnResizeEnd(EventArgs e)
-        {
-            base.OnResizeEnd(e);
-            _contents.OnResizeEnded(); 
-        }
-
-        //public T Invoke<T>(Func<T> action)
-        //{
-        //    return this.RunInvoke(action);
-        //}
 
         public void BeginInvoke(Action action)
         {
             this.RunBeginInvoke(action);
         }
 
-        public void Invoke(Action action) => base.Invoke(action);
+        public void Invoke(Action action)
+        {
+            base.Invoke(action);
+        }
 
-        public void Invoke(Action action, 
+        public void Invoke(Action action,
                            Int32 priority)
         {
             Invoke(action);
@@ -106,7 +68,7 @@ namespace Das.Views.Winforms
             return this.RunInvokeAsync(input, action);
         }
 
-        public Task InvokeAsync<TInput>(TInput input, 
+        public Task InvokeAsync<TInput>(TInput input,
                                         Func<TInput, Task> action)
         {
             return this.RunInvokeAsync(input, action);
@@ -117,16 +79,9 @@ namespace Das.Views.Winforms
             return this.RunInvokeAsync(action);
         }
 
-        private readonly Size _availableSize;
-
-        protected override Boolean DoubleBuffered
-        {
-            get => true;
-            set { }
-        }
-
         public Thickness RenderMargin { get; set; } = Thickness.Empty;
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public SizeToContent SizeToContent { get; set; }
 
         public abstract IPoint2D GetOffset(IPoint2D input);
@@ -136,74 +91,38 @@ namespace Das.Views.Winforms
         public event Func<Task>? HostCreated;
 
         public event Action<ISize>? AvailableSizeChanged;
-        
 
-        //public void Invoke(Action action) => base.Invoke(action);
-
-        //public Task InvokeAsync(Action action)
-        //{
-        //    return this.RunInvokeAsync(action);
-        //}
-
-        //private Boolean _isChanged;
-        //private readonly Object _changeLock;
-
-        //public void AcceptChanges()
-        //{
-        //    //lock (_changeLock)
-        //    //    _isChanged = false;
-
-        //    _contents.AcceptChanges();
-        //}
-
-        //public virtual Boolean IsChanged
-        //{
-        //    get => _contents.IsChanged;
-        //    //get
-        //    //{
-        //    //    if (View != null && (View.IsChanged || View.IsRequiresMeasure))
-        //    //        return true;
-
-        //    //    lock (_changeLock)
-        //    //        return _isChanged;
-        //    //}
-        //}
-
-        //public IViewModel? DataContext
-        //{
-        //    get => _contents.DataContext;
-        //    set => _contents.DataContext = value;
-        //}
 
         public Size AvailableSize => _availableSize;
-        public T GetStyleSetter<T>(StyleSetter setter, 
-                                   IVisualElement element)
-            => StyleContext.GetStyleSetter<T>(setter, element);
 
-        public T GetStyleSetter<T>(StyleSetter setter, 
-                                   StyleSelector selector, 
+        public T GetStyleSetter<T>(StyleSetterType setterType,
                                    IVisualElement element)
-            => StyleContext.GetStyleSetter<T>(setter, selector, element);
-
-        public void RegisterStyleSetter(IVisualElement element, StyleSetter setter, Object value)
         {
-            _contents.RegisterStyleSetter(element, setter, value);
+            return StyleContext.GetStyleSetter<T>(setterType, element);
         }
 
-        public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetter setter, 
-                                        StyleSelector selector, 
+        public T GetStyleSetter<T>(StyleSetterType setterType,
+                                   StyleSelector selector,
+                                   IVisualElement element)
+        {
+            return StyleContext.GetStyleSetter<T>(setterType, selector, element);
+        }
+
+        public void RegisterStyleSetter(IVisualElement element, StyleSetterType setterType, Object value)
+        {
+            _contents.RegisterStyleSetter(element, setterType, value);
+        }
+
+        public void RegisterStyleSetter(IVisualElement element,
+                                        StyleSetterType setterType,
+                                        StyleSelector selector,
                                         Object value)
         {
-            StyleContext.RegisterStyleSetter(element, setter, selector, value);
+            StyleContext.RegisterStyleSetter(element, setterType, selector, value);
         }
 
         public IColorPalette ColorPalette => _contents.ColorPalette;
 
-        public IColor GetCurrentAccentColor()
-        {
-            return _contents.GetCurrentAccentColor();
-        }
 
         public IVisualElement View
         {
@@ -222,9 +141,63 @@ namespace Das.Views.Winforms
 
         public void AcceptChanges()
         {
-            ((System.ComponentModel.IChangeTracking) _contents).AcceptChanges();
+            ((IChangeTracking) _contents).AcceptChanges();
         }
 
-        public Boolean IsChanged => _contents.IsChanged;
+        public Boolean IsChanged => _isHandleCreated &&  _contents.IsChanged;
+
+        protected override Boolean DoubleBuffered
+        {
+            get => true;
+            set { }
+        }
+
+        protected override async void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            _isHandleCreated = true;
+
+            await HostCreated.InvokeAsyncEvent(true);
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            SynchronizeSizeToContent();
+        }
+
+        protected override void OnResizeEnd(EventArgs e)
+        {
+            base.OnResizeEnd(e);
+            _contents.OnResizeEnded();
+        }
+
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+            if (_contents == null)
+                return;
+
+            if (!SynchronizeSizeToContent())
+                return;
+
+            _contents.View.InvalidateMeasure();
+        }
+
+        private Boolean SynchronizeSizeToContent()
+        {
+            if (_availableSize.Width.AreEqualEnough(_contents.Width) &&
+                _availableSize.Height.AreEqualEnough(_contents.Height))
+                return false;
+
+            _availableSize = new ValueSize(_contents.Width, _contents.Height);
+            AvailableSizeChanged?.Invoke(_availableSize);
+            return true;
+        }
+
+        private readonly HostedViewControl _contents;
+        private ValueSize _availableSize;
+        private Boolean _isHandleCreated;
     }
 }

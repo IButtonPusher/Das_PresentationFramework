@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace Das.Views.Input
 {
-    public interface IMouseButtonEventArgs<T> : IMouseButtonEventArgs,
-                                                IMouseInputEventArgs<T>
+    public interface IMouseButtonEventArgs<out T> : IMouseButtonEventArgs,
+                                                    IMouseInputEventArgs<T>
         where T : IMouseButtonEventArgs<T>
     {
     }

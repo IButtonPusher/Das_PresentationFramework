@@ -30,7 +30,7 @@ namespace Das.Gdi.Kits
 
             MeasureContext = new GdiMeasureContext(defaultSurrogates,lastMeasure, _styleContext);
             RenderContext = new GdiRenderContext(viewPerspective, 
-                MeasureContext.Graphics, defaultSurrogates, imageProvider,lastMeasure,
+                MeasureContext.Graphics, defaultSurrogates,lastMeasure,
                 new Dictionary<IVisualElement, ValueCube>(), _styleContext);
         }
 

@@ -55,7 +55,7 @@ namespace Das.Gdi
                     _inputHandler.OnMouseInput(
                         new MouseUpEventArgs(GetPosition(m.LParam),
                             _rightButtonWentDown,
-                        MouseButtons.Right, this), 
+                        MouseButtons.Right, this, true), 
                         InputAction.RightMouseButtonUp);
                     _rightButtonWentDown = default;
                     _lastDragPosition = default;
@@ -105,7 +105,7 @@ namespace Das.Gdi
 
                     var lBtnArgs = new MouseUpEventArgs(pos,
                         _leftButtonWentDown,
-                        MouseButtons.Left, this);
+                        MouseButtons.Left, this, true);
 
                     _leftButtonWentDown = default;
                     _lastDragPosition = default;

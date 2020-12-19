@@ -103,15 +103,19 @@ namespace Das.Views.Panels
                 _inputContext.TryCaptureMouseInput(this);
             }
 
-            OnScroll(args.LastChange.Width, 0 - args.LastChange.Height);
 
-            return true;
+            var res = OnScroll(args.LastChange.Width, 0 - args.LastChange.Height);
+
+            return res;
         }
 
         public Boolean OnInput(FlingEventArgs args)
         {
             if (!IsScrollWithMouseDrag)
                 return false;
+
+            //if (args.InputContext.GetVisualWithMouseCapture() != this)
+            //    return false;
 
             var working = _flingHandler.OnInput(args);
 
@@ -130,6 +134,9 @@ namespace Das.Views.Panels
                 args.InputContext.GetVisualWithMouseCapture() != this)
                 return false;
 
+
+            args.InputContext.TryReleaseMouseCapture(this);
+            
             if (IsScrollsHorizontal)
             {
                 var diffX = args.PositionWentDown.X - args.Position.X;
@@ -144,7 +151,7 @@ namespace Das.Views.Panels
                     return true;
             }
 
-            //Debug.WriteLine("mouse up: " + args.Position);
+            
             return false;
         }
 
@@ -259,33 +266,67 @@ namespace Das.Views.Panels
             return _lastNeeded;
         }
 
-        protected virtual void OnScroll(Double deltaX,
-                                        Double deltaY)
+        protected virtual Boolean OnScroll(Double deltaX,
+                                           Double deltaY)
         {
             //Debug.WriteLine(Environment.TickCount + " scrolling Y " + deltaY + " WAS: " + VerticalOffset);
-            
+
+            var didScroll = false;
+
             if (deltaY.IsNotZero() && IsScrollsVertical)
             {
-                var nextYScroll = VerticalOffset + deltaY;
-                if (VerticalOffset < 0)
-                    VerticalOffset = 0;
-                else if (nextYScroll > _maximumYScroll)
-                    VerticalOffset = _maximumYScroll;
-                else
-                    VerticalOffset = Convert.ToInt32(nextYScroll);
+                var nextYScroll = GetValueBetween(VerticalOffset + deltaY, 0, _maximumYScroll);
+
+                //var nextYScroll = Math.Max(0, VerticalOffset + deltaY);
+
+                if (nextYScroll.AreDifferent(VerticalOffset))
+                {
+                    if (nextYScroll < 0)
+                        VerticalOffset = 0;
+                    else if (nextYScroll > _maximumYScroll)
+                        VerticalOffset = _maximumYScroll;
+                    else
+                        VerticalOffset = Convert.ToInt32(nextYScroll);
+
+                    didScroll = true;
+                }
             }
 
             if (!deltaX.IsNotZero() || !IsScrollsHorizontal)
-                return;
+                return didScroll;
 
-            var nextScroll = HorizontalOffset - deltaX;
-            if (nextScroll < 0)
-                HorizontalOffset = 0;
-            else if (nextScroll > _maximumXScroll)
-                HorizontalOffset = _maximumXScroll;
-            else
-                HorizontalOffset = Convert.ToInt32(nextScroll);
+            var nextScroll = GetValueBetween(HorizontalOffset - deltaX, 0, _maximumXScroll);
+            //Math.Min(HorizontalOffset - deltaX, _maximumXScroll);
 
+            if (nextScroll.AreDifferent(HorizontalOffset))
+            {
+
+                //var nextScroll = Math.Min(HorizontalOffset - deltaX, _maximumXScroll);
+                if (nextScroll < 0)
+                    HorizontalOffset = 0;
+                else if (nextScroll > _maximumXScroll)
+                    HorizontalOffset = _maximumXScroll;
+                else
+                    HorizontalOffset = Convert.ToInt32(nextScroll);
+
+                didScroll = true;
+            }
+
+            return didScroll;
+
+        }
+
+        private static Double GetValueBetween(Double value,
+                                              Double min,
+                                              Double max)
+        {
+            if (value <= min)
+                return min;
+
+            if (value >= max)
+                return max;
+
+            return value;
         }
 
         private void OnHorzOffsetChanged(Int32 obj)

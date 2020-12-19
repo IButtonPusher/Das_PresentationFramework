@@ -20,6 +20,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)StaticBitmapRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StaticGdiRenderKit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Static\StaticViewState.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TypeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GdiTypeConverter.cs" />
   </ItemGroup>
 </Project>

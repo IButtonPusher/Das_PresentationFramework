@@ -8,30 +8,12 @@ using Das.Views.Styles;
 
 namespace Das.Views.Controls
 {
-    //public class ButtonBase : ButtonBase<Object>
-    //{
-    //    public override Boolean OnInput(MouseClickEventArgs args)
-    //    {
-    //        if (ClickMode != ClickMode.Release || !(Command is {} cmd))
-    //            return true;
-
-    //        cmd.ExecuteAsync().ConfigureAwait(false);
-    //        return true;
-    //    }
-
-    //    public new IObservableCommand? Command { get; set; }
-
-    //    public ButtonBase(IVisualBootstrapper templateResolver) : base(templateResolver)
-    //    {
-    //    }
-    //}
-    
     public abstract class ButtonBase : ContentPanel,
-                                 IHandleInput<MouseClickEventArgs>,
-                                 IHandleInput<MouseDownEventArgs>,
-                                 IHandleInput<MouseUpEventArgs>,
-                                 IHandleInput<MouseOverEventArgs>,
-                                 IButtonBase
+                                       IHandleInput<MouseClickEventArgs>,
+                                       IHandleInput<MouseDownEventArgs>,
+                                       IHandleInput<MouseUpEventArgs>,
+                                       IHandleInput<MouseOverEventArgs>,
+                                       IButtonBase
     {
         private ISize _lastRenderSize;
 
@@ -44,7 +26,7 @@ namespace Das.Views.Controls
 
         protected override Thickness? GetPadding(IStyleProvider styleContext)
         {
-            return styleContext.GetStyleSetter<Thickness>(StyleSetter.Padding,
+            return styleContext.GetStyleSetter<Thickness>(StyleSetterType.Padding,
                 CurrentStyleSelector, this);
         }
 
@@ -69,9 +51,11 @@ namespace Das.Views.Controls
         protected void RemoveStyleSelector(StyleSelector value)
         {
             var val = _currentStyleSelector & ~value;
-            
+
             if (val == 0)
-            {}
+            {
+                val = StyleSelector.None;
+            }
 
             SetValue(ref _currentStyleSelector, val, OnCurrentSelectorChanged,
                 nameof(CurrentStyleSelector));
@@ -157,8 +141,6 @@ namespace Das.Views.Controls
         private void OnCurrentSelectorChanged(StyleSelector value)
         {
             InvalidateArrange();
-
-            //IsChanged = true;
         }
 
         public override String ToString()

@@ -3,28 +3,34 @@ using System.Threading.Tasks;
 
 namespace Das.Views.Styles
 {
-    public readonly struct AssignedStyle : IEquatable<AssignedStyle>
+    public readonly struct AssignedStyle : IEquatable<AssignedStyle>,
+                                           IStyleSetter
     {
-        public AssignedStyle(StyleSetter setter,
+        public AssignedStyle(StyleSetterType setterType,
                              StyleSelector selector,
                              Object? value = null)
         {
-            Setter = setter;
+            SetterType = setterType;
             Selector = selector;
             Value = value;
 
-            _hash = (Int32) setter + ((Int32) selector << 16);
+            _hash = (Int32) setterType + ((Int32) selector << 16);
         }
 
-        public readonly StyleSetter Setter;
+        public readonly StyleSetterType SetterType;
         public readonly StyleSelector Selector;
-        public readonly Object? Value;
+        public Object? Value { get; }
 
         private readonly Int32 _hash;
 
         public Boolean Equals(AssignedStyle other)
         {
-            return other.Setter == Setter && other.Selector == Selector;
+            return other.SetterType == SetterType && other.Selector == Selector;
+        }
+
+        public Boolean Equals(IStyleSetter other)
+        {
+            return other is AssignedStyle assigned && Equals(assigned);
         }
 
         public override Boolean Equals(Object obj)
@@ -40,9 +46,9 @@ namespace Das.Views.Styles
         public override String ToString()
         {
             if (Selector == StyleSelector.None)
-                return Setter + " = " + Value;
+                return SetterType + " = " + Value;
 
-            return Setter + ":" + Selector + " = " + Value;
+            return SetterType + ":" + Selector + " = " + Value;
         }
     }
 }

@@ -54,7 +54,7 @@ namespace Das.Views.Charting.Pie
             }
 
             renderContext.FillRectangle(availableSpace.ToFullRectangle(),
-                renderContext.ColorPalette.Background.ToBrush());
+                renderContext.ColorPalette.Background);
 
             var radius = side / 2;
             var center = new Point2D(availableSpace.Width - side + radius,

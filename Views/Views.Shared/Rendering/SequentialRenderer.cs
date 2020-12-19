@@ -103,7 +103,7 @@ namespace Das.Views.Rendering
                     }
                 });
 
-                var margin = measureContext.GetStyleSetter<Thickness>(StyleSetter.Margin, container);
+                var margin = measureContext.GetStyleSetter<Thickness>(StyleSetterType.Margin, container);
 
                 totalWidth = Math.Max(totalWidth, maxWidth);
                 totalHeight = Math.Max(totalHeight, maxHeight);
@@ -179,7 +179,7 @@ namespace Das.Views.Rendering
 
                     var useHorzAlign = child.HorizontalAlignment != HorizontalAlignments.Default
                         ? child.HorizontalAlignment
-                        : context.GetStyleSetter<HorizontalAlignments>(StyleSetter.HorizontalAlignment, child);
+                        : context.GetStyleSetter<HorizontalAlignments>(StyleSetterType.HorizontalAlignment, child);
 
                     
 
@@ -211,7 +211,7 @@ namespace Das.Views.Rendering
                     
                     var useVertAlign = child.VerticalAlignment != VerticalAlignments.Default
                         ? child.VerticalAlignment
-                        : context.GetStyleSetter<VerticalAlignments>(StyleSetter.VerticalAlignment, child);
+                        : context.GetStyleSetter<VerticalAlignments>(StyleSetterType.VerticalAlignment, child);
 
                     switch (useVertAlign)
                     {

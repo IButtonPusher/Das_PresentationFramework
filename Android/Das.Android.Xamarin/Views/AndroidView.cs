@@ -201,8 +201,8 @@ namespace Das.Xamarin.Android
                 }
                 else
                 {
-                    if (_inputContext.SleepTime == 0)
-                        System.Diagnostics.Debug.WriteLine("[OKYN] frame skipped!");
+                    //if (_inputContext.SleepTime == 0)
+                    //    System.Diagnostics.Debug.WriteLine("[OKYN] frame skipped!");
 
                     _inputContext.SleepTime = Math.Min(++_inputContext.SleepTime, 50);
 

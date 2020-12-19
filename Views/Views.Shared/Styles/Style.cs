@@ -1,74 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Das.Views.Styles
 {
-    public class Style : StyleBase, IStyle
+    
+    public class Style : StyleBase, 
+                         IStyle
     {
-        //public Style()
-        //{
-        //    _setters = new Dictionary<AssignedStyle, Object?>();
-        //    _transitions = new Dictionary<AssignedStyle, Transition>();
-        //}
-
-        public virtual Object? this[StyleSetter setter]
+        public virtual Object? this[StyleSetterType setterType]
         {
-            get => TryGetValue(setter, StyleSelector.None, out var found)
+            get => TryGetValue(setterType, StyleSelector.None, out var found)
                 ? found
                 : default;
-            set => AddSetterImpl(setter, value);
+            set => AddSetterImpl(setterType, value);
         }
 
-        public virtual Object? this[StyleSetter setter,
+        public virtual Object? this[StyleSetterType setterType,
                                     StyleSelector selector]
         {
-            get => TryGetValue(setter, selector, out var found)
+            get => TryGetValue(setterType, selector, out var found)
                 ? found
                 : default;
-            set => AddImpl(setter, selector, value);
+            set => AddImpl(setterType, selector, value);
         }
 
-        //public virtual Boolean TryGetValue(StyleSetter setter,
-        //                                   StyleSelector selector,
-        //                                   out Object val)
-        //{
-        //    foreach (var k in GetUniqueFlags<StyleSelector>(selector))
-        //    {
-        //        var key = new AssignedStyle(setter, k);
-        //        if (_setters.TryGetValue(key, out val!))
-        //            return true;
-        //    }
-
-        //    val = default!;
-        //    return false;
-        //}
-
-        //private static IEnumerable<T> GetUniqueFlags<T>(Enum flags)
-        //    where T : Enum
-        //{
-        //    foreach (Enum value in Enum.GetValues(flags.GetType()))
-        //        if (flags.HasFlag(value))
-        //            yield return (T)value;
-        //}
-
-        //public virtual Boolean TryGetValue(StyleSetter setter,
-        //                                   StyleSelector selector,
-        //                                   Object? dataContext,
-        //                                   out Object val)
-        //{
-        //    return TryGetValue(setter, selector, out val);
-        //}
-
-
-        //public virtual IEnumerator<AssignedStyle> GetEnumerator()
-        //{
-        //    return _setters.Keys.GetEnumerator();
-        //}
-
-        //IEnumerator IEnumerable.GetEnumerator()
-        //{
-        //    return GetEnumerator();
-        //}
+       
+       
 
         public void AddMissingSetters(IStyle fromStyle)
         {
@@ -77,13 +35,11 @@ namespace Das.Views.Styles
                     _setters[kvp] = kvp.Value;
         }
 
-        public virtual void Add(StyleSetter setter,
+        public virtual void Add(StyleSetterType setterType,
                               StyleSelector selector,
                               Object? value)
         {
-            AddImpl(setter, selector, value);
-            //var key = new AssignedStyle(setter, selector, value);
-            //_setters[key] = value;
+            AddImpl(setterType, selector, value);
         }
 
         protected virtual void UpdateTransition(AssignedStyle style)
@@ -95,18 +51,24 @@ namespace Das.Views.Styles
         {
             foreach (var kvp in style)
             {
-                var key = new AssignedStyle(kvp.Setter, kvp.Selector, kvp.Value);
+                var key = new AssignedStyle(kvp.SetterType, kvp.Selector, kvp.Value);
                 _setters[key] = kvp;
             }
         }
 
-        public virtual void AddSetter(StyleSetter setter,
-                              Object? value)
+        protected void AddOrUpdate(IEnumerable<AssignedStyle> newValues)
         {
-            Add(setter, StyleSelector.None, value);
+            foreach (var value in newValues)
+            {
+                _setters[value] = value.Value;
+            }
         }
 
-        //protected readonly Dictionary<AssignedStyle, Object?> _setters;
-        //protected readonly Dictionary<AssignedStyle, Transition> _transitions;
+        public virtual void AddSetter(StyleSetterType setterType,
+                              Object? value)
+        {
+            Add(setterType, StyleSelector.None, value);
+        }
+
     }
 }

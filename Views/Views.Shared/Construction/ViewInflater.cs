@@ -7,9 +7,10 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Das.Serializer;
 using Das.Views.Construction;
+using Das.Views.Controls;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
-using Das.Views.Rendering;
+using Das.Views.Templates;
 
 namespace Das.Views
 {
@@ -34,6 +35,7 @@ namespace Das.Views
             _defaultNamespaceSeed["Das.Views.Panels"] = "Das.Views";
             _defaultNamespaceSeed["Das.Views.Controls"] = "Das.Views";
             _defaultNamespaceSeed["Das.Views.DataBinding"] = "Das.Views";
+            _defaultNamespaceSeed["Das.Views.Templates"] = "Das.Views";
             _defaultNamespaceSeed["Das.Views"] = "Das.Views";
         }
         
@@ -283,23 +285,63 @@ namespace Das.Views
 
             if (typeof(IContentContainer).IsAssignableFrom(visualType))
             {
-                if (node.ChildrenCount == 1)
-                {
-                    var currentNode = node[0];
+                visual = BuildContentVisual(node, dataContextType, 
+                    nameSpaceAssemblySearch, visualType);
+                //IVisualElement? contentVisual = null;
 
-                    var contentContainer = _visualBootstrapper.Instantiate<IContentContainer>(visualType);
+                //var contentContainer = _visualBootstrapper.Instantiate<IContentVisual>(visualType);
 
-                    var contentVisual = GetVisual(currentNode, dataContextType, nameSpaceAssemblySearch);
-                    contentContainer.Content = contentVisual;
-                    visual = contentContainer;
-                }
-                else throw new NotImplementedException();
+                //if (node.ChildrenCount == 1)
+                //{
+                //    var currentNode = node[0];
+                //    var childObj = InflateChild(currentNode, contentContainer,
+                //        dataContextType, nameSpaceAssemblySearch,
+                //        out var childType,
+                //        out var childProp);
+
+                //    if (childType == ChildNodeType.ChildVisual && childObj is IVisualElement childVisual)
+                //        contentVisual = childVisual;
+
+                //    else if (childType == ChildNodeType.PropertyValue && childProp is {} prop)
+                //        prop.SetValue(contentContainer, childObj);
+
+
+                //    //contentVisual = GetVisual(currentNode, dataContextType, nameSpaceAssemblySearch);
+                //}
+                //else if (node.ChildrenCount == 0)
+                //{
+                //    if (!node.TryGetAttributeValue(nameof(IContentContainer.Content), out var textContent))
+                //        textContent = node.InnerText;
+
+                //    if (!String.IsNullOrEmpty(textContent))
+                //    {
+                //        // <button>TEXT</button> etc
+                //        contentVisual = new Label(_visualBootstrapper) {Text = textContent!};
+                //    }
+                //}
+                //else throw new NotImplementedException();
+
+                //contentContainer.Content = contentVisual;
+                //visual = contentContainer;
             }
             else if (visualType is { } validVisualType)
             {
                 visual = _visualBootstrapper.Instantiate<IVisualElement>(validVisualType);
 
-                if (node.ChildrenCount > 0) InflateChildNodes(node, visual, dataContextType, nameSpaceAssemblySearch);
+                if (node.ChildrenCount > 0) 
+                    InflateChildNodes(node, visual, dataContextType, nameSpaceAssemblySearch);
+
+                if (node.InnerText is {} innerText && 
+                    innerText.Trim() is {} validInnerText && validInnerText.Length > 0 &&
+                    GetAttribute<ContentPropertyAttribute>(validVisualType) is {} cp &&
+                    //validVisualType.GetCustomAttribute<ContentPropertyAttribute>() is {} cp &&
+                    _typeInferrer.FindPublicProperty(validVisualType, cp.Name) is {} contentProp && 
+                    contentProp.PropertyType == typeof(String))
+                {
+                    // <Label>hello world</Label>
+                    contentProp.SetValue(visual, validInnerText, null);
+                }
+                
             }
             else throw new NotImplementedException();
 
@@ -313,59 +355,251 @@ namespace Das.Views
             return visual;
         }
 
+        private static T GetAttribute<T>(Type type)
+            where T : Attribute
+        {
+            var res = Attribute.GetCustomAttribute(type, typeof(T));
+            switch (res)
+            {
+                case T good:
+                    return good;
+                
+                default:
+                    return default!;
+            }
+            
+        }
+
         private void InflateChildNodes(IMarkupNode node,
                                        IVisualElement visual,
                                        Type? dataContextType,
                                        Dictionary<String, String> nameSpaceAssemblySearch)
         {
-            var visualType = visual.GetType();
+           
 
             foreach (var childNode in node.Children)
             {
-                var visualProp = _typeInferrer.FindPublicProperty(visualType, childNode.Name);
+                var visualChild = InflateChild(childNode, visual, dataContextType, 
+                    nameSpaceAssemblySearch, out var childType, out var visualProp);
+
+                if (childType == ChildNodeType.PropertyValue && visualProp is { } prop)
+                {
+                    prop.SetValue(visual, visualChild, null);
+                }
+                else if (visualChild is IVisualElement childVisual)
+                {
+                    AddChildVisual(visual, childVisual);
+                }
+                
+
+                //var visualProp = _typeInferrer.FindPublicProperty(visualType, childNode.Name);
+                //if (visualProp != null)
+                //{
+                //    if (typeof(IVisualElement).IsAssignableFrom(visualProp.PropertyType))
+                //    {
+                //        // try to set a property with a visual based on the node's value
+
+                //        var childVisual = GetVisual(childNode, dataContextType, nameSpaceAssemblySearch);
+
+                //        visualProp.SetValue(visual, childVisual, null);
+                //    }
+                //    else if (typeof(IDataTemplate).IsAssignableFrom(visualProp.PropertyType))
+                //    {
+                //        var dataTemplate = BuildDataTemplate(childNode, dataContextType, nameSpaceAssemblySearch);
+                //        visualProp.SetValue(visual, dataTemplate, null);
+                //    }
+                //}
+                //else
+                //{
+                //    var childVisual = GetVisual(childNode, dataContextType, nameSpaceAssemblySearch);
+                //    if (childVisual != null)
+                //    {
+                //        if (visual is IVisualContainer container)
+                //            container.AddChild(childVisual);
+                //        else
+                //        {
+                //            var addMethod = visualType.GetMethod(nameof(IVisualContainer.AddChild));
+                //            if (addMethod == null)
+                //                throw new NotImplementedException();
+
+                //            var mParam = addMethod.GetParameters();
+                //            if (mParam.Length != 1)
+                //                throw new NotImplementedException();
+
+                //            var addType = mParam[0].ParameterType;
+                //            var childVisualType = childVisual.GetType();
+                //            if (!addType.IsAssignableFrom(childVisualType))
+                //                throw new NotImplementedException();
+
+                //            addMethod.Invoke(visual, new Object[] {childVisual});
+                //        }
+                //    }
+                //}
+            }
+        }
+        
+        
+
+        private IContentVisual BuildContentVisual(IMarkupNode node,
+                                                        Type? dataContextType,
+                                                        Dictionary<String, String> nameSpaceAssemblySearch,
+                                                        Type visualType)
+        {
+            IVisualElement? contentVisual = null;
+
+            var contentContainer = _visualBootstrapper.Instantiate<IContentVisual>(visualType);
+                
+            switch (node.ChildrenCount)
+            {
+                case 1:
+                {
+                    var currentNode = node[0];
+                    var childObj = InflateChild(currentNode, contentContainer,
+                        dataContextType, nameSpaceAssemblySearch,
+                        out var childType,
+                        out var childProp);
+
+                    if (childType == ChildNodeType.ChildVisual && childObj is IVisualElement childVisual)
+                        contentVisual = childVisual;
+                    
+                    else if (childType == ChildNodeType.PropertyValue && childProp is {} prop)
+                        prop.SetValue(contentContainer, childObj, null);
+                    
+                    
+                    //contentVisual = GetVisual(currentNode, dataContextType, nameSpaceAssemblySearch);
+                    break;
+                }
+                case 0:
+                {
+                    if (!node.TryGetAttributeValue(nameof(IContentContainer.Content), out var textContent))
+                        textContent = node.InnerText;
+
+                    if (!String.IsNullOrEmpty(textContent))
+                    {
+                        // <button>TEXT</button> etc
+                        contentVisual = new Label(_visualBootstrapper) {Text = textContent!};
+                    }
+
+                    break;
+                }
+                default:
+                    throw new NotImplementedException();
+            }
+                
+            contentContainer.Content = contentVisual;
+            return contentContainer;
+        }
+
+        private static void AddChildVisual(IVisualElement visual,
+                                           IVisualElement childVisual)
+        {
+            var visualType = visual.GetType();
+            
+            if (visual is IVisualContainer container)
+                container.AddChild(childVisual);
+            else
+            {
+                var addMethod = visualType.GetMethod(nameof(IVisualContainer.AddChild));
+                if (addMethod == null)
+                    throw new NotImplementedException();
+
+                var mParam = addMethod.GetParameters();
+                if (mParam.Length != 1)
+                    throw new NotImplementedException();
+
+                var addType = mParam[0].ParameterType;
+                var childVisualType = childVisual.GetType();
+                if (!addType.IsAssignableFrom(childVisualType))
+                    throw new NotImplementedException();
+
+                addMethod.Invoke(visual, new Object[] { childVisual });
+            }
+        }
+
+        private Object? InflateChild(IMarkupNode childNode,
+                                     IVisualElement visual,
+                                     Type? dataContextType,
+                                     Dictionary<String, String> nameSpaceAssemblySearch,
+                                     out ChildNodeType childType,
+                                     out PropertyInfo? visualProp)
+        {
+            var visualType = visual.GetType();
+            
+            visualProp = _typeInferrer.FindPublicProperty(visualType, childNode.Name);
                 if (visualProp != null)
                 {
+                    childType = ChildNodeType.PropertyValue;
+                    
                     if (typeof(IVisualElement).IsAssignableFrom(visualProp.PropertyType))
                     {
                         // try to set a property with a visual based on the node's value
 
                         var childVisual = GetVisual(childNode, dataContextType, nameSpaceAssemblySearch);
-
-                        visualProp.SetValue(visual, childVisual, null);
+                        return childVisual;
+                        //visualProp.SetValue(visual, childVisual, null);
                     }
-                    else if (typeof(IDataTemplate).IsAssignableFrom(visualProp.PropertyType))
+                    
+                    if (typeof(IDataTemplate).IsAssignableFrom(visualProp.PropertyType))
                     {
                         var dataTemplate = BuildDataTemplate(childNode, dataContextType, nameSpaceAssemblySearch);
-                        visualProp.SetValue(visual, dataTemplate, null);
+                        return dataTemplate;
+                        //visualProp.SetValue(visual, dataTemplate, null);
                     }
+
+                    if (typeof(IVisualTemplate).IsAssignableFrom(visualProp.PropertyType))
+                    {
+                        if (childNode.ChildrenCount == 1)
+                        {
+                            var templateVisual = GetVisual(childNode[0], visualType,
+                                nameSpaceAssemblySearch);
+
+                            return new VisualTemplate
+                            {
+                                Content = templateVisual
+                            };
+                        }
+
+                        //else if (childNode.TryGetAttributeValue(nameof(IVisualTemplate.Content),
+                        //    out var foundIt))
+                        //    templateContent = foundIt;
+                    }
+
+                    throw new NotImplementedException();
+
                 }
                 else
                 {
+                    childType = ChildNodeType.ChildVisual;
+                    
                     var childVisual = GetVisual(childNode, dataContextType, nameSpaceAssemblySearch);
-                    if (childVisual != null)
-                    {
-                        if (visual is IVisualContainer container)
-                            container.AddChild(childVisual);
-                        else
-                        {
-                            var addMethod = visualType.GetMethod(nameof(IVisualContainer.AddChild));
-                            if (addMethod == null)
-                                throw new NotImplementedException();
 
-                            var mParam = addMethod.GetParameters();
-                            if (mParam.Length != 1)
-                                throw new NotImplementedException();
+                    return childVisual;
+                    
+                    //if (childVisual != null)
+                    //{
+                    //    if (visual is IVisualContainer container)
+                    //        container.AddChild(childVisual);
+                    //    else
+                    //    {
+                    //        var addMethod = visualType.GetMethod(nameof(IVisualContainer.AddChild));
+                    //        if (addMethod == null)
+                    //            throw new NotImplementedException();
 
-                            var addType = mParam[0].ParameterType;
-                            var childVisualType = childVisual.GetType();
-                            if (!addType.IsAssignableFrom(childVisualType))
-                                throw new NotImplementedException();
+                    //        var mParam = addMethod.GetParameters();
+                    //        if (mParam.Length != 1)
+                    //            throw new NotImplementedException();
 
-                            addMethod.Invoke(visual, new Object[] {childVisual});
-                        }
-                    }
+                    //        var addType = mParam[0].ParameterType;
+                    //        var childVisualType = childVisual.GetType();
+                    //        if (!addType.IsAssignableFrom(childVisualType))
+                    //            throw new NotImplementedException();
+
+                    //        addMethod.Invoke(visual, new Object[] {childVisual});
+                    //    }
+                    //}
                 }
-            }
+
+                //return default;
         }
 
         private IVisualElement InflateXmlImpl(String xml,

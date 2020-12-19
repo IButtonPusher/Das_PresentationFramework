@@ -26,9 +26,9 @@ namespace Das.Gdi
 
         public override IPoint2D GetOffset(IPoint2D input)
         {
-            var point = TypeConverter.GetPoint(input);
+            var point = GdiTypeConverter.GetPoint(input);
             point = PointToClient(point);
-            return TypeConverter.GetPoint(point);
+            return GdiTypeConverter.GetPoint(point);
         }
 
         private readonly GdiHostedElement _contents;
@@ -38,8 +38,6 @@ namespace Das.Gdi
             get => _contents.BackingBitmap!;
             set => _contents.BackingBitmap = value;
         }
-
-        //public override Boolean IsChanged => base.IsChanged || _isChanged;
 
         public Bitmap Asset
         {

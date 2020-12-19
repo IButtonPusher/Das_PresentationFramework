@@ -52,7 +52,7 @@ namespace Das.Views.Windows
 
 
         [DllImport(User32, CharSet = CharSet.Unicode, SetLastError = true)]
-        internal static extern Int32 GetMessage([In] [Out] ref MSG msg, IntPtr hWnd,
+        public static extern Int32 GetMessage([In] [Out] ref MSG msg, IntPtr hWnd,
                                                 Int32 uMsgFilterMin, Int32 uMsgFilterMax);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
@@ -240,21 +240,21 @@ namespace Das.Views.Windows
         // Various helpers for forcing binding to proper 
         // version of Comctl32 (v6).
         [DllImport("kernel32.dll", SetLastError = true, ThrowOnUnmappableChar = true, BestFitMapping = false)]
-        internal static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] String fileName);
+        public static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] String fileName);
 
         [DllImport("gdi32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern Boolean DeleteObject(IntPtr graphicsObjectHandle);
+        public static extern Boolean DeleteObject(IntPtr graphicsObjectHandle);
 
         [DllImport(User32, SetLastError = true, CharSet = CharSet.Unicode)]
-        internal static extern Int32 LoadString(
+        public static extern Int32 LoadString(
             IntPtr instanceHandle,
             Int32 id,
             StringBuilder buffer,
             Int32 bufferSize);
 
         [DllImport("Kernel32.dll", EntryPoint = "LocalFree")]
-        internal static extern IntPtr LocalFree(ref Guid guid);
+        public static extern IntPtr LocalFree(ref Guid guid);
 
         /// <summary>
         ///     Destroys an icon and frees any memory the icon occupied.
@@ -266,24 +266,24 @@ namespace Das.Views.Windows
         /// </returns>
         [DllImport(User32, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern Boolean DestroyIcon(IntPtr hIcon);
+        public static extern Boolean DestroyIcon(IntPtr hIcon);
 
         #endregion
 
         #region General Declarations
 
         // Various important window messages
-        internal const Int32 UserMessage = 0x0400;
-        internal const Int32 EnterIdleMessage = 0x0121;
+        public const Int32 UserMessage = 0x0400;
+        public const Int32 EnterIdleMessage = 0x0121;
 
         // FormatMessage constants and structs.
-        internal const Int32 FormatMessageFromSystem = 0x00001000;
+        public const Int32 FormatMessageFromSystem = 0x00001000;
 
         // App recovery and restart return codes
-        internal const UInt32 ResultFailed = 0x80004005;
-        internal const UInt32 ResultInvalidArgument = 0x80070057;
-        internal const UInt32 ResultFalse = 1;
-        internal const UInt32 ResultNotFound = 0x80070490;
+        public const UInt32 ResultFailed = 0x80004005;
+        public const UInt32 ResultInvalidArgument = 0x80070057;
+        public const UInt32 ResultFalse = 1;
+        public const UInt32 ResultNotFound = 0x80070490;
 
         /// <summary>
         ///     Gets the HiWord
@@ -328,28 +328,28 @@ namespace Das.Views.Windows
         }
 
         // Enable/disable non-client rendering based on window style.
-        internal const Int32 DWMNCRP_USEWINDOWSTYLE = 0;
+        public const Int32 DWMNCRP_USEWINDOWSTYLE = 0;
 
         // Disabled non-client rendering; window style is ignored.
-        internal const Int32 DWMNCRP_DISABLED = 1;
+        public const Int32 DWMNCRP_DISABLED = 1;
 
         // Enabled non-client rendering; window style is ignored.
-        internal const Int32 DWMNCRP_ENABLED = 2;
+        public const Int32 DWMNCRP_ENABLED = 2;
 
         // Enable/disable non-client rendering Use DWMNCRP_* values.
-        internal const Int32 DWMWA_NCRENDERING_ENABLED = 1;
+        public const Int32 DWMWA_NCRENDERING_ENABLED = 1;
 
         // Non-client rendering policy.
-        internal const Int32 DWMWA_NCRENDERING_POLICY = 2;
+        public const Int32 DWMWA_NCRENDERING_POLICY = 2;
 
         // Potentially enable/forcibly disable transitions 0 or 1.
-        internal const Int32 DWMWA_TRANSITIONS_FORCEDISABLED = 3;
+        public const Int32 DWMWA_TRANSITIONS_FORCEDISABLED = 3;
 
         #endregion
 
         #region Windows OS structs and consts
 
-        internal const UInt32 StatusAccessDenied = 0xC0000022;
+        public const UInt32 StatusAccessDenied = 0xC0000022;
 
 
         public delegate Int32 WNDPROC(IntPtr hWnd,

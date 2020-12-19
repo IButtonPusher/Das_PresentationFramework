@@ -5,11 +5,9 @@ using Das.OpenGL.Text.FreeType;
 using Das.OpenGL.Windows;
 using Das.Views;
 using Das.Views.Core.Writing;
-using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Updaters;
 using Das.Views.Windows;
-using Das.Views.Mvvm;
 using Das.Views.Styles;
 
 namespace Das.OpenGL
@@ -26,10 +24,9 @@ namespace Das.OpenGL
             _taskScheduler = new StaScheduler("Das GL Thread");
         }
 
-        public void Run<TViewModel>(TViewModel viewModel, 
-                                    IView view)
+        public void Run(IView view)
         {
-            var window = _windowBuilder.Show(viewModel, view);
+            var window = _windowBuilder.Show(view);
             Cook(window);
             Application.Run(window);
         }

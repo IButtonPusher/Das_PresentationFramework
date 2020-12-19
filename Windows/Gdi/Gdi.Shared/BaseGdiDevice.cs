@@ -2,7 +2,6 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using Das.Extensions;
 using Das.Views.Windows;
 
 
@@ -18,8 +17,8 @@ namespace Das.Gdi
                 Convert.ToInt32(size.Height), 
                 backgroundColor);
         }
-        
-        protected static IntPtr CreateMemoryHdc(IntPtr hdc, 
+
+        private static IntPtr CreateMemoryHdc(IntPtr hdc, 
                                               Int32 width, 
                                               Int32 height,
                                               out IntPtr dib)
@@ -46,24 +45,12 @@ namespace Das.Gdi
         {
             if (iwidth == 0 || iheight == 0)
                 return false;
-            
-            //if (width.IsZero() || height.IsZero())
-            //    return false;
-            
-            //var iwidth = Convert.ToInt32(width);
-            //var iheight = Convert.ToInt32(height);
 
             _memoryDeviceContext = CreateMemoryHdc(IntPtr.Zero, iwidth, iheight,
                 out _currentDib);
 
             if (_memoryDeviceContext == IntPtr.Zero) 
                 return false;
-
-            //_bmp.Dispose();
-            //_dcGraphics.Dispose();
-            //_bmp = new Bitmap(iwidth, iheight);
-            //using (var g = Graphics.FromImage(_bmp))
-            //    g.Clear(backgroundColor);
 
             _width = iwidth;
             _height = iheight;
@@ -103,7 +90,6 @@ namespace Das.Gdi
 
         public virtual void Dispose()
         {
-            //_bmp.Dispose();
             _dcGraphics?.Dispose();
 
             if (_currentDib != IntPtr.Zero)
@@ -118,9 +104,8 @@ namespace Das.Gdi
         protected IntPtr _memoryDeviceContext;
         protected Graphics? _dcGraphics;
         protected IntPtr _currentDib;
-        //private readonly Object _sizeLock;
         protected Int32 _width;
         protected Int32 _height;
-        //private Bitmap _bmp;
+        
     }
 }

@@ -2,6 +2,9 @@
 <RuleSet Name="Rules for XamarinAndroidTest" Description="Code analysis rules for XamarinAndroidTest.csproj." ToolsVersion="16.0">
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
     <Rule Id="AD0001" Action="None" />
+    <Rule Id="BC2007" Action="None" />
+    <Rule Id="BC2034" Action="None" />
+    <Rule Id="BC2038" Action="None" />
     <Rule Id="CS0078" Action="None" />
     <Rule Id="CS0105" Action="None" />
     <Rule Id="CS0108" Action="None" />
@@ -140,6 +143,7 @@
     <Rule Id="CS4024" Action="None" />
     <Rule Id="CS4025" Action="None" />
     <Rule Id="CS4026" Action="None" />
+    <Rule Id="CS7023" Action="None" />
     <Rule Id="CS7033" Action="None" />
     <Rule Id="CS7035" Action="None" />
     <Rule Id="CS7080" Action="None" />
@@ -178,6 +182,7 @@
     <Rule Id="CS8513" Action="None" />
     <Rule Id="CS8519" Action="None" />
     <Rule Id="CS8520" Action="None" />
+    <Rule Id="CS8524" Action="None" />
     <Rule Id="CS8597" Action="None" />
     <Rule Id="CS8600" Action="None" />
     <Rule Id="CS8601" Action="None" />
@@ -230,11 +235,30 @@
     <Rule Id="CS8775" Action="None" />
     <Rule Id="CS8776" Action="None" />
     <Rule Id="CS8777" Action="None" />
+    <Rule Id="CS8778" Action="None" />
     <Rule Id="CS8784" Action="None" />
     <Rule Id="CS8785" Action="None" />
     <Rule Id="CS8793" Action="None" />
     <Rule Id="CS8794" Action="None" />
     <Rule Id="CS8819" Action="None" />
+    <Rule Id="CS8824" Action="None" />
+    <Rule Id="CS8825" Action="None" />
+    <Rule Id="CS8846" Action="None" />
+    <Rule Id="CS8847" Action="None" />
+    <Rule Id="CS8848" Action="None" />
+    <Rule Id="CS8850" Action="None" />
+    <Rule Id="CS8851" Action="None" />
+    <Rule Id="CS8860" Action="None" />
+    <Rule Id="CS8880" Action="None" />
+    <Rule Id="CS8881" Action="None" />
+    <Rule Id="CS8882" Action="None" />
+    <Rule Id="CS8883" Action="None" />
+    <Rule Id="CS8884" Action="None" />
+    <Rule Id="CS8885" Action="None" />
+    <Rule Id="CS8886" Action="None" />
+    <Rule Id="CS8887" Action="None" />
+    <Rule Id="CS8897" Action="None" />
+    <Rule Id="CS8898" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
     <Rule Id="IDE0001" Action="None" />
@@ -343,8 +367,12 @@
     <Rule Id="IDE0075WithoutSuggestion" Action="None" />
     <Rule Id="IDE0076" Action="None" />
     <Rule Id="IDE0077" Action="None" />
+    <Rule Id="IDE0078" Action="None" />
+    <Rule Id="IDE0079" Action="None" />
     <Rule Id="IDE0080" Action="None" />
     <Rule Id="IDE0080WithoutSuggestion" Action="None" />
+    <Rule Id="IDE0082" Action="None" />
+    <Rule Id="IDE0083" Action="None" />
     <Rule Id="IDE1005" Action="None" />
     <Rule Id="IDE1005WithoutSuggestion" Action="None" />
     <Rule Id="IDE1006" Action="None" />
@@ -368,6 +396,9 @@
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.VisualBasic" RuleNamespace="Microsoft.CodeAnalysis.VisualBasic">
     <Rule Id="AD0001" Action="None" />
+    <Rule Id="BC2007" Action="None" />
+    <Rule Id="BC2034" Action="None" />
+    <Rule Id="BC2038" Action="None" />
     <Rule Id="CS2008" Action="None" />
     <Rule Id="CS2023" Action="None" />
     <Rule Id="CS2029" Action="None" />
@@ -432,6 +463,8 @@
     <Rule Id="IDE0075WithoutSuggestion" Action="None" />
     <Rule Id="IDE0076" Action="None" />
     <Rule Id="IDE0077" Action="None" />
+    <Rule Id="IDE0079" Action="None" />
+    <Rule Id="IDE0082" Action="None" />
     <Rule Id="IDE1006" Action="None" />
     <Rule Id="IDE1006WithoutSuggestion" Action="None" />
     <Rule Id="RE0001" Action="None" />

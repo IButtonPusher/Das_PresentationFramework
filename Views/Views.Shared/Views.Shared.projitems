@@ -13,17 +13,19 @@
     <Compile Include="$(MSBuildThisFileDirectory)Collections\VisualCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\VisualCollectionHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\BindingBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\ChildNodeType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\DefaultValueConverterProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\MarkupNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\ViewInflater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\XmlMarkupNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\XmlNodeBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ContentVisuals\ContentPropertyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ContextBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\ButtonBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\ButtonBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Label.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\PictureFrame.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\ToggleButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\ToggleButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\BaseConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToBrushConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToThicknessConverter.cs" />
@@ -54,7 +56,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BasePanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BaseSelectorVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BaseSequentialPanel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Panels\ContentPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ContentVisuals\ContentPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\RepeaterPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\ScrollMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\StackPanel.cs" />
@@ -72,12 +74,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\SequentialUniformRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VisualElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\BaseStyleContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\CascadingAssignedStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\CascadingStyleSheet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\ColorPalette.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\DefaultColorPalette.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\DefaultStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\DefaultStyleContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\ElementStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSheetHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\DoubleTransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\ScopedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Style.cs" />
@@ -88,7 +93,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Templates\DataTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\DefaultVisualBootstrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\MultiDataTemplate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\VisualTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Updaters\BaseLoopUpdater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Updaters\LoopViewUpdater.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Primitives\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)DefaultStyles\Primitives\ToggleButton.xml" />
   </ItemGroup>
 </Project>

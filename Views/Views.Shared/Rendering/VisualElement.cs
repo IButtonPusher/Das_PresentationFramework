@@ -49,17 +49,6 @@ namespace Das.Views
         {
             TryGetSize(out var size);
             return size;
-
-            //var width = Width;
-            //if (width == null || width == 0)
-            //    return ValueSize.Empty;
-            //var height = Height;
-            //if (height == null || height == 0)
-            //    return ValueSize.Empty;
-
-            //return new ValueSize(width.Value, height.Value);
-
-            //return measureContext.GetStyleDesiredSize(this);
         }
 
         public virtual void Arrange(IRenderSize availableSpace,
@@ -71,8 +60,6 @@ namespace Das.Views
 
         public virtual void InvalidateMeasure()
         {
-            //System.Diagnostics.Debug.WriteLine("InvalidateMeasure " + this);
-
             IsRequiresMeasure = true;
             IsRequiresArrange = true;
         }
@@ -86,17 +73,12 @@ namespace Das.Views
         {
             get => _isRequiresMeasure;
             protected set => SetValue(ref _isRequiresMeasure, value);
-                    //OnIsRequiresMeasureChanging, OnIsRequiresMeasureChanged);
         }
 
         public virtual Boolean IsRequiresArrange
         {
-            get
-            {
-                return _isRequiresArrange;
-            }
+            get => _isRequiresArrange;
             protected set => SetValue(ref _isRequiresArrange, value);
-                    //OnIsRequiresArrangeChanging, OnIsRequiresArrangeChangedAsync);
         }
 
 
@@ -106,7 +88,7 @@ namespace Das.Views
 
         public event Action<IVisualElement>? Disposed;
 
-        public virtual IControlTemplate? Template
+        public virtual IVisualTemplate? Template
         {
             get => _template;
             // ReSharper disable once UnusedMember.Global
@@ -118,13 +100,11 @@ namespace Das.Views
             switch (changeType)
             {
                 case ChangeType.Measure:
-                    //lock (_measureLock)
-                        IsRequiresMeasure = false;
+                    IsRequiresMeasure = false;
                     break;
 
                 case ChangeType.Arrange:
-                    //lock (_arrangeLock)
-                        IsRequiresArrange = false;
+                    IsRequiresArrange = false;
                     break;
             }
         }
@@ -196,28 +176,6 @@ namespace Das.Views
             set => SetValue(ref _isEnabled, value);
         }
 
-        //protected virtual Task OnIsRequiresArrangeChangedAsync(Boolean value)
-        //{
-        //    return TaskEx.CompletedTask;
-        //}
-
-        //protected virtual Boolean OnIsRequiresArrangeChanging(Boolean oldValue,
-        //                                                      Boolean newValue)
-        //{
-        //    return true;
-        //}
-
-        //protected virtual void OnIsRequiresMeasureChanged(Boolean value)
-        //{
-            
-        //}
-
-        //protected virtual Boolean OnIsRequiresMeasureChanging(Boolean oldValue,
-        //                                                      Boolean newValue)
-        //{
-        //    return true;
-        //}
-
         public override String ToString()
         {
             return GetType().Name + " req arrange: " + IsRequiresArrange + 
@@ -258,6 +216,6 @@ namespace Das.Views
         private Boolean _isRequiresArrange;
         private Boolean _isRequiresMeasure;
 
-        private IControlTemplate? _template;
+        private IVisualTemplate? _template;
     }
 }

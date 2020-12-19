@@ -95,7 +95,7 @@ namespace Das.Views.Styles
             var currentValue = new Thickness(currentLeft, currentTop,
                 currentRight, currentBottom);
 
-            var assigned = new AssignedStyle(_assignedStyle.Setter, _assignedStyle.Selector,
+            var assigned = new AssignedStyle(_assignedStyle.SetterType, _assignedStyle.Selector,
                 currentValue);
 
             _updater(assigned);

@@ -6,26 +6,23 @@ namespace Das.Views.Styles
 {
     public interface IStyle : IEnumerable<AssignedStyle>
     {
-        Object? this[StyleSetter setter] { get; }
+        Object? this[StyleSetterType setterType] { get; }
 
-        Object? this[StyleSetter setter, StyleSelector selector] { get; }
+        Object? this[StyleSetterType setterType, 
+                     StyleSelector selector] { get; }
 
-        Boolean TryGetValue(StyleSetter setter,
+        Boolean TryGetValue(StyleSetterType setterType,
                             StyleSelector selector,
                             out Object val);
 
-        //Boolean TryGetValue(StyleSetter setter,
-        //                    StyleSelector selector,
-        //                    Object? dataContext,
-        //                    out Object val);
 
-        void Add(StyleSetter setter,
+        void Add(StyleSetterType setterType,
                  StyleSelector selector,
                  Object? value);
 
         void AddOrUpdate(IStyle style);
 
-        void AddSetter(StyleSetter setter,
+        void AddSetter(StyleSetterType setterType,
                        Object? value);
     }
 }

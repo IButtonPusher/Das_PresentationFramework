@@ -10,6 +10,7 @@ using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Panels;
 using Das.Views.Rendering;
+using Das.Views.Templates;
 
 namespace Das.Xamarin.Android.Controls
 {
@@ -91,7 +92,7 @@ namespace Das.Xamarin.Android.Controls
 
         public event Action<IVisualElement>? Disposed;
 
-        IControlTemplate IVisualElement.Template => throw new NotSupportedException();
+        IVisualTemplate? ITemplatableVisual.Template => default;
 
         public void AcceptChanges(ChangeType changeType)
         {

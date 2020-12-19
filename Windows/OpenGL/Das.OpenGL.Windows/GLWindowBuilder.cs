@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using Das.Views;
+using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Windows;
@@ -39,9 +41,29 @@ namespace Das.OpenGL.Windows
             return form;
         }
 
+        public GLForm Show<TRectangle>(IView view,
+                                       TRectangle rect) 
+            where TRectangle : IRectangle
+        {
+            var styleContext = view.StyleContext;
+
+            var control = new GLHostedElement(view, styleContext);
+            var form = new GLForm(control);
+
+            form.Bounds = new System.Drawing.Rectangle(
+                Convert.ToInt32(rect.Left),
+                Convert.ToInt32(rect.Top),
+                Convert.ToInt32(rect.Width),
+                Convert.ToInt32(rect.Height));
+            
+
+            WindowShown?.Invoke(form);
+
+            return form;
+        }
+        
         public GLForm Show<TViewModel>(TViewModel viewModel, 
-                                       IView view) 
-            //where TViewModel : IViewModel
+                                       IView view)
         {
             var styleContext = view.StyleContext;
 
@@ -56,7 +78,7 @@ namespace Das.OpenGL.Windows
             return form;
         }
 
-        public GLForm Show<TViewModel>(IView view) 
+        public GLForm Show(IView view) 
             //where TViewModel : IViewModel
         {
             return Show(view.DataContext, view);
@@ -112,5 +134,6 @@ namespace Das.OpenGL.Windows
             return wndClass;
         }
 
+        
     }
 }

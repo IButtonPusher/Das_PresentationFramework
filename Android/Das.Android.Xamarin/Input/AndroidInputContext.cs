@@ -31,6 +31,8 @@ namespace Das.Xamarin.Android.Input
             _maximumFlingVelocity = viewConfig.ScaledMaximumFlingVelocity;
             _minimumFlingVelocity = viewConfig.ScaledMinimumFlingVelocity;
 
+            _touchSlop = viewConfig.ScaledTouchSlop;
+
             
             if (displayMetrics.ZoomLevel.AreEqualEnough(1.0))
             {
@@ -122,6 +124,9 @@ namespace Das.Xamarin.Android.Input
                                Single velocityX,
                                Single velocityY)
         {
+            System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS FLING vx: " + velocityX + 
+                                               " vy: " + velocityY);
+            
             if (e1 == null)
                 return false;
 
@@ -183,14 +188,20 @@ namespace Das.Xamarin.Android.Input
             if (e == null)
                 return false;
 
+            System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS SINGLE TAP UP.");
+
             var pos = GetPosition(e);
-            if (_inputHandler.OnMouseInput(new MouseUpEventArgs(
-                    pos, _leftButtonWentDown, MouseButtons.Left, this),
+
+            var args = new MouseUpEventArgs(
+                pos, _leftButtonWentDown, MouseButtons.Left, this, true);
+            
+            if (_inputHandler.OnMouseInput(args,
                 InputAction.LeftMouseButtonUp))
             {
                 //_hostView.Invalidate();
             }
             IsInteracting = false;
+            _leftButtonWentDown = default;
 
             return false;
         }
@@ -199,26 +210,104 @@ namespace Das.Xamarin.Android.Input
         {
             _hostView.Dispose();
         }
-
-       
-        public Boolean OnTouch(View? v, 
+        
+        public Boolean OnTouch(View? v,
                                MotionEvent? e)
         {
-            if (e?.Action == MotionEventActions.Up)
+            var res = _gestureDetector.OnTouchEvent(e);
+
+            System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS TOUCH " + e?.Action +
+                                               " handled by gesture detector? " + res);
+            
+            if (res)
+                return true;
+
+
+            if (e?.Action != MotionEventActions.Up ||
+                _leftButtonWentDown == null)
             {
-                // gesture detector not detecting anything for when you lift the finger after dragging
-                var pos = GetPosition(e);
-                if (_inputHandler.OnMouseInput(new MouseUpEventArgs(pos,
-                    _leftButtonWentDown, MouseButtons.Left, this), InputAction.LeftMouseButtonUp))
-                {
-                    IsInteracting = false;
-                    SleepTime = 0;
-                    //Invalidate();
-                }
+                return false;
             }
 
-            return _gestureDetector.OnTouchEvent(e);
+            var pos = GetPosition(e);
+                
+            var distance = pos.Distance(_leftButtonWentDown);
+            var willHandle = distance >= _touchSlop;
+            
+            System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS TOUCH UP.  Distance from down:" +
+                                               distance + " will handle: " + willHandle);
+
+            if (!willHandle)
+                return false;
+
+            var args = new MouseUpEventArgs(pos,
+                _leftButtonWentDown, MouseButtons.Left, this, false);
+            if (_inputHandler.OnMouseInput(args,
+                InputAction.LeftMouseButtonUp))
+            {
+                IsInteracting = false;
+                SleepTime = 0;
+            }
+
+            _leftButtonWentDown = default;
+
+            return true;
+
+            
+
         }
+
+
+        //public Boolean OnTouch(View? v,
+        //                       MotionEvent? e)
+        //{
+        //    if (e?.Action == MotionEventActions.Up)
+        //    {
+        //        //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS TOUCH UP");
+
+        //        if (_leftButtonWentDown != null)
+        //        {
+
+        //        }
+        //        else
+        //        {}
+                
+        //        //IsInteracting = false;
+        //        //SleepTime = 0;
+
+        //        // gesture detector not detecting anything for when you lift the finger after dragging
+        //        // this is needed because otherwise swipes that aren't flings won't register
+        //        var pos = GetPosition(e);
+
+        //        if (_leftButtonWentDown != null)
+        //        {
+        //            var distance = pos.Distance(_leftButtonWentDown);
+                    
+        //            if (distance < _touchSlop)
+        //            {}
+        //        }
+
+        //        var args = new MouseUpEventArgs(pos,
+        //            _leftButtonWentDown, MouseButtons.Left, this, false);
+        //        if (_inputHandler.OnMouseInput(args,
+        //            InputAction.LeftMouseButtonUp))
+        //        {
+        //            IsInteracting = false;
+        //            SleepTime = 0;
+        //        }
+
+        //        _leftButtonWentDown = default;
+        //    }
+
+        //    var res = _gestureDetector.OnTouchEvent(e);
+            
+        //    if (!res)
+        //    {}
+        //    else
+        //    {}
+            
+        //    return res;
+        //}
 
         public Int32 SleepTime;
         
@@ -284,6 +373,7 @@ namespace Das.Xamarin.Android.Input
         
         private readonly Int32 _maximumFlingVelocity;
         private readonly Int32 _minimumFlingVelocity;
+        private readonly Double _touchSlop;
 
         private ValuePoint2D? _leftButtonWentDown;
 

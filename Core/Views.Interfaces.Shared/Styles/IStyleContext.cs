@@ -20,12 +20,12 @@ namespace Das.Views.Styles
         void RegisterStyle(IStyle style,
                            IVisualElement scope);
 
-        void SetCurrentAccentColor(IColor color);
+        //void SetCurrentAccentColor(IColor color);
 
         /// <summary>
         ///     Registers a single style setter at the type level.
         /// </summary>
-        void RegisterStyleSetter<T>(StyleSetter setter,
+        void RegisterStyleSetter<T>(StyleSetterType setterType,
                                     Object value, 
                                     IVisualElement scope) 
             where T : IVisualElement;

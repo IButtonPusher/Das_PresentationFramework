@@ -28,24 +28,26 @@ namespace Das.Views.Defaults
             _indicator = new HorizontalRule(visualBootstrapper);
             _lastStyleContext = visualBootstrapper.StyleContext;
 
+            var accent = _lastStyleContext.ColorPalette.Accent;
+
             _separator = new HorizontalRule(visualBootstrapper);
             _lastStyleContext.RegisterStyleSetter(_indicator,
-                StyleSetter.Transition, new[]
+                StyleSetterType.Transition, new[]
                 {
-                    new Transition(StyleSetter.Margin, TimeSpan.FromSeconds(0.3),
+                    new Transition(StyleSetterType.Margin, TimeSpan.FromSeconds(0.3),
                         TimeSpan.Zero, TransitionTiming.Ease),
-                    new Transition(StyleSetter.Width, TimeSpan.FromSeconds(0.3),
+                    new Transition(StyleSetterType.Width, TimeSpan.FromSeconds(0.3),
                         TimeSpan.Zero, TransitionTiming.Ease)
                 });
             _lastStyleContext.RegisterStyleSetter(_indicator,
-                StyleSetter.HorizontalAlignment, HorizontalAlignments.Left);
+                StyleSetterType.HorizontalAlignment, HorizontalAlignments.Left);
 
             _lastStyleContext.RegisterStyleSetter(_indicator,
-                StyleSetter.Background, visualBootstrapper.StyleContext.GetCurrentAccentColor().ToBrush());
+                StyleSetterType.Background, accent);
             _lastStyleContext.RegisterStyleSetter(_separator,
-                StyleSetter.Background, SolidColorBrush.LightGray);
+                StyleSetterType.Background, SolidColorBrush.LightGray);
 
-            Background = _lastStyleContext.ColorPalette.Background.ToBrush();
+            Background = _lastStyleContext.ColorPalette.Background;
 
             var stackPanel = new UniformStackPanel(visualBootstrapper)
             {
@@ -164,10 +166,10 @@ namespace Das.Views.Defaults
             _indicatorRect = new Rectangle(pos.Left + _scrollPanel.HorizontalOffset, 0, pos.Size);
 
             _lastStyleContext.RegisterStyleSetter(_indicator,
-                StyleSetter.Margin, new Thickness(pos.Left + _scrollPanel.HorizontalOffset,
+                StyleSetterType.Margin, new Thickness(pos.Left + _scrollPanel.HorizontalOffset,
                     0, 0, 0));
             _lastStyleContext.RegisterStyleSetter(_indicator,
-                StyleSetter.Width, pos.Width);
+                StyleSetterType.Width, pos.Width);
 
             return true;
         }

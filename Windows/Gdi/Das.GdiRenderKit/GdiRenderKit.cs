@@ -42,7 +42,7 @@ namespace Das.Gdi.Kits
 
             MeasureContext = new GdiMeasureContext(this, lastMeasure, styleContext);
             RenderContext = new GdiRenderContext(viewPerspective, 
-                MeasureContext.Graphics, this, _imageProvider, lastMeasure,
+                MeasureContext.Graphics, this, lastMeasure,
                 new Dictionary<IVisualElement, ValueCube>(), styleContext);
 
             Container.ResolveTo<IImageProvider>(_imageProvider);

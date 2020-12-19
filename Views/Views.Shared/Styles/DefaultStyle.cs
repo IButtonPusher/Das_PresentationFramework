@@ -11,81 +11,105 @@ using Das.Views.Rendering;
 
 namespace Das.Views.Styles
 {
-    public sealed class DefaultStyle : StyleBase, //Style, 
-                                IStyleSheet
+    public sealed class DefaultStyle : StyleBase, 
+                                       IStyleSheet
     {
-        public static DefaultStyle Instance = new DefaultStyle();
+        public static readonly DefaultStyle Instance = new DefaultStyle();
         
         private DefaultStyle()
         {
-            //_setters = new Dictionary<AssignedStyle, Object?>()
-            
             var font = new Font(10, FontName, FontStyle.Regular);
 
-            this[StyleSetter.Margin] = new Thickness(0);
-            this[StyleSetter.Padding] = new Thickness(0);
+            this[StyleSetterType.Margin] = new Thickness(0);
+            this[StyleSetterType.Padding] = new Thickness(0);
 
-            this[StyleSetter.BorderThickness] = new Thickness(0);
-            this[StyleSetter.BorderRadius] = 0;
+            this[StyleSetterType.BorderThickness] = new Thickness(0);
+            this[StyleSetterType.BorderRadius] = 0;
 
-            this[StyleSetter.BorderBrush] = new SolidColorBrush(Color.Transparent);
-            this[StyleSetter.Foreground] = new SolidColorBrush(Color.Black);
-            this[StyleSetter.Background] = new SolidColorBrush(Color.Transparent);
+            this[StyleSetterType.BorderBrush] = new SolidColorBrush(Color.Transparent);
+            this[StyleSetterType.Foreground] = new SolidColorBrush(Color.Black);
+            this[StyleSetterType.Background] = new SolidColorBrush(Color.Transparent);
 
-            this[StyleSetter.FontName] = font.FamilyName;
-            this[StyleSetter.FontSize] = font.Size;
-            this[StyleSetter.FontWeight] = font.FontStyle;
-            this[StyleSetter.Font] = font;
-            this[StyleSetter.HorizontalAlignment] = HorizontalAlignments.Default;
-            this[StyleSetter.VerticalAlignment] = VerticalAlignments.Default;
+            this[StyleSetterType.FontName] = font.FamilyName;
+            this[StyleSetterType.FontSize] = font.Size;
+            this[StyleSetterType.FontWeight] = font.FontStyle;
+            this[StyleSetterType.Font] = font;
+            this[StyleSetterType.HorizontalAlignment] = HorizontalAlignments.Default;
+            this[StyleSetterType.VerticalAlignment] = VerticalAlignments.Default;
             //this[StyleSetter.Size] = null;
-            this[StyleSetter.Height] = Double.NaN;
-            this[StyleSetter.Width] = Double.NaN;
-            this[StyleSetter.Visibility] = Visibility.Visible;
-            this[StyleSetter.Transition] = Transition.EmptyTransitions;
+            this[StyleSetterType.Height] = Double.NaN;
+            this[StyleSetterType.Width] = Double.NaN;
+            this[StyleSetterType.Visibility] = Visibility.Visible;
+            this[StyleSetterType.Transition] = Transition.EmptyTransitions;
 
-            var typeTypes = new Dictionary<Type, IStyle>
+            this[StyleSetterType.Template] = default;
+
+            //var buttonStyle = new TypeStyle<IButtonBase>
+            //{
+            //    {StyleSetterType.BorderRadius, StyleSelector.None, 8},
+            //    {StyleSetterType.BorderThickness, StyleSelector.None, 1},
+            //    {StyleSetterType.BorderBrush, StyleSelector.None, SolidColorBrush.Black},
+            //    {StyleSetterType.Background, StyleSelector.Active, SolidColorBrush.LightGray},
+            //    {StyleSetterType.Background, StyleSelector.Hover, SolidColorBrush.Pink},
+            //    {StyleSetterType.Padding, StyleSelector.None, new Thickness(5)}
+            //};
+
+            //var toggleButtonStyle = new TypeStyle<IToggleButton>
+            //{
+            //    {StyleSetterType.Background, StyleSelector.Checked, SolidColorBrush.LightGray},
+            //};
+
+            //VisualTypeStyles[typeof(IButtonBase)] = buttonStyle;
+            //VisualTypeStyles[typeof(IToggleButton)] = toggleButtonStyle;
+
+            var typeTypes = new Dictionary<Type, IStyleSheet>
             {
                 [typeof(IButtonBase)] = new TypeStyle<IButtonBase>
                 {
-                    {StyleSetter.BorderRadius, StyleSelector.None, 8},
-                    {StyleSetter.BorderThickness, StyleSelector.None, 1},
-                    {StyleSetter.BorderBrush, StyleSelector.None, SolidColorBrush.Black},
-                    {StyleSetter.Background, StyleSelector.Active, SolidColorBrush.LightGray},
-                    {StyleSetter.Background, StyleSelector.Hover, SolidColorBrush.Pink},
-                    {StyleSetter.Padding, StyleSelector.None, new Thickness(5)}
+                    {StyleSetterType.BorderRadius, StyleSelector.None, 8},
+                    {StyleSetterType.BorderThickness, StyleSelector.None, 1},
+                    {StyleSetterType.BorderBrush, StyleSelector.None, SolidColorBrush.Black},
+                    {StyleSetterType.Background, StyleSelector.Active, SolidColorBrush.LightGray},
+                    {StyleSetterType.Background, StyleSelector.Hover, SolidColorBrush.Pink},
+                    {StyleSetterType.Padding, StyleSelector.None, new Thickness(5)}
                 },
                 [typeof(IToggleButton)] = new TypeStyle<IToggleButton>
                 {
-                    {StyleSetter.Background, StyleSelector.Checked, SolidColorBrush.LightGray},
+                    {StyleSetterType.Background, StyleSelector.Checked, SolidColorBrush.LightGray},
                 }
             };
             VisualTypeStyles = typeTypes;
         }
 
-        public IDictionary<Type, IStyle> VisualTypeStyles { get; }
+        public IDictionary<Type, IStyleSheet> VisualTypeStyles { get; }
+
+        public IEnumerable<IStyleSetter> StyleSetters
+        {
+            get => StyleSheetHelper.GetAllSetters(this);
+        }
+
 
         public const String FontName = "Segoe UI";
 
-        public Object? this[StyleSetter setter]
+        public Object? this[StyleSetterType setterType]
         {
-            get => TryGetValue(setter, StyleSelector.None, out var found)
+            get => TryGetValue(setterType, StyleSelector.None, out var found)
                 ? found
                 : default;
-            private set => AddSetterImpl(setter, value);
+            private set => AddSetterImpl(setterType, value);
         }
 
-        public Object? this[StyleSetter setter,
+        public Object? this[StyleSetterType setterType,
                                     StyleSelector selector]
         {
-            get => TryGetValue(setter, selector, out var found)
+            get => TryGetValue(setterType, selector, out var found)
                 ? found
                 : default;
-            private set => AddImpl(setter, selector, value);
+            //private set => AddImpl(setter, selector, value);
         }
 
 
-        void IStyle.Add(StyleSetter setter, 
+        void IStyle.Add(StyleSetterType setterType, 
                         StyleSelector selector, 
                         Object? value)
         {
@@ -97,7 +121,7 @@ namespace Das.Views.Styles
             throw new NotSupportedException();
         }
 
-        void IStyle.AddSetter(StyleSetter setter, Object? value)
+        void IStyle.AddSetter(StyleSetterType setterType, Object? value)
         {
             throw new NotSupportedException();
         }

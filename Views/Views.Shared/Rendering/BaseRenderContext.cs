@@ -35,7 +35,7 @@ namespace Das.Views.Rendering
                                     Dictionary<IVisualElement, ValueCube> renderPositions,
                                     Dictionary<IVisualElement, ValueSize> lastMeasurements,
                                     IStyleContext styleContext)
-        : base(lastMeasurements, styleContext)
+        : base(lastMeasurements, styleContext, surrogateProvider)
         {
             
 
@@ -241,6 +241,10 @@ namespace Das.Views.Rendering
         {
             lock (_renderLock)
             {
+                ViewState = viewState;
+                
+                FillRectangle(rect, viewState.ColorPalette.Background);
+                
                 LastRenderPositions.Clear();
                 foreach (var kvp in RenderPositions)
                 {
@@ -248,12 +252,9 @@ namespace Das.Views.Rendering
                 }
                 RenderPositions.Clear();
 
-                ViewState = viewState;
+                
                 DrawElement(element, new ValueRenderRectangle(rect));
             }
-
-            //ViewState = viewState;
-            //DrawElement(element, new ValueRenderRectangle(rect));
         }
 
 
@@ -269,27 +270,28 @@ namespace Das.Views.Rendering
             _fairyRect.Height = size.Height;
 
             DrawElement(element, _fairyRect);
-
-            //return DrawElementImpl(element, size, 0, 0, Point2D.Empty);
         }
 
-        public void DrawElement<TRenderRectangle>(IVisualElement element, 
+        public void DrawElement<TRenderRectangle>(IVisualElement element2, 
                                                         TRenderRectangle rect)
             where TRenderRectangle : IRenderRectangle
         {
-            _styleContext.PushVisual(element);
+            _styleContext.PushVisual(element2);
 
-            _surrogateProvider.EnsureSurrogate(ref element);
+            var element = GetElementForLayout(element2);
+            
+            //_surrogateProvider.EnsureSurrogate(ref element);
+            //if (element.Template is {Content: { } validTemplateContent})
+            //    element = validTemplateContent;
 
             var selector = element is IInteractiveView interactive
                 ? interactive.CurrentStyleSelector
                 : StyleSelector.None;
 
-
-            var border = GetStyleSetter<Thickness>(StyleSetter.BorderThickness, 
+            var border = GetStyleSetter<Thickness>(StyleSetterType.BorderThickness, 
                 selector, element);
 
-            var margin =  element.Margin ?? GetStyleSetter<Thickness>(StyleSetter.Margin, element);
+            var margin =  element.Margin ?? GetStyleSetter<Thickness>(StyleSetterType.Margin, element);
 
             _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
 
@@ -300,10 +302,10 @@ namespace Das.Views.Rendering
 
             useRect.Update(rect, CurrentElementRect.Offset, margin, border);
 
-            var radius = GetStyleSetter<Double>(StyleSetter.BorderRadius, selector, element);
+            var radius = GetStyleSetter<Double>(StyleSetterType.BorderRadius, selector, element);
 
             var background = element.Background ??
-                             GetStyleSetter<SolidColorBrush>(StyleSetter.Background, 
+                             GetStyleSetter<SolidColorBrush>(StyleSetterType.Background, 
                 selector, element);
             if (!background.IsInvisible)
             {
@@ -315,7 +317,7 @@ namespace Das.Views.Rendering
 
             if (!border.IsEmpty)
             {
-                var brush = GetStyleSetter<IBrush>(StyleSetter.BorderBrush, selector, element);
+                var brush = GetStyleSetter<IBrush>(StyleSetterType.BorderBrush, selector, element);
                 OnDrawBorder(useRect, border, brush, radius);
             }
 
@@ -323,40 +325,7 @@ namespace Das.Views.Rendering
 
             PushRect(useRect);
 
-            SetElementRenderPosition(useRect, element);
-
-           // lock (_renderLock)
-            {
-                //var currentClip = GetCurrentClip();
-                
-                //if (currentClip.IsEmpty)
-                //{
-                //    RenderPositions[element] = new ValueCube(useRect, _currentZ);
-                //}
-                //else
-                //{
-                //    var leftOverlap = useRect.Left < currentClip.Left
-                //        ? useRect.Left - currentClip.Left
-                //        : 0;
-                //    var topOverlap = useRect.Top < currentClip.Top
-                //        ? useRect.Top - currentClip.Top
-                //        : 0;
-                //    var rightOverlap = useRect.Right > currentClip.Right
-                //        ? useRect.Right - currentClip.Right
-                //        : 0;
-                //    var bottomOverlap = useRect.Bottom > currentClip.Bottom
-                //        ? useRect.Bottom - currentClip.Bottom
-                //        : 0;
-
-                //    var left = useRect.Left + leftOverlap;
-                //    var top = useRect.Top + topOverlap;
-                //    var width = useRect.Width - (leftOverlap + rightOverlap);
-                //    var height = useRect.Height - (topOverlap + bottomOverlap);
-
-                //    RenderPositions[element] = new ValueCube(left, top, width, height,
-                //        _currentZ);
-                //}
-            }
+            SetElementRenderPosition(useRect, element2);
 
             //System.Diagnostics.Debug.WriteLine(_tabs + element.GetType().Name + "\t\ttarget rect: (" + rect.X + "," + 
             //                                   rect.Y +
@@ -392,7 +361,7 @@ namespace Das.Views.Rendering
 
             _styleContext.PopVisual();
 
-            element.AcceptChanges(ChangeType.Arrange);
+            element2.AcceptChanges(ChangeType.Arrange);
 
             //_tabs = _tabs.Substring(0, _tabs.Length - 1);
         }
@@ -439,11 +408,7 @@ namespace Das.Views.Rendering
 
         protected abstract ValueRectangle GetCurrentClip();
 
-        //private void OnElementDisposed(IVisualElement element)
-        //{
-        //    lock (_renderLock)
-        //        RenderPositions.Remove(element);
-        //}
+        
 
         public abstract void DrawString<TFont, TBrush, TRectangle>(String s,
                                                                    TFont font,

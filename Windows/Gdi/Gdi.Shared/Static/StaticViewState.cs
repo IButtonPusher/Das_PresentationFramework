@@ -15,10 +15,10 @@ namespace Gdi.Shared.Static
             ColorPalette = new DefaultColorPalette();
         }
 
-        public T GetStyleSetter<T>(StyleSetter setter, 
+        public T GetStyleSetter<T>(StyleSetterType setterType, 
                                    IVisualElement element)
         {
-            if (_defaultStyle[setter] is T good)
+            if (_defaultStyle[setterType] is T good)
             {
                 return good;
             }
@@ -26,22 +26,22 @@ namespace Gdi.Shared.Static
             return default!;
         }
 
-        public T GetStyleSetter<T>(StyleSetter setter, 
+        public T GetStyleSetter<T>(StyleSetterType setterType, 
                                    StyleSelector selector, 
                                    IVisualElement element)
         {
-            return GetStyleSetter<T>(setter, element);
+            return GetStyleSetter<T>(setterType, element);
         }
 
         public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetter setter, 
+                                        StyleSetterType setterType, 
                                         Object value)
         {
             throw new NotSupportedException();
         }
 
         public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetter setter, 
+                                        StyleSetterType setterType, 
                                         StyleSelector selector, 
                                         Object value)
         {
@@ -50,10 +50,6 @@ namespace Gdi.Shared.Static
 
         public IColorPalette ColorPalette { get; }
 
-        public IColor GetCurrentAccentColor()
-        {
-            return ColorPalette.Accent;
-        }
 
         public Double ZoomLevel { get; }
 

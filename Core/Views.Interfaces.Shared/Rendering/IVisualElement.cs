@@ -1,18 +1,18 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
-using Das.Views.Panels;
 using Das.Views.Rendering;
+using Das.Views.Templates;
 
 namespace Das.Views
 {
     public interface IVisualElement : IVisualRenderer,
                                       IDisposable,
                                       INotifyPropertyChanged,
+                                      ITemplatableVisual,
                                       IEquatable<IVisualElement>
 
     {
@@ -26,8 +26,6 @@ namespace Das.Views
         void OnParentChanging(IVisualElement? newParent);
 
         event Action<IVisualElement>? Disposed;
-
-        IControlTemplate? Template { get; }
 
         void RaisePropertyChanged(String propertyName,
                                   Object? value);

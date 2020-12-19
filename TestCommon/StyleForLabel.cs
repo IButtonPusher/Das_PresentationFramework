@@ -23,11 +23,11 @@ namespace TestCommon
                              IStyleContext styleContext) 
             : base(element, styleContext)
         {
-            AddSetter(StyleSetter.Background, new SolidColorBrush(bg));
+            AddSetter(StyleSetterType.Background, new SolidColorBrush(bg));
 
-            AddSetter(StyleSetter.Font, new Font(fontSize, "Segoe UI", fontStyle));
-            AddSetter(StyleSetter.FontSize, fontSize);
-            AddSetter(StyleSetter.Margin, new  Thickness(5));
+            AddSetter(StyleSetterType.Font, new Font(fontSize, "Segoe UI", fontStyle));
+            AddSetter(StyleSetterType.FontSize, fontSize);
+            AddSetter(StyleSetterType.Margin, new  Thickness(5));
         }
     }
 }

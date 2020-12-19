@@ -6,18 +6,13 @@ namespace Das.Views.Controls
 {
     // ReSharper disable once UnusedType.Global
     public class ToggleButton : ButtonBase,
-                                   IToggleButton
+                                IToggleButton
     {
         public ToggleButton(IVisualBootstrapper templateResolver)
             : base(templateResolver)
         {
             IsChecked = false;
         }
-
-        //public override void Arrange(IRenderSize availableSpace, IRenderContext renderContext)
-        //{
-        //    base.Arrange(availableSpace, renderContext);
-        //}
 
         public override Boolean OnInput(MouseClickEventArgs args)
         {
@@ -48,7 +43,7 @@ namespace Das.Views.Controls
                     break;
             }
 
-            
+
         }
     }
 }

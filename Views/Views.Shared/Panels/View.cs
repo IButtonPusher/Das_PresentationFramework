@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-
+using Das.Views.Core.Geometry;
+using Das.Views.Rendering;
 using Das.Views.Styles;
 
 namespace Das.Views.Panels
@@ -16,9 +17,18 @@ namespace Das.Views.Panels
             //_dataContext = default!;
         }
 
-       
-
         public IStyleContext StyleContext { get; }
+
+        public override ValueSize Measure(IRenderSize availableSpace, 
+                                          IMeasureContext measureContext)
+        {
+            return base.Measure(availableSpace, measureContext);
+        }
+
+        public override void Arrange(IRenderSize availableSpace, IRenderContext renderContext)
+        {
+            base.Arrange(availableSpace, renderContext);
+        }
 
 
         //public virtual void SetDataContext(T dataContext)

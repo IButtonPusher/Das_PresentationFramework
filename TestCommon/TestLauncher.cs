@@ -50,7 +50,8 @@ namespace TestCommon
         public virtual void Run<TViewModel>(TViewModel vm, 
                                             IView view)
         {
-            BootStrapper.Run(vm, view);
+            BootStrapper.Run(//vm, 
+                view);
         }
 
         // ReSharper disable once UnusedMember.Global

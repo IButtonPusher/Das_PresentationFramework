@@ -76,8 +76,11 @@ namespace Das.Views.Input
             }
 
             // if the capture doesn't want it, maybe a parent visual does
-            var argsOverCapture = args.Offset(bounds.TopLeft);
-            return OnMouseInputNoCapture(argsOverCapture, action, isButtonAction, out handledBy);
+            return OnMouseInputNoCapture(args, action, isButtonAction, out handledBy);
+            
+            //using the args over capture here had elements that were nowhere near the mouse handling input
+            //var argsOverCapture = args.Offset(bounds.TopLeft);
+            //return OnMouseInputNoCapture(argsOverCapture, action, isButtonAction, out handledBy);
         }
 
         private Boolean OnMouseInputNoCapture<TArgs>(TArgs args,
@@ -127,7 +130,8 @@ namespace Das.Views.Input
         private Boolean HandleButtonAction<TArgs>(TArgs margs,
                                                             IHandleInput<TArgs> element,
                                                             InputAction action)
-            where TArgs : IMouseInputEventArgs<TArgs>//, IMouseButtonEventArgs
+            //where TArgs : IMouseButtonEventArgs<TArgs> - doesn't work due to recursive generic
+            where TArgs : IMouseInputEventArgs<TArgs>
         {
             var handledActionDirectly = element.OnInput(margs);
 
@@ -159,6 +163,11 @@ namespace Das.Views.Input
                         IsHandlesAction(element, InputAction.LeftClick) && 
                         element is IHandleInput<MouseClickEventArgs> clickMe)
                     {
+                        
+                        // ReSharper disable once PatternNeverMatches - RS YOU'RE WRONG
+                        if (margs is MouseUpEventArgs {IsValidForClick: false})
+                            break;
+
                         if (!handledActionDirectly &&
                             IsHandlesAction(element, InputAction.LeftMouseButtonUp))
                         {
@@ -358,6 +367,7 @@ namespace Das.Views.Input
         //private static InputAction 
         private IHandleInput<MouseDownEventArgs>? _handledMouseDown;
         private IVisualElement? _inputCapturingMouse;
+        // ReSharper disable once NotAccessedField.Local
         private IHandleInput<MouseDownEventArgs>? _mouseActiveElement;
         private IHandleInput<MouseOverEventArgs>? _lastMouseOverVisual;
         private IInputContext? _lastInputContext;

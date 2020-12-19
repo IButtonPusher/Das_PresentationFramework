@@ -7,8 +7,8 @@ using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
-using Das.Views.Panels;
 using Das.Views.Rendering;
+using Das.Views.Templates;
 
 namespace Das.Views.Gdi.Controls
 {
@@ -20,6 +20,7 @@ namespace Das.Views.Gdi.Controls
         {
             if (!(element is HtmlPanel valid))
                 throw new InvalidCastException();
+            _element = element;
             _hostingControl = hostingControl;
 
             _htmlPanel = valid;
@@ -55,7 +56,7 @@ namespace Das.Views.Gdi.Controls
         public void Arrange(IRenderSize availableSpace,
                             IRenderContext renderContext)
         {
-            var cube = renderContext.TryGetElementBounds(this);
+            var cube = renderContext.TryGetElementBounds(_element);
 
             BeginInvoke((Action) (() =>
             {
@@ -114,7 +115,7 @@ namespace Das.Views.Gdi.Controls
             }
         }
 
-        IControlTemplate IVisualElement.Template => throw new NotSupportedException();
+        IVisualTemplate? ITemplatableVisual.Template => default;
 
         public void AcceptChanges(ChangeType changeType)
         {
@@ -127,11 +128,7 @@ namespace Das.Views.Gdi.Controls
             _htmlPanel.RaisePropertyChanged(propertyName, value);
         }
 
-        //public void RaisePropertyChanged(String propertyName)
-        //{
-        //    _htmlPanel.RaisePropertyChanged(propertyName);
-        //}
-
+      
         Double? IVisualElement.Width
         {
             get => ((IVisualElement) _htmlPanel).Width;
@@ -169,6 +166,7 @@ namespace Das.Views.Gdi.Controls
         }
 
         private readonly WebBrowser _browser;
+        private readonly IVisualElement _element;
         private readonly Control _hostingControl;
         private readonly HtmlPanel _htmlPanel;
 

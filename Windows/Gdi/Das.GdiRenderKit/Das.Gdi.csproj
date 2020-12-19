@@ -25,7 +25,8 @@
     <WarningLevel>4</WarningLevel>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
-    <CodeAnalysisRuleSet>..\Das.Presentation.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\..\Das.Presentation.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>

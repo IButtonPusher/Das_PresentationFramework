@@ -46,10 +46,15 @@ namespace Das.Views
                 var letsWait = _minDelay - (Int32) swLast.ElapsedMilliseconds;
                 if (letsWait < 0)
                     continue;
+                
                 #if !NET40
+                
                 await Task.Delay(letsWait);
+                
                 #else
-                System.Threading.Thread.Sleep(letsWait);
+                
+                await TaskEx.Delay(letsWait);
+                
                 #endif
             } while (!_isDisposed);
         }

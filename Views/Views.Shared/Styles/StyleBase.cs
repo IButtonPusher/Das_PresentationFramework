@@ -14,13 +14,13 @@ namespace Das.Views.Styles
         }
         
         
-        public virtual Boolean TryGetValue(StyleSetter setter,
+        public virtual Boolean TryGetValue(StyleSetterType setterType,
                                            StyleSelector selector,
                                            out Object val)
         {
             foreach (var k in GetUniqueFlags<StyleSelector>(selector))
             {
-                var key = new AssignedStyle(setter, k);
+                var key = new AssignedStyle(setterType, k);
                 if (_setters.TryGetValue(key, out val!))
                     return true;
             }
@@ -45,17 +45,17 @@ namespace Das.Views.Styles
                     yield return (T)value;
         }
         
-        protected void AddSetterImpl(StyleSetter setter,
+        protected void AddSetterImpl(StyleSetterType setterType,
                                       Object? value)
         {
-            AddImpl(setter, StyleSelector.None, value);
+            AddImpl(setterType, StyleSelector.None, value);
         }
         
-        protected void AddImpl(StyleSetter setter,
+        protected void AddImpl(StyleSetterType setterType,
                                 StyleSelector selector,
                                 Object? value)
         {
-            var key = new AssignedStyle(setter, selector, value);
+            var key = new AssignedStyle(setterType, selector, value);
             _setters[key] = value;
         }
         

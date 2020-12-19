@@ -190,7 +190,7 @@ namespace Das.Views.Templates
 
             RunOnBoth<IPanelElement>(visual, obj, CopyChildren);
             
-            RunOnBoth<IContentContainer>(visual, obj, CopyContent);
+            RunOnBoth<IContentVisual>(visual, obj, CopyContent);
 
             RunOnBoth<IContentPresenter>(visual, obj, (o, c) =>
                 c.ContentTemplate = o.ContentTemplate);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Das.Views.Construction
 {
@@ -13,6 +12,8 @@ namespace Das.Views.Construction
         Int32 ChildrenCount { get; }
 
         String Name { get; }
+        
+        String? InnerText { get; }
 
         IEnumerable<IMarkupNode> Children { get; }
 

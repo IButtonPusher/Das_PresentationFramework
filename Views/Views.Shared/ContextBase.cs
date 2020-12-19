@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
@@ -12,53 +13,61 @@ namespace Das.Views
     {
         private readonly Dictionary<IVisualElement, ValueSize> _lastMeasurements;
         private readonly IStyleContext _styleContext;
+        private readonly IVisualSurrogateProvider _surrogateProvider;
         protected readonly Object _measureLock;
         
 
         public ContextBase(Dictionary<IVisualElement, ValueSize> lastMeasurements,
-                           IStyleContext styleContext)
+                           IStyleContext styleContext,
+                           IVisualSurrogateProvider surrogateProvider)
         {
             _measureLock = new Object();
             _lastMeasurements = lastMeasurements;
             _styleContext = styleContext;
+            _surrogateProvider = surrogateProvider;
         }
 
         public IViewState? ViewState { get; protected set; }
 
-        public T GetStyleSetter<T>(StyleSetter setter, 
+        public T GetStyleSetter<T>(StyleSetterType setterType, 
                                    IVisualElement element)
         {
-            return GetViewState.GetStyleSetter<T>(setter, element);
+            return GetViewState.GetStyleSetter<T>(setterType, element);
         }
 
-        public T GetStyleSetter<T>(StyleSetter setter, 
+        public T GetStyleSetter<T>(StyleSetterType setterType, 
                                    StyleSelector selector, 
                                    IVisualElement element)
         {
-            return GetViewState.GetStyleSetter<T>(setter, selector, element);
+            return GetViewState.GetStyleSetter<T>(setterType, selector, element);
         }
 
         public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetter setter,
+                                        StyleSetterType setterType,
                                         Object value)
         {
-            GetViewState.RegisterStyleSetter(element, setter, value);
+            GetViewState.RegisterStyleSetter(element, setterType, value);
         }
 
         public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetter setter, 
+                                        StyleSetterType setterType, 
                                         StyleSelector selector, 
                                         Object value)
         {
-            GetViewState.RegisterStyleSetter(element, setter, selector, value);
+            GetViewState.RegisterStyleSetter(element, setterType, selector, value);
+        }
+        
+        protected IVisualElement GetElementForLayout(IVisualElement element)
+        {
+            _surrogateProvider.EnsureSurrogate(ref element);
+            
+            if (element.Template is {Content: { } validTemplateContent})
+                return validTemplateContent;
+
+            return element;
         }
 
         public IColorPalette ColorPalette => GetViewState.ColorPalette;
-
-        public IColor GetCurrentAccentColor()
-        {
-            return GetViewState.GetCurrentAccentColor();
-        }
 
 
         public ValueSize GetLastMeasure(IVisualElement element)

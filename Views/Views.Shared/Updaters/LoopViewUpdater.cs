@@ -3,6 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Rendering;
 
+#if !NET40
+using TaskEx = System.Threading.Tasks.Task;
+#endif
+
 namespace Das.Views
 {
     /// <summary>
@@ -18,15 +22,20 @@ namespace Das.Views
             _viewHost = viewHost;
             _renderer = renderer;
 
+            _viewHost.HostCreated += OnHostReady;
+        }
 
+        private Task OnHostReady()
+        {
+            _viewHost.HostCreated -= OnHostReady;
             Task.Factory.StartNew(GameLoop, TaskCreationOptions.LongRunning);
+            return TaskEx.CompletedTask;
         }
 
         protected override Boolean IsChanged => _viewHost.IsChanged || _viewHost.StyleContext.IsChanged;
 
         protected override Boolean Update()
         {
-            //Debug.WriteLine("ran loop update");
             var asset = _renderer.DoRender();
             if (asset == null)
                 return false;
@@ -34,7 +43,6 @@ namespace Das.Views
             _viewHost.Asset = asset;
             _viewHost.Invalidate();
 
-            //_viewHost.AcceptChanges();
             _viewHost.StyleContext.AcceptChanges();
 
             return true;

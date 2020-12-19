@@ -6,14 +6,10 @@ using System.Windows.Forms;
 using Das.Gdi;
 using Das.Serializer;
 //using Das.OpenGL;
-using Das.Views.Extended;
 using Das.Views.Panels;
 using TestCommon;
-using ViewCompiler;
 //using Das.OpenGL.Windows;
-using Das.Views;
 using Das.Views.DataBinding;
-using Das.Views.Mvvm;
 using TestCommon.Company;
 
 namespace GdiTest
@@ -42,6 +38,8 @@ namespace GdiTest
             
 
             var view = GetTestCompanyTabsView(_testLauncher);
+            view.Width = 1024;
+            view.Height = 768;
 
             //_testLauncher.RenderKit.
 
@@ -137,13 +135,13 @@ namespace GdiTest
         //    return view;
         //}
 
-        private static Form Show<TViewModel>(TViewModel viewModel, 
-                                             IBindableElement view)
-            where TViewModel : IViewModel
-        {
-            var provider = new GdiProvider();
-            return provider.Show(viewModel, view);
-        }
+        //private static Form Show<TViewModel>(TViewModel viewModel, 
+        //                                     IBindableElement view)
+        //    where TViewModel : IViewModel
+        //{
+        //    var provider = new GdiProvider();
+        //    return provider.Show(viewModel, view);
+        //}
 
         // ReSharper disable once UnusedMember.Local
         //private static async Task CubeTest()

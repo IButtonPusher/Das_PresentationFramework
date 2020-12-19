@@ -6,7 +6,6 @@ using Android.OS;
 using Android.Support.V7.App;
 using Das.Views;
 using Das.Views.Core.Drawing;
-using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 using Das.Xamarin.Android.Mvvm;
@@ -65,11 +64,11 @@ namespace Das.Xamarin.Android
         }
 
         public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetter setter, 
+                                        StyleSetterType setterType, 
                                         StyleSelector selector, 
                                         Object value)
         {
-            CurrentStyleContext.RegisterStyleSetter(element, setter, selector, value);
+            CurrentStyleContext.RegisterStyleSetter(element, setterType, selector, value);
         }
 
         public IColorPalette ColorPalette => CurrentStyleContext.ColorPalette;
@@ -81,15 +80,15 @@ namespace Das.Xamarin.Android
                 base.OnBackPressed();
         }
 
-        public T GetStyleSetter<T>(StyleSetter setter,
+        public T GetStyleSetter<T>(StyleSetterType setterType,
                                    IVisualElement element)
-            => GetStyleSetter<T>(setter, StyleSelector.None, element);
+            => GetStyleSetter<T>(setterType, StyleSelector.None, element);
 
-        public T GetStyleSetter<T>(StyleSetter setter, 
+        public T GetStyleSetter<T>(StyleSetterType setterType, 
                                    StyleSelector selector, 
                                    IVisualElement element)
         {
-            return CurrentStyleContext.GetStyleSetter<T>(setter, selector, element);
+            return CurrentStyleContext.GetStyleSetter<T>(setterType, selector, element);
 
             //if (_styleContext is {} valid)
             //    return valid.GetStyleSetter<T>(setter, selector, element);
@@ -106,16 +105,16 @@ namespace Das.Xamarin.Android
         
 
         public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetter setter,
+                                        StyleSetterType setterType,
                                         Object value)
         {
-            CurrentStyleContext.RegisterStyleSetter(element, setter, value);
+            CurrentStyleContext.RegisterStyleSetter(element, setterType, value);
         }
 
-        public IColor GetCurrentAccentColor()
-        {
-            return CurrentStyleContext.GetCurrentAccentColor();
-        }
+        //public IColor GetCurrentAccentColor()
+        //{
+        //    return CurrentStyleContext.GetCurrentAccentColor();
+        //}
 
         public Double ZoomLevel { get; private set; } = 1.0;
 

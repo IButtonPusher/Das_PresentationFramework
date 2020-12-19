@@ -7,7 +7,6 @@ using Das.Serializer;
 using Das.Views;
 using Das.Views.DevKit;
 using Das.Views.Panels;
-using Das.Views.Rendering;
 using Das.Views.Styles;
 
 namespace ViewCompiler
@@ -18,7 +17,7 @@ namespace ViewCompiler
         //public ViewDeserializer(ISerializerSettings settings) : base(settings)
         public ViewDeserializer() : base(GetSettings())
         {
-
+            RootNode = NullNode.Instance;
         }
 
 
@@ -139,10 +138,16 @@ namespace ViewCompiler
                 PostDeserialize(kvp);
         }
 
-        private Boolean TryGetElementStyle(IVisualElement element, String styleName,
+        private Boolean TryGetElementStyle(IVisualElement element, 
+                                           String styleName,
                                            out IStyle style)
         {
             var styleType = TypeInferrer.GetTypeFromClearName(styleName);
+            if (styleType == null)
+            {
+                style = default!;
+                return false;
+            }
 
             if (typeof(ElementStyle).IsAssignableFrom(styleType))
             {
@@ -162,10 +167,10 @@ namespace ViewCompiler
                 return true;
             }
 
-            style = default;
+            style = default!;
             return false;
         }
 
-        private IJsonLoaner _state;
+        private IJsonLoaner? _state;
     }
 }

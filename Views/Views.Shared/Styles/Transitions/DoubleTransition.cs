@@ -80,7 +80,7 @@ namespace Das.Views.Styles
         protected override void OnUpdate(Double runningPct)
         {
             var currentValue = _initialValue + (_valueDifference * runningPct);
-            var assigned = new AssignedStyle(_assignedStyle.Setter, _assignedStyle.Selector,
+            var assigned = new AssignedStyle(_assignedStyle.SetterType, _assignedStyle.Selector,
                 currentValue);
 
             _updater(assigned);

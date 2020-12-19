@@ -16,9 +16,9 @@ using Size = System.Drawing.Size;
 
 namespace Das.Gdi.Core
 {
-    public static class TypeConverter
+    public static class GdiTypeConverter
     {
-        static TypeConverter()
+        static GdiTypeConverter()
         {
             _brushLock = new Object();
             _fonts = new ConcurrentDictionary<IFont, Font>();
@@ -27,6 +27,7 @@ namespace Das.Gdi.Core
             _colorBrushes = new Dictionary<IColor, Brush>();
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static Boolean Equate(ISize dvSize, Size size)
         {
             return dvSize != null && Convert.ToInt32(dvSize.Width) == size.Width
@@ -131,6 +132,7 @@ namespace Das.Gdi.Core
             return new Rectangle(GetPoint(rect.Location), GetSize(rect.Size));
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static RectangleF GetRectF(IRectangle rect)
         {
             return new RectangleF(GetPoint(rect.Location), GetSize(rect.Size));
@@ -139,7 +141,13 @@ namespace Das.Gdi.Core
 
         public static Size GetSize(ISize size)
         {
-            return new Size(Convert.ToInt32(size.Width), Convert.ToInt32(size.Height));
+            return GetSize(size.Width, size.Height);
+        }
+        
+        public static Size GetSize(Double width,
+                                   Double height)
+        {
+            return new Size(Convert.ToInt32(width), Convert.ToInt32(height));
         }
 
         private static readonly ConcurrentDictionary<IFont, Font> _fonts;
@@ -148,13 +156,5 @@ namespace Das.Gdi.Core
         private static readonly Dictionary<IBrush, Brush> _brushes;
         private static readonly Dictionary<IColor, Brush> _colorBrushes;
         private static readonly Object _brushLock;
-
-        //private static readonly ThreadLocal<Dictionary<IBrush, Brush>> Brushes
-        //    = new ThreadLocal<Dictionary<IBrush, Brush>>(()
-        //        => new Dictionary<IBrush, Brush>());
-
-        //private static readonly ThreadLocal<Dictionary<IColor, Brush>> ColorBrushes
-        //    = new ThreadLocal<Dictionary<IColor, Brush>>(()
-        //        => new Dictionary<IColor, Brush>());
     }
 }

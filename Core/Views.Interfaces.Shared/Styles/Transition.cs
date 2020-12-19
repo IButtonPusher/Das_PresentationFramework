@@ -5,12 +5,12 @@ namespace Das.Views.Rendering
 {
     public class Transition
     {
-        public Transition(StyleSetter setter,
+        public Transition(StyleSetterType setterType,
                           TimeSpan duration,
                           TimeSpan delay, 
                           TransitionTiming timing)
         {
-            Setter = setter;
+            SetterType = setterType;
             Duration = duration;
             Delay = delay;
             Timing = timing;
@@ -18,7 +18,7 @@ namespace Das.Views.Rendering
 
         public static readonly Transition[] EmptyTransitions = new Transition[0];
 
-        public StyleSetter Setter { get; }
+        public StyleSetterType SetterType { get; }
 
         public TimeSpan Duration { get; }
 

@@ -12,8 +12,7 @@ namespace Das.Views.Panels
 {
     public class ContentPanel : BaseContainerVisual,
                                 IBindableContainer,
-                                IContentContainer,
-                                IContentPresenter
+                                IContentVisual
     {
         public ContentPanel(IVisualBootstrapper visualBootstrapper) : base(visualBootstrapper)
         {
@@ -194,12 +193,12 @@ namespace Das.Views.Panels
             var valign = content.VerticalAlignment;
             if (valign == VerticalAlignments.Default)
                 valign = styleContext.GetStyleSetter<VerticalAlignments>(
-                    StyleSetter.VerticalAlignment, content);
+                    StyleSetterType.VerticalAlignment, content);
 
             var halign = content.HorizontalAlignment;
             if (halign == HorizontalAlignments.Default)
                 halign = styleContext.GetStyleSetter<HorizontalAlignments>(
-                    StyleSetter.HorizontalAlignment, content);
+                    StyleSetterType.HorizontalAlignment, content);
 
             //up to here we are giving content all available minus our padding
             var xDiff = width - contentMeasured.Width;
@@ -246,7 +245,7 @@ namespace Das.Views.Panels
 
         protected virtual Thickness? GetPadding(IStyleProvider styleContext)
           {
-            return styleContext.GetStyleSetter<Thickness>(StyleSetter.Padding, this);
+            return styleContext.GetStyleSetter<Thickness>(StyleSetterType.Padding, this);
           }
 
         //public override IVisualElement DeepCopy()

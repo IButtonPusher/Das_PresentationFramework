@@ -46,6 +46,15 @@ namespace Das.Views.Core.Geometry
                 left.Y - right.Y);
         }
 
+        public Double Distance(IPoint2D fromPoint)
+        {
+            var a = X - fromPoint.X;
+            var b = Y - fromPoint.Y;
+
+            return Math.Sqrt(a * a + b * b);
+
+        }
+
         public static ValuePoint2D operator /(ValuePoint2D left,
                                               Double right)
         {

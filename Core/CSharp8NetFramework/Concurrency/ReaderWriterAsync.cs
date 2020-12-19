@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
+// ReSharper disable UnusedMember.Global
 
 #endif
 
@@ -253,9 +254,32 @@ namespace System.Threading
             }
         }
 
-        public async IAsyncEnumerable<TResult> ReadManyAsync<TParam, TResult>(TParam p1,
-                                                                              Func<TParam, IAsyncEnumerable<TResult>>
-                                                                                  action)
+        private Task WaitForIteratorAsync()
+        {
+            Task waitFor;
+            
+            lock (_lockObj)
+            {
+                if (_writerCount > 0 || _waiterCount > 0)
+                {
+                    _waiterCount++;
+                    var waiter = new AsyncWaiter<Boolean>(() => true, WorkerTypes.IteratorReader);
+                    _waiters.Enqueue(waiter);
+                    waitFor = waiter;
+                }
+                else
+                {
+                    waitFor = TaskEx.CompletedTask;
+                    _readerCount++;
+                }
+            }
+            
+            return waitFor;
+        }
+
+        public async IAsyncEnumerable<TResult> ReadManyAsync<TParam, TResult>(
+            TParam p1,
+            Func<TParam, IAsyncEnumerable<TResult>> action)
         {
             Task waitFor;
 
@@ -295,8 +319,33 @@ namespace System.Threading
             }
         }
 
+        
+        public async IAsyncEnumerable<TResult> ReadManyAsync<TParam1, TParam2, TResult>(
+            TParam1 p1,
+            TParam2 p2,
+            Func<TParam1, TParam2, IEnumerable<TResult>> action)
+        {
+            if (_isDisposed)
+                yield break;
 
-      
+            await WaitForIteratorAsync();
+
+            try
+            {
+                foreach (var a in action(p1, p2))
+                {
+                    if (_isDisposed)
+                        yield break;
+                    yield return a;
+                }
+            }
+            finally
+            {
+                EndReaderImpl(action);
+            }
+        }
+
+
 
         public Task WriteAsync(Func<Task> asyncAction)
         {

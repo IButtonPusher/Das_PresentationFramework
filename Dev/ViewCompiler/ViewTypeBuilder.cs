@@ -26,7 +26,8 @@ namespace ViewCompiler
             _codeGenerator = new DasCodeGenerator("ViewTypes", "ViewsModule", AssemblyBuilderAccess.RunAndSave);
         }
 
-        public Type BuildViewType(ViewBuilder viewBuilder, String viewName)
+        public Type BuildViewType(ViewBuilder viewBuilder, 
+                                  String viewName)
         {
             var typeBuilder = GetBuilder(viewBuilder, viewName);
             var il = OpenConstructor(typeBuilder);

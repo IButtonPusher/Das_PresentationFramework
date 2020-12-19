@@ -109,7 +109,7 @@ namespace Das.Views.Rendering
                     }
                 });
 
-                var margin = measureContext.GetStyleSetter<Thickness>(StyleSetter.Margin, container);
+                var margin = measureContext.GetStyleSetter<Thickness>(StyleSetterType.Margin, container);
 
                 totalWidth = Math.Max(totalWidth, maxWidth);
                 totalHeight = Math.Max(totalHeight, maxHeight);

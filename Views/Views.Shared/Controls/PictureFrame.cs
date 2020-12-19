@@ -91,8 +91,8 @@ namespace Das.Views.Controls
             //    return size;
 
 
-            var width = Width ?? measureContext.GetStyleSetter<Double>(StyleSetter.Width, this);// * zoom;
-            var height = Height ?? measureContext.GetStyleSetter<Double>(StyleSetter.Height, this);// * zoom;
+            var width = Width ?? measureContext.GetStyleSetter<Double>(StyleSetterType.Width, this);// * zoom;
+            var height = Height ?? measureContext.GetStyleSetter<Double>(StyleSetterType.Height, this);// * zoom;
 
             if (!Double.IsNaN(width) && !Double.IsNaN(height))
                 return new ValueSize(width, height);

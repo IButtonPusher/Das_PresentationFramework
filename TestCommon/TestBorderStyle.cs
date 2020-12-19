@@ -11,8 +11,8 @@ namespace TestCommon
         public TestBorderStyle(IVisualElement element) : base(element,
             new BaseStyleContext(DefaultStyle.Instance, new DefaultColorPalette()))
         {
-            AddSetter(StyleSetter.BorderThickness, new Thickness(1,2,3,4));
-            AddSetter(StyleSetter.BorderBrush, SolidColorBrush.Red);
+            AddSetter(StyleSetterType.BorderThickness, new Thickness(1,2,3,4));
+            AddSetter(StyleSetterType.BorderBrush, SolidColorBrush.Red);
         }
     }
 }
