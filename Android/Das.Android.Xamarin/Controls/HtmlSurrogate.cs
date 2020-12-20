@@ -8,7 +8,6 @@ using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
-using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Templates;
 
@@ -161,8 +160,6 @@ namespace Das.Xamarin.Android.Controls
             else _viewGroup.AddView(this);
         }
 
-        public Type ReplacesType => typeof(HtmlPanel);
-
         public Boolean Equals(IVisualElement other)
         {
             return ReferenceEquals(this, other) ||  _htmlPanel.Equals(other);
@@ -173,5 +170,7 @@ namespace Das.Xamarin.Android.Controls
             add => _htmlPanel.PropertyChanged += value;
             remove => _htmlPanel.PropertyChanged -= value;
         }
+
+        public IVisualElement ReplacingVisual => _htmlPanel;
     }
 }

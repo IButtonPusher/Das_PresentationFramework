@@ -26,23 +26,62 @@ namespace Das.Views
                                 IStringPrimitiveScanner attributeScanner,
                                 ITypeInferrer typeInferrer,
                                 IPropertyProvider propertyProvider)
+        : this(resolver, styleContext, attributeScanner, typeInferrer, propertyProvider, 
+            GetVisualBootstrapper(resolver, styleContext, propertyProvider))
+        {
+           
+        }
+
+        protected BaseRenderKit(IResolver resolver,
+                                IStyleContext styleContext,
+                                IStringPrimitiveScanner attributeScanner,
+                                ITypeInferrer typeInferrer,
+                                IPropertyProvider propertyProvider,
+                                IVisualBootstrapper visualBootstrapper)
+        : this(resolver, styleContext,
+            visualBootstrapper, GetViewInflater(visualBootstrapper, attributeScanner,
+                typeInferrer, propertyProvider))
+        
+        {
+
+        }
+        
+        protected BaseRenderKit(IResolver resolver,
+                                IStyleContext styleContext,
+                                IVisualBootstrapper visualBootstrapper,
+                                IViewInflater viewInflater)
         {
             _styleContext = styleContext;
             Container = resolver;
             
             _surrogateInstances = new Dictionary<IVisualElement, IVisualSurrogate>();
             _surrogateTypeBuilders = new Dictionary<Type, Func<IVisualElement, IVisualSurrogate>>();
-            var templateResolver = new DefaultVisualBootstrapper(resolver, styleContext, propertyProvider);
-            VisualBootstrapper = templateResolver;
+            
+            VisualBootstrapper = visualBootstrapper;
 
+            ViewInflater = viewInflater;
+
+            resolver.ResolveTo(visualBootstrapper);
+        }
+        
+        private static IVisualBootstrapper GetVisualBootstrapper(IResolver resolver,
+                                                                 IStyleContext styleContext,
+                                                                 IPropertyProvider propertyProvider)
+        {
+            return new DefaultVisualBootstrapper(resolver, styleContext, propertyProvider);
+        }
+
+        private static IViewInflater GetViewInflater(IVisualBootstrapper visualBootstrapper,
+                                                     IStringPrimitiveScanner attributeScanner,
+                                                     ITypeInferrer typeInferrer,
+                                                     IPropertyProvider propertyProvider)
+        {
             var bindingBuilder = new BindingBuilder(typeInferrer, propertyProvider);
             var converterProvider = new DefaultValueConverterProvider();
+            var visualTypeResolver = new VisualTypeResolver(typeInferrer);
             
-            
-            ViewInflater = new ViewInflater(templateResolver, attributeScanner, 
-                typeInferrer, bindingBuilder, converterProvider);
-            
-            resolver.ResolveTo<IVisualBootstrapper>(templateResolver);
+            return new ViewInflater(visualBootstrapper, attributeScanner, 
+                typeInferrer, bindingBuilder, converterProvider, visualTypeResolver);
         }
 
         public void EnsureSurrogate(ref IVisualElement element)
@@ -58,6 +97,8 @@ namespace Das.Views
         }
 
         public IResolver Container { get; }
+
+        public IStyleContext StyleContext => _styleContext;
 
         public IViewInflater ViewInflater { get; }
 

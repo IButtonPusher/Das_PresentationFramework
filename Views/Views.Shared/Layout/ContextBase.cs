@@ -76,6 +76,8 @@ namespace Das.Views
                 return _lastMeasurements.TryGetValue(element, out var val) ? val : ValueSize.Empty;
         }
 
+        public IVisualLineage VisualLineage { get; }
+
         public Double ZoomLevel => ViewState?.ZoomLevel ?? 1;
         
 

@@ -180,5 +180,7 @@ namespace Das.Views.Gdi.Controls
             add => _htmlPanel.PropertyChanged += value;
             remove => _htmlPanel.PropertyChanged -= value;
         }
+
+        public IVisualElement ReplacingVisual => _element;
     }
 }

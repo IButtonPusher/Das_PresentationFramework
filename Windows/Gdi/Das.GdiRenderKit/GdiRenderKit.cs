@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Das.Container;
 using Das.Serializer;
 using Das.Views;
+using Das.Views.Construction;
 using Das.Views.Controls;
 using Das.Views.Core;
 using Das.Views.Core.Geometry;
@@ -21,8 +22,6 @@ namespace Das.Gdi.Kits
                                        IRenderKit,
                                        IDisplayMetrics
     {
-        public IStyleContext StyleContext { get; }
-
         private readonly IWindowProvider<IVisualHost> _windowProvider;
 
         public GdiRenderKit(IViewPerspective viewPerspective,
@@ -32,7 +31,6 @@ namespace Das.Gdi.Kits
         : base(container, styleContext, Serializer.AttributeParser, Serializer.TypeInferrer,
             Serializer.TypeManipulator)
         {
-            StyleContext = styleContext;
             _windowProvider = windowProvider;
             // ReSharper disable once VirtualMemberCallInConstructor
             RegisterSurrogate<HtmlPanel>(GetHtmlPanelSurrogate);
@@ -58,6 +56,28 @@ namespace Das.Gdi.Kits
         : this(viewPerspective, windowProvider, styleContext, new BaseResolver())
         {
            
+        }
+
+        public GdiRenderKit(IStyleContext styleContext, 
+                            IStringPrimitiveScanner attributeScanner, 
+                            ITypeInferrer typeInferrer, 
+                            IPropertyProvider propertyProvider) 
+            : base(styleContext, attributeScanner, typeInferrer, propertyProvider)
+        {
+        }
+
+        public GdiRenderKit(IResolver resolver, 
+                            IStyleContext styleContext, 
+                            IStringPrimitiveScanner attributeScanner, 
+                            ITypeInferrer typeInferrer,
+                            IPropertyProvider propertyProvider, 
+                            IVisualBootstrapper visualBootstrapper) 
+            : base(resolver, styleContext, attributeScanner, typeInferrer, propertyProvider, visualBootstrapper)
+        {
+        }
+
+        public GdiRenderKit(IResolver resolver, IStyleContext styleContext, IVisualBootstrapper visualBootstrapper, IViewInflater viewInflater) : base(resolver, styleContext, visualBootstrapper, viewInflater)
+        {
         }
 
         private IVisualSurrogate GetHtmlPanelSurrogate(IVisualElement element)

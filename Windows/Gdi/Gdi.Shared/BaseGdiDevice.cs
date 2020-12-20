@@ -9,7 +9,7 @@ namespace Das.Gdi
 {
     public class BaseGdiDevice : IDisposable
     {
-        public BaseGdiDevice(Color backgroundColor, 
+        public BaseGdiDevice(Color? backgroundColor, 
                              ISize size)
         {
             Invalidate(
@@ -41,7 +41,7 @@ namespace Das.Gdi
 
         protected Boolean Invalidate(Int32 iwidth,
                                   Int32 iheight,
-                                  Color backgroundColor)
+                                  Color? backgroundColor)
         {
             if (iwidth == 0 || iheight == 0)
                 return false;
@@ -56,12 +56,14 @@ namespace Das.Gdi
             _height = iheight;
 
             _dcGraphics = Graphics.FromHdc(_memoryDeviceContext);
-            _dcGraphics.Clear(backgroundColor);
+            
+            if (backgroundColor != null)
+                _dcGraphics.Clear(backgroundColor.Value);
 
             return true;
         }
 
-        public Bitmap? ToBitmap(Color backgroundColor)
+        public Bitmap? ToBitmap(Color? backgroundColor)
         {
             if (_width== 0 || _height == 0)
                 return default;
@@ -69,7 +71,8 @@ namespace Das.Gdi
             var bmp = new Bitmap(_width, _height);
             using (var g = Graphics.FromImage(bmp))
             {
-                g.Clear(backgroundColor);
+                if (backgroundColor != null)
+                    g.Clear(backgroundColor.Value);
                 
                 var imgHdc = g.GetHdc();
                 Native.BitBlt(imgHdc, 0, 0, _width, _height, _memoryDeviceContext,

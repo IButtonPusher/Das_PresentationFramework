@@ -14,6 +14,8 @@ namespace Das.Views.Construction
         String Name { get; }
         
         String? InnerText { get; }
+        
+        MarkupLanguage Language { get; }
 
         IEnumerable<IMarkupNode> Children { get; }
 

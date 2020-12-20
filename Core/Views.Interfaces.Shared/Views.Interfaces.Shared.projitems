@@ -9,10 +9,13 @@
     <Import_RootNamespace>Das.Views</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\IVisualTypeResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\MarkupLanguage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDeepCopyable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IContentVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\IButtonBase{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\IToggleButton{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IVisualLineage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleSetter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IBindingBuilder.cs" />

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Das.Views.Rendering;
 
 namespace Das.Views.Controls
 {
@@ -9,6 +8,8 @@ namespace Das.Views.Controls
     /// </summary>
     public interface IVisualSurrogate : IVisualElement
     {
-        Type ReplacesType { get; }
+        //Type ReplacesType { get; }
+        
+        IVisualElement ReplacingVisual { get; }
     }
 }

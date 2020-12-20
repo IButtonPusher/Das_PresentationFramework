@@ -103,7 +103,7 @@ namespace Das.Xamarin.Android
 
                 if (hasSurrogates && current is IVisualSurrogate surrogate)
                 {
-                    var wants = RenderKit.RenderContext.TryGetElementBounds(surrogate);
+                    var wants = RenderKit.RenderContext.TryGetElementBounds(surrogate.ReplacingVisual);
                     if (wants != null)
                     {
                         left = Convert.ToInt32(wants.Left * ZoomLevel);

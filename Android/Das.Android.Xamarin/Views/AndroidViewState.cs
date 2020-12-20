@@ -30,11 +30,6 @@ namespace Das.Xamarin.Android
             _styleContext.RegisterStyleSetter(element, setterType, value);
         }
 
-        //public IColor GetCurrentAccentColor()
-        //{
-        //    return _styleContext.GetCurrentAccentColor();
-        //}
-
         public T GetStyleSetter<T>(StyleSetterType setterType,
                                    StyleSelector selector,
                                    IVisualElement element)

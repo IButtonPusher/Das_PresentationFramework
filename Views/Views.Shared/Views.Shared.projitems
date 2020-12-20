@@ -17,11 +17,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Construction\DefaultValueConverterProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\MarkupNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\ViewInflater.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\VisualTypeResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\XmlMarkupNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\XmlNodeBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ContentVisuals\ContentPropertyAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ContextBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\ContextBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\VisualLineage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\ButtonBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Label.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\PictureFrame.cs" />
@@ -50,7 +52,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Input\BaseInputHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ItemsControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ItemsControlHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Layout\HorizontalRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\HorizontalRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Measuring\BaseMeasureContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BaseContainerVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\BasePanel.cs" />

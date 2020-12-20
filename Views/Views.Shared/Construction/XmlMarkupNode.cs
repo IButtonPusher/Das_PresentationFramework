@@ -7,7 +7,8 @@ namespace Das.Views.Construction
         public XmlMarkupNode(String name, 
                              MarkupNode? parent) 
             : base(name, parent, 
-                String.Equals(name, "?xml", StringComparison.OrdinalIgnoreCase))
+                String.Equals(name, "?xml", StringComparison.OrdinalIgnoreCase),
+                MarkupLanguage.Xml)
         {
         }
     }

@@ -8,13 +8,15 @@ namespace Das.Views.Construction
     {
         public MarkupNode(String name,
                           MarkupNode? parent, 
-                          Boolean isEncodingHeader)
+                          Boolean isEncodingHeader,
+                          MarkupLanguage language)
         {
             Name = name;
             Children = new List<MarkupNode>();
             _attributes = new Dictionary<String, String>(StringComparer.OrdinalIgnoreCase);
             Parent = parent;
             IsEncodingHeader = isEncodingHeader;
+            Language = language;
 
             CanHaveChildren = true;
             parent?.Children.Add(this);
@@ -56,6 +58,8 @@ namespace Das.Views.Construction
         public Int32 ChildrenCount => Children.Count;
 
         public String Name { get; }
+
+        public MarkupLanguage Language { get; }
 
         IEnumerable<IMarkupNode> IMarkupNode.Children => Children;
 

@@ -10,5 +10,7 @@ namespace Das.Views.Rendering
         Double ZoomLevel { get; }
 
         ValueSize GetLastMeasure(IVisualElement element);
+        
+        IVisualLineage VisualLineage { get; }
     }
 }

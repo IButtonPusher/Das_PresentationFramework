@@ -20,12 +20,14 @@ namespace Das.Views
                             IStringPrimitiveScanner xmlAttributeParser,
                             ITypeInferrer typeInferrer,
                             IBindingBuilder bindingBuilder,
-                            IValueConverterProvider converterProvider)
+                            IValueConverterProvider converterProvider,
+                            IVisualTypeResolver visualTypeResolver)
         {
             _visualBootstrapper = visualBootstrapper;
             _typeInferrer = typeInferrer;
             _bindingBuilder = bindingBuilder;
             _converterProvider = converterProvider;
+            _visualTypeResolver = visualTypeResolver;
             _attributeValueScanner = xmlAttributeParser;
         }
 
@@ -75,9 +77,6 @@ namespace Das.Views
 
         public async Task<IVisualElement> InflateResourceXmlAsync(String resourceName)
         {
-
-            var sw = Stopwatch.StartNew();
-            
             String xml;
 
             var thisExe = Assembly.GetExecutingAssembly();
@@ -93,8 +92,6 @@ namespace Das.Views
                     xml = await sr.ReadToEndAsync();
                 }
             }
-            
-            Debug.WriteLine("Read resource in " + sw.ElapsedMilliseconds + " ms");
 
             return InflateXml(xml);
         }
@@ -138,115 +135,78 @@ namespace Das.Views
         }
 
 
-        private static Dictionary<String, String> GetNamespaceAssemblySearch(IMarkupNode node,
-                                                                             IDictionary<String, String> search)
-        {
-            var nsAsmSearch = new Dictionary<String, String>(search);
-            return GetNamespaceAssemblySearchImpl(node, nsAsmSearch);
-        }
+        //private static Dictionary<String, String> GetNamespaceAssemblySearch(
+        //    IMarkupNode node,
+        //    IDictionary<String, String> search)
+        //{
+        //    var nsAsmSearch = new Dictionary<String, String>(search);
+        //    return GetNamespaceAssemblySearchImpl(node, nsAsmSearch);
+        //}
 
-        private static Dictionary<String, String> GetNamespaceAssemblySearchImpl(IMarkupNode node,
-            Dictionary<String, String> nsAsmSearch)
-        {
-            foreach (var attribute in node.GetAllAttributes())
-            {
-                if (!attribute.Key.StartsWith("xmlns:"))
-                    continue;
-                var tokens = attribute.Value.Split(';');
-
-
-                String? asmName = null;
-                String? ns = null;
-
-                for (var t = 0; t < tokens.Length; t++)
-                {
-                    var subTokens = tokens[t].Split(_namespaceSplitters);
-                    if (subTokens.Length != 2)
-                        continue;
-
-                    switch (subTokens[0])
-                    {
-                        case "clr-namespace":
-                            ns = subTokens[1];
-                            break;
-
-                        case "assembly":
-                            asmName = subTokens[1];
-                            break;
-                    }
-                }
-
-                if (ns == null)
-                    continue;
-
-                if (asmName == null)
-                    continue;
-
-                nsAsmSearch[ns] = asmName;
-            }
-
-            return nsAsmSearch;
-        }
+        //private static Dictionary<String, String> GetNamespaceAssemblySearchImpl(IMarkupNode node,
+        //    Dictionary<String, String> nsAsmSearch)
+        //{
+        //    foreach (var attribute in node.GetAllAttributes())
+        //    {
+        //        if (!attribute.Key.StartsWith("xmlns:"))
+        //            continue;
+        //        var tokens = attribute.Value.Split(';');
 
 
-        private Type GetType(IMarkupNode node,
-                             String? genericArgName,
-                             Dictionary<String, String> nameSpaceAssemblySearch)
-        {
-            var name = node.Name;
+        //        String? asmName = null;
+        //        String? ns = null;
 
-            var notGeneric = _typeInferrer.GetTypeFromClearName(name, nameSpaceAssemblySearch);
-            if (notGeneric != null)
-                return notGeneric;
+        //        for (var t = 0; t < tokens.Length; t++)
+        //        {
+        //            var subTokens = tokens[t].Split(_namespaceSplitters);
+        //            if (subTokens.Length != 2)
+        //                continue;
+
+        //            switch (subTokens[0])
+        //            {
+        //                case "clr-namespace":
+        //                    ns = subTokens[1];
+        //                    break;
+
+        //                case "assembly":
+        //                    asmName = subTokens[1];
+        //                    break;
+        //            }
+        //        }
+
+        //        if (ns == null)
+        //            continue;
+
+        //        if (asmName == null)
+        //            continue;
+
+        //        nsAsmSearch[ns] = asmName;
+        //    }
+
+        //    return nsAsmSearch;
+        //}
+
+
+        //private Type GetType(IMarkupNode node,
+        //                     String? genericArgName,
+        //                     Dictionary<String, String> nameSpaceAssemblySearch)
+        //{
+        //    var name = node.Name;
+
+        //    var notGeneric = _typeInferrer.GetTypeFromClearName(name, nameSpaceAssemblySearch);
+        //    if (notGeneric != null)
+        //        return notGeneric;
             
-            if (!String.IsNullOrEmpty(genericArgName) && node.ChildrenCount > 0)
-            {
-                var letsTry = name + "[" + genericArgName + "]";
-                var found = _typeInferrer.GetTypeFromClearName(letsTry, nameSpaceAssemblySearch, true);
-                if (found != null)
-                    return found;
-            }
+        //    if (!String.IsNullOrEmpty(genericArgName) && node.ChildrenCount > 0)
+        //    {
+        //        var letsTry = name + "[" + genericArgName + "]";
+        //        var found = _typeInferrer.GetTypeFromClearName(letsTry, nameSpaceAssemblySearch, true);
+        //        if (found != null)
+        //            return found;
+        //    }
 
-            //return _typeInferrer.GetTypeFromClearName(name, nameSpaceAssemblySearch)
-            //       ?? 
-            throw new TypeLoadException(name);
-        }
-
-        private Type GetType(IMarkupNode node,
-                             String genericArg1,
-                             String? genericArg2,
-                             Dictionary<String, String> nameSpaceAssemblySearch)
-        {
-            var name = node.Name;
-            
-            if (!String.IsNullOrEmpty(genericArg2))
-            {
-                var genericType = _typeInferrer.GetTypeFromClearName(name + "`2", nameSpaceAssemblySearch)
-                                  ?? throw new TypeLoadException(name);
-                var genericParam1 = _typeInferrer.GetTypeFromClearName(genericArg1,
-                    nameSpaceAssemblySearch, true);
-                var genericParam2 = _typeInferrer.GetTypeFromClearName(genericArg2!,
-                    nameSpaceAssemblySearch, true);
-
-                try
-                {
-                    var res = genericType.MakeGenericType(genericParam1, genericParam2);
-                    return res;
-                }
-                catch
-                {
-                    // ignored
-                }
-
-                {
-                    var res = genericType.MakeGenericType(genericParam2, genericParam1);
-                    return res;
-                }
-            }
-
-            return GetType(node, genericArg1, nameSpaceAssemblySearch);
-        }
-
+        //    throw new TypeLoadException(name);
+        //}
 
         /// <summary>
         ///     Builds a visual from a markup node.  Infers the data context type and instantiates
@@ -273,13 +233,8 @@ namespace Das.Views
                 dataContextType = _typeInferrer.GetTypeFromClearName(currentGenericArgName,
                     nameSpaceAssemblySearch, true);
 
-            Type visualType;
-
-
-            if (node.TryGetAttributeValue("VisualConstraint", out var visualConstraint))
-                visualType = GetType(node, visualConstraint, currentGenericArgName, nameSpaceAssemblySearch);
-            else
-                visualType = GetType(node, currentGenericArgName, nameSpaceAssemblySearch);
+            var visualType = _visualTypeResolver.GetType(node, currentGenericArgName, 
+                nameSpaceAssemblySearch);
 
             IVisualElement visual;
 
@@ -287,42 +242,6 @@ namespace Das.Views
             {
                 visual = BuildContentVisual(node, dataContextType, 
                     nameSpaceAssemblySearch, visualType);
-                //IVisualElement? contentVisual = null;
-
-                //var contentContainer = _visualBootstrapper.Instantiate<IContentVisual>(visualType);
-
-                //if (node.ChildrenCount == 1)
-                //{
-                //    var currentNode = node[0];
-                //    var childObj = InflateChild(currentNode, contentContainer,
-                //        dataContextType, nameSpaceAssemblySearch,
-                //        out var childType,
-                //        out var childProp);
-
-                //    if (childType == ChildNodeType.ChildVisual && childObj is IVisualElement childVisual)
-                //        contentVisual = childVisual;
-
-                //    else if (childType == ChildNodeType.PropertyValue && childProp is {} prop)
-                //        prop.SetValue(contentContainer, childObj);
-
-
-                //    //contentVisual = GetVisual(currentNode, dataContextType, nameSpaceAssemblySearch);
-                //}
-                //else if (node.ChildrenCount == 0)
-                //{
-                //    if (!node.TryGetAttributeValue(nameof(IContentContainer.Content), out var textContent))
-                //        textContent = node.InnerText;
-
-                //    if (!String.IsNullOrEmpty(textContent))
-                //    {
-                //        // <button>TEXT</button> etc
-                //        contentVisual = new Label(_visualBootstrapper) {Text = textContent!};
-                //    }
-                //}
-                //else throw new NotImplementedException();
-
-                //contentContainer.Content = contentVisual;
-                //visual = contentContainer;
             }
             else if (visualType is { } validVisualType)
             {
@@ -334,17 +253,15 @@ namespace Das.Views
                 if (node.InnerText is {} innerText && 
                     innerText.Trim() is {} validInnerText && validInnerText.Length > 0 &&
                     GetAttribute<ContentPropertyAttribute>(validVisualType) is {} cp &&
-                    //validVisualType.GetCustomAttribute<ContentPropertyAttribute>() is {} cp &&
                     _typeInferrer.FindPublicProperty(validVisualType, cp.Name) is {} contentProp && 
                     contentProp.PropertyType == typeof(String))
                 {
-                    // <Label>hello world</Label>
+                    // zb <Label>hello world</Label>
                     contentProp.SetValue(visual, validInnerText, null);
                 }
                 
             }
             else throw new NotImplementedException();
-
 
             if (bindings.Count > 0 && visual is IBindableElement bindable)
                 foreach (var binding in bindings)
@@ -367,7 +284,6 @@ namespace Das.Views
                 default:
                     return default!;
             }
-            
         }
 
         private void InflateChildNodes(IMarkupNode node,
@@ -375,8 +291,6 @@ namespace Das.Views
                                        Type? dataContextType,
                                        Dictionary<String, String> nameSpaceAssemblySearch)
         {
-           
-
             foreach (var childNode in node.Children)
             {
                 var visualChild = InflateChild(childNode, visual, dataContextType, 
@@ -390,60 +304,13 @@ namespace Das.Views
                 {
                     AddChildVisual(visual, childVisual);
                 }
-                
-
-                //var visualProp = _typeInferrer.FindPublicProperty(visualType, childNode.Name);
-                //if (visualProp != null)
-                //{
-                //    if (typeof(IVisualElement).IsAssignableFrom(visualProp.PropertyType))
-                //    {
-                //        // try to set a property with a visual based on the node's value
-
-                //        var childVisual = GetVisual(childNode, dataContextType, nameSpaceAssemblySearch);
-
-                //        visualProp.SetValue(visual, childVisual, null);
-                //    }
-                //    else if (typeof(IDataTemplate).IsAssignableFrom(visualProp.PropertyType))
-                //    {
-                //        var dataTemplate = BuildDataTemplate(childNode, dataContextType, nameSpaceAssemblySearch);
-                //        visualProp.SetValue(visual, dataTemplate, null);
-                //    }
-                //}
-                //else
-                //{
-                //    var childVisual = GetVisual(childNode, dataContextType, nameSpaceAssemblySearch);
-                //    if (childVisual != null)
-                //    {
-                //        if (visual is IVisualContainer container)
-                //            container.AddChild(childVisual);
-                //        else
-                //        {
-                //            var addMethod = visualType.GetMethod(nameof(IVisualContainer.AddChild));
-                //            if (addMethod == null)
-                //                throw new NotImplementedException();
-
-                //            var mParam = addMethod.GetParameters();
-                //            if (mParam.Length != 1)
-                //                throw new NotImplementedException();
-
-                //            var addType = mParam[0].ParameterType;
-                //            var childVisualType = childVisual.GetType();
-                //            if (!addType.IsAssignableFrom(childVisualType))
-                //                throw new NotImplementedException();
-
-                //            addMethod.Invoke(visual, new Object[] {childVisual});
-                //        }
-                //    }
-                //}
             }
         }
-        
-        
 
         private IContentVisual BuildContentVisual(IMarkupNode node,
-                                                        Type? dataContextType,
-                                                        Dictionary<String, String> nameSpaceAssemblySearch,
-                                                        Type visualType)
+                                                  Type? dataContextType,
+                                                  Dictionary<String, String> nameSpaceAssemblySearch,
+                                                  Type visualType)
         {
             IVisualElement? contentVisual = null;
 
@@ -464,9 +331,7 @@ namespace Das.Views
                     
                     else if (childType == ChildNodeType.PropertyValue && childProp is {} prop)
                         prop.SetValue(contentContainer, childObj, null);
-                    
-                    
-                    //contentVisual = GetVisual(currentNode, dataContextType, nameSpaceAssemblySearch);
+
                     break;
                 }
                 case 0:
@@ -476,7 +341,7 @@ namespace Das.Views
 
                     if (!String.IsNullOrEmpty(textContent))
                     {
-                        // <button>TEXT</button> etc
+                        // zb <button>TEXT</button> etc
                         contentVisual = new Label(_visualBootstrapper) {Text = textContent!};
                     }
 
@@ -524,82 +389,43 @@ namespace Das.Views
                                      out PropertyInfo? visualProp)
         {
             var visualType = visual.GetType();
-            
+
             visualProp = _typeInferrer.FindPublicProperty(visualType, childNode.Name);
-                if (visualProp != null)
+            if (visualProp != null)
+            {
+                childType = ChildNodeType.PropertyValue;
+
+                if (typeof(IVisualElement).IsAssignableFrom(visualProp.PropertyType))
                 {
-                    childType = ChildNodeType.PropertyValue;
-                    
-                    if (typeof(IVisualElement).IsAssignableFrom(visualProp.PropertyType))
-                    {
-                        // try to set a property with a visual based on the node's value
+                    // try to set a property with a visual based on the node's value
+                    var res = GetVisual(childNode, dataContextType, nameSpaceAssemblySearch);
+                    return res;
+                }
 
-                        var childVisual = GetVisual(childNode, dataContextType, nameSpaceAssemblySearch);
-                        return childVisual;
-                        //visualProp.SetValue(visual, childVisual, null);
-                    }
-                    
-                    if (typeof(IDataTemplate).IsAssignableFrom(visualProp.PropertyType))
-                    {
-                        var dataTemplate = BuildDataTemplate(childNode, dataContextType, nameSpaceAssemblySearch);
-                        return dataTemplate;
-                        //visualProp.SetValue(visual, dataTemplate, null);
-                    }
+                if (typeof(IDataTemplate).IsAssignableFrom(visualProp.PropertyType))
+                {
+                    var dataTemplate = BuildDataTemplate(childNode, dataContextType, nameSpaceAssemblySearch);
+                    return dataTemplate;
+                }
 
-                    if (typeof(IVisualTemplate).IsAssignableFrom(visualProp.PropertyType))
-                    {
-                        if (childNode.ChildrenCount == 1)
-                        {
-                            var templateVisual = GetVisual(childNode[0], visualType,
-                                nameSpaceAssemblySearch);
-
-                            return new VisualTemplate
-                            {
-                                Content = templateVisual
-                            };
-                        }
-
-                        //else if (childNode.TryGetAttributeValue(nameof(IVisualTemplate.Content),
-                        //    out var foundIt))
-                        //    templateContent = foundIt;
-                    }
-
+                if (!typeof(IVisualTemplate).IsAssignableFrom(visualProp.PropertyType) || 
+                    childNode.ChildrenCount != 1)
                     throw new NotImplementedException();
 
-                }
-                else
+                var templateVisual = GetVisual(childNode[0], visualType,
+                    nameSpaceAssemblySearch);
+
+                return new VisualTemplate
                 {
-                    childType = ChildNodeType.ChildVisual;
-                    
-                    var childVisual = GetVisual(childNode, dataContextType, nameSpaceAssemblySearch);
+                    Content = templateVisual
+                };
+            }
 
-                    return childVisual;
-                    
-                    //if (childVisual != null)
-                    //{
-                    //    if (visual is IVisualContainer container)
-                    //        container.AddChild(childVisual);
-                    //    else
-                    //    {
-                    //        var addMethod = visualType.GetMethod(nameof(IVisualContainer.AddChild));
-                    //        if (addMethod == null)
-                    //            throw new NotImplementedException();
+            childType = ChildNodeType.ChildVisual;
 
-                    //        var mParam = addMethod.GetParameters();
-                    //        if (mParam.Length != 1)
-                    //            throw new NotImplementedException();
+            var childVisual = GetVisual(childNode, dataContextType, nameSpaceAssemblySearch);
 
-                    //        var addType = mParam[0].ParameterType;
-                    //        var childVisualType = childVisual.GetType();
-                    //        if (!addType.IsAssignableFrom(childVisualType))
-                    //            throw new NotImplementedException();
-
-                    //        addMethod.Invoke(visual, new Object[] {childVisual});
-                    //    }
-                    //}
-                }
-
-                //return default;
+            return childVisual;
         }
 
         private IVisualElement InflateXmlImpl(String xml,
@@ -615,7 +441,7 @@ namespace Das.Views
             if (node.IsEncodingHeader)
                 node = node[0];
 
-            var nsAsmSearch = GetNamespaceAssemblySearch(node, searchSeed);
+            var nsAsmSearch = _visualTypeResolver.GetNamespaceAssemblySearch(node, searchSeed);
 
             var res = GetVisual(node, null, nsAsmSearch);
 
@@ -628,10 +454,6 @@ namespace Das.Views
                                         IMarkupNode node,
                                         Dictionary<String, IDataBinding> bindings)
         {
-            if (visual is IRepeaterPanel)
-            {
-            }
-
             var vType = visual.GetType();
 
             foreach (var kvp in node.GetAllAttributes())
@@ -654,10 +476,11 @@ namespace Das.Views
             }
         }
 
-        private static readonly Char[] _namespaceSplitters = {':', '='};
+        //private static readonly Char[] _namespaceSplitters = {':', '='};
         private readonly IStringPrimitiveScanner _attributeValueScanner;
         private readonly IBindingBuilder _bindingBuilder;
         private readonly IValueConverterProvider _converterProvider;
+        private readonly IVisualTypeResolver _visualTypeResolver;
 
         private readonly ITypeInferrer _typeInferrer;
         private readonly IVisualBootstrapper _visualBootstrapper;

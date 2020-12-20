@@ -8,11 +8,12 @@ namespace Gdi.Shared.Static
 {
     public readonly struct StaticViewState : IViewState
     {
-        public StaticViewState(Double zoomLevel)
+        public StaticViewState(Double zoomLevel,
+                               IColorPalette colorPalette)
         {
             _defaultStyle = DefaultStyle.Instance;
             ZoomLevel = zoomLevel;
-            ColorPalette = new DefaultColorPalette();
+            ColorPalette = colorPalette;//new DefaultColorPalette();
         }
 
         public T GetStyleSetter<T>(StyleSetterType setterType, 

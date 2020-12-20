@@ -42,6 +42,8 @@ namespace Das.Views.Core.Drawing
         public static SolidColorBrush Purple => _purple.Value;
 
         public static SolidColorBrush Pink => _pink.Value;
+        
+        public static SolidColorBrush Orange => _orange.Value;
 
 
         public static SolidColorBrush Red => _red.Value;
@@ -75,6 +77,9 @@ namespace Das.Views.Core.Drawing
 
         private static readonly Lazy<SolidColorBrush> _darkGray = new Lazy<SolidColorBrush>(()
             => new SolidColorBrush(Color.DarkGray));
+        
+        private static readonly Lazy<SolidColorBrush> _orange = new Lazy<SolidColorBrush>(()
+            => new SolidColorBrush(Color.Orange));
         
         private static readonly Lazy<SolidColorBrush> _green = new Lazy<SolidColorBrush>(()
             => new SolidColorBrush(Color.Green));

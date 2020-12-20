@@ -5,7 +5,6 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Support.V7.App;
 using Das.Views;
-using Das.Views.Core.Drawing;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 using Das.Xamarin.Android.Mvvm;
@@ -14,8 +13,8 @@ using Xamarin.Essentials;
 
 namespace Das.Xamarin.Android
 {
-    public abstract class DasMainActivity : AppCompatActivity, 
-                                            IViewState
+    public abstract class DasMainActivity : AppCompatActivity 
+                                            //IViewState
     {
         protected virtual IStyleContext GetStyleContext()
         {
@@ -31,7 +30,7 @@ namespace Das.Xamarin.Android
             _styleContext = GetStyleContext();
 
             var displayMetrics = Resources?.DisplayMetrics ?? throw new NullReferenceException();
-            ZoomLevel = displayMetrics.ScaledDensity;
+            //ZoomLevel = displayMetrics.ScaledDensity;
 
             var fontProvider = new AndroidFontProvider(displayMetrics, _styleContext);
 
@@ -39,8 +38,10 @@ namespace Das.Xamarin.Android
 
             var windowManager = WindowManager ?? throw new NullReferenceException(
                 "WindowManager cannot be null");
+            
+            var viewState = new AndroidViewState(displayMetrics, _styleContext);
 
-            var renderKit = new AndroidRenderKit(new BasePerspective(), this, 
+            var renderKit = new AndroidRenderKit(new BasePerspective(), viewState, 
                 fontProvider, windowManager, uiProvider, _styleContext, displayMetrics);
 
             _view = await GetMainViewAsync(renderKit, uiProvider);
@@ -50,8 +51,10 @@ namespace Das.Xamarin.Android
         }
 
         protected abstract Task<IVisualElement> GetMainViewAsync(IRenderKit renderKit,
+                                                                 // ReSharper disable once UnusedParameter.Global
                                                                  IUiProvider uiProvider);
 
+        // ReSharper disable once UnusedMember.Global
         protected abstract Func<Task<Boolean>> BackButtonCommand { get; }
 
         public override void OnRequestPermissionsResult(Int32 requestCode, 
@@ -63,60 +66,48 @@ namespace Das.Xamarin.Android
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetterType setterType, 
-                                        StyleSelector selector, 
-                                        Object value)
-        {
-            CurrentStyleContext.RegisterStyleSetter(element, setterType, selector, value);
-        }
-
-        public IColorPalette ColorPalette => CurrentStyleContext.ColorPalette;
-
-        public override async void OnBackPressed()
-        {
-            var handled = await BackButtonCommand();
-            if (!handled)
-                base.OnBackPressed();
-        }
-
-        public T GetStyleSetter<T>(StyleSetterType setterType,
-                                   IVisualElement element)
-            => GetStyleSetter<T>(setterType, StyleSelector.None, element);
-
-        public T GetStyleSetter<T>(StyleSetterType setterType, 
-                                   StyleSelector selector, 
-                                   IVisualElement element)
-        {
-            return CurrentStyleContext.GetStyleSetter<T>(setterType, selector, element);
-
-            //if (_styleContext is {} valid)
-            //    return valid.GetStyleSetter<T>(setter, selector, element);
-
-            //if (_view?.StyleContext is {} ctx)
-            //    return ctx.GetStyleSetter<T>(setter, selector, element);
-
-            //throw new NullReferenceException();
-        }
-
-        protected IStyleContext CurrentStyleContext =>
-            _styleContext //?? _view?.StyleContext 
-            ?? throw new NullReferenceException();
-        
-
-        public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetterType setterType,
-                                        Object value)
-        {
-            CurrentStyleContext.RegisterStyleSetter(element, setterType, value);
-        }
-
-        //public IColor GetCurrentAccentColor()
+        //public void RegisterStyleSetter(IVisualElement element, 
+        //                                StyleSetterType setterType, 
+        //                                StyleSelector selector, 
+        //                                Object value)
         //{
-        //    return CurrentStyleContext.GetCurrentAccentColor();
+        //    CurrentStyleContext.RegisterStyleSetter(element, setterType, selector, value);
         //}
 
-        public Double ZoomLevel { get; private set; } = 1.0;
+        //public IColorPalette ColorPalette => CurrentStyleContext.ColorPalette;
+
+        //public override async void OnBackPressed()
+        //{
+        //    var handled = await BackButtonCommand();
+        //    if (!handled)
+        //        base.OnBackPressed();
+        //}
+
+        //public T GetStyleSetter<T>(StyleSetterType setterType,
+        //                           IVisualElement element)
+        //    => GetStyleSetter<T>(setterType, StyleSelector.None, element);
+
+        //public T GetStyleSetter<T>(StyleSetterType setterType, 
+        //                           StyleSelector selector, 
+        //                           IVisualElement element)
+        //{
+        //    return CurrentStyleContext.GetStyleSetter<T>(setterType, selector, element);
+        //}
+
+        //protected IStyleContext CurrentStyleContext =>
+        //    _styleContext //?? _view?.StyleContext 
+        //    ?? throw new NullReferenceException();
+        
+
+        //public void RegisterStyleSetter(IVisualElement element, 
+        //                                StyleSetterType setterType,
+        //                                Object value)
+        //{
+        //    CurrentStyleContext.RegisterStyleSetter(element, setterType, value);
+        //}
+
+
+        //public Double ZoomLevel { get; private set; } = 1.0;
 
         private IStyleContext? _styleContext;
         private IVisualElement? _view;

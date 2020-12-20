@@ -6,6 +6,7 @@ using Android.Views;
 using Das.Container;
 using Das.Serializer;
 using Das.Views;
+using Das.Views.Construction;
 using Das.Views.Core;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
@@ -31,7 +32,6 @@ namespace Das.Xamarin.Android
             Serializer.TypeInferrer, Serializer.TypeManipulator)
         {
             ViewState = viewState;
-            StyleContext = styleContext;
             DisplayMetrics = displayMetrics;
             var lastMeasures = new Dictionary<IVisualElement, ValueSize>();
             MeasureContext = new AndroidMeasureKit(windowManager, fontProvider, 
@@ -65,7 +65,19 @@ namespace Das.Xamarin.Android
         {
             
         }
-        
+
+        public AndroidRenderKit(IStyleContext styleContext, IStringPrimitiveScanner attributeScanner, ITypeInferrer typeInferrer, IPropertyProvider propertyProvider) : base(styleContext, attributeScanner, typeInferrer, propertyProvider)
+        {
+        }
+
+        public AndroidRenderKit(IResolver resolver, IStyleContext styleContext, IStringPrimitiveScanner attributeScanner, ITypeInferrer typeInferrer, IPropertyProvider propertyProvider, IVisualBootstrapper visualBootstrapper) : base(resolver, styleContext, attributeScanner, typeInferrer, propertyProvider, visualBootstrapper)
+        {
+        }
+
+        public AndroidRenderKit(IResolver resolver, IStyleContext styleContext, IVisualBootstrapper visualBootstrapper, IViewInflater viewInflater) : base(resolver, styleContext, visualBootstrapper, viewInflater)
+        {
+        }
+
         protected static readonly DasSerializer Serializer = new DasSerializer();
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;
@@ -74,7 +86,7 @@ namespace Das.Xamarin.Android
 
         public IViewState ViewState { get; }
 
-        public IStyleContext StyleContext { get; }
+        
 
         public DisplayMetrics DisplayMetrics { get; }
 

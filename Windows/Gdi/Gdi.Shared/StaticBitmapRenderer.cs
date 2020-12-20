@@ -3,7 +3,9 @@ using System.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Gdi.Kits;
 using Das.Views;
+using Das.Views.Core.Drawing;
 using Gdi.Shared.Static;
+using Color = System.Drawing.Color;
 
 namespace Das.Gdi
 {
@@ -11,13 +13,13 @@ namespace Das.Gdi
     {
         public static Bitmap? DoRender(IVisualElement view,
                                        StaticGdiRenderKit renderKit,
-                                       //IViewState viewState,
-                                       Color backgroundColor,
+                                       Color? backgroundColor,
                                        Double dpi,
-                                       ValueRenderSize availableSize)
+                                       ValueRenderSize availableSize,
+                                       IColorPalette colorPalette)
         {
 
-            var viewState = new StaticViewState(dpi);
+            var viewState = new StaticViewState(dpi, colorPalette);
 
 
             var desired = renderKit.MeasureContext.MeasureMainView(view, availableSize,

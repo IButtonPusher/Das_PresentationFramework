@@ -62,8 +62,6 @@ namespace Das.Views.Measuring
         public virtual ValueSize MeasureElement(IVisualElement element,
                                                 IRenderSize availableSpace)
         {
-            //_surrogateProvider.EnsureSurrogate(ref element);
-
             if (!element.IsRequiresMeasure)
             {
                 lock (_measureLock)
@@ -77,50 +75,15 @@ namespace Das.Views.Measuring
 
             _styleContext.PushVisual(element);
 
-            //if (element.Template is {Content: { } validTemplateContent})
-            //    element = validTemplateContent;
-
             var layoutElement = GetElementForLayout(element);
 
+            ////////////////////////
             var res = MeasureElementImpl(layoutElement, availableSpace);
-
+            ////////////////////////
+            
+            
             element.AcceptChanges(ChangeType.Measure);
             return res;
-
-            ////System.Diagnostics.Debug.WriteLine("measuring " + element);
-
-            //var viewState = GetViewState;
-
-
-            //var margin = element.Margin ?? viewState.GetStyleSetter<Thickness>(StyleSetter.Margin, element);
-
-            //var border = viewState.GetStyleSetter<Thickness>(StyleSetter.BorderThickness, element);
-
-
-            //ValueSize desiredSize;
-
-            //if (margin.IsEmpty && border.IsEmpty)
-            //{
-            //    desiredSize = element.Measure(availableSpace, this);
-            //    //System.Diagnostics.Debug.WriteLine(element + " wants " + desiredSize);
-            //}
-            //else
-            //{
-            //    desiredSize = element.Measure(
-            //        new ValueRenderSize(availableSpace.Width - (margin.Width - border.Width),
-            //            availableSpace.Height - (margin.Height + border.Height)), this);
-
-            //    desiredSize = new ValueSize(desiredSize.Width + margin.Width + border.Width,
-            //        desiredSize.Height + margin.Height + border.Height);
-            //}
-
-            //SetLastMeasured(element, desiredSize);
-
-            //_styleContext.PopVisual();
-
-            //element.AcceptChanges(ChangeType.Measure);
-
-            //return desiredSize;
         }
 
 
@@ -131,9 +94,6 @@ namespace Das.Views.Measuring
         {
             var viewState = GetViewState;
             var zoom = viewState.ZoomLevel;
-
-            //var specificSize = viewState.GetStyleSetter<Size>(StyleSetter.Size, element)
-            //                   * zoom;
 
             var specificHeight = viewState.GetStyleSetter<Double>(StyleSetterType.Height, element)
                                  * zoom;
