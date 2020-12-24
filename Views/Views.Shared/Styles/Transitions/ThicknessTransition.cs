@@ -3,7 +3,6 @@ using TaskEx = System.Threading.Tasks.Task;
 #endif
 
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
@@ -95,7 +94,7 @@ namespace Das.Views.Styles
             var currentValue = new Thickness(currentLeft, currentTop,
                 currentRight, currentBottom);
 
-            var assigned = new AssignedStyle(_assignedStyle.SetterType, _assignedStyle.Selector,
+            var assigned = new AssignedStyle(_assignedStyle.SetterType, _assignedStyle.Type,
                 currentValue);
 
             _updater(assigned);

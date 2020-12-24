@@ -3,6 +3,7 @@ using Das.Serializer;
 using Das.Views;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
+using Das.Views.Layout;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 
@@ -19,10 +20,13 @@ namespace Das.OpenGL
             Serializer.TypeInferrer, Serializer.TypeManipulator)
         {
             var lastMeasurements = new Dictionary<IVisualElement, ValueSize>();
+            var visualLineage = new VisualLineage();
+            
             MeasureContext = new GLMeasureContext(fontProvider, this, 
-                lastMeasurements, styleContext);
+                lastMeasurements, styleContext, visualLineage);
+            
             RenderContext = new GLRenderContext(new BasePerspective(),
-                 glContext, fontProvider, this, styleContext);
+                 glContext, fontProvider, this, styleContext, visualLineage);
         }
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;

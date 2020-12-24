@@ -28,7 +28,7 @@ namespace Das.OpenGL.Windows
             //where TViewModel : IViewModel
         {
             //var styleContext = view.StyleContext;
-            var styleContext = new DefaultStyleContext();
+            var styleContext = DefaultStyleContext.Instance;
 
             var control = new GLHostedElement(view, styleContext);
             var form = new GLForm(control);

@@ -5,10 +5,8 @@ using Das.Views.Styles;
 
 namespace Das.Views
 {
-    public interface IInteractiveView
+    public interface IInteractiveView : IStatefulVisual
     {
-        StyleSelector CurrentStyleSelector { get; }
-
         InputAction HandlesActions { get; }
     }
 }

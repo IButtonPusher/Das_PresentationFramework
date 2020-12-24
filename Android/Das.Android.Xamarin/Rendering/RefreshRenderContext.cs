@@ -15,9 +15,10 @@ namespace Das.Xamarin.Android.Rendering
                                     IVisualSurrogateProvider surrogateProvider,
                                     Dictionary<IVisualElement, ValueCube> renderPositions,
                                     Dictionary<IVisualElement, ValueSize> lastMeasurements,
-                                    IStyleContext styleContext)
+                                    IStyleContext styleContext,
+                                    IVisualLineage visualLineage)
             : base(perspective, surrogateProvider, 
-                renderPositions, lastMeasurements, styleContext)
+                renderPositions, lastMeasurements, styleContext, visualLineage)
         {
             
         }

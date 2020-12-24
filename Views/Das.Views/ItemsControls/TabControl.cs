@@ -74,6 +74,8 @@ namespace Das.Views
                 return _headerUses;
             }
 
+            var usingWidth = Math.Max(availableSpace.Width, _contentUses.Width);
+            
 
             return new ValueSize(Math.Max(_headerUses.Width, _contentUses.Width),
                 _headerUses.Height + _contentUses.Height);
@@ -249,9 +251,7 @@ namespace Das.Views
         {
             if (newValue is { } valid)
             {
-                var bob = valid.BuildVisual(DataContext);
-
-                _headerPanel = bob;
+                _headerPanel = valid.BuildVisual(DataContext);
                 if (_headerPanel is { } hp)
                     AddChild(hp);
             }

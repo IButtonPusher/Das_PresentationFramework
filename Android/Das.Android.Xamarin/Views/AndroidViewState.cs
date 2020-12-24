@@ -17,39 +17,41 @@ namespace Das.Xamarin.Android
             ZoomLevel = displayMetrics.ScaledDensity;
         }
 
-        public T GetStyleSetter<T>(StyleSetterType setterType,
-                                   IVisualElement element)
-        {
-            return _styleContext.GetStyleSetter<T>(setterType, element);
-        }
+        //public T GetStyleSetter<T>(StyleSetterType setterType,
+        //                           IVisualElement element)
+        //{
+        //    return _styleContext.GetStyleSetter<T>(setterType, element);
+        //}
 
-        public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetterType setterType, 
-                                        Object value)
-        {
-            _styleContext.RegisterStyleSetter(element, setterType, value);
-        }
+        //public void RegisterStyleSetter(IVisualElement element, 
+        //                                StyleSetterType setterType, 
+        //                                Object value)
+        //{
+        //    _styleContext.RegisterStyleSetter(element, setterType, value);
+        //}
 
-        public T GetStyleSetter<T>(StyleSetterType setterType,
-                                   StyleSelector selector,
-                                   IVisualElement element)
-        {
-            return _styleContext.GetStyleSetter<T>(setterType, selector, element);
-        }
+        //public T GetStyleSetter<T>(StyleSetterType setterType,
+        //                           StyleSelector selector,
+        //                           IVisualElement element)
+        //{
+        //    return _styleContext.GetStyleSetter<T>(setterType, selector, element);
+        //}
 
-        public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetterType setterType, 
-                                        StyleSelector selector, 
-                                        Object value)
-        {
-            _styleContext.RegisterStyleSetter(element, setterType, selector, value);
-        }
+        //public void RegisterStyleSetter(IVisualElement element, 
+        //                                StyleSetterType setterType, 
+        //                                StyleSelector selector, 
+        //                                Object value)
+        //{
+        //    _styleContext.RegisterStyleSetter(element, setterType, selector, value);
+        //}
 
-        public IColorPalette ColorPalette => _styleContext.ColorPalette;
+        //public IColorPalette ColorPalette => _styleContext.ColorPalette;
 
         public Double ZoomLevel { get; }
 
         
         private readonly IStyleContext _styleContext;
+
+        public IStyleContext StyleContext => _styleContext;
     }
 }

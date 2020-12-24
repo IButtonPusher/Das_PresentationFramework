@@ -12,5 +12,12 @@ namespace Das.Views.Rendering
         ValueSize GetLastMeasure(IVisualElement element);
         
         IVisualLineage VisualLineage { get; }
+        
+        /// <summary>
+        /// Returns the Size + Width properties of the visual, if set.
+        /// Otherwise looks to the applicable styles.
+        /// </summary>
+        Boolean TryGetElementSize(IVisualElement visual,
+                                  out ValueSize size);
     }
 }

@@ -15,8 +15,9 @@ namespace Das.OpenGL
                                IGLContext openGlContext,
                                IFontProvider fontProvider,
                                IVisualSurrogateProvider surrogateProvider,
-                               IStyleContext styleContext)
-            : base(perspective, surrogateProvider, styleContext)
+                               IStyleContext styleContext,
+                               IVisualLineage visualLineage)
+            : base(perspective, surrogateProvider, styleContext, visualLineage)
         {
             _openGlContext = openGlContext;
             _fontProvider = fontProvider;

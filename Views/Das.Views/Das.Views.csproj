@@ -60,5 +60,7 @@
   </ItemGroup>
 
   <Import Project="..\Views.Shared\Views.Shared.projitems" Label="Shared" />
+
+  <Import Project="..\Styles.Shared\Styles.Shared.projitems" Label="Shared" />
  
 </Project>

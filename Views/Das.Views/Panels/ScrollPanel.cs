@@ -72,7 +72,11 @@ namespace Das.Views.Panels
         void IFlingHost.OnFlingStep(Double deltaHorizontal,
                                     Double deltaVertical)
         {
+            //Debug.WriteLine("fling step x: " + deltaHorizontal + " y: " + deltaVertical);
+            
             OnScroll(deltaHorizontal, deltaVertical);
+            
+            //Debug.WriteLine("after step x: " + HorizontalOffset + " y: " + VerticalOffset);
         }
 
         public void OnFlingEnded(Boolean wasCancelled)
@@ -103,8 +107,10 @@ namespace Das.Views.Panels
                 _inputContext.TryCaptureMouseInput(this);
             }
 
-
-            var res = OnScroll(args.LastChange.Width, 0 - args.LastChange.Height);
+            // use the opposites here because if we are dragging, for example,
+            // to the right, that's a +X but we want the scroll to decrease
+            var res = OnScroll(0 - args.LastChange.Width,
+                0 - args.LastChange.Height);
 
             return res;
         }
@@ -114,10 +120,10 @@ namespace Das.Views.Panels
             if (!IsScrollWithMouseDrag)
                 return false;
 
-            //if (args.InputContext.GetVisualWithMouseCapture() != this)
-            //    return false;
-
             var working = _flingHandler.OnInput(args);
+
+            if (working)
+                args.InputContext.TryCaptureMouseInput(this);
 
             return working;
         }
@@ -158,7 +164,7 @@ namespace Das.Views.Panels
         /// <summary>
         ///     todo: possibly...
         /// </summary>
-        public StyleSelector CurrentStyleSelector => StyleSelector.None;
+        public VisualStateType CurrentVisualStateType => VisualStateType.None;
 
         public InputAction HandlesActions => InputAction.MouseDrag |
                                              InputAction.MouseWheel |
@@ -263,7 +269,13 @@ namespace Das.Views.Panels
                 ? Convert.ToInt32(Math.Max(_lastNeeded.Width - _lastAvailable.Width, 0))
                 : 0;
 
-            return _lastNeeded;
+
+            var letsUseW = Math.Min(_lastNeeded.Width, availableSpace.Width);
+            var letsUseH = Math.Min(_lastNeeded.Height, availableSpace.Height);
+            return new ValueSize(letsUseW, letsUseH);
+
+
+            //return _lastNeeded;
         }
 
         protected virtual Boolean OnScroll(Double deltaX,
@@ -295,7 +307,7 @@ namespace Das.Views.Panels
             if (!deltaX.IsNotZero() || !IsScrollsHorizontal)
                 return didScroll;
 
-            var nextScroll = GetValueBetween(HorizontalOffset - deltaX, 0, _maximumXScroll);
+            var nextScroll = GetValueBetween(HorizontalOffset + deltaX, 0, _maximumXScroll);
             //Math.Min(HorizontalOffset - deltaX, _maximumXScroll);
 
             if (nextScroll.AreDifferent(HorizontalOffset))

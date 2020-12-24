@@ -8,6 +8,7 @@ namespace Das.Views.Construction
     {
         Unknown,
         Xml,
-        Json
+        Json,
+        Css
     }
 }

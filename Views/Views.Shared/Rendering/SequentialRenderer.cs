@@ -131,6 +131,9 @@ namespace Das.Views.Rendering
         protected virtual ValueSize SetChildSize(IVisualElement child,
                                             RenderRectangle current)
         {
+            if (current.Width > 500)
+            {}
+            
             ElementsRendered[child] = new ValueRenderRectangle(current);
             return ValueSize.Empty;
         }

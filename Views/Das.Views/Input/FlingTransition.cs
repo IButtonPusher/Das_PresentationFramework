@@ -39,11 +39,16 @@ namespace Das.Views.Input
 
         protected override void OnUpdate(Double runningPct)
         {
+            _updateCounter++;
+            
             var flungX = _host.CurrentX - _startX;
             var flungY = _host.CurrentY - _startY;
             
             var currentX = _flingX * runningPct - flungX;
             var currentY = _flingY * runningPct - flungY;
+            
+            if (_updateCounter == 3)
+            {}
 
             _host.OnFlingStep(currentX, currentY);
         }
@@ -58,6 +63,8 @@ namespace Das.Views.Input
 
         private readonly Double _flingX;
         private readonly Double _flingY;
+
+        private Int32 _updateCounter;
         
         private readonly Double _startX;
         private readonly Double _startY;

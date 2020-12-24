@@ -9,20 +9,20 @@ namespace Das.Views.Styles
         Object? this[StyleSetterType setterType] { get; }
 
         Object? this[StyleSetterType setterType, 
-                     StyleSelector selector] { get; }
+                     VisualStateType type] { get; }
 
         Boolean TryGetValue(StyleSetterType setterType,
-                            StyleSelector selector,
+                            VisualStateType type,
                             out Object val);
 
 
         void Add(StyleSetterType setterType,
-                 StyleSelector selector,
+                 VisualStateType type,
                  Object? value);
 
-        void AddOrUpdate(IStyle style);
+        //void AddOrUpdate(IStyle style);
 
-        void AddSetter(StyleSetterType setterType,
-                       Object? value);
+        //void AddSetter(StyleSetterType setterType,
+        //               Object? value);
     }
 }

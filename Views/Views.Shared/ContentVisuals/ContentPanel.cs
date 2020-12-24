@@ -135,13 +135,13 @@ namespace Das.Views.Panels
             IsRequiresArrange = false;
         }
 
-        protected virtual IRenderSize GetMeasureSpace(IStyleProvider styleContext,
-                                                     IRenderSize availableSpace,
-                                                     out Thickness? padding,
-                                                     out ValueSize mySize)
+        protected virtual IRenderSize GetMeasureSpace(IVisualContext styleContext,
+                                                      IRenderSize availableSpace,
+                                                      out Thickness? padding,
+                                                      out ValueSize mySize)
         {
             padding = GetPadding(styleContext);
-            TryGetSize(out mySize);
+            styleContext.TryGetElementSize(this, out mySize);
 
             IRenderSize useAvailable;
             if (mySize.IsEmpty && padding?.IsEmpty != false)
@@ -159,16 +159,16 @@ namespace Das.Views.Panels
 
         protected virtual IRenderRectangle GetContentArrangeSpace(IVisualElement content,
                                                                   ISize contentMeasured,
-            IStyleProvider styleContext,
-                                                           IRenderSize availableSpace,
-                                                           out Thickness? padding,
-                                                           out ValueSize mySize)
+                                                                  IVisualContext visualContext,
+                                                                  IRenderSize availableSpace,
+                                                                  out Thickness? padding,
+                                                                  out ValueSize mySize)
         {
-            padding = GetPadding(styleContext);
-            TryGetSize(out mySize);
+            padding = GetPadding(visualContext);
+            visualContext.TryGetElementSize(this, out mySize);
 
 
-            Double left = 0, top = 0; 
+            Double left = 0, top = 0;
             Double width, height;
 
             if (mySize.IsEmpty)
@@ -182,7 +182,7 @@ namespace Das.Views.Panels
                 height = mySize.Height;
             }
 
-            if (padding is {} goodPadding && !goodPadding.IsEmpty)
+            if (padding is { } goodPadding && !goodPadding.IsEmpty)
             {
                 left += goodPadding.Left;
                 top += goodPadding.Top;
@@ -192,12 +192,12 @@ namespace Das.Views.Panels
 
             var valign = content.VerticalAlignment;
             if (valign == VerticalAlignments.Default)
-                valign = styleContext.GetStyleSetter<VerticalAlignments>(
+                valign = visualContext.GetStyleSetter<VerticalAlignments>(
                     StyleSetterType.VerticalAlignment, content);
 
             var halign = content.HorizontalAlignment;
             if (halign == HorizontalAlignments.Default)
-                halign = styleContext.GetStyleSetter<HorizontalAlignments>(
+                halign = visualContext.GetStyleSetter<HorizontalAlignments>(
                     StyleSetterType.HorizontalAlignment, content);
 
             //up to here we are giving content all available minus our padding
@@ -208,7 +208,7 @@ namespace Das.Views.Panels
             switch (halign)
             {
                 case HorizontalAlignments.Center:
-                    
+
                     left += (xDiff / 2);
                     width = Math.Min(width, contentMeasured.Width);
                     break;
@@ -221,7 +221,7 @@ namespace Das.Views.Panels
             switch (valign)
             {
                 case VerticalAlignments.Center:
-                    
+
                     top += (yDiff / 2);
                     height = Math.Min(height, contentMeasured.Height);
                     break;
@@ -232,21 +232,12 @@ namespace Das.Views.Panels
             }
 
             return new RenderRectangle(left, top, width, height, availableSpace.Offset);
-
-            //if (mySize.IsEmpty && padding?.IsEmpty != false)
-            //    useAvailable = availableSpace.ToFullRectangle();
-            //else if (mySize.IsEmpty)
-            //    useAvailable = new ValueRenderRectangle(availableSpace, padding);
-            //else
-            //    useAvailable = new ValueRenderRectangle(mySize, availableSpace.Offset, padding);
-
-            //return useAvailable;
         }
 
         protected virtual Thickness? GetPadding(IStyleProvider styleContext)
-          {
+        {
             return styleContext.GetStyleSetter<Thickness>(StyleSetterType.Padding, this);
-          }
+        }
 
         //public override IVisualElement DeepCopy()
         //{

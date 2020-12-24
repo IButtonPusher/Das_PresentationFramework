@@ -26,12 +26,13 @@ namespace Das.Views.Defaults
             _indicatord = Size.Empty;
 
             _indicator = new HorizontalRule(visualBootstrapper);
-            _lastStyleContext = visualBootstrapper.StyleContext;
 
-            var accent = _lastStyleContext.ColorPalette.Accent;
+            _styleRegistry = visualBootstrapper.StyleContext;
+
+            var accent = _styleRegistry.ColorPalette.Accent;
 
             _separator = new HorizontalRule(visualBootstrapper);
-            _lastStyleContext.RegisterStyleSetter(_indicator,
+            _styleRegistry.RegisterStyleSetter(_indicator,
                 StyleSetterType.Transition, new[]
                 {
                     new Transition(StyleSetterType.Margin, TimeSpan.FromSeconds(0.3),
@@ -39,15 +40,15 @@ namespace Das.Views.Defaults
                     new Transition(StyleSetterType.Width, TimeSpan.FromSeconds(0.3),
                         TimeSpan.Zero, TransitionTiming.Ease)
                 });
-            _lastStyleContext.RegisterStyleSetter(_indicator,
+            _styleRegistry.RegisterStyleSetter(_indicator,
                 StyleSetterType.HorizontalAlignment, HorizontalAlignments.Left);
 
-            _lastStyleContext.RegisterStyleSetter(_indicator,
+            _styleRegistry.RegisterStyleSetter(_indicator,
                 StyleSetterType.Background, accent);
-            _lastStyleContext.RegisterStyleSetter(_separator,
+            _styleRegistry.RegisterStyleSetter(_separator,
                 StyleSetterType.Background, SolidColorBrush.LightGray);
 
-            Background = _lastStyleContext.ColorPalette.Background;
+            Background = _styleRegistry.ColorPalette.Background;
 
             var stackPanel = new UniformStackPanel(visualBootstrapper)
             {
@@ -165,10 +166,13 @@ namespace Das.Views.Defaults
 
             _indicatorRect = new Rectangle(pos.Left + _scrollPanel.HorizontalOffset, 0, pos.Size);
 
-            _lastStyleContext.RegisterStyleSetter(_indicator,
+            if (!(_lastStyleContext is { })) 
+                return false;
+            
+            _styleRegistry.RegisterStyleSetter(_indicator,
                 StyleSetterType.Margin, new Thickness(pos.Left + _scrollPanel.HorizontalOffset,
                     0, 0, 0));
-            _lastStyleContext.RegisterStyleSetter(_indicator,
+            _styleRegistry.RegisterStyleSetter(_indicator,
                 StyleSetterType.Width, pos.Width);
 
             return true;
@@ -200,9 +204,10 @@ namespace Das.Views.Defaults
         private Size _indicatord;
         private Rectangle _indicatorRect;
         private IElementLocator? _lastElementLocator;
-        private IStyleProvider _lastStyleContext;
+        private IStyleProvider? _lastStyleContext;
 
 
         private Size _tabsUsed;
+        private readonly IStyleContext _styleRegistry;
     }
 }

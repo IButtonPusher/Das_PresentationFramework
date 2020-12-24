@@ -1,6 +1,4 @@
 ﻿using System;
-using Das.Views.Panels;
-using Das.Views.Templates;
 
 namespace Das.Views.Rendering
 {

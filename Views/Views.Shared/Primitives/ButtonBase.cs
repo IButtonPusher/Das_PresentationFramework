@@ -20,45 +20,45 @@ namespace Das.Views.Controls
         protected ButtonBase(IVisualBootstrapper visualBootstrapper)
         : base(visualBootstrapper)
         {
-            _currentStyleSelector = StyleSelector.None;
+            _currentVisualStateType = VisualStateType.None;
             _lastRenderSize = Size.Empty;
         }
 
         protected override Thickness? GetPadding(IStyleProvider styleContext)
         {
             return styleContext.GetStyleSetter<Thickness>(StyleSetterType.Padding,
-                CurrentStyleSelector, this);
+                CurrentVisualStateType, this);
         }
 
-        public StyleSelector CurrentStyleSelector
+        public VisualStateType CurrentVisualStateType
         {
-            get => _currentStyleSelector;
+            get => _currentVisualStateType;
         }
 
-        protected void AddStyleSelector(StyleSelector value)
+        protected void AddStyleSelector(VisualStateType value)
         {
-            var val = _currentStyleSelector == StyleSelector.None 
+            var val = _currentVisualStateType == VisualStateType.None 
             ? value : 
-            _currentStyleSelector | value;
+            _currentVisualStateType | value;
 
-            if (SetValue(ref _currentStyleSelector, val, OnCurrentSelectorChanged,
-                nameof(CurrentStyleSelector)))
+            if (SetValue(ref _currentVisualStateType, val, OnCurrentSelectorChanged,
+                nameof(CurrentVisualStateType)))
             {
                 InvalidateArrange();
             }
         }
 
-        protected void RemoveStyleSelector(StyleSelector value)
+        protected void RemoveStyleSelector(VisualStateType value)
         {
-            var val = _currentStyleSelector & ~value;
+            var val = _currentVisualStateType & ~value;
 
             if (val == 0)
             {
-                val = StyleSelector.None;
+                val = VisualStateType.None;
             }
 
-            SetValue(ref _currentStyleSelector, val, OnCurrentSelectorChanged,
-                nameof(CurrentStyleSelector));
+            SetValue(ref _currentVisualStateType, val, OnCurrentSelectorChanged,
+                nameof(CurrentVisualStateType));
         }
 
         public virtual Boolean OnInput(MouseClickEventArgs args)
@@ -85,7 +85,7 @@ namespace Das.Views.Controls
         {
             args.InputContext.TryCaptureMouseInput(this);
 
-            AddStyleSelector(StyleSelector.Active);
+            AddStyleSelector(VisualStateType.Active);
 
             if (ClickMode != ClickMode.Press || !(Command is {} cmd))
                 return true;
@@ -102,9 +102,9 @@ namespace Das.Views.Controls
         public virtual Boolean OnInput(MouseOverEventArgs args)
         {
             if (args.IsMouseOver)
-                AddStyleSelector(StyleSelector.Hover);
+                AddStyleSelector(VisualStateType.Hover);
             else
-                RemoveStyleSelector(StyleSelector.Hover);
+                RemoveStyleSelector(VisualStateType.Hover);
 
             return true;
         }
@@ -118,7 +118,7 @@ namespace Das.Views.Controls
 
         public virtual Boolean OnInput(MouseUpEventArgs args)
         {
-            RemoveStyleSelector(StyleSelector.Active);
+            RemoveStyleSelector(VisualStateType.Active);
             args.InputContext.TryReleaseMouseCapture(this);
 
             if (args.PositionWentDown != null && Math.Abs(args.PositionWentDown.X -
@@ -138,7 +138,7 @@ namespace Das.Views.Controls
 
         public IObservableCommand? Command { get; set; }
 
-        private void OnCurrentSelectorChanged(StyleSelector value)
+        private void OnCurrentSelectorChanged(VisualStateType value)
         {
             InvalidateArrange();
         }
@@ -150,6 +150,6 @@ namespace Das.Views.Controls
 
 
         private ClickMode _clickMode;
-        private StyleSelector _currentStyleSelector;
+        private VisualStateType _currentVisualStateType;
     }
 }

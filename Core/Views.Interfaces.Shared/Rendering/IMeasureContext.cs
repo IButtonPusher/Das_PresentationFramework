@@ -13,7 +13,7 @@ namespace Das.Views.Rendering
         /// </summary>
         ValueSize ContextBounds { get; }
 
-        IViewState? ViewState { get; }
+        IViewState ViewState { get; }
 
         /// <summary>
         /// Applies the amount needed by styles (margin, border) then
@@ -33,5 +33,7 @@ namespace Das.Views.Rendering
                                 IFont font);
 
         ValueSize GetStyleDesiredSize(IVisualElement element);
+
+        
     }
 }

@@ -18,8 +18,9 @@ namespace Das.Xamarin.Android
     {
         protected virtual IStyleContext GetStyleContext()
         {
-            return new BaseStyleContext(DefaultStyle.Instance,
-                new DefaultColorPalette());
+            return DefaultStyleContext.Instance;
+            //return new BaseStyleContext(DefaultStyle.Instance,
+            //    new DefaultColorPalette());
         }
 
         protected sealed override async void OnCreate(Bundle? savedInstanceState)

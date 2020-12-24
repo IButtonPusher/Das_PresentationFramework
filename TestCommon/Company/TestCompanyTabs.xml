@@ -19,7 +19,8 @@
       </ContentTemplate>
     </TabControl>
 
-    <ToggleButton Content="hello" />
+    <ToggleButton Content="hello"
+                  Class="pure-material-switch"/>
 
     <ToggleButton>
       <Template>

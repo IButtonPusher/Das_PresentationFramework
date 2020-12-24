@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Gdi.Controls;
 using Das.Gdi.Core;
@@ -7,10 +8,9 @@ using Das.Views;
 using Das.Views.Core.Geometry;
 using Das.Views.Winforms;
 
-
 namespace Das.Gdi
 {
-    public partial class ViewWindow : ViewForm, 
+    public partial class ViewWindow : ViewForm,
                                       IViewHost<Bitmap>
     {
         public ViewWindow(GdiHostedElement element) : base(element)
@@ -31,7 +31,11 @@ namespace Das.Gdi
             return GdiTypeConverter.GetPoint(point);
         }
 
-        private readonly GdiHostedElement _contents;
+        public Bitmap Asset
+        {
+            get => BackingBitmap;
+            set => BackingBitmap = value;
+        }
 
         public Bitmap BackingBitmap
         {
@@ -39,11 +43,6 @@ namespace Das.Gdi
             set => _contents.BackingBitmap = value;
         }
 
-        public Bitmap Asset
-        {
-            get => BackingBitmap;
-            set => BackingBitmap = value;
-        }
-
+        private readonly GdiHostedElement _contents;
     }
 }

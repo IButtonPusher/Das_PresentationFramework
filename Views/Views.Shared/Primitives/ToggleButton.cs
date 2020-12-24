@@ -22,27 +22,39 @@ namespace Das.Views.Controls
             return true;
         }
 
-        private Boolean? _isChecked;
+        public static readonly DependencyProperty<IToggleButton, Boolean?> IsCheckedProperty =
+            DependencyProperty<IToggleButton, Boolean?>.Register(
+                nameof(IsChecked),
+                default);
 
         public Boolean? IsChecked
         {
-            get => _isChecked;
-            set => SetValue(ref _isChecked, value, OnIsCheckedChanged);
+            get => IsCheckedProperty.GetValue(this);
+            set => IsCheckedProperty.SetValue(this, value, OnIsCheckedChanged);
         }
 
-        private void OnIsCheckedChanged(Boolean? value)
+
+        //private Boolean? _isChecked;
+
+        //public Boolean? IsChecked
+        //{
+        //    get => _isChecked;
+        //    set => SetValue(ref _isChecked, value, OnIsCheckedChanged);
+        //}
+
+        private void OnIsCheckedChanged(Boolean? oldValue,
+                                        Boolean? value)
         {
             switch (value)
             {
                 case true:
-                    AddStyleSelector(StyleSelector.Checked);
+                    AddStyleSelector(VisualStateType.Checked);
                     break;
 
                 case false:
-                    RemoveStyleSelector(StyleSelector.Checked);
+                    RemoveStyleSelector(VisualStateType.Checked);
                     break;
             }
-
 
         }
     }

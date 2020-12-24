@@ -27,7 +27,7 @@ namespace Das.Views
         
         SizeToContent SizeToContent { get; }
 
-        IStyleContext StyleContext { get; }
+        //IStyleContext StyleContext { get; }
 
         IVisualElement View { get; }
 

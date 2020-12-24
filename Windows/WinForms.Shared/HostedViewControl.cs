@@ -13,10 +13,11 @@ using Das.Views.Mvvm;
 
 namespace WinForms.Shared
 {
-    public abstract class HostedViewControl : HostedControl, 
-        IBoundElementContainer, IWindowsViewHost
+    public abstract class HostedViewControl : HostedControl,
+                                              IBoundElementContainer, 
+                                              IWindowsViewHost
     {
-        protected HostedViewControl(IVisualElement view, 
+        protected HostedViewControl(IVisualElement view,
                                     IStyleContext styleContext)
             : this(styleContext)
         {
@@ -30,28 +31,11 @@ namespace WinForms.Shared
             StyleContext = styleContext;
             _zoomLevel = 1;
         }
-     
-
-        //public event EventHandler? DataContextChanged;
-
-        //private Boolean _isChanged;
-        //private IViewModel? _dataContext;
 
         public IVisualElement View { get; protected set; }
 
         public IVisualElement Element { get; set; }
-        //public IViewModel? DataContext
-        //{
-        //    get => _dataContext;
-        //    set
-        //    {
-        //        _dataContext = value;
-        //        View.DataContext = value;
-        //        //View.SetDataContext(value);
-        //        //_isChanged = true;
-        //        DataContextChanged?.Invoke(this, EventArgs.Empty);
-        //    }
-        //}
+       
 
         public void SetView(IVisualElement view) => View = view;
 
@@ -74,30 +58,13 @@ namespace WinForms.Shared
             }
         }
 
-        public T GetStyleSetter<T>(StyleSetterType setterType, IVisualElement element)
-            => StyleContext.GetStyleSetter<T>(setterType, element);
-
-        public T GetStyleSetter<T>(StyleSetterType setterType, StyleSelector selector, IVisualElement element)
+        protected override void OnSizeChanged(EventArgs e)
         {
-            return StyleContext.GetStyleSetter<T>(setterType, selector, element);
-        }
+            base.OnSizeChanged(e);
 
-        public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetterType setterType, 
-                                        Object value)
-        {
-            StyleContext.RegisterStyleSetter(element, setterType, value);
+            View.Width = Width;
+            View.Height = Height;
         }
-
-        public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetterType setterType, 
-                                        StyleSelector selector, 
-                                        Object value)
-        {
-            StyleContext.RegisterStyleSetter(element, setterType, selector, value);
-        }
-
-        public IColorPalette ColorPalette => StyleContext.ColorPalette;
 
         public void AcceptChanges()
         {
@@ -105,7 +72,7 @@ namespace WinForms.Shared
             View.AcceptChanges(ChangeType.Arrange);
         }
 
-        public virtual Boolean IsChanged => View.IsRequiresMeasure || View.IsRequiresArrange;  //_isChanged;
+        public virtual Boolean IsChanged => View.IsRequiresMeasure || View.IsRequiresArrange; //_isChanged;
 
         public IPoint2D GetOffset(IPoint2D input)
         {

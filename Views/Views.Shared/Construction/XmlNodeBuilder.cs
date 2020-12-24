@@ -5,17 +5,15 @@ namespace Das.Views.Construction
 {
     public static class XmlNodeBuilder
     {
-        public static MarkupNode? GetMarkupNode(String xml,
-                                                Boolean isSkipScripts)
+        public static MarkupNode? GetMarkupNode(String xml)
         {
 
             var i = 0;
-            return GetMarkupNodeImpl(xml, ref i, isSkipScripts);
+            return GetMarkupNodeImpl(xml, ref i);
         }
 
         private static MarkupNode? GetMarkupNodeImpl(String xml,
-                                                  ref Int32 i,
-                                                  Boolean isSkipScripts)
+                                                  ref Int32 i)
         {
             var sbOuter = new StringBuilder();
             var sbInner = new StringBuilder();
@@ -108,7 +106,7 @@ namespace Das.Views.Construction
                             }
 
                             // opening tag
-                            GetTag(ref i, str, sbOuter, sbInner, ref currentTag, isSkipScripts);
+                            GetTag(ref i, str, sbOuter, sbInner, ref currentTag);
                         }
 
 
@@ -149,8 +147,7 @@ namespace Das.Views.Construction
                                    String str,
                                    StringBuilder sbOuter,
                                    StringBuilder sbInner,
-                                   ref MarkupNode? currentTag,
-                                   Boolean isSkipScripts)
+                                   ref MarkupNode? currentTag)
         {
             var next = str[i];
 

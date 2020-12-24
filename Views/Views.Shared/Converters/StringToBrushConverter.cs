@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
-using Das.Views.DataBinding;
 
 namespace Das.Views.Converters
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using Das.Views.DataBinding;
 
 namespace Das.Views.Panels
 {

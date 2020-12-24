@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views;
 using Das.Views.Core.Drawing;
 using Das.Views.Rendering;
@@ -13,37 +14,35 @@ namespace Gdi.Shared.Static
         {
             _defaultStyle = DefaultStyle.Instance;
             ZoomLevel = zoomLevel;
-            ColorPalette = colorPalette;//new DefaultColorPalette();
+            ColorPalette = colorPalette; //new DefaultColorPalette();
+            StyleContext = DefaultStyleContext.Instance;
         }
 
-        public T GetStyleSetter<T>(StyleSetterType setterType, 
+        public T GetStyleSetter<T>(StyleSetterType setterType,
                                    IVisualElement element)
         {
-            if (_defaultStyle[setterType] is T good)
-            {
-                return good;
-            }
+            if (_defaultStyle[setterType] is T good) return good;
 
             return default!;
         }
 
-        public T GetStyleSetter<T>(StyleSetterType setterType, 
-                                   StyleSelector selector, 
+        public T GetStyleSetter<T>(StyleSetterType setterType,
+                                   VisualStateType type,
                                    IVisualElement element)
         {
             return GetStyleSetter<T>(setterType, element);
         }
 
-        public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetterType setterType, 
+        public void RegisterStyleSetter(IVisualElement element,
+                                        StyleSetterType setterType,
                                         Object value)
         {
             throw new NotSupportedException();
         }
 
-        public void RegisterStyleSetter(IVisualElement element, 
-                                        StyleSetterType setterType, 
-                                        StyleSelector selector, 
+        public void RegisterStyleSetter(IVisualElement element,
+                                        StyleSetterType setterType,
+                                        VisualStateType type,
                                         Object value)
         {
             throw new NotSupportedException();
@@ -55,5 +54,7 @@ namespace Gdi.Shared.Static
         public Double ZoomLevel { get; }
 
         private readonly DefaultStyle _defaultStyle;
+
+        public IStyleContext StyleContext { get; }
     }
 }

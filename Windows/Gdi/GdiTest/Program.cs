@@ -76,7 +76,7 @@ namespace GdiTest
                 "company", "TestCompanyTabs.xml"));
 
             var xml = File.ReadAllText(file.FullName);
-            var view = inflater.InflateXml<IBindableElement>(xml);
+            var view = inflater.InflateXmlAsync<IBindableElement>(xml).Result;
 
             //return view;
             return new Das.Views.Panels.View(testLauncher.RenderKit.VisualBootstrapper)

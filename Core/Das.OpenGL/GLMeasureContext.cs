@@ -7,6 +7,7 @@ using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Measuring;
+using Das.Views.Rendering;
 using Das.Views.Styles;
 
 namespace Das.OpenGL
@@ -16,8 +17,9 @@ namespace Das.OpenGL
         public GLMeasureContext(IFontProvider fontProvider,
                                 IVisualSurrogateProvider surrogateProvider,
                                 Dictionary<IVisualElement, ValueSize> lastMeasurements,
-                                IStyleContext styleContext)
-        : base(surrogateProvider, lastMeasurements,styleContext)
+                                IStyleContext styleContext,
+                                IVisualLineage visualLineage)
+        : base(surrogateProvider, lastMeasurements,styleContext, visualLineage)
         {
             _fontProvider = fontProvider;
         }

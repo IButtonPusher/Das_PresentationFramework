@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Das.Views.Styles.Declarations.Transition
+{
+    public class TransitionFunctionDeclaration : EnumDeclaration<TransitionFunctionType>
+    {
+        public TransitionFunctionDeclaration(String value, 
+                                             TransitionFunctionType defaultValue, 
+                                             IStyleVariableAccessor variableAccessor) 
+            : base(value, defaultValue, variableAccessor, DeclarationProperty.TransitionTimingFunction)
+        {
+        }
+        
+        public TransitionFunctionDeclaration(TransitionFunctionType value, 
+                                             IStyleVariableAccessor variableAccessor) 
+            : base(value, variableAccessor, DeclarationProperty.TransitionTimingFunction)
+        {
+        }
+    }
+}

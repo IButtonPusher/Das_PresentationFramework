@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Extensions;
+// ReSharper disable UnusedMember.Global
 
 namespace Das.Views.Core.Geometry
 {
@@ -53,6 +54,19 @@ namespace Das.Views.Core.Geometry
         public ValueSize PlusVertical(ISize adding)
         {
             return GeometryHelper.PlusVertical(this, adding);
+        }
+
+        /// <summary>
+        /// Returns a ValueSize with the minimum value of width and height between this
+        /// object and the provided parameter value
+        /// </summary>
+        public ValueSize LeastCommonDenominator(ISize other)
+        {
+            if (IsEmpty || other.IsEmpty)
+                return Empty;
+
+            return new ValueSize(Math.Min(Width, other.Width),
+                Math.Min(Height, other.Height));
         }
 
         ISize ISize.PlusVertical(ISize adding)

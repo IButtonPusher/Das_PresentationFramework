@@ -1,10 +1,7 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Das.Views.Controls;
-using Das.Views.Core.Drawing;
-using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Mvvm;
 using Das.Views.Rendering;
@@ -15,47 +12,37 @@ using TaskEx = System.Threading.Tasks.Task;
 
 namespace Das.Views
 {
-    public abstract class VisualElement : NotifyPropertyChangedBase,
-                                          IVisualElement
+    public abstract partial class VisualElement : NotifyPropertyChangedBase,
+                                                  IVisualElement
     {
         protected VisualElement(IVisualBootstrapper visualBootstrapper)
         {
             _visualBootstrapper = visualBootstrapper;
+            _styleClasses = new HashSet<String>();
+            _measuredSize = ValueSize.Empty;
             Id = Interlocked.Increment(ref _currentId);
-        }
-
-        protected Boolean TryGetSize(out ValueSize size)
-        {
-            var width = Width;
-            if (width == null || width == 0)
-            {
-                size = ValueSize.Empty;
-                return false;
-            }
-
-            var height = Height;
-            if (height == null || height == 0)
-            {
-                size = ValueSize.Empty;
-                return false;
-            }
-
-            size = new ValueSize(width.Value, height.Value);
-            return true;
         }
 
         public virtual ValueSize Measure(IRenderSize availableSpace,
                                          IMeasureContext measureContext)
         {
-            TryGetSize(out var size);
-            return size;
+            measureContext.TryGetElementSize(this, out _measuredSize);
+            //TryGetSize(out var size);
+            return _measuredSize;
         }
 
         public virtual void Arrange(IRenderSize availableSpace,
                                     IRenderContext renderContext)
         {
-            if (TryGetSize(out var size))
-                renderContext.DrawContentElement(this, size);
+            if (_measuredSize.IsEmpty)
+                return;
+
+            var letsUse = _measuredSize.LeastCommonDenominator(availableSpace);
+
+            if (letsUse.IsEmpty)
+                return;
+
+            renderContext.DrawContentElement(this, letsUse);
         }
 
         public virtual void InvalidateMeasure()
@@ -67,32 +54,6 @@ namespace Das.Views
         public virtual void InvalidateArrange()
         {
             IsRequiresArrange = true;
-        }
-
-        public virtual Boolean IsRequiresMeasure
-        {
-            get => _isRequiresMeasure;
-            protected set => SetValue(ref _isRequiresMeasure, value);
-        }
-
-        public virtual Boolean IsRequiresArrange
-        {
-            get => _isRequiresArrange;
-            protected set => SetValue(ref _isRequiresArrange, value);
-        }
-
-
-        public virtual Int32 Id { get; private set; }
-
-        public virtual Boolean IsClipsContent { get; set; }
-
-        public event Action<IVisualElement>? Disposed;
-
-        public virtual IVisualTemplate? Template
-        {
-            get => _template;
-            // ReSharper disable once UnusedMember.Global
-            set => SetValue(ref _template, value);
         }
 
         public virtual void AcceptChanges(ChangeType changeType)
@@ -133,89 +94,42 @@ namespace Das.Views
             return ReferenceEquals(this, other);
         }
 
-        public Double? Width
+        public virtual Boolean IsMarkupNameAlias(String markupTag)
         {
-            get => WidthProperty.GetValue(this);
-            set => WidthProperty.SetValue(this, value);
+            return false;
         }
 
-        public Double? Height
-        {
-            get => HeightProperty.GetValue(this);
-            set => HeightProperty.SetValue(this, value);
-        }
-
-        public HorizontalAlignments HorizontalAlignment
-        {
-            get => HorizontalAlignmentProperty.GetValue(this);
-            set => HorizontalAlignmentProperty.SetValue(this, value);
-        }
-
-        public VerticalAlignments VerticalAlignment
-        {
-            get => VerticalAlignmentProperty.GetValue(this);
-            set => VerticalAlignmentProperty.SetValue(this, value);
-        }
-
-        public IBrush? Background
-        {
-            get => BackgroundProperty.GetValue(this);
-            set => BackgroundProperty.SetValue(this, value);
-        }
-
-        public Thickness? Margin
-        {
-            get => MarginProperty.GetValue(this);
-            set => MarginProperty.SetValue(this, value);
-        }
-
-        // ReSharper disable once UnusedMember.Global
-        public virtual Boolean IsEnabled
-        {
-            get => _isEnabled;
-            set => SetValue(ref _isEnabled, value);
-        }
 
         public override String ToString()
         {
-            return GetType().Name + " req arrange: " + IsRequiresArrange + 
+            return GetType().Name + " req arrange: " + IsRequiresArrange +
                    " measure: " + IsRequiresMeasure;
         }
 
+        //protected Boolean TryGetSize(out ValueSize size)
+        //{
+        //    var width = Width;
+        //    if (width == null || width == 0)
+        //    {
+        //        size = ValueSize.Empty;
+        //        return false;
+        //    }
+
+        //    var height = Height;
+        //    if (height == null || height == 0)
+        //    {
+        //        size = ValueSize.Empty;
+        //        return false;
+        //    }
+
+        //    size = new ValueSize(width.Value, height.Value);
+        //    return true;
+        //}
+
         private static Int32 _currentId;
+        private ValueSize _measuredSize;
 
-
-        public static readonly DependencyProperty<IVisualElement, Double?> WidthProperty =
-            DependencyProperty<IVisualElement, Double?>.Register(nameof(Width), null);
-
-        public static readonly DependencyProperty<IVisualElement, Double?> HeightProperty =
-            DependencyProperty<IVisualElement, Double?>.Register(nameof(Height), null);
-
-
-        public static readonly DependencyProperty<IVisualElement, VerticalAlignments> VerticalAlignmentProperty =
-            DependencyProperty<IVisualElement, VerticalAlignments>.Register(nameof(VerticalAlignment),
-                VerticalAlignments.Default);
-
-        public static readonly DependencyProperty<IVisualElement, HorizontalAlignments> HorizontalAlignmentProperty =
-            DependencyProperty<IVisualElement, HorizontalAlignments>.Register(nameof(HorizontalAlignment),
-                HorizontalAlignments.Default);
-
-        public static readonly DependencyProperty<IVisualElement, IBrush?> BackgroundProperty =
-            DependencyProperty<IVisualElement, IBrush?>.Register(nameof(Background), default);
-
-        public static readonly DependencyProperty<IVisualElement, Thickness?> MarginProperty =
-            DependencyProperty<IVisualElement, Thickness?>.Register(nameof(Margin),
-                null);
 
         protected readonly IVisualBootstrapper _visualBootstrapper;
-
-
-        private Boolean _isEnabled;
-
-
-        private Boolean _isRequiresArrange;
-        private Boolean _isRequiresMeasure;
-
-        private IVisualTemplate? _template;
     }
 }

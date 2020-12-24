@@ -67,10 +67,10 @@ namespace Das.Views
             newItems(news);
         }
 
-        public static Boolean Contains(this StyleSelector selector,
-                                       StyleSelector value)
+        public static Boolean Contains(this VisualStateType type,
+                                       VisualStateType value)
         {
-            return (selector & value) > StyleSelector.Active;
+            return (type & value) > VisualStateType.Active;
         }
     }
 }

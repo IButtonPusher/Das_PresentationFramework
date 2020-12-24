@@ -1,11 +1,15 @@
 ﻿using System;
+using Das.Views.Construction.Styles;
 
 namespace Das.Views.Styles
 {
     public class DefaultStyleContext : BaseStyleContext
     {
-        public DefaultStyleContext() : base(DefaultStyle.Instance,
-            new DefaultColorPalette())
+        public static readonly DefaultStyleContext Instance = new DefaultStyleContext();
+        
+        
+        private DefaultStyleContext() : base(DefaultStyle.Instance,
+            new DefaultColorPalette(), new StyleVariableAccessor())
         {
         }
     }

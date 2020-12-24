@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Das.Extensions;
@@ -21,11 +20,12 @@ namespace Das.Views.Rendering
        
         protected BaseRenderContext(IViewPerspective perspective,
                                     IVisualSurrogateProvider surrogateProvider,
-                                    IStyleContext styleContext)
+                                    IStyleContext styleContext,
+                                    IVisualLineage visualLineage)
         : this(perspective, surrogateProvider, 
             new Dictionary<IVisualElement, ValueCube>(),
             new Dictionary<IVisualElement, ValueSize>(),
-            styleContext)
+            styleContext, visualLineage)
         {
            
         }
@@ -34,8 +34,9 @@ namespace Das.Views.Rendering
                                     IVisualSurrogateProvider surrogateProvider,
                                     Dictionary<IVisualElement, ValueCube> renderPositions,
                                     Dictionary<IVisualElement, ValueSize> lastMeasurements,
-                                    IStyleContext styleContext)
-        : base(lastMeasurements, styleContext, surrogateProvider)
+                                    IStyleContext styleContext,
+                                    IVisualLineage visualLineage)
+        : base(lastMeasurements, styleContext, surrogateProvider, visualLineage)
         {
             
 
@@ -243,7 +244,7 @@ namespace Das.Views.Rendering
             {
                 ViewState = viewState;
                 
-                FillRectangle(rect, viewState.ColorPalette.Background);
+                FillRectangle(rect, viewState.StyleContext.ColorPalette.Background);
                 
                 LastRenderPositions.Clear();
                 foreach (var kvp in RenderPositions)
@@ -276,22 +277,26 @@ namespace Das.Views.Rendering
                                                         TRenderRectangle rect)
             where TRenderRectangle : IRenderRectangle
         {
-            _styleContext.PushVisual(element2);
+            VisualLineage.PushVisual(element2);
+            //_styleContext.PushVisual(element2);
 
             var element = GetElementForLayout(element2);
+            
+            var styles = ViewState.StyleContext;
             
             //_surrogateProvider.EnsureSurrogate(ref element);
             //if (element.Template is {Content: { } validTemplateContent})
             //    element = validTemplateContent;
 
             var selector = element is IInteractiveView interactive
-                ? interactive.CurrentStyleSelector
-                : StyleSelector.None;
+                ? interactive.CurrentVisualStateType
+                : VisualStateType.None;
 
-            var border = GetStyleSetter<Thickness>(StyleSetterType.BorderThickness, 
-                selector, element);
+            var border = styles.GetStyleSetter<Thickness>(StyleSetterType.BorderThickness, 
+                selector, element, VisualLineage);
 
-            var margin =  element.Margin ?? GetStyleSetter<Thickness>(StyleSetterType.Margin, element);
+            var margin =  element.Margin ?? styles.GetStyleSetter<Thickness>(StyleSetterType.Margin, 
+                element, VisualLineage);
 
             _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
 
@@ -302,11 +307,12 @@ namespace Das.Views.Rendering
 
             useRect.Update(rect, CurrentElementRect.Offset, margin, border);
 
-            var radius = GetStyleSetter<Double>(StyleSetterType.BorderRadius, selector, element);
+            var radius = styles.GetStyleSetter<Double>(StyleSetterType.BorderRadius, 
+                selector, element, VisualLineage);
 
             var background = element.Background ??
-                             GetStyleSetter<SolidColorBrush>(StyleSetterType.Background, 
-                selector, element);
+                             styles.GetStyleSetter<SolidColorBrush>(StyleSetterType.Background, 
+                selector, element, VisualLineage);
             if (!background.IsInvisible)
             {
                 if (radius.IsZero())
@@ -317,7 +323,8 @@ namespace Das.Views.Rendering
 
             if (!border.IsEmpty)
             {
-                var brush = GetStyleSetter<IBrush>(StyleSetterType.BorderBrush, selector, element);
+                var brush = styles.GetStyleSetter<IBrush>(StyleSetterType.BorderBrush, selector, 
+                    element, VisualLineage);
                 OnDrawBorder(useRect, border, brush, radius);
             }
 
@@ -359,7 +366,8 @@ namespace Das.Views.Rendering
             if (element.IsClipsContent && !useRect.IsEmpty)
                 PopClip(useRect);
 
-            _styleContext.PopVisual();
+            VisualLineage.PopVisual();
+            //_styleContext.PopVisual();
 
             element2.AcceptChanges(ChangeType.Arrange);
 

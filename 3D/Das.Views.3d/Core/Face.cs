@@ -4,7 +4,9 @@ namespace Das.Views.Extended
 {
     public struct Face
     {
-        public Face(Int32 a, Int32 b, Int32 c)
+        public Face(Int32 a, 
+                    Int32 b, 
+                    Int32 c)
         {
             A = a;
             B = b;

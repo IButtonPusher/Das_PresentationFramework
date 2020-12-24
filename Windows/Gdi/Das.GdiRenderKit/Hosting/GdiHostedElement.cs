@@ -1,21 +1,20 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Views;
-using Das.Views.Panels;
 using Das.Views.Styles;
 using WinForms.Shared;
 
 namespace Das.Gdi.Controls
 {
     /// <summary>
-    /// Control to show an IView in windows forms using GDI rendering
+    ///     Control to show an IView in windows forms using GDI rendering
     /// </summary>
-    public class GdiHostedElement : HostedViewControl, 
-        IViewHost<Bitmap>
+    public class GdiHostedElement : HostedViewControl,
+                                    IViewHost<Bitmap>
     {
-        public GdiHostedElement(IVisualElement view, 
+        public GdiHostedElement(IVisualElement view,
                                 IStyleContext styleContext)
             : base(view, styleContext)
         {
@@ -23,36 +22,18 @@ namespace Das.Gdi.Controls
             _lockBmp = new Object();
         }
 
-        //public GdiHostedElement(IStyleContext styleContext) : 
-        //    base(styleContext)
-        //{
-        //    _lockBmp = new Object();
-        //}
-        
         public override Boolean IsLoaded => true;
-        
-        private readonly Object _lockBmp;
 
-        protected override void OnPaint(PaintEventArgs e)
+        public Bitmap Asset
         {
-            base.OnPaint(e);
-
-            lock (_lockBmp)
-            {
-                if (BackingBitmap == null)
-                    return;
-
-                _isChanged = false;
-
-                AvailableSize.Width = Width;
-                AvailableSize.Height = Height;
-
-                e.Graphics.DrawImage(BackingBitmap, Point.Empty);
-            }
+            get => BackingBitmap!;
+            set => BackingBitmap = value;
         }
-       
-        private Bitmap? _backingBitmap;
-        private Boolean _isChanged;
+
+        //todo: base on IView after changing element to IView type _
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        public override Boolean IsChanged => View != null && (_isChanged //|| View.IsChanged 
+                                                              || base.IsChanged);
 
         public Bitmap? BackingBitmap
         {
@@ -75,15 +56,27 @@ namespace Das.Gdi.Controls
             }
         }
 
-        public Bitmap Asset
+        protected override void OnPaint(PaintEventArgs e)
         {
-            get => BackingBitmap!;
-            set => BackingBitmap = value;
+            base.OnPaint(e);
+
+            lock (_lockBmp)
+            {
+                if (BackingBitmap == null)
+                    return;
+
+                _isChanged = false;
+
+                AvailableSize.Width = Width;
+                AvailableSize.Height = Height;
+
+                e.Graphics.DrawImage(BackingBitmap, Point.Empty);
+            }
         }
 
-        //todo: base on IView after changing element to IView type _
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-        public override Boolean IsChanged => View != null && (_isChanged //|| View.IsChanged 
-                                                                         || base.IsChanged);
+        private readonly Object _lockBmp;
+
+        private Bitmap? _backingBitmap;
+        private Boolean _isChanged;
     }
 }

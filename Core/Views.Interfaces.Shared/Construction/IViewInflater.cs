@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Das.Views.Rendering;
 
 namespace Das.Views.Construction
 {
@@ -10,7 +9,7 @@ namespace Das.Views.Construction
         /// <summary>
         /// Loads a visual element of the specific type from the provided xml
         /// </summary>
-        TVisualElement InflateXml<TVisualElement>(String xml)
+        Task<TVisualElement> InflateXmlAsync<TVisualElement>(String xml)
             where TVisualElement : IVisualElement;
         
         
@@ -23,8 +22,8 @@ namespace Das.Views.Construction
         /// <param name="namespaceHints">A dictionary where keys are namespaces and values are
         /// assemblies in which they are located</param>
         /// <returns></returns>
-        TVisualElement InflateXml<TVisualElement>(String xml,
-                                                  IDictionary<String, String> namespaceHints)
+        Task<TVisualElement> InflateXmlAsync<TVisualElement>(String xml,
+                                                       IDictionary<String, String> namespaceHints)
             where TVisualElement : IVisualElement;
 
         Task<TVisualElement> InflateResourceXmlAsync<TVisualElement>(String resourceName)
@@ -32,9 +31,9 @@ namespace Das.Views.Construction
 
         Task<IVisualElement> InflateResourceXmlAsync(String resourceName);
 
-        IVisualElement InflateXml(String xml);
+        Task<IVisualElement> InflateXmlAsync(String xml);
         
-        IVisualElement InflateXml(String xml,
-                                  IDictionary<String, String> namespaceHints);
+        Task<IVisualElement> InflateXmlAsync(String xml,
+                                       IDictionary<String, String> namespaceHints);
     }
 }

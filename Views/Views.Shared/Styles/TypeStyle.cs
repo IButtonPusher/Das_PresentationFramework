@@ -13,7 +13,7 @@ namespace Das.Views.Styles
         }
     }
 
-    public abstract class TypeStyle : CascadingStyleSheet
+    public abstract class TypeStyle : StyleSheet
     {
         protected TypeStyle(Type targetType)
         {

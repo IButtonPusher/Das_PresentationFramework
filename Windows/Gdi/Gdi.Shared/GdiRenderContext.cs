@@ -25,9 +25,10 @@ namespace Das.Gdi
                                 IVisualSurrogateProvider surrogateProvider,
                                 Dictionary<IVisualElement, ValueSize> lastMeasures,
                                 Dictionary<IVisualElement, ValueCube> renderPositions,
-                                IStyleContext styleContext)
+                                IStyleContext styleContext,
+                                IVisualLineage visualLineage)
             : base(perspective, surrogateProvider, renderPositions,
-                lastMeasures, styleContext)
+                lastMeasures, styleContext, visualLineage)
         {
             _testPen = new Pen(Color.Yellow, 1);
             Graphics = nullGraphics;

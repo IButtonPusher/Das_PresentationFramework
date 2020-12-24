@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Das.Views.Construction
 {
-    public class MarkupNode : IMarkupNode
+    public abstract class MarkupNode : IMarkupNode
     {
-        public MarkupNode(String name,
-                          MarkupNode? parent, 
-                          Boolean isEncodingHeader,
-                          MarkupLanguage language)
+        protected MarkupNode(String name,
+                             MarkupNode? parent, 
+                             Boolean isEncodingHeader,
+                             MarkupLanguage language)
         {
             Name = name;
             Children = new List<MarkupNode>();

@@ -6,7 +6,11 @@ namespace Das.Views.Styles
     public class DefaultColorPalette : ColorPalette
     {
         public DefaultColorPalette() 
-            : base(SolidColorBrush.Green, SolidColorBrush.White)
+            : base(SolidColorBrush.Pink,
+                SolidColorBrush.White,
+                SolidColorBrush.White,
+                SolidColorBrush.White,
+                SolidColorBrush.Green)
         {
         }
     }

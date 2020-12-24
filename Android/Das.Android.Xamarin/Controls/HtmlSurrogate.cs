@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Android.Content;
 using Android.Views;
 using Android.Webkit;
 using Das.Views;
 using Das.Views.Controls;
+using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
@@ -14,15 +17,11 @@ using Das.Views.Templates;
 namespace Das.Xamarin.Android.Controls
 {
     public class HtmlSurrogate : WebView,
-                                  IVisualSurrogate
+                                 IVisualSurrogate
     {
-        private readonly HtmlPanel _htmlPanel;
-        private readonly ViewGroup _viewGroup;
-        private Boolean _hasPendingContent;
-
-        public HtmlSurrogate(HtmlPanel htmlPanel, 
-                              Context? context,
-                              ViewGroup viewGroup) 
+        public HtmlSurrogate(HtmlPanel htmlPanel,
+                             Context? context,
+                             ViewGroup viewGroup)
             : base(context)
         {
             _htmlPanel = htmlPanel;
@@ -32,10 +31,9 @@ namespace Das.Xamarin.Android.Controls
             _hasPendingContent = htmlPanel.Markup != null || htmlPanel.Uri != null;
         }
 
-        public ValueSize Measure(IRenderSize availableSpace, 
+        public ValueSize Measure(IRenderSize availableSpace,
                                  IMeasureContext measureContext)
         {
-            //System.Diagnostics.Debug.WriteLine("measure html surrogate");
             return availableSpace.ToValueSize();
         }
 
@@ -65,28 +63,7 @@ namespace Das.Xamarin.Android.Controls
                 else if (_htmlPanel.Uri != null)
                     LoadUrl(_htmlPanel.Uri.AbsoluteUri);
             }
-            //System.Diagnostics.Debug.WriteLine("arrange html surrogate");
-        }
 
-        private void OnControlPropertyChanged(Object sender,
-                                              PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(HtmlPanel.Parent):
-                    OnParentChanging(_htmlPanel.Parent);
-                    break;
-
-                case nameof(HtmlPanel.Markup):
-                   
-                    LoadData(_htmlPanel.Markup, "text/html; charset=utf-8", "UTF-8");
-                    break;
-
-                case nameof(HtmlPanel.Uri):
-                    if (_htmlPanel.Uri != null)
-                        LoadUrl(_htmlPanel.Uri.AbsoluteUri);
-                    break;
-            }
         }
 
         public event Action<IVisualElement>? Disposed;
@@ -95,7 +72,7 @@ namespace Das.Xamarin.Android.Controls
 
         public void AcceptChanges(ChangeType changeType)
         {
-            ((IVisualElement) _htmlPanel).AcceptChanges(changeType);
+            _htmlPanel.AcceptChanges(changeType);
         }
 
         public void RaisePropertyChanged(String propertyName, Object? value)
@@ -117,14 +94,14 @@ namespace Das.Xamarin.Android.Controls
 
         public HorizontalAlignments HorizontalAlignment
         {
-            get => ((IVisualElement) _htmlPanel).HorizontalAlignment;
-            set => ((IVisualElement) _htmlPanel).HorizontalAlignment = value;
+            get => _htmlPanel.HorizontalAlignment;
+            set => _htmlPanel.HorizontalAlignment = value;
         }
 
         public VerticalAlignments VerticalAlignment
         {
-            get => ((IVisualElement) _htmlPanel).VerticalAlignment;
-            set => ((IVisualElement) _htmlPanel).VerticalAlignment = value;
+            get => _htmlPanel.VerticalAlignment;
+            set => _htmlPanel.VerticalAlignment = value;
         }
 
         IBrush? IVisualElement.Background
@@ -139,30 +116,41 @@ namespace Das.Xamarin.Android.Controls
             set => _htmlPanel.Margin = value;
         }
 
-        protected override void Dispose(Boolean disposing)
+        public ISet<String> StyleClasses => _htmlPanel.StyleClasses;
+
+        public Double Opacity => _htmlPanel.Opacity;
+
+        Visibility IVisualElement.Visibility => _htmlPanel.Visibility;
+
+        public Boolean IsEnabled
         {
-            base.Dispose(disposing);
-            Disposed?.Invoke(this);
+            get => _htmlPanel.IsEnabled;
+            set => _htmlPanel.IsEnabled = value;
         }
+
+        public Boolean IsMarkupNameAlias(String markupTag)
+        {
+            return _htmlPanel.IsMarkupNameAlias(markupTag);
+        }
+
+        public Int32 ZIndex => _htmlPanel.ZIndex;
 
         public Boolean IsClipsContent
         {
-            get => ((IVisualElement) _htmlPanel).IsClipsContent;
-            set => ((IVisualElement) _htmlPanel).IsClipsContent = value;
+            get => _htmlPanel.IsClipsContent;
+            set => _htmlPanel.IsClipsContent = value;
         }
 
         public void OnParentChanging(IVisualElement? newParent)
         {
             if (newParent == null)
-            {
                 _viewGroup.RemoveView(this);
-            }
             else _viewGroup.AddView(this);
         }
 
         public Boolean Equals(IVisualElement other)
         {
-            return ReferenceEquals(this, other) ||  _htmlPanel.Equals(other);
+            return ReferenceEquals(this, other) || _htmlPanel.Equals(other);
         }
 
         public event PropertyChangedEventHandler PropertyChanged
@@ -172,5 +160,36 @@ namespace Das.Xamarin.Android.Controls
         }
 
         public IVisualElement ReplacingVisual => _htmlPanel;
+
+        protected override void Dispose(Boolean disposing)
+        {
+            base.Dispose(disposing);
+            Disposed?.Invoke(this);
+        }
+
+        private void OnControlPropertyChanged(Object sender,
+                                              PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(HtmlPanel.Parent):
+                    OnParentChanging(_htmlPanel.Parent);
+                    break;
+
+                case nameof(HtmlPanel.Markup):
+
+                    LoadData(_htmlPanel.Markup, "text/html; charset=utf-8", "UTF-8");
+                    break;
+
+                case nameof(HtmlPanel.Uri):
+                    if (_htmlPanel.Uri != null)
+                        LoadUrl(_htmlPanel.Uri.AbsoluteUri);
+                    break;
+            }
+        }
+
+        private readonly HtmlPanel _htmlPanel;
+        private readonly ViewGroup _viewGroup;
+        private Boolean _hasPendingContent;
     }
 }

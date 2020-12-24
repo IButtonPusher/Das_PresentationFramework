@@ -143,7 +143,7 @@ namespace Das.Views.Input
                         element is IHandleInput<MouseDownEventArgs> leftDowner)
                     {
                         _handledMouseDown = leftDowner;
-                        if (element.CurrentStyleSelector.Contains(StyleSelector.Active))
+                        if (element.CurrentVisualStateType.Contains(VisualStateType.Active))
                             _mouseActiveElement = leftDowner;
                     }
 

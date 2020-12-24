@@ -12,7 +12,7 @@ namespace Das.Views.Rendering
     {
         IViewPerspective Perspective { get; }
 
-        IViewState? ViewState { get; }
+        IViewState ViewState { get; }
 
         /// <summary>
         ///     Returns the actual rectangle occupied by the element, including borders etc

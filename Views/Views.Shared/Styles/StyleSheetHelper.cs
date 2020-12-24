@@ -12,11 +12,11 @@ namespace Das.Views.Styles
                 yield return item;
             }
 
-            foreach (var kvp in styleSheet.VisualTypeStyles)
-            {
-                foreach (var childSetter in kvp.Value.StyleSetters)
-                    yield return childSetter;
-            }
+            //foreach (var kvp in styleSheet.VisualTypeStyles)
+            //{
+            //    foreach (var childSetter in kvp.Value.StyleSetters)
+            //        yield return childSetter;
+            //}
         }
     }
 }

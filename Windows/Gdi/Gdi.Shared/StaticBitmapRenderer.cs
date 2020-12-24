@@ -18,7 +18,6 @@ namespace Das.Gdi
                                        ValueRenderSize availableSize,
                                        IColorPalette colorPalette)
         {
-
             var viewState = new StaticViewState(dpi, colorPalette);
 
 

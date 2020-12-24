@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Views.Controls;
+using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
@@ -20,7 +22,7 @@ namespace Das.Views.Gdi.Controls
         {
             if (!(element is HtmlPanel valid))
                 throw new InvalidCastException();
-            _element = element;
+            ReplacingVisual = element;
             _hostingControl = hostingControl;
 
             _htmlPanel = valid;
@@ -30,8 +32,6 @@ namespace Das.Views.Gdi.Controls
             if (valid.Markup != null)
                 DocumentText = valid.Markup;
         }
-
-        public Type ReplacesType => typeof(HtmlPanel);
 
         public ValueSize Measure(IRenderSize availableSpace,
                                  IMeasureContext measureContext)
@@ -56,7 +56,7 @@ namespace Das.Views.Gdi.Controls
         public void Arrange(IRenderSize availableSpace,
                             IRenderContext renderContext)
         {
-            var cube = renderContext.TryGetElementBounds(_element);
+            var cube = renderContext.TryGetElementBounds(ReplacingVisual);
 
             BeginInvoke((Action) (() =>
             {
@@ -68,14 +68,13 @@ namespace Das.Views.Gdi.Controls
             }));
         }
 
-        
 
         public Int32 Id => -1;
 
         public Boolean IsClipsContent
         {
-            get => ((IVisualElement) _htmlPanel).IsClipsContent;
-            set => ((IVisualElement) _htmlPanel).IsClipsContent = value;
+            get => _htmlPanel.IsClipsContent;
+            set => _htmlPanel.IsClipsContent = value;
         }
 
         public new event Action<IVisualElement>? Disposed;
@@ -87,6 +86,88 @@ namespace Das.Views.Gdi.Controls
             else if (!_hostingControl.Controls.Contains(this))
                 _hostingControl.Controls.Add(this);
         }
+
+        IVisualTemplate? ITemplatableVisual.Template => default;
+
+        public void AcceptChanges(ChangeType changeType)
+        {
+            _htmlPanel.AcceptChanges(changeType);
+        }
+
+        public void RaisePropertyChanged(String propertyName,
+                                         Object? value)
+        {
+            _htmlPanel.RaisePropertyChanged(propertyName, value);
+        }
+
+
+        Double? IVisualElement.Width
+        {
+            get => _htmlPanel.Width;
+            set => _htmlPanel.Width = value;
+        }
+
+        Double? IVisualElement.Height
+        {
+            get => _htmlPanel.Height;
+            set => _htmlPanel.Height = value;
+        }
+
+        public HorizontalAlignments HorizontalAlignment
+        {
+            get => _htmlPanel.HorizontalAlignment;
+            set => _htmlPanel.HorizontalAlignment = value;
+        }
+
+        public VerticalAlignments VerticalAlignment
+        {
+            get => _htmlPanel.VerticalAlignment;
+            set => _htmlPanel.VerticalAlignment = value;
+        }
+
+        public IBrush? Background
+        {
+            get => _htmlPanel.Background;
+            set => _htmlPanel.Background = value;
+        }
+
+        Thickness? IVisualElement.Margin
+        {
+            get => _htmlPanel.Margin;
+            set => _htmlPanel.Margin = value;
+        }
+
+        public ISet<String> StyleClasses => _htmlPanel.StyleClasses;
+
+        public Double Opacity => _htmlPanel.Opacity;
+
+        public Visibility Visibility => _htmlPanel.Visibility;
+
+        public Boolean IsEnabled
+        {
+            get => _htmlPanel.IsEnabled;
+            set => _htmlPanel.IsEnabled = value;
+        }
+
+        public Boolean IsMarkupNameAlias(String markupTag)
+        {
+            return _htmlPanel.IsMarkupNameAlias(markupTag);
+        }
+
+        public Int32 ZIndex => _htmlPanel.ZIndex;
+
+        public Boolean Equals(IVisualElement other)
+        {
+            return ReferenceEquals(this, other) || _htmlPanel.Equals(other);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add => _htmlPanel.PropertyChanged += value;
+            remove => _htmlPanel.PropertyChanged -= value;
+        }
+
+        public IVisualElement ReplacingVisual { get; }
 
         protected override void Dispose(Boolean disposing)
         {
@@ -115,72 +196,8 @@ namespace Das.Views.Gdi.Controls
             }
         }
 
-        IVisualTemplate? ITemplatableVisual.Template => default;
-
-        public void AcceptChanges(ChangeType changeType)
-        {
-            ((IVisualElement) _htmlPanel).AcceptChanges(changeType);
-        }
-
-        public void RaisePropertyChanged(String propertyName, 
-                                         Object? value)
-        {
-            _htmlPanel.RaisePropertyChanged(propertyName, value);
-        }
-
-      
-        Double? IVisualElement.Width
-        {
-            get => ((IVisualElement) _htmlPanel).Width;
-            set => ((IVisualElement) _htmlPanel).Width = value;
-        }
-
-        Double? IVisualElement.Height
-        {
-            get => _htmlPanel.Height;
-            set => _htmlPanel.Height = value;
-        }
-
-        public HorizontalAlignments HorizontalAlignment
-        {
-            get => ((IVisualElement) _htmlPanel).HorizontalAlignment;
-            set => ((IVisualElement) _htmlPanel).HorizontalAlignment = value;
-        }
-
-        public VerticalAlignments VerticalAlignment
-        {
-            get => ((IVisualElement) _htmlPanel).VerticalAlignment;
-            set => ((IVisualElement) _htmlPanel).VerticalAlignment = value;
-        }
-
-        public IBrush? Background
-        {
-            get => _htmlPanel.Background;
-            set => _htmlPanel.Background = value;
-        }
-
-        Thickness? IVisualElement.Margin
-        {
-            get => _htmlPanel.Margin;
-            set => _htmlPanel.Margin = value;
-        }
-
         private readonly WebBrowser _browser;
-        private readonly IVisualElement _element;
         private readonly Control _hostingControl;
         private readonly HtmlPanel _htmlPanel;
-
-        public Boolean Equals(IVisualElement other)
-        {
-            return ReferenceEquals(this, other) ||  _htmlPanel.Equals(other);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged
-        {
-            add => _htmlPanel.PropertyChanged += value;
-            remove => _htmlPanel.PropertyChanged -= value;
-        }
-
-        public IVisualElement ReplacingVisual => _element;
     }
 }

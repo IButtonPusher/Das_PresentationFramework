@@ -2,9 +2,6 @@
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
-using Das.Views.DataBinding;
-using Das.Views.ItemsControls;
-using Das.Views.Rendering;
 using Das.Views.Styles;
 
 namespace Das.Views.Defaults
@@ -36,13 +33,13 @@ namespace Das.Views.Defaults
             _visualBootstrapper.StyleContext.RegisterStyleSetter(btn, StyleSetterType.BorderBrush,
                 SolidColorBrush.Tranparent);
             _visualBootstrapper.StyleContext.RegisterStyleSetter(btn, StyleSetterType.Background,
-                StyleSelector.Active, SolidColorBrush.Tranparent);
+                VisualStateType.Active, SolidColorBrush.Tranparent);
             _visualBootstrapper.StyleContext.RegisterStyleSetter(btn, StyleSetterType.Background,
-                StyleSelector.Checked, SolidColorBrush.Tranparent);
+                VisualStateType.Checked, SolidColorBrush.Tranparent);
 
 
             _visualBootstrapper.StyleContext.RegisterStyleSetter(btn, StyleSetterType.Background,
-                StyleSelector.None, SolidColorBrush.White);
+                VisualStateType.None, SolidColorBrush.White);
 
             //btn.Width = 80;
             //btn.Height = 50;
@@ -51,7 +48,7 @@ namespace Das.Views.Defaults
             //_visualBootStrapper.StyleContext.RegisterStyleSetter(btn, StyleSetter.Padding,
             //    StyleSelector.None, new Thickness(15, 5, 15, 15));
             _visualBootstrapper.StyleContext.RegisterStyleSetter(btn, StyleSetterType.FontSize,
-                StyleSelector.None, 15);
+                VisualStateType.None, 15);
 
             btn.VerticalAlignment = VerticalAlignments.Default;
             btn.HorizontalAlignment = HorizontalAlignments.Default;

@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Das.Views.Collections;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
-using Das.Views.DataBinding;
 using Das.Views.ItemsControls;
 using Das.Views.Mvvm;
 using Das.Views.Rendering;
-using Das.Views.Templates;
 
 namespace Das.Views.Panels
 {

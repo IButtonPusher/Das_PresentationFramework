@@ -13,12 +13,18 @@ namespace Das.Views.Styles
             _transitions = new Dictionary<AssignedStyle, Transition>();
         }
         
+        public IEnumerable<IStyleRule> Rules => throw new NotImplementedException();
+
+        public Boolean TryGetValue<T>(IVisualElement visual, out T value)
+        {
+            throw new NotImplementedException();
+        }
         
         public virtual Boolean TryGetValue(StyleSetterType setterType,
-                                           StyleSelector selector,
+                                           VisualStateType type,
                                            out Object val)
         {
-            foreach (var k in GetUniqueFlags<StyleSelector>(selector))
+            foreach (var k in GetUniqueFlags<VisualStateType>(type))
             {
                 var key = new AssignedStyle(setterType, k);
                 if (_setters.TryGetValue(key, out val!))
@@ -29,13 +35,7 @@ namespace Das.Views.Styles
             return false;
         }
         
-        //public virtual Boolean TryGetValue(StyleSetter setter,
-        //                                   StyleSelector selector,
-        //                                   Object? dataContext,
-        //                                   out Object val)
-        //{
-        //    return TryGetValue(setter, selector, out val);
-        //}
+      
         
         protected static IEnumerable<T> GetUniqueFlags<T>(Enum flags)
             where T : Enum
@@ -48,14 +48,14 @@ namespace Das.Views.Styles
         protected void AddSetterImpl(StyleSetterType setterType,
                                       Object? value)
         {
-            AddImpl(setterType, StyleSelector.None, value);
+            AddImpl(setterType, VisualStateType.None, value);
         }
         
         protected void AddImpl(StyleSetterType setterType,
-                                StyleSelector selector,
+                                VisualStateType type,
                                 Object? value)
         {
-            var key = new AssignedStyle(setterType, selector, value);
+            var key = new AssignedStyle(setterType, type, value);
             _setters[key] = value;
         }
         

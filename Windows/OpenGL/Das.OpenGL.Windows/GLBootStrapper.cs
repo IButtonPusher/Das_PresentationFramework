@@ -50,10 +50,12 @@ namespace Das.OpenGL
         {
             var context = GetContext(element);
             var fontProvider = GetFontProvider(context);
-            var styleContext = new BaseStyleContext(DefaultStyle.Instance,
-                new DefaultColorPalette());
+            //var styleContext = new BaseStyleContext(DefaultStyle.Instance,
+            //    new DefaultColorPalette());
 
-            var kit = new OpenGLRenderKit(fontProvider, context, styleContext);
+            
+            
+            var kit = new OpenGLRenderKit(fontProvider, context, DefaultStyleContext.Instance);
 
             var renderer = new GLFormViewRenderer(element, kit, context);
             var _ = new LoopViewUpdater(renderer, element, _taskScheduler);

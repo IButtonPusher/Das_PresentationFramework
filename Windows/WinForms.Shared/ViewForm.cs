@@ -27,8 +27,6 @@ namespace Das.Views.Winforms
                      ControlStyles.OptimizedDoubleBuffer |
                      ControlStyles.ResizeRedraw,
                 true);
-
-            //SynchronizeSizeToContent();
         }
 
         public void BeginInvoke(Action action)
@@ -94,34 +92,6 @@ namespace Das.Views.Winforms
 
 
         public Size AvailableSize => _availableSize;
-
-        public T GetStyleSetter<T>(StyleSetterType setterType,
-                                   IVisualElement element)
-        {
-            return StyleContext.GetStyleSetter<T>(setterType, element);
-        }
-
-        public T GetStyleSetter<T>(StyleSetterType setterType,
-                                   StyleSelector selector,
-                                   IVisualElement element)
-        {
-            return StyleContext.GetStyleSetter<T>(setterType, selector, element);
-        }
-
-        public void RegisterStyleSetter(IVisualElement element, StyleSetterType setterType, Object value)
-        {
-            _contents.RegisterStyleSetter(element, setterType, value);
-        }
-
-        public void RegisterStyleSetter(IVisualElement element,
-                                        StyleSetterType setterType,
-                                        StyleSelector selector,
-                                        Object value)
-        {
-            StyleContext.RegisterStyleSetter(element, setterType, selector, value);
-        }
-
-        public IColorPalette ColorPalette => _contents.ColorPalette;
 
 
         public IVisualElement View

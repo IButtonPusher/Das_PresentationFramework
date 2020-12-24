@@ -16,8 +16,9 @@ namespace Das.Views.Measuring
     {
         protected BaseMeasureContext(IVisualSurrogateProvider surrogateProvider,
                                      Dictionary<IVisualElement, ValueSize> lastMeasurements,
-                                     IStyleContext styleContext)
-            : base(lastMeasurements, styleContext, surrogateProvider)
+                                     IStyleContext styleContext,
+                                     IVisualLineage visualLineage)
+            : base(lastMeasurements, styleContext, surrogateProvider, visualLineage)
         {
             _surrogateProvider = surrogateProvider;
             _contextBounds = ValueSize.Empty;
@@ -73,7 +74,8 @@ namespace Das.Views.Measuring
                 return ValueSize.Empty;
             }
 
-            _styleContext.PushVisual(element);
+            VisualLineage.PushVisual(element);
+            //_styleContext.PushVisual(element);
 
             var layoutElement = GetElementForLayout(element);
 
@@ -92,13 +94,16 @@ namespace Das.Views.Measuring
 
         public ValueSize GetStyleDesiredSize(IVisualElement element)
         {
-            var viewState = GetViewState;
-            var zoom = viewState.ZoomLevel;
+            //var viewState = GetViewState;
+            var styles = ViewState.StyleContext;
+            var zoom = ViewState.ZoomLevel;
 
-            var specificHeight = viewState.GetStyleSetter<Double>(StyleSetterType.Height, element)
-                                 * zoom;
-            var specificWidth = viewState.GetStyleSetter<Double>(StyleSetterType.Width, element)
-                                * zoom;
+            var specificHeight = styles.GetStyleSetter<Double>(StyleSetterType.Height, element,
+                VisualLineage);
+
+            var specificWidth = styles.GetStyleSetter<Double>(StyleSetterType.Width, element,
+                VisualLineage);
+
 
             return new ValueSize(Double.IsNaN(specificWidth) ? 0 : specificWidth,
                 Double.IsNaN(specificHeight) ? 0 : specificHeight);
@@ -114,40 +119,21 @@ namespace Das.Views.Measuring
             }
         }
 
-        protected virtual Boolean TryGetElementSpecifiedSize(IVisualElement visual,
-                                                             out ValueSize size)
-        {
-            var width = visual.Width ?? GetStyleSetter<Double>(StyleSetterType.Width, visual);
-
-            if (Double.IsNaN(width))
-            {
-                size = ValueSize.Empty;
-                return false;
-            }
-
-            var height = visual.Height ?? GetStyleSetter<Double>(StyleSetterType.Height, visual);
-
-            if (Double.IsNaN(height))
-            {
-                size = ValueSize.Empty;
-                return false;
-            }
-
-            size = new ValueSize(width, height);
-            return true;
-        }
+        
 
         private ValueSize MeasureElementImpl(IVisualElement element,
                                              IRenderSize availableSpace)
         {
             //System.Diagnostics.Debug.WriteLine("measuring " + element);
 
-            var viewState = GetViewState;
+            var styles = ViewState.StyleContext;
 
 
-            var margin = element.Margin ?? viewState.GetStyleSetter<Thickness>(StyleSetterType.Margin, element);
+            var margin = element.Margin ?? styles.GetStyleSetter<Thickness>(StyleSetterType.Margin, 
+                element, VisualLineage);
 
-            var border = viewState.GetStyleSetter<Thickness>(StyleSetterType.BorderThickness, element);
+            var border = styles.GetStyleSetter<Thickness>(StyleSetterType.BorderThickness, element,
+                VisualLineage);
 
 
             ValueSize desiredSize;
@@ -167,8 +153,7 @@ namespace Das.Views.Measuring
 
             SetLastMeasured(element, desiredSize);
 
-            _styleContext.PopVisual();
-
+            VisualLineage.PopVisual();
 
             return desiredSize;
         }

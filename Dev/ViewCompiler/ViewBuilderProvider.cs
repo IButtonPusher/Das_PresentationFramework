@@ -40,8 +40,10 @@ namespace ViewCompiler
 
             bldr.Serializer = _serializer;
 
-            var styleContext = new BaseStyleContext(DefaultStyle.Instance,
-                new DefaultColorPalette());
+            var styleContext = DefaultStyleContext.Instance;
+            
+            //var styleContext = new BaseStyleContext(DefaultStyle.Instance,
+            //    new DefaultColorPalette());
 
             foreach (var style in _serializer.GetStyles())
                 styleContext.RegisterStyle(style.Item1, style.Item2);

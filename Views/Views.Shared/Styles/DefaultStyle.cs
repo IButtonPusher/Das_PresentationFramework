@@ -36,46 +36,29 @@ namespace Das.Views.Styles
             this[StyleSetterType.Font] = font;
             this[StyleSetterType.HorizontalAlignment] = HorizontalAlignments.Default;
             this[StyleSetterType.VerticalAlignment] = VerticalAlignments.Default;
-            //this[StyleSetter.Size] = null;
+            
             this[StyleSetterType.Height] = Double.NaN;
             this[StyleSetterType.Width] = Double.NaN;
             this[StyleSetterType.Visibility] = Visibility.Visible;
             this[StyleSetterType.Transition] = Transition.EmptyTransitions;
+            this[StyleSetterType.ZIndex] = 0;
 
             this[StyleSetterType.Template] = default;
-
-            //var buttonStyle = new TypeStyle<IButtonBase>
-            //{
-            //    {StyleSetterType.BorderRadius, StyleSelector.None, 8},
-            //    {StyleSetterType.BorderThickness, StyleSelector.None, 1},
-            //    {StyleSetterType.BorderBrush, StyleSelector.None, SolidColorBrush.Black},
-            //    {StyleSetterType.Background, StyleSelector.Active, SolidColorBrush.LightGray},
-            //    {StyleSetterType.Background, StyleSelector.Hover, SolidColorBrush.Pink},
-            //    {StyleSetterType.Padding, StyleSelector.None, new Thickness(5)}
-            //};
-
-            //var toggleButtonStyle = new TypeStyle<IToggleButton>
-            //{
-            //    {StyleSetterType.Background, StyleSelector.Checked, SolidColorBrush.LightGray},
-            //};
-
-            //VisualTypeStyles[typeof(IButtonBase)] = buttonStyle;
-            //VisualTypeStyles[typeof(IToggleButton)] = toggleButtonStyle;
 
             var typeTypes = new Dictionary<Type, IStyleSheet>
             {
                 [typeof(IButtonBase)] = new TypeStyle<IButtonBase>
                 {
-                    {StyleSetterType.BorderRadius, StyleSelector.None, 8},
-                    {StyleSetterType.BorderThickness, StyleSelector.None, 1},
-                    {StyleSetterType.BorderBrush, StyleSelector.None, SolidColorBrush.Black},
-                    {StyleSetterType.Background, StyleSelector.Active, SolidColorBrush.LightGray},
-                    {StyleSetterType.Background, StyleSelector.Hover, SolidColorBrush.Pink},
-                    {StyleSetterType.Padding, StyleSelector.None, new Thickness(5)}
+                    {StyleSetterType.BorderRadius, VisualStateType.None, 8},
+                    {StyleSetterType.BorderThickness, VisualStateType.None, 1},
+                    {StyleSetterType.BorderBrush, VisualStateType.None, SolidColorBrush.Black},
+                    {StyleSetterType.Background, VisualStateType.Active, SolidColorBrush.LightGray},
+                    {StyleSetterType.Background, VisualStateType.Hover, SolidColorBrush.Pink},
+                    {StyleSetterType.Padding, VisualStateType.None, new Thickness(5)}
                 },
                 [typeof(IToggleButton)] = new TypeStyle<IToggleButton>
                 {
-                    {StyleSetterType.Background, StyleSelector.Checked, SolidColorBrush.LightGray},
+                    {StyleSetterType.Background, VisualStateType.Checked, SolidColorBrush.LightGray},
                 }
             };
             VisualTypeStyles = typeTypes;
@@ -93,16 +76,16 @@ namespace Das.Views.Styles
 
         public Object? this[StyleSetterType setterType]
         {
-            get => TryGetValue(setterType, StyleSelector.None, out var found)
+            get => TryGetValue(setterType, VisualStateType.None, out var found)
                 ? found
                 : default;
             private set => AddSetterImpl(setterType, value);
         }
 
         public Object? this[StyleSetterType setterType,
-                                    StyleSelector selector]
+                                    VisualStateType type]
         {
-            get => TryGetValue(setterType, selector, out var found)
+            get => TryGetValue(setterType, type, out var found)
                 ? found
                 : default;
             //private set => AddImpl(setter, selector, value);
@@ -110,21 +93,21 @@ namespace Das.Views.Styles
 
 
         void IStyle.Add(StyleSetterType setterType, 
-                        StyleSelector selector, 
+                        VisualStateType type, 
                         Object? value)
         {
             throw new NotSupportedException();
         }
 
-        void IStyle.AddOrUpdate(IStyle style)
-        {
-            throw new NotSupportedException();
-        }
+        //void IStyle.AddOrUpdate(IStyle style)
+        //{
+        //    throw new NotSupportedException();
+        //}
 
-        void IStyle.AddSetter(StyleSetterType setterType, Object? value)
-        {
-            throw new NotSupportedException();
-        }
+        //void IStyle.AddSetter(StyleSetterType setterType, Object? value)
+        //{
+        //    throw new NotSupportedException();
+        //}
         
         //protected readonly Dictionary<AssignedStyle, Object?> _setters;
     }

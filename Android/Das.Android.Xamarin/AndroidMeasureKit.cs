@@ -21,8 +21,9 @@ namespace Das.Xamarin.Android
                                  IVisualSurrogateProvider surrogateProvider,
                                  Dictionary<IVisualElement, ValueSize> lastMeasurements,
                                  IStyleContext styleContext,
-                                 DisplayMetrics displayMetrics)
-        : base(surrogateProvider, lastMeasurements, styleContext)
+                                 DisplayMetrics displayMetrics,
+                                 IVisualLineage visualLineage)
+        : base(surrogateProvider, lastMeasurements, styleContext, visualLineage)
         {
             _windowManager = windowManager;
             _fontProvider = fontProvider;
@@ -57,7 +58,7 @@ namespace Das.Xamarin.Android
         public sealed override ValueSize MeasureString(String s, 
                                                 IFont font)
         {
-            var renderer = _fontProvider.GetRenderer(font);
+            var renderer = _fontProvider.GetRenderer(font, VisualLineage);
             var res = renderer.MeasureString(s);
 
             if (ZoomLevel.AreDifferent(1.0))

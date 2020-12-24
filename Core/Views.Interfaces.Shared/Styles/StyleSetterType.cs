@@ -63,9 +63,11 @@ namespace Das.Views.Styles
         [StyleType(typeof(Visibility), false)]
         Visibility,
         
-        [StyleType(typeof(IVisualTemplate), default)]
-        Template
+        [StyleType(typeof(IVisualTemplate), false)]
+        Template,
 
+        [StyleType(typeof(Int32), false)]
+        ZIndex
 
     }
 }

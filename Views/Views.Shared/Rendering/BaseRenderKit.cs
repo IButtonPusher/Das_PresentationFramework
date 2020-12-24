@@ -6,6 +6,7 @@ using Das.Serializer;
 using Das.Views.Construction;
 using Das.Views.Controls;
 using Das.Views.Styles;
+using Das.Views.Styles.Construction;
 using Das.Views.Templates;
 
 namespace Das.Views
@@ -79,9 +80,14 @@ namespace Das.Views
             var bindingBuilder = new BindingBuilder(typeInferrer, propertyProvider);
             var converterProvider = new DefaultValueConverterProvider();
             var visualTypeResolver = new VisualTypeResolver(typeInferrer);
+
+            var styleInflater = new DefaultStyleInflater();
+            var styleProvider = new VisualStyleProvider(styleInflater);
+            var styledVisualBuilder = new StyledVisualBuilder(styleProvider);
             
             return new ViewInflater(visualBootstrapper, attributeScanner, 
-                typeInferrer, bindingBuilder, converterProvider, visualTypeResolver);
+                typeInferrer, bindingBuilder, converterProvider, 
+                visualTypeResolver, styledVisualBuilder);
         }
 
         public void EnsureSurrogate(ref IVisualElement element)

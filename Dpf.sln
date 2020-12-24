@@ -69,6 +69,12 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Charting.Shared", "Charting
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Das.Views.Charting", "Charting\Das.Views.Charting\Das.Views.Charting.csproj", "{2BF5A71D-F514-4B2C-A8B3-0450CAE673BA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E1F74958-8371-483B-9766-F99868679BED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dpf.Tests", "Tests\Dpf.Tests\Dpf.Tests.csproj", "{EB2451A8-55E9-4EEC-8722-8A1474AD654C}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Styles.Shared", "Views\Styles.Shared\Styles.Shared.shproj", "{823C8E55-1480-4837-87D4-06D8B2CF8CB4}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Windows\WinForms.Shared\WinForms.Shared.projitems*{15783956-b706-41d5-982b-1bcf698ca5b1}*SharedItemsImports = 13
@@ -82,9 +88,11 @@ Global
 		Windows\Windows.Shared\Windows.Shared.projitems*{6f514769-88cf-4d8a-8aa4-a015919df274}*SharedItemsImports = 13
 		Core\CSharp8NetFramework\CSharp8NetFramework.projitems*{73aea84a-7e59-466e-b5b9-cee436a5ecbc}*SharedItemsImports = 13
 		Views\Views.Shared\Views.Shared.projitems*{778a378f-7a09-4c1d-abd3-634f3d9cc8ab}*SharedItemsImports = 13
+		Views\Styles.Shared\Styles.Shared.projitems*{823c8e55-1480-4837-87d4-06d8b2cf8cb4}*SharedItemsImports = 13
 		Charting\Charting.Shared\Charting.Shared.projitems*{96070dbd-8d78-4bc7-90ee-c4d545bcd2aa}*SharedItemsImports = 13
 		Windows\Windows.Shared\Windows.Shared.projitems*{aa3e511b-3696-46d8-81ae-98f547b0b43c}*SharedItemsImports = 4
 		Windows\WinForms.Shared\WinForms.Shared.projitems*{aa3e511b-3696-46d8-81ae-98f547b0b43c}*SharedItemsImports = 4
+		Views\Styles.Shared\Styles.Shared.projitems*{bb6f35ef-5375-44d1-8398-0480a61d2bd6}*SharedItemsImports = 5
 		Views\Views.Shared\Views.Shared.projitems*{bb6f35ef-5375-44d1-8398-0480a61d2bd6}*SharedItemsImports = 5
 		Windows\Gdi\Gdi.Shared\Gdi.Shared.projitems*{ce7e6b63-33e2-44f8-85c9-979a4f6b6f2c}*SharedItemsImports = 13
 		ViewModels\ViewModels.Shared\ViewModels.Shared.projitems*{cec76f49-102d-4f52-9f95-231829c47839}*SharedItemsImports = 13
@@ -157,6 +165,10 @@ Global
 		{2BF5A71D-F514-4B2C-A8B3-0450CAE673BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BF5A71D-F514-4B2C-A8B3-0450CAE673BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BF5A71D-F514-4B2C-A8B3-0450CAE673BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB2451A8-55E9-4EEC-8722-8A1474AD654C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB2451A8-55E9-4EEC-8722-8A1474AD654C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB2451A8-55E9-4EEC-8722-8A1474AD654C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB2451A8-55E9-4EEC-8722-8A1474AD654C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -186,6 +198,8 @@ Global
 		{B5D034B4-FE61-4587-9612-827F4A282301} = {225D062A-7759-4B85-AFF6-6798DC5E22E2}
 		{96070DBD-8D78-4BC7-90EE-C4D545BCD2AA} = {CEB5CD80-077C-418F-86C1-0432BF663763}
 		{2BF5A71D-F514-4B2C-A8B3-0450CAE673BA} = {CEB5CD80-077C-418F-86C1-0432BF663763}
+		{EB2451A8-55E9-4EEC-8722-8A1474AD654C} = {E1F74958-8371-483B-9766-F99868679BED}
+		{823C8E55-1480-4837-87D4-06D8B2CF8CB4} = {47A3E7CB-FB2D-4F27-A851-3D8A2F68895E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DFC00A6-1CD7-4B08-ADD9-F102FBD088BC}

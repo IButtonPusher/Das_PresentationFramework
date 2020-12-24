@@ -3,7 +3,6 @@ using TaskEx = System.Threading.Tasks.Task;
 #endif
 
 using System;
-using System.Diagnostics;
 using System.Threading;
 using Das.Views.Rendering;
 using System.Threading.Tasks;
@@ -80,7 +79,7 @@ namespace Das.Views.Styles
         protected override void OnUpdate(Double runningPct)
         {
             var currentValue = _initialValue + (_valueDifference * runningPct);
-            var assigned = new AssignedStyle(_assignedStyle.SetterType, _assignedStyle.Selector,
+            var assigned = new AssignedStyle(_assignedStyle.SetterType, _assignedStyle.Type,
                 currentValue);
 
             _updater(assigned);

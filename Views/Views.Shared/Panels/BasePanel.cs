@@ -40,7 +40,7 @@ namespace Das.Views.Panels
 
         protected virtual void OnDistributeDataContextToChildren(Object? newValue)
         {
-         //   Children.DistributeDataContext(newValue);
+         
         }
         
         protected readonly VisualCollection _children;
@@ -117,13 +117,6 @@ namespace Das.Views.Panels
             _children.RunOnEachChild(child => child.InvalidateMeasure());
         }
 
-        public override void InvalidateArrange()
-        {
-            base.InvalidateArrange();
-
-            //_children.RunOnEachChild(child => child.InvalidateArrange());
-        }
-
         public override Boolean IsRequiresMeasure
         {
             get => base.IsRequiresMeasure || 
@@ -138,39 +131,11 @@ namespace Das.Views.Panels
             protected set => base.IsRequiresArrange = value;
         }
 
-        //public override void SetBoundValue(Object? value)
-        //{
-        //    base.SetBoundValue(value);
-
-        //    _children.RunOnEachChild(value, (v, child) =>
-        //    {
-        //        if (!(child is IBindableElement bindable))
-        //            return;
-
-        //        bindable.SetDataContext(v);
-        //    });
-        //}
-
         public override void Dispose()
         {
             base.Dispose();
             _children.Dispose();
         }
-
-        //public override async Task SetBoundValueAsync(Object? value)
-        //{
-        //    await _children.RunOnEachChildAsync(value, async (v, child) =>
-        //    {
-        //        if (!(child is IBindableElement bindable))
-        //            return;
-
-        //        await bindable.SetDataContextAsync(v);
-        //    });
-        //}
-
-
-        //private readonly List<IVisualElement> _children;
         
-        //private readonly Object _lockChildren;
     }
 }

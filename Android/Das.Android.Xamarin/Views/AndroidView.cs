@@ -26,7 +26,8 @@ namespace Das.Xamarin.Android
                            AndroidUiProvider uiProvider)
             : this(view, context,
                 BuildRenderKit(context, windowManager, uiProvider,
-                    new BaseStyleContext(DefaultStyle.Instance, new DefaultColorPalette())),
+                    DefaultStyleContext.Instance),
+                    //new BaseStyleContext(DefaultStyle.Instance, new DefaultColorPalette())),
                 uiProvider)
         {
         }
@@ -50,10 +51,10 @@ namespace Das.Xamarin.Android
 
             ZoomLevel = renderKit.DisplayMetrics.ScaledDensity;
 
-            System.Diagnostics.Debug.WriteLine("Built android view with display w/h: " +
-                                               renderKit.DisplayMetrics.WidthPixels + ", " +
-                                               renderKit.DisplayMetrics.HeightPixels + " dpi: " +
-                                               renderKit.DisplayMetrics.ScaledDensity);
+            //System.Diagnostics.Debug.WriteLine("Built android view with display w/h: " +
+            //                                   renderKit.DisplayMetrics.WidthPixels + ", " +
+            //                                   renderKit.DisplayMetrics.HeightPixels + " dpi: " +
+            //                                   renderKit.DisplayMetrics.ScaledDensity);
 
             _paintView = new AndroidPaintView(context, renderKit, view);
             // ReSharper disable once VirtualMemberCallInConstructor
@@ -195,7 +196,10 @@ namespace Das.Xamarin.Android
                 if (willInvalidate)
                 {
                     _paintView.Invalidate();
-                    Invalidate();
+                    
+                    if (ChildCount > 1)
+                        Invalidate();
+                    
                     _inputContext.SleepTime = 0;
                     await Task.Yield();
                 }

@@ -18,14 +18,16 @@ namespace Das.Xamarin.Android
     public class AndroidRenderContext : BaseRenderContext
     {
         public AndroidRenderContext(IViewPerspective perspective,
-                                    IFontProvider<AndroidFontPaint> fontProvider,
+                                    AndroidFontProvider fontProvider,
                                     IViewState viewState,
                                     IVisualSurrogateProvider surrogateProvider,
                                     Dictionary<IVisualElement, ValueCube> renderPositions,
                                     DisplayMetrics displayMetrics,
                                     Dictionary<IVisualElement, ValueSize> lastMeasurements,
-                                    IStyleContext styleContext)
-            : base(perspective, surrogateProvider, renderPositions, lastMeasurements, styleContext)
+                                    IStyleContext styleContext,
+                                    IVisualLineage visualLineage)
+            : base(perspective, surrogateProvider, renderPositions, lastMeasurements, 
+                styleContext, visualLineage)
         {
             _fontProvider = fontProvider;
             _displayMetrics = displayMetrics;
@@ -194,7 +196,7 @@ namespace Das.Xamarin.Android
                                                                TBrush brush,
                                                                TPoint location)
         {
-            var renderer = _fontProvider.GetRenderer(font);
+            var renderer = _fontProvider.GetRenderer(font, VisualLineage);
             var dest = GetAbsolutePoint(location);
             renderer.Canvas = GetCanvas();
             renderer.DrawString(s, brush, dest);
@@ -205,7 +207,7 @@ namespace Das.Xamarin.Android
                                                                    TRectangle location,
                                                                    TBrush brush)
         {
-            var renderer = _fontProvider.GetRenderer(font);
+            var renderer = _fontProvider.GetRenderer(font, VisualLineage);
             var dest = GetAbsoluteRect(location);
             renderer.Canvas = GetCanvas();
             renderer.DrawStringInRect(s, brush, dest);
@@ -239,9 +241,6 @@ namespace Das.Xamarin.Android
             SetColor(brush);
             var target = GetAbsoluteAndroidRectF(rect);
 
-
-            //System.Diagnostics.Debug.WriteLine("Fill rounded rect.  Target: " + rect + 
-            //                                   " effective: " + target + " " + brush);
 
             GetCanvas().DrawRoundRect(target,
                 Convert.ToSingle(cornerRadius),
@@ -480,7 +479,7 @@ namespace Das.Xamarin.Android
             }
         }
 
-        private readonly IFontProvider<AndroidFontPaint> _fontProvider;
+        private readonly AndroidFontProvider _fontProvider;
         private readonly DisplayMetrics _displayMetrics;
 
         private readonly Paint _paint;

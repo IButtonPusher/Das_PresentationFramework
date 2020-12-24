@@ -7,25 +7,25 @@ namespace Das.Views.Styles
                                            IStyleSetter
     {
         public AssignedStyle(StyleSetterType setterType,
-                             StyleSelector selector,
+                             VisualStateType type,
                              Object? value = null)
         {
             SetterType = setterType;
-            Selector = selector;
+            Type = type;
             Value = value;
 
-            _hash = (Int32) setterType + ((Int32) selector << 16);
+            _hash = (Int32) setterType + ((Int32) type << 16);
         }
 
         public readonly StyleSetterType SetterType;
-        public readonly StyleSelector Selector;
+        public readonly VisualStateType Type;
         public Object? Value { get; }
 
         private readonly Int32 _hash;
 
         public Boolean Equals(AssignedStyle other)
         {
-            return other.SetterType == SetterType && other.Selector == Selector;
+            return other.SetterType == SetterType && other.Type == Type;
         }
 
         public Boolean Equals(IStyleSetter other)
@@ -45,10 +45,10 @@ namespace Das.Views.Styles
 
         public override String ToString()
         {
-            if (Selector == StyleSelector.None)
+            if (Type == VisualStateType.None)
                 return SetterType + " = " + Value;
 
-            return SetterType + ":" + Selector + " = " + Value;
+            return SetterType + ":" + Type + " = " + Value;
         }
     }
 }
