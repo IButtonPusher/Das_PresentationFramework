@@ -128,8 +128,8 @@
       <Project>{2a2fc2ba-af07-492d-a438-2239791511f5}</Project>
       <Name>ViewCompiler</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\TestCommon\TestCommon.csproj">
-      <Project>{7ac6ce98-b845-430d-920c-ad8d4ac74300}</Project>
+    <ProjectReference Include="..\..\..\Tests\TestCommon\TestCommon.csproj">
+      <Project>{6f5d2f7b-2d1d-4a5b-b1ae-654192afb3b8}</Project>
       <Name>TestCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\ViewModels\Das.ViewModels\Das.ViewModels.csproj">

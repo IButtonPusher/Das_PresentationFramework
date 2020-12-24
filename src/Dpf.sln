@@ -61,8 +61,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Das.Xamarin.Android", "Andr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamarinAndroidTest", "Android\XamarinAndroidTest\XamarinAndroidTest.csproj", "{B5D034B4-FE61-4587-9612-827F4A282301}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCommon", "TestCommon\TestCommon.csproj", "{7AC6CE98-B845-430D-920C-AD8D4AC74300}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Charting", "Charting", "{CEB5CD80-077C-418F-86C1-0432BF663763}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Charting.Shared", "Charting\Charting.Shared\Charting.Shared.shproj", "{96070DBD-8D78-4BC7-90EE-C4D545BCD2AA}"
@@ -74,6 +72,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dpf.Tests", "Tests\Dpf.Tests\Dpf.Tests.csproj", "{EB2451A8-55E9-4EEC-8722-8A1474AD654C}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Styles.Shared", "Views\Styles.Shared\Styles.Shared.shproj", "{823C8E55-1480-4837-87D4-06D8B2CF8CB4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCommon", "Tests\TestCommon\TestCommon.csproj", "{6F5D2F7B-2D1D-4A5B-B1AE-654192AFB3B8}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -157,10 +157,6 @@ Global
 		{B5D034B4-FE61-4587-9612-827F4A282301}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5D034B4-FE61-4587-9612-827F4A282301}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B5D034B4-FE61-4587-9612-827F4A282301}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{7AC6CE98-B845-430D-920C-AD8D4AC74300}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7AC6CE98-B845-430D-920C-AD8D4AC74300}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7AC6CE98-B845-430D-920C-AD8D4AC74300}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7AC6CE98-B845-430D-920C-AD8D4AC74300}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2BF5A71D-F514-4B2C-A8B3-0450CAE673BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2BF5A71D-F514-4B2C-A8B3-0450CAE673BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BF5A71D-F514-4B2C-A8B3-0450CAE673BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -169,6 +165,10 @@ Global
 		{EB2451A8-55E9-4EEC-8722-8A1474AD654C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB2451A8-55E9-4EEC-8722-8A1474AD654C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB2451A8-55E9-4EEC-8722-8A1474AD654C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F5D2F7B-2D1D-4A5B-B1AE-654192AFB3B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F5D2F7B-2D1D-4A5B-B1AE-654192AFB3B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F5D2F7B-2D1D-4A5B-B1AE-654192AFB3B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F5D2F7B-2D1D-4A5B-B1AE-654192AFB3B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -200,6 +200,7 @@ Global
 		{2BF5A71D-F514-4B2C-A8B3-0450CAE673BA} = {CEB5CD80-077C-418F-86C1-0432BF663763}
 		{EB2451A8-55E9-4EEC-8722-8A1474AD654C} = {E1F74958-8371-483B-9766-F99868679BED}
 		{823C8E55-1480-4837-87D4-06D8B2CF8CB4} = {47A3E7CB-FB2D-4F27-A851-3D8A2F68895E}
+		{6F5D2F7B-2D1D-4A5B-B1AE-654192AFB3B8} = {E1F74958-8371-483B-9766-F99868679BED}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DFC00A6-1CD7-4B08-ADD9-F102FBD088BC}
