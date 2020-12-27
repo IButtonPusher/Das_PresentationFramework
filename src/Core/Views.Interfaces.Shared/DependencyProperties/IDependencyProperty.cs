@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Das.Views.Rendering;
 
 namespace Das.Views
 {
@@ -11,5 +8,17 @@ namespace Das.Views
 
         void SetValue(IVisualElement visual,
                       Object? value);
+
+        void SetValueFromStyle(IVisualElement visual,
+                               Object? value);
+        
+        void SetComputedValueFromStyle(IVisualElement visual,
+                               Func<IVisualElement, Object?> value);
+
+        String Name { get; }
+        
+        Type PropertyType { get; }
+        
+        Type VisualType { get; }
     }
 }

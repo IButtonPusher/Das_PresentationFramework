@@ -9,5 +9,10 @@ namespace Das.Views.Construction.Styles
         Task ApplyStylesToVisualAsync(IVisualElement visual,
                                  String? styleClassName,
                                  IVisualLineage visualLineage);
+
+        Task ApplyStylesToVisualAsync(IVisualElement visual,
+                                      IAttributeDictionary attributeDictionary,
+                                      IVisualLineage visualLineage,
+                                      IViewInflater viewInflater);
     }
 }

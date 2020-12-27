@@ -10,20 +10,32 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Colors\IThemeProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\ApplyVisualStyles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\IAttributeDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IStyleInflater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IVisualTypeResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\MarkupLanguage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\IStyledVisualBuilder.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\IStyleRuleBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\ICssRuleBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\IStyleSelectorBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\IXmlStyleRuleBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IGraphicsPath.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IThickness.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\QuantifiedThickness.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueThickness.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\LengthUnits.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\QuantifiedDouble.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDeepCopyable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IInputVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\InputVisualType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IVisualAliasProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\ISpan.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\ContentAppendType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\DeclarationProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\ICascadingStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleDeclaration{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleValueDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleVariableAccessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IVisualStyleProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Visuals\IContentVisual.cs" />

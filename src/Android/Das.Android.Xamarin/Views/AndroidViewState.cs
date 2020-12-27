@@ -1,7 +1,5 @@
 ﻿using System;
 using Android.Util;
-using Das.Views;
-using Das.Views.Core.Drawing;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 

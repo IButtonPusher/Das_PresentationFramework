@@ -8,10 +8,13 @@ namespace Das.Views.Styles
     public class StyleSheet : Style,
                               IStyleSheet
     {
-        public StyleSheet()
+        public StyleSheet(IEnumerable<IStyleRule> rules)
         {
             VisualTypeStyles = new ConcurrentDictionary<Type, IStyleSheet>();
+            _rules = new List<IStyleRule>(rules);
         }
+
+        public IEnumerable<IStyleRule> Rules => _rules;
 
         public IDictionary<Type, IStyleSheet> VisualTypeStyles { get; }
 
@@ -28,5 +31,7 @@ namespace Das.Views.Styles
 
             throw new NotImplementedException();
         }
+
+        protected readonly List<IStyleRule> _rules;
     }
 }

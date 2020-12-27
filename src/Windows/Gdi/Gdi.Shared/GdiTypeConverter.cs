@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
+using Das.Extensions;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
@@ -46,7 +47,7 @@ namespace Das.Gdi.Core
                 switch (brush)
                 {
                     case SolidColorBrush scb:
-                        found = GetBrush(scb.Color);
+                        found = GetBrush(scb.Color, scb.Opacity);
                         break;
 
                     case HatchBrush hb:
@@ -68,15 +69,21 @@ namespace Das.Gdi.Core
             }
         }
 
-        public static Brush GetBrush(IColor color)
+        public static Brush GetBrush(IColor color,
+                                     Double opacity)
         {
             //var brushes = ColorBrushes.Value;
             lock (_brushLock)
             {
-                if (_colorBrushes.TryGetValue(color, out var found))
+                if (opacity.AreEqualEnough(1.0) && 
+                    _colorBrushes.TryGetValue(color, out var found))
                     return found;
 
-                var gcolor = GetColor(color);
+                var gcolor = opacity.AreDifferent(1.0)
+                    ? GetColor(color, opacity)
+                    : GetColor(color);
+
+
                 found = new SolidBrush(gcolor);
                 _colorBrushes.Add(color, found);
                 return found;
@@ -86,6 +93,12 @@ namespace Das.Gdi.Core
         public static Color GetColor(IColor color)
         {
             return Color.FromArgb(color.A, color.R, color.G, color.B);
+        }
+
+        public static Color GetColor(IColor color,
+                                     Double opacity)
+        {
+            return Color.FromArgb(Convert.ToInt32(opacity * 255), color.R, color.G, color.B);
         }
 
         public static Font GetFont(IFont font)

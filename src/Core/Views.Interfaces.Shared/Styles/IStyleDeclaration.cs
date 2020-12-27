@@ -6,7 +6,5 @@ namespace Das.Views.Styles
     public interface IStyleDeclaration
     {
         DeclarationProperty Property { get; }
-        
-        //void AssignValueToVisual(IVisualElement visual);
     }
 }

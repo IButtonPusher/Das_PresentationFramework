@@ -3,6 +3,9 @@
 
 namespace Das.Views.Styles.Declarations
 {
+    /// <summary>
+    /// Cascading style sheet properties (zb box-shadow, width, color)
+    /// </summary>
     public enum DeclarationProperty
     {
         Invalid,

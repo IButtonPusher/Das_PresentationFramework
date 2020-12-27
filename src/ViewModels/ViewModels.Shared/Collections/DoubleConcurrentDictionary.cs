@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using AsyncResults.ForEach;
+// ReSharper disable UnusedMember.Global
 
 namespace Das.ViewModels.Collections
 {
@@ -61,13 +61,11 @@ namespace Das.ViewModels.Collections
             return _backingDictionary.TryGetValue(k1, out _);
         }
 
-        public async Task<TValue> GetOrAddAsync(
-            TKey1 k1, TKey2 k2,
-            Func<TKey1, TKey2, Task<TValue>> bldr)
+        public async Task<TValue> GetOrAddAsync(TKey1 k1, 
+                                                TKey2 k2,
+                                                Func<TKey1, TKey2, Task<TValue>> bldr)
         {
             var d2 = _backingDictionary.GetOrAdd(k1, _ => new ConcurrentDictionary<TKey2, TValue>());
-            //if (d2.TryGetValue(k2, out var gotIt))
-            //    return gotIt;
 
             if (!d2.TryGetValue(k2, out var gotIt))
             {
@@ -76,7 +74,6 @@ namespace Das.ViewModels.Collections
             }
 
             return gotIt;
-            //d2.GetOrAdd(k2, v => await bldr(k1, v));
         }
 
         public IEnumerable<TValue> GetOrAddValues<TKeyValue>(TKey1 k1, 

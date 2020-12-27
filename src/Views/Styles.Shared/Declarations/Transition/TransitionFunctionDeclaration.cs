@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Das.Views.Styles.Declarations.Transition
 {
     public class TransitionFunctionDeclaration : EnumDeclaration<TransitionFunctionType>
     {
+        // ReSharper disable once UnusedMember.Global
         public TransitionFunctionDeclaration(String value, 
                                              TransitionFunctionType defaultValue, 
                                              IStyleVariableAccessor variableAccessor) 

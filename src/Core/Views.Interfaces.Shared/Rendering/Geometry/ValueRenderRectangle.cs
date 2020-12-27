@@ -268,6 +268,20 @@ namespace Das.Views.Rendering.Geometry
             return _hash;
         }
 
+        TRectangle IRenderRectangle.Reduce<TRectangle>(Double left, 
+                                                       Double top, 
+                                                       Double right, 
+                                                       Double bottom)
+        {
+            var res = new ValueRenderRectangle(X + left, Top + top,
+                Width - (left + right),
+                Height - (top + bottom), Offset);
+
+            if (res is TRectangle fku)
+                return fku;
+            throw new InvalidOperationException();
+        }
+
         private readonly Int32 _hash;
     }
 }

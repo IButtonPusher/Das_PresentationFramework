@@ -11,9 +11,13 @@ namespace Das.Views.Construction
         public VisualStyleProvider(IStyleInflater styleInflater)
         {
             _styleInflater = styleInflater;
+            
             _lockStylesByClassName = new Object();
             _stylesByClassName = new Dictionary<String, List<IStyleRule>>();
 
+            _lockStylesByName = new Object();
+            _stylesByName = new Dictionary<String, IStyleSheet?>();
+            
             _resourcesLock = new Object();
             _resourcesRead = new HashSet<String>();
         }
@@ -45,7 +49,8 @@ namespace Das.Views.Construction
                         continue;
                 }
 
-                var resourceStyles = await _styleInflater.InflateResourceCssAsync(name).ConfigureAwait(false);
+                var resourceStyles = await _styleInflater.InflateResourceCssAsync(name).
+                                                          ConfigureAwait(false);
 
                 if (resourceStyles == null)
                     continue;
@@ -72,17 +77,63 @@ namespace Das.Views.Construction
                     }
                 }
             }
-
-
-            await Task.Yield();
         }
 
-        private readonly Object _lockStylesByClassName;
+        public async Task<IStyleSheet?> GetStyleByNameAsync(String name)
+        {
+            lock (_lockStylesByClassName)
+            {
+                if (_stylesByName.TryGetValue(name, out var style))
+                {
+                    return style;
+                }
+            }
+            
+            var thisExe = Assembly.GetExecutingAssembly();
+            var resourceNames = thisExe.GetManifestResourceNames();
+
+            foreach (var resource in resourceNames)
+            {
+                if (!resource.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                lock (_resourcesLock)
+                {
+                    if (!_resourcesRead.Add(resource))
+                        continue;
+                }
+
+                var resourceStyle = await _styleInflater.InflateResourceXmlAsync(resource).
+                                                          ConfigureAwait(false);
+
+                switch (resourceStyle)
+                {
+                    case NamedStyle named:
+
+                        lock (_lockStylesByName)
+                        {
+                            _stylesByName.Add(named.Name, named);
+                        }
+
+                        if (String.Equals(named.Name, name))
+                            return named;
+                        
+                        break;
+                }
+            }
+
+            return default;
+        }
+
+        private readonly IStyleInflater _styleInflater;
+        
+        private readonly HashSet<String> _resourcesRead;
         private readonly Object _resourcesLock;
 
-        private readonly HashSet<String> _resourcesRead;
-        private readonly IStyleInflater _styleInflater;
-
+        private readonly Object _lockStylesByClassName;
         private readonly Dictionary<String, List<IStyleRule>> _stylesByClassName;
+        
+        private readonly Object _lockStylesByName;
+        private readonly Dictionary<String, IStyleSheet?> _stylesByName;
     }
 }

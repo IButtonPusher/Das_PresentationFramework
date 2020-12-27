@@ -1,6 +1,5 @@
 ﻿using System;
 using Das.Views;
-using Das.Views.Panels;
 using Das.Views.Styles;
 using WinForms.Shared;
 

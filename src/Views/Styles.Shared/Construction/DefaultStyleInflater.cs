@@ -1,4 +1,5 @@
 ﻿using System;
+using Das.Serializer;
 using Das.Views.Construction;
 using Das.Views.Construction.Styles;
 
@@ -6,16 +7,18 @@ namespace Das.Views.Styles.Construction
 {
     public class DefaultStyleInflater : StyleInflater
     {
-        public DefaultStyleInflater() : base(GetRuleBuilder())
+        public DefaultStyleInflater(ITypeInferrer typeInferrer) 
+            : base(GetCssRuleBuilder(), 
+            new XmlStyleRuleBuilder(), new VisualTypeResolver(typeInferrer))
         {
         }
 
-        private static IStyleRuleBuilder GetRuleBuilder()
+        private static ICssRuleBuilder GetCssRuleBuilder()
         {
             var visualAliases = new VisualAliasProvider();
-            var selectorBuilder = new StyleSelectorBuilder(visualAliases);
+            var selectorBuilder = new CssStyleSelectorBuilder(visualAliases);
 
-            var ruleBuilder = new StyleRuleBuilder(selectorBuilder,
+            var ruleBuilder = new CssRuleBuilder(selectorBuilder,
                 DefaultStyleContext.Instance.VariableAccessor);
 
             return ruleBuilder;

@@ -6,6 +6,7 @@ namespace Das.Views.Styles
     [Flags]
     public enum VisualStateType
     {
+        Invalid = 0,
         None = 1,
         Hover = 2,
         Active = 4,

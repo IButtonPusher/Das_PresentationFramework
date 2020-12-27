@@ -32,7 +32,8 @@ namespace Das.Xamarin.Android
                                 DisplayMetrics displayMetrics,
                                 IResolver container)
         : base(container, styleContext, Serializer.AttributeParser, 
-            Serializer.TypeInferrer, Serializer.TypeManipulator)
+            Serializer.TypeInferrer, Serializer.TypeManipulator, 
+            new Dictionary<IVisualElement, ValueCube>())
         {
             ViewState = viewState;
             DisplayMetrics = displayMetrics;
@@ -40,27 +41,6 @@ namespace Das.Xamarin.Android
             Init(windowManager, styleContext, viewPerspective, displayMetrics, 
                 fontProvider, viewState, uiProvider, 
                 ref _measureContext!, ref _renderContext!, ref _refreshRenderContext!);
-            
-            
-            
-            //var lastMeasures = new Dictionary<IVisualElement, ValueSize>();
-            //MeasureContext = new AndroidMeasureKit(windowManager, fontProvider, 
-            //    this, lastMeasures,styleContext, displayMetrics);
-
-            //var visualPositions = new Dictionary<IVisualElement, ValueCube>();
-
-            //var imageProvider = new AndroidImageProvider(displayMetrics);
-
-            //RenderContext = new AndroidRenderContext(viewPerspective,
-            //    fontProvider, viewState, this, visualPositions, displayMetrics,
-            //    lastMeasures, styleContext);
-
-            //RefreshRenderContext = new RefreshRenderContext(viewPerspective, this, visualPositions,
-            //    lastMeasures, styleContext);
-
-            //Container.ResolveTo<IImageProvider>(imageProvider);
-            //Container.ResolveTo(uiProvider);
-            //Container.ResolveTo(styleContext);
         }
 
         public AndroidRenderKit(IViewPerspective viewPerspective,
@@ -86,7 +66,8 @@ namespace Das.Xamarin.Android
                                 IStringPrimitiveScanner attributeScanner,
                                 ITypeInferrer typeInferrer,
                                 IPropertyProvider propertyProvider)
-            : base(styleContext, attributeScanner, typeInferrer, propertyProvider)
+            : base(styleContext, attributeScanner, typeInferrer, propertyProvider,
+                new Dictionary<IVisualElement, ValueCube>())
         {
             ViewState = viewState;
             DisplayMetrics = displayMetrics;
@@ -108,7 +89,8 @@ namespace Das.Xamarin.Android
                                 ITypeInferrer typeInferrer, 
                                 IPropertyProvider propertyProvider, 
                                 IVisualBootstrapper visualBootstrapper) 
-            : base(resolver, styleContext, attributeScanner, typeInferrer, propertyProvider, visualBootstrapper)
+            : base(resolver, styleContext, attributeScanner, typeInferrer, propertyProvider, 
+                visualBootstrapper,new Dictionary<IVisualElement, ValueCube>())
         {
             ViewState = viewState;
             DisplayMetrics = displayMetrics;
@@ -128,7 +110,8 @@ namespace Das.Xamarin.Android
                                 IStyleContext styleContext, 
                                 IVisualBootstrapper visualBootstrapper, 
                                 IViewInflater viewInflater) 
-            : base(resolver, styleContext, visualBootstrapper, viewInflater)
+            : base(resolver, styleContext, visualBootstrapper, viewInflater,
+                new Dictionary<IVisualElement, ValueCube>())
         {
             ViewState = viewState;
             DisplayMetrics = displayMetrics;

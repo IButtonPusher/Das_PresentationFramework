@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Das.Extensions;
 
@@ -7,7 +6,7 @@ namespace Das.Views.Core.Geometry
 {
     public class Thickness : Size,
                              IDeepCopyable<Thickness>,
-                             IShape2d
+                             IThickness
     {
         public Thickness(Double uniformLength)
         {

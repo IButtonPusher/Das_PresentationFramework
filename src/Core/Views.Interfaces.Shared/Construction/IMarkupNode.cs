@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Das.Views.Construction
 {
-    public interface IMarkupNode
+    public interface IMarkupNode : IAttributeDictionary
     {
         Boolean IsEncodingHeader { get; }
 
@@ -18,10 +18,5 @@ namespace Das.Views.Construction
         MarkupLanguage Language { get; }
 
         IEnumerable<IMarkupNode> Children { get; }
-
-        Boolean TryGetAttributeValue(String key, 
-                                     out String value);
-
-        IEnumerable<KeyValuePair<String, String>> GetAllAttributes();
     }
 }

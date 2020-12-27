@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Android.Content;
@@ -12,6 +11,8 @@ using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
+using Das.Views.Styles;
+using Das.Views.Styles.Declarations;
 using Das.Views.Templates;
 
 namespace Das.Xamarin.Android.Controls
@@ -68,8 +69,6 @@ namespace Das.Xamarin.Android.Controls
 
         public event Action<IVisualElement>? Disposed;
 
-        IVisualTemplate? ITemplatableVisual.Template => default;
-
         public void AcceptChanges(ChangeType changeType)
         {
             _htmlPanel.AcceptChanges(changeType);
@@ -80,16 +79,40 @@ namespace Das.Xamarin.Android.Controls
             _htmlPanel.RaisePropertyChanged(propertyName, value);
         }
 
-        Double? IVisualElement.Width
+        QuantifiedDouble? IVisualElement.Width
         {
             get => _htmlPanel.Width;
             set => _htmlPanel.Width = value;
         }
 
-        Double? IVisualElement.Height
+        QuantifiedDouble? IVisualElement.Height
         {
             get => _htmlPanel.Height;
             set => _htmlPanel.Height = value;
+        }
+
+        QuantifiedDouble? IVisualElement.Left
+        {
+            get => ((IVisualElement) _htmlPanel).Left;
+            set => ((IVisualElement) _htmlPanel).Left = value;
+        }
+
+        QuantifiedDouble? IVisualElement.Right
+        {
+            get => ((IVisualElement) _htmlPanel).Right;
+            set => ((IVisualElement) _htmlPanel).Right = value;
+        }
+
+        QuantifiedDouble? IVisualElement.Top
+        {
+            get => ((IVisualElement) _htmlPanel).Top;
+            set => ((IVisualElement) _htmlPanel).Top = value;
+        }
+
+        QuantifiedDouble? IVisualElement.Bottom
+        {
+            get => ((IVisualElement) _htmlPanel).Bottom;
+            set => ((IVisualElement) _htmlPanel).Bottom = value;
         }
 
         public HorizontalAlignments HorizontalAlignment
@@ -110,17 +133,27 @@ namespace Das.Xamarin.Android.Controls
             set => _htmlPanel.Background = value;
         }
 
-        public Thickness? Margin
+        public QuantifiedThickness Margin
         {
             get => _htmlPanel.Margin;
             set => _htmlPanel.Margin = value;
         }
 
-        public ISet<String> StyleClasses => _htmlPanel.StyleClasses;
+        
 
         public Double Opacity => _htmlPanel.Opacity;
 
-        Visibility IVisualElement.Visibility => _htmlPanel.Visibility;
+        Visibility IVisualElement.Visibility
+        {
+            get => _htmlPanel.Visibility;
+            set => _htmlPanel.Visibility = value;
+        }
+
+        public QuantifiedThickness BorderRadius
+        {
+            get => _htmlPanel.BorderRadius;
+            set => _htmlPanel.BorderRadius = value;
+        }
 
         public Boolean IsEnabled
         {
@@ -128,12 +161,36 @@ namespace Das.Xamarin.Android.Controls
             set => _htmlPanel.IsEnabled = value;
         }
 
+        public Boolean TryGetDependencyProperty(DeclarationProperty declarationProperty, out IDependencyProperty dependencyProperty)
+        {
+            return _htmlPanel.TryGetDependencyProperty(declarationProperty, out dependencyProperty);
+        }
+
+        public ILabel? BeforeLabel
+        {
+            get => _htmlPanel.BeforeLabel;
+            set => _htmlPanel.BeforeLabel = value;
+        }
+
+        public ILabel? AfterLabel
+        {
+            get => _htmlPanel.AfterLabel;
+            set => _htmlPanel.AfterLabel = value;
+        }
+
+
         public Boolean IsMarkupNameAlias(String markupTag)
         {
             return _htmlPanel.IsMarkupNameAlias(markupTag);
         }
 
         public Int32 ZIndex => _htmlPanel.ZIndex;
+
+        Int32 IVisualElement.Id => _htmlPanel.Id;
+
+        String? IVisualElement.Class => _htmlPanel.Class;
+
+        public IStyleSheet? Style => _htmlPanel.Style;
 
         public Boolean IsClipsContent
         {
@@ -191,5 +248,11 @@ namespace Das.Xamarin.Android.Controls
         private readonly HtmlPanel _htmlPanel;
         private readonly ViewGroup _viewGroup;
         private Boolean _hasPendingContent;
+        
+        IVisualTemplate? ITemplatableVisual.Template
+        {
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
+        }
     }
 }

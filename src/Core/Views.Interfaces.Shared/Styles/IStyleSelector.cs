@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Das.Views.Styles
 {
-    public interface IStyleSelector
+    public interface IStyleSelector : IEquatable<IStyleSelector>
     {
         Boolean TryGetClassName(out String className);
-        
+
+        Boolean TryGetContentAppendType(out ContentAppendType appendType);
+
         /// <summary>
-        /// Returns whether a visual meets all the requirements
+        /// Returns true if this selector should only apply to a visual in certain states
         /// </summary>
-        Boolean IsSelectVisual(IVisualElement visual);
+        Boolean IsFilteringOnVisualState();
     }
 }

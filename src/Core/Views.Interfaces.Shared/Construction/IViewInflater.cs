@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Das.Views.Rendering;
 
 namespace Das.Views.Construction
 {
@@ -35,5 +36,10 @@ namespace Das.Views.Construction
         
         Task<IVisualElement> InflateXmlAsync(String xml,
                                        IDictionary<String, String> namespaceHints);
+
+        Task<IVisualElement> GetVisualAsync(IMarkupNode node,
+                                            Type dataContextType,
+                                            IVisualLineage visualLineage,
+                                            ApplyVisualStyles applyStyles);
     }
 }

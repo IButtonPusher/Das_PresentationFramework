@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Das.Views.Styles;
 
 namespace Das.Views.Construction.Styles
 {
-    public interface IStyleRuleBuilder
+    public class ComputedValueWorker<T>
     {
-        IStyleRule? GetRule(IMarkupNode cssNode);
     }
 }

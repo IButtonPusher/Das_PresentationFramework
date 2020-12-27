@@ -16,7 +16,10 @@ namespace Das.Views
             _delegateLock = new Object();
             _propertyName = propertyName;
             _defaultValue = defaultValue;
+            
             _values = new ConcurrentDictionary<TVisual, TValue>();
+            _computedValues = new ConcurrentDictionary<TVisual, Func<IVisualElement, Object?>>();
+            
             _changings = new ConcurrentDictionary<TVisual, List<Func<TVisual, TValue, TValue, Boolean>>>();
             _changeds = new ConcurrentDictionary<TVisual, List<Action<TVisual, TValue, TValue>>>();
             _knownVisuals = new ConcurrentDictionary<TVisual, Byte>();
@@ -34,8 +37,25 @@ namespace Das.Views
         void IDependencyProperty.SetValue(IVisualElement visual,
                                           Object? value)
         {
-            if (!(visual is TVisual tv))
-                throw new InvalidCastException(visual + " cannot be cast to type " + typeof(TVisual));
+            SetRuntimeValueImpl(visual, value, false);
+        }
+
+        private static TOut GetValue<TIn, TOut>(TIn value)
+        {
+            if (Equals(value, default))
+                return default!;
+            
+            if (!(value is TOut tv))
+                throw new InvalidCastException(value + " cannot be cast to type " + typeof(TOut));
+
+            return tv;
+        }
+
+        private void SetRuntimeValueImpl(IVisualElement visual,
+                                         Object? value,
+                                         Boolean isFromStyle)
+        {
+            var tv = GetValue<IVisualElement, TVisual>(visual);
 
             switch (value)
             {
@@ -48,9 +68,30 @@ namespace Das.Views
                     break;
 
                 default:
-                    throw new InvalidCastException(value + "cannot be cast to type " + typeof(TValue));
+                    throw new InvalidCastException(value + " cannot be cast to type " + typeof(TValue));
             }
         }
+
+        void IDependencyProperty.SetValueFromStyle(IVisualElement visual, Object? value)
+        {
+            SetRuntimeValueImpl(visual, value, true);
+        }
+
+        void IDependencyProperty.SetComputedValueFromStyle(IVisualElement visual, 
+                                                           Func<IVisualElement, Object?> value)
+        {
+            var tv = GetValue<IVisualElement, TVisual>(visual);
+            _values.TryRemove(tv, out _);
+            
+            _computedValues[tv] = value;
+            EnsureKnown(tv);
+        }
+
+        public String Name => _propertyName;
+
+        public Type PropertyType => typeof(TValue);
+
+        public Type VisualType => typeof(TVisual);
 
         public void AddOnChangedHandler(Action<TVisual, TValue, TValue> handler)
         {
@@ -80,14 +121,31 @@ namespace Das.Views
             }
         }
 
+        private Boolean TryGetKnownOrComputedValue(TVisual forVisual,
+                                                   out TValue value)
+        {
+            if (_values.TryGetValue(forVisual, out value))
+                return true;
+            
+            if (_computedValues.TryGetValue(forVisual, out var computer))
+            {
+                var computed = computer(forVisual);
+                value = GetValue<Object, TValue>(computed!);
+                return true;
+            }
+            
+            value = default!;
+            return false;
+        }
+
         public TValue GetValue(TVisual forVisual)
         {
-            if (!_values.TryGetValue(forVisual, out var good))
+            if (!TryGetKnownOrComputedValue(forVisual, out var good))
             {
                 good = _defaultValue;
                 EnsureKnown(forVisual);
             }
-
+            
             return good;
         }
 
@@ -95,7 +153,8 @@ namespace Das.Views
                                IStyleProvider contextStyle,
                                Func<TVisual, IStyleProvider, TValue> getDefault)
         {
-            if (!_values.TryGetValue(forVisual, out var good))
+            //if (!_values.TryGetValue(forVisual, out var good))
+            if (!TryGetKnownOrComputedValue(forVisual, out var good))
             {
                 good = getDefault(forVisual, contextStyle);
                 EnsureKnown(forVisual);
@@ -243,12 +302,15 @@ namespace Das.Views
 
         private void OnVisualDisposed(IVisualElement visual)
         {
+            visual.Disposed -= OnVisualDisposed;
+            
             if (!(visual is TVisual valid))
                 return;
 
             _knownVisuals.TryRemove(valid, out _);
 
             _values.TryRemove(valid, out _);
+            _computedValues.TryRemove(valid, out _);
             _changeds.TryRemove(valid, out _);
             _changings.TryRemove(valid, out _);
         }
@@ -325,5 +387,7 @@ namespace Das.Views
         private readonly String _propertyName;
         private readonly List<Action<TVisual, TValue, TValue>> _staticChangeds;
         private readonly ConcurrentDictionary<TVisual, TValue> _values;
+        
+        private readonly ConcurrentDictionary<TVisual, Func<IVisualElement, Object?>> _computedValues;
     }
 }

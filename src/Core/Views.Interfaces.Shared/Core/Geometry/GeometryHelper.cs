@@ -118,6 +118,7 @@ namespace Das.Views.Core.Geometry
             return new ValueSize(rect.Width, rect.Height);
         }
 
+
         public static ValueIntRectangle GetUnion<TRoundedRectangle>(TRoundedRectangle a,
                                                                     IRoundedRectangle b)
             where TRoundedRectangle : IRoundedRectangle

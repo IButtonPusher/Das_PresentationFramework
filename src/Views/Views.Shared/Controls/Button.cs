@@ -11,6 +11,6 @@ namespace Das.Views.Controls
         {
         }
 
-        public InputVisualType InputType => InputVisualType.Button;
+        public override InputVisualType InputType => InputVisualType.Button;
     }
 }

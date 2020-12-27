@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Das.Views.Controls;
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
 
@@ -80,7 +81,6 @@ namespace Das.Views.DataBinding
                             {PropertyName: nameof(DataContext)} setter)
                         {
                             var res = setter.GetSourceValue(something);
-                            //  if (res != null)
                             return res;
                         }
                 }
@@ -102,6 +102,16 @@ namespace Das.Views.DataBinding
                     _bindings[c] = b.Update(dataContext, this);
                 }
             }
+        }
+
+        protected override void OnTemplateSet(IVisualTemplate? newValue)
+        {
+            base.OnTemplateSet(newValue);
+
+            if (!(newValue?.Content is IBindableElement bindable))
+                return;
+
+            bindable.DataContext = this;
         }
 
         protected readonly List<IDataBinding> _bindings;

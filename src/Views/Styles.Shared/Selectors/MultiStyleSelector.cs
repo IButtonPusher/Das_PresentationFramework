@@ -23,6 +23,8 @@ namespace Das.Views.Styles.Selectors
             className = default!;
             return false;
         }
+
+        public IEnumerable<IStyleSelector> Selectors => _selectors;
         
         protected readonly List<IStyleSelector> _selectors;
     }

@@ -1,6 +1,8 @@
 ﻿using Das.Views.Rendering;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using Das.Views;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
@@ -16,8 +18,9 @@ namespace Das.OpenGL
                                IFontProvider fontProvider,
                                IVisualSurrogateProvider surrogateProvider,
                                IStyleContext styleContext,
-                               IVisualLineage visualLineage)
-            : base(perspective, surrogateProvider, styleContext, visualLineage)
+                               IVisualLineage visualLineage,
+                               Dictionary<IVisualElement, ValueCube> renderPositions)
+            : base(perspective, surrogateProvider, styleContext, visualLineage, renderPositions)
         {
             _openGlContext = openGlContext;
             _fontProvider = fontProvider;
@@ -26,6 +29,11 @@ namespace Das.OpenGL
         private readonly IGLContext _openGlContext;
         private readonly IFontProvider _fontProvider;
         private const Double TwoPi = 2.0 * Math.PI;
+
+        public override void DrawRoundedRect<TRectangle, TPen, TThickness>(TRectangle rect, TPen pen, TThickness cornerRadii)
+        {
+            throw new NotImplementedException();
+        }
 
         public override void DrawString<TFont, TBrush, TPoint>(String s,
                                                                TFont font,
@@ -37,12 +45,7 @@ namespace Das.OpenGL
             renderer.DrawString(s, brush, to);
         }
 
-        public override void DrawRoundedRect<TRectangle, TPen>(TRectangle rect,
-                                                               TPen pen,
-                                                               Double cornerRadius)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public override void FillRectangle<TRectangle, TBrush>(TRectangle orect,
                                                                TBrush brush)
@@ -60,12 +63,11 @@ namespace Das.OpenGL
             GL.glFlush();
         }
 
-        public override void FillRoundedRectangle<TRectangle, TBrush>(TRectangle rect,
-                                                                      TBrush brush,
-                                                                      Double cornerRadius)
+        public override void FillRoundedRectangle<TRectangle, TBrush, TThickness>(TRectangle rect, TBrush brush, TThickness cornerRadii)
         {
             throw new NotImplementedException();
         }
+
 
         private static void SetColor(IColor color)
         {

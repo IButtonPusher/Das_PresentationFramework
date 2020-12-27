@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="Das.Views.Construction.VisualStyleProvider">
+    <Position X="7.5" Y="0.75" Width="5.25" />
+    <TypeIdentifier />
+    <Lollipop Orientation="Bottom" Position="0.1" />
+  </Class>
+  <Class Name="Das.Views.Construction.StyledVisualBuilder">
+    <Position X="0.5" Y="0.5" Width="5.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.242" />
+  </Class>
+  <Class Name="Das.Views.Styles.Construction.StyleInflater">
+    <Position X="7" Y="3.75" Width="5.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Das.Views.Construction.Styles.IStyledVisualBuilder">
+    <Position X="0.75" Y="1.5" Width="3.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Das.Views.Construction.IStyleInflater">
+    <Position X="7.25" Y="4.75" Width="4.75" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

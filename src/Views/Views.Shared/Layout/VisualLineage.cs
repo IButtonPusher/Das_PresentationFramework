@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Das.Views.Panels;
+using Das.Views.Primitives;
 using Das.Views.Rendering;
 
 namespace Das.Views.Layout
@@ -36,7 +39,6 @@ namespace Das.Views.Layout
                     }
                 }
             }
-
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -46,14 +48,28 @@ namespace Das.Views.Layout
 
         public void PushVisual(IVisualElement visual)
         {
+            //Debug.WriteLine("Push: " + visual);
+
             lock (_lock)
                 _visualStack.Push(visual);
         }
 
         public IVisualElement PopVisual()
         {
+
             lock (_lock)
-                return _visualStack.Pop();
+            {
+                var res =_visualStack.Pop();
+              //  Debug.WriteLine("Pop: " + res);
+                return res;
+            }
+        }
+
+        public void AssertPopVisual(IVisualElement visual)
+        {
+            var popped = PopVisual();
+            if (!ReferenceEquals(popped, visual))
+                throw new InvalidOperationException();
         }
 
         public IVisualElement? PeekVisual()
@@ -65,7 +81,52 @@ namespace Das.Views.Layout
                 return _visualStack.Peek();
             }
         }
-        
+
+        public IVisualElement? GetNextSibling()
+        {
+            lock (_lock)
+            {
+                if (_visualStack.Count < 2)
+                    return default;
+
+                IVisualElement? res = default;
+
+                var currentVisual = PopVisual();
+
+                var parent = PeekVisual();
+                if (parent is IVisualContainer container)
+                {
+                    for (var c = 0; c < container.Children.Count - 1; c++)
+                    {
+                        if (ReferenceEquals(currentVisual, container.Children[c]))
+                        {
+                            res = container.Children[c + 1];
+                            break;
+                        }
+                    }
+                }
+
+                PushVisual(currentVisual);
+
+                return res;
+            }
+        }
+
+        public override String ToString()
+        {
+            lock (_lock)
+                return "Visual stack - count: " + Count + " - " + String.Join(", ", this);
+        }
+
+        public Int32 Count
+        {
+            get
+            {
+                lock (_lock)
+                    return _visualStack.Count;
+            }
+        }
+
         private readonly Stack<IVisualElement> _visualStack;
         private readonly Object _lock;
         private readonly Stack<IVisualElement> _iterationStack;

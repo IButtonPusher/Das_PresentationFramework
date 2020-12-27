@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Das.Views.Styles
@@ -16,6 +17,7 @@ namespace Das.Views.Styles
     public abstract class TypeStyle : StyleSheet
     {
         protected TypeStyle(Type targetType)
+        : base(Enumerable.Empty<IStyleRule>())
         {
             TargetType = targetType;
         }

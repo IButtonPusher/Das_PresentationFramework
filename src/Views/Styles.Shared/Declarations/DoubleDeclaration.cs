@@ -5,19 +5,19 @@ namespace Das.Views.Styles.Declarations
     /// <summary>
     /// A single number without quantity
     /// </summary>
-    public class NumericDeclaration : DeclarationBase
+    public class DoubleDeclaration : DeclarationBase
     {
-        public NumericDeclaration(String value,
-            IStyleVariableAccessor variableAccessor, 
-                                  DeclarationProperty property) 
+        public DoubleDeclaration(String value,
+                                 IStyleVariableAccessor variableAccessor,
+                                 DeclarationProperty property)
             : base(variableAccessor, property)
         {
             Value = Double.TryParse(value, out var val) ? val : Double.NaN;
         }
-        
-        public NumericDeclaration(Double value,
-                                  IStyleVariableAccessor variableAccessor, 
-                                  DeclarationProperty property) 
+
+        public DoubleDeclaration(Double value,
+                                 IStyleVariableAccessor variableAccessor,
+                                 DeclarationProperty property)
             : base(variableAccessor, property)
         {
             Value = value;

@@ -5,6 +5,7 @@ using Das.Container;
 using Das.Serializer;
 using Das.Views.Construction;
 using Das.Views.Controls;
+using Das.Views.Core.Geometry;
 using Das.Views.Styles;
 using Das.Views.Styles.Construction;
 using Das.Views.Templates;
@@ -16,9 +17,10 @@ namespace Das.Views
         protected BaseRenderKit(IStyleContext styleContext,
                                 IStringPrimitiveScanner attributeScanner,
                                 ITypeInferrer typeInferrer,
-                                IPropertyProvider propertyProvider)
+                                IPropertyProvider propertyProvider,
+                                Dictionary<IVisualElement, ValueCube> renderPositions)
             : this(new BaseResolver(), styleContext, attributeScanner,
-                typeInferrer, propertyProvider)
+                typeInferrer, propertyProvider, renderPositions)
         {
         }
 
@@ -26,9 +28,10 @@ namespace Das.Views
                                 IStyleContext styleContext,
                                 IStringPrimitiveScanner attributeScanner,
                                 ITypeInferrer typeInferrer,
-                                IPropertyProvider propertyProvider)
+                                IPropertyProvider propertyProvider,
+                                Dictionary<IVisualElement, ValueCube> renderPositions)
         : this(resolver, styleContext, attributeScanner, typeInferrer, propertyProvider, 
-            GetVisualBootstrapper(resolver, styleContext, propertyProvider))
+            GetVisualBootstrapper(resolver, styleContext, propertyProvider), renderPositions)
         {
            
         }
@@ -38,10 +41,12 @@ namespace Das.Views
                                 IStringPrimitiveScanner attributeScanner,
                                 ITypeInferrer typeInferrer,
                                 IPropertyProvider propertyProvider,
-                                IVisualBootstrapper visualBootstrapper)
-        : this(resolver, styleContext,
-            visualBootstrapper, GetViewInflater(visualBootstrapper, attributeScanner,
-                typeInferrer, propertyProvider))
+                                IVisualBootstrapper visualBootstrapper,
+                                Dictionary<IVisualElement, ValueCube> renderPositions)
+        : this(resolver, styleContext, visualBootstrapper, 
+            GetViewInflater(visualBootstrapper, attributeScanner, 
+                typeInferrer, propertyProvider, renderPositions),
+            renderPositions)
         
         {
 
@@ -50,9 +55,11 @@ namespace Das.Views
         protected BaseRenderKit(IResolver resolver,
                                 IStyleContext styleContext,
                                 IVisualBootstrapper visualBootstrapper,
-                                IViewInflater viewInflater)
+                                IViewInflater viewInflater,
+                                Dictionary<IVisualElement, ValueCube> renderPositions)
         {
             _styleContext = styleContext;
+            _renderPositions = renderPositions;
             Container = resolver;
             
             _surrogateInstances = new Dictionary<IVisualElement, IVisualSurrogate>();
@@ -75,19 +82,21 @@ namespace Das.Views
         private static IViewInflater GetViewInflater(IVisualBootstrapper visualBootstrapper,
                                                      IStringPrimitiveScanner attributeScanner,
                                                      ITypeInferrer typeInferrer,
-                                                     IPropertyProvider propertyProvider)
+                                                     IPropertyProvider propertyProvider,
+                                                     Dictionary<IVisualElement, ValueCube> renderPositions)
         {
             var bindingBuilder = new BindingBuilder(typeInferrer, propertyProvider);
-            var converterProvider = new DefaultValueConverterProvider();
+            var converterProvider = new DefaultValueConverterProvider(visualBootstrapper);
             var visualTypeResolver = new VisualTypeResolver(typeInferrer);
 
-            var styleInflater = new DefaultStyleInflater();
+            var styleInflater = new DefaultStyleInflater(typeInferrer);
             var styleProvider = new VisualStyleProvider(styleInflater);
-            var styledVisualBuilder = new StyledVisualBuilder(styleProvider);
+            var styledVisualBuilder = new StyledVisualBuilder(visualBootstrapper, styleProvider, 
+                propertyProvider, renderPositions);
             
             return new ViewInflater(visualBootstrapper, attributeScanner, 
                 typeInferrer, bindingBuilder, converterProvider, 
-                visualTypeResolver, styledVisualBuilder);
+                visualTypeResolver, styledVisualBuilder, propertyProvider);
         }
 
         public void EnsureSurrogate(ref IVisualElement element)
@@ -118,6 +127,7 @@ namespace Das.Views
         }
 
         protected readonly IStyleContext _styleContext;
+        protected readonly Dictionary<IVisualElement, ValueCube> _renderPositions;
         private readonly Dictionary<IVisualElement, IVisualSurrogate> _surrogateInstances;
         private readonly Dictionary<Type, Func<IVisualElement, IVisualSurrogate>> _surrogateTypeBuilders;
     }

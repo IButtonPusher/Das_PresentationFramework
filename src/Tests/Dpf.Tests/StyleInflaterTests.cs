@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Das.Serializer;
 using Das.Views.Construction;
 using Das.Views.Construction.Styles;
 using Das.Views.Styles;
+using Das.Views.Styles.Construction;
 using Xunit;
 
 namespace Dpf.Tests
 {
-    public class CssInflaterTests
+    public class StyleInflaterTests
     {
         [Fact]
         public void ParseMaterialSwitchCss()
@@ -24,13 +27,13 @@ namespace Dpf.Tests
             
 
             var visualAliases = new VisualAliasProvider();
-            var selectorBuilder = new StyleSelectorBuilder(visualAliases);
+            var selectorBuilder = new CssStyleSelectorBuilder(visualAliases);
             
             var variableAccessor = new StyleVariableAccessor();
 
             var defaultStyle = DefaultStyleContext.Instance;
 
-            var ruleBuilder = new StyleRuleBuilder(selectorBuilder, variableAccessor);
+            var ruleBuilder = new CssRuleBuilder(selectorBuilder, variableAccessor);
 
             var index = 0;
 
@@ -48,6 +51,28 @@ namespace Dpf.Tests
                 index++;
             }
         }
+
+        [Fact]
+        public void ParseMaterialSwitchXml()
+        {
+            //var xml = GetResourceContents("abc");
+            
+            var inflater = new DefaultStyleInflater(Serializer.TypeInferrer);
+            var provider = new VisualStyleProvider(inflater);
+
+            var bob = provider.GetStyleByNameAsync("mat-toggle-button").Result;
+
+            //var rizzo = GetResourceContents("bob");
+        }
+
+        private static String GetResourceContents(String resourceName)
+        {
+            var thisExe = Assembly.GetExecutingAssembly();
+            var names = thisExe.GetManifestResourceNames();
+            throw new NotImplementedException();
+        }
+
+        private static readonly DasSerializer Serializer = new DasSerializer();
 
         private static String GetFileContents(String fileName)
         {

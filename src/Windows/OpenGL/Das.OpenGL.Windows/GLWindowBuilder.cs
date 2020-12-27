@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Drawing;
 using Das.Views;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Windows;
-using Das.Views.Mvvm;
 using Das.Views.Styles;
 
 namespace Das.OpenGL.Windows

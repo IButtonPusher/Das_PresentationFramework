@@ -7,6 +7,7 @@ using Das.Views.Core.Writing;
 using Das.Views.DataBinding;
 using Das.Views.Rendering;
 using Das.Views.Styles;
+using Das.Views.Styles.Declarations;
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
 
@@ -15,7 +16,8 @@ using TaskEx = System.Threading.Tasks.Task;
 namespace Das.Views.Controls
 {
     [ContentProperty(nameof(Text))]
-    public class Label : BindableElement
+    public class Label : BindableElement,
+                         ILabel
     {
         public Label(IVisualBootstrapper visualBootstrapper)
             : base(visualBootstrapper)
@@ -57,7 +59,9 @@ namespace Das.Views.Controls
 
         public override String ToString()
         {
-            return "Label: " + Text;
+            return !String.IsNullOrEmpty(Text) 
+                ? Text
+                : "Label";
         }
 
         private Font GetFont(IStyleProvider context)
@@ -78,6 +82,22 @@ namespace Das.Views.Controls
                                           String oldValue, String newValue)
         {
             sender.InvalidateMeasure();
+        }
+
+        public override Boolean TryGetDependencyProperty(DeclarationProperty declarationProperty, 
+                                                         out IDependencyProperty property)
+        {
+            switch (declarationProperty)
+            {
+                case DeclarationProperty.Color:
+                    property = TextBrushProperty;
+                    return true;
+                
+                default:
+                    return base.TryGetDependencyProperty(declarationProperty, out property);
+            }
+            
+            
         }
 
         public static readonly DependencyProperty<Label, String> TextProperty =

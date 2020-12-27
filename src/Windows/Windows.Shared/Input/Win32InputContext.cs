@@ -4,7 +4,6 @@ using Das.Views;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Input;
 using Das.Views.Input;
-using Das.Views.Rendering;
 using Das.Views.Windows;
 
 namespace Windows.Shared.Input

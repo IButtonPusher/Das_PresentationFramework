@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Das.Views.Controls;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
+using Das.Views.Styles;
+using Das.Views.Styles.Declarations;
 using Das.Views.Templates;
 
 namespace Das.Views
@@ -22,6 +24,13 @@ namespace Das.Views
         ///     For style lookups. Allows items in repeaters to use the same style assignment
         /// </summary>
         Int32 Id { get; }
+        
+        /// <summary>
+        /// Class name for style resolution
+        /// </summary>
+        String? Class { get; }
+
+        IStyleSheet? Style { get; }
 
         Boolean IsClipsContent { get; set; }
 
@@ -32,9 +41,17 @@ namespace Das.Views
         void RaisePropertyChanged(String propertyName,
                                   Object? value);
 
-        Double? Width { get; set; }
+        QuantifiedDouble? Width { get; set; }
 
-        Double? Height { get; set; }
+        QuantifiedDouble? Height { get; set; }
+
+        QuantifiedDouble? Left { get; set; }
+
+        QuantifiedDouble? Right { get; set; }
+
+        QuantifiedDouble? Top { get; set; }
+
+        QuantifiedDouble? Bottom { get; set; }
 
         HorizontalAlignments HorizontalAlignment { get; set; }
 
@@ -42,15 +59,22 @@ namespace Das.Views
 
         IBrush? Background { get; set; }
         
-        Thickness? Margin { get; set; }
-        
-        ISet<String> StyleClasses { get; }
-        
+        QuantifiedThickness Margin { get; set; }
+
         Double Opacity { get; }
         
-        Visibility Visibility { get; }
+        Visibility Visibility { get; set; }
+        
+        QuantifiedThickness BorderRadius { get; set; }
         
         Boolean IsEnabled { get; set; }
+
+        Boolean TryGetDependencyProperty(DeclarationProperty declarationProperty,
+                                         out IDependencyProperty dependencyProperty);
+
+        ILabel? BeforeLabel { get; set; }
+        
+        ILabel? AfterLabel { get; set; }
 
         /// <summary>
         /// Tags in markup that are meant to identify this visual.
@@ -59,6 +83,5 @@ namespace Das.Views
         Boolean IsMarkupNameAlias(String markupTag);
         
         Int32 ZIndex { get; }
-
     }
 }

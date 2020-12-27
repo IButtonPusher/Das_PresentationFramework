@@ -59,6 +59,7 @@
     <Compile Include="Images\AndroidImageProvider.cs" />
     <Compile Include="Input\AndroidInputContext.cs" />
     <Compile Include="Mvvm\InvokeCompletionSource.cs" />
+    <Compile Include="Rendering\AndroidGraphicsPath.cs" />
     <Compile Include="Rendering\AndroidRenderContext.cs" />
     <Compile Include="Rendering\AndroidRenderKit.cs" />
     <Compile Include="Rendering\RefreshRenderContext.cs" />

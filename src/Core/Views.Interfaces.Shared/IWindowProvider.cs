@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
-using Das.Views.DataBinding;
-using Das.Views.Mvvm;
 using Das.Views.Panels;
+// ReSharper disable UnusedMember.Global
 
 namespace Das.Views
 {
@@ -15,10 +14,5 @@ namespace Das.Views
             where TRectangle : IRectangle;
 
         TWindow Show(IView view);
-
-        //TWindow Show<TViewModel, TRectangle>(IView view)
-        //    where TRectangle : IRectangle;
-
-        //where TViewModel : IViewModel;
     }
 }

@@ -11,9 +11,9 @@ namespace Das.Views.Images
         public static NullImage Instance = new NullImage();
 
         #if NET40
-        private static Task _completedTask = TaskEx.CompletedTask;
+        private static readonly Task _completedTask = TaskEx.CompletedTask;
         #else
-        private static Task _completedTask = Task.CompletedTask;
+        private static readonly Task _completedTask = Task.CompletedTask;
         #endif
 
         private NullImage()

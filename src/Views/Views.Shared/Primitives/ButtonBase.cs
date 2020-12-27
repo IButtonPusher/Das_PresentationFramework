@@ -151,5 +151,7 @@ namespace Das.Views.Controls
 
         private ClickMode _clickMode;
         private VisualStateType _currentVisualStateType;
+
+        public abstract InputVisualType InputType { get; }
     }
 }

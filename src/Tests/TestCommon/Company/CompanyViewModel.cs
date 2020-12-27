@@ -39,14 +39,7 @@ namespace TestCommon.Company
 
         private readonly Stopwatch _running;
 
-        //public override void AcceptChanges()
-        //{
-            
-        //}
-
-        //private Boolean _isChanged;
-
-        //public override bool IsChanged => _isChanged;
+       
         public ICamera Camera { get; }
         public void Update()
         {

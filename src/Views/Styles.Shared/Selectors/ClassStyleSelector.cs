@@ -2,32 +2,33 @@
 
 namespace Das.Views.Styles.Selectors
 {
-    public class ClassStyleSelector : IStyleSelector
+    public class ClassStyleSelector : SelectorBase
     {
-        private readonly String _className;
+        public String ClassName { get; }
 
         public ClassStyleSelector(String className)
         {
             if (!className.StartsWith(".", StringComparison.OrdinalIgnoreCase))
                 throw new InvalidOperationException();
             
-            _className = className.Substring(1);
+            ClassName = className.Substring(1);
+        }
+
+        public sealed override Boolean Equals(IStyleSelector other)
+        {
+            return other is ClassStyleSelector classy &&
+                   String.Equals(classy.ClassName, ClassName);
         }
 
         public override String ToString()
         {
-            return "Select class: " + _className;
+            return "Class: " + ClassName;
         }
 
-        public Boolean TryGetClassName(out String className)
+        public sealed override Boolean TryGetClassName(out String className)
         {
-            className = _className;
+            className = ClassName;
             return true;
-        }
-
-        public Boolean IsSelectVisual(IVisualElement visual)
-        {
-            return visual.StyleClasses.Contains(_className);
         }
     }
 }

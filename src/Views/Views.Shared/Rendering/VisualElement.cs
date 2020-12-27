@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Das.Views.Controls;
 using Das.Views.Core.Geometry;
 using Das.Views.Mvvm;
 using Das.Views.Rendering;
+using Das.Views.Styles;
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
 
@@ -18,7 +19,7 @@ namespace Das.Views
         protected VisualElement(IVisualBootstrapper visualBootstrapper)
         {
             _visualBootstrapper = visualBootstrapper;
-            _styleClasses = new HashSet<String>();
+            
             _measuredSize = ValueSize.Empty;
             Id = Interlocked.Increment(ref _currentId);
         }
@@ -27,22 +28,21 @@ namespace Das.Views
                                          IMeasureContext measureContext)
         {
             measureContext.TryGetElementSize(this, out _measuredSize);
-            //TryGetSize(out var size);
             return _measuredSize;
         }
 
         public virtual void Arrange(IRenderSize availableSpace,
                                     IRenderContext renderContext)
         {
-            if (_measuredSize.IsEmpty)
-                return;
+            //if (_measuredSize.IsEmpty)
+            //    return;
 
-            var letsUse = _measuredSize.LeastCommonDenominator(availableSpace);
+            //var letsUse = _measuredSize.LeastCommonDenominator(availableSpace);
 
-            if (letsUse.IsEmpty)
-                return;
+            //if (letsUse.IsEmpty)
+            //    return;
 
-            renderContext.DrawContentElement(this, letsUse);
+            //renderContext.DrawContentElement(this, letsUse);
         }
 
         public virtual void InvalidateMeasure()
@@ -76,6 +76,9 @@ namespace Das.Views
             base.RaisePropertyChanged(propertyName, value);
         }
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public IStyleSheet? Style { get; set; }
+
         public virtual void OnParentChanging(IVisualElement? newParent)
         {
         }
@@ -83,6 +86,18 @@ namespace Das.Views
         public override void Dispose()
         {
             base.Dispose();
+
+            if (BeforeLabel is { } beforeLabel)
+            {
+                beforeLabel.Dispose();
+                BeforeLabel = default;
+            }
+
+            if (AfterLabel is { } afterLabel)
+            {
+                afterLabel.Dispose();
+                AfterLabel = default;
+            }
 
             Disposed?.Invoke(this);
 
@@ -102,34 +117,21 @@ namespace Das.Views
 
         public override String ToString()
         {
-            return GetType().Name + " req arrange: " + IsRequiresArrange +
-                   " measure: " + IsRequiresMeasure;
+            return GetType().Name;
+            //+ " req arrange: " + IsRequiresArrange +
+            //" measure: " + IsRequiresMeasure;
         }
 
-        //protected Boolean TryGetSize(out ValueSize size)
-        //{
-        //    var width = Width;
-        //    if (width == null || width == 0)
-        //    {
-        //        size = ValueSize.Empty;
-        //        return false;
-        //    }
-
-        //    var height = Height;
-        //    if (height == null || height == 0)
-        //    {
-        //        size = ValueSize.Empty;
-        //        return false;
-        //    }
-
-        //    size = new ValueSize(width.Value, height.Value);
-        //    return true;
-        //}
-
+       
         private static Int32 _currentId;
         private ValueSize _measuredSize;
 
 
         protected readonly IVisualBootstrapper _visualBootstrapper;
+
+        protected virtual void OnTemplateSet(IVisualTemplate? newValue)
+        {
+            
+        }
     }
 }

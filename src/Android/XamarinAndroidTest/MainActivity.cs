@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Android.App;
-using Android.OS;
 using Android.Runtime;
 using Android.Support.Design.Widget;
 using Android.Views;
-using Android.Widget;
 using Das.Views;
 using Das.Views.Panels;
 using Das.Xamarin.Android;

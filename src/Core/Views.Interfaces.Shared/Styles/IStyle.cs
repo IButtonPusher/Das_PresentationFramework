@@ -19,10 +19,7 @@ namespace Das.Views.Styles
         void Add(StyleSetterType setterType,
                  VisualStateType type,
                  Object? value);
-
-        //void AddOrUpdate(IStyle style);
-
-        //void AddSetter(StyleSetterType setterType,
-        //               Object? value);
+        
+        IEnumerable<AssignedStyle> Setters { get; }
     }
 }

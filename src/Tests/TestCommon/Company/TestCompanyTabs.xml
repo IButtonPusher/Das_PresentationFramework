@@ -20,14 +20,19 @@
     </TabControl>
 
     <ToggleButton Content="hello"
-                  Class="pure-material-switch"/>
+                  Style="mat-toggle-button"/>
 
     <ToggleButton>
       <Template>
         <Label>
           hello 2 u 2
         </Label>
-        <!--<Label Text="hello 2 u 2" />-->
+      </Template>
+    </ToggleButton>
+
+    <ToggleButton Content="hello 3 u 3">
+      <Template>
+        <Label Text="{Content}" />
       </Template>
     </ToggleButton>
 

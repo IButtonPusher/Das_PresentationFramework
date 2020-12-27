@@ -141,12 +141,6 @@ namespace Das.ViewModels
             await _uiProvider.InvokeAsync(() => { CanExecuteChanged?.Invoke(canExecute, EventArgs.Empty); });
         }
 
-        //private Boolean CanExecuteImpl()
-        //{
-        //    var propVal = _typeManipulator.GetPropertyValue<Boolean>(_viewModel, _propertyName);
-        //    return propVal;
-        //}
-
         private async void OnViewModelPropertyChanged(Object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName != _propertyName)
@@ -173,14 +167,10 @@ namespace Das.ViewModels
 
         private readonly Func<Task>? _executeAsync;
         private readonly String? _propertyName;
-
-        //private readonly IObjectManipulator _typeManipulator;
         private readonly IUiProvider _uiProvider;
 
 
         private Boolean _canExecuteVal;
-
-        //private readonly INotifyPropertyChanged _viewModel;
         private Int32 _canExecutions;
 
 

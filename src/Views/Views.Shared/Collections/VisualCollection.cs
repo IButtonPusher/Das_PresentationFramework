@@ -192,7 +192,7 @@ namespace Das.Views.Collections
 
         public override String ToString()
         {
-            return _collectionHelper.ToString();
+            return "Visuals: " + _children.Count;
         }
 
         Object? INotifyingCollection.this[Int32 index] => ((INotifyingCollection) _collectionHelper)[index];

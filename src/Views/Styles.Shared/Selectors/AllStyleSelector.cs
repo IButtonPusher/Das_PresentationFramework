@@ -2,8 +2,7 @@
 
 namespace Das.Views.Styles.Selectors
 {
-    public class AllStyleSelector : SelectorBase,
-                                    IStyleSelector
+    public class AllStyleSelector : SelectorBase
     {
         public static readonly AllStyleSelector Instance = new AllStyleSelector();
         
@@ -12,14 +11,16 @@ namespace Das.Views.Styles.Selectors
             
         }
 
-        public Boolean IsSelectVisual(IVisualElement visual)
+        public sealed override Boolean Equals(IStyleSelector other)
         {
-            return true;
+            return other is AllStyleSelector;
         }
 
         public override String ToString()
         {
             return "Select *";
         }
+
+       
     }
 }

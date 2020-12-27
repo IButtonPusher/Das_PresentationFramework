@@ -10,8 +10,8 @@ namespace Das.Views.Construction
 
         Task<ICascadingStyle> InflateResourceCssAsync(String resourceName);
         
-        ICascadingStyle InflateXml(String xml);
+        IStyleSheet InflateXml(String xml);
 
-        Task<ICascadingStyle> InflateResourceXmlAsync(String resourceName);
+        Task<IStyleSheet> InflateResourceXmlAsync(String resourceName);
     }
 }

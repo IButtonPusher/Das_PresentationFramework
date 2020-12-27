@@ -3,18 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Das.Serializer;
-using Das.Views.DataBinding;
-using Das.Views.Rendering;
 
 namespace Das.Views.Panels
 {
-    //public interface IVisualContainer : IVisualContainer<IVisualElement>
-    //{
-        
-    //}
 
-    public interface IVisualContainer : //IBindableElement,
-                                        IVisualFinder,
+    public interface IVisualContainer : IVisualFinder,
                                         IChangeTracking,
                                         IPanelElement
     {
@@ -28,5 +21,6 @@ namespace Das.Views.Panels
 
         void OnChildDeserialized(IVisualElement element,
                                  INode node);
+
     }
 }

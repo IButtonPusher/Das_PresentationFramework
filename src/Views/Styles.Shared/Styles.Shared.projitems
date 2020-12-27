@@ -10,13 +10,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CascadingStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Combinators\ChildCombinator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Combinators\CombinatorBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Combinators\DescendantCombinator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\Combinator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\CssMarkupNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\CssNodeBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\DefaultStyleInflater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\StyleInflater.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Construction\StyleRuleBuilder.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Construction\StyleSelectorBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\CssRuleBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\CssStyleSelectorBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\StyleVariableAccessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\XmlStyleRuleBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\AppearanceDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\AppearanceType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\BorderRadiusDeclaration.cs" />
@@ -32,14 +37,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\FloatType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\FontFamilyDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\FontSizeDeclaration.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Declarations\LengthUnits.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\LineHeightDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\MarginDeclaration.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Declarations\NumericDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Outline\OutlineStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Outline\OutlineColorDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Outline\OutlineDeclaration.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Declarations\Outline\OutlineOffsetDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Outline\OutlineStyleDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Outline\OutlineWidthDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\PointerEventType.cs" />
@@ -48,6 +50,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\QuadQuantityDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\QuantifiedNumericDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\QuantityDeclaration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Declarations\ScalarDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\SizeType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\StringDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\TimeUnit.cs" />
@@ -58,6 +61,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Transition\TransitionFunctionType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Transition\TransitionFunctionDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Transition\TransitionPropertyDeclaration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Declarations\ValueDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\VerticalAlignDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\VerticalAlignType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Functions\FunctionBuilder.cs" />
@@ -68,12 +72,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)NamedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Selectors\AllStyleSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Selectors\AndStyleSelector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Selectors\ChildSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Selectors\ClassStyleSelector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Selectors\CombinatorSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Selectors\ContentAppenderSelector.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Selectors\ContentAppendType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Selectors\MultiStyleSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Selectors\OrStyleSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Selectors\SelectorBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Selectors\AdjacentSiblingSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Selectors\VisualStateSelector.cs" />
   </ItemGroup>
   <ItemGroup>

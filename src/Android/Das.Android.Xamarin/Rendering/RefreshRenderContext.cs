@@ -44,6 +44,11 @@ namespace Das.Xamarin.Android.Rendering
         {
         }
 
+        public override void DrawRoundedRect<TRectangle, TPen, TThickness>(TRectangle rect, TPen pen, TThickness cornerRadii)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void DrawString<TFont, TBrush, TPoint>(String s,
                                                                TFont font,
                                                                TBrush brush,
@@ -67,16 +72,17 @@ namespace Das.Xamarin.Android.Rendering
         {
         }
 
+        public override void FillRoundedRectangle<TRectangle, TBrush, TThickness>(TRectangle rect, TBrush brush, TThickness cornerRadii)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void DrawRect<TRectangle, TPen>(TRectangle rect,
                                                         TPen pen)
         {
         }
 
-        public override void DrawRoundedRect<TRectangle, TPen>(TRectangle rect,
-                                                               TPen pen,
-                                                               Double cornerRadius)
-        {
-        }
+       
 
         protected override void PushClip<TRectangle>(TRectangle rect)
         {
@@ -120,12 +126,6 @@ namespace Das.Xamarin.Android.Rendering
 
         public override void FillRectangle<TRectangle, TBrush>(TRectangle rect,
                                                                TBrush brush)
-        {
-        }
-
-        public override void FillRoundedRectangle<TRectangle, TBrush>(TRectangle rect,
-                                                                      TBrush brush,
-                                                                      Double cornerRadius)
         {
         }
     }

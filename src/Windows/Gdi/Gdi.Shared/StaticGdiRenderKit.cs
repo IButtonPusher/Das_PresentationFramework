@@ -21,13 +21,19 @@ namespace Das.Gdi.Kits
                                   IStringPrimitiveScanner attributeScanner,
                                   ITypeInferrer typeInferrer,
                                   IPropertyProvider propertyProvider)
-        : base(
-            //new BaseStyleContext(DefaultStyle.Instance, new DefaultColorPalette()), 
-            DefaultStyleContext.Instance,
-            attributeScanner, typeInferrer, propertyProvider)
+        : this(viewPerspective, attributeScanner, typeInferrer, propertyProvider, 
+            new Dictionary<IVisualElement, ValueCube>())
+        {}
+        
+        private StaticGdiRenderKit(IViewPerspective viewPerspective,
+                                  IStringPrimitiveScanner attributeScanner,
+                                  ITypeInferrer typeInferrer,
+                                  IPropertyProvider propertyProvider,
+                                  Dictionary<IVisualElement, ValueCube> renderPositions )
+        : base(DefaultStyleContext.Instance,
+            attributeScanner, typeInferrer, propertyProvider, renderPositions)
         {
             var defaultSurrogates = new BaseSurrogateProvider();
-            //var imageProvider = new GdiImageProvider();
 
             var lastMeasure = new Dictionary<IVisualElement, ValueSize>();
             var visualLineage = new VisualLineage();

@@ -48,43 +48,6 @@ namespace Das.Views.Styles
             TaskEx.Run(() => RunUpdates(CancellationToken.None)).ConfigureAwait(false);
         }
 
-        //private async Task RunUpdates()
-        //{
-        //    await TaskEx.Delay(_transition.Delay);
-
-        //    var running = Stopwatch.StartNew();
-        //    Double runningPct;
-
-        //    while (true)
-        //    {
-        //        await TaskEx.Delay(SIXTY_FPS);
-
-        //        runningPct = Math.Min(
-        //            running.ElapsedMilliseconds / _transition.Duration.TotalMilliseconds, 1);
-
-        //        runningPct = EaseOutQuadratic(runningPct);
-
-        //        var currentLeft = _initialValue.Left + (_leftDiff * runningPct);
-        //        var currentTop = _initialValue.Top + (_topDiff * runningPct);
-        //        var currentRight = _initialValue.Right+ (_rightDiff * runningPct);
-        //        var currentBottom = _initialValue.Bottom+ (_bottomDiff * runningPct);
-        //        var currentValue = new Thickness(currentLeft, currentTop,
-        //            currentRight, currentBottom);
-
-        //        var assigned = new AssignedStyle(_assignedStyle.Setter, _assignedStyle.Selector,
-        //            currentValue);
-
-        //        _updater(assigned);
-                
-
-        //        if (runningPct >= 1)
-        //            break;
-
-        //    } 
-        //}
-
-        private const Int32 SIXTY_FPS = 1000 / 60;
-
         protected override void OnUpdate(Double runningPct)
         {
             var currentLeft = _initialValue.Left + (_leftDiff * runningPct);

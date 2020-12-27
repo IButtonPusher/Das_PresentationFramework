@@ -8,6 +8,8 @@ namespace Das.Views.Panels
     public interface IVisualCollection : IMeasureAndArrange,
                                          IDisposable
     {
+        IVisualElement this[Int32 index] { get; }
+
         Int32 Count { get; }
 
         Boolean Contains(IVisualElement element);

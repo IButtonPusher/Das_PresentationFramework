@@ -2,7 +2,7 @@
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace Das.Views.Styles.Declarations.Outline
+namespace Das.Views.Styles.Declarations
 {
     public class OutlineDeclaration : DeclarationBase
     {

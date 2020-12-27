@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Das.Views.Controls;
 using Das.Views.Core;
@@ -63,6 +64,8 @@ namespace Das.Views.Styles
             };
             VisualTypeStyles = typeTypes;
         }
+
+        public IEnumerable<IStyleRule> Rules => Enumerable.Empty<IStyleRule>();
 
         public IDictionary<Type, IStyleSheet> VisualTypeStyles { get; }
 

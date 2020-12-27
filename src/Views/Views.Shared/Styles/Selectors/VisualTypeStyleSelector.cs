@@ -3,24 +3,25 @@ using System.Threading.Tasks;
 
 namespace Das.Views.Styles.Selectors
 {
-    public class VisualTypeStyleSelector : SelectorBase,
-                                           IStyleSelector
+    public class VisualTypeStyleSelector : SelectorBase
     {
         public VisualTypeStyleSelector(Type visualType)
         {
-            _visualType = visualType;
+            VisualType = visualType;
         }
 
-        public Boolean IsSelectVisual(IVisualElement visual)
+
+        public sealed override Boolean Equals(IStyleSelector other)
         {
-            return _visualType.IsInstanceOfType(visual);
+            return other is VisualTypeStyleSelector visType &&
+                   visType.VisualType == VisualType;
         }
 
         public override String ToString()
         {
-            return "Select: " + _visualType.Name;
+            return VisualType.Name;
         }
 
-        private readonly Type _visualType;
+        public Type VisualType { get; }
     }
 }

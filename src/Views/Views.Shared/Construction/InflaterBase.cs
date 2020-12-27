@@ -22,6 +22,19 @@ namespace Das.Views.Construction
                 }
             }
         }
+
+        protected static IMarkupNode GetRootNode(String xml)
+        {
+            IMarkupNode? node = XmlNodeBuilder.GetMarkupNode(xml);
+
+            if (node == null)
+                throw new InvalidOperationException();
+
+            if (node.IsEncodingHeader)
+                node = node[0];
+
+            return node;
+        }
         
     }
 }

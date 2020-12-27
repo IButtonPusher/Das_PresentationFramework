@@ -11,15 +11,6 @@ namespace Das.Views.Styles.Selectors
             _selectors = new List<IStyleSelector>(selectors);
         }
 
-        public Boolean IsSelectVisual(IVisualElement visual)
-        {
-            foreach (var selector in _selectors)
-                if (selector.IsSelectVisual(visual))
-                    return true;
-
-            return false;
-        }
-
         private readonly List<IStyleSelector> _selectors;
     }
 }

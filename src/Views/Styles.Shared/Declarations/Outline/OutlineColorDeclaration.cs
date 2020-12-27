@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Das.Views.Styles.Declarations.Outline
+namespace Das.Views.Styles.Declarations
 {
     public class OutlineColorDeclaration : ColorDeclaration
     {

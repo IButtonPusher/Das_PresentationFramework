@@ -20,14 +20,16 @@ namespace Das.Views.Rendering
         /// calls element.Measure with the reduced size, if applicable.
         /// </summary>
         /// <returns>The amount needed for margin/borders + what the element asked for</returns>
-        ValueSize MeasureElement(IVisualElement element,
-                            IRenderSize availableSpace);
+        ValueSize MeasureElement<TRenderSize>(IVisualElement element,
+                                              TRenderSize availableSpace)
+            where TRenderSize : IRenderSize;
 
         ValueSize MeasureImage(IImage img);
 
-        ValueSize MeasureMainView(IVisualElement element,
-                                  IRenderSize availableSpace,
-                                  IViewState viewState);
+        ValueSize MeasureMainView<TRenderSize>(IVisualElement element,
+                                               TRenderSize availableSpace,
+                                               IViewState viewState)
+            where TRenderSize : IRenderSize;
 
         ValueSize MeasureString(String s,
                                 IFont font);

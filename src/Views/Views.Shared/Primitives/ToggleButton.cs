@@ -22,25 +22,17 @@ namespace Das.Views.Controls
             return true;
         }
 
+        public override InputVisualType InputType => InputVisualType.CheckBox;
+
         public static readonly DependencyProperty<IToggleButton, Boolean?> IsCheckedProperty =
             DependencyProperty<IToggleButton, Boolean?>.Register(
-                nameof(IsChecked),
-                default);
+                nameof(IsChecked), false);
 
         public Boolean? IsChecked
         {
             get => IsCheckedProperty.GetValue(this);
             set => IsCheckedProperty.SetValue(this, value, OnIsCheckedChanged);
         }
-
-
-        //private Boolean? _isChecked;
-
-        //public Boolean? IsChecked
-        //{
-        //    get => _isChecked;
-        //    set => SetValue(ref _isChecked, value, OnIsCheckedChanged);
-        //}
 
         private void OnIsCheckedChanged(Boolean? oldValue,
                                         Boolean? value)

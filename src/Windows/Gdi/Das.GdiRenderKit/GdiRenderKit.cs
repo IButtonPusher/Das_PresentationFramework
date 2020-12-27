@@ -31,11 +31,12 @@ namespace Das.Gdi.Kits
                             IStyleContext styleContext,
                             IVisualBootstrapper visualBootstrapper,
                             IViewInflater viewInflater)
-            : base(resolver, styleContext, visualBootstrapper, viewInflater)
+            : base(resolver, styleContext, visualBootstrapper, viewInflater,
+                new Dictionary<IVisualElement, ValueCube>())
         {
             _windowProvider = windowProvider;
-            Init(windowProvider, styleContext, viewPerspective, ref _imageProvider!,
-                ref _measureContext!, ref _renderContext!);
+            Init(windowProvider, styleContext, viewPerspective, _renderPositions,
+                ref _imageProvider!, ref _measureContext!, ref _renderContext!);
         }
 
         public GdiRenderKit(IViewPerspective viewPerspective,
@@ -43,11 +44,11 @@ namespace Das.Gdi.Kits
                             IStyleContext styleContext,
                             IResolver container)
             : base(container, styleContext, Serializer.AttributeParser, Serializer.TypeInferrer,
-                Serializer.TypeManipulator)
+                Serializer.TypeManipulator, new Dictionary<IVisualElement, ValueCube>())
         {
             _windowProvider = windowProvider;
-            Init(windowProvider, styleContext, viewPerspective, ref _imageProvider!,
-                ref _measureContext!, ref _renderContext!);
+            Init(windowProvider, styleContext, viewPerspective, _renderPositions,
+                ref _imageProvider!, ref _measureContext!, ref _renderContext!);
         }
 
         public GdiRenderKit(IViewPerspective viewPerspective,
@@ -63,10 +64,13 @@ namespace Das.Gdi.Kits
                             IStringPrimitiveScanner attributeScanner,
                             ITypeInferrer typeInferrer,
                             IPropertyProvider propertyProvider)
-            : base(styleContext, attributeScanner, typeInferrer, propertyProvider)
+            : base(styleContext, attributeScanner, typeInferrer, propertyProvider,
+                new Dictionary<IVisualElement, ValueCube>())
         {
             _windowProvider = windowProvider;
-            Init(windowProvider, styleContext, viewPerspective, ref _imageProvider!,
+            Init(windowProvider, styleContext, viewPerspective, 
+                    _renderPositions,
+                ref _imageProvider!,
                 ref _measureContext!, ref _renderContext!);
         }
 
@@ -79,10 +83,12 @@ namespace Das.Gdi.Kits
                             IPropertyProvider propertyProvider,
                             IVisualBootstrapper visualBootstrapper)
             : base(resolver, styleContext, attributeScanner, typeInferrer,
-                propertyProvider, visualBootstrapper)
+                propertyProvider, visualBootstrapper,
+                new Dictionary<IVisualElement, ValueCube>())
         {
             _windowProvider = windowProvider;
-            Init(windowProvider, styleContext, viewPerspective, ref _imageProvider!,
+            Init(windowProvider, styleContext, viewPerspective, _renderPositions,
+                ref _imageProvider!,
                 ref _measureContext!, ref _renderContext!);
         }
 
@@ -116,6 +122,7 @@ namespace Das.Gdi.Kits
         private void Init(IWindowProvider<IVisualHost> windowProvider,
                           IStyleContext styleContext,
                           IViewPerspective viewPerspective,
+                          Dictionary<IVisualElement, ValueCube> renderPositions,
                           ref GdiImageProvider? imageProvider,
                           ref GdiMeasureContext measureContext,
                           ref GdiRenderContext renderContext)
@@ -129,7 +136,9 @@ namespace Das.Gdi.Kits
 
             renderContext = new GdiRenderContext(viewPerspective,
                 MeasureContext.Graphics, this, lastMeasure,
-                new Dictionary<IVisualElement, ValueCube>(), styleContext, visualLineage);
+                renderPositions,
+                //new Dictionary<IVisualElement, ValueCube>(),
+                styleContext, visualLineage);
 
             Container.ResolveTo<IImageProvider>(imageProvider);
             Container.ResolveTo<IUiProvider>(new GdiUiProvider(windowProvider));

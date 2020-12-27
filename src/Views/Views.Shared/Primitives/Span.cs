@@ -3,7 +3,8 @@ using Das.Views.Panels;
 
 namespace Das.Views.Primitives
 {
-    public class Span : BasePanel
+    public class Span : BasePanel,
+                        ISpan
     {
         public Span(IVisualBootstrapper visualBootstrapper) 
             : base(visualBootstrapper)

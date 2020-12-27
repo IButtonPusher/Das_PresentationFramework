@@ -2,15 +2,13 @@
 
 namespace Das.Views.Styles.Declarations
 {
-    public class DisplayDeclaration : DeclarationBase
+    public class DisplayDeclaration : EnumDeclaration<DisplayType>
     {
-        private readonly DisplayType _displayType;
-
         public DisplayDeclaration(DisplayType displayType,
                                   IStyleVariableAccessor variableAccessor)
-        : base(variableAccessor, DeclarationProperty.Display)
+        : base(displayType, variableAccessor, DeclarationProperty.Display)
         {
-            _displayType = displayType;
+            
         }
 
         public DisplayDeclaration(String displayName,
@@ -20,12 +18,5 @@ namespace Das.Views.Styles.Declarations
         {
 
         }
-
-
-        //public override void AssignValueToVisual(IVisualElement visual)
-        //{
-        //    throw new NotImplementedException();
-        //}
-        
     }
 }

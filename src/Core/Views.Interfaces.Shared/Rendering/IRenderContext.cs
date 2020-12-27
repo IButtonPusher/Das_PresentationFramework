@@ -14,15 +14,12 @@ namespace Das.Views.Rendering
 
         IViewState ViewState { get; }
 
-        /// <summary>
-        ///     Returns the actual rectangle occupied by the element, including borders etc
-        /// </summary>
-        void DrawElement<TRenderRectangle>(IVisualElement element,
-                                                TRenderRectangle rect)
+        void DrawElement<TRenderRectangle>(IVisualElement visual,
+                                                       TRenderRectangle rect)
             where TRenderRectangle : IRenderRectangle;
 
         void DrawContentElement<TSize>(IVisualElement element,
-                                          TSize size)
+                                       TSize size)
             where TSize : ISize;
 
 
@@ -32,7 +29,7 @@ namespace Das.Views.Rendering
         /// <param name="element">The element to draw</param>
         /// <param name="location">The top left position where the element should be drawn</param>
         void DrawElementAt<TPosition>(IVisualElement element,
-                                         TPosition location)
+                                      TPosition location)
             where TPosition : IPoint2D;
 
 
@@ -66,8 +63,8 @@ namespace Das.Views.Rendering
 
 
         void DrawMainElement<TRectangle>(IVisualElement element,
-                                              TRectangle rect,
-                                              IViewState viewState)
+                                         TRectangle rect,
+                                         IViewState viewState)
             where TRectangle : IRectangle;
 
         void DrawRect<TRectangle, TPen>(TRectangle rect,
@@ -75,11 +72,12 @@ namespace Das.Views.Rendering
             where TRectangle : IRectangle
             where TPen : IPen;
 
-        void DrawRoundedRect<TRectangle, TPen>(TRectangle rect,
-                                               TPen pen,
-                                               Double cornerRadius)
+        void DrawRoundedRect<TRectangle, TPen, TThickness>(TRectangle rect,
+                                                           TPen pen,
+                                                           TThickness cornerRadii)
             where TRectangle : IRectangle
-            where TPen : IPen;
+            where TPen : IPen
+            where TThickness : IThickness;
 
         void DrawString<TFont, TBrush, TPoint>(String s,
                                                TFont font,
@@ -114,10 +112,11 @@ namespace Das.Views.Rendering
             where TRectangle : IRectangle
             where TBrush : IBrush;
 
-        void FillRoundedRectangle<TRectangle, TBrush>(TRectangle rect,
+        void FillRoundedRectangle<TRectangle, TBrush, TThickness>(TRectangle rect,
                                                       TBrush brush,
-                                                      Double cornerRadius)
+                                                      TThickness cornerRadii)
             where TRectangle : IRectangle
-            where TBrush : IBrush;
+            where TBrush : IBrush
+            where TThickness : IThickness;
     }
 }

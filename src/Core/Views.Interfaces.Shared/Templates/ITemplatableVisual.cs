@@ -5,6 +5,6 @@ namespace Das.Views.Templates
 {
     public interface ITemplatableVisual
     {
-        IVisualTemplate? Template { get; }
+        IVisualTemplate? Template { get; set; }
     }
 }

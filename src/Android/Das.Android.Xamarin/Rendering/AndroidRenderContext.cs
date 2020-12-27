@@ -9,9 +9,9 @@ using Das.Views;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
-using Das.Views.Core.Writing;
 using Das.Views.Rendering;
 using Das.Views.Styles;
+using Das.Xamarin.Android.Rendering;
 
 namespace Das.Xamarin.Android
 {
@@ -123,15 +123,19 @@ namespace Das.Xamarin.Android
             GetCanvas().DrawRect(GetAbsoluteAndroidRect(rect), _paint);
         }
 
-        public override void DrawRoundedRect<TRectangle, TPen>(TRectangle rect,
+        public override void DrawRoundedRect<TRectangle, TPen, TThickness>(TRectangle rect,
                                                                TPen pen,
-                                                               Double cornerRadius)
+                                                               TThickness cornerRadii)
         {
             _paint.SetStyle(Paint.Style.Stroke);
             SetColor(pen);
+
+            var bob = new Path();
+            
+
             GetCanvas().DrawRoundRect(GetAbsoluteAndroidRectF(rect),
-                Convert.ToSingle(cornerRadius),
-                Convert.ToSingle(cornerRadius),
+                Convert.ToSingle(cornerRadii.Left),
+                Convert.ToSingle(cornerRadii.Top),
                 _paint);
         }
 
@@ -233,19 +237,21 @@ namespace Das.Xamarin.Android
             GetCanvas().DrawRect(letsDraw, _paint);
         }
 
-        public override void FillRoundedRectangle<TRectangle, TBrush>(TRectangle rect,
-                                                                      TBrush brush,
-                                                                      Double cornerRadius)
+        public override void FillRoundedRectangle<TRectangle, TBrush, TThickness>(TRectangle rect,
+            TBrush brush,
+            TThickness cornerRadii)
         {
             _paint.SetStyle(Paint.Style.Fill);
             SetColor(brush);
             var target = GetAbsoluteAndroidRectF(rect);
-
-
-            GetCanvas().DrawRoundRect(target,
-                Convert.ToSingle(cornerRadius),
-                Convert.ToSingle(cornerRadius),
-                _paint);
+            var useRect = GetAbsoluteRect(rect);
+            var path = new AndroidGraphicsPath();
+            CreateRoundedRectangle(path, useRect, cornerRadii);
+            GetCanvas().DrawPath(path.Path, _paint);
+            //GetCanvas().DrawRoundRect(target,
+            //    Convert.ToSingle(cornerRadius),
+            //    Convert.ToSingle(cornerRadius),
+            //    _paint);
         }
 
         private Point GetAbsoluteAndroidPoint(IPoint2D relativePoint2D)

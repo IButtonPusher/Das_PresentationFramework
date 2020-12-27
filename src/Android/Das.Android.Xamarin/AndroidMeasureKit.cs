@@ -40,7 +40,7 @@ namespace Das.Xamarin.Android
 
         private ValueSize GetCOntextBounds(DisplayMetrics metrics)
         {
-            if (!(_windowManager.DefaultDisplay is {} disp))
+            if (!(_windowManager.DefaultDisplay is {}))
                 throw new NullReferenceException();
 
 
@@ -48,15 +48,15 @@ namespace Das.Xamarin.Android
                 metrics.HeightPixels / metrics.ScaledDensity);
         }
 
-        public sealed override ValueSize MeasureElement(IVisualElement element, 
-                                                       IRenderSize availableSpace)
+        public sealed override ValueSize MeasureElement<TRenderSize>(IVisualElement element,
+                                                                     TRenderSize availableSpace)
         {
             _fontProvider.RemoveElement(element);
             return base.MeasureElement(element, availableSpace);
         }
 
         public sealed override ValueSize MeasureString(String s, 
-                                                IFont font)
+                                                       IFont font)
         {
             var renderer = _fontProvider.GetRenderer(font, VisualLineage);
             var res = renderer.MeasureString(s);

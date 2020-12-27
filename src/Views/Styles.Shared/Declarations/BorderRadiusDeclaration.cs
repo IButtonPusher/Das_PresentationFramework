@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Das.Views.Styles.Declarations
 {
@@ -8,11 +6,11 @@ namespace Das.Views.Styles.Declarations
     {
         public BorderRadiusDeclaration(String value,
                                        IStyleVariableAccessor variableAccessor)
-            : base(value, variableAccessor, DeclarationProperty.BorderRadius,
-                DeclarationProperty.BorderRadiusTop,
-                DeclarationProperty.BorderRadiusRight,
-                DeclarationProperty.BorderRadiusBottom,
-                DeclarationProperty.BorderRadiusLeft)
+            : base(value, variableAccessor, DeclarationProperty.BorderRadius)
+                //DeclarationProperty.BorderRadiusTop,
+                //DeclarationProperty.BorderRadiusRight,
+                //DeclarationProperty.BorderRadiusBottom,
+                //DeclarationProperty.BorderRadiusLeft)
         {
         }
     }

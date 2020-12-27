@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
+using Das.Serializer;
 
 namespace Das.Views.Construction
 {
-    public class ChildObjectResult
+    public readonly struct ChildObjectResult
     {
         public ChildObjectResult(Object? child, 
                                  ChildNodeType childType, 
-                                 PropertyInfo? visualProperty)
+                                 IPropertyAccessor? visualProperty)
+                                // PropertyInfo? visualProperty)
         {
             Child = child;
             ChildType = childType;
@@ -20,6 +20,8 @@ namespace Das.Views.Construction
         
         public ChildNodeType ChildType { get; }
 
-        public PropertyInfo? VisualProperty { get; }
+        public IPropertyAccessor? VisualProperty { get; }
+        
+        //public PropertyInfo? VisualProperty { get; }
     }
 }

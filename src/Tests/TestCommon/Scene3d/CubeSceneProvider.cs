@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Das.Views;
 using Das.Views.Extended;
 using Das.Views.Extended.Runtime;
-using Das.Views.Panels;
 using TestCommon.Scene3d;
 
 namespace TestCommon

@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Das.Views.Styles;
 using Das.Views.Styles.Declarations;
-using Das.Views.Styles.Declarations.Outline;
 using Das.Views.Styles.Declarations.Transform;
 using Das.Views.Styles.Declarations.Transition;
 
 namespace Das.Views.Construction.Styles
 {
-    public class StyleRuleBuilder : IStyleRuleBuilder
+    public class CssRuleBuilder : ICssRuleBuilder
     {
-        public StyleRuleBuilder(IStyleSelectorBuilder selectorBuilder,
+        public CssRuleBuilder(IStyleSelectorBuilder selectorBuilder,
                                 IStyleVariableAccessor variableAccessor)
         {
             _selectorBuilder = selectorBuilder;
             _variableAccessor = variableAccessor;
         }
 
-        static StyleRuleBuilder()
+        static CssRuleBuilder()
         {
             _vendorPrefixes = new HashSet<String>(StringComparer.OrdinalIgnoreCase) {"-moz-", "-webkit-"};
         }
@@ -35,19 +35,26 @@ namespace Das.Views.Construction.Styles
             return res;
         }
 
+        public IEnumerable<IStyleRule> GetRules(String css)
+        {
+            var nodes = CssNodeBuilder.GetMarkupNodes(css).ToArray();
+
+            foreach (var node in nodes)
+            {
+                var rule = GetRule(node);
+                if (rule != null)
+                    yield return rule;
+            }
+        }
+
         private IStyleDeclaration? GetDeclaration(DeclarationProperty property,
                                                   String value)
         {
             switch (property)
             {
                 case DeclarationProperty.ZIndex:
-                    //if (!Int32.TryParse(value, out var zIndex))
-                    //    throw new InvalidCastException();
-
-                    return new NumericDeclaration(value, _variableAccessor, property);
-
-                //return new DependencyPropertyDeclaration<IVisualElement, Int32>(VisualElement.ZIndexProperty,
-                //    zIndex, null);
+                    return new ScalarDeclaration<Int32>(value, _variableAccessor, property);
+                    //return new DoubleDeclaration(value, _variableAccessor, property);
 
                 case DeclarationProperty.Position:
                     return new PositionDeclaration(value, _variableAccessor);
@@ -92,7 +99,8 @@ namespace Das.Views.Construction.Styles
                     return new OutlineDeclaration(value, _variableAccessor);
                 
                 case DeclarationProperty.Opacity:
-                    return new NumericDeclaration(value, _variableAccessor, property);
+                    return new ScalarDeclaration<Double>(value, _variableAccessor, property);
+                    //return new DoubleDeclaration(value, _variableAccessor, property);
                 
                 case DeclarationProperty.Transform:
                     return new TransformDeclaration(value, _variableAccessor);

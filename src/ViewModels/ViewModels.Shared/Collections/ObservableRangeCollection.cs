@@ -8,8 +8,7 @@ using Das.Views.Mvvm;
 namespace Das.ViewModels
 {
     public class ObservableRangeCollection<T> : ObservableCollection<T>,
-                                                INotifyingCollection<T>,
-        INotifyingCollection
+                                                INotifyingCollection<T>
     {
         public ObservableRangeCollection()
         {

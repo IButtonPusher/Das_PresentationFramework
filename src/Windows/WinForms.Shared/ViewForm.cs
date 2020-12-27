@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Extensions;
-using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Hosting;
 using Das.Views.Styles;

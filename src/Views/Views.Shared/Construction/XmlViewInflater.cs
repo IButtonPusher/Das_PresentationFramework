@@ -55,22 +55,23 @@ namespace Das.Views.Construction
         {
             var sw = Stopwatch.StartNew();
 
-            IMarkupNode? node = XmlNodeBuilder.GetMarkupNode(xml);
-
-            if (node == null)
-                throw new InvalidOperationException();
-
-            if (node.IsEncodingHeader)
-                node = node[0];
-
+            var node = GetRootNode(xml);
+            
             var nsAsmSearch = _visualTypeResolver.GetNamespaceAssemblySearch(node, searchSeed);
 
             var lineage = new VisualLineage();
 
-            var res = await GetVisualAsync(node, null, nsAsmSearch, lineage).ConfigureAwait(false);
+            var res = await GetVisualAsync(node, null, nsAsmSearch, lineage,
+                _styledVisualBuilder.ApplyStylesToVisualAsync).ConfigureAwait(false);
 
             Debug.WriteLine("Inflated visual in " + sw.ElapsedMilliseconds + " ms");
 
+            
+            lineage.AssertPopVisual(res);
+            
+            if (lineage.Count > 0)
+                throw new InvalidOperationException();
+            
             return res;
         }
     }

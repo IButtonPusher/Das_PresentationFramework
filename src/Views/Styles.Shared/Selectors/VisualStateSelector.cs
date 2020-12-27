@@ -1,28 +1,36 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Styles.Selectors
 {
-    public class VisualStateSelector : SelectorBase,
-                                       IStyleSelector
+    public class VisualStateSelector : SelectorBase
     {
-        private readonly VisualStateType _stateType;
-
-        public VisualStateSelector(VisualStateType stateType)
+        public VisualStateSelector(IStyleSelector selector,
+                                   VisualStateType stateType)
         {
+            BaseSelector = selector;
             _stateType = stateType;
         }
 
-        public Boolean IsSelectVisual(IVisualElement visual)
-        {
-            if (!(visual is IStatefulVisual stateful))
-                return false;
+        public IStyleSelector BaseSelector { get; }
 
-            return stateful.CurrentVisualStateType.Contains(_stateType);
+        public sealed override Boolean Equals(IStyleSelector other)
+        {
+            return other is VisualStateSelector stateSelector &&
+                   Equals(stateSelector.BaseSelector, BaseSelector) && 
+                   stateSelector._stateType == _stateType;
+        }
+
+        public sealed override Boolean IsFilteringOnVisualState()
+        {
+            return true;
         }
 
         public override String ToString()
         {
-            return "Select: " + _stateType;
+            return BaseSelector + ":" + _stateType;
         }
+
+        private readonly VisualStateType _stateType;
     }
 }

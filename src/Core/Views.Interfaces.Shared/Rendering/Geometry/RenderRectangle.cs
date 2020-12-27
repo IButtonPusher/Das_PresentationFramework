@@ -20,15 +20,6 @@ namespace Das.Views.Rendering.Geometry
             _offset = offset;
         }
 
-        //public RenderRectangle(Double x,
-        //                       Double y,
-        //                       Double width,
-        //                       Double height) 
-        //    : base(x, y, width, height)
-        //{
-        //    Offset = Point2D.Empty;
-        //}
-
         public RenderRectangle(IRectangle start,
                                Thickness margin,
                                IPoint2D offset) : base(start, margin) 
@@ -49,12 +40,13 @@ namespace Das.Views.Rendering.Geometry
             _offset = Point2D.Empty;
         }
 
-        public void Update<TPoint, TRenderRectangle>(TRenderRectangle rect,
+        public void Update<TPoint, TRenderRectangle, TThickness>(TRenderRectangle rect,
                                                      TPoint parentOffset,
-                                                     Thickness margin,
-                                                     Thickness border)
+                                                     TThickness margin,
+                                                     TThickness border)
             where TPoint : IPoint2D
             where TRenderRectangle : IRenderRectangle
+        where TThickness : IThickness
         {
             _left = rect.Left + margin.Left - parentOffset.X;
             _top = rect.Top + margin.Top - parentOffset.Y;
@@ -148,6 +140,20 @@ namespace Das.Views.Rendering.Geometry
         }
 
         IRenderSize IRenderRectangle.Size => new ValueRenderSize(Width, Height, Offset);
+
+        TRectangle IRenderRectangle.Reduce<TRectangle>(Double left, 
+                                             Double top, 
+                                             Double right, 
+                                             Double bottom)
+        {
+            var res = new RenderRectangle(X + left, Top + top,
+                Width - (left + right),
+                Height - (top + bottom), Offset);
+
+            if (res is TRectangle fku)
+                return fku;
+            throw new InvalidOperationException();
+        }
 
         public new RenderRectangle DeepCopy()
         {

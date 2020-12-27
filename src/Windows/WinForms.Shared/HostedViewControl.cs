@@ -2,13 +2,11 @@
 using Das.Views.Styles;
 using System;
 using Das.Views;
-using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Hosting;
 using Das.Views.Rendering;
 using Das.Views.Windows;
 using Das.Views.Winforms;
-using Das.Views.Mvvm;
 
 
 namespace WinForms.Shared

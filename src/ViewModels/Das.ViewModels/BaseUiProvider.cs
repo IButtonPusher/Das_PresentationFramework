@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Das.Views;
-using Das.Views.Core.Geometry;
 using Das.Views.Input;
 
 namespace Das.ViewModels

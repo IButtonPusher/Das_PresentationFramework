@@ -18,24 +18,33 @@
     <Compile Include="$(MSBuildThisFileDirectory)Construction\DefaultValueConverterProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\InflaterBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\MarkupNode.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Construction\StyledVisualBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\ComputedValueWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\DeclarationWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\SelectorWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\StyledVisualBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\StyledVisualWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\Types\VisualTypeTuple.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\ViewInflater.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Construction\VisualAliasProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Construction\VisualStyleProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Construction\VisualTypeResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\Types\VisualAliasProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\VisualStyleProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\Types\VisualTypeResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\XmlMarkupNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\XmlNodeBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\XmlViewInflater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ContentVisuals\ContentPropertyAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\CheckBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToVisualConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\ContextBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\NullStyleContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\NullViewState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\VisualLineage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Panels\Canvas.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\ButtonBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Label.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\PictureFrame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\Span.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\SpanSlim.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\ToggleButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\BaseConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToBrushConverter.cs" />
@@ -87,6 +96,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VisualElementProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\BaseStyleContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\CascadingAssignedStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Declarations\ObjectDeclaration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\DependencyPropertyValueRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Selectors\DependencyPropertySelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSheet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\ColorPalette.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\DefaultColorPalette.cs" />
@@ -106,9 +118,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\TypeStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\DataTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\DefaultVisualBootstrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\DeferredVisualTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\MultiDataTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\VisualTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Updaters\BaseLoopUpdater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Updaters\LoopViewUpdater.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Geometry\" />
   </ItemGroup>
 </Project>

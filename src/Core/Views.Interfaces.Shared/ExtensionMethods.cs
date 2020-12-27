@@ -16,6 +16,34 @@ namespace Das.Views
             {
             }
         }
+        
+        public static TEnum GetEnumValue<TEnum>(String name,
+                                                   TEnum defaultValue)
+            where TEnum : struct
+        {
+            return GetEnumValue(name, defaultValue, true);
+        }
+        
+        public static TEnum GetEnumValue<TEnum>(String name,
+                                                TEnum defaultValue,
+                                                Boolean isThrowifInvalid)
+            where TEnum : struct
+        {
+            if (name.Length == 0)
+                return defaultValue;
+            
+            name = name.IndexOf('-') > 0
+                ? name.Replace("-", "")
+                : name;
+
+            if (Enum.TryParse<TEnum>(name, true, out var value))
+                return value;
+
+            if (!isThrowifInvalid)
+                return defaultValue;
+
+            throw new InvalidOperationException();
+        }
 
         public static void Clear<T>(this BlockingCollection<T> bloc)
         {

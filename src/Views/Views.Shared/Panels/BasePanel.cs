@@ -15,7 +15,6 @@ namespace Das.Views.Panels
     {
         // ReSharper disable once UnusedMember.Global
         protected BasePanel(IVisualBootstrapper visualBootstrapper)
-            //: this(null, visualBootstrapper)
             : this(visualBootstrapper, new VisualCollection())
         {
             

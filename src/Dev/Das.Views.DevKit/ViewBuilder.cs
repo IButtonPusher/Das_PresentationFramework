@@ -63,7 +63,11 @@ namespace Das.Views.DevKit
 
         //public event Action<IVisualElement>? Disposed;
 
-        IVisualTemplate ITemplatableVisual.Template => throw new NotSupportedException();
+        IVisualTemplate? ITemplatableVisual.Template
+        {
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
+        }
 
         //public void AcceptChanges(ChangeType changeType)
         //{

@@ -9,27 +9,40 @@ namespace Das.Views.Styles.Selectors
                                        ContentAppendType appendType)
         {
             AppendType = appendType;
-            _typeSelector = typeSelector;
+            TypeSelector = typeSelector;
         }
 
         public Boolean TryGetClassName(out String className)
         {
-            return _typeSelector.TryGetClassName(out className);
+            return TypeSelector.TryGetClassName(out className);
         }
 
-        public Boolean IsSelectVisual(IVisualElement visual)
+        public Boolean TryGetContentAppendType(out ContentAppendType appendType)
         {
-            return _typeSelector.IsSelectVisual(visual);
+            appendType = AppendType;
+            return true;
+        }
+
+        public Boolean IsFilteringOnVisualState()
+        {
+            return TypeSelector.IsFilteringOnVisualState();
+        }
+
+        public Boolean Equals(IStyleSelector other)
+        {
+            return other is ContentAppenderSelector contenty &&
+                   contenty.AppendType == AppendType &&
+                   contenty.TypeSelector.Equals(TypeSelector);
         }
 
         public override String ToString()
         {
-            return _typeSelector + "::" + AppendType;
+            return TypeSelector + "::" + AppendType;
         }
 
 
         public ContentAppendType AppendType { get; }
 
-        private readonly IStyleSelector _typeSelector;
+        public IStyleSelector TypeSelector { get; }
     }
 }

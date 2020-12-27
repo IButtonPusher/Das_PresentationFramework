@@ -28,14 +28,8 @@ namespace Das.Views.DataBinding
 
     public abstract class BaseBinding : IDataBinding
     {
-        //public static IPropertyAccessor GetPropertyAccessorOrDie(Type declaringType,
-        //                                                         String propertyName)
-        //{
-
-        //}
-        
-        public static PropertyInfo GetTypePropertyOrDie(Type declaringType,
-                                                       String propertyName)
+        protected static PropertyInfo GetTypePropertyOrDie(Type declaringType,
+                                                           String propertyName)
         {
             return GetBindingProperty(declaringType, propertyName)
                    ?? GetMissingProperty(declaringType, propertyName);

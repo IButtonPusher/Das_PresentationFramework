@@ -8,7 +8,7 @@ namespace Das.Views.Styles
         public DefaultColorPalette() 
             : base(SolidColorBrush.Pink,
                 SolidColorBrush.White,
-                SolidColorBrush.White,
+                SolidColorBrush.Black,
                 SolidColorBrush.White,
                 SolidColorBrush.Green)
         {

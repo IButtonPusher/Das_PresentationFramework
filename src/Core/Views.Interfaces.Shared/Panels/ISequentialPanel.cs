@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Views.Core.Enums;
-using Das.Views.Rendering;
 
 namespace Das.Views.Panels
 {

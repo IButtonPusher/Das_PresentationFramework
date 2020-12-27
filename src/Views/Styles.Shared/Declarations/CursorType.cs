@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+// ReSharper disable UnusedMember.Global
+
 // ReSharper disable InconsistentNaming
 
 namespace Das.Views.Styles.Declarations

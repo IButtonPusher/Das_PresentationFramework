@@ -13,7 +13,6 @@ namespace SharpGL.Shaders
         /// <summary>
         /// Creates the shader program.
         /// </summary>
-        /// <param name="gl">The GL.</param>
         /// <param name="vertexShaderSource">The vertex shader source.</param>
         /// <param name="fragmentShaderSource">The fragment shader source.</param>
         /// <param name="attributeLocations">The attribute locations. This is an optional array of

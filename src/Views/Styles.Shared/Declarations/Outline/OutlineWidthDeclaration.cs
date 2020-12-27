@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Das.Views.Styles.Declarations.Outline
+namespace Das.Views.Styles.Declarations
 {
     public class OutlineWidthDeclaration : QuantityDeclaration
     {

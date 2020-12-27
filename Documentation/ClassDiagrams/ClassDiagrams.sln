@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassDiagrams", "ClassDiagrams.csproj", "{753F0776-4074-4B45-BC78-708E381D8E04}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Das.Views.Interfaces", "..\..\src\Core\Das.View.Interfaces\Das.Views.Interfaces.csproj", "{F789FF3A-0F1F-4A57-B31D-6DB5656959AB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Das.ViewModels", "..\..\src\ViewModels\Das.ViewModels\Das.ViewModels.csproj", "{179C0C25-6015-40F4-A7F2-333BE4A4C336}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Das.Views", "..\..\src\Views\Das.Views\Das.Views.csproj", "{2F5B7BE7-1204-4F88-AF7B-CD1750FCFBA3}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\src\ViewModels\ViewModels.Shared\ViewModels.Shared.projitems*{179c0c25-6015-40f4-a7f2-333be4a4c336}*SharedItemsImports = 5
+		..\..\src\Views\Styles.Shared\Styles.Shared.projitems*{2f5b7be7-1204-4f88-af7b-cd1750fcfba3}*SharedItemsImports = 5
+		..\..\src\Views\Views.Shared\Views.Shared.projitems*{2f5b7be7-1204-4f88-af7b-cd1750fcfba3}*SharedItemsImports = 5
+		..\..\src\Core\CSharp8NetFramework\CSharp8NetFramework.projitems*{f789ff3a-0f1f-4a57-b31d-6db5656959ab}*SharedItemsImports = 5
+		..\..\src\Core\Views.Interfaces.Shared\Views.Interfaces.Shared.projitems*{f789ff3a-0f1f-4a57-b31d-6db5656959ab}*SharedItemsImports = 5
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{753F0776-4074-4B45-BC78-708E381D8E04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{753F0776-4074-4B45-BC78-708E381D8E04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{753F0776-4074-4B45-BC78-708E381D8E04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{753F0776-4074-4B45-BC78-708E381D8E04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F789FF3A-0F1F-4A57-B31D-6DB5656959AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F789FF3A-0F1F-4A57-B31D-6DB5656959AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F789FF3A-0F1F-4A57-B31D-6DB5656959AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F789FF3A-0F1F-4A57-B31D-6DB5656959AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{179C0C25-6015-40F4-A7F2-333BE4A4C336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{179C0C25-6015-40F4-A7F2-333BE4A4C336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{179C0C25-6015-40F4-A7F2-333BE4A4C336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{179C0C25-6015-40F4-A7F2-333BE4A4C336}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F5B7BE7-1204-4F88-AF7B-CD1750FCFBA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F5B7BE7-1204-4F88-AF7B-CD1750FCFBA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F5B7BE7-1204-4F88-AF7B-CD1750FCFBA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F5B7BE7-1204-4F88-AF7B-CD1750FCFBA3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD41F0D6-0C4B-4B23-BEBD-D5942D5C4DDF}
+	EndGlobalSection
+EndGlobal

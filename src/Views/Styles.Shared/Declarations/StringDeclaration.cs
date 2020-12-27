@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Das.Views.Styles.Declarations
 {
-    public class StringDeclaration : DeclarationBase
+    public class StringDeclaration : ValueDeclaration<String>
     {
-        public String Value { get; }
+        //public String Value { get; }
 
         public StringDeclaration(String value,
                                  IStyleVariableAccessor variableAccessor, 
                                  DeclarationProperty property) 
-            : base(variableAccessor, property)
+            : base(value, variableAccessor, property)
         {
-            Value = value;
+          //  Value = value;
         }
 
-        public override String ToString()
-        {
-            return Property + ": " + Value;
-        }
+        //public override String ToString()
+        //{
+        //    return Property + ": " + Value;
+        //}
     }
 }

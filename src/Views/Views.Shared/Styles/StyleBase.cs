@@ -13,7 +13,7 @@ namespace Das.Views.Styles
             _transitions = new Dictionary<AssignedStyle, Transition>();
         }
         
-        public IEnumerable<IStyleRule> Rules => throw new NotImplementedException();
+        //public IEnumerable<IStyleRule> Rules => throw new NotImplementedException();
 
         public Boolean TryGetValue<T>(IVisualElement visual, out T value)
         {
@@ -68,6 +68,8 @@ namespace Das.Views.Styles
         {
             return GetEnumerator();
         }
+        
+        public IEnumerable<AssignedStyle> Setters => _setters.Keys;
         
         protected readonly Dictionary<AssignedStyle, Object?> _setters;
         protected readonly Dictionary<AssignedStyle, Transition> _transitions;

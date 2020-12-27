@@ -1,21 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
-<Style>
+<Style Name="mat-toggle-button"
+       TargetType="ToggleButton">
   
-  <StyleSetters>
+  <Setters>
 
     <Setter Property="Template">
-      <label class="pure-material-switch">
+
+      <Canvas class="mat-switch">
         <input type="checkbox" />
         <span>Switch</span>
-      </label>
+      </Canvas>
+
     </Setter>
 
-  </StyleSetters>
+  </Setters>
 
   <!-- CSS -->
   <Rules>
-    .pure-material-switch {
+    .mat-switch {
     color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.87);
     display: inline-block;
     font-family: var(--pure-material-font, "Roboto", "Segoe UI", BlinkMacSystemFont, system-ui, -apple-system);
@@ -27,7 +30,7 @@
 
     /* Input */
 
-    .pure-material-switch > input {
+    .mat-switch > input {
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
@@ -50,7 +53,7 @@
 
     /* Span */
 
-    .pure-material-switch > span {
+    .mat-switch > span {
     cursor: pointer;
     display: inline-block;
     width: 100%;
@@ -58,7 +61,7 @@
 
     /* Track */
 
-    .pure-material-switch > span::before {
+    .mat-switch > span::before {
     background-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.38);
     border-radius: 7px;
     content: "";
@@ -73,7 +76,7 @@
 
     /* Thumb */
 
-    .pure-material-switch > span::after {
+    .mat-switch > span::after {
     background-color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
     border-radius: 50%;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
@@ -88,51 +91,51 @@
 
     /* Checked */
 
-    .pure-material-switch > input:checked {
+    .mat-switch > input:checked {
     background-color: rgb(var(--pure-material-primary-rgb, 33, 150, 243));
     right: -10px;
     }
 
-    .pure-material-switch > input:checked + span::before { background-color: rgba(var(--pure-material-primary-rgb, 33, 150, 243), 0.6); }
+    .mat-switch > input:checked + span::before { background-color: rgba(var(--pure-material-primary-rgb, 33, 150, 243), 0.6); }
 
-    .pure-material-switch > input:checked + span::after {
+    .mat-switch > input:checked + span::after {
     background-color: rgb(var(--pure-material-primary-rgb, 33, 150, 243));
     transform: translateX(16px);
     }
 
     /* Hover, Focus */
 
-    .pure-material-switch:hover > input { opacity: 0.04; }
+    .mat-switch:hover > input { opacity: 0.04; }
 
-    .pure-material-switch > input:focus { opacity: 0.12; }
+    .mat-switch > input:focus { opacity: 0.12; }
 
-    .pure-material-switch:hover > input:focus { opacity: 0.16; }
+    .mat-switch:hover > input:focus { opacity: 0.16; }
 
     /* Active */
 
-    .pure-material-switch > input:active {
+    .mat-switch > input:active {
     opacity: 1;
     transform: scale(0);
     transition: transform 0s, opacity 0s;
     }
 
-    .pure-material-switch > input:active + span::before { background-color: rgba(var(--pure-material-primary-rgb, 33, 150, 243), 0.6); }
+    .mat-switch > input:active + span::before { background-color: rgba(var(--pure-material-primary-rgb, 33, 150, 243), 0.6); }
 
-    .pure-material-switch > input:checked:active + span::before { background-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.38); }
+    .mat-switch > input:checked:active + span::before { background-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.38); }
 
     /* Disabled */
 
-    .pure-material-switch > input:disabled { opacity: 0; }
+    .mat-switch > input:disabled { opacity: 0; }
 
-    .pure-material-switch > input:disabled + span {
+    .mat-switch > input:disabled + span {
     color: rgb(var(--pure-material-onsurface-rgb, 0, 0, 0));
     cursor: default;
     opacity: 0.38;
     }
 
-    .pure-material-switch > input:disabled + span::before { background-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.38); }
+    .mat-switch > input:disabled + span::before { background-color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.38); }
 
-    .pure-material-switch > input:checked:disabled + span::before { background-color: rgba(var(--pure-material-primary-rgb, 33, 150, 243), 0.6); }
+    .mat-switch > input:checked:disabled + span::before { background-color: rgba(var(--pure-material-primary-rgb, 33, 150, 243), 0.6); }
   </Rules>
 
 

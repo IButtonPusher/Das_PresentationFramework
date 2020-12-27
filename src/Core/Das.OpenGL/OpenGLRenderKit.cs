@@ -17,16 +17,18 @@ namespace Das.OpenGL
                                IGLContext glContext,
                                IStyleContext styleContext)
         : base(styleContext, Serializer.AttributeParser, 
-            Serializer.TypeInferrer, Serializer.TypeManipulator)
+            Serializer.TypeInferrer, Serializer.TypeManipulator,
+            new Dictionary<IVisualElement, ValueCube>())
         {
             var lastMeasurements = new Dictionary<IVisualElement, ValueSize>();
+            var lastRender = new Dictionary<IVisualElement, ValueCube>();
             var visualLineage = new VisualLineage();
             
             MeasureContext = new GLMeasureContext(fontProvider, this, 
                 lastMeasurements, styleContext, visualLineage);
             
             RenderContext = new GLRenderContext(new BasePerspective(),
-                 glContext, fontProvider, this, styleContext, visualLineage);
+                 glContext, fontProvider, this, styleContext, visualLineage, lastRender);
         }
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;
