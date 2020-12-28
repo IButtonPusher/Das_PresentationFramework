@@ -7,7 +7,7 @@ using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
-using Das.Views.Styles;
+using Das.Views.Styles.Application;
 using Das.Views.Styles.Declarations;
 using Das.Views.Templates;
 
@@ -30,7 +30,7 @@ namespace Das.Views
         /// </summary>
         String? Class { get; }
 
-        IStyleSheet? Style { get; }
+        IAppliedStyle? Style { get; }
 
         Boolean IsClipsContent { get; set; }
 

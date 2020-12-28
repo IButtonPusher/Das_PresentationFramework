@@ -30,8 +30,6 @@ namespace Das.Views.Panels
             }
 
             return new ValueSize(useWidth, useHeight);
-
-            //return base.Measure(availableSpace, measureContext);
         }
 
         public override void Arrange(IRenderSize availableSpace, 
@@ -50,13 +48,16 @@ namespace Das.Views.Panels
                 var width = Math.Min(childWants.Width, availableSpace.Width);
                 var height = Math.Min(childWants.Height, availableSpace.Height);
 
-                    //child.Left.GetValueOrDefault().GetQuantity(availableSpace.Width);
-                //var top = child.Top.GetValueOrDefault().GetQuantity(availableSpace.Height);
-
                 var drawMe = new RenderRectangle(left, top, width, height, availableSpace.Offset);
 
                 renderContext.DrawElement(child,drawMe);
             }
+        }
+
+        protected override void OnDistributeDataContextToChildren(Object? newValue)
+        {
+            _children.DistributeDataContext(newValue);
+            base.OnDistributeDataContextToChildren(newValue);
         }
     }
 }

@@ -65,9 +65,16 @@ namespace Das.Views.Measuring
             return res;
         }
 
+        public ValueSize MeasureRenderer<TRenderSize>(IVisualRenderer visualRenderer, 
+                                                      TRenderSize availableSpace) 
+            where TRenderSize : IRenderSize
+        {
+            throw new NotImplementedException();
+        }
+
 
         public virtual ValueSize MeasureElement<TRenderSize>(IVisualElement element,
-                                                TRenderSize availableSpace)
+                                                             TRenderSize availableSpace)
         where TRenderSize : IRenderSize
         {
             if (!element.IsRequiresMeasure)
@@ -126,58 +133,12 @@ namespace Das.Views.Measuring
             }
         }
 
-        //private Double GetDesiredWidth<TRenderSize>(IVisualElement visual,
-        //                                            ValueSize initialMeasure,
-        //                                            TRenderSize availableSize)
-        //    where TRenderSize : IRenderSize
-        //{
-        //    if (visual.Width == null)
-        //        return initialMeasure.Width;
-
-        //    var visWidth = visual.Width.Value;
-
-        //    switch (visWidth.Units)
-        //    {
-        //        case LengthUnits.Px:
-        //            return visWidth.Quantity;
-
-        //        case LengthUnits.Percent:
-        //            return availableSize.Width * (visWidth.Quantity / 100);
-
-        //        default:
-        //            throw new ArgumentOutOfRangeException();
-        //    }
-        //}
-
-        //private Double GetDesiredHeight<TRenderSize>(IVisualElement visual,
-        //                                            ValueSize initialMeasure,
-        //                                            TRenderSize availableSize)
-        //    where TRenderSize : IRenderSize
-        //{
-        //    if (visual.Height == null)
-        //        return initialMeasure.Height;
-
-        //    var visHeight = visual.Height.Value;
-
-        //    switch (visHeight.Units)
-        //    {
-        //        case LengthUnits.Px:
-        //            return visHeight.Quantity;
-
-        //        case LengthUnits.Percent:
-        //            return availableSize.Height * (visHeight.Quantity / 100);
-
-        //        default:
-        //            throw new ArgumentOutOfRangeException();
-        //    }
-        //}
+      
 
         private ValueSize MeasureElementImpl<TRenderSize>(IVisualElement element,
                                              TRenderSize availableSpace)
         where TRenderSize : IRenderSize
         {
-            //System.Diagnostics.Debug.WriteLine("measuring " + element);
-
             if (element.Visibility == Visibility.Collapsed)
                 return ValueSize.Empty;
 
@@ -186,12 +147,8 @@ namespace Das.Views.Measuring
 
             var margin = element.Margin.GetValue(availableSpace);
 
-            //var margin = element.Margin ?? styles.GetStyleSetter<Thickness>(StyleSetterType.Margin,
-            //    element, VisualLineage);
-
             var border = styles.GetStyleSetter<Thickness>(StyleSetterType.BorderThickness, element,
                 VisualLineage);
-
 
             ValueSize desiredSize;
             Double extraWidth;
@@ -203,16 +160,8 @@ namespace Das.Views.Measuring
 
                 extraWidth = 0;
                 extraHeight = 0;
-
-                //if (element.Width.HasValue || element.Height.HasValue)
-                //{
-                //    var w = element.Width?.GetQuantity(availableSpace.Width) ?? desiredSize.Width;
-                //    var h = element.Height?.GetQuantity(availableSpace.Height) ?? desiredSize.Height;
-
-                //    desiredSize = new ValueSize(w, h);
-                //}
             }
-            //System.Diagnostics.Debug.WriteLine(element + " wants " + desiredSize);
+            
             else
             {
                 extraWidth = margin.Width + border.Width;
@@ -221,57 +170,6 @@ namespace Das.Views.Measuring
                 desiredSize = element.Measure(
                     new ValueRenderSize(availableSpace.Width - extraWidth,
                         availableSpace.Height - extraHeight), this);
-
-                //var h = desiredSize.Height;
-                //switch (element.Height?.Units ?? LengthUnits.Invalid)
-                //{
-                //    case LengthUnits.Invalid:
-                //    case LengthUnits.Percent:
-                //        h = desiredSize.Height + extraHeight;
-                //        break;
-
-                //    case LengthUnits.Px:
-                //        h = element.Height!.Value.GetQuantity(availableSpace.Height) + extraHeight;
-                //        break;
-
-                //    //case LengthUnits.Percent:
-                //    //    h = element.Height!.Value.GetQuantity(availableSpace.Height);
-                //    //    break;
-                //}
-
-
-                //var w = desiredSize.Width;
-                //switch (element.Width?.Units ?? LengthUnits.Invalid)
-                //{
-                //    case LengthUnits.Invalid:
-                //    case LengthUnits.Percent:
-                //        w = desiredSize.Width + margin.Width + border.Width;
-                //        break;
-
-                //    case LengthUnits.Px:
-                //        w = element.Width!.Value.GetQuantity(availableSpace.Width) + extraWidth;
-                //        break;
-
-
-                //    //case LengthUnits.Percent:
-                //    //    w = element.Width!.Value.GetQuantity(availableSpace.Width);
-                //    //    break;
-                //}
-
-
-                //desiredSize = new ValueSize(w, h);
-
-                //if (element.Width.HasValue && element.Width.Value.u)
-
-
-                //if (element.Width.HasValue || element.Height.HasValue)
-                //{
-                //    desiredSize = new ValueSize(element.Width?.Quantity ?? desiredSize.Width,
-                //        element.Height?.Quantity ?? desiredSize.Height);
-                //}
-
-                //desiredSize = new ValueSize(desiredSize.Width + margin.Width + border.Width,
-                //    desiredSize.Height + margin.Height + border.Height);
             }
 
             var h = desiredSize.Height;
@@ -285,10 +183,6 @@ namespace Das.Views.Measuring
                 case LengthUnits.Px:
                     h = element.Height!.Value.GetQuantity(availableSpace.Height) + extraHeight;
                     break;
-
-                //case LengthUnits.Percent:
-                //    h = element.Height!.Value.GetQuantity(availableSpace.Height);
-                //    break;
             }
 
 
@@ -303,20 +197,11 @@ namespace Das.Views.Measuring
                 case LengthUnits.Px:
                     w = element.Width!.Value.GetQuantity(availableSpace.Width) + extraWidth;
                     break;
-
-
-                //case LengthUnits.Percent:
-                //    w = element.Width!.Value.GetQuantity(availableSpace.Width);
-                //    break;
             }
 
 
             desiredSize = new ValueSize(w, h);
 
-
-            //var useWidth = GetDesiredWidth(element, desiredSize, availableSpace);
-            //var useHeight = GetDesiredHeight(element, desiredSize, availableSpace);
-            
             var useHeight = desiredSize.Height;
             var useWidth = desiredSize.Width;
             

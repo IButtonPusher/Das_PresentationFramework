@@ -3,7 +3,7 @@ using Das.Views.Styles;
 
 namespace Das.Views
 {
-    public interface IStatefulVisual
+    public interface IStatefulVisual //: IVisualElement
     {
         VisualStateType CurrentVisualStateType { get; }
     }

@@ -27,7 +27,7 @@ namespace Das.Views.Input
             //                                   _inputCapturingMouse);
             
             var isButtonAction = (InputAction.AnyMouseButton & action) > InputAction.None;
-            IInteractiveView? handledBy = null;
+            IHandleInput? handledBy = null;
 
             if (_inputCapturingMouse is IHandleInput<TArgs> captureHandler && 
                 _inputCapturingMouse is IVisualElement captureElement)
@@ -59,7 +59,7 @@ namespace Das.Views.Input
                                                        TArgs args,
                                                        InputAction action,
                                                        Boolean isButtonAction,
-                                                       out IInteractiveView handledBy)
+                                                       out IHandleInput handledBy)
             where TArgs : IMouseInputEventArgs<TArgs>
         {
             if (!(_elementLocator.TryGetLastRenderBounds(captureAsVisual) is { } bounds))
@@ -86,7 +86,7 @@ namespace Das.Views.Input
         private Boolean OnMouseInputNoCapture<TArgs>(TArgs args,
                                                      InputAction action,
                                                      Boolean isButtonAction,
-                                                     out IInteractiveView handledBy)
+                                                     out IHandleInput handledBy)
             where TArgs : IMouseInputEventArgs<TArgs>
         {
             foreach (var clickable in _elementLocator.GetRenderedVisualsForMouseInput<TArgs, IPoint2D>(
@@ -204,10 +204,10 @@ namespace Das.Views.Input
             return handledActionDirectly;
         }
 
-        private static Boolean IsHandlesAction(IInteractiveView view,
+        private static Boolean IsHandlesAction(IHandleInput visual,
                                                InputAction action)
         {
-            return (view.HandlesActions & action) > InputAction.None;
+            return (visual.HandlesActions & action) > InputAction.None;
         }
 
         public Boolean OnMouseMove<TPoint>(TPoint position,

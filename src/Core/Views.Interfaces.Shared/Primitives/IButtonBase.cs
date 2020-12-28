@@ -7,7 +7,7 @@ using Das.Views.Input;
 namespace Das.Views.Controls
 {
     public interface IButtonBase : IBindableElement,
-                                   IInteractiveView,
+                                   IInteractiveVisual,
                                    IInputVisual<InputVisualType>
     {
         IObservableCommand? Command { get; }

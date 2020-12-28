@@ -32,7 +32,5 @@ namespace Das.Views
 
         void SetValue(TVisual forVisual,
                       TValue value);
-
-        String ToString();
     }
 }

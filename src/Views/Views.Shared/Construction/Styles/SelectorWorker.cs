@@ -105,10 +105,10 @@ namespace Das.Views.Construction
                         }
                         break;
 
-                    //case VisualStateSelector stateSelector:
-                    //    if (IsVisualSelectable(currentVisual, stateSelector.BaseSelector, visualLineage))
-                    //    {}
-                    //    break;
+                    case VisualStateSelector stateSelector:
+                        if (IsVisualSelectable(currentVisual, stateSelector.BaseSelector, visualLineage))
+                        { }
+                        goto default;
 
                     default:
                         if (!IsVisualSelectable(currentVisual, currentSelector, visualLineage))

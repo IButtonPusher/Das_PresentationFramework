@@ -24,25 +24,25 @@ namespace Das.Gdi.Kits
         : this(viewPerspective, attributeScanner, typeInferrer, propertyProvider, 
             new Dictionary<IVisualElement, ValueCube>())
         {}
-        
+
         private StaticGdiRenderKit(IViewPerspective viewPerspective,
-                                  IStringPrimitiveScanner attributeScanner,
-                                  ITypeInferrer typeInferrer,
-                                  IPropertyProvider propertyProvider,
-                                  Dictionary<IVisualElement, ValueCube> renderPositions )
-        : base(DefaultStyleContext.Instance,
-            attributeScanner, typeInferrer, propertyProvider, renderPositions)
+                                   IStringPrimitiveScanner attributeScanner,
+                                   ITypeInferrer typeInferrer,
+                                   IPropertyProvider propertyProvider,
+                                   Dictionary<IVisualElement, ValueCube> renderPositions)
+            : base(DefaultStyleContext.Instance,
+                attributeScanner, typeInferrer, propertyProvider, renderPositions)
         {
             var defaultSurrogates = new BaseSurrogateProvider();
 
             var lastMeasure = new Dictionary<IVisualElement, ValueSize>();
             var visualLineage = new VisualLineage();
 
-            MeasureContext = new GdiMeasureContext(defaultSurrogates,lastMeasure, 
+            MeasureContext = new GdiMeasureContext(defaultSurrogates, lastMeasure,
                 _styleContext, visualLineage);
-            
-            RenderContext = new GdiRenderContext(viewPerspective, 
-                MeasureContext.Graphics, defaultSurrogates,lastMeasure,
+
+            RenderContext = new GdiRenderContext(viewPerspective,
+                MeasureContext.Graphics, defaultSurrogates, lastMeasure,
                 new Dictionary<IVisualElement, ValueCube>(), _styleContext, new VisualLineage());
         }
 

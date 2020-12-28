@@ -9,7 +9,7 @@ namespace Das.Views.Styles.Selectors
                                    VisualStateType stateType)
         {
             BaseSelector = selector;
-            _stateType = stateType;
+            StateType = stateType;
         }
 
         public IStyleSelector BaseSelector { get; }
@@ -18,7 +18,7 @@ namespace Das.Views.Styles.Selectors
         {
             return other is VisualStateSelector stateSelector &&
                    Equals(stateSelector.BaseSelector, BaseSelector) && 
-                   stateSelector._stateType == _stateType;
+                   stateSelector.StateType == StateType;
         }
 
         public sealed override Boolean IsFilteringOnVisualState()
@@ -28,9 +28,9 @@ namespace Das.Views.Styles.Selectors
 
         public override String ToString()
         {
-            return BaseSelector + ":" + _stateType;
+            return BaseSelector + ":" + StateType;
         }
 
-        private readonly VisualStateType _stateType;
+        public VisualStateType StateType { get; }
     }
 }

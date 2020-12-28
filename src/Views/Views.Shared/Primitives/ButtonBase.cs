@@ -74,7 +74,7 @@ namespace Das.Views.Controls
             return true;
         }
 
-        InputAction IInteractiveView.HandlesActions => I_HANDLE_INPUT;
+        InputAction IHandleInput.HandlesActions => I_HANDLE_INPUT;
 
         private const InputAction I_HANDLE_INPUT = InputAction.LeftMouseButtonDown |
                                              InputAction.LeftMouseButtonUp |
@@ -134,6 +134,24 @@ namespace Das.Views.Controls
         {
             get => _clickMode;
             set => SetValue(ref _clickMode, value);
+        }
+
+        public Boolean IsActive
+        {
+            get => InteractiveVisualProperties.IsActiveProperty.GetValue(this);
+            set => InteractiveVisualProperties.IsActiveProperty.SetValue(this, value);
+        }
+
+        public Boolean IsFocused 
+        {
+            get => InteractiveVisualProperties.IsFocusedProperty.GetValue(this);
+            set => InteractiveVisualProperties.IsFocusedProperty.SetValue(this, value);
+        }
+
+        public Boolean IsMouseOver
+        {
+            get => InteractiveVisualProperties.IsMouseOverProperty.GetValue(this);
+            set => InteractiveVisualProperties.IsMouseOverProperty.SetValue(this, value);
         }
 
         public IObservableCommand? Command { get; set; }

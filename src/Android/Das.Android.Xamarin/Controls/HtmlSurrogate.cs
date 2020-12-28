@@ -12,6 +12,7 @@ using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 using Das.Views.Styles;
+using Das.Views.Styles.Application;
 using Das.Views.Styles.Declarations;
 using Das.Views.Templates;
 
@@ -190,7 +191,7 @@ namespace Das.Xamarin.Android.Controls
 
         String? IVisualElement.Class => _htmlPanel.Class;
 
-        public IStyleSheet? Style => _htmlPanel.Style;
+        public IAppliedStyle? Style => _htmlPanel.Style;
 
         public Boolean IsClipsContent
         {

@@ -24,6 +24,7 @@ namespace Das.Views.Rendering
                                               TRenderSize availableSpace)
             where TRenderSize : IRenderSize;
 
+
         ValueSize MeasureImage(IImage img);
 
         ValueSize MeasureMainView<TRenderSize>(IVisualElement element,
@@ -31,11 +32,15 @@ namespace Das.Views.Rendering
                                                IViewState viewState)
             where TRenderSize : IRenderSize;
 
+        ValueSize MeasureRenderer<TRenderSize>(IVisualRenderer visualRenderer,
+                                               TRenderSize availableSpace)
+            where TRenderSize : IRenderSize;
+
         ValueSize MeasureString(String s,
                                 IFont font);
 
         ValueSize GetStyleDesiredSize(IVisualElement element);
 
-        
+
     }
 }

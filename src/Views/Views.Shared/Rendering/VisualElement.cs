@@ -5,7 +5,7 @@ using Das.Views.Controls;
 using Das.Views.Core.Geometry;
 using Das.Views.Mvvm;
 using Das.Views.Rendering;
-using Das.Views.Styles;
+using Das.Views.Styles.Application;
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
 
@@ -77,7 +77,7 @@ namespace Das.Views
         }
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public IStyleSheet? Style { get; set; }
+        public IAppliedStyle? Style { get; set; }
 
         public virtual void OnParentChanging(IVisualElement? newParent)
         {

@@ -17,19 +17,16 @@
     <Compile Remove="Kits\**" />
     <Compile Remove="Measuring\**" />
     <Compile Remove="Rendering\**" />
-    <Compile Remove="Styles\**" />
     <EmbeddedResource Remove="DataBinding\**" />
     <EmbeddedResource Remove="Invocations\**" />
     <EmbeddedResource Remove="Kits\**" />
     <EmbeddedResource Remove="Measuring\**" />
     <EmbeddedResource Remove="Rendering\**" />
-    <EmbeddedResource Remove="Styles\**" />
     <None Remove="DataBinding\**" />
     <None Remove="Invocations\**" />
     <None Remove="Kits\**" />
     <None Remove="Measuring\**" />
     <None Remove="Rendering\**" />
-    <None Remove="Styles\**" />
   </ItemGroup>
 
   <ItemGroup>

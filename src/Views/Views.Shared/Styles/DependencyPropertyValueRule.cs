@@ -27,5 +27,10 @@ namespace Das.Views.Styles
         public ObjectDeclaration Declaration { get; }
 
         IStyleSelector IStyleRule.Selector => Selector;
+
+        public override String ToString()
+        {
+            return Selector + " => " + Declaration;
+        }
     }
 }

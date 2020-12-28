@@ -35,7 +35,6 @@ namespace Das.Views.Rendering
                                     IVisualSurrogateProvider surrogateProvider,
                                     Dictionary<IVisualElement, ValueCube> renderPositions,
                                     Dictionary<IVisualElement, ValueSize> lastMeasurements,
-                                    //Dictionary<IVisualElement, ValueCube> lastRenderPositions,
                                     IStyleContext styleContext,
                                     IVisualLineage visualLineage)
             : base(lastMeasurements, styleContext, surrogateProvider, visualLineage)
@@ -75,7 +74,7 @@ namespace Das.Views.Rendering
         {
             foreach (var visual in GetElementsAt(point2D))
             {
-                if (!(visual.Element is IInteractiveView interactive) ||
+                if (!(visual.Element is IInteractiveVisual interactive) ||
                     !(visual.Element is TVisual ofType))
                     continue;
 
@@ -90,7 +89,7 @@ namespace Das.Views.Rendering
             where TPoint : IPoint2D
         {
             foreach (var visual in GetElementsAt(point2D))
-                if (visual.Element is IInteractiveView interactive &&
+                if (visual.Element is IInteractiveVisual interactive &&
                     (interactive.HandlesActions & inputAction) == inputAction &&
                     interactive is IHandleInput<T> handler)
                     yield return handler;
@@ -107,7 +106,7 @@ namespace Das.Views.Rendering
                 foreach (var kvp in RenderPositions.Where(p => p.Value.Contains(point2D))
                                                    .OrderByDescending(p => p.Value.Depth))
                 {
-                    if (!(kvp.Key is IInteractiveView interactive) ||
+                    if (!(kvp.Key is IInteractiveVisual interactive) ||
                         (interactive.HandlesActions & inputAction) != inputAction ||
                         !(interactive is IHandleInput<T> inputHandler))
                         continue;
@@ -369,7 +368,7 @@ namespace Das.Views.Rendering
 
             var styles = ViewState.StyleContext;
 
-            var selector = layoutVisual is IInteractiveView interactive
+            var selector = layoutVisual is IInteractiveVisual interactive
                 ? interactive.CurrentVisualStateType
                 : VisualStateType.None;
 

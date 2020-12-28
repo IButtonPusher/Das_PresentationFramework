@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 using Das.Serializer;
 using Das.Views.Construction.Styles;
 using Das.Views.Controls;
-using Das.Views.Core.Geometry;
-using Das.Views.Panels;
-using Das.Views.Primitives;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 
@@ -18,14 +15,13 @@ namespace Das.Views.Construction
     {
         public StyledVisualWorker(IStyleSheet styleSheet,
                                   IPropertyProvider propertyProvider,
-                                  Dictionary<IVisualElement, ValueCube> renderPositions,
                                   IVisualBootstrapper visualBootstrapper)
         {
             _propertyProvider = propertyProvider;
             _visualBootstrapper = visualBootstrapper;
             _rules = new List<IStyleRule>(styleSheet.Rules);
 
-            _declarationWorker = new DeclarationWorker(renderPositions);
+            //_declarationWorker = new DeclarationWorker(renderPositions, visualBootstrapper);
         }
 
         public async Task ApplyStylesToVisualAsync(IVisualElement visual,
@@ -102,24 +98,18 @@ namespace Das.Views.Construction
             return false;
         }
 
-       
+
         private Boolean TryApplyRuleToVisual(IVisualElement visual,
-                                                 IStyleRule rule,
-                                                 IVisualLineage visualLineage)
+                                             IStyleRule rule,
+                                             IVisualLineage visualLineage)
         {
-            if (visual is Canvas)
-            {
-
-            }
-
-            var applicableVisuals = SelectorWorker.GetSelectableVisuals(visual, 
+            var applicableVisuals = SelectorWorker.GetSelectableVisuals(visual,
                 rule.Selector, visualLineage);
 
             foreach (var applicable in applicableVisuals)
             {
                 Debug.WriteLine("Rule: " + rule + " applies to " + applicable);
-                if (applicable is SpanSlim)
-                {}
+
 
                 if (rule.Selector.TryGetContentAppendType(out var contentAppend))
                 {
@@ -136,27 +126,6 @@ namespace Das.Views.Construction
                 }
 
             }
-
-            //if (!SelectorWorker.IsVisualSelectable(visual, rule.Selector, visualLineage))
-            //{
-            //    //Debug.WriteLine("Rule: " + rule + " DOES NOT apply to " + visual);
-                
-            //    return false;
-            //}
-
-            //Debug.WriteLine("Rule: " + rule + " applies to " + visual);
-
-            //if (rule.Selector.TryGetContentAppendType(out var contentAppend))
-            //{
-            //    AddPseudoVisual(visual, contentAppend, rule, visualLineage);
-            //    return true;
-            //}
-            
-            //foreach (var declaration in rule.Declarations)
-            //{
-            //    ApplyDeclarationToVisual(visual, visualLineage, 
-            //        declaration, rule.Selector);
-            //}
 
             return true;
         }
@@ -199,10 +168,10 @@ namespace Das.Views.Construction
             }
         }
 
-        private void ApplyDeclarationToVisual(IVisualElement visual,
-                                              IVisualLineage visualLineage,
-                                              IStyleDeclaration declaration,
-                                              IStyleSelector selector)
+        private static void ApplyDeclarationToVisual(IVisualElement visual,
+                                                     IVisualLineage visualLineage,
+                                                     IStyleDeclaration declaration,
+                                                     IStyleSelector selector)
         {
             if (visual.TryGetDependencyProperty(declaration.Property, //declarationValue, 
                 out var dependencyProperty))
@@ -220,11 +189,11 @@ namespace Das.Views.Construction
             }
         }
 
-        private void ApplyDeclarationToDependencyProperty(IVisualElement visual,
-                                                          IVisualLineage visualLineage,
-                                                          IDependencyProperty property,
-                                                          IStyleDeclaration declaration,
-                                                          IStyleSelector selector)
+        private static void ApplyDeclarationToDependencyProperty(IVisualElement visual,
+                                                                 IVisualLineage visualLineage,
+                                                                 IDependencyProperty property,
+                                                                 IStyleDeclaration declaration,
+                                                                 IStyleSelector selector)
         {
             if (selector.IsFilteringOnVisualState())
             {}
@@ -246,7 +215,7 @@ namespace Das.Views.Construction
 
         private readonly IPropertyProvider _propertyProvider;
         private readonly IVisualBootstrapper _visualBootstrapper;
-        private readonly DeclarationWorker _declarationWorker;
+        //private readonly IDeclarationWorker _declarationWorker;
 
         private readonly List<IStyleRule> _rules;
     }

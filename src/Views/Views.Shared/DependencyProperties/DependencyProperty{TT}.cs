@@ -87,6 +87,18 @@ namespace Das.Views
             EnsureKnown(tv);
         }
 
+        void IDependencyProperty.AddOnChangedHandler(IVisualElement visual,
+                                                     Action<IDependencyProperty> onChange)
+        {
+            var tVisual = GetValue<IVisualElement, TVisual>(visual);
+
+            AddOnChangedHandler(tVisual, (v, was, now) => onChange(this));
+        }
+
+        private void CloseOnChange()
+        {
+        }
+
         public String Name => _propertyName;
 
         public Type PropertyType => typeof(TValue);

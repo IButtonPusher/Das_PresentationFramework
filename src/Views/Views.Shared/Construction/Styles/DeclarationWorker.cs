@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Views.Core;
 using Das.Views.Core.Enums;
@@ -8,15 +9,103 @@ using Das.Views.Declarations;
 
 using Das.Views.Rendering;
 using Das.Views.Styles;
+using Das.Views.Styles.Application;
 using Das.Views.Styles.Declarations;
 
 namespace Das.Views.Construction.Styles
 {
-    public class DeclarationWorker
+    public class DeclarationWorker : IDeclarationWorker
     {
-        public DeclarationWorker(Dictionary<IVisualElement, ValueCube> renderPositions)
+        public DeclarationWorker(Dictionary<IVisualElement, ValueCube> renderPositions,
+                                 IVisualBootstrapper visualBootstrapper)
         {
             _renderPositions = renderPositions;
+            _visualBootstrapper = visualBootstrapper;
+        }
+
+        public IEnumerable<IStyleValueAssignment> BuildStyleValueAssignments(IVisualElement visual,
+            IVisualLineage visualLineage,
+            IStyleRule rule)
+        {
+            if (rule.Selector.TryGetContentAppendType(out var contentAppend))
+            {
+                yield return new PseudoVisualAssignment(visual, contentAppend,
+                    rule, _visualBootstrapper, visualLineage, BuildStyleValueAssignments);
+
+                //AddPseudoVisual(applicable, contentAppend, rule, visualLineage);
+                //return true;
+            }
+            else
+            {
+                foreach (var assignment in BuildStyleValueAssignments(visual, visualLineage, rule.Selector,
+                    rule.Declarations))
+                {
+                    yield return assignment;
+                }
+
+                //foreach (var declaration in rule.Declarations)
+                //{
+                //    var assignment = ApplyDeclarationToVisual(visual, visualLineage,
+                //        declaration, rule.Selector);
+
+                //    if (assignment != null)
+                //        yield return assignment;
+                //}
+            }
+        }
+
+        private static IEnumerable<IStyleValueAssignment> BuildStyleValueAssignments(IVisualElement visual,
+                                                                                     IVisualLineage lineage,
+                                                                                     IStyleSelector selector,
+                                                                                     IEnumerable<IStyleDeclaration> declarations)
+        {
+            foreach (var declaration in declarations)
+            {
+                var assignment = ApplyDeclarationToVisual(visual, lineage,
+                    declaration, selector);
+
+                if (assignment != null)
+                    yield return assignment;
+            }
+        }
+
+        private static IStyleValueAssignment? ApplyDeclarationToVisual(IVisualElement visual,
+                                                                       IVisualLineage visualLineage,
+                                                                       IStyleDeclaration declaration,
+                                                                       IStyleSelector selector)
+        {
+            if (visual.TryGetDependencyProperty(declaration.Property, //declarationValue, 
+                out var dependencyProperty))
+            {
+                Debug.WriteLine("Setting " + visual.GetType().Name + "->" + dependencyProperty +
+                                " = " + declaration);
+
+                return ApplyDeclarationToDependencyProperty(visual, visualLineage,
+                    dependencyProperty, declaration, selector);
+            }
+
+            Debug.WriteLine("No dependency property found for " + declaration.Property +
+                            " on " + visual);
+            return default;
+        }
+
+        private static IStyleValueAssignment ApplyDeclarationToDependencyProperty(IVisualElement visual,
+                                                                 IVisualLineage visualLineage,
+                                                                 IDependencyProperty property,
+                                                                 IStyleDeclaration declaration,
+                                                                 IStyleSelector selector)
+        {
+            var declarationValue = GetDeclarationValue(visual, 
+                declaration, visualLineage);
+
+            switch (declarationValue)
+            {
+                case Func<IVisualElement, Object?> computed:
+                    return new ComputedValueAssignment(visual, property, computed);
+
+                default:
+                    return new AppliedValueAssignment(visual, property, declarationValue);
+            }
         }
 
         public static Object? GetDeclarationValue(IVisualElement visual,
@@ -99,35 +188,6 @@ namespace Das.Views.Construction.Styles
             return value;
         }
 
-        //private QuantifiedThickness GetQuadValue(QuadQuantityDeclaration quadQuan,
-        //                                         IVisualElement visual,
-        //                                         IVisualLineage lineage)
-        //{
-        //    switch (quadQuan.Units)
-        //    {
-        //        case LengthUnits.Px:
-        //            var left = GetQuadValue(quadQuan.Left, lineage);
-        //            var top = GetQuadValue(quadQuan.Top, lineage);
-        //            var right = GetQuadValue(quadQuan.Right, lineage);
-        //            var bottom = GetQuadValue(quadQuan.Bottom, lineage);
-
-        //            return new Thickness(left, top, right, bottom);
-
-        //        case LengthUnits.Percent:
-
-        //            return new VisualPercentThickness(visual,
-        //                quadQuan.Left.Value,
-        //                quadQuan.Top.Value,
-        //                quadQuan.Right.Value,
-        //                quadQuan.Bottom.Value, _renderPositions);
-
-        //        case LengthUnits.None:
-        //            return Thickness.Empty;
-        //    }
-
-        //    throw new NotImplementedException();
-        //}
-
         private static Double GetQuadValue(QuantityDeclaration declaration,
                                            IVisualLineage lineage)
         {
@@ -141,5 +201,6 @@ namespace Das.Views.Construction.Styles
         }
 
         private readonly Dictionary<IVisualElement, ValueCube> _renderPositions;
+        private readonly IVisualBootstrapper _visualBootstrapper;
     }
 }

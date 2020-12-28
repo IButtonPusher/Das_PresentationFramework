@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Das.Container;
 using Das.Serializer;
 using Das.Views.Construction;
+using Das.Views.Construction.Styles;
 using Das.Views.Controls;
 using Das.Views.Core.Geometry;
 using Das.Views.Styles;
@@ -43,10 +44,31 @@ namespace Das.Views
                                 IPropertyProvider propertyProvider,
                                 IVisualBootstrapper visualBootstrapper,
                                 Dictionary<IVisualElement, ValueCube> renderPositions)
-        : this(resolver, styleContext, visualBootstrapper, 
-            GetViewInflater(visualBootstrapper, attributeScanner, 
-                typeInferrer, propertyProvider, renderPositions),
+        : this(resolver, 
+            styleContext, 
+            attributeScanner, 
+            typeInferrer, 
+            propertyProvider,
+            visualBootstrapper, 
+            GetStyleVisualBuilder(visualBootstrapper, typeInferrer, propertyProvider, renderPositions),
             renderPositions)
+        
+        {
+
+        }
+
+        protected BaseRenderKit(IResolver resolver,
+                                IStyleContext styleContext,
+                                IStringPrimitiveScanner attributeScanner,
+                                ITypeInferrer typeInferrer,
+                                IPropertyProvider propertyProvider,
+                                IVisualBootstrapper visualBootstrapper,
+                                IStyledVisualBuilder styledVisualBuilder,
+                                Dictionary<IVisualElement, ValueCube> renderPositions)
+            : this(resolver, styleContext, visualBootstrapper, 
+                GetViewInflater(visualBootstrapper, attributeScanner, 
+                    typeInferrer, propertyProvider, styledVisualBuilder),
+                renderPositions)
         
         {
 
@@ -79,24 +101,44 @@ namespace Das.Views
             return new DefaultVisualBootstrapper(resolver, styleContext, propertyProvider);
         }
 
+        private static IStyledVisualBuilder GetStyleVisualBuilder(IVisualBootstrapper visualBootstrapper,
+                                                                  ITypeInferrer typeInferrer,
+                                                                  IPropertyProvider propertyProvider,
+                                                                  Dictionary<IVisualElement, ValueCube> renderPositions)
+        {
+            var styleInflater = new DefaultStyleInflater(typeInferrer);
+            var styleProvider = new VisualStyleProvider(styleInflater);
+            var declarationWorker = new DeclarationWorker(renderPositions, visualBootstrapper);
+            var appliedStyleBuilder = new AppliedRuleBuilder(styleProvider, declarationWorker,
+                propertyProvider);
+            
+            var styledVisualBuilder = new StyledVisualBuilder(visualBootstrapper, styleProvider, 
+                propertyProvider, renderPositions, appliedStyleBuilder);
+
+            return styledVisualBuilder;
+        }
+
         private static IViewInflater GetViewInflater(IVisualBootstrapper visualBootstrapper,
                                                      IStringPrimitiveScanner attributeScanner,
                                                      ITypeInferrer typeInferrer,
                                                      IPropertyProvider propertyProvider,
-                                                     Dictionary<IVisualElement, ValueCube> renderPositions)
+                                                     IStyledVisualBuilder styleVisualBuilder)
         {
             var bindingBuilder = new BindingBuilder(typeInferrer, propertyProvider);
             var converterProvider = new DefaultValueConverterProvider(visualBootstrapper);
             var visualTypeResolver = new VisualTypeResolver(typeInferrer);
 
-            var styleInflater = new DefaultStyleInflater(typeInferrer);
-            var styleProvider = new VisualStyleProvider(styleInflater);
-            var styledVisualBuilder = new StyledVisualBuilder(visualBootstrapper, styleProvider, 
-                propertyProvider, renderPositions);
+            //var styleInflater = new DefaultStyleInflater(typeInferrer);
+            //var styleProvider = new VisualStyleProvider(styleInflater);
+            //var declarationWorker = new DeclarationWorker(renderPositions, visualBootstrapper);
+            //var appliedStyleBuilder = new AppliedRuleBuilder(declarationWorker);
+            
+            //var styledVisualBuilder = new StyledVisualBuilder(visualBootstrapper, styleProvider, 
+            //    propertyProvider, renderPositions, appliedStyleBuilder);
             
             return new ViewInflater(visualBootstrapper, attributeScanner, 
                 typeInferrer, bindingBuilder, converterProvider, 
-                visualTypeResolver, styledVisualBuilder, propertyProvider);
+                visualTypeResolver, styleVisualBuilder, propertyProvider);
         }
 
         public void EnsureSurrogate(ref IVisualElement element)

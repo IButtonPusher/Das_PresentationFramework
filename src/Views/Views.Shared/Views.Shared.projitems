@@ -34,6 +34,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ContentVisuals\ContentPropertyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\CheckBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToVisualConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\InteractiveVisualProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\ContextBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\NullStyleContext.cs" />

@@ -8,7 +8,8 @@
     <Setter Property="Template">
 
       <Canvas class="mat-switch">
-        <input type="checkbox" />
+        <input type="checkbox"
+               IsChecked="{Binding IsChecked}"/>
         <span>Switch</span>
       </Canvas>
 

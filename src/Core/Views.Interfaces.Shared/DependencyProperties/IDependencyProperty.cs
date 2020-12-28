@@ -15,6 +15,9 @@ namespace Das.Views
         void SetComputedValueFromStyle(IVisualElement visual,
                                Func<IVisualElement, Object?> value);
 
+        void AddOnChangedHandler(IVisualElement visual,
+                                 Action<IDependencyProperty> onChange);
+
         String Name { get; }
         
         Type PropertyType { get; }

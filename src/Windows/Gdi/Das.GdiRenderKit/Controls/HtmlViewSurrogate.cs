@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -10,7 +9,7 @@ using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
-using Das.Views.Styles;
+using Das.Views.Styles.Application;
 using Das.Views.Styles.Declarations;
 using Das.Views.Templates;
 
@@ -75,7 +74,7 @@ namespace Das.Views.Gdi.Controls
 
         public String? Class => _htmlPanel.Class;
 
-        public IStyleSheet? Style => _htmlPanel.Style;
+        public IAppliedStyle? Style => _htmlPanel.Style;
 
         public Boolean IsClipsContent
         {
@@ -123,7 +122,7 @@ namespace Das.Views.Gdi.Controls
             set => _htmlPanel.Height = value;
         }
 
-        public QuantifiedDouble? Left
+        QuantifiedDouble? IVisualElement.Left
         {
             get => ((IVisualElement) _htmlPanel).Left;
             set => ((IVisualElement) _htmlPanel).Left = value;
