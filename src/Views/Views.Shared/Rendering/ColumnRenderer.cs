@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Panels;
@@ -9,34 +10,19 @@ namespace Das.Views.Rendering
 {
     public class ColumnRenderer : SequentialRenderer
     {
-        //private readonly Func<Int32, Double> _getRowHeight;
-        private readonly Dictionary<Int32, Double> _rowHeights;
-        private Int32 _currentRow;
-        private Double _currentY;
-
         public ColumnRenderer(IVisualCollection visuals,
-                              //Func<Int32, Double> getRowHeight,
-                              Dictionary<Int32, Double> rowHeights) 
+                              Dictionary<Int32, Double> rowHeights)
             : base(visuals)
         {
-            //_getRowHeight = getRowHeight;
             _rowHeights = rowHeights;
             RowHeights = new Dictionary<Int32, Double>();
         }
 
-        public override ValueSize Measure(IVisualElement container, 
-                                          Orientations orientation, 
-                                          IRenderSize availableSpace,
-                                          IMeasureContext measureContext)
-        {
-            _currentRow = 0;
-            _currentY = 0;
-            return base.Measure(container, orientation, availableSpace, measureContext);
-        }
+        public Dictionary<Int32, Double> RowHeights { get; }
 
-       
-        public override void Arrange(Orientations orientation, 
-                                     IRenderRectangle bounds, 
+
+        public override void Arrange(Orientations orientation,
+                                     IRenderRectangle bounds,
                                      IRenderContext renderContext)
         {
             _currentRow = 0;
@@ -44,12 +30,23 @@ namespace Das.Views.Rendering
             base.Arrange(orientation, bounds, renderContext);
         }
 
-        protected override ValueRenderRectangle GetElementBounds(IVisualElement child, 
+        public override ValueSize Measure(IVisualElement container,
+                                          Orientations orientation,
+                                          IRenderSize availableSpace,
+                                          IMeasureContext measureContext)
+        {
+            _currentRow = 0;
+            _currentY = 0;
+            RowHeights.Clear();
+            return base.Measure(container, orientation, availableSpace, measureContext);
+        }
+
+        protected override ValueRenderRectangle GetElementBounds(IVisualElement child,
                                                                  ValueRenderRectangle precedingVisualBounds)
         {
             var useY = _currentY;
             var topGap = 0.0;
-            
+
             var consider = base.GetElementBounds(child, precedingVisualBounds);
             var currentRowHeight = _rowHeights[_currentRow];
 
@@ -58,35 +55,34 @@ namespace Das.Views.Rendering
                 case VerticalAlignments.Top:
                 case VerticalAlignments.Stretch:
                     break;
-                
+
                 case VerticalAlignments.Bottom:
                     topGap = currentRowHeight - consider.Height;
-                    //useY += (currentRowHeight - consider.Height);
                     break;
-                
+
                 case VerticalAlignments.Center:
                 case VerticalAlignments.Default:
                     topGap = (currentRowHeight - consider.Height) / 2;
-                    
+
                     break;
-                
-                
+
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
             var useHeight = currentRowHeight - topGap;
             useY += topGap;
-                
-            
+
+
             _currentRow++;
             _currentY += currentRowHeight;
-            
-            return new ValueRenderRectangle(consider.X, useY, // consider.Y,
+
+            return new ValueRenderRectangle(consider.X, useY, 
                 new ValueSize(consider.Width, useHeight), consider.Offset);
         }
 
-        protected override ValueSize SetChildSize(IVisualElement child, 
+        protected override ValueSize SetChildSize(IVisualElement child,
                                                   RenderRectangle current)
         {
             RowHeights[_currentRow] = current.Height;
@@ -94,6 +90,8 @@ namespace Das.Views.Rendering
             return base.SetChildSize(child, current);
         }
 
-        public Dictionary<Int32, Double> RowHeights {get;}
+        private readonly Dictionary<Int32, Double> _rowHeights;
+        private Int32 _currentRow;
+        private Double _currentY;
     }
 }

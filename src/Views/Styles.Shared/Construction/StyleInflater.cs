@@ -46,14 +46,14 @@ namespace Das.Views.Styles.Construction
         {
             var node = GetRootNode(xml);
 
-            if (node.TryGetAttributeValue(nameof(NamedStyle.Name), out var styleName))
-                if (node.TryGetAttributeValue(nameof(NamedStyle.TargetType), out var targetTypeName))
+            if (node.TryGetAttributeValue(nameof(NamedTargetedStyle.Name), out var styleName))
+                if (node.TryGetAttributeValue(nameof(NamedTargetedStyle.TargetType), out var targetTypeName))
                 {
                     var targetType = _visualTypeResolver.GetType(targetTypeName);
 
                     var rules = GetStyleRules(node.Children, targetType);
 
-                    var namedStyle = new NamedStyle(styleName, targetType, rules);
+                    var namedStyle = new NamedTargetedStyle(styleName, targetType, rules);
                     return namedStyle;
                 }
 

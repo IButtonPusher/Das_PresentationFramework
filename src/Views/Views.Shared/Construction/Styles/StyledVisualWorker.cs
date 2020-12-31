@@ -24,17 +24,17 @@ namespace Das.Views.Construction
             //_declarationWorker = new DeclarationWorker(renderPositions, visualBootstrapper);
         }
 
-        public async Task ApplyStylesToVisualAsync(IVisualElement visual,
-                                                   IAttributeDictionary attributeDictionary,
-                                                   IVisualLineage visualLineage,
-                                                   IViewInflater viewInflater)
-        {
-            var applicableRules = ApplyStyleValuesToVisual(visual, attributeDictionary, visualLineage);
+        //public async Task ApplyStylesToVisualAsync(IVisualElement visual,
+        //                                           IAttributeDictionary attributeDictionary,
+        //                                           IVisualLineage visualLineage,
+        //                                           IViewInflater viewInflater)
+        //{
+        //    var applicableRules = ApplyStyleValuesToVisual(visual, attributeDictionary, visualLineage);
 
-            TrySetVisualStyle(visual, new StyleSheet(applicableRules));
+        //    TrySetVisualStyle(visual, new StyleSheet(applicableRules));
 
-            await Task.CompletedTask;
-        }
+        //    await Task.CompletedTask;
+        //}
         
         public List<IStyleRule> ApplyStyleValuesToVisual(IVisualElement visual,
                                                          IAttributeDictionary attributeDictionary,
@@ -68,17 +68,17 @@ namespace Das.Views.Construction
             }
         }
 
-        public void TrySetVisualStyle(IVisualElement visual,
-                                       IStyleSheet styleSheet)
-        {
-            var propAccessor = _propertyProvider.GetPropertyAccessor(visual.GetType(),
-                nameof(IVisualElement.Style));
-            if (propAccessor.CanWrite)
-            {
-                Object oVisual = visual;
-                propAccessor.SetPropertyValue(ref oVisual, styleSheet); 
-            }
-        }
+        //public void TrySetVisualStyle(IVisualElement visual,
+        //                               IAppliedStyle styleSheet)
+        //{
+        //    var propAccessor = _propertyProvider.GetPropertyAccessor(visual.GetType(),
+        //        nameof(IVisualElement.Style));
+        //    if (propAccessor.CanWrite)
+        //    {
+        //        Object oVisual = visual;
+        //        propAccessor.SetPropertyValue(ref oVisual, styleSheet); 
+        //    }
+        //}
 
         public Boolean TryGetVisualTemplate(out IVisualTemplate template)
         {
@@ -198,8 +198,7 @@ namespace Das.Views.Construction
             if (selector.IsFilteringOnVisualState())
             {}
 
-            var declarationValue = DeclarationWorker.GetDeclarationValue(visual, 
-                declaration, visualLineage);
+            var declarationValue = DeclarationWorker.GetDeclarationValue(declaration);
 
             switch (declarationValue)
             {

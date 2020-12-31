@@ -65,18 +65,18 @@ namespace Das.Views.Core.Geometry
             return new Rectangle(X, Y, Width, Height);
         }
 
-        public void Update<TPoint, TMargin>(Double x,
-                                            Double y,
-                                            Double width,
-                                            Double height)
-        where TPoint : IPoint2D
-        where TMargin : IShape2d
-        {
-            _left = x;
-            _top = y;
-            _w = width;
-            _h = height;
-        }
+        //public void Update<TPoint, TMargin>(Double x,
+        //                                    Double y,
+        //                                    Double width,
+        //                                    Double height)
+        //where TPoint : IPoint2D
+        //where TMargin : IShape2d
+        //{
+        //    _left = x;
+        //    _top = y;
+        //    _w = width;
+        //    _h = height;
+        //}
 
         public Boolean Equals(IRectangle? other)
         {

@@ -34,6 +34,52 @@ namespace Das.Views.Core.Geometry
                        bottom.IsZero();
         }
 
+        public override String ToString()
+        {
+            return IsEmpty ? "0" : $"{Left} {Top} {Right} {Bottom}";
+        }
+
+        public static QuantifiedThickness Parse(String value)
+        {
+            var tokens = value.Split();
+
+            QuantifiedDouble top, bottom, left, right, leftRight, topBottom;
+
+            switch (tokens.Length)
+            {
+                case 1:
+                    var all = QuantifiedDouble.Parse(tokens[0]);
+                    return new QuantifiedThickness(all);
+
+                case 2:
+                    leftRight = QuantifiedDouble.Parse(tokens[1]);
+                    topBottom = QuantifiedDouble.Parse(tokens[0]);
+                    return new QuantifiedThickness(leftRight, topBottom);
+
+                case 4:
+
+                    //top = QuantifiedDouble.Parse(tokens[1]);
+                    //right = QuantifiedDouble.Parse(tokens[2]);
+                    //bottom = QuantifiedDouble.Parse(tokens[3]);
+                    //left = QuantifiedDouble.Parse(tokens[0]);
+
+                    top = QuantifiedDouble.Parse(tokens[0]);
+                    right = QuantifiedDouble.Parse(tokens[1]);
+                    bottom = QuantifiedDouble.Parse(tokens[2]);
+                    left = QuantifiedDouble.Parse(tokens[3]);
+                    return new QuantifiedThickness(left, top, right, bottom);
+
+                case 3:
+                    top = QuantifiedDouble.Parse(tokens[0]);
+                    right = QuantifiedDouble.Parse(tokens[1]);
+                    left = right;
+                    bottom = QuantifiedDouble.Parse(tokens[2]);
+                    return new QuantifiedThickness(left, top, right, bottom);
+            }
+
+            throw new InvalidOperationException();
+        }
+
         public static readonly QuantifiedThickness Empty = new QuantifiedThickness(0, 0, 0, 0);
 
         private readonly QuantifiedDouble Left;

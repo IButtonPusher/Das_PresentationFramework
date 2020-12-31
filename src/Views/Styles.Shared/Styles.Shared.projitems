@@ -55,6 +55,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\StringDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\TimeUnit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Transform\TransformDeclaration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Declarations\Transform\TransformType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Transition\MultiTransitionDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Transition\TransitionDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Transition\TransitionDurationDeclaration.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Functions\MultiFunction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Functions\ParameterizedFunction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NamedStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NamedTargetedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Selectors\AllStyleSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Selectors\AndStyleSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Selectors\ChildSelector.cs" />

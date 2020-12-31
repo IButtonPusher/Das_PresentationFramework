@@ -137,7 +137,6 @@ namespace Das.Gdi.Kits
             renderContext = new GdiRenderContext(viewPerspective,
                 MeasureContext.Graphics, this, lastMeasure,
                 renderPositions,
-                //new Dictionary<IVisualElement, ValueCube>(),
                 styleContext, visualLineage);
 
             Container.ResolveTo<IImageProvider>(imageProvider);

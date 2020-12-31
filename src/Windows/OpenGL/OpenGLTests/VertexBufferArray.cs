@@ -1,5 +1,6 @@
 ﻿using Das.OpenGL;
 using System;
+// ReSharper disable All
 
 namespace SharpGL.VertexBuffers
 {

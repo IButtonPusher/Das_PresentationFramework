@@ -97,7 +97,7 @@ namespace Das.Views.Images
 
             #else
 
-            return Task.FromResult<Boolean>(false);
+            return Task.FromResult(false);
 
             #endif
         }

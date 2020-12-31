@@ -3,23 +3,17 @@ using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Util;
 using Das.ViewModels;
 using bob = System.Uri;
+using Uri = Android.Net.Uri;
 
 namespace Das.Xamarin.Android.Mvvm
 {
     public class AndroidUiProvider : BaseUiProvider
     {
-        private readonly Activity _activity;
-        private readonly DisplayMetrics _displayMetrics;
-        private readonly Looper _looper;
-
-        public AndroidUiProvider(Activity activity,
-                                 DisplayMetrics displayMetrics)
+        public AndroidUiProvider(Activity activity)
         {
             _activity = activity;
-            _displayMetrics = displayMetrics;
             _looper = _activity.MainLooper ??
                       throw new ArgumentNullException(nameof(Activity.MainLooper));
         }
@@ -27,11 +21,10 @@ namespace Das.Xamarin.Android.Mvvm
         public override void BrowseToUri(bob uri)
         {
             Intent intent = new Intent(Intent.ActionView);
-            intent.SetData(global::Android.Net.Uri.Parse(uri.AbsoluteUri));
+            intent.SetData(Uri.Parse(uri.AbsoluteUri));
             _activity.StartActivity(intent);
         }
 
-       
 
         public override void Invoke(Action action)
         {
@@ -84,5 +77,8 @@ namespace Das.Xamarin.Android.Mvvm
                 await src.Task;
             }
         }
+
+        private readonly Activity _activity;
+        private readonly Looper _looper;
     }
 }

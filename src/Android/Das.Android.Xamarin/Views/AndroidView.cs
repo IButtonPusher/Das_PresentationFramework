@@ -168,7 +168,7 @@ namespace Das.Xamarin.Android
 
             var viewState = new AndroidViewState(displayMetrics, styleContext);
 
-            var fontProvider = new AndroidFontProvider(displayMetrics, styleContext);
+            var fontProvider = new AndroidFontProvider(displayMetrics);
             return new AndroidRenderKit(new BasePerspective(), viewState,
                 fontProvider, windowManager, uiProvider, styleContext, displayMetrics);
         }

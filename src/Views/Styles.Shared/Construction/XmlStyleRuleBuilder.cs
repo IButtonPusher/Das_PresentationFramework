@@ -10,11 +10,6 @@ namespace Das.Views.Styles.Construction
 {
     public class XmlStyleRuleBuilder : IXmlStyleRuleBuilder
     {
-        public XmlStyleRuleBuilder()
-        {
-            
-        }
-
         public IStyleRule? GetRule(IMarkupNode markupNode, 
                                    Type targetType)
         {

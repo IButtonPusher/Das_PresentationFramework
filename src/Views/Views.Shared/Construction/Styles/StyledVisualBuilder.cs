@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Serializer;
 using Das.Views.Construction.Styles;
-using Das.Views.Core.Geometry;
+using Das.Views.Controls;
 using Das.Views.DataBinding;
 using Das.Views.Rendering;
 using Das.Views.Styles;
@@ -17,13 +16,11 @@ namespace Das.Views.Construction
         public StyledVisualBuilder(IVisualBootstrapper visualBootstrapper,
                                    IVisualStyleProvider styleProvider,
                                    IPropertyProvider propertyProvider,
-                                   Dictionary<IVisualElement, ValueCube> renderPositions,
                                    IAppliedStyleBuilder appliedStyleBuilder)
         {
             _visualBootstrapper = visualBootstrapper;
             _styleProvider = styleProvider;
             _propertyProvider = propertyProvider;
-            _renderPositions = renderPositions;
             _appliedStyleBuilder = appliedStyleBuilder;
         }
 
@@ -47,6 +44,9 @@ namespace Das.Views.Construction
                                                    IVisualLineage visualLineage,
                                                    IViewInflater viewInflater)
         {
+            var omgStyle = await _styleProvider.GetStyleForVisualAsync(visual, attributeDictionary);
+
+
             if (attributeDictionary.TryGetAttributeValue("class", out var className))
             {
                 await ApplyStylesToVisualAsync(visual, className, visualLineage);
@@ -59,11 +59,13 @@ namespace Das.Views.Construction
                 if (style == null)
                     return;
 
-                var applyingRules = new StyledVisualWorker(style, _propertyProvider, _visualBootstrapper);
+                //var applyingRules = new StyledVisualWorker(style, _propertyProvider, _visualBootstrapper);
 
-                applyingRules.TrySetVisualStyle(visual, style);
+                //applyingRules.TrySetVisualStyle(visual, style);
 
-                if (applyingRules.TryGetVisualTemplate(out var visualTemplate) &&
+                //if (applyingRules.TryGetVisualTemplate(out var visualTemplate) &&
+                //    visualTemplate is DeferredVisualTemplate deferred)
+                if (TryGetVisualTemplate(style, out var visualTemplate) &&
                     visualTemplate is DeferredVisualTemplate deferred)
                 {
                     //var contentVisual = await viewInflater.GetVisualAsync(deferred.MarkupNode,
@@ -83,19 +85,53 @@ namespace Das.Views.Construction
 
                     visualLineage.AssertPopVisual(contentVisual);
 
-                    var appliedStyle = _appliedStyleBuilder.BuildAppliedStyle(style, visual, visualLineage);
+                    _appliedStyleBuilder.BuildAppliedStyle(style, visual, visualLineage);
                 }
                 else
                 {
-                    applyingRules.ApplyStyleValuesToVisual(visual, attributeDictionary, visualLineage);
+                    await _appliedStyleBuilder.ApplyVisualStylesAsync(visual, attributeDictionary, visualLineage);
+                    //applyingRules.ApplyStyleValuesToVisual(visual, attributeDictionary, visualLineage);
                 }
             }
+        }
+
+        private static Boolean TryGetVisualTemplate(IStyleSheet style,
+                                                    out IVisualTemplate template)
+        {
+            foreach (var rule in style.Rules)
+            {
+                if (!(rule is DependencyPropertyValueRule depProp) ||
+                    depProp.Selector.Property.Name != nameof(IVisualElement.Template))
+                    continue;
+
+                if (depProp.Declaration.Value is IVisualTemplate visualTemplate)
+                {
+                    template = visualTemplate;
+                    return true;
+                }
+
+            }
+
+
+            //var items = from r in style.Rules.OfType<DependencyPropertyValueRule>()
+            //    where r.Selector.Property.Name == nameof(IVisualElement.Template)
+            //    select r;
+
+            //var goodRule = items.FirstOrDefault();
+
+            //if (goodRule?.Declaration.Value is IVisualTemplate visualTemplate)
+            //{
+            //    template = visualTemplate;
+            //    return true;
+            //}
+
+            template = default!;
+            return false;
         }
 
         private readonly IVisualBootstrapper _visualBootstrapper;
         private readonly IVisualStyleProvider _styleProvider;
         private readonly IPropertyProvider _propertyProvider;
-        private readonly Dictionary<IVisualElement, ValueCube> _renderPositions;
         private readonly IAppliedStyleBuilder _appliedStyleBuilder;
     }
 }

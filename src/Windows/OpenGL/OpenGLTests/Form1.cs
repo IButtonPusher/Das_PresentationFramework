@@ -33,6 +33,7 @@ namespace OpenGLTests
                 Thread.Sleep(5);
             }
 
+            // ReSharper disable once FunctionNeverReturns
         }
 
         protected override void OnPaint(PaintEventArgs e)

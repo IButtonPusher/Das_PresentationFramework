@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Gdi.Core;
@@ -15,7 +14,6 @@ using Gdi.Shared;
 using Color = Das.Views.Core.Drawing.Color;
 using Pen = Das.Views.Core.Drawing.Pen;
 using Rectangle = System.Drawing.Rectangle;
-using Size = System.Drawing.Size;
 
 namespace Das.Gdi
 {
@@ -77,11 +75,6 @@ namespace Das.Gdi
 
             img.UnwrapLocked<Bitmap>(b => Graphics.DrawImage(b, dest, src, GraphicsUnit.Pixel));
         }
-
-        //protected IGraphicsPath GetGraphicsPath()
-        //{
-        //    return new GdiGraphicsPath();
-        //}
 
         public override void DrawLine<TPen, TPoint1, TPoint2>(TPen pen,
                                                               TPoint1 pt1,

@@ -50,7 +50,7 @@ namespace Das.Views
             typeInferrer, 
             propertyProvider,
             visualBootstrapper, 
-            GetStyleVisualBuilder(visualBootstrapper, typeInferrer, propertyProvider, renderPositions),
+            GetStyleVisualBuilder(visualBootstrapper, typeInferrer, propertyProvider),
             renderPositions)
         
         {
@@ -103,17 +103,16 @@ namespace Das.Views
 
         private static IStyledVisualBuilder GetStyleVisualBuilder(IVisualBootstrapper visualBootstrapper,
                                                                   ITypeInferrer typeInferrer,
-                                                                  IPropertyProvider propertyProvider,
-                                                                  Dictionary<IVisualElement, ValueCube> renderPositions)
+                                                                  IPropertyProvider propertyProvider)
         {
             var styleInflater = new DefaultStyleInflater(typeInferrer);
             var styleProvider = new VisualStyleProvider(styleInflater);
-            var declarationWorker = new DeclarationWorker(renderPositions, visualBootstrapper);
+            var declarationWorker = new DeclarationWorker(visualBootstrapper);
             var appliedStyleBuilder = new AppliedRuleBuilder(styleProvider, declarationWorker,
                 propertyProvider);
             
             var styledVisualBuilder = new StyledVisualBuilder(visualBootstrapper, styleProvider, 
-                propertyProvider, renderPositions, appliedStyleBuilder);
+                propertyProvider, appliedStyleBuilder);
 
             return styledVisualBuilder;
         }
@@ -128,14 +127,6 @@ namespace Das.Views
             var converterProvider = new DefaultValueConverterProvider(visualBootstrapper);
             var visualTypeResolver = new VisualTypeResolver(typeInferrer);
 
-            //var styleInflater = new DefaultStyleInflater(typeInferrer);
-            //var styleProvider = new VisualStyleProvider(styleInflater);
-            //var declarationWorker = new DeclarationWorker(renderPositions, visualBootstrapper);
-            //var appliedStyleBuilder = new AppliedRuleBuilder(declarationWorker);
-            
-            //var styledVisualBuilder = new StyledVisualBuilder(visualBootstrapper, styleProvider, 
-            //    propertyProvider, renderPositions, appliedStyleBuilder);
-            
             return new ViewInflater(visualBootstrapper, attributeScanner, 
                 typeInferrer, bindingBuilder, converterProvider, 
                 visualTypeResolver, styleVisualBuilder, propertyProvider);

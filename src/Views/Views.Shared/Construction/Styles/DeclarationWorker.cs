@@ -4,22 +4,21 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Views.Core;
 using Das.Views.Core.Enums;
-using Das.Views.Core.Geometry;
 using Das.Views.Declarations;
 
 using Das.Views.Rendering;
 using Das.Views.Styles;
 using Das.Views.Styles.Application;
 using Das.Views.Styles.Declarations;
+using Das.Views.Styles.Declarations.Transform;
+using Das.Views.Transforms;
 
 namespace Das.Views.Construction.Styles
 {
     public class DeclarationWorker : IDeclarationWorker
     {
-        public DeclarationWorker(Dictionary<IVisualElement, ValueCube> renderPositions,
-                                 IVisualBootstrapper visualBootstrapper)
+        public DeclarationWorker(IVisualBootstrapper visualBootstrapper)
         {
-            _renderPositions = renderPositions;
             _visualBootstrapper = visualBootstrapper;
         }
 
@@ -31,9 +30,6 @@ namespace Das.Views.Construction.Styles
             {
                 yield return new PseudoVisualAssignment(visual, contentAppend,
                     rule, _visualBootstrapper, visualLineage, BuildStyleValueAssignments);
-
-                //AddPseudoVisual(applicable, contentAppend, rule, visualLineage);
-                //return true;
             }
             else
             {
@@ -42,15 +38,6 @@ namespace Das.Views.Construction.Styles
                 {
                     yield return assignment;
                 }
-
-                //foreach (var declaration in rule.Declarations)
-                //{
-                //    var assignment = ApplyDeclarationToVisual(visual, visualLineage,
-                //        declaration, rule.Selector);
-
-                //    if (assignment != null)
-                //        yield return assignment;
-                //}
             }
         }
 
@@ -61,8 +48,8 @@ namespace Das.Views.Construction.Styles
         {
             foreach (var declaration in declarations)
             {
-                var assignment = ApplyDeclarationToVisual(visual, lineage,
-                    declaration, selector);
+                var assignment = ApplyDeclarationToVisual(visual,
+                    declaration);
 
                 if (assignment != null)
                     yield return assignment;
@@ -70,9 +57,7 @@ namespace Das.Views.Construction.Styles
         }
 
         private static IStyleValueAssignment? ApplyDeclarationToVisual(IVisualElement visual,
-                                                                       IVisualLineage visualLineage,
-                                                                       IStyleDeclaration declaration,
-                                                                       IStyleSelector selector)
+                                                                       IStyleDeclaration declaration)
         {
             if (visual.TryGetDependencyProperty(declaration.Property, //declarationValue, 
                 out var dependencyProperty))
@@ -80,8 +65,8 @@ namespace Das.Views.Construction.Styles
                 Debug.WriteLine("Setting " + visual.GetType().Name + "->" + dependencyProperty +
                                 " = " + declaration);
 
-                return ApplyDeclarationToDependencyProperty(visual, visualLineage,
-                    dependencyProperty, declaration, selector);
+                return ApplyDeclarationToDependencyProperty(visual,
+                    dependencyProperty, declaration);
             }
 
             Debug.WriteLine("No dependency property found for " + declaration.Property +
@@ -90,13 +75,10 @@ namespace Das.Views.Construction.Styles
         }
 
         private static IStyleValueAssignment ApplyDeclarationToDependencyProperty(IVisualElement visual,
-                                                                 IVisualLineage visualLineage,
                                                                  IDependencyProperty property,
-                                                                 IStyleDeclaration declaration,
-                                                                 IStyleSelector selector)
+                                                                 IStyleDeclaration declaration)
         {
-            var declarationValue = GetDeclarationValue(visual, 
-                declaration, visualLineage);
+            var declarationValue = GetDeclarationValue(declaration);
 
             switch (declarationValue)
             {
@@ -108,21 +90,18 @@ namespace Das.Views.Construction.Styles
             }
         }
 
-        public static Object? GetDeclarationValue(IVisualElement visual,
-                                                  IStyleDeclaration declaration,
-                                                  IVisualLineage lineage)
+        public static Object? GetDeclarationValue(IStyleDeclaration declaration)
         {
             switch (declaration)
             {
+                case TransformDeclaration xform:
+                    return ConvertTransform(xform);
+
                 case IStyleValueDeclaration scalar:
                     var res = scalar.Value;
                     res = ConvertDeclarationValue(res);
                     return res;
 
-                //case QuadQuantityDeclaration quadQuan:
-                //    return GetQuadValue(quadQuan, visual, lineage);
-
-              
             }
 
             throw new NotImplementedException();
@@ -132,41 +111,8 @@ namespace Das.Views.Construction.Styles
         {
             switch (value)
             {
-                case VerticalAlignType var:
-                    switch (var)
-                    {
-                        case VerticalAlignType.Baseline:
-                            break;
-                        case VerticalAlignType.Length:
-                            break;
-                        case VerticalAlignType.Percent:
-                            break;
-                        case VerticalAlignType.Sub:
-                            break;
-                        case VerticalAlignType.Super:
-                            break;
-                        case VerticalAlignType.Top:
-                            return VerticalAlignments.Top;
-                            
-                        case VerticalAlignType.TextTop:
-                            break;
-                        case VerticalAlignType.Middle:
-                            return VerticalAlignments.Center;
-                            
-                        case VerticalAlignType.Bottom:
-                            return VerticalAlignments.Bottom;
-                            
-                        case VerticalAlignType.TextBottom:
-                            break;
-                        case VerticalAlignType.Initial:
-                            break;
-                        case VerticalAlignType.Inherit:
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-
-                    throw new NotImplementedException();
+                case VerticalAlignType vat:
+                    return ConvertVerticalAlign(vat);
 
                 case AppearanceType displayType:
 
@@ -188,19 +134,90 @@ namespace Das.Views.Construction.Styles
             return value;
         }
 
-        private static Double GetQuadValue(QuantityDeclaration declaration,
-                                           IVisualLineage lineage)
+        private static VerticalAlignments ConvertVerticalAlign(VerticalAlignType vat)
         {
-            if (declaration.Value.Units == LengthUnits.Px)
-                return declaration.Value;
-
-            if (declaration.Units == LengthUnits.None)
-                return 0;
+            switch (vat)
+            {
+                case VerticalAlignType.Baseline:
+                    break;
+                case VerticalAlignType.Length:
+                    break;
+                case VerticalAlignType.Percent:
+                    break;
+                case VerticalAlignType.Sub:
+                    break;
+                case VerticalAlignType.Super:
+                    break;
+                case VerticalAlignType.Top:
+                    return VerticalAlignments.Top;
+                            
+                case VerticalAlignType.TextTop:
+                    break;
+                case VerticalAlignType.Middle:
+                    return VerticalAlignments.Center;
+                            
+                case VerticalAlignType.Bottom:
+                    return VerticalAlignments.Bottom;
+                            
+                case VerticalAlignType.TextBottom:
+                    break;
+                case VerticalAlignType.Initial:
+                    break;
+                case VerticalAlignType.Inherit:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             throw new NotImplementedException();
         }
 
-        private readonly Dictionary<IVisualElement, ValueCube> _renderPositions;
+        private static ITransform ConvertTransform(TransformDeclaration xform)
+        {
+            Double[] paramValues;
+            //Object?[] oParamValues;
+            String[] sParamValues;
+
+            switch (xform.TransformType)
+            {
+                case TransformType.Scale:
+                    paramValues = xform.Function.GetParameterValues<Double>();
+
+                    switch (paramValues.Length)
+                    {
+                        case 1:
+                            return new ScaleTransform(paramValues[0]);
+
+                        case 2:
+                            return new ScaleTransform(paramValues[0], paramValues[1]);
+
+                        default:
+                            throw new InvalidOperationException();
+
+                    }
+
+                case TransformType.TranslateX:
+                    sParamValues = xform.Function.GetParameterValues<String>();
+                    if (sParamValues.Length != 1)
+                        throw new InvalidOperationException();
+
+                    var xValue = QuantifiedDouble.Parse(sParamValues[0]);
+
+                    //var quantifiedValues = new QuantifiedDouble[sParamValues.Length];
+                    //for (var c = 0; c < sParamValues.Length; c++)
+                    //{
+                    //    var current = sParamValues[c];
+                    //    quantifiedValues[c] = QuantifiedDouble.Parse(current);
+                    //}
+
+                    return new TranslateTransform(xValue);
+
+            }
+
+            //xform.Function.
+            throw new NotImplementedException();
+        }
+
         private readonly IVisualBootstrapper _visualBootstrapper;
     }
 }

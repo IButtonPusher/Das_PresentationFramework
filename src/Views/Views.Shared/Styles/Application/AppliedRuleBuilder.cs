@@ -46,10 +46,9 @@ namespace Das.Views.Styles
             return appliedStyle;
         }
 
-        public async Task ApplyVisualStylesAsync(IVisualElement visual,
+        public async Task ApplyVisualStylesAsync(IVisualElement visual, 
                                                  IAttributeDictionary attributeDictionary,
-                                                 IVisualLineage visualLineage,
-                                                 IViewInflater viewInflater)
+                                                 IVisualLineage visualLineage)
         {
             var useStyle = await _styleProvider.GetStyleForVisualAsync(visual, attributeDictionary);
             if (useStyle == null)
@@ -64,6 +63,27 @@ namespace Das.Views.Styles
                 TrySetVisualStyle(visual, appliedStyle);
                 appliedStyle.Execute();
             }
+        }
+
+        public  Task ApplyVisualStylesAsync(IVisualElement visual,
+                                                 IAttributeDictionary attributeDictionary,
+                                                 IVisualLineage visualLineage,
+                                                 IViewInflater viewInflater)
+        {
+            return ApplyVisualStylesAsync(visual, attributeDictionary, visualLineage);
+            //var useStyle = await _styleProvider.GetStyleForVisualAsync(visual, attributeDictionary);
+            //if (useStyle == null)
+            //    return;
+
+            //TrySetVisualClass(visual, attributeDictionary);
+
+            //var appliedStyle = BuildAppliedStyle(useStyle, visual, visualLineage);
+
+            //if (appliedStyle != null)
+            //{
+            //    TrySetVisualStyle(visual, appliedStyle);
+            //    appliedStyle.Execute();
+            //}
         }
 
         private IAppliedStyleRule? BuildAppliedRule(AppliedStyle appliedStyle,
@@ -212,8 +232,10 @@ namespace Das.Views.Styles
                                 out var dependencyProperty, out var value))
                                 continue;
 
-                            dependencyProperty.AddOnChangedHandler(currentVisual,
-                                d => appliedStyle.Execute());
+                            appliedStyle.MonitorPropertyChange(dependencyProperty, currentVisual);
+
+                            //dependencyProperty.AddOnChangedHandler(currentVisual,
+                            //    d => appliedStyle.Execute());
 
                             var condition = new AppliedStyleCondition(currentVisual, dependencyProperty,
                                 value!.Value);

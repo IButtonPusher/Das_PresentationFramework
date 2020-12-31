@@ -35,7 +35,7 @@ namespace Das.Views
 
             
             
-            if (!(measureContext.ViewState is { } viewState))
+            if (!(measureContext.ViewState is { }))
                 return new ValueSize(availableSpace.Width, 1);
 
             var specificHeight = measureContext.GetStyleSetter<Double>(StyleSetterType.Height, this);

@@ -44,7 +44,7 @@ namespace Das.Views.Styles.Application
                     throw new NotImplementedException();
             }
 
-            var res = assignmentsBuilder(applyTo, visualLineage, 
+            var res = assignmentsBuilder(applyTo, visualLineage,
                 AllStyleSelector.Instance, rule.Declarations);
 
             _assignments = new List<IStyleValueAssignment>(res);
@@ -52,7 +52,8 @@ namespace Das.Views.Styles.Application
 
         public void Execute()
         {
-            foreach (var assignment in _assignments) assignment.Execute();
+            foreach (var assignment in _assignments)
+                assignment.Execute();
         }
 
         private readonly List<IStyleValueAssignment> _assignments;

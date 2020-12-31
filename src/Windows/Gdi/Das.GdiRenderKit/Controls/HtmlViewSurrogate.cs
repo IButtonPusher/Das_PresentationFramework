@@ -12,6 +12,7 @@ using Das.Views.Rendering;
 using Das.Views.Styles.Application;
 using Das.Views.Styles.Declarations;
 using Das.Views.Templates;
+using Das.Views.Transforms;
 
 namespace Das.Views.Gdi.Controls
 {
@@ -94,8 +95,8 @@ namespace Das.Views.Gdi.Controls
 
         IVisualTemplate? ITemplatableVisual.Template
         {
-            get => throw new NotSupportedException();
-            set => throw new NotSupportedException();
+            get => _htmlPanel.Template;
+            set => _htmlPanel.Template = value;
         }
 
         public void AcceptChanges(ChangeType changeType)
@@ -124,26 +125,26 @@ namespace Das.Views.Gdi.Controls
 
         QuantifiedDouble? IVisualElement.Left
         {
-            get => ((IVisualElement) _htmlPanel).Left;
-            set => ((IVisualElement) _htmlPanel).Left = value;
+            get => _htmlPanel.Left;
+            set => _htmlPanel.Left = value;
         }
 
-        public QuantifiedDouble? Right
+        QuantifiedDouble? IVisualElement.Right
         {
-            get => ((IVisualElement) _htmlPanel).Right;
-            set => ((IVisualElement) _htmlPanel).Right = value;
+            get => _htmlPanel.Right;
+            set => _htmlPanel.Right = value;
         }
 
-        public QuantifiedDouble? Top
+        QuantifiedDouble? IVisualElement.Top
         {
-            get => ((IVisualElement) _htmlPanel).Top;
-            set => ((IVisualElement) _htmlPanel).Top = value;
+            get => _htmlPanel.Top;
+            set => _htmlPanel.Top = value;
         }
 
-        public QuantifiedDouble? Bottom
+        QuantifiedDouble? IVisualElement.Bottom
         {
-            get => ((IVisualElement) _htmlPanel).Bottom;
-            set => ((IVisualElement) _htmlPanel).Bottom = value;
+            get => _htmlPanel.Bottom;
+            set => _htmlPanel.Bottom = value;
         }
 
         public HorizontalAlignments HorizontalAlignment
@@ -191,6 +192,12 @@ namespace Das.Views.Gdi.Controls
         {
             get => _htmlPanel.IsEnabled;
             set => _htmlPanel.IsEnabled = value;
+        }
+
+        ITransform IVisualElement.Transform
+        {
+            get => _htmlPanel.Transform;
+            set => _htmlPanel.Transform = value;
         }
 
         public Boolean TryGetDependencyProperty(DeclarationProperty declarationProperty, out IDependencyProperty dependencyProperty)

@@ -16,6 +16,8 @@ namespace Das.Views
 
         public Boolean IsZero() => Quantity.IsNotZero();
 
+        public static readonly QuantifiedDouble Zero = new QuantifiedDouble(0, LengthUnits.None);
+
         public Double GetQuantity(Double available)
         {
             switch (Units)

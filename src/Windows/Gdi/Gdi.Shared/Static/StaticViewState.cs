@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Views;
+using Das.Views.Construction.Styles;
 using Das.Views.Core.Drawing;
 using Das.Views.Rendering;
 using Das.Views.Styles;
@@ -15,7 +16,8 @@ namespace Gdi.Shared.Static
             _defaultStyle = DefaultStyle.Instance;
             ZoomLevel = zoomLevel;
             ColorPalette = colorPalette; //new DefaultColorPalette();
-            StyleContext = DefaultStyleContext.Instance;
+            StyleContext = new BaseStyleContext(DefaultStyle.Instance, colorPalette,
+                new StyleVariableAccessor()); //DefaultStyleContext.Instance;
         }
 
         public T GetStyleSetter<T>(StyleSetterType setterType,

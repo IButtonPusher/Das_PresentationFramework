@@ -12,6 +12,7 @@ using Das.Views.Input;
 using Das.Views.Panels;
 using Das.Views.Rendering.Geometry;
 using Das.Views.Styles;
+using Das.Views.Transforms;
 
 namespace Das.Views.Rendering
 {
@@ -24,7 +25,6 @@ namespace Das.Views.Rendering
                                     IVisualLineage visualLineage,
                                     Dictionary<IVisualElement, ValueCube> renderPositions)
             : this(perspective, surrogateProvider,
-                //new Dictionary<IVisualElement, ValueCube>(),
                 renderPositions,
                 new Dictionary<IVisualElement, ValueSize>(),
                 styleContext, visualLineage)
@@ -74,7 +74,7 @@ namespace Das.Views.Rendering
         {
             foreach (var visual in GetElementsAt(point2D))
             {
-                if (!(visual.Element is IInteractiveVisual interactive) ||
+                if (!(visual.Element is IHandleInput interactive) ||
                     !(visual.Element is TVisual ofType))
                     continue;
 
@@ -89,7 +89,7 @@ namespace Das.Views.Rendering
             where TPoint : IPoint2D
         {
             foreach (var visual in GetElementsAt(point2D))
-                if (visual.Element is IInteractiveVisual interactive &&
+                if (visual.Element is IHandleInput interactive &&
                     (interactive.HandlesActions & inputAction) == inputAction &&
                     interactive is IHandleInput<T> handler)
                     yield return handler;
@@ -106,22 +106,14 @@ namespace Das.Views.Rendering
                 foreach (var kvp in RenderPositions.Where(p => p.Value.Contains(point2D))
                                                    .OrderByDescending(p => p.Value.Depth))
                 {
-                    if (!(kvp.Key is IInteractiveVisual interactive) ||
+                    if (!(kvp.Key is IHandleInput interactive) ||
                         (interactive.HandlesActions & inputAction) != inputAction ||
                         !(interactive is IHandleInput<T> inputHandler))
                         continue;
 
-                    //if (kvp.Key is IContentContainer container && container.Content != null)
-                    //    yield return new RenderedVisual(container.Content, kvp.Value);
-
                     yield return new RenderedVisual<IHandleInput<T>>(inputHandler, kvp.Value);
                 }
             }
-
-            //foreach (var visual in GetElementsAt<IHandleInput<T>>(point2D))
-            //    if (visual.Element is IInteractiveView interactive &&
-            //        (interactive.HandlesActions & inputAction) == inputAction)
-            //        yield return visual;
         }
 
         public ICube? TryGetElementBounds(IVisualElement element)
@@ -147,12 +139,12 @@ namespace Das.Views.Rendering
             }
         }
 
-         // https://github.com/koszeggy/KGySoft.Drawing/blob/625e71e38a0d2e2c94821629f34e797ceae4015c/KGySoft.Drawing/Drawing/_Extensions/GraphicsExtensions.cs#L287
+        // https://github.com/koszeggy/KGySoft.Drawing/blob/625e71e38a0d2e2c94821629f34e797ceae4015c/KGySoft.Drawing/Drawing/_Extensions/GraphicsExtensions.cs#L287
         protected static void CreateRoundedRectangle<TThickness, TRect>(IGraphicsPath path,
-                                                                 TRect bounds, 
-                                                                       TThickness cornerRadii)
-        where TThickness : IThickness
-        where TRect : IRectangle
+                                                                        TRect bounds,
+                                                                        TThickness cornerRadii)
+            where TThickness : IThickness
+            where TRect : IRectangle
         {
             var radiusTopLeft = Convert.ToInt32(cornerRadii.Left);
             var radiusTopRight = Convert.ToInt32(cornerRadii.Top);
@@ -161,7 +153,7 @@ namespace Das.Views.Rendering
 
             var size = new Size(radiusTopLeft << 1, radiusTopLeft << 1);
             var arc = new Rectangle(bounds.Location, size);
-            
+
             // top left arc
             if (radiusTopLeft == 0)
                 path.LineTo(arc.Location);
@@ -209,11 +201,7 @@ namespace Das.Views.Rendering
                 path.AddArc(arc, 90, 90);
 
             path.CloseFigure();
-            //return path;
         }
-
-
-        //protected abstract IGraphicsPath GetGraphicsPath();
 
         public abstract void DrawLine<TPen, TPoint1, TPoint2>(TPen pen,
                                                               TPoint1 pt1,
@@ -323,17 +311,14 @@ namespace Das.Views.Rendering
         }
 
         public void DrawElement<TRenderRectangle>(IVisualElement visual,
-                                                              TRenderRectangle rect)
+                                                  TRenderRectangle rect)
             where TRenderRectangle : IRenderRectangle
         {
-            //if (visual.Visibility == Visibility.Collapsed)
             if (visual.Visibility != Visibility.Visible)
             {
                 visual.AcceptChanges(ChangeType.Arrange);
                 return;
             }
-
-            //var isReallyDraw = visual.Visibility == Visibility.Visible;
 
             var leftLabelRect = ValueRenderRectangle.Empty;
             var rightLabelRect = ValueRenderRectangle.Empty;
@@ -368,17 +353,14 @@ namespace Das.Views.Rendering
 
             var styles = ViewState.StyleContext;
 
-            var selector = layoutVisual is IInteractiveVisual interactive
+            var selector = layoutVisual is IHandleInput interactive
                 ? interactive.CurrentVisualStateType
                 : VisualStateType.None;
 
-            var border =  styles.GetStyleSetter<ValueThickness>(StyleSetterType.BorderThickness,
+            var border = styles.GetStyleSetter<ValueThickness>(StyleSetterType.BorderThickness,
                 selector, layoutVisual, VisualLineage);
 
             var margin = layoutVisual.Margin.GetValue(rect);
-
-            //var margin = layoutVisual.Margin ?? styles.GetStyleSetter<Thickness>(StyleSetterType.Margin,
-            //    layoutVisual, VisualLineage);
 
             _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
 
@@ -389,11 +371,12 @@ namespace Das.Views.Rendering
 
             useRect.Update(rect, CurrentElementRect.Offset, margin, border);
 
-            var radius = layoutVisual.BorderRadius.GetValue(rect);
+            if (layoutVisual.Transform is TranslateTransform translateTransform)
+            {
 
-            //var radius = layoutVisual.BorderRadius?.Top ?? 
-            //             styles.GetStyleSetter<Double>(StyleSetterType.BorderRadius,
-            //    selector, layoutVisual, VisualLineage);
+            }
+
+            var radius = layoutVisual.BorderRadius.GetValue(rect);
 
             var background = layoutVisual.Background ??
                              styles.GetStyleSetter<SolidColorBrush>(StyleSetterType.Background,
@@ -410,7 +393,9 @@ namespace Das.Views.Rendering
             {
                 var brush = styles.GetStyleSetter<IBrush>(StyleSetterType.BorderBrush, selector,
                     layoutVisual, VisualLineage);
-                OnDrawBorder(useRect, border, brush, radius);
+
+                if (!brush.IsInvisible)
+                    OnDrawBorder(useRect, border, brush, radius);
             }
 
             useRect += CurrentLocation;
@@ -449,7 +434,6 @@ namespace Das.Views.Rendering
                 PopClip(useRect);
 
             VisualLineage.PopVisual();
-            //_styleContext.PopVisual();
 
             if (!rightLabelRect.IsEmpty && visual.AfterLabel is { } lbl)
             {
@@ -494,34 +478,6 @@ namespace Das.Views.Rendering
 
         protected Dictionary<IVisualElement, ValueCube> RenderPositions { get; }
 
-        //public IEnumerable<IRenderedVisual<TElement>> GetElementsAt<TElement>(IPoint2D point2D)
-        //{
-        //    lock (_renderLock)
-        //    {
-        //        foreach (var kvp in RenderPositions.Where(p => p.Value.Contains(point2D))
-        //                                           .OrderByDescending(p => p.Value.Depth))
-        //        {
-        //            var current = kvp.Key;
-        //            while (current is IContentContainer container)
-        //            {
-        //                if (container.Content is TElement valid)
-        //                    yield return new RenderedVisual<TElement>(valid, kvp.Value);
-
-        //                current = container.Content;
-        //            }
-
-        //            if (kvp.Key is TElement good)
-        //                yield return new RenderedVisual<TElement>(good, kvp.Value);
-        //        }
-        //    }
-        //}
-
-        //protected virtual ValueIntRectangle GetAbsoluteIntRect<TRectangle>(TRectangle relativeRect)
-        //    where TRectangle : IRectangle
-        //{
-        //    return new ValueIntRectangle(relativeRect.TopLeft + CurrentLocation, relativeRect.Size);
-        //}
-
         protected virtual IPoint2D GetAbsolutePoint(IPoint2D relativePoint2D)
         {
             if (ZoomLevel.AreDifferent(1.0))
@@ -532,15 +488,6 @@ namespace Das.Views.Rendering
             return CurrentLocation + relativePoint2D;
         }
 
-        //protected virtual IPoint2D GetAbsolutePointNoZoom(IPoint2D relativePoint2D)
-        //{
-        //    if (ZoomLevel.AreDifferent(1.0))
-        //        return new ValuePoint2D(
-        //            CurrentLocation.X + relativePoint2D.X,
-        //            CurrentLocation.Y + relativePoint2D.Y);
-
-        //    return CurrentLocation + relativePoint2D;
-        //}
 
         protected virtual ValueRectangle GetAbsoluteRect<TRectangle>(TRectangle relativeRect)
             where TRectangle : IRectangle
@@ -560,13 +507,13 @@ namespace Das.Views.Rendering
 
 
         protected void OnDrawBorder<TRectangle, TShape, TBrush, TThickness>(TRectangle rect,
-                                                                TShape thickness,
-                                                                TBrush brush,
-                                                                TThickness cornerRadius)
+                                                                            TShape thickness,
+                                                                            TBrush brush,
+                                                                            TThickness cornerRadius)
             where TRectangle : IRectangle
             where TShape : IThickness
             where TBrush : IBrush
-        where TThickness : IThickness
+            where TThickness : IThickness
         {
             //if (cornerRadius != 0)
             if (!cornerRadius.IsEmpty)
@@ -621,9 +568,6 @@ namespace Das.Views.Rendering
             _currentZ++;
             _locations.Push(rect);
             CurrentElementRect = rect;
-            if (CurrentElementRect.X < 0)
-            {
-            }
         }
 
         private void SetElementRenderPosition(RenderRectangle useRect,

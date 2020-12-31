@@ -44,6 +44,7 @@
   <ItemGroup>
     <Folder Include="Panels\Grid\" />
     <Folder Include="Panels\Providers\" />
+    <Folder Include="Styles\Application\" />
   </ItemGroup>
 
   <ItemGroup>

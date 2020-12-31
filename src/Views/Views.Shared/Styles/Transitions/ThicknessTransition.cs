@@ -27,7 +27,7 @@ namespace Das.Views.Styles
                                    Transition transition,
                                    AssignedStyle assignedStyle,
                                    Action<AssignedStyle> updater)
-         : base(Easing.QuadraticOut, transition.Duration, transition.Delay)
+         : base(transition.Duration, transition.Delay)
         {
             _initialValue = initialValue is Thickness d ? d : new Thickness(0);
             if (!(assignedStyle.Value is Thickness finalValue))

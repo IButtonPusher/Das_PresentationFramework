@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Das.OpenGL;
+// ReSharper disable All
 
 namespace SharpGL.Shaders
 {
@@ -17,9 +18,8 @@ namespace SharpGL.Shaders
         /// <param name="fragmentShaderSource">The fragment shader source.</param>
         /// <param name="attributeLocations">The attribute locations. This is an optional array of
         /// uint attribute locations to their names.</param>
-        /// <exception cref="ShaderCompilationException"></exception>
         public void Create(string vertexShaderSource, string fragmentShaderSource, 
-            Dictionary<uint, string> attributeLocations)
+                           Dictionary<uint, string> attributeLocations)
         {
             //  Create the shaders.
             vertexShader.Create(GL.GL_VERTEX_SHADER, vertexShaderSource);

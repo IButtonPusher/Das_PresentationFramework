@@ -33,9 +33,9 @@ namespace Das.Xamarin.Android
             var displayMetrics = Resources?.DisplayMetrics ?? throw new NullReferenceException();
             //ZoomLevel = displayMetrics.ScaledDensity;
 
-            var fontProvider = new AndroidFontProvider(displayMetrics, _styleContext);
+            var fontProvider = new AndroidFontProvider(displayMetrics);
 
-            var uiProvider = new AndroidUiProvider(this, displayMetrics);
+            var uiProvider = new AndroidUiProvider(this);
 
             var windowManager = WindowManager ?? throw new NullReferenceException(
                 "WindowManager cannot be null");

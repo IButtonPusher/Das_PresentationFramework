@@ -11,7 +11,7 @@ namespace Das.Views.Input
                                Double flingX,
                                Double flingY,
                                IFlingHost host)
-            : base(Easing.QuadraticOut, duration, TimeSpan.Zero)
+            : base(duration, TimeSpan.Zero)
         {
             System.Diagnostics.Debug.WriteLine("Created fling transition x,y: " + flingX + 
                                                "," + flingY + " duration: " + duration + 

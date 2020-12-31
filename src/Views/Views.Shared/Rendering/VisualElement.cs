@@ -34,15 +34,7 @@ namespace Das.Views
         public virtual void Arrange(IRenderSize availableSpace,
                                     IRenderContext renderContext)
         {
-            //if (_measuredSize.IsEmpty)
-            //    return;
-
-            //var letsUse = _measuredSize.LeastCommonDenominator(availableSpace);
-
-            //if (letsUse.IsEmpty)
-            //    return;
-
-            //renderContext.DrawContentElement(this, letsUse);
+           //intentionally left blank
         }
 
         public virtual void InvalidateMeasure()

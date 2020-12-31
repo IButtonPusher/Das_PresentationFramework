@@ -46,8 +46,8 @@ namespace Das.Views.Styles
                         break;
 
                     case Double _:
-                        var running = new DoubleTransition(Element, existed,
-                            transition, this, key, UpdateTransition);
+                        var running = new DoubleTransition(existed,
+                            transition, key, UpdateTransition);
                         running.Start();
                         break;
 

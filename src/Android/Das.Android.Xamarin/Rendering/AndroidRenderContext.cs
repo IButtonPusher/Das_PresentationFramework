@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.Graphics;
-
-using Android.Util;
 using Das.Extensions;
 using Das.Views;
 using Das.Views.Controls;
@@ -22,7 +20,6 @@ namespace Das.Xamarin.Android
                                     IViewState viewState,
                                     IVisualSurrogateProvider surrogateProvider,
                                     Dictionary<IVisualElement, ValueCube> renderPositions,
-                                    DisplayMetrics displayMetrics,
                                     Dictionary<IVisualElement, ValueSize> lastMeasurements,
                                     IStyleContext styleContext,
                                     IVisualLineage visualLineage)
@@ -30,7 +27,6 @@ namespace Das.Xamarin.Android
                 styleContext, visualLineage)
         {
             _fontProvider = fontProvider;
-            _displayMetrics = displayMetrics;
             _paint = new Paint();
             ViewState = viewState;
         }
@@ -130,13 +126,15 @@ namespace Das.Xamarin.Android
             _paint.SetStyle(Paint.Style.Stroke);
             SetColor(pen);
 
-            var bob = new Path();
-            
+            var useRect = GetAbsoluteRect(rect);
+            var path = new AndroidGraphicsPath();
+            CreateRoundedRectangle(path, useRect, cornerRadii);
+            GetCanvas().DrawPath(path.Path, _paint);
 
-            GetCanvas().DrawRoundRect(GetAbsoluteAndroidRectF(rect),
-                Convert.ToSingle(cornerRadii.Left),
-                Convert.ToSingle(cornerRadii.Top),
-                _paint);
+            //GetCanvas().DrawRoundRect(GetAbsoluteAndroidRectF(rect),
+            //    Convert.ToSingle(cornerRadii.Left),
+            //    Convert.ToSingle(cornerRadii.Top),
+            //    _paint);
         }
 
         
@@ -243,7 +241,7 @@ namespace Das.Xamarin.Android
         {
             _paint.SetStyle(Paint.Style.Fill);
             SetColor(brush);
-            var target = GetAbsoluteAndroidRectF(rect);
+            //var target = GetAbsoluteAndroidRectF(rect);
             var useRect = GetAbsoluteRect(rect);
             var path = new AndroidGraphicsPath();
             CreateRoundedRectangle(path, useRect, cornerRadii);
@@ -272,8 +270,8 @@ namespace Das.Xamarin.Android
             //    Convert.ToInt32(to.Y));
         }
 
-        [ThreadStatic]
-        private static RectF? _rectF;
+        //[ThreadStatic]
+        //private static RectF? _rectF;
 
         [ThreadStatic]
         private static Rect? _rect;
@@ -325,50 +323,40 @@ namespace Das.Xamarin.Android
         }
 
 
-        private RectF GetAbsoluteAndroidRectF<TRectangle>(TRectangle rect)
-            where TRectangle : IRectangle
-        {
-            _rectF ??= new RectF();
+        //private RectF GetAbsoluteAndroidRectF<TRectangle>(TRectangle rect)
+        //    where TRectangle : IRectangle
+        //{
+        //    _rectF ??= new RectF();
 
 
-            if (ZoomLevel.AreDifferent(1.0))
-            {
-                _rectF.Left =
-                    Convert.ToSingle((rect.Left + CurrentLocation.X) * ZoomLevel); // X
-                _rectF.Top =
-                    Convert.ToSingle((rect.Top + CurrentLocation.Y) * ZoomLevel); // Y
+        //    if (ZoomLevel.AreDifferent(1.0))
+        //    {
+        //        _rectF.Left =
+        //            Convert.ToSingle((rect.Left + CurrentLocation.X) * ZoomLevel); // X
+        //        _rectF.Top =
+        //            Convert.ToSingle((rect.Top + CurrentLocation.Y) * ZoomLevel); // Y
 
-                _rectF.Right =
-                    Convert.ToSingle((rect.Right + CurrentLocation.X) * ZoomLevel);
+        //        _rectF.Right =
+        //            Convert.ToSingle((rect.Right + CurrentLocation.X) * ZoomLevel);
 
-                _rectF.Bottom =
-                    Convert.ToSingle((rect.Bottom + CurrentLocation.Y) * ZoomLevel);
+        //        _rectF.Bottom =
+        //            Convert.ToSingle((rect.Bottom + CurrentLocation.Y) * ZoomLevel);
 
-                return _rectF;
-                //return new RectF(
-                //    Convert.ToSingle((rect.Left + CurrentLocation.X) * ZoomLevel), // X
-                //    Convert.ToSingle((rect.Top + CurrentLocation.Y) * ZoomLevel), // Y
-                //    Convert.ToSingle((rect.Right + CurrentLocation.X) * ZoomLevel),
-                //    Convert.ToSingle((rect.Bottom + CurrentLocation.Y) * ZoomLevel));
-            }
+        //        return _rectF;
+                
+        //    }
 
-            _rectF.Left =
-                Convert.ToSingle(rect.Left + CurrentLocation.X);
+        //    _rectF.Left =
+        //        Convert.ToSingle(rect.Left + CurrentLocation.X);
 
-            _rectF.Top =
-            Convert.ToSingle(rect.Top + CurrentLocation.Y);
-            _rectF.Right =
-            Convert.ToSingle(rect.Right + CurrentLocation.X);
-            _rectF.Bottom =
-                Convert.ToSingle(rect.Bottom + CurrentLocation.Y);
-            return _rectF;
-
-            //return new RectF(Convert.ToSingle(rect.Left + CurrentLocation.X),
-            //    Convert.ToSingle(rect.Top + CurrentLocation.Y),
-            //    Convert.ToSingle(rect.Right + CurrentLocation.X),
-            //    Convert.ToSingle(rect.Bottom + CurrentLocation.Y));
-
-        }
+        //    _rectF.Top =
+        //    Convert.ToSingle(rect.Top + CurrentLocation.Y);
+        //    _rectF.Right =
+        //    Convert.ToSingle(rect.Right + CurrentLocation.X);
+        //    _rectF.Bottom =
+        //        Convert.ToSingle(rect.Bottom + CurrentLocation.Y);
+        //    return _rectF;
+        //}
 
         private Rect GetAbsoluteAndroidRect<TRectangle>(TRectangle rect)
         where TRectangle : IRectangle
@@ -486,7 +474,6 @@ namespace Das.Xamarin.Android
         }
 
         private readonly AndroidFontProvider _fontProvider;
-        private readonly DisplayMetrics _displayMetrics;
 
         private readonly Paint _paint;
         

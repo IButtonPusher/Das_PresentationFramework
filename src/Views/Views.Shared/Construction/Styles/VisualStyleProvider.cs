@@ -111,7 +111,7 @@ namespace Das.Views.Construction
 
                 switch (resourceStyle)
                 {
-                    case NamedStyle named:
+                    case NamedTargetedStyle named:
 
                         lock (_lockStylesByName)
                         {
@@ -161,10 +161,11 @@ namespace Das.Views.Construction
                 if (String.IsNullOrEmpty(className))
                     return default;
 
-                var stylez = await GetStylesByClassNameAsync(className).ToArrayAsync();
+                var rules = await GetStylesByClassNameAsync(className).ToArrayAsync();
 
-                var sheeeeeit = new StyleSheet(stylez);
-                return sheeeeeit;
+                //var res = new StyleSheet(rules);
+                var res = new NamedStyle(className, rules);
+                return res;
             }
 
             if (attributeDictionary.TryGetAttributeValue("Style", out var styleName))
@@ -172,7 +173,7 @@ namespace Das.Views.Construction
                 return await GetStyleByNameAsync(styleName);
             }
 
-            throw new NotImplementedException();
+            return default;
         }
 
         private readonly IStyleInflater _styleInflater;

@@ -3,15 +3,20 @@ using Das.Views.Styles.Functions;
 
 namespace Das.Views.Styles.Declarations.Transform
 {
-    public class TransformDeclaration : DeclarationBase
+    public class TransformDeclaration : ValueDeclaration<IFunction>
     {
         public TransformDeclaration(String value,
             IStyleVariableAccessor variableAccessor) 
-            : base(variableAccessor, DeclarationProperty.Transform)
+            : base(FunctionBuilder.GetFunction(value, variableAccessor),
+                variableAccessor, DeclarationProperty.Transform)
         {
-            Function = FunctionBuilder.GetFunction(value, variableAccessor);
+            Function = Value as ParameterizedFunction ?? throw new InvalidOperationException();
+
+            TransformType = GetEnumValue(Function.FunctionName, TransformType.Invalid);
         }
 
-        public IFunction Function { get; }
+        public ParameterizedFunction Function { get; }
+
+        public TransformType TransformType {get;}
     }
 }

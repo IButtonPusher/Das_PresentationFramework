@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Views.Styles;
+using Das.Views.Transforms;
 
 namespace Das.Views
 {
@@ -21,7 +22,7 @@ namespace Das.Views
             _computedValues = new ConcurrentDictionary<TVisual, Func<IVisualElement, Object?>>();
             
             _changings = new ConcurrentDictionary<TVisual, List<Func<TVisual, TValue, TValue, Boolean>>>();
-            _changeds = new ConcurrentDictionary<TVisual, List<Action<TVisual, TValue, TValue>>>();
+            _changeds = new ConcurrentDictionary<TVisual, HashSet<Action<TVisual, TValue, TValue>>>();
             _knownVisuals = new ConcurrentDictionary<TVisual, Byte>();
             _staticChangeds = new List<Action<TVisual, TValue, TValue>>();
         }
@@ -37,6 +38,9 @@ namespace Das.Views
         void IDependencyProperty.SetValue(IVisualElement visual,
                                           Object? value)
         {
+            if (value is TranslateTransform)
+            {}
+
             SetRuntimeValueImpl(visual, value, false);
         }
 
@@ -95,9 +99,6 @@ namespace Das.Views
             AddOnChangedHandler(tVisual, (v, was, now) => onChange(this));
         }
 
-        private void CloseOnChange()
-        {
-        }
 
         public String Name => _propertyName;
 
@@ -181,8 +182,8 @@ namespace Das.Views
                              Action<TValue, TValue> onChanged)
         {
             SetValueImpl(forVisual, value,
-                GetOnChanging(forVisual, WrapOnChanging(forVisual, onChanging)),
-                GetOnChanged(forVisual, WrapOnChanged(forVisual, onChanged)));
+                GetOnChanging(forVisual, WrapOnChanging(onChanging)),
+                GetOnChanged(forVisual, WrapOnChanged(onChanged)));
         }
         
         public void SetValue(TVisual forVisual,
@@ -191,7 +192,7 @@ namespace Das.Views
         {
             SetValueImpl(forVisual, value,
                 GetOnChanging(forVisual, null),
-                GetOnChanged(forVisual, WrapOnChanged(forVisual, onChanged)));
+                GetOnChanged(forVisual, WrapOnChanged(onChanged)));
         }
         
 
@@ -247,10 +248,10 @@ namespace Das.Views
             }
         }
 
-        private List<Action<TVisual, TValue, TValue>> GetChangedDelegate(TVisual forVisual)
+        private HashSet<Action<TVisual, TValue, TValue>> GetChangedDelegate(TVisual forVisual)
         {
             EnsureKnown(forVisual);
-            return new List<Action<TVisual, TValue, TValue>>();
+            return new HashSet<Action<TVisual, TValue, TValue>>();
         }
 
         private List<Func<TVisual, TValue, TValue, Boolean>> GetChangingDelegate(TVisual forVisual)
@@ -355,22 +356,9 @@ namespace Das.Views
             foreach (var oc in onChangeds) oc(forVisual, was, value);
 
             forVisual.RaisePropertyChanged(_propertyName, value);
-
-            //if (!_changeds.TryGetValue(forVisual, out var interested))
-            //    return;
-
-
-            //List<Action<TVisual, TValue, TValue>> actions;
-            //lock (_delegateLock)
-            //{
-            //    actions = new List<Action<TVisual, TValue, TValue>>(interested);
-            //}
-
-            //foreach (var func in actions) func(forVisual, was, value);
         }
 
-        private static Action<TVisual, TValue, TValue> WrapOnChanged(TVisual forVisual,
-                                                                     Action<TValue, TValue> onChanged)
+        private static Action<TVisual, TValue, TValue> WrapOnChanged(Action<TValue, TValue> onChanged)
         {
             void Wrapped(TVisual _, TValue oldValue, TValue newValue)
             {
@@ -380,8 +368,8 @@ namespace Das.Views
             return Wrapped;
         }
 
-        private static Func<TVisual, TValue, TValue, Boolean> WrapOnChanging(TVisual forVisual,
-                                                                             Func<TValue, TValue, Boolean> onChanging)
+        private static Func<TVisual, TValue, TValue, Boolean> WrapOnChanging(
+            Func<TValue, TValue, Boolean> onChanging)
         {
             Boolean Wrapped(TVisual _, TValue oldValue, TValue newValue)
             {
@@ -391,7 +379,8 @@ namespace Das.Views
             return Wrapped;
         }
 
-        private readonly ConcurrentDictionary<TVisual, List<Action<TVisual, TValue, TValue>>> _changeds;
+        private readonly ConcurrentDictionary<TVisual, HashSet<Action<TVisual, TValue, TValue>>> _changeds;
+        //private readonly ConcurrentDictionary<TVisual, List<Action<TVisual, TValue, TValue>>> _changeds;
         private readonly ConcurrentDictionary<TVisual, List<Func<TVisual, TValue, TValue, Boolean>>> _changings;
         private readonly TValue _defaultValue;
         private readonly Object _delegateLock;

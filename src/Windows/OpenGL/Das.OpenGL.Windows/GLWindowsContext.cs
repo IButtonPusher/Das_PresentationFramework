@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Das.Views;
 using Das.Views.Windows;
 using Size = Das.Views.Core.Geometry.Size;
+// ReSharper disable All
 
 namespace Das.OpenGL.Windows
 {

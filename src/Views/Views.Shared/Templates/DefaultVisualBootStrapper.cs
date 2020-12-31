@@ -20,10 +20,10 @@ namespace Das.Views.Templates
             _dependencyResolver = dependencyResolver;
             _propertyProvider = propertyProvider;
 
-            _bindingConstructorLock = new Object();
+            
             _defaultConstructorLock = new Object();
 
-            _bindingConstructors = new Dictionary<Type, ConstructorInfo>();
+            //_bindingConstructors = new Dictionary<Type, ConstructorInfo>();
             _defaultConstructors = new Dictionary<Type, ConstructorInfo>();
         }
 
@@ -120,68 +120,19 @@ namespace Das.Views.Templates
             return obj;
         }
 
-        public TVisualElement InstantiateCopy<TVisualElement, TViewModel>(TVisualElement visual,
-                                                                          TViewModel dataContext)
-            where TVisualElement : IBindableElement
-        {
-            var obj = InstantiateCopyBase(visual);
+        //public TVisualElement InstantiateCopy<TVisualElement, TViewModel>(TVisualElement visual,
+        //                                                                  TViewModel dataContext)
+        //    where TVisualElement : IBindableElement
+        //{
+        //    var obj = InstantiateCopyBase(visual);
 
-            if (dataContext != null && obj is IBindableElement bindable)
-                bindable.DataContext = dataContext;
+        //    if (dataContext != null && obj is IBindableElement bindable)
+        //        bindable.DataContext = dataContext;
 
-            return obj;
-        }
+        //    return obj;
+        //}
 
         public IUiProvider UiProvider => _uiProvider ??= _dependencyResolver.Resolve<IUiProvider>();
-
-        //public TBindableElement Instantiate<TBindableElement>(Type type, 
-        //                                                      IDataBinding? binding)
-        //    where TBindableElement : IBindableElement
-        //{
-        //    ConstructorInfo? ctor;
-
-        //    lock (_bindingConstructorLock)
-        //    {
-        //        if (!_bindingConstructors.TryGetValue(type, out ctor))
-        //        {
-        //            var bindingType = binding != null ? binding.GetType() : typeof(IDataBinding);
-
-        //            foreach (var ctorMaybe in type.GetConstructors())
-        //            {
-        //                var ctorParams = ctorMaybe.GetParameters();
-        //                if (ctorParams.Length != 2 ||
-        //                    !ctorParams[0].ParameterType.IsAssignableFrom(bindingType) ||
-        //                    !ctorParams[1].ParameterType.IsAssignableFrom(typeof(IVisualBootstrapper))
-        //                    )
-        //                {
-        //                    continue;
-        //                }
-
-        //                ctor = ctorMaybe;
-        //                _bindingConstructors.Add(type, ctorMaybe);
-        //                break;
-        //            }
-        //        }
-        //    }
-
-        //    if (ctor == null)
-        //        throw new MissingMethodException(type.Namespace, "constructor");
-        //    var res = (TBindableElement)ctor.Invoke(new Object?[] {binding, this});
-        //    return res;
-        //}
-
-
-        //public TVisualElement Instantiate<TVisualElement>() 
-        //    where TVisualElement : IVisualElement
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public IBindableElement Instantiate(Type type, 
-        //                                    Object dataContext)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         private TVisualElement InstantiateCopyBase<TVisualElement>(TVisualElement visual)
             where TVisualElement : IVisualElement
@@ -253,8 +204,7 @@ namespace Das.Views.Templates
             action(vOriginal, vCopy);
         }
 
-        private readonly Object _bindingConstructorLock;
-        private readonly Dictionary<Type, ConstructorInfo> _bindingConstructors;
+        //private readonly Dictionary<Type, ConstructorInfo> _bindingConstructors;
         private readonly Object _defaultConstructorLock;
         private readonly Dictionary<Type, ConstructorInfo> _defaultConstructors;
         private readonly IResolver _dependencyResolver;

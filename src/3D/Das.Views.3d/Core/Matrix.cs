@@ -5,36 +5,42 @@ namespace Das.Views.Extended
 {
     public struct Matrix 
     {
+        /// <summary>
+        /// The first row/first column
+        /// </summary>
         public Single M11;
-        /// <summary>Value at row 1 column 2 of the matrix.</summary>
+        
+        /// <summary>
+        /// The first row/second column
+        /// </summary>
         public Single M12;
-        /// <summary>Value at row 1 column 3 of the matrix.</summary>
+        
         public Single M13;
-        /// <summary>Value at row 1 column 4 of the matrix.</summary>
+        
         public Single M14;
-        /// <summary>Value at row 2 column 1 of the matrix.</summary>
+        
         public Single M21;
-        /// <summary>Value at row 2 column 2 of the matrix.</summary>
+        
         public Single M22;
-        /// <summary>Value at row 2 column 3 of the matrix.</summary>
+        
         public Single M23;
-        /// <summary>Value at row 2 column 4 of the matrix.</summary>
+        
         public Single M24;
-        /// <summary>Value at row 3 column 1 of the matrix.</summary>
+        
         public Single M31;
-        /// <summary>Value at row 3 column 2 of the matrix.</summary>
+        
         public Single M32;
-        /// <summary>Value at row 3 column 3 of the matrix.</summary>
+        
         public Single M33;
-        /// <summary>Value at row 3 column 4 of the matrix.</summary>
+        
         public Single M34;
-        /// <summary>Value at row 4 column 1 of the matrix.</summary>
+        
         public Single M41;
-        /// <summary>Value at row 4 column 2 of the matrix.</summary>
+        
         public Single M42;
-        /// <summary>Value at row 4 column 3 of the matrix.</summary>
+        
         public Single M43;
-        /// <summary>Value at row 4 column 4 of the matrix.</summary>
+        
         public Single M44;
 
         public static readonly Matrix Identity = new Matrix()
@@ -46,12 +52,11 @@ namespace Das.Views.Extended
             return result;
         }
 
-        public static void PerspectiveFovRH(
-            Single fov,
-            Single aspect,
-            Single znear,
-            Single zfar,
-            out Matrix result)
+        public static void PerspectiveFovRH(Single fov,
+                                            Single aspect,
+                                            Single znear,
+                                            Single zfar,
+                                            out Matrix result)
         {
             var num1 = (Single)(1.0 / Math.Tan(fov * 0.5));
             var num2 = num1 / aspect;
@@ -168,7 +173,9 @@ namespace Das.Views.Extended
             return result;
         }
 
-        public static Matrix RotationYawPitchRoll(Single yaw, Single pitch, Single roll)
+        public static Matrix RotationYawPitchRoll(Single yaw, 
+                                                  Single pitch, 
+                                                  Single roll)
         {
             var result1 = Quaternion.RotationYawPitchRoll(yaw, pitch, roll);
             return RotationQuaternion(result1);

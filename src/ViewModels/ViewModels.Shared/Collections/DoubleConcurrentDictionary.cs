@@ -140,8 +140,17 @@ namespace Das.ViewModels.Collections
             _backingDictionary.TryRemove(k1, out _);
         }
 
+        public Boolean TryAdd(TKey1 k1,
+                              TKey2 k2,
+                              TValue value)
+        {
+            return _backingDictionary.TryAdd(k1, new ConcurrentDictionary<TKey2, TValue>()) 
+                   | _backingDictionary[k1].TryAdd(k2, value);
+        }
 
-        public Boolean TryGetValue(TKey1 k1, TKey2 k2, out TValue value)
+        public Boolean TryGetValue(TKey1 k1, 
+                                   TKey2 k2, 
+                                   out TValue value)
         {
             if (_backingDictionary.TryGetValue(k1, out var d2) &&
                 d2.TryGetValue(k2, out value))

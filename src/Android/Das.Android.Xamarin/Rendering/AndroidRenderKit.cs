@@ -149,7 +149,7 @@ namespace Das.Xamarin.Android
             
 
             renderContext = new AndroidRenderContext(viewPerspective,
-                fontProvider, viewState, this, visualPositions, displayMetrics,
+                fontProvider, viewState, this, visualPositions,
                 lastMeasures, styleContext, visualLineage);
             
             refreshRenderContext = new RefreshRenderContext(viewPerspective, this, visualPositions,

@@ -10,6 +10,7 @@ using Das.Views.Rendering;
 using Das.Views.Styles.Application;
 using Das.Views.Styles.Declarations;
 using Das.Views.Templates;
+using Das.Views.Transforms;
 
 namespace Das.Views
 {
@@ -68,6 +69,8 @@ namespace Das.Views
         QuantifiedThickness BorderRadius { get; set; }
         
         Boolean IsEnabled { get; set; }
+
+        ITransform Transform { get; set; }
 
         Boolean TryGetDependencyProperty(DeclarationProperty declarationProperty,
                                          out IDependencyProperty dependencyProperty);

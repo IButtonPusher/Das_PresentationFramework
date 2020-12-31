@@ -5,6 +5,7 @@ using Das.Views.Rendering.Geometry;
 
 namespace Das.Views.Panels
 {
+    // ReSharper disable once UnusedType.Global
     public class Canvas: BasePanel
     {
         public Canvas(IVisualBootstrapper visualBootstrapper) 
@@ -35,7 +36,7 @@ namespace Das.Views.Panels
         public override void Arrange(IRenderSize availableSpace, 
                                      IRenderContext renderContext)
         {
-            var iWant = renderContext.GetLastMeasure(this);
+            //var iWant = renderContext.GetLastMeasure(this);
 
             foreach (var child in Children.GetAllChildren())
             {

@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Das.OpenGL;
 using Das.OpenGL.Windows;
 using Das.Views.Windows;
+// ReSharper disable All
 
 namespace OpenGLTests
 {

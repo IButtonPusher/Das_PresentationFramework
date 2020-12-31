@@ -18,15 +18,38 @@ namespace Das.Views.Panels
     /// Panel where each child visual is displayed as a column and a row is generated
     /// for each T in the Data Context
     /// </summary>
-    /// <typeparam name="TDataContext">The type of the data context</typeparam>
     // ReSharper disable once UnusedType.Global
     public class UniformRepeaterPanel : ItemsControl
     {
+        //public UniformRepeaterPanel(//IDataBinding<T>? binding, 
+        //                            IVisualBootstrapper visualBootstrapper, 
+        //                            IVisualCollection children) 
+        //    : base(//binding, 
+        //        visualBootstrapper)//, children)
+        //{
+        //    _rows = new List<VisualCollection>();
+        //    _columns = new List<VisualCollection>();
+            
+        //    _dataContextRows = new Dictionary<Object, VisualCollection>();
+        //    _columnRenderers = new Dictionary<IVisualElement, ColumnRenderer>();
+        //    _columnIndexRenderers = new Dictionary<Int32, ColumnRenderer>();
+        //    _rendererColumns = new Dictionary<ColumnRenderer, Int32>();
+        //    _columnVisuals = new Dictionary<IVisualElement, VisualCollection>();
+        //    _columnWidths = new Dictionary<Int32, Double>();
+        //    _rowHeights = new Dictionary<Int32, Double>();
+
+        //    _currentHeightRatio = 1;
+            
+        //    _cellLock = new Object();
+        //    _children.CollectionChanged += OnVisualsCollectionChanged;
+        //    AddNewColumns(Children.GetAllChildren(), false);
+        //}
+
+       
+
         public UniformRepeaterPanel(//IDataBinding<T>? binding, 
-                                    IVisualBootstrapper visualBootstrapper, 
-                                    IVisualCollection children) 
-            : base(//binding, 
-                visualBootstrapper)//, children)
+                                    IVisualBootstrapper visualBootstrapper) 
+            : base(visualBootstrapper)
         {
             _rows = new List<VisualCollection>();
             _columns = new List<VisualCollection>();
@@ -39,22 +62,11 @@ namespace Das.Views.Panels
             _columnWidths = new Dictionary<Int32, Double>();
             _rowHeights = new Dictionary<Int32, Double>();
 
-            _currentHeightRatio = 1;
+            //_currentHeightRatio = 1;
             
             _cellLock = new Object();
             _children.CollectionChanged += OnVisualsCollectionChanged;
             AddNewColumns(Children.GetAllChildren(), false);
-        }
-
-       
-
-        public UniformRepeaterPanel(//IDataBinding<T>? binding, 
-                                    IVisualBootstrapper visualBootstrapper) 
-            : this(//binding, 
-                visualBootstrapper, 
-                new VisualCollection())
-        {
-            
         }
 
         //public UniformRepeaterPanel(IVisualBootstrapper templateResolver) 
@@ -348,7 +360,7 @@ namespace Das.Views.Panels
                 _columnWidths.Clear();
                 _rowHeights.Clear();
                 
-                var tallest = 0.0;
+//                var tallest = 0.0;
                 _totalWidthMeasured = 0.0;
                 
                 foreach (var kvp in _columnRenderers)
@@ -373,11 +385,15 @@ namespace Das.Views.Panels
                         }
                     }
 
-                    if (current.Height > tallest)
-                        tallest = current.Height;
+                    //if (current.Height > tallest)
+                    //    tallest = current.Height;
                 }
 
-                return new ValueSize(_totalWidthMeasured, tallest);
+                var useHeight = 0.0;
+                foreach (var h in _rowHeights.Values)
+                    useHeight += h;
+
+                return new ValueSize(_totalWidthMeasured, useHeight); //tallest);
             }
         }
 
@@ -400,7 +416,7 @@ namespace Das.Views.Panels
                 if (totalHeight.IsZero())
                     return;
 
-                _currentHeightRatio = availableSpace.Height / totalHeight;
+                //_currentHeightRatio = availableSpace.Height / totalHeight;
 
                 var x = 0.0;
 
@@ -422,13 +438,13 @@ namespace Das.Views.Panels
             }
         }
 
-        private Double GetRowHeight(Int32 row)
-        {
-            if (!_rowHeights.TryGetValue(row, out var val))
-                return 0;
+        //private Double GetRowHeight(Int32 row)
+        //{
+        //    if (!_rowHeights.TryGetValue(row, out var val))
+        //        return 0;
 
-            return val * _currentHeightRatio;
-        }
+        //    return val * _currentHeightRatio;
+        //}
 
 
         private readonly List<VisualCollection> _rows;
@@ -444,7 +460,7 @@ namespace Das.Views.Panels
         private readonly Object _cellLock;
 
 
-        private Double _currentHeightRatio;
+        //private Double _currentHeightRatio;
         private readonly Dictionary<Int32, Double> _columnWidths;
         private readonly Dictionary<Int32, Double> _rowHeights;
 

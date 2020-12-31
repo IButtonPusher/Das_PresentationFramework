@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Container;
-using Das.Extensions;
 using Das.Gdi.Controls;
 using Das.Gdi.Core;
 using Das.Gdi.Kits;
@@ -45,37 +44,7 @@ namespace Das.Gdi
             Application.Run(window);
         }
 
-        //public void Run<TViewModel>(TViewModel viewModel, 
-        //                            IView view)
-        //{
-        //    var window = Show(viewModel, view);
-
-        //    Application.Run(window);
-        //}
-
         public IVisualBootstrapper VisualBootstrapper { get; }
-
-        //public ViewWindow Show<TViewModel>(TViewModel viewModel, 
-        //                                   IView view) 
-        //    //where TViewModel : IViewModel
-        //{
-        //    var styleContext = view.StyleContext;
-
-        //    var control = new GdiHostedElement(view, styleContext);
-        //    var form = new ViewWindow(control);
-        //    Cook(form);
-
-        //    //System.Windows.SystemParameters.PrimaryScreenWidth System.Windows.SystemParameters.PrimaryScreenHeight
-
-        //    //renderer.GetContentSize()
-
-        //   // view.DataContext = viewModel;
-        //    //view.SetDataContext(viewModel);
-
-        //    WindowShown?.Invoke(form);
-
-        //    return form;
-        //}
 
 
         public ViewWindow Show<TRectangle>(IView view,
@@ -112,18 +81,7 @@ namespace Das.Gdi
             WindowShown?.Invoke(form);
 
             return form;
-
-            //return Show(view.DataContext, view);
         }
-
-        //public VisualForm Show(IVisualRenderer visual)
-        //{
-        //    var control = new HostedVisualControl(visual);
-        //    var form = new VisualForm(visual, control);
-        //    Cook(form);
-
-        //    return form;
-        //}
 
         public event Action<ViewWindow>? WindowShown;
 
@@ -136,11 +94,11 @@ namespace Das.Gdi
         {
             var styleContext = view.StyleContext;
             var control = new GdiHostedElement(view, styleContext);
-            //control.DataContext = viewModel;
+            
             Cook(control);
 
             view.DataContext = viewModel;
-            //view.SetDataContext(viewModel);
+            
 
             return control;
         }
@@ -155,11 +113,9 @@ namespace Das.Gdi
                 RenderKit.MeasureContext, RenderKit.RenderContext);
 
             view.DataContext = viewModel;
-            //view.PropertyChanged += (o, e) =
-            //view.SetDataContext(viewModel);
+            
 
             control.BackingBitmap = renderer.DoRender();
-            //control.DataContextChanged += (o, e) => { control.BackingBitmap = renderer.DoRender(); };
 
             return control;
         }
@@ -174,31 +130,12 @@ namespace Das.Gdi
             var form = new ViewWindow(control);
             Cook(form);
 
-            //var myScreen = Screen.FromControl(form);
-            //var area = myScreen.WorkingArea;
-            //var size = new ValueSize(area.Width, area.Height);
-
-            //var iWant = renderer.GetContentSize(size);
-
-            //var hwnd = new WindowInteropHelper( this ).EnsureHandle();
-            //var monitor = NativeMethods.MonitorFromWindow( hwnd, NativeMethods.MONITOR_DEFAULTTONEAREST );
-
             view.DataContext = viewModel;
-            //view.SetDataContext(viewModel);
 
             WindowShown?.Invoke(form);
 
             return form;
         }
-
-        //private void OnViewPropertyChanged(Object sender, 
-        //                                   PropertyChangedEventArgs e)
-        //{
-        //    switch (e.PropertyName)
-        //    {
-        //        nameof(IBindableElement.DataContext)
-        //    }
-        //}
 
         // ReSharper disable once UnusedMethodReturnValue.Local
         private IRenderer<Bitmap> Cook(IViewHost<Bitmap> form)
@@ -214,7 +151,6 @@ namespace Das.Gdi
         {
             var perspective = new BasePerspective();
             var kit = new GdiRenderKit(perspective, windowProvider,
-                //new BaseStyleContext(DefaultStyle.Instance, new DefaultColorPalette()),
                 DefaultStyleContext.Instance,
                 container);
             return kit;

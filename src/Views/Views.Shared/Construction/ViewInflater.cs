@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Das.Serializer;
 using Das.Views.Construction.Styles;
@@ -253,17 +254,15 @@ namespace Das.Views.Construction
                 visual = _visualBootstrapper.Instantiate<IVisualElement>(validVisualType);
                 //await applyStyles(visual, node, visualLineage, this);
                 //-------------------------------
-                
+
                 visualLineage.PushVisual(visual);
 
                 if (node.ChildrenCount > 0)
                     // PANEL
                     await InflateAndAddChildNodesAsync(node, visual, dataContextType,
-                        nameSpaceAssemblySearch, visualLineage, 
+                        nameSpaceAssemblySearch, visualLineage,
                         _styledVisualBuilder.ApplyStylesToVisualAsync).ConfigureAwait(false);
-                    
-                    //await InflateAndAddChildNodesAsync(node, visual, dataContextType,
-                    //    nameSpaceAssemblySearch, visualLineage, applyStyles).ConfigureAwait(false);
+
 
                 if (node.InnerText is { } innerText &&
                     innerText.Trim() is { } validInnerText && validInnerText.Length > 0 &&
@@ -395,20 +394,42 @@ namespace Das.Views.Construction
                     continue;
 
                 var prop = _typeInferrer.FindPublicProperty(vType, kvp.Key);
-                
-                //var prop = vType.GetProperty(kvp.Key);
+
                 if (prop == null)
                     continue;
 
-                var valueConverter = _converterProvider.GetDefaultConverter(prop.PropertyType);
+                var propVal = GetPropertyValue(prop, kvp.Value);
 
-                var propVal = valueConverter != null
-                    ? valueConverter.Convert(kvp.Value)
-                    : _attributeValueScanner.GetValue(kvp.Value, prop.PropertyType);
+                //var valueConverter = _converterProvider.GetDefaultConverter(prop.PropertyType);
+
+                //var propVal = valueConverter != null
+                //    ? valueConverter.Convert(kvp.Value)
+                //    : _attributeValueScanner.GetValue(kvp.Value, prop.PropertyType);
 
 
-                if (propVal != null) prop.SetValue(visual, propVal, null);
+                if (propVal != null) 
+                    prop.SetValue(visual, propVal, null);
             }
+        }
+
+        private Object? GetPropertyValue(PropertyInfo prop,
+                                         String strValue)
+        {
+            var useType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+
+            if (useType == typeof(QuantifiedDouble))
+                return QuantifiedDouble.Parse(strValue);
+
+            //var bob = prop.PropertyType.ReflectedType;
+
+            var valueConverter = _converterProvider.GetDefaultConverter(useType);
+
+            var propVal = valueConverter != null
+                ? valueConverter.Convert(strValue)
+                : _attributeValueScanner.GetValue(strValue, useType);
+
+            return propVal;
+
         }
 
         private static readonly Dictionary<String, String> _defaultNamespaceSeed;

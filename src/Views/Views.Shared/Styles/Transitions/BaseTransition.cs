@@ -11,11 +11,9 @@ namespace Das.Views.Styles.Transitions
 {
     public abstract class BaseTransition
     {
-        public BaseTransition(Easing easing,
-                              TimeSpan duration,
+        public BaseTransition(TimeSpan duration,
                               TimeSpan delay)
         {
-            _easing = easing;
             _duration = duration;
             _delay = delay;
         }
@@ -85,6 +83,5 @@ namespace Das.Views.Styles.Transitions
         private const Int32 SIXTY_FPS = 1000 / 60;
         private readonly TimeSpan _delay;
         private readonly TimeSpan _duration;
-        private readonly Easing _easing;
     }
 }

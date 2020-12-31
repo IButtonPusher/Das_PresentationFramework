@@ -20,7 +20,7 @@ namespace Das.Views.Extended
             Y = y;
             Z = z;
 
-            _hash = x.GetHashCode() ^ y.GetHashCode() ^ z.GetHashCode();
+//            _hash = x.GetHashCode() ^ y.GetHashCode() ^ z.GetHashCode();
         }
 
         public Vector3(Double x, Double y, Double z) : this((Single)x, (Single)y, (Single)z)
@@ -59,33 +59,33 @@ namespace Das.Views.Extended
 
  
 
-        public static Vector3 TransformCoordinate(
-            Vector3 coordinate,
-            Matrix transform)
-        {
-            var vector4 = new Vector4();
-            vector4.X = (Single)(coordinate.X * (Double)transform.M11 + coordinate.Y * (Double)transform.M21 + coordinate.Z * (Double)transform.M31) + transform.M41;
-            vector4.Y = (Single)(coordinate.X * (Double)transform.M12 + coordinate.Y * (Double)transform.M22 + coordinate.Z * (Double)transform.M32) + transform.M42;
-            vector4.Z = (Single)(coordinate.X * (Double)transform.M13 + coordinate.Y * (Double)transform.M23 + coordinate.Z * (Double)transform.M33) + transform.M43;
-            vector4.W = (Single)(1.0 / (coordinate.X * (Double)transform.M14 + coordinate.Y * (Double)transform.M24 + coordinate.Z * (Double)transform.M34 + transform.M44));
-            return new Vector3(vector4.X * vector4.W, vector4.Y * vector4.W, vector4.Z * vector4.W);
-        }
+        //public static Vector3 TransformCoordinate(
+        //    Vector3 coordinate,
+        //    Matrix transform)
+        //{
+        //    var vector4 = new Vector4();
+        //    vector4.X = (Single)(coordinate.X * (Double)transform.M11 + coordinate.Y * (Double)transform.M21 + coordinate.Z * (Double)transform.M31) + transform.M41;
+        //    vector4.Y = (Single)(coordinate.X * (Double)transform.M12 + coordinate.Y * (Double)transform.M22 + coordinate.Z * (Double)transform.M32) + transform.M42;
+        //    vector4.Z = (Single)(coordinate.X * (Double)transform.M13 + coordinate.Y * (Double)transform.M23 + coordinate.Z * (Double)transform.M33) + transform.M43;
+        //    vector4.W = (Single)(1.0 / (coordinate.X * (Double)transform.M14 + coordinate.Y * (Double)transform.M24 + coordinate.Z * (Double)transform.M34 + transform.M44));
+        //    return new Vector3(vector4.X * vector4.W, vector4.Y * vector4.W, vector4.Z * vector4.W);
+        //}
 
-        private Int32 _hash;
+        //private Int32 _hash;
 
         public static Vector3 Subtract(Vector3 left, Vector3 right) =>
             new Vector3(left.X - right.X,
                 left.Y - right.Y,
                 left.Z - right.Z);
 
-        public static Single GetDistance(Vector3 left, Vector3 right)
-        {
-            var deltaX = left.X - right.X;
-            var deltaY = left.Y- right.Y;
-            var deltaZ = left.Z - right.Z;
+        //public static Single GetDistance(Vector3 left, Vector3 right)
+        //{
+        //    var deltaX = left.X - right.X;
+        //    var deltaY = left.Y- right.Y;
+        //    var deltaZ = left.Z - right.Z;
 
-            return (Single) Math.Sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
-        }
+        //    return (Single) Math.Sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+        //}
 
         
 
@@ -114,9 +114,9 @@ namespace Das.Views.Extended
 
         public Vector3 Cross(Vector3 other) => Cross(this, other);
 
-        public static Vector3 Cross(IPoint3D left, IPoint3D right) 
-            => new Vector3((Single)(left.Y * (Double)right.Z - left.Z * 
-                (Double)right.Y), (Single)(left.Z * (Double)right.X - left.X * (Double)right.Z), (Single)(left.X * (Double)right.Y - left.Y * (Double)right.X));
+        //public static Vector3 Cross(IPoint3D left, IPoint3D right) 
+        //    => new Vector3((Single)(left.Y * (Double)right.Z - left.Z * 
+        //        (Double)right.Y), (Single)(left.Z * (Double)right.X - left.X * (Double)right.Z), (Single)(left.X * (Double)right.Y - left.Y * (Double)right.X));
 
         //public static readonly Vector3 Zero = new Vector3();
 
@@ -182,10 +182,10 @@ namespace Das.Views.Extended
             return new Vector3(X - a.X, Y - a.Y, Z - a.Z);
         }
 
-        public Vector3 Times(double a)
-        {
-            return new Vector3(X * a, Y * a, Z * a);
-        }
+        //public Vector3 Times(double a)
+        //{
+        //    return new Vector3(X * a, Y * a, Z * a);
+        //}
 
         public Vector3 DividedBy(double a)
         {

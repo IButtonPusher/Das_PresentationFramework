@@ -33,6 +33,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Construction\XmlViewInflater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ContentVisuals\ContentPropertyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\CheckBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\QuantifiedThicknessConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToVisualConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\InteractiveVisualProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\ContextBase.cs" />
@@ -95,6 +96,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\SequentialUniformRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VisualElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VisualElementProperties.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\VisualElementStyles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\AppliedRuleBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\AppliedStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\AppliedStyleCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\AppliedStyleRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\AppliedValueAssignment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\BuildAssignments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\ComputedValueAssignment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\PseudoVisualAssignment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\BaseStyleContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\CascadingAssignedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Declarations\ObjectDeclaration.cs" />
@@ -122,6 +132,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Templates\DeferredVisualTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\MultiDataTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\VisualTemplate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\IdentityTransform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\ScaleTransform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\TranslateTransform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Updaters\BaseLoopUpdater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Updaters\LoopViewUpdater.cs" />
   </ItemGroup>

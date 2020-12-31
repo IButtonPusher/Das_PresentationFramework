@@ -12,36 +12,27 @@ namespace Das.Views.Styles
 {
     public class DoubleTransition : BaseTransition
     {
-        private readonly IVisualElement _runningOnVisual;
-        //private readonly Object? _initialValue;
-        private readonly Transition _transition;
-        private readonly IStyle _style;
         private readonly AssignedStyle _assignedStyle;
         private readonly Action<AssignedStyle> _updater;
 
         private readonly Double _initialValue;
-        private readonly Double _finalValue;
         private readonly Double _valueDifference;
 
-        public DoubleTransition(IVisualElement runningOnVisual,
-                                 Object? initialValue,
-                                 Transition transition,
-                                 IStyle style,
-                                 AssignedStyle assignedStyle,
-                                 Action<AssignedStyle> updater)
-            : base(Easing.QuadraticOut, transition.Duration, transition.Delay)
+        public DoubleTransition(Object? initialValue,
+                                Transition transition,
+                                AssignedStyle assignedStyle,
+                                Action<AssignedStyle> updater)
+            : base(transition.Duration, transition.Delay)
         {
-            _runningOnVisual = runningOnVisual;
+            Double finalValue;
             _initialValue = initialValue is Double d ? d : 0;
             if (assignedStyle.Value is Double valid)
-                _finalValue = valid;
+                finalValue = valid;
             else 
                 throw new NotImplementedException();
 
-            _valueDifference = _finalValue - _initialValue;
+            _valueDifference = finalValue - _initialValue;
 
-            _transition = transition;
-            _style = style;
             _assignedStyle = assignedStyle;
             _updater = updater;
         }
@@ -51,30 +42,6 @@ namespace Das.Views.Styles
             TaskEx.Run(() => RunUpdates(CancellationToken.None)).ConfigureAwait(false);
         }
 
-        //private async Task RunUpdates()
-        //{
-        //    await TaskEx.Delay(_transition.Delay);
-
-        //    var running = Stopwatch.StartNew();
-        //    var runningPct = 0.0;
-
-        //    while (runningPct < 1)
-        //    {
-        //        runningPct = EaseOutQuadratic(runningPct);
-
-        //        var currentValue = _initialValue + (_valueDifference * runningPct);
-        //        var assigned = new AssignedStyle(_assignedStyle.Setter, _assignedStyle.Selector,
-        //            currentValue);
-
-        //        _updater(assigned);
-        //        //_style.Add(_assignedStyle.Setter, _assignedStyle.Selector, currentValue);
-                
-        //        await TaskEx.Delay(SIXTY_FPS);
-        //        runningPct = running.ElapsedMilliseconds / _transition.Duration.TotalMilliseconds;
-        //    } 
-        //}
-
-        private const Int32 SIXTY_FPS = 1000 / 60;
 
         protected override void OnUpdate(Double runningPct)
         {

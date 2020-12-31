@@ -11,10 +11,10 @@ using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
-using Das.Views.Styles;
 using Das.Views.Styles.Application;
 using Das.Views.Styles.Declarations;
 using Das.Views.Templates;
+using Das.Views.Transforms;
 
 namespace Das.Xamarin.Android.Controls
 {
@@ -23,11 +23,13 @@ namespace Das.Xamarin.Android.Controls
     {
         public HtmlSurrogate(HtmlPanel htmlPanel,
                              Context? context,
-                             ViewGroup viewGroup)
+                             ViewGroup viewGroup,
+                             IUiProvider uiProvider)
             : base(context)
         {
             _htmlPanel = htmlPanel;
             _viewGroup = viewGroup;
+            _uiProvider = uiProvider;
             _htmlPanel.PropertyChanged += OnControlPropertyChanged;
 
             _hasPendingContent = htmlPanel.Markup != null || htmlPanel.Uri != null;
@@ -94,26 +96,26 @@ namespace Das.Xamarin.Android.Controls
 
         QuantifiedDouble? IVisualElement.Left
         {
-            get => ((IVisualElement) _htmlPanel).Left;
-            set => ((IVisualElement) _htmlPanel).Left = value;
+            get => _htmlPanel.Left;
+            set => _htmlPanel.Left = value;
         }
 
         QuantifiedDouble? IVisualElement.Right
         {
-            get => ((IVisualElement) _htmlPanel).Right;
-            set => ((IVisualElement) _htmlPanel).Right = value;
+            get => _htmlPanel.Right;
+            set => _htmlPanel.Right = value;
         }
 
         QuantifiedDouble? IVisualElement.Top
         {
-            get => ((IVisualElement) _htmlPanel).Top;
-            set => ((IVisualElement) _htmlPanel).Top = value;
+            get => _htmlPanel.Top;
+            set => _htmlPanel.Top = value;
         }
 
         QuantifiedDouble? IVisualElement.Bottom
         {
-            get => ((IVisualElement) _htmlPanel).Bottom;
-            set => ((IVisualElement) _htmlPanel).Bottom = value;
+            get => _htmlPanel.Bottom;
+            set => _htmlPanel.Bottom = value;
         }
 
         public HorizontalAlignments HorizontalAlignment
@@ -160,6 +162,12 @@ namespace Das.Xamarin.Android.Controls
         {
             get => _htmlPanel.IsEnabled;
             set => _htmlPanel.IsEnabled = value;
+        }
+
+        ITransform IVisualElement.Transform
+        {
+            get => _htmlPanel.Transform;
+            set => _htmlPanel.Transform = value;
         }
 
         public Boolean TryGetDependencyProperty(DeclarationProperty declarationProperty, out IDependencyProperty dependencyProperty)
@@ -235,25 +243,31 @@ namespace Das.Xamarin.Android.Controls
                     break;
 
                 case nameof(HtmlPanel.Markup):
-
-                    LoadData(_htmlPanel.Markup, "text/html; charset=utf-8", "UTF-8");
+                    _uiProvider.Invoke(() =>
+                    {
+                        LoadData(_htmlPanel.Markup, "text/html; charset=utf-8", "UTF-8");
+                    });
                     break;
 
                 case nameof(HtmlPanel.Uri):
                     if (_htmlPanel.Uri != null)
-                        LoadUrl(_htmlPanel.Uri.AbsoluteUri);
+                        _uiProvider.Invoke(() =>
+                        {
+                            LoadUrl(_htmlPanel.Uri.AbsoluteUri);
+                        });
                     break;
             }
         }
 
         private readonly HtmlPanel _htmlPanel;
         private readonly ViewGroup _viewGroup;
+        private readonly IUiProvider _uiProvider;
         private Boolean _hasPendingContent;
         
         IVisualTemplate? ITemplatableVisual.Template
         {
-            get => throw new NotSupportedException();
-            set => throw new NotSupportedException();
+            get => _htmlPanel.Template;
+            set => _htmlPanel.Template = value;
         }
     }
 }

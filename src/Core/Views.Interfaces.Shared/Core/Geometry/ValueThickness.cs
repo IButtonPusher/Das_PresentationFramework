@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Das.Extensions;
 
 namespace Das.Views.Core.Geometry
@@ -21,6 +19,11 @@ namespace Das.Views.Core.Geometry
                       right.IsZero() &&
                       top.IsZero() &&
                       bottom.IsZero();
+        }
+
+        public override String ToString()
+        {
+            return $"T: {Top} R: {Right} B: {Bottom} L: {Left}";
         }
 
         public Boolean IsEmpty { get; }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Das.Views.Construction;
 using Das.Views.Rendering;
@@ -13,6 +11,10 @@ namespace Das.Views.Styles.Construction
         IAppliedStyle? BuildAppliedStyle(IStyleSheet style,
                                          IVisualElement visual,
                                          IVisualLineage visualLineage);
+
+        Task ApplyVisualStylesAsync(IVisualElement visual,
+                                    IAttributeDictionary attributeDictionary,
+                                    IVisualLineage visualLineage);
 
         Task ApplyVisualStylesAsync(IVisualElement visual,
                                IAttributeDictionary attributeDictionary,

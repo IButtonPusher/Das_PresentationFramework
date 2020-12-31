@@ -5,7 +5,7 @@ using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
-using Das.Views.Styles.Declarations;
+using Das.Views.Transforms;
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
 
@@ -14,59 +14,7 @@ namespace Das.Views
 {
     public abstract partial class VisualElement
     {
-        public virtual Boolean TryGetDependencyProperty(DeclarationProperty declarationProperty,
-                                                        out IDependencyProperty property)
-        {
-            IDependencyProperty? dependencyProperty = default;
-
-
-            switch (declarationProperty)
-            {
-                case DeclarationProperty.BackgroundColor:
-                    dependencyProperty = BackgroundProperty;
-                    break;
-                
-                case DeclarationProperty.BorderRadius:
-                case DeclarationProperty.BorderRadiusBottom:
-                case DeclarationProperty.BorderRadiusLeft:
-                case DeclarationProperty.BorderRadiusRight:
-                case DeclarationProperty.BorderRadiusTop:
-                    dependencyProperty = BorderRadiusProperty;
-                    break;
-
-                case DeclarationProperty.Height:
-                    dependencyProperty = HeightProperty;
-                    break;
-                
-                case DeclarationProperty.Margin:
-                case DeclarationProperty.MarginBottom:
-                case DeclarationProperty.MarginLeft:
-                case DeclarationProperty.MarginRight:
-                case DeclarationProperty.MarginTop:
-                    dependencyProperty = MarginProperty;
-                    break;
-                
-                case DeclarationProperty.Width:
-                    dependencyProperty = WidthProperty;
-                    break;
-
-                case DeclarationProperty.ZIndex:
-                    dependencyProperty = ZIndexProperty;
-                    break;
-                
-                case DeclarationProperty.VerticalAlign:
-                    dependencyProperty = VerticalAlignmentProperty;
-                    break;
-                
-                case DeclarationProperty.Appearance:
-                    dependencyProperty = VisibilityProperty;
-                    break;
-            }
-
-            property = dependencyProperty!;
-            
-            return dependencyProperty != null;
-        }
+        
         
         public virtual Boolean IsRequiresMeasure
         {
@@ -117,12 +65,7 @@ namespace Das.Views
             set => MarginProperty.SetValue(this, value);
         }
 
-        //public ISet<String> StyleClasses => _styleClasses;
-
-        
         public virtual Int32 Id { get; private set; }
-
-        //public String? Class { get; set; }
 
         public static readonly DependencyProperty<IVisualElement, String?> ClassProperty =
             DependencyProperty<IVisualElement, String?>.Register(
@@ -294,8 +237,20 @@ namespace Das.Views
             set => BottomProperty.SetValue(this, value);
         }
 
+        public static readonly DependencyProperty<IVisualElement, ITransform> TransformProperty =
+            DependencyProperty<IVisualElement, ITransform>.Register(
+                nameof(Transform), IdentityTransform.Instance);
+
+        public ITransform Transform
+        {
+            get => TransformProperty.GetValue(this);
+            set => TransformProperty.SetValue(this, value);
+        }
+
+
+
         private Boolean _isRequiresArrange;
         private Boolean _isRequiresMeasure;
-        //private readonly HashSet<String> _styleClasses;
+        
     }
 }

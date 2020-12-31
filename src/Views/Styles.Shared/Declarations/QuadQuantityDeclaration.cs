@@ -1,7 +1,5 @@
 ﻿using Das.Views.Core.Geometry;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
@@ -12,45 +10,45 @@ namespace Das.Views.Styles.Declarations
         protected QuadQuantityDeclaration(String value,
             IStyleVariableAccessor variableAccessor, 
                                           DeclarationProperty property) 
-            : base(GetValue(value), variableAccessor, property)
+            : base(QuantifiedThickness.Parse(value), variableAccessor, property)
         {
         }
 
-        private static QuantifiedThickness GetValue(String value)
-        {
-            var tokens = value.Split();
+        //private static QuantifiedThickness GetValue(String value)
+        //{
+        //    var tokens = value.Split();
 
-            QuantifiedDouble top, bottom, left, right, leftRight, topBottom;
+        //    QuantifiedDouble top, bottom, left, right, leftRight, topBottom;
 
-            switch (tokens.Length)
-            {
-                case 1:
-                    var all = QuantifiedDouble.Parse(tokens[0]);
-                    return new QuantifiedThickness(all);
+        //    switch (tokens.Length)
+        //    {
+        //        case 1:
+        //            var all = QuantifiedDouble.Parse(tokens[0]);
+        //            return new QuantifiedThickness(all);
 
-                case 2:
-                    leftRight = QuantifiedDouble.Parse(tokens[1]);
-                    topBottom = QuantifiedDouble.Parse(tokens[0]);
-                    return new QuantifiedThickness(leftRight, topBottom);
+        //        case 2:
+        //            leftRight = QuantifiedDouble.Parse(tokens[1]);
+        //            topBottom = QuantifiedDouble.Parse(tokens[0]);
+        //            return new QuantifiedThickness(leftRight, topBottom);
 
-                case 4:
+        //        case 4:
                     
-                    top = QuantifiedDouble.Parse(tokens[0]);
-                    right = QuantifiedDouble.Parse(tokens[1]);
-                    bottom = QuantifiedDouble.Parse(tokens[2]);
-                    left = QuantifiedDouble.Parse(tokens[3]);
-                    return new QuantifiedThickness(left, top, right, bottom);
+        //            top = QuantifiedDouble.Parse(tokens[0]);
+        //            right = QuantifiedDouble.Parse(tokens[1]);
+        //            bottom = QuantifiedDouble.Parse(tokens[2]);
+        //            left = QuantifiedDouble.Parse(tokens[3]);
+        //            return new QuantifiedThickness(left, top, right, bottom);
 
-                case 3:
-                    top = QuantifiedDouble.Parse(tokens[0]);
-                    right = QuantifiedDouble.Parse(tokens[1]);
-                    left = right;
-                    bottom = QuantifiedDouble.Parse(tokens[2]);
-                    return new QuantifiedThickness(left, top, right, bottom);
-            }
+        //        case 3:
+        //            top = QuantifiedDouble.Parse(tokens[0]);
+        //            right = QuantifiedDouble.Parse(tokens[1]);
+        //            left = right;
+        //            bottom = QuantifiedDouble.Parse(tokens[2]);
+        //            return new QuantifiedThickness(left, top, right, bottom);
+        //    }
 
-            throw new InvalidOperationException();
-        }
+        //    throw new InvalidOperationException();
+        //}
     }
 
     //public abstract class QuadQuantityDeclaration : DeclarationBase

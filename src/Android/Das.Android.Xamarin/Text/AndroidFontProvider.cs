@@ -5,14 +5,12 @@ using Android.Util;
 using Das.Views;
 using Das.Views.Core.Writing;
 using Das.Views.Rendering;
-using Das.Views.Styles;
 
 namespace Das.Xamarin.Android
 {
     public class AndroidFontProvider //: IFontProvider<AndroidFontPaint>
     {
-        public AndroidFontProvider(DisplayMetrics displayMetrics,
-                                   IStyleContext styleContext)
+        public AndroidFontProvider(DisplayMetrics displayMetrics)
         {
             _fontLock = new Object();
 

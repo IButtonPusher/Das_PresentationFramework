@@ -19,6 +19,11 @@ namespace Das.Views.Styles.Application
             _dependencyProperty.SetValue(_visual, _value);
         }
 
+        public override String ToString()
+        {
+            return _visual + "." + _dependencyProperty.Name + " = " + _visual;
+        }
+
         private readonly IDependencyProperty _dependencyProperty;
         private readonly Object? _value;
         private readonly IVisualElement _visual;

@@ -17,9 +17,39 @@ namespace Das.Views.Styles.Functions
             _parameterValues = new List<IFunction>(parameterValues);
         }
 
+        public T[] GetParameterValues<T>()
+        where T : IConvertible
+        {
+            var res = new T[_parameterValues.Count];
+
+            for (var c = 0; c < _parameterValues.Count; c++)
+            {
+                var current = _parameterValues[c];
+
+                switch (current.GetValue())
+                {
+                    case T good:
+                        res[c] = good;
+                        break;
+
+                    case IConvertible goodEnough:
+                        res[c] = (T)Convert.ChangeType(goodEnough, typeof(T));
+                        break;
+
+                    default:
+                        throw new InvalidCastException();
+                }
+
+            }
+            return res;
+        }
+
+        public Object?[] GetParameterValues() =>_parameterValues.Select(p => p.GetValue()).ToArray();
+
         public Object? GetValue()
         {
-            var parameterValues = _parameterValues.Select(p => p.GetValue()).ToArray();
+            //var parameterValues = _parameterValues.Select(p => p.GetValue()).ToArray();
+            var parameterValues = GetParameterValues();
 
             switch (FunctionName)
             {

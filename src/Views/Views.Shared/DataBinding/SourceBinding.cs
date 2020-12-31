@@ -47,10 +47,6 @@ namespace Das.Views.DataBinding
             _sourcePropertyAccessor = sourcePropertyAccessor;
             _targetPropertyName = targetProp.Name;
 
-            _sourceGetter = srcProp.GetGetMethod()
-                            ?? throw new MissingMethodException(_sourcePropertyName);
-
-            
 
             _targetSetter = targetProp.GetSetMethod();
 
@@ -119,7 +115,7 @@ namespace Das.Views.DataBinding
             SetTargetValue(value);
         }
 
-        private Boolean TryGetGenericCollectionArgument(Type valueType,
+        private static Boolean TryGetGenericCollectionArgument(Type valueType,
                                                                out Type germane)
         {
             if (valueType.IsGenericType)
@@ -285,7 +281,6 @@ namespace Das.Views.DataBinding
         private readonly PropertyInfo _targetProp;
         private readonly IPropertyAccessor _sourcePropertyAccessor;
 
-        private readonly MethodInfo _sourceGetter;
         private readonly MethodInfo _targetGetter;
         private readonly MethodInfo? _targetSetter;
 
