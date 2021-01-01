@@ -64,7 +64,6 @@ namespace Das.Views.Rendering
                         current.Height += offset.Height;
                     }
 
-
                     switch (orientation)
                     {
                         case Orientations.Horizontal:
@@ -149,18 +148,7 @@ namespace Das.Views.Rendering
                 return ValueSize.Empty;
 
             return new ValueSize(0 - diffX, 0 - diffY);
-            
-            //_positions[child] = new ValuePoint2D(current.Left, current.Top);
 
-            //if (current.Width > _maxWidth)
-            //{
-            //    _maxWidth = current.Width;
-            //}
-
-            //if (current.Height > _maxHeight)
-            //{
-            //    _maxHeight = current.Height;
-            //}
         }
 
         protected override ValueRenderRectangle GetElementBounds(IVisualElement child,

@@ -19,8 +19,14 @@ namespace Das.Views.Transforms
             Y = y;
 
             IsIdentity = X.IsZero() && Y.IsZero();
+
+            Value = IsIdentity
+                ? ValueTranslation.Identity
+                : new ValueTranslation(1, 0, 0, 1, x, y);
         }
 
         public Boolean IsIdentity { get; }
+
+        public ValueTranslation Value { get; }
     }
 }

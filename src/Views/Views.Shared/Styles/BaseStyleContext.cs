@@ -461,6 +461,12 @@ namespace Das.Views.Styles
                     }
 
                     break;
+
+                case null:
+                    goto failBoat;
+
+                    default:
+                        throw new InvalidOperationException();
             }
 
 

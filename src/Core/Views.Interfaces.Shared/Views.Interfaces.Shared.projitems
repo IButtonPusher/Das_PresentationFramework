@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Colors\IThemeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\ApplyVisualStyles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IAttributeDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IBoxModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IAppliedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IAppliedStyleRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IStyleApplication.cs" />
@@ -46,6 +47,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleVariableAccessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IVisualStyleProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\ITransform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\ValueTranslation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Visuals\IContentVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\IButtonBase{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\IToggleButton{T}.cs" />

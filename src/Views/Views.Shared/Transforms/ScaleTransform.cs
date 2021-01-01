@@ -22,8 +22,14 @@ namespace Das.Views.Transforms
             ScaleY = scaleY;
 
             IsIdentity = ScaleX.AreEqualEnough(1.0) && ScaleY.AreEqualEnough(1.0);
+
+            Value = IsIdentity 
+                ? ValueTranslation.Identity 
+                : new ValueTranslation(scaleX, 0, 0, scaleY, 0, 0);
         }
 
         public Boolean IsIdentity { get; }
+
+        public ValueTranslation Value { get; }
     }
 }

@@ -105,10 +105,13 @@ namespace Das.Views.Rendering
 
                 var margin = measureContext.GetStyleSetter<Thickness>(StyleSetterType.Margin, container);
 
-                totalWidth = Math.Max(totalWidth, maxWidth);
-                totalHeight = Math.Max(totalHeight, maxHeight);
+                return new ValueSize(Math.Max(totalWidth, maxWidth) + margin.Width, 
+                    Math.Max(totalHeight, maxHeight) + margin.Height);
 
-                return new ValueSize(totalWidth + margin.Width, totalHeight + margin.Height);
+                //totalWidth = Math.Max(totalWidth, maxWidth);
+                //totalHeight = Math.Max(totalHeight, maxHeight);
+
+                //return new ValueSize(totalWidth + margin.Width, totalHeight + margin.Height);
             }
         }
 

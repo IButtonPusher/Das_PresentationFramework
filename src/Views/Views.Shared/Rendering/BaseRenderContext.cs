@@ -357,10 +357,14 @@ namespace Das.Views.Rendering
                 ? interactive.CurrentVisualStateType
                 : VisualStateType.None;
 
-            var border = styles.GetStyleSetter<ValueThickness>(StyleSetterType.BorderThickness,
+            var border = styles.GetStyleSetter<IThickness>(StyleSetterType.BorderThickness,
                 selector, layoutVisual, VisualLineage);
 
-            var margin = layoutVisual.Margin.GetValue(rect);
+            IThickness margin = layoutVisual.Margin.GetValue(rect);
+            if (margin.IsEmpty)
+                margin = styles.GetStyleSetter<IThickness>(StyleSetterType.Margin,
+                    selector, layoutVisual, VisualLineage);
+            
 
             _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
 
@@ -422,8 +426,7 @@ namespace Das.Views.Rendering
 
             /////////////////////////////////
             /////////////////////////////////
-            if (visual.Visibility == Visibility.Visible &&
-                (useRect.Bottom > 0 || useRect.Right > 0))
+            if (useRect.Bottom > 0 || useRect.Right > 0)
                 // don't draw it if it's completely off screen
                 layoutVisual.Arrange(CurrentElementRect, this);
             /////////////////////////////////
@@ -515,13 +518,11 @@ namespace Das.Views.Rendering
             where TBrush : IBrush
             where TThickness : IThickness
         {
-            //if (cornerRadius != 0)
             if (!cornerRadius.IsEmpty)
             {
                 if (!(brush is SolidColorBrush scb))
                     throw new NotImplementedException();
 
-                //var scb = (SolidColorBrush) brush;
                 var p = new Pen(scb.Color, Convert.ToInt32(thickness.Left));
 
                 DrawRoundedRect(rect, p, cornerRadius);
@@ -609,6 +610,7 @@ namespace Das.Views.Rendering
         private readonly Dictionary<IVisualElement, ValueSize> _lastMeasurements;
 
         private readonly Stack<RenderRectangle> _locations;
+        //private readonly IBoxModel _boxModel;
         private readonly Object _renderLock;
 
         private Int32 _currentZ;
