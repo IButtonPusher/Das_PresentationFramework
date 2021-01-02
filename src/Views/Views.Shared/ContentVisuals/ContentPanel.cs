@@ -6,7 +6,6 @@ using Das.Views.DataBinding;
 using Das.Views.Defaults;
 using Das.Views.Rendering;
 using Das.Views.Rendering.Geometry;
-using Das.Views.Styles;
 
 namespace Das.Views.Panels
 {
@@ -52,6 +51,16 @@ namespace Das.Views.Panels
                 OnContentChanging, OnContentChanged);
         }
 
+        public static readonly DependencyProperty<IContentVisual, QuantifiedThickness> PaddingProperty =
+            DependencyProperty<IContentVisual, QuantifiedThickness>.Register(
+                nameof(Padding), QuantifiedThickness.Empty);
+
+        public QuantifiedThickness Padding
+        {
+            get => PaddingProperty.GetValue(this);
+            set => PaddingProperty.SetValue(this, value);
+        }
+
         public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
         {
@@ -73,7 +82,8 @@ namespace Das.Views.Panels
             if (Double.IsInfinity(useHeight) || useHeight < _contentMeasured.Height)
             {
                 useHeight = _contentMeasured.Height;
-                if (padding != null)
+                //if (padding != null)
+                if (!padding.IsEmpty)
                     useHeight += padding.Height;
             }
 
@@ -89,7 +99,8 @@ namespace Das.Views.Panels
             if (Double.IsInfinity(useWidth) || useWidth < _contentMeasured.Width)
             {
                 useWidth = _contentMeasured.Width;
-                if (padding != null)
+                //if (padding != null)
+                if (!padding.IsEmpty)
                     useWidth += padding.Width;
             }
 
@@ -137,14 +148,15 @@ namespace Das.Views.Panels
 
         protected virtual IRenderSize GetMeasureSpace(IVisualContext styleContext,
                                                       IRenderSize availableSpace,
-                                                      out Thickness? padding,
+                                                      out ValueThickness padding,
                                                       out ValueSize mySize)
         {
-            padding = GetPadding(styleContext);
-            styleContext.TryGetElementSize(this, out mySize);
+            padding = Padding.GetValue(availableSpace);
+            //padding = GetPadding(styleContext);
+            styleContext.TryGetElementSize(this, availableSpace, out mySize);
 
             IRenderSize useAvailable;
-            if (mySize.IsEmpty && padding?.IsEmpty != false)
+            if (mySize.IsEmpty && padding.IsEmpty)
                 useAvailable = availableSpace;
             else if (mySize.IsEmpty)
                 useAvailable = new ValueRenderSize(availableSpace, availableSpace.Offset, padding);
@@ -161,11 +173,12 @@ namespace Das.Views.Panels
                                                                   ISize contentMeasured,
                                                                   IVisualContext visualContext,
                                                                   IRenderSize availableSpace,
-                                                                  out Thickness? padding,
+                                                                  out ValueThickness padding,
                                                                   out ValueSize mySize)
         {
-            padding = GetPadding(visualContext);
-            visualContext.TryGetElementSize(this, out mySize);
+            padding = Padding.GetValue(availableSpace);
+            //padding = GetPadding(visualContext);
+            visualContext.TryGetElementSize(this, availableSpace, out mySize);
 
 
             Double left = 0, top = 0;
@@ -191,14 +204,14 @@ namespace Das.Views.Panels
             }
 
             var valign = content.VerticalAlignment;
-            if (valign == VerticalAlignments.Default)
-                valign = visualContext.GetStyleSetter<VerticalAlignments>(
-                    StyleSetterType.VerticalAlignment, content);
+            //if (valign == VerticalAlignments.Default)
+            //    valign = visualContext.GetStyleSetter<VerticalAlignments>(
+            //        StyleSetterType.VerticalAlignment, content);
 
             var halign = content.HorizontalAlignment;
-            if (halign == HorizontalAlignments.Default)
-                halign = visualContext.GetStyleSetter<HorizontalAlignments>(
-                    StyleSetterType.HorizontalAlignment, content);
+            //if (halign == HorizontalAlignments.Default)
+            //    halign = visualContext.GetStyleSetter<HorizontalAlignments>(
+            //        StyleSetterType.HorizontalAlignment, content);
 
             //up to here we are giving content all available minus our padding
             var xDiff = width - contentMeasured.Width;
@@ -234,33 +247,15 @@ namespace Das.Views.Panels
             return new RenderRectangle(left, top, width, height, availableSpace.Offset);
         }
 
-        protected virtual Thickness? GetPadding(IStyleProvider styleContext)
-        {
-            return styleContext.GetStyleSetter<Thickness>(StyleSetterType.Padding, this);
-        }
-
-        //public override IVisualElement DeepCopy()
+        //protected virtual Thickness? GetPadding(IStyleProvider styleContext)
         //{
-        //    var newObject = (IContentContainer) base.DeepCopy();
-
-        //    var content = Content;
-        //    if (content == null)
-        //        return newObject;
-
-        //    var newContent = content.DeepCopy();
-        //    newObject.Content = newContent;
-        //    if (newObject is BindableElement<T> bindable)
-        //        bindable.Binding = Binding;
-
-        //    return newObject;
+        //    return styleContext.GetStyleSetter<Thickness>(StyleSetterType.Padding, this);
         //}
-
 
         public override void AcceptChanges()
         {
             base.AcceptChanges();
 
-            //IsChanged = false;
             if (Content is IChangeTracking ct)
                 ct.AcceptChanges();
         }
@@ -270,7 +265,6 @@ namespace Das.Views.Panels
             base.AcceptChanges(changeType);
             Content?.AcceptChanges(changeType);
         }
-
 
         public IDataTemplate? ContentTemplate
         {
@@ -302,73 +296,7 @@ namespace Das.Views.Panels
         }
 
 
-        //public void OnChildDeserialized(IVisualElement element, INode node)
-        //{
-        //}
-
-        //public virtual Boolean Contains(IVisualElement element)
-        //{
-        //    if (Content == element)
-        //        return true;
-
-        //    if (Content is IVisualContainer container)
-        //        return container.Contains(element);
-
-        //    return false;
-        //}
-
-        //public override void SetDataContext(Object? dataContext)
-        //{
-        //    DataContext = dataContext;
-
-        //    if (Content is IBindableElement bindable)
-        //        bindable.SetDataContext(dataContext);
-
-        //    //IsChanged = true;
-        //}
-
-        //public override async Task SetDataContextAsync(Object? dataContext)
-        //{
-        //    DataContext = dataContext;
-
-        //    if (Content is IBindableElement bindable)
-        //        await bindable.SetDataContextAsync(dataContext);
-
-        //    //IsChanged = true;
-        //}
-
-
-        //public override void SetBoundValue(T value)
-        //{
-        //    Binding = new ObjectBinding<T>(value);
-
-        //    if (Content is IBindableElement<T> bindable)
-        //        bindable.SetBoundValue(value);
-        //    else if (Content is IBindableElement almost)
-        //        almost.SetDataContext(value);
-        //}
-
-        //public override async Task SetBoundValueAsync(T value)
-        //{
-        //    Binding = new ObjectBinding<T>(value);
-
-        //    if (Content is IBindableElement<T> bindable)
-        //        await bindable.SetBoundValueAsync(value);
-        //    else if (Content is IBindableElement almost)
-        //        await almost.SetDataContextAsync(value);
-        //}
-
-        //protected IVisualElement? GetContent()
-        //{
-        //    if (Content is { } content)
-        //        return content;
-
-        //    if (!(Value is { } valid))
-        //        return null;
-
-        //    return Content = _contentTemplate.BuildVisual(valid);
-        //}
-
+       
         protected virtual void OnContentChanged(IVisualElement? obj)
         {
             InvalidateMeasure();
@@ -422,12 +350,6 @@ namespace Das.Views.Panels
         private IVisualElement? _content;
         private IDataTemplate _contentTemplate;
         private ValueSize _contentMeasured;
-
-        //public ContentPanel(IVisualBootstrapper visualBootstrapper, 
-        //                    IDataBinding<Object> binding) 
-        //    : base(visualBootstrapper, binding)
-        //{
-        //}
     }
 }
 

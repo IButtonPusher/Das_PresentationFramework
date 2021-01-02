@@ -28,10 +28,10 @@ namespace Das.Views.Core.Geometry
         {
         }
 
-        ISize ISize.Divide(Double pct)
-        {
-            return GeometryHelper.Divide(this, pct);
-        }
+        //ISize ISize.Divide(Double pct)
+        //{
+        //    return GeometryHelper.Divide(this, pct);
+        //}
 
         public ValueCube(Double x,
                          Double y,
@@ -87,15 +87,15 @@ namespace Das.Views.Core.Geometry
 
         public Double Width { get; }
 
-        public ISize Reduce(Thickness padding)
-        {
-            return GeometryHelper.Reduce(this, padding);
-        }
+        //public ISize Reduce(Thickness padding)
+        //{
+        //    return GeometryHelper.Reduce(this, padding);
+        //}
 
-        ISize ISize.Minus(ISize subtract)
-        {
-            return GeometryHelper.Minus(this, subtract);
-        }
+        //ISize ISize.Minus(ISize subtract)
+        //{
+        //    return GeometryHelper.Minus(this, subtract);
+        //}
 
         public IPoint2D Location => TopLeft;
 
@@ -116,10 +116,10 @@ namespace Das.Views.Core.Geometry
             return GeometryHelper.IsRectangleContains(this, x, y);
         }
 
-        public ISize PlusVertical(ISize adding)
-        {
-            return GeometryHelper.PlusVertical(this, adding);
-        }
+        //public ISize PlusVertical(ISize adding)
+        //{
+        //    return GeometryHelper.PlusVertical(this, adding);
+        //}
 
         public Boolean Equals(ISize other)
         {
@@ -131,10 +131,10 @@ namespace Das.Views.Core.Geometry
             throw new NotSupportedException();
         }
 
-        ISize IDeepCopyable<ISize>.DeepCopy()
-        {
-            return new ValueSize(Width, Height);
-        }
+        //ISize IDeepCopyable<ISize>.DeepCopy()
+        //{
+        //    return new ValueSize(Width, Height);
+        //}
 
         public Boolean Equals(IRectangle other)
         {

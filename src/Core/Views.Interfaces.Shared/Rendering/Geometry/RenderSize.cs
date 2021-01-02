@@ -29,20 +29,20 @@ namespace Das.Views.Core.Geometry
 
         public IPoint2D Offset { get; set; }
 
-        public new IRenderSize Reduce(Thickness padding)
-        {
-            return GeometryHelper.Reduce(this, padding);
-        }
+        //public new IRenderSize Reduce(Thickness padding)
+        //{
+        //    return GeometryHelper.Reduce(this, padding);
+        //}
 
-        public IRenderSize MinusVertical(ISize subtract)
-        {
-            return GeometryHelper.MinusVertical(this, subtract);
-        }
+        //public IRenderSize MinusVertical(ISize subtract)
+        //{
+        //    return GeometryHelper.MinusVertical(this, subtract);
+        //}
 
-        public new IRenderSize PlusVertical(ISize adding)
-        {
-            return GeometryHelper.PlusRenderVertical(this, adding);
-        }
+        //public new IRenderSize PlusVertical(ISize adding)
+        //{
+        //    return GeometryHelper.PlusRenderVertical(this, adding);
+        //}
 
         public ValueRenderRectangle ToFullRectangle()
         {
@@ -55,15 +55,15 @@ namespace Das.Views.Core.Geometry
         }
 
 
-        public new IRenderSize Minus(ISize subtract)
-        {
-            return GeometryHelper.Minus(this, subtract);
-        }
+        //public new IRenderSize Minus(ISize subtract)
+        //{
+        //    return GeometryHelper.Minus(this, subtract);
+        //}
 
-        public new IRenderSize DeepCopy()
-        {
-            return new ValueRenderSize(Width, Height, Offset);
-        }
+        //public new IRenderSize DeepCopy()
+        //{
+        //    return new ValueRenderSize(Width, Height, Offset);
+        //}
 
         public Boolean Equals(IRenderSize other)
         {

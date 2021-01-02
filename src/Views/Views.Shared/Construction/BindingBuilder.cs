@@ -20,8 +20,9 @@ namespace Das.Views.Construction
         }
 
         public Dictionary<String, IDataBinding> GetBindingsDictionary(IMarkupNode node,
-                                                                      Type? dataContextType, 
-                                                                      Dictionary<String, String> nameSpaceAssemblySearch)
+                                                                      Type? dataContextType,
+                                                                      Dictionary<String, String>
+                                                                          nameSpaceAssemblySearch)
         {
             Dictionary<String, IDataBinding> bindings;
 
@@ -29,7 +30,9 @@ namespace Das.Views.Construction
             {
                 bindings = new Dictionary<String, IDataBinding>();
                 foreach (var kvp in GetBindings(dataContextType, node, nameSpaceAssemblySearch))
+                {
                     bindings.Add(kvp.Key, kvp.Value);
+                }
             }
             else bindings = _emptyBindings;
 
@@ -39,21 +42,24 @@ namespace Das.Views.Construction
         public Type? InferDataContextTypeFromBindings(IEnumerable<IDataBinding> bindings,
                                                       Type? currentGenericArg)
         {
-            Type? genericChild;
+            //Type? genericChild;
 
-            if (currentGenericArg != null)
-            {
-                var childArgs = currentGenericArg?.GetGenericArguments();
+            //if (currentGenericArg != null)
+            //{
+            //    var childArgs = currentGenericArg?.GetGenericArguments();
 
-                if (childArgs != null && childArgs.Length > 0)
-                {
-                    if (childArgs.Length == 1)
-                        genericChild = childArgs[0];
-                    else throw new NotImplementedException();
-                }
-            }
+            //    if (childArgs != null && childArgs.Length > 0)
+            //    {
+            //        if (childArgs.Length == 1)
+            //        {
+            //            //genericChild = childArgs[0];
+            //        }
+            //        else throw new NotImplementedException();
+            //    }
+            //}
 
             foreach (var binding in bindings)
+            {
                 switch (binding)
                 {
                     case DeferredPropertyBinding deferredPropertyBinding:
@@ -101,6 +107,7 @@ namespace Das.Views.Construction
 
                         break;
                 }
+            }
 
             return currentGenericArg;
         }
@@ -200,11 +207,12 @@ namespace Das.Views.Construction
                 if (BaseBinding.GetBindingProperty(dataContextType, propName) == null)
                     throw new MissingMemberException(dataContextType.Name, propName);
 
-                var propAccessor = _cachedPropertyAccessors.GetOrAdd(dataContextType, propName, (d, p) =>
+                var propAccessor = _cachedPropertyAccessors.GetOrAdd(dataContextType, propName, (d,
+                        p) =>
                     _propertyProvider.GetPropertyAccessor(d, p));
-                
+
                 //var propAccessor = _propertyProvider.GetPropertyAccessor(dataContextType, propName);
-                
+
                 var binding = new DeferredPropertyBinding(propName, kvp.Key, propAccessor, converter);
                 yield return new KeyValuePair<String, IDataBinding>(kvp.Key, binding);
             }
@@ -229,8 +237,9 @@ namespace Das.Views.Construction
         private static readonly Dictionary<String, IDataBinding> _emptyBindings =
             new Dictionary<String, IDataBinding>();
 
-        private readonly ITypeInferrer _typeInferrer;
-        private readonly IPropertyProvider _propertyProvider;
         private readonly DoubleConcurrentDictionary<Type, String, IPropertyAccessor> _cachedPropertyAccessors;
+        private readonly IPropertyProvider _propertyProvider;
+
+        private readonly ITypeInferrer _typeInferrer;
     }
 }

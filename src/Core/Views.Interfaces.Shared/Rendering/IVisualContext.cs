@@ -17,9 +17,9 @@ namespace Das.Views.Rendering
         
         /// <summary>
         /// Returns the Size + Width properties of the visual, if set.
-        /// Otherwise looks to the applicable styles.
         /// </summary>
         Boolean TryGetElementSize(IVisualElement visual,
+                                  ISize availableSize,
                                   out ValueSize size);
     }
 }

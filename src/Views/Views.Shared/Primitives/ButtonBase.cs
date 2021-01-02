@@ -5,6 +5,8 @@ using Das.Views.Core.Geometry;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Das.Views.Controls
 {
@@ -24,11 +26,11 @@ namespace Das.Views.Controls
             _lastRenderSize = Size.Empty;
         }
 
-        protected override Thickness? GetPadding(IStyleProvider styleContext)
-        {
-            return styleContext.GetStyleSetter<Thickness>(StyleSetterType.Padding,
-                CurrentVisualStateType, this);
-        }
+        //protected override Thickness? GetPadding(IStyleProvider styleContext)
+        //{
+        //    return styleContext.GetStyleSetter<Thickness>(StyleSetterType.Padding,
+        //        CurrentVisualStateType, this);
+        //}
 
         public VisualStateType CurrentVisualStateType
         {
@@ -40,6 +42,9 @@ namespace Das.Views.Controls
             var val = _currentVisualStateType == VisualStateType.None 
             ? value : 
             _currentVisualStateType | value;
+
+            SetValue(ref _currentVisualStateType, val, OnCurrentSelectorChanged,
+                nameof(CurrentVisualStateType));
 
             //if (SetValue(ref _currentVisualStateType, val, OnCurrentSelectorChanged,
             //    nameof(CurrentVisualStateType)))
@@ -63,15 +68,19 @@ namespace Das.Views.Controls
 
         public virtual Boolean OnInput(MouseClickEventArgs args)
         {
-            if (ClickMode != ClickMode.Release || !(Command is {} cmd))
-                return true;
-
-            //todo: this is not good
-            //var boundValue = BoundValue ?? Binding?.GetBoundValue(DataContext);
-            var boundValue = DataContext;
-
-            cmd.ExecuteAsync(boundValue!).ConfigureAwait(false);
+            ClickToAction(ClickMode.Release);
             return true;
+        }
+
+        private void ClickToAction(ClickMode clickType)
+        {
+            if (ClickMode != clickType || !(Command is {} cmd))
+                return;
+
+            if (DataContext is {} boundValue)
+                cmd.ExecuteAsync(boundValue).ConfigureAwait(false);
+            else
+                cmd.ExecuteAsync().ConfigureAwait(false);
         }
 
         InputAction IHandleInput.HandlesActions => I_HANDLE_INPUT;
@@ -87,15 +96,7 @@ namespace Das.Views.Controls
 
             AddStyleSelector(VisualStateType.Active);
 
-            if (ClickMode != ClickMode.Press || !(Command is {} cmd))
-                return true;
-
-            //var boundValue = DataContext;
-            
-            if (DataContext is {} boundValue)
-                cmd.ExecuteAsync(boundValue).ConfigureAwait(false);
-            else
-                cmd.ExecuteAsync().ConfigureAwait(false);
+            ClickToAction(ClickMode.Press);
             return true;
         }
 
@@ -156,7 +157,7 @@ namespace Das.Views.Controls
 
         public IObservableCommand? Command { get; set; }
 
-        private void OnCurrentSelectorChanged(VisualStateType value)
+        protected virtual void OnCurrentSelectorChanged(VisualStateType value)
         {
             //InvalidateArrange();
         }

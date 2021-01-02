@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 
 namespace Das.Views.Styles
@@ -40,16 +39,16 @@ namespace Das.Views.Styles
 
                 switch (value)
                 {
-                    case Thickness _:
-                        var runningThickness = new ThicknessTransition(existed, transition, key, UpdateTransition);
-                        runningThickness.Start();
-                        break;
+                    //case Thickness _:
+                    //    var runningThickness = new ThicknessTransition(existed, transition, key, UpdateTransition);
+                    //    runningThickness.Start();
+                    //    break;
 
-                    case Double _:
-                        var running = new DoubleTransition(existed,
-                            transition, key, UpdateTransition);
-                        running.Start();
-                        break;
+                    //case Double _:
+                    //    var running = new DoubleTransition(existed,
+                    //        transition, key, UpdateTransition);
+                    //    running.Start();
+                    //    break;
 
                     default:
                         throw new NotImplementedException();

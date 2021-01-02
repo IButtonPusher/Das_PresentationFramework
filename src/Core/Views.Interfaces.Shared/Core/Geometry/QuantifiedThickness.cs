@@ -80,6 +80,23 @@ namespace Das.Views.Core.Geometry
             throw new InvalidOperationException();
         }
 
+        public QuantifiedThickness Transition(QuantifiedThickness target,
+                                              Double percentComplete)
+        {
+            if (percentComplete >= 1.0)
+                return target;
+
+            return new QuantifiedThickness(Left.Transition(target.Left, percentComplete),
+                Top.Transition(target.Top, percentComplete),
+                Right.Transition(target.Right, percentComplete),
+                Bottom.Transition(target.Bottom, percentComplete));
+
+            //return new QuantifiedThickness((target.Left - Left) * percentComplete,
+            //    (target.Top - Top) * percentComplete,
+            //    (target.Right - Right) * percentComplete,
+            //    (target.Bottom - Bottom) * percentComplete);
+        }
+
         public static readonly QuantifiedThickness Empty = new QuantifiedThickness(0, 0, 0, 0);
 
         public QuantifiedDouble Left => _left;

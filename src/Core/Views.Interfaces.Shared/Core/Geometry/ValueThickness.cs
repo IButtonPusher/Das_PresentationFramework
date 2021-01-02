@@ -27,6 +27,12 @@ namespace Das.Views.Core.Geometry
                       bottom.IsZero();
         }
 
+        public Boolean Equals(ISize other)
+        {
+            return other.Width.AreEqualEnough(Width) &&
+                   other.Height.AreEqualEnough(Height);
+        }
+
         public override String ToString()
         {
             return $"T: {Top} R: {Right} B: {Bottom} L: {Left}";

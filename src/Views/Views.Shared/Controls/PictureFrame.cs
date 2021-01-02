@@ -5,7 +5,6 @@ using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Rendering;
-using Das.Views.Styles;
 
 namespace Das.Views.Controls
 {
@@ -91,8 +90,8 @@ namespace Das.Views.Controls
             //    return size;
 
 
-            var width = Width ?? measureContext.GetStyleSetter<Double>(StyleSetterType.Width, this);// * zoom;
-            var height = Height ?? measureContext.GetStyleSetter<Double>(StyleSetterType.Height, this);// * zoom;
+            var width = Width ?? Double.NaN; //measureContext.GetStyleSetter<Double>(StyleSetterType.Width, this);// * zoom;
+            var height = Height ?? Double.NaN; //measureContext.GetStyleSetter<Double>(StyleSetterType.Height, this);// * zoom;
 
             if (!Double.IsNaN(width) && !Double.IsNaN(height))
                 return new ValueSize(width, height);

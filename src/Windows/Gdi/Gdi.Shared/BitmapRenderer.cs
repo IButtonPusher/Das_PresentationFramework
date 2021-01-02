@@ -256,12 +256,12 @@ namespace Das.Gdi
                 _renderContext.DrawMainElement(view, renderTo, _viewHost);
             }
 
-            while (_layoutQueue.TryDequeueVisualNeedingArrange(out var arrangeMe))
+            while (_layoutQueue.TryDequeueVisualNeedingArrange(out _)) // var arrangeMe))
             {
-            //    if (arrangeMe.ArrangedBounds.IsEmpty)
-            //        continue;
+                //    if (arrangeMe.ArrangedBounds.IsEmpty)
+                //        continue;
 
-            //    _renderContext.DrawElement(arrangeMe, arrangeMe.ArrangedBounds);
+                //    _renderContext.DrawElement(arrangeMe, arrangeMe.ArrangedBounds);
             }
 
             lock (_eventLock)
@@ -273,27 +273,27 @@ namespace Das.Gdi
             return true;
         }
 
-        private Boolean DoRender2(Graphics g,
-                                 IVisualElement view)
-        {
-            if (!view.IsRequiresArrange)
-                return false;
+        //private Boolean DoRender2(Graphics g,
+        //                         IVisualElement view)
+        //{
+        //    if (!view.IsRequiresArrange)
+        //        return false;
 
-            var renderTo = new ValueRectangle(0, 0,
-                Math.Min(_hostRect.Width, _renderRect.Width),
-                Math.Min(_hostRect.Height, _renderRect.Height));
+        //    var renderTo = new ValueRectangle(0, 0,
+        //        Math.Min(_hostRect.Width, _renderRect.Width),
+        //        Math.Min(_hostRect.Height, _renderRect.Height));
             
-            _renderContext.Graphics = g;
-            _renderContext.DrawMainElement(view, renderTo, _viewHost);
+        //    _renderContext.Graphics = g;
+        //    _renderContext.DrawMainElement(view, renderTo, _viewHost);
 
-            lock (_eventLock)
-            {
-                if (_eventCounter > 0)
-                    _rendering!.Invoke(this, EventArgs.Empty);
-            }
+        //    lock (_eventLock)
+        //    {
+        //        if (_eventCounter > 0)
+        //            _rendering!.Invoke(this, EventArgs.Empty);
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
 
         private readonly GdiDevice _gdiDevice;
         private readonly Object _lock;
@@ -305,9 +305,9 @@ namespace Das.Gdi
         private readonly IViewHost<Bitmap> _viewHost;
         private readonly IVisualHost<Bitmap> _visualHost;
 
-        public void Dispose()
-        {
-            _gdiDevice.Dispose();
-        }
+        //public void Dispose()
+        //{
+        //    _gdiDevice.Dispose();
+        //}
     }
 }

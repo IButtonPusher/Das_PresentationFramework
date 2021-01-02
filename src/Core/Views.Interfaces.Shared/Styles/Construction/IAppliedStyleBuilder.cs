@@ -20,5 +20,7 @@ namespace Das.Views.Styles.Construction
                                IAttributeDictionary attributeDictionary,
                                IVisualLineage visualLineage,
                                IViewInflater viewInflater);
+
+        IVisualStyleProvider StyleProvider { get; }
     }
 }

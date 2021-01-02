@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
-using Das.Views;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 
@@ -43,20 +42,20 @@ namespace Gdi.Shared
 
         Double ISize.Width => _bmp.Width;
 
-        public ISize PlusVertical(ISize adding)
-        {
-            return GeometryHelper.PlusVertical(this, adding);
-        }
+        //public ISize PlusVertical(ISize adding)
+        //{
+        //    return GeometryHelper.PlusVertical(this, adding);
+        //}
 
-        public ISize Reduce(Thickness padding)
-        {
-            return GeometryHelper.Reduce(this, padding);
-        }
+        //public ISize Reduce(Thickness padding)
+        //{
+        //    return GeometryHelper.Reduce(this, padding);
+        //}
 
-        ISize ISize.Minus(ISize subtract)
-        {
-            return GeometryHelper.Minus(this, subtract);
-        }
+        //ISize ISize.Minus(ISize subtract)
+        //{
+        //    return GeometryHelper.Minus(this, subtract);
+        //}
 
         void IDisposable.Dispose()
         {
@@ -137,10 +136,10 @@ namespace Gdi.Shared
             return GeometryHelper.CenterX(this, item);
         }
 
-        ISize ISize.Divide(Double pct)
-        {
-            return new ValueSize(_bmp.Width * pct, _bmp.Height * pct);
-        }
+        //ISize ISize.Divide(Double pct)
+        //{
+        //    return new ValueSize(_bmp.Width * pct, _bmp.Height * pct);
+        //}
 
         Task<TResult> IImage.UseImage<TImage, TParam, TResult>(TParam param1, 
                                                                Func<TImage, TParam, TResult> action)
@@ -148,9 +147,9 @@ namespace Gdi.Shared
             throw new NotImplementedException();
         }
 
-        ISize IDeepCopyable<ISize>.DeepCopy()
-        {
-            return new ValueSize(_bmp.Width, _bmp.Height);
-        }
+        //ISize IDeepCopyable<ISize>.DeepCopy()
+        //{
+        //    return new ValueSize(_bmp.Width, _bmp.Height);
+        //}
     }
 }

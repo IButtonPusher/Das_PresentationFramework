@@ -12,13 +12,13 @@ namespace Das.Views.Construction
         public VisualStyleProvider(IStyleInflater styleInflater)
         {
             _styleInflater = styleInflater;
-            
+
             _lockStylesByClassName = new Object();
             _stylesByClassName = new Dictionary<String, HashSet<IStyleRule>>();
 
             _lockStylesByName = new Object();
             _stylesByName = new Dictionary<String, IStyleSheet?>();
-            
+
             _resourcesLock = new Object();
             _resourcesRead = new HashSet<String>();
         }
@@ -30,7 +30,9 @@ namespace Das.Views.Construction
                 if (_stylesByClassName.TryGetValue(className, out var styles))
                 {
                     foreach (var style in styles)
+                    {
                         yield return style;
+                    }
 
                     yield break;
                 }
@@ -50,34 +52,20 @@ namespace Das.Views.Construction
                         continue;
                 }
 
-                var resourceStyles = await _styleInflater.InflateResourceCssAsync(name).
-                                                          ConfigureAwait(false);
+                var resourceStyles = await _styleInflater.InflateResourceCssAsync(name).ConfigureAwait(false);
 
                 if (resourceStyles == null)
                     continue;
 
                 foreach (var rule in resourceStyles.Rules)
                 {
-                    if (!rule.Selector.TryGetClassName(out var selectorClassName)) 
+                    if (!rule.Selector.TryGetClassName(out var selectorClassName))
                         continue;
 
                     TryAddRuleByClassName(selectorClassName, rule);
-                    
-                    //lock (_lockStylesByClassName)
-                    //{
-                    //    if (!_stylesByClassName.TryGetValue(selectorClassName, out var classRules))
-                    //    {
-                    //        classRules = new HashSet<IStyleRule>();
-                    //        _stylesByClassName[selectorClassName] = classRules;
-                    //    }
-
-                    //    classRules.Add(rule);
-                    //}
 
                     if (String.Equals(selectorClassName, className))
-                    {
                         yield return rule;
-                    }
                 }
             }
         }
@@ -87,11 +75,9 @@ namespace Das.Views.Construction
             lock (_lockStylesByClassName)
             {
                 if (_stylesByName.TryGetValue(name, out var style))
-                {
                     return style;
-                }
             }
-            
+
             var thisExe = Assembly.GetExecutingAssembly();
             var resourceNames = thisExe.GetManifestResourceNames();
 
@@ -106,8 +92,7 @@ namespace Das.Views.Construction
                         continue;
                 }
 
-                var resourceStyle = await _styleInflater.InflateResourceXmlAsync(resource).
-                                                          ConfigureAwait(false);
+                var resourceStyle = await _styleInflater.InflateResourceXmlAsync(resource).ConfigureAwait(false);
 
                 switch (resourceStyle)
                 {
@@ -119,18 +104,39 @@ namespace Das.Views.Construction
                             foreach (var rule in named.Rules)
                             {
                                 if (rule.Selector.TryGetClassName(out var className))
-                                {
                                     TryAddRuleByClassName(className, rule);
-                                }
                             }
                         }
 
                         if (String.Equals(named.Name, name))
                             return named;
-                        
+
                         break;
                 }
             }
+
+            return default;
+        }
+
+        public async Task<IStyleSheet?> GetStyleForVisualAsync(IVisualElement visual,
+                                                               IAttributeDictionary attributeDictionary)
+        {
+            if (visual.Style is { } appliedStyle && appliedStyle.StyleTemplate is { } styleSheet)
+                return styleSheet;
+
+            if (attributeDictionary.TryGetAttributeValue("class", out var className))
+            {
+                if (String.IsNullOrEmpty(className))
+                    return default;
+
+                var rules = await GetStylesByClassNameAsync(className).ToArrayAsync();
+
+                var res = new NamedStyle(className, rules);
+                return res;
+            }
+
+            if (attributeDictionary.TryGetAttributeValue("Style", out var styleName))
+                return await GetStyleByNameAsync(styleName);
 
             return default;
         }
@@ -150,41 +156,15 @@ namespace Das.Views.Construction
             }
         }
 
-        public async Task<IStyleSheet?> GetStyleForVisualAsync(IVisualElement visual,
-                                                         IAttributeDictionary attributeDictionary)
-        {
-            if (visual.Style is { } appliedStyle && appliedStyle.StyleTemplate is { } styleSheet)
-                return styleSheet;
+        private readonly Object _lockStylesByClassName;
 
-            if (attributeDictionary.TryGetAttributeValue("class", out var className))
-            {
-                if (String.IsNullOrEmpty(className))
-                    return default;
-
-                var rules = await GetStylesByClassNameAsync(className).ToArrayAsync();
-
-                //var res = new StyleSheet(rules);
-                var res = new NamedStyle(className, rules);
-                return res;
-            }
-
-            if (attributeDictionary.TryGetAttributeValue("Style", out var styleName))
-            {
-                return await GetStyleByNameAsync(styleName);
-            }
-
-            return default;
-        }
-
-        private readonly IStyleInflater _styleInflater;
-        
-        private readonly HashSet<String> _resourcesRead;
+        private readonly Object _lockStylesByName;
         private readonly Object _resourcesLock;
 
-        private readonly Object _lockStylesByClassName;
+        private readonly HashSet<String> _resourcesRead;
+
+        private readonly IStyleInflater _styleInflater;
         private readonly Dictionary<String, HashSet<IStyleRule>> _stylesByClassName;
-        
-        private readonly Object _lockStylesByName;
         private readonly Dictionary<String, IStyleSheet?> _stylesByName;
     }
 }

@@ -61,20 +61,31 @@ namespace Das.Views
 
 
         public virtual Boolean TryGetElementSize(IVisualElement visual,
+                                                 ISize availableSize,
                                                  out ValueSize size)
         {
-            var width = visual.Width ?? GetStyleSetter<Double>(StyleSetterType.Width, visual);
-
-            if (Double.IsNaN(width))
+            if (!(visual.Width is {} vWidth) || 
+                !(visual.Height is {} vHeight))
                 goto fail;
 
-            var height = visual.Height ?? GetStyleSetter<Double>(StyleSetterType.Height, visual);
+            var w = vWidth.GetQuantity(availableSize.Width);
+            var h = vHeight.GetQuantity(availableSize.Height);
 
-            if (Double.IsNaN(height))
-                goto fail;
-
-            size = new ValueSize(width, height);
+            size = new ValueSize(w, h);
             return true;
+
+            //var width = visual.Width ?? GetStyleSetter<Double>(StyleSetterType.Width, visual);
+
+            //if (Double.IsNaN(width))
+            //    goto fail;
+
+            //var height = visual.Height ?? GetStyleSetter<Double>(StyleSetterType.Height, visual);
+
+            //if (Double.IsNaN(height))
+            //    goto fail;
+
+            //size = new ValueSize(width, height);
+            //return true;
             
             fail:
             size = ValueSize.Empty;

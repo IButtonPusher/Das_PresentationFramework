@@ -6,8 +6,8 @@ namespace Das.Views.Styles
 {
     public interface IStyleProvider : IThemeProvider
     {
-        T GetStyleSetter<T>(StyleSetterType setterType,
-                            IVisualElement element);
+        //T GetStyleSetter<T>(StyleSetterType setterType,
+        //                    IVisualElement element);
 
         /// <summary>
         ///     Falls back to StyleSelector.None if a different value is passed and no setter is found

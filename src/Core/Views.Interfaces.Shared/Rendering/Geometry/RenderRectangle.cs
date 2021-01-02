@@ -52,7 +52,7 @@ namespace Das.Views.Rendering.Geometry
             _top = rect.Top + margin.Top - parentOffset.Y;
             _w = rect.Width - margin.Width;
             _h = rect.Height - margin.Height;
-            _offset = rect.Offset;
+            _offset = rect.Size.Offset;
 
 
             if (border.IsEmpty)
@@ -96,45 +96,45 @@ namespace Das.Views.Rendering.Geometry
             return false;
         }
 
-        public new IRenderSize Minus(ISize subtract)
-        {
-            return GeometryHelper.Minus(this, subtract);
-        }
+        //public new IRenderSize Minus(ISize subtract)
+        //{
+        //    return GeometryHelper.Minus(this, subtract);
+        //}
 
-        IRenderSize IRenderSize.PlusVertical(ISize adding)
-        {
-            return GeometryHelper.PlusRenderVertical(this, adding);
-        }
+        //IRenderSize IRenderSize.PlusVertical(ISize adding)
+        //{
+        //    return GeometryHelper.PlusRenderVertical(this, adding);
+        //}
 
-        public IRenderSize MinusVertical(ISize subtract)
-        {
-            return GeometryHelper.MinusVertical(this, subtract);
-        }
+        //public IRenderSize MinusVertical(ISize subtract)
+        //{
+        //    return GeometryHelper.MinusVertical(this, subtract);
+        //}
 
         public IPoint2D Offset  
         {
             get => _offset;
         }
 
-        IRenderSize IRenderSize.Reduce(Thickness padding)
-        {
-            return GeometryHelper.Reduce(this, padding);
-        }
+        //IRenderSize IRenderSize.Reduce(Thickness padding)
+        //{
+        //    return GeometryHelper.Reduce(this, padding);
+        //}
 
-        public ValueRenderRectangle ToFullRectangle()
-        {
-            return new ValueRenderRectangle(0,0, Width, Height, Offset);
-        }
+        //public ValueRenderRectangle ToFullRectangle()
+        //{
+        //    return new ValueRenderRectangle(0,0, Width, Height, Offset);
+        //}
 
-        public ValueSize ToValueSize()
-        {
-            return GeometryHelper.ToValueSize(this);
-        }
+        //public ValueSize ToValueSize()
+        //{
+        //    return GeometryHelper.ToValueSize(this);
+        //}
 
-        IRenderSize IRenderSize.DeepCopy()
-        {
-            return new ValueRenderSize(Width, Height, Offset);
-        }
+        //IRenderSize IRenderSize.DeepCopy()
+        //{
+        //    return new ValueRenderSize(Width, Height, Offset);
+        //}
 
         IRenderSize IRenderRectangle.Size => new ValueRenderSize(Width, Height, Offset);
 

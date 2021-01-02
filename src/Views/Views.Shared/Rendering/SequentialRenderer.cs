@@ -5,7 +5,6 @@ using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Panels;
 using Das.Views.Rendering.Geometry;
-using Das.Views.Styles;
 
 namespace Das.Views.Rendering
 {
@@ -106,7 +105,8 @@ namespace Das.Views.Rendering
                     }
                 }//);
 
-                var margin = measureContext.GetStyleSetter<Thickness>(StyleSetterType.Margin, container);
+                //var margin = measureContext.GetStyleSetter<Thickness>(StyleSetterType.Margin, container);
+                var margin = container.Margin.GetValue(availableSpace);
 
                 return new ValueSize(Math.Max(totalWidth, maxWidth) + margin.Width,
                     Math.Max(totalHeight, maxHeight) + margin.Height);
@@ -184,9 +184,11 @@ namespace Das.Views.Rendering
                 case Orientations.Vertical:
                     // may need to adjust the X based on alignment
 
-                    var useHorzAlign = child.HorizontalAlignment != HorizontalAlignments.Default
-                        ? child.HorizontalAlignment
-                        : context.GetStyleSetter<HorizontalAlignments>(StyleSetterType.HorizontalAlignment, child);
+                    var useHorzAlign = child.HorizontalAlignment;
+
+                    //var useHorzAlign = child.HorizontalAlignment != HorizontalAlignments.Default
+                    //    ? child.HorizontalAlignment
+                    //    : context.GetStyleSetter<HorizontalAlignments>(StyleSetterType.HorizontalAlignment, child);
 
                     
 
@@ -215,10 +217,12 @@ namespace Das.Views.Rendering
                 case Orientations.Horizontal:
 
                     //useY = 0;
-                    
-                    var useVertAlign = child.VerticalAlignment != VerticalAlignments.Default
-                        ? child.VerticalAlignment
-                        : context.GetStyleSetter<VerticalAlignments>(StyleSetterType.VerticalAlignment, child);
+
+                    var useVertAlign = child.VerticalAlignment;
+
+                    //var useVertAlign = child.VerticalAlignment != VerticalAlignments.Default
+                    //    ? child.VerticalAlignment
+                    //    : context.GetStyleSetter<VerticalAlignments>(StyleSetterType.VerticalAlignment, child);
 
                     switch (useVertAlign)
                     {

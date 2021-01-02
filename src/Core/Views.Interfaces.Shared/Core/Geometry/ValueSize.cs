@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Extensions;
-// ReSharper disable UnusedMember.Global
+
 
 namespace Das.Views.Core.Geometry
 {
@@ -25,10 +25,10 @@ namespace Das.Views.Core.Geometry
         }
 
 
-        ISize ISize.Divide(Double pct)
-        {
-            return GeometryHelper.Divide(this, pct);
-        }
+        //ISize ISize.Divide(Double pct)
+        //{
+        //    return GeometryHelper.Divide(this, pct);
+        //}
 
         public Boolean Equals(ISize? other)
         {
@@ -41,20 +41,20 @@ namespace Das.Views.Core.Geometry
 
         public Double Width { get; }
 
-        public ISize Reduce(Thickness padding)
-        {
-            return GeometryHelper.Reduce(this, padding);
-        }
+        //public ISize Reduce(Thickness padding)
+        //{
+        //    return GeometryHelper.Reduce(this, padding);
+        //}
 
-        public ISize Minus(ISize subtract)
-        {
-            return GeometryHelper.Minus(this, subtract);
-        }
+        //public ISize Minus(ISize subtract)
+        //{
+        //    return GeometryHelper.Minus(this, subtract);
+        //}
 
-        public ValueSize PlusVertical(ISize adding)
-        {
-            return GeometryHelper.PlusVertical(this, adding);
-        }
+        //public ValueSize PlusVertical(ISize adding)
+        //{
+        //    return GeometryHelper.PlusVertical(this, adding);
+        //}
 
         /// <summary>
         /// Returns a ValueSize with the minimum value of width and height between this
@@ -69,10 +69,10 @@ namespace Das.Views.Core.Geometry
                 Math.Min(Height, other.Height));
         }
 
-        ISize ISize.PlusVertical(ISize adding)
-        {
-            return GeometryHelper.PlusVertical(this, adding);
-        }
+        //ISize ISize.PlusVertical(ISize adding)
+        //{
+        //    return GeometryHelper.PlusVertical(this, adding);
+        //}
 
         public static ValueSize operator +(ValueSize size, 
                                            Thickness margin)

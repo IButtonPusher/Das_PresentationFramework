@@ -133,7 +133,8 @@ namespace Das.Views
         
         
         public static readonly DependencyProperty<IVisualElement, QuantifiedDouble?> WidthProperty =
-            DependencyProperty<IVisualElement, QuantifiedDouble?>.Register(nameof(Width), null);
+            DependencyProperty<IVisualElement, QuantifiedDouble?>.Register(nameof(Width), null,
+                PropertyMetadata.AffectsMeasure);
 
         public static readonly DependencyProperty<IVisualElement, QuantifiedDouble?> HeightProperty =
             DependencyProperty<IVisualElement, QuantifiedDouble?>.Register(nameof(Height), null);
@@ -152,7 +153,7 @@ namespace Das.Views
 
         public static readonly DependencyProperty<IVisualElement, QuantifiedThickness> MarginProperty =
             DependencyProperty<IVisualElement, QuantifiedThickness>.Register(nameof(Margin), 
-                QuantifiedThickness.Empty);
+                QuantifiedThickness.Empty, PropertyMetadata.AffectsMeasure);
 
         public static readonly DependencyProperty<IVisualElement, Double> OpacityProperty =
             DependencyProperty<IVisualElement, Double>.Register(nameof(Opacity), 1.0);

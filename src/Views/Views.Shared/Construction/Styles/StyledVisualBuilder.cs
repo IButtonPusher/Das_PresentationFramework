@@ -44,8 +44,14 @@ namespace Das.Views.Construction
                                                    IVisualLineage visualLineage,
                                                    IViewInflater viewInflater)
         {
+            await _appliedStyleBuilder.ApplyVisualStylesAsync(visual, attributeDictionary, 
+                visualLineage, viewInflater);
+            return;
+
             var omgStyle = await _styleProvider.GetStyleForVisualAsync(visual, attributeDictionary);
 
+            if (omgStyle != null)
+            {}
 
             if (attributeDictionary.TryGetAttributeValue("class", out var className))
             {

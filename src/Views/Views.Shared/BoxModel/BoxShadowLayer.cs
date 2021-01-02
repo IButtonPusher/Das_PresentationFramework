@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
-using Das.Views.Core.Geometry;
 
 namespace Das.Views.BoxModel
 {

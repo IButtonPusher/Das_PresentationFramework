@@ -29,7 +29,7 @@ namespace Das.Views
                 OnItemsSourceChanging);
         }
 
-        private IDataTemplate _itemTemplate;
+        protected IDataTemplate _itemTemplate;
         private readonly IDataTemplate _defaultTemplate;
 
         public virtual IDataTemplate? ItemTemplate

@@ -19,6 +19,7 @@ using Das.Views.Rendering.Geometry;
 
 namespace Das.Views
 {
+    // ReSharper disable once UnusedType.Global
     public class TabControl : SelectorVisual,
                               ITabControl
     {
@@ -38,7 +39,7 @@ namespace Das.Views
             HeaderTemplate = new DefaultTabHeaderTemplate(_visualBootstrapper, this);
             _headerTemplate = HeaderTemplate;
             _defaultItemTemplate = new DefaultTabItemTemplate(visualBootstrapper); //, this);
-            ItemTemplate = _defaultItemTemplate;
+            _itemTemplate = _defaultItemTemplate;
             _contentTemplate = new DefaultContentTemplate(visualBootstrapper);
         }
 
@@ -74,7 +75,7 @@ namespace Das.Views
                 return _headerUses;
             }
 
-            var usingWidth = Math.Max(availableSpace.Width, _contentUses.Width);
+            //var usingWidth = Math.Max(availableSpace.Width, _contentUses.Width);
             
 
             return new ValueSize(Math.Max(_headerUses.Width, _contentUses.Width),

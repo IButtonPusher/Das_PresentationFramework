@@ -50,8 +50,9 @@ namespace Das.Views
             attributeScanner, 
             typeInferrer, 
             propertyProvider,
-            visualBootstrapper, 
-            GetStyleVisualBuilder(visualBootstrapper, typeInferrer, propertyProvider),
+            visualBootstrapper,
+            GetAppliedStyleBuilder(visualBootstrapper, typeInferrer, propertyProvider),
+            //GetStyleVisualBuilder(visualBootstrapper, typeInferrer, propertyProvider),
             renderPositions)
         
         {
@@ -64,11 +65,12 @@ namespace Das.Views
                                 ITypeInferrer typeInferrer,
                                 IPropertyProvider propertyProvider,
                                 IVisualBootstrapper visualBootstrapper,
-                                IStyledVisualBuilder styledVisualBuilder,
+                                IAppliedStyleBuilder appliedStyleBuilder,
+                                //IStyledVisualBuilder styledVisualBuilder,
                                 Dictionary<IVisualElement, ValueCube> renderPositions)
             : this(resolver, styleContext, visualBootstrapper, 
                 GetViewInflater(visualBootstrapper, attributeScanner, 
-                    typeInferrer, propertyProvider, styledVisualBuilder),
+                    typeInferrer, propertyProvider, appliedStyleBuilder),// styledVisualBuilder),
                 renderPositions)
         
         {
@@ -103,27 +105,44 @@ namespace Das.Views
                 new LayoutQueue());
         }
 
-        private static IStyledVisualBuilder GetStyleVisualBuilder(IVisualBootstrapper visualBootstrapper,
-                                                                  ITypeInferrer typeInferrer,
-                                                                  IPropertyProvider propertyProvider)
+        private static IAppliedStyleBuilder GetAppliedStyleBuilder(IVisualBootstrapper visualBootstrapper,
+                                                                   ITypeInferrer typeInferrer,
+                                                                   IPropertyProvider propertyProvider)
         {
             var styleInflater = new DefaultStyleInflater(typeInferrer);
             var styleProvider = new VisualStyleProvider(styleInflater);
             var declarationWorker = new DeclarationWorker(visualBootstrapper);
             var appliedStyleBuilder = new AppliedRuleBuilder(styleProvider, declarationWorker,
                 propertyProvider);
-            
-            var styledVisualBuilder = new StyledVisualBuilder(visualBootstrapper, styleProvider, 
-                propertyProvider, appliedStyleBuilder);
 
-            return styledVisualBuilder;
+            return appliedStyleBuilder;
         }
+
+        //private static IStyledVisualBuilder GetStyleVisualBuilder(IVisualBootstrapper visualBootstrapper,
+        //                                                          ITypeInferrer typeInferrer,
+        //                                                          IPropertyProvider propertyProvider)
+        //{
+        //    //var styleInflater = new DefaultStyleInflater(typeInferrer);
+        //    //var styleProvider = new VisualStyleProvider(styleInflater);
+        //    //var declarationWorker = new DeclarationWorker(visualBootstrapper);
+        //    //var appliedStyleBuilder = new AppliedRuleBuilder(styleProvider, declarationWorker,
+        //    //    propertyProvider);
+
+        //    var appliedStyleBuilder = GetAppliedStyleBuilder(visualBootstrapper, typeInferrer, 
+        //        propertyProvider);
+
+        //    var styledVisualBuilder = new StyledVisualBuilder(visualBootstrapper, 
+        //        appliedStyleBuilder.StyleProvider, propertyProvider, appliedStyleBuilder);
+
+        //    return styledVisualBuilder;
+        //}
 
         private static IViewInflater GetViewInflater(IVisualBootstrapper visualBootstrapper,
                                                      IStringPrimitiveScanner attributeScanner,
                                                      ITypeInferrer typeInferrer,
                                                      IPropertyProvider propertyProvider,
-                                                     IStyledVisualBuilder styleVisualBuilder)
+                                                     //IStyledVisualBuilder styleVisualBuilder,
+                                                     IAppliedStyleBuilder appliedStyleBuilder)
         {
             var bindingBuilder = new BindingBuilder(typeInferrer, propertyProvider);
             var converterProvider = new DefaultValueConverterProvider(visualBootstrapper);
@@ -131,7 +150,8 @@ namespace Das.Views
 
             return new ViewInflater(visualBootstrapper, attributeScanner, 
                 typeInferrer, bindingBuilder, converterProvider, 
-                visualTypeResolver, styleVisualBuilder, propertyProvider);
+                visualTypeResolver, //styleVisualBuilder, 
+                propertyProvider, appliedStyleBuilder);
         }
 
         public Boolean TrySetSurrogate(ref IVisualElement element)

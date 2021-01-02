@@ -4,7 +4,7 @@ namespace Das.Views.Styles.Declarations
 {
     public class PositionDeclaration : EnumDeclaration<PositionType>
     {
-        private readonly PositionType _positionType;
+        //private readonly PositionType _positionType;
 
         public PositionDeclaration(String positionName,
                                    IStyleVariableAccessor variableAccessor) 
@@ -18,7 +18,7 @@ namespace Das.Views.Styles.Declarations
                                    IStyleVariableAccessor variableAccessor)
         : base(positionType, variableAccessor, DeclarationProperty.Position)
         {
-            _positionType = positionType;
+          //  _positionType = positionType;
         }
     }
 }

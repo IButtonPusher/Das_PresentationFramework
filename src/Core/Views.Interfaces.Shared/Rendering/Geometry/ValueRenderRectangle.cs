@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Geometry;
-// ReSharper disable UnusedMember.Global
+
 
 namespace Das.Views.Rendering.Geometry
 {
@@ -29,7 +29,7 @@ namespace Das.Views.Rendering.Geometry
 
         public ValueRenderRectangle(IRenderRectangle rect,
                                     Thickness? padding)
-        : this(rect.Location, rect.Size, rect.Offset, padding)
+        : this(rect.Location, rect.Size, rect.Size.Offset, padding)
         {
         }
 
@@ -169,28 +169,28 @@ namespace Das.Views.Rendering.Geometry
 
         public IRenderSize MinusVertical(ISize subtract)
         {
-            return GeometryHelper.MinusVertical(this, subtract);
+            return GeometryHelper.MinusVertical(Size, subtract);
         }
 
         public ValueSize ToValueSize()
         {
-            return GeometryHelper.ToValueSize(this);
+            return GeometryHelper.ToValueSize(Size);
         }
 
-        ISize ISize.Divide(Double pct)
-        {
-            return new ValueSize(Width * pct, Height * pct);
-        }
+        //ISize ISize.Divide(Double pct)
+        //{
+        //    return new ValueSize(Width * pct, Height * pct);
+        //}
 
-        ISize ISize.PlusVertical(ISize adding)
-        {
-            return PlusVertical(adding);
-        }
+        //ISize ISize.PlusVertical(ISize adding)
+        //{
+        //    return PlusVertical(adding);
+        //}
 
-        ISize ISize.Reduce(Thickness padding)
-        {
-            return GeometryHelper.Reduce(this, padding);
-        }
+        //ISize ISize.Reduce(Thickness padding)
+        //{
+        //    return GeometryHelper.Reduce(this, padding);
+        //}
 
         public ValueRenderRectangle ToFullRectangle()
         {
@@ -199,27 +199,27 @@ namespace Das.Views.Rendering.Geometry
 
         public IRenderSize PlusVertical(ISize adding)
         {
-            return GeometryHelper.PlusRenderVertical(this, adding);
+            return GeometryHelper.PlusRenderVertical(Size, adding);
         }
 
-        IRenderSize IRenderSize.DeepCopy()
-        {
-            return new RenderSize(Width, Height, Offset);
-        }
+        //IRenderSize IRenderSize.DeepCopy()
+        //{
+        //    return new RenderSize(Width, Height, Offset);
+        //}
 
-        public IRenderSize Reduce(Thickness padding)
-        {
-            return GeometryHelper.Reduce(this, padding);
-        }
+        //public IRenderSize Reduce(Thickness padding)
+        //{
+        //    return GeometryHelper.Reduce(Size, padding);
+        //}
 
-        ISize ISize.Minus(ISize subtract)
-        {
-            return GeometryHelper.Minus(this, subtract);
-        }
+        //ISize ISize.Minus(ISize subtract)
+        //{
+        //    return GeometryHelper.Minus(this, subtract);
+        //}
 
         public IRenderSize Minus(ISize subtract)
         {
-            return GeometryHelper.Minus(this, subtract);
+            return GeometryHelper.Minus(Size, subtract);
         }
 
         public ValueRenderRectangle Move(IPoint2D point)
@@ -260,15 +260,15 @@ namespace Das.Views.Rendering.Geometry
             throw new NotSupportedException();
         }
 
-        ISize IDeepCopyable<ISize>.DeepCopy()
-        {
-            return new ValueSize(Width, Height);
-        }
+        //ISize IDeepCopyable<ISize>.DeepCopy()
+        //{
+        //    return new ValueSize(Width, Height);
+        //}
 
-        Boolean IEquatable<IRenderSize>.Equals(IRenderSize other)
-        {
-            return false;
-        }
+        //Boolean IEquatable<IRenderSize>.Equals(IRenderSize other)
+        //{
+        //    return false;
+        //}
 
         public Double CenterY(ISize item)
         {

@@ -20,11 +20,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Construction\DefaultValueConverterProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\InflaterBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\MarkupNode.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\ComputedValueWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\DeclarationWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\SelectorWorker.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\StyledVisualBuilder.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\StyledVisualWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\Types\VisualTypeTuple.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\ViewInflater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\Types\VisualAliasProvider.cs" />
@@ -51,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\PictureFrame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\Span.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\SpanSlim.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\TextBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\ToggleButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\BaseConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToBrushConverter.cs" />
@@ -132,6 +130,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Style.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\Easing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\PropertyTransition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\QuantifiedDoubleTransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\ThicknessTransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\BaseTransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\TransformTransition.cs" />

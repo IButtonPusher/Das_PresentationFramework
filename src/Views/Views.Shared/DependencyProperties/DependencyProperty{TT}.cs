@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.DependencyProperties;
@@ -157,7 +156,6 @@ namespace Das.Views
                                IStyleProvider contextStyle,
                                Func<TVisual, IStyleProvider, TValue> getDefault)
         {
-            //if (!_values.TryGetValue(forVisual, out var good))
             if (!TryGetKnownOrComputedValue(forVisual, out var good))
             {
                 good = getDefault(forVisual, contextStyle);
@@ -366,20 +364,6 @@ namespace Das.Views
             var tv = GetValue<IVisualElement, TVisual>(visual);
             var tValue = GetValue<Object?, TValue>(value);
             SetValueImpl(tv, tValue, isDeclineTransitions);
-
-            //switch (value)
-            //{
-            //    case null:
-            //        SetValue(tv, default!);
-            //        break;
-
-            //    case TValue valid:
-            //        SetValue(tv, valid);
-            //        break;
-
-            //    default:
-            //        throw new InvalidCastException(value + " cannot be cast to type " + typeof(TValue));
-            //}
         }
 
         private void SetValueImpl(TVisual forVisual,
@@ -397,9 +381,6 @@ namespace Das.Views
                                   IEnumerable<Action<TVisual, TValue, TValue>> onChangeds,
                                   Boolean isDeclineTransitions)
         {
-            if (Name == nameof(IVisualElement.Transform) && isDeclineTransitions)
-            {}
-
             var oldValue = GetOldValue(forVisual);
 
             if (value is IBrush && oldValue != null) { }
@@ -431,10 +412,7 @@ namespace Das.Views
                 forVisual.InvalidateMeasure();
 
             else if (HasMetadataFlag(PropertyMetadata.AffectsArrange))
-            {
-                Debug.WriteLine("invalidate arrange per dep prop change");
                 forVisual.InvalidateArrange();
-            }
         }
 
         private Boolean TryGetKnownOrComputedValue(TVisual forVisual,

@@ -41,6 +41,12 @@ namespace Das.Views
             }
         }
 
+        public QuantifiedDouble Transition(QuantifiedDouble target,
+                                           Double percentComplete)
+        {
+            return new QuantifiedDouble(Quantity + (target.Quantity - Quantity) * percentComplete, Units);
+        }
+
         public override String ToString()
         {
             return Quantity + " " + Units;
@@ -83,12 +89,7 @@ namespace Das.Views
                 units = u;
             else
                 units = LengthUnits.None;
-            //quantifiedDouble = Zero;
-            //return false;
-
-            //var units = unitStr == "%" 
-            //    ? LengthUnits.Percent 
-            //    : ExtensionMethods.GetEnumValue(unitStr, LengthUnits.None, false);
+            
 
             if (!Double.TryParse(value.Substring(0, endOfValue + 1), out var val))
             {
@@ -99,6 +100,24 @@ namespace Das.Views
 
             quantifiedDouble = new QuantifiedDouble(val, units);
             return true;
+        }
+
+        public static QuantifiedDouble operator *(QuantifiedDouble value,
+                                                  Double mult)
+        {
+            return new QuantifiedDouble(value.Quantity * mult, value.Units);
+        }
+
+        public static QuantifiedDouble operator +(QuantifiedDouble value,
+                                                  QuantifiedDouble addMe)
+        {
+            return new QuantifiedDouble(value.Quantity + addMe.Quantity, value.Units);
+        }
+
+        public static QuantifiedDouble operator -(QuantifiedDouble value,
+                                                  QuantifiedDouble addMe)
+        {
+            return new QuantifiedDouble(value.Quantity - addMe.Quantity, value.Units);
         }
 
         public static implicit operator QuantifiedDouble(Double value)

@@ -394,7 +394,7 @@ namespace Das.Views.Rendering
             if (useRect2.Bottom > 0 || useRect2.Right > 0)
             {
                 // don't draw it if it's completely off screen
-                layoutVisual.Arrange(CurrentElementRect, this);
+                layoutVisual.Arrange(CurrentElementRect.Size, this);
                 visual.ArrangedBounds = useRect2;
             }
             /////////////////////////////////
@@ -445,7 +445,7 @@ namespace Das.Views.Rendering
                 !leftWants.IsEmpty)
             {
                 beforeLabelRect = new ValueRenderRectangle(rect.Left, rect.Top,
-                    leftWants.Width, leftWants.Height, rect.Offset);
+                    leftWants.Width, leftWants.Height, rect.Size.Offset);
                 DrawElement(beforeLeft, beforeLabelRect);
                 
 
@@ -463,7 +463,7 @@ namespace Das.Views.Rendering
                 var ry = rect.Top + afterLabel.Top?.GetQuantity(0) ?? 0;
 
                 rightLabelRect = new ValueRenderRectangle(rx, ry,
-                    rightWants.Width, rightWants.Height, rect.Offset);
+                    rightWants.Width, rightWants.Height, rect.Size.Offset);
             }
 
             rect = rect.Reduce<TRenderRectangle>(beforeLabelRect.Width, 0, rightLabelRect.Width, 0);

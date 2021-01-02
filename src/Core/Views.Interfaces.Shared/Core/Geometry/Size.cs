@@ -23,10 +23,10 @@ namespace Das.Views.Core.Geometry
             return new Size(Width, Height);
         }
 
-        ISize ISize.Divide(Double pct)
-        {
-            return GeometryHelper.Divide(this, pct);
-        }
+        //ISize ISize.Divide(Double pct)
+        //{
+        //    return GeometryHelper.Divide(this, pct);
+        //}
 
         public virtual Double Width
         {
@@ -34,25 +34,25 @@ namespace Das.Views.Core.Geometry
             set => _width = value;
         }
 
-        public ISize Reduce(Thickness padding)
-        {
-            return GeometryHelper.Reduce(this, padding);
-        }
+        //public ISize Reduce(Thickness padding)
+        //{
+        //    return GeometryHelper.Reduce(this, padding);
+        //}
 
-        public Double CenterY(ISize item)
-        {
-            return GeometryHelper.CenterY(this, item);
-        }
+        //public Double CenterY(ISize item)
+        //{
+        //    return GeometryHelper.CenterY(this, item);
+        //}
 
-        public Double CenterX(ISize item)
-        {
-            return GeometryHelper.CenterX(this, item);
-        }
+        //public Double CenterX(ISize item)
+        //{
+        //    return GeometryHelper.CenterX(this, item);
+        //}
 
-        public ISize Minus(ISize subtract)
-        {
-            return GeometryHelper.Minus(this, subtract);
-        }
+        //public ISize Minus(ISize subtract)
+        //{
+        //    return GeometryHelper.Minus(this, subtract);
+        //}
 
         public virtual Double Height
         {
@@ -68,10 +68,10 @@ namespace Das.Views.Core.Geometry
         }
 
 
-        ISize IDeepCopyable<ISize>.DeepCopy()
-        {
-            return DeepCopy();
-        }
+        //ISize IDeepCopyable<ISize>.DeepCopy()
+        //{
+        //    return DeepCopy();
+        //}
 
         public static Size Empty { get; } = new Size(0, 0);
 

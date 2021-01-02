@@ -10,7 +10,9 @@ namespace Das.Views.Styles
                 SolidColorBrush.White,
                 SolidColorBrush.Black,
                 SolidColorBrush.White,
-                SolidColorBrush.Green)
+                SolidColorBrush.Green,
+                SolidColorBrush.Black,
+                SolidColorBrush.White)
         {
         }
     }

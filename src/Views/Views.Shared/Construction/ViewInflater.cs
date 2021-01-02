@@ -9,6 +9,7 @@ using Das.Views.Controls;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Rendering;
+using Das.Views.Styles.Construction;
 using Das.Views.Templates;
 
 namespace Das.Views.Construction
@@ -35,16 +36,18 @@ namespace Das.Views.Construction
                             IBindingBuilder bindingBuilder,
                             IValueConverterProvider converterProvider,
                             IVisualTypeResolver visualTypeResolver,
-                            IStyledVisualBuilder styledVisualBuilder,
-                            IPropertyProvider typeManipulator)
+                            //IStyledVisualBuilder styledVisualBuilder,
+                            IPropertyProvider typeManipulator,
+                            IAppliedStyleBuilder appliedStyleBuilder)
         {
             _visualBootstrapper = visualBootstrapper;
             _typeInferrer = typeInferrer;
             _bindingBuilder = bindingBuilder;
             _converterProvider = converterProvider;
             _visualTypeResolver = visualTypeResolver;
-            _styledVisualBuilder = styledVisualBuilder;
+            //_styledVisualBuilder = styledVisualBuilder;
             _typeManipulator = typeManipulator;
+            _appliedStyleBuilder = appliedStyleBuilder;
             _attributeValueScanner = xmlAttributeParser;
         }
 
@@ -97,7 +100,7 @@ namespace Das.Views.Construction
             var contentContainer = _visualBootstrapper.Instantiate<IContentVisual>(visualType);
             //await applyStyles(contentContainer, node, visualLineage, this);
             //-------------------------------
-            
+
             visualLineage.PushVisual(contentContainer);
 
             switch (node.ChildrenCount)
@@ -143,10 +146,10 @@ namespace Das.Views.Construction
 
 
             contentContainer.Content = contentVisual;
-            
+
             if (contentVisual != null)
                 visualLineage.AssertPopVisual(contentVisual);
-            
+
 
             return contentContainer;
         }
@@ -210,6 +213,25 @@ namespace Das.Views.Construction
             }
         }
 
+        private Object? GetPropertyValue(PropertyInfo prop,
+                                         String strValue)
+        {
+            var useType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+
+            if (useType == typeof(QuantifiedDouble))
+                return QuantifiedDouble.Parse(strValue);
+
+            //var bob = prop.PropertyType.ReflectedType;
+
+            var valueConverter = _converterProvider.GetDefaultConverter(useType);
+
+            var propVal = valueConverter != null
+                ? valueConverter.Convert(strValue)
+                : _attributeValueScanner.GetValue(strValue, useType);
+
+            return propVal;
+        }
+
         /// <summary>
         ///     Builds a visual from a markup node.  Infers the data context type and instantiates
         ///     a generic visual if possible
@@ -261,7 +283,8 @@ namespace Das.Views.Construction
                     // PANEL
                     await InflateAndAddChildNodesAsync(node, visual, dataContextType,
                         nameSpaceAssemblySearch, visualLineage,
-                        _styledVisualBuilder.ApplyStylesToVisualAsync).ConfigureAwait(false);
+                        _appliedStyleBuilder.ApplyVisualStylesAsync).ConfigureAwait(false);
+                //_styledVisualBuilder.ApplyStylesToVisualAsync).ConfigureAwait(false);
 
 
                 if (node.InnerText is { } innerText &&
@@ -276,7 +299,9 @@ namespace Das.Views.Construction
 
             if (bindings.Count > 0 && visual is IBindableElement bindable)
                 foreach (var binding in bindings)
+                {
                     bindable.AddBinding(binding.Value);
+                }
 
             //////////////////////////////////////////
             // have to apply styles after children are instantiated as some styles specify child selectors
@@ -314,10 +339,7 @@ namespace Das.Views.Construction
                     AddChildVisual(visual, childVisual);
 
                 if (childObjRes.Child is IVisualElement childVisualElement)
-                {
                     visualLineage.AssertPopVisual(childVisualElement);
-                }
-                
             }
         }
 
@@ -333,11 +355,11 @@ namespace Das.Views.Construction
 
             var visualProp = _typeInferrer.FindPublicProperty(visualType, childNode.Name);
             IPropertyAccessor? propAccessor = null;
-            
+
             if (visualProp != null)
             {
                 propAccessor = _typeManipulator.GetPropertyAccessor(visualType, childNode.Name);
-             
+
                 childType = ChildNodeType.PropertyValue;
 
                 if (typeof(IVisualElement).IsAssignableFrom(visualProp.PropertyType))
@@ -346,7 +368,7 @@ namespace Das.Views.Construction
                     var res = await GetVisualAsync(childNode, dataContextType,
                         nameSpaceAssemblySearch, visualLineage, applyStyles).ConfigureAwait(false);
                     {
-                        return new ChildObjectResult(res, childType, propAccessor);// visualProp);
+                        return new ChildObjectResult(res, childType, propAccessor); // visualProp);
                     }
                 }
 
@@ -354,7 +376,7 @@ namespace Das.Views.Construction
                 {
                     var dataTemplate = await BuildDataTemplateAsync(childNode, dataContextType,
                         nameSpaceAssemblySearch, visualLineage, applyStyles).ConfigureAwait(false);
-                    return new ChildObjectResult(dataTemplate, childType, propAccessor);// visualProp);
+                    return new ChildObjectResult(dataTemplate, childType, propAccessor); // visualProp);
                 }
 
                 if (!typeof(IVisualTemplate).IsAssignableFrom(visualProp.PropertyType) ||
@@ -368,10 +390,10 @@ namespace Das.Views.Construction
                 {
                     Content = templateVisual
                 };
-                
+
                 visualLineage.AssertPopVisual(templateVisual);
 
-                return new ChildObjectResult(vt, childType, propAccessor);// visualProp);
+                return new ChildObjectResult(vt, childType, propAccessor); // visualProp);
             }
 
             childType = ChildNodeType.ChildVisual;
@@ -379,7 +401,7 @@ namespace Das.Views.Construction
             var childVisual = await GetVisualAsync(childNode, dataContextType,
                 nameSpaceAssemblySearch, visualLineage, applyStyles).ConfigureAwait(false);
 
-            return new ChildObjectResult(childVisual, childType, propAccessor);// visualProp);
+            return new ChildObjectResult(childVisual, childType, propAccessor); // visualProp);
         }
 
         private void SetHardCodedValues(IVisualElement visual,
@@ -407,40 +429,21 @@ namespace Das.Views.Construction
                 //    : _attributeValueScanner.GetValue(kvp.Value, prop.PropertyType);
 
 
-                if (propVal != null) 
+                if (propVal != null)
                     prop.SetValue(visual, propVal, null);
             }
         }
 
-        private Object? GetPropertyValue(PropertyInfo prop,
-                                         String strValue)
-        {
-            var useType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
-
-            if (useType == typeof(QuantifiedDouble))
-                return QuantifiedDouble.Parse(strValue);
-
-            //var bob = prop.PropertyType.ReflectedType;
-
-            var valueConverter = _converterProvider.GetDefaultConverter(useType);
-
-            var propVal = valueConverter != null
-                ? valueConverter.Convert(strValue)
-                : _attributeValueScanner.GetValue(strValue, useType);
-
-            return propVal;
-
-        }
-
         private static readonly Dictionary<String, String> _defaultNamespaceSeed;
+        private readonly IAppliedStyleBuilder _appliedStyleBuilder;
 
 
         private readonly IStringPrimitiveScanner _attributeValueScanner;
         private readonly IBindingBuilder _bindingBuilder;
         private readonly IValueConverterProvider _converterProvider;
-        private readonly IStyledVisualBuilder _styledVisualBuilder;
-        private readonly IPropertyProvider _typeManipulator;
+        //private readonly IStyledVisualBuilder _styledVisualBuilder;
         private readonly ITypeInferrer _typeInferrer;
+        private readonly IPropertyProvider _typeManipulator;
         private readonly IVisualBootstrapper _visualBootstrapper;
         private readonly IVisualTypeResolver _visualTypeResolver;
     }

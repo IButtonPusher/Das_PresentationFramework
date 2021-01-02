@@ -29,7 +29,7 @@ namespace Das.Views
         public virtual ValueSize Measure(IRenderSize availableSpace,
                                          IMeasureContext measureContext)
         {
-            measureContext.TryGetElementSize(this, out _measuredSize);
+            measureContext.TryGetElementSize(this, availableSpace, out _measuredSize);
             return _measuredSize;
         }
 

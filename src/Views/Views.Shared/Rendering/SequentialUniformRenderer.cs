@@ -4,7 +4,6 @@ using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Panels;
 using Das.Views.Rendering.Geometry;
-using Das.Views.Styles;
 
 namespace Das.Views.Rendering
 {
@@ -107,7 +106,9 @@ namespace Das.Views.Rendering
                     }
                 }//);
 
-                var margin = measureContext.GetStyleSetter<Thickness>(StyleSetterType.Margin, container);
+                var margin = container.Margin.GetValue(availableSpace);
+
+                //var margin = measureContext.GetStyleSetter<Thickness>(StyleSetterType.Margin, container);
 
                 totalWidth = Math.Max(totalWidth, maxWidth);
                 totalHeight = Math.Max(totalHeight, maxHeight);

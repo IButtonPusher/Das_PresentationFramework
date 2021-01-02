@@ -59,7 +59,7 @@ namespace Das.Views.Layout
         {
             //var poppedTransform = _transforms.Pop();
             //_netTransform -= poppedTransform;
-            _currentZ--;
+            //_currentZ--;
             _locations.Pop();
             CurrentElementRect = _locations.Peek();
         }
@@ -139,7 +139,7 @@ namespace Das.Views.Layout
 
         private void PushRect(ValueRenderRectangle rect)
         {
-            _currentZ++;
+            //_currentZ++;
             _locations.Push(rect);
             CurrentElementRect = rect;
         }
@@ -150,7 +150,7 @@ namespace Das.Views.Layout
 
         private TransformationMatrix _netTransform;
 
-        private Int32 _currentZ;
+        //private Int32 _currentZ;
         protected ValueRenderRectangle CurrentElementRect;
 
         protected Dictionary<IVisualElement, ValueCube> RenderPositions { get; }

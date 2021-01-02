@@ -148,13 +148,14 @@ namespace Das.Views.Measuring
             if (element.Visibility == Visibility.Collapsed)
                 return ValueSize.Empty;
 
-            var styles = ViewState.StyleContext;
+            //var styles = ViewState.StyleContext;
 
 
             var margin = element.Margin.GetValue(availableSpace);
-
-            var border = styles.GetStyleSetter<Thickness>(StyleSetterType.BorderThickness, element,
-                VisualLineage);
+            var border = element.Border;
+            var borderThickness = border.GetThickness(availableSpace);
+            //var border = styles.GetStyleSetter<Thickness>(StyleSetterType.BorderThickness, element,
+            //    VisualLineage);
 
             ValueSize desiredSize;
             Double extraWidth;
@@ -170,8 +171,8 @@ namespace Das.Views.Measuring
             
             else
             {
-                extraWidth = margin.Width + border.Width;
-                extraHeight = margin.Height + border.Height;
+                extraWidth = margin.Width + borderThickness.Width;
+                extraHeight = margin.Height + borderThickness.Height;
 
                 desiredSize = element.Measure(
                     new ValueRenderSize(availableSpace.Width - extraWidth,
@@ -197,7 +198,7 @@ namespace Das.Views.Measuring
             {
                 case LengthUnits.Invalid:
                 case LengthUnits.Percent:
-                    w = desiredSize.Width + margin.Width + border.Width;
+                    w = desiredSize.Width + margin.Width + borderThickness.Width;
                     break;
 
                 case LengthUnits.Px:

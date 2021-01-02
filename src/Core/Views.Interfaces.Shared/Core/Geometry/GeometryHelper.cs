@@ -93,25 +93,25 @@ namespace Das.Views.Core.Geometry
                 original.Height - takeAway.Height, original.Offset);
         }
 
-        public static ISize Reduce(ISize size,
-                                   Thickness margin)
-        {
-            if (margin == null)
-                return size.DeepCopy();
+        //public static ISize Reduce(ISize size,
+        //                           Thickness margin)
+        //{
+        //    if (margin == null)
+        //        return size.DeepCopy();
 
-            return new ValueSize(size.Width - (margin.Left + margin.Right),
-                size.Height - (margin.Top + margin.Bottom));
-        }
+        //    return new ValueSize(size.Width - (margin.Left + margin.Right),
+        //        size.Height - (margin.Top + margin.Bottom));
+        //}
 
-        public static IRenderSize Reduce(IRenderSize size,
-                                         Thickness margin)
-        {
-            if (margin == null)
-                return size.DeepCopy();
+        //public static IRenderSize Reduce(IRenderSize size,
+        //                                 Thickness margin)
+        //{
+        //    if (margin == null)
+        //        return size.DeepCopy();
 
-            return new ValueRenderSize(size.Width - (margin.Left + margin.Right),
-                size.Height - (margin.Top + margin.Bottom), size.Offset);
-        }
+        //    return new ValueRenderSize(size.Width - (margin.Left + margin.Right),
+        //        size.Height - (margin.Top + margin.Bottom), size.Offset);
+        //}
 
         public static ValueSize ToValueSize(IRenderSize rect)
         {
@@ -177,7 +177,7 @@ namespace Das.Views.Core.Geometry
                                                           IRenderRectangle right)
             where TRect : IRenderRectangle
         {
-            return AreRectsEqual(left, right) && left.Offset.Equals(right.Offset);
+            return AreRectsEqual(left, right) && left.Size.Offset.Equals(right.Size.Offset);
         }
 
         public static Int32 BuildRectHash<TRect>(TRect me)

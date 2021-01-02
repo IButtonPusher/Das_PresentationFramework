@@ -5,12 +5,14 @@ using Das.Serializer;
 using Das.Views.Construction;
 using Das.Views.Construction.Styles;
 using Das.Views.Controls;
+using Das.Views.DataBinding;
 using Das.Views.Input;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles.Application;
 using Das.Views.Styles.Construction;
 using Das.Views.Styles.Selectors;
+using Das.Views.Templates;
 
 namespace Das.Views.Styles
 {
@@ -21,6 +23,7 @@ namespace Das.Views.Styles
                                   IPropertyProvider propertyProvider)
         {
             _styleProvider = styleProvider;
+            StyleProvider = styleProvider;
             _declarationWorker = declarationWorker;
             _propertyProvider = propertyProvider;
         }
@@ -69,26 +72,79 @@ namespace Das.Views.Styles
             }
         }
 
-        public  Task ApplyVisualStylesAsync(IVisualElement visual,
+        private async Task EnsureStyleVisualTemplates(IVisualElement visual,
+            IStyleSheet style,
+            IViewInflater viewInflater,
+            IVisualLineage visualLineage)
+        {
+            if (!TryGetVisualTemplate(style, out var visualTemplate) ||
+                !(visualTemplate is DeferredVisualTemplate deferred))
+            {
+                return;
+            }
+
+            var contentVisual = await viewInflater.GetVisualAsync(deferred.MarkupNode,
+                visual.GetType(), visualLineage, ApplyVisualStylesAsync);
+
+            visual.Template = new VisualTemplate
+            {
+                Content = contentVisual
+            };
+
+            //control template's data context should be the control being templated....?
+            if (contentVisual is IBindableElement bindable)
+                bindable.DataContext = visual;
+
+            visualLineage.AssertPopVisual(contentVisual);
+
+            BuildAppliedStyle(style, visual, visualLineage);
+        }
+
+        private static Boolean TryGetVisualTemplate(IStyleSheet style,
+                                                    out IVisualTemplate template)
+        {
+            foreach (var rule in style.Rules)
+            {
+                if (!(rule is DependencyPropertyValueRule depProp) ||
+                    depProp.Selector.Property.Name != nameof(IVisualElement.Template))
+                    continue;
+
+                if (depProp.Declaration.Value is IVisualTemplate visualTemplate)
+                {
+                    template = visualTemplate;
+                    return true;
+                }
+            }
+
+            template = default!;
+            return false;
+        }
+
+        public async Task ApplyVisualStylesAsync(IVisualElement visual,
                                                  IAttributeDictionary attributeDictionary,
                                                  IVisualLineage visualLineage,
                                                  IViewInflater viewInflater)
         {
-            return ApplyVisualStylesAsync(visual, attributeDictionary, visualLineage);
-            //var useStyle = await _styleProvider.GetStyleForVisualAsync(visual, attributeDictionary);
-            //if (useStyle == null)
-            //    return;
+            var useStyle = await _styleProvider.GetStyleForVisualAsync(visual, attributeDictionary);
+            if (useStyle == null)
+                return;
 
-            //TrySetVisualClass(visual, attributeDictionary);
+            await EnsureStyleVisualTemplates(visual, useStyle, viewInflater, visualLineage);
 
-            //var appliedStyle = BuildAppliedStyle(useStyle, visual, visualLineage);
+            TrySetVisualClass(visual, attributeDictionary);
 
-            //if (appliedStyle != null)
-            //{
-            //    TrySetVisualStyle(visual, appliedStyle);
-            //    appliedStyle.Execute();
-            //}
+            var appliedStyle = BuildAppliedStyle(useStyle, visual, visualLineage);
+
+            if (appliedStyle != null)
+            {
+                TrySetVisualStyle(visual, appliedStyle);
+                appliedStyle.Execute(false);
+            }
+
+            //return ApplyVisualStylesAsync(visual, attributeDictionary, visualLineage);
         }
+
+        public IVisualStyleProvider StyleProvider { get; }
 
         private AppliedStyleRule? BuildAppliedRule(AppliedStyle appliedStyle,
                                                    IStyleRule rule,

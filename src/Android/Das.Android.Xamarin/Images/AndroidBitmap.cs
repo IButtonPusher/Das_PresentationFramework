@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using Android.Graphics;
-using Das.Views;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 
@@ -10,7 +9,6 @@ namespace Das.Xamarin.Android
 {
     public class AndroidBitmap : IImage
     {
-        //private static Int32 _count;
 
         public AndroidBitmap(Bitmap bmp,
                              Stream? stream)
@@ -42,21 +40,6 @@ namespace Das.Xamarin.Android
             if (_bmp != null)
                 _bmp.Dispose();
             _isDisposed = true;
-        }
-
-        ISize IDeepCopyable<ISize>.DeepCopy()
-        {
-            return new ValueSize(_bmp.Width, _bmp.Height);
-        }
-
-        public ISize Reduce(Thickness padding)
-        {
-            return GeometryHelper.Reduce(this, padding);
-        }
-
-        ISize ISize.Minus(ISize subtract)
-        {
-            return GeometryHelper.Minus(this, subtract);
         }
 
         public Boolean IsNullImage => _isEmpty;
@@ -105,10 +88,10 @@ namespace Das.Xamarin.Android
             throw new NotImplementedException();
         }
 
-        ISize ISize.Divide(Double pct)
-        {
-            return GeometryHelper.Divide(this, pct);
-        }
+        //ISize ISize.Divide(Double pct)
+        //{
+        //    return GeometryHelper.Divide(this, pct);
+        //}
 
         public void UnwrapLocked<T>(Action<T> action)
         {

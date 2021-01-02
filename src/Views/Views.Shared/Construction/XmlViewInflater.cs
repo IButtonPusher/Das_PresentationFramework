@@ -62,7 +62,8 @@ namespace Das.Views.Construction
             var lineage = new VisualLineage();
 
             var res = await GetVisualAsync(node, null, nsAsmSearch, lineage,
-                _styledVisualBuilder.ApplyStylesToVisualAsync).ConfigureAwait(false);
+                _appliedStyleBuilder.ApplyVisualStylesAsync).ConfigureAwait(false);
+                //_styledVisualBuilder.ApplyStylesToVisualAsync).ConfigureAwait(false);
 
             Debug.WriteLine("Inflated visual in " + sw.ElapsedMilliseconds + " ms");
 

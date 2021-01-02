@@ -5,7 +5,7 @@ using Das.Views.Core.Geometry;
 namespace Das.Views.Rendering
 {
     public interface IRenderRectangle : IRectangle,
-                                       IRenderSize,
+                                    //   IRenderSize,
                                         IEquatable<IRenderRectangle>
     {
         new IRenderSize Size { get; }

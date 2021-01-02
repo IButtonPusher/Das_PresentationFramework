@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxShadowLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\OutlineStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\VisualBorder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Colors\ColorType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\IThemeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\ApplyVisualStyles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IAttributeDictionary.cs" />
@@ -25,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IDependencyProperty{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\PropertyMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ILayoutQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\ITextVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transitions\ITransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IAppliedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IAppliedStyleRule.cs" />

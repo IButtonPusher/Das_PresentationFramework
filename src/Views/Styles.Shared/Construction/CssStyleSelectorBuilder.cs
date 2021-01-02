@@ -16,7 +16,7 @@ namespace Das.Views.Construction.Styles
 
         public IStyleSelector GetSelector(IMarkupNode cssNode)
         {
-            GetSelectorParts(cssNode, out var selectors, out var combinator);
+            GetSelectorParts(cssNode, out var selectors, out _);
 
             switch (selectors.Count)
             {
@@ -146,49 +146,49 @@ namespace Das.Views.Construction.Styles
             }
         }
 
-        private IStyleSelector GetSelectorFromParts(List<IStyleSelector> selectors,
-                                                List<Combinator> combinators)
-        {
-            if (selectors.Count == 1)
-                return selectors[0];
+        //private IStyleSelector GetSelectorFromParts(List<IStyleSelector> selectors,
+        //                                        List<Combinator> combinators)
+        //{
+        //    if (selectors.Count == 1)
+        //        return selectors[0];
 
-            var resultSelector = selectors[0];
-            selectors.RemoveAt(0);
+        //    var resultSelector = selectors[0];
+        //    selectors.RemoveAt(0);
 
-            foreach (var combinator in combinators)
-            {
-                switch (combinator)
-                {
-                    case Combinator.Child:
-                        resultSelector = new ChildSelector(
-                            resultSelector, selectors[0]);
-                        selectors.RemoveAt(0);
+        //    foreach (var combinator in combinators)
+        //    {
+        //        switch (combinator)
+        //        {
+        //            case Combinator.Child:
+        //                resultSelector = new ChildSelector(
+        //                    resultSelector, selectors[0]);
+        //                selectors.RemoveAt(0);
                         
-                        break;
+        //                break;
 
-                    case Combinator.AdjacentSibling:
-                        resultSelector = new AdjacentSiblingSelector(
-                            resultSelector, selectors[0]);
-                        selectors.RemoveAt(0);
+        //            case Combinator.AdjacentSibling:
+        //                resultSelector = new AdjacentSiblingSelector(
+        //                    resultSelector, selectors[0]);
+        //                selectors.RemoveAt(0);
                         
 
-                        break;
-                }
-            }
+        //                break;
+        //        }
+        //    }
 
-            if (selectors.Count > 0)
-                throw new InvalidOperationException();
+        //    if (selectors.Count > 0)
+        //        throw new InvalidOperationException();
 
-            return resultSelector;
+        //    return resultSelector;
            
-        }
+        //}
 
-        private static IStyleSelector ThrowForWrongCount(Int32 needed,
-                                                         Combinator combinator)
-        {
-            throw new InvalidOperationException(needed + " selectors are required for combinator: " 
-                                                       + combinator);
-        }
+        //private static IStyleSelector ThrowForWrongCount(Int32 needed,
+        //                                                 Combinator combinator)
+        //{
+        //    throw new InvalidOperationException(needed + " selectors are required for combinator: " 
+        //                                               + combinator);
+        //}
 
         private static IStyleSelector GetClassStyleSelector(String currentToken)
         {
@@ -196,7 +196,7 @@ namespace Das.Views.Construction.Styles
             if (colonIndex == -1)
                 return new ClassStyleSelector(currentToken);
 
-            var andSelectors = new List<IStyleSelector>();
+            //var andSelectors = new List<IStyleSelector>();
 
             var className = currentToken.Substring(0, colonIndex);
             var classSelector = new ClassStyleSelector(className);

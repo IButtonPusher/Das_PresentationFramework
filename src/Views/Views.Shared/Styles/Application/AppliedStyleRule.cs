@@ -83,8 +83,6 @@ namespace Das.Views.Styles.Application
 
         public void Execute(Boolean isUpdate)
         {
-            System.Diagnostics.Debug.WriteLine("executing rule: " + this + " update: " + isUpdate);
-
             foreach (var condition in Conditions)
                 if (!condition.CanExecute())
                     return;

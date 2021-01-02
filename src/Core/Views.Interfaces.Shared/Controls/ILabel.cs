@@ -1,12 +1,10 @@
 ﻿using System;
-using Das.Views.Core.Drawing;
+using Das.Views.Primitives;
 
 namespace Das.Views.Controls
 {
-    public interface ILabel : IVisualElement
+    public interface ILabel : ITextVisual
     {
-        String Text { get; set; }
         
-        IBrush? TextBrush { get; set; }
     }
 }

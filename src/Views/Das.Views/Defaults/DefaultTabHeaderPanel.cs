@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
@@ -11,6 +10,7 @@ using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Rendering.Geometry;
 using Das.Views.Styles;
+using Das.Views.Styles.Transitions;
 using Das.Views.Transitions;
 
 namespace Das.Views.Defaults
@@ -26,30 +26,39 @@ namespace Das.Views.Defaults
             _tabsUsed = Size.Empty;
             _indicatord = Size.Empty;
 
-            _indicator = new HorizontalRule(visualBootstrapper);
+            _indicator = new HorizontalRule(visualBootstrapper)
+            {
+                HorizontalAlignment = HorizontalAlignments.Left,
+                Background = visualBootstrapper.StyleContext.ColorPalette.Accent
+            };
+            MarginProperty.AddTransition(_indicator, new ThicknessTransition(_indicator,
+                MarginProperty, TimeSpan.FromSeconds(0.3), TimeSpan.Zero, TransitionFunctionType.Ease));
+            WidthProperty.AddTransition(_indicator, new QuantifiedDoubleTransition(_indicator,
+                WidthProperty,TimeSpan.FromSeconds(0.3), TimeSpan.Zero, TransitionFunctionType.Ease));
 
-            _styleRegistry = visualBootstrapper.StyleContext;
+            //_styleRegistry = visualBootstrapper.StyleContext;
 
-            var accent = _styleRegistry.ColorPalette.Accent;
+            //var accent = visualBootstrapper.StyleContext.ColorPalette.Accent;
 
             _separator = new HorizontalRule(visualBootstrapper);
-            _styleRegistry.RegisterStyleSetter(_indicator,
-                StyleSetterType.Transition, new[]
-                {
-                    new Transition(StyleSetterType.Margin, TimeSpan.FromSeconds(0.3),
-                        TimeSpan.Zero, TransitionFunctionType.Ease),
-                    new Transition(StyleSetterType.Width, TimeSpan.FromSeconds(0.3),
-                        TimeSpan.Zero, TransitionFunctionType.Ease)
-                });
-            _styleRegistry.RegisterStyleSetter(_indicator,
-                StyleSetterType.HorizontalAlignment, HorizontalAlignments.Left);
+            //_styleRegistry.RegisterStyleSetter(_indicator,
+            //    StyleSetterType.Transition, new[]
+            //    {
+            //        new Transition(StyleSetterType.Margin, TimeSpan.FromSeconds(0.3),
+            //            TimeSpan.Zero, TransitionFunctionType.Ease),
+            //        new Transition(StyleSetterType.Width, TimeSpan.FromSeconds(0.3),
+            //            TimeSpan.Zero, TransitionFunctionType.Ease)
+            //    });
 
-            _styleRegistry.RegisterStyleSetter(_indicator,
-                StyleSetterType.Background, accent);
-            _styleRegistry.RegisterStyleSetter(_separator,
-                StyleSetterType.Background, SolidColorBrush.LightGray);
+            //_styleRegistry.RegisterStyleSetter(_indicator,
+            //    StyleSetterType.HorizontalAlignment, HorizontalAlignments.Left);
 
-            Background = _styleRegistry.ColorPalette.Background;
+            //_styleRegistry.RegisterStyleSetter(_indicator,
+            //    StyleSetterType.Background, accent);
+            //_styleRegistry.RegisterStyleSetter(_separator,
+            //    StyleSetterType.Background, SolidColorBrush.LightGray);
+
+            Background = visualBootstrapper.StyleContext.ColorPalette.Background;
 
             var stackPanel = new UniformStackPanel(visualBootstrapper)
             {
@@ -68,12 +77,11 @@ namespace Das.Views.Defaults
             {
                 Content = stackPanel,
                 ScrollMode = ScrollMode.Horizontal,
-                IsScrollWithMouseDrag = true
+                IsScrollWithMouseDrag = true,
+                VerticalAlignment = VerticalAlignments.Top
             };
 
-            _scrollPanel.VerticalAlignment = VerticalAlignments.Top;
             VerticalAlignment = VerticalAlignments.Top;
-
 
             AddChildren(_scrollPanel, _indicator, _separator);
 
@@ -150,7 +158,7 @@ namespace Das.Views.Defaults
                 _indicatorRect.Width, INDICATOR_LINE_HEIGHT,
                 availableSpace.Offset);
 
-            _indicatord = measureContext.MeasureElement(_indicator, indicatorRect);
+            _indicatord = measureContext.MeasureElement(_indicator, indicatorRect.Size);
 
 
             return new ValueSize(_tabsUsed.Width, _tabsUsed.Height +
@@ -215,6 +223,6 @@ namespace Das.Views.Defaults
 
 
         private Size _tabsUsed;
-        private readonly IStyleContext _styleRegistry;
+        //private readonly IStyleContext _styleRegistry;
     }
 }
