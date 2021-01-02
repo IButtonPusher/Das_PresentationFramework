@@ -15,13 +15,15 @@ namespace Das.Views
         protected ContextBase(Dictionary<IVisualElement, ValueSize> lastMeasurements,
                               IStyleContext styleContext,
                               IVisualSurrogateProvider surrogateProvider,
-                              IVisualLineage visualLineage)
+                              IVisualLineage visualLineage,
+                              ILayoutQueue layoutQueue)
         {
             _measureLock = new Object();
             _lastMeasurements = lastMeasurements;
             _styleContext = styleContext;
             _surrogateProvider = surrogateProvider;
             VisualLineage = visualLineage;
+            LayoutQueue = layoutQueue;
             ViewState = NullViewState.Instance;
             
         }
@@ -40,23 +42,6 @@ namespace Das.Views
                 element, VisualLineage);
         }
 
-        //public void RegisterStyleSetter(IVisualElement element,
-        //                                StyleSetterType setterType,
-        //                                Object value)
-        //{
-        //    GetViewState.RegisterStyleSetter(element, setterType, value);
-        //}
-
-        //public void RegisterStyleSetter(IVisualElement element,
-        //                                StyleSetterType setterType,
-        //                                StyleSelector selector,
-        //                                Object value)
-        //{
-        //    GetViewState.RegisterStyleSetter(element, setterType, selector, value);
-        //}
-
-        //public IColorPalette ColorPalette => GetViewState.ColorPalette;
-
 
         public ValueSize GetLastMeasure(IVisualElement element)
         {
@@ -67,6 +52,8 @@ namespace Das.Views
         }
 
         public IVisualLineage VisualLineage { get; }
+
+        public ILayoutQueue LayoutQueue { get; }
 
         public Double ZoomLevel => ViewState?.ZoomLevel ?? 1;
 

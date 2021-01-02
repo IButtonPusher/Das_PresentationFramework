@@ -18,13 +18,11 @@ namespace Das.Views
     {
         
         
-        //IViewModel? DataContext { get; set; }
+
 
         Thickness RenderMargin { get; }
         
         SizeToContent SizeToContent { get; }
-
-        //IStyleContext StyleContext { get; }
 
         IVisualElement View { get; }
 

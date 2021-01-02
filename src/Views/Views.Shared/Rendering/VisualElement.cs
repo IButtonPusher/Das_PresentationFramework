@@ -1,11 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Controls;
 using Das.Views.Core.Geometry;
 using Das.Views.Mvvm;
 using Das.Views.Rendering;
+using Das.Views.Rendering.Geometry;
 using Das.Views.Styles.Application;
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
@@ -23,6 +23,7 @@ namespace Das.Views
             
             _measuredSize = ValueSize.Empty;
             Id = Interlocked.Increment(ref _currentId);
+            ArrangedBounds = ValueRenderRectangle.Empty;
         }
 
         public virtual ValueSize Measure(IRenderSize availableSpace,
@@ -31,6 +32,8 @@ namespace Das.Views
             measureContext.TryGetElementSize(this, out _measuredSize);
             return _measuredSize;
         }
+
+        public ValueRenderRectangle ArrangedBounds { get; set; }
 
         public virtual void Arrange(IRenderSize availableSpace,
                                     IRenderContext renderContext)
@@ -42,13 +45,13 @@ namespace Das.Views
         {
             IsRequiresMeasure = true;
             IsRequiresArrange = true;
-            _visualBootstrapper.QueueVisualForMeasure(this);
+            _visualBootstrapper.LayoutQueue.QueueVisualForMeasure(this);
         }
 
         public virtual void InvalidateArrange()
         {
             IsRequiresArrange = true;
-            _visualBootstrapper.QueueVisualForArrange(this);
+            _visualBootstrapper.LayoutQueue.QueueVisualForArrange(this);
         }
 
         public virtual void AcceptChanges(ChangeType changeType)
@@ -129,37 +132,37 @@ namespace Das.Views
             
         }
 
-        protected virtual void OnTemplateChanged(IVisualTemplate? oldValue,
-                                                 IVisualTemplate? newValue)
-        {
-            if (oldValue?.Content is { } oldValid)
-                oldValid.PropertyChanged -= OnTemplatePropertyChanged;
+        //protected virtual void OnTemplateChanged(IVisualTemplate? oldValue,
+        //                                         IVisualTemplate? newValue)
+        //{
+        //    if (oldValue?.Content is { } oldValid)
+        //        oldValid.PropertyChanged -= OnTemplatePropertyChanged;
 
-            if (newValue?.Content is {} newValid)
-                newValid.PropertyChanged += OnTemplatePropertyChanged;
-        }
+        //    if (newValue?.Content is {} newValid)
+        //        newValid.PropertyChanged += OnTemplatePropertyChanged;
+        //}
 
-        private void OnTemplatePropertyChanged(Object sender,
-                                               PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(IsRequiresArrange):
-                    InvalidateArrange();
-                    break;
+        //private void OnTemplatePropertyChanged(Object sender,
+        //                                       PropertyChangedEventArgs e)
+        //{
+        //    switch (e.PropertyName)
+        //    {
+        //        case nameof(IsRequiresArrange):
+        //            InvalidateArrange();
+        //            break;
 
-                case nameof(IsRequiresMeasure):
-                    InvalidateMeasure();
-                    break;
-            }
-        }
+        //        case nameof(IsRequiresMeasure):
+        //            InvalidateMeasure();
+        //            break;
+        //    }
+        //}
 
-        private static void OnTemplateChanged(IVisualElement visual,
-                                              IVisualTemplate? oldValue,
-                                              IVisualTemplate? newValue)
-        {
-            if (visual is VisualElement visualElement)
-                visualElement.OnTemplateChanged(oldValue, newValue);
-        }
+        //private static void OnTemplateChanged(IVisualElement visual,
+        //                                      IVisualTemplate? oldValue,
+        //                                      IVisualTemplate? newValue)
+        //{
+        //    if (visual is VisualElement visualElement)
+        //        visualElement.OnTemplateChanged(oldValue, newValue);
+        //}
     }
 }

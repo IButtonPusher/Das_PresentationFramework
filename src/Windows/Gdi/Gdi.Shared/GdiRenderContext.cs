@@ -195,21 +195,19 @@ namespace Das.Gdi
                                                                       TBrush brush,
                                                                       TThickness cornerRadii)
         {
-            //if (cornerRadius == 0)
             if (cornerRadii.IsEmpty)
             {
                 FillRectangle(rect, brush);
                 return;
             }
 
-            //var useRect = GetAbsoluteGdiRectangle(rect);
             var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
+            
             var useBrush = GdiTypeConverter.GetBrush(brush);
 
             using (var path = new GdiGraphicsPath())
             {
                 path.SetRoundedRectangle(useRect, cornerRadii);
-                //CreateRoundedRectangle(path, useRect, cornerRadii);
                 Graphics.FillPath(useBrush, path.Path);
             }
 

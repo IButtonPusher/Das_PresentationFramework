@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Das.Extensions;
+using Das.Views.BoxModel;
 using Das.Views.Controls;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
@@ -39,17 +40,18 @@ namespace Das.Views.Rendering
                                     IStyleContext styleContext,
                                     IVisualLineage visualLineage,
                                     ILayoutQueue layoutQueue)
-            : base(lastMeasurements, styleContext, surrogateProvider, visualLineage)
+            : base(lastMeasurements, styleContext, surrogateProvider, 
+                visualLineage, layoutQueue)
         {
             RenderPositions = renderPositions;
             LastRenderPositions = new Dictionary<IVisualElement, ValueCube>();
 
             _lastMeasurements = lastMeasurements;
-            _layoutQueue = layoutQueue;
+            
             _renderLock = new Object();
             Perspective = perspective;
-            CurrentElementRect = new RenderRectangle();
-            _locations = new Stack<RenderRectangle>();
+            CurrentElementRect = ValueRenderRectangle.Empty;
+            _locations = new Stack<ValueRenderRectangle>();
             _locations.Push(CurrentElementRect);
 
             _boxModel = new BoxModelLayoutTree();
@@ -188,22 +190,22 @@ namespace Das.Views.Rendering
             where TBrush : IBrush;
 
 
-        public void DrawElementAt<TPosition>(IVisualElement element,
-                                             TPosition location)
-            where TPosition : IPoint2D
-        {
-            if (!_lastMeasurements.TryGetValue(element, out var size))
-                return;
+        //public void DrawElementAt<TPosition>(IVisualElement element,
+        //                                     TPosition location)
+        //    where TPosition : IPoint2D
+        //{
+        //    if (!_lastMeasurements.TryGetValue(element, out var size))
+        //        return;
 
-            _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
+        //    _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
 
-            _fairyRect.X = location.X;
-            _fairyRect.Y = location.Y;
-            _fairyRect.Width = size.Width;
-            _fairyRect.Height = size.Height;
+        //    _fairyRect.X = location.X;
+        //    _fairyRect.Y = location.Y;
+        //    _fairyRect.Width = size.Width;
+        //    _fairyRect.Height = size.Height;
 
-            DrawElement(element, _fairyRect);
-        }
+        //    DrawElement(element, _fairyRect);
+        //}
 
         public abstract void DrawEllipse<TPoint, TPen>(TPoint center,
                                                        Double radius,
@@ -238,19 +240,19 @@ namespace Das.Views.Rendering
         }
 
 
-        public void DrawContentElement<TSize>(IVisualElement element,
-                                              TSize size)
-            where TSize : ISize
-        {
-            _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
+        //public void DrawContentElement<TSize>(IVisualElement element,
+        //                                      TSize size)
+        //    where TSize : ISize
+        //{
+        //    _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
 
-            _fairyRect.X = 0;
-            _fairyRect.Y = 0;
-            _fairyRect.Width = size.Width;
-            _fairyRect.Height = size.Height;
+        //    _fairyRect.X = 0;
+        //    _fairyRect.Y = 0;
+        //    _fairyRect.Width = size.Width;
+        //    _fairyRect.Height = size.Height;
 
-            DrawElement(element, _fairyRect);
-        }
+        //    DrawElement(element, _fairyRect);
+        //}
 
         public void DrawElement<TRenderRectangle>(IVisualElement visual,
                                                   TRenderRectangle rect)
@@ -265,54 +267,65 @@ namespace Das.Views.Rendering
 
             var layoutVisual = GetElementForLayout(visual);
 
-            var styles = ViewState.StyleContext;
+            //var styles = ViewState.StyleContext;
 
-            var selector = layoutVisual is IHandleInput interactive
-                ? interactive.CurrentVisualStateType
-                : VisualStateType.None;
+            //var selector = layoutVisual is IHandleInput interactive
+            //    ? interactive.CurrentVisualStateType
+            //    : VisualStateType.None;
 
-            var border = styles.GetStyleSetter<IThickness>(StyleSetterType.BorderThickness,
-                selector, layoutVisual, VisualLineage);
+            var border = layoutVisual.Border;
+            var borderThickness = border.GetThickness(rect);
+
+            //var border = styles.GetStyleSetter<IThickness>(StyleSetterType.BorderThickness,
+            //    selector, layoutVisual, VisualLineage);
 
             IThickness margin = layoutVisual.Margin.GetValue(rect);
-            if (margin.IsEmpty)
-                margin = styles.GetStyleSetter<IThickness>(StyleSetterType.Margin,
-                    selector, layoutVisual, VisualLineage);
+            //if (margin.IsEmpty)
+            //    margin = styles.GetStyleSetter<IThickness>(StyleSetterType.Margin,
+            //        selector, layoutVisual, VisualLineage);
             
 
-            _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
+            //_fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
 
-            _fairyRect.Update(rect,
-                CurrentElementRect.Offset, margin, border);
+            //_fairyRect.Update(rect,
+            //    CurrentElementRect.Offset, margin, border);
 
-            var useRect = _fairyRect;
+            //var useRect = _fairyRect;
 
-            useRect.Update(rect, CurrentElementRect.Offset, margin, border);
+            //useRect.Update(rect, CurrentElementRect.Offset, margin, border);
 
             /////////
             //var useRect2 = _boxModel.PushVisualBox(rect, visual.Transform, margin, border,
             //    GetCurrentClip());
-            var useRect2 = _boxModel.ComputeContentBounds(rect, margin, border);
+            var useRect2 = _boxModel.ComputeContentBounds(rect, margin, borderThickness);
 
             _boxModel.PushTransform(visual.Transform);
 
             /////////
             
-            if (!useRect.Equals(useRect2))
-            {}
+            //if (!useRect.Equals(useRect2))
+            //{}
 
             var radius = layoutVisual.BorderRadius.GetValue(rect);
 
             if (!visual.BoxShadow.IsEmpty)
             {
-                var thickness = !border.IsEmpty ? border : new ValueThickness(1);
+                var thickness = borderThickness;//!border.IsEmpty ? border : new ValueThickness(1);
                 foreach (var layer in visual.BoxShadow)
                 {
-                    var h = useRect.Height + layer.SpreadRadius.GetQuantity(rect.Height);
+                    var h = useRect2.Height + layer.SpreadRadius.GetQuantity(rect.Height);
 
-                    var shadowRect = new ValueRectangle(useRect.X + layer.OffsetX.GetQuantity(rect.Width),
-                        useRect.Y + layer.OffsetY.GetQuantity(rect.Height), useRect.Width, h);
-                    OnDrawBorder(shadowRect, thickness, layer.Color, radius);
+                    var shadowRect = new ValueRectangle(useRect2.X + layer.OffsetX.GetQuantity(rect.Width),
+                        useRect2.Y + layer.OffsetY.GetQuantity(rect.Height), useRect2.Width, h);
+                    var colorVals = new BoxValues<IBrush>(layer.Color);
+                    OnDrawBorder(shadowRect, colorVals, thickness, radius);
+                   // OnDrawBorder(shadowRect, thickness, layer.Color, radius);
+
+                    //var h = useRect.Height + layer.SpreadRadius.GetQuantity(rect.Height);
+
+                    //var shadowRect = new ValueRectangle(useRect.X + layer.OffsetX.GetQuantity(rect.Width),
+                    //    useRect.Y + layer.OffsetY.GetQuantity(rect.Height), useRect.Width, h);
+                    //OnDrawBorder(shadowRect, thickness, layer.Color, radius);
                 }
             }
 
@@ -322,40 +335,43 @@ namespace Das.Views.Rendering
 
             //}
 
-            var background = layoutVisual.Background ??
-                             styles.GetStyleSetter<SolidColorBrush>(StyleSetterType.Background,
-                                 selector, layoutVisual, VisualLineage);
-            if (!background.IsInvisible)
+            var background = layoutVisual.Background;
+                             //??
+                             //styles.GetStyleSetter<SolidColorBrush>(StyleSetterType.Background,
+                             //    selector, layoutVisual, VisualLineage);
+            if (background?.IsInvisible == false)
             {
                 if (radius.IsEmpty)
-                    FillRectangle(useRect, background);
+                    FillRectangle(useRect2, background);
                 else
-                    FillRoundedRectangle(useRect, background, radius);
+                    FillRoundedRectangle(useRect2, background, radius);
             }
 
             if (!border.IsEmpty)
             {
                 
 
-                var brush = styles.GetStyleSetter<IBrush>(StyleSetterType.BorderBrush, selector,
-                    layoutVisual, VisualLineage);
+                //var brush = border.
+                    //styles.GetStyleSetter<IBrush>(StyleSetterType.BorderBrush, selector,
+                    //layoutVisual, VisualLineage);
 
-                if (!brush.IsInvisible)
-                    OnDrawBorder(useRect, border, brush, radius);
+                //if (!brush.IsInvisible)
+                    OnDrawBorder(useRect2, border, borderThickness, radius);
             }
 
             
 
             useRect2 = _boxModel.PushContentBounds(useRect2);
 
-            useRect += CurrentLocation;
+            //useRect += CurrentLocation;
 
-            if (!useRect.Equals(useRect2))
-            {}
+            //if (!useRect.Equals(useRect2))
+            //{}
 
-            PushRect(useRect);
+            //PushRect(useRect);
+            PushRect(useRect2);
 
-            SetElementRenderPosition(useRect, visual);
+            SetElementRenderPosition(useRect2, visual);
 
             //System.Diagnostics.Debug.WriteLine(_tabs + visual.GetType().Name + "\t\ttarget rect: (" + rect.X + "," +
             //                                   rect.Y +
@@ -365,25 +381,28 @@ namespace Das.Views.Rendering
 
             //_tabs += "\t";
 
-            if (layoutVisual.IsClipsContent && !useRect.IsEmpty)
+            if (layoutVisual.IsClipsContent && !useRect2.IsEmpty)
             {
                 if (ZoomLevel.AreDifferent(1.0))
-                    PushClip(useRect * ZoomLevel);
+                    PushClip(useRect2 * ZoomLevel);
                 else
-                    PushClip(useRect);
+                    PushClip(useRect2);
             }
 
             /////////////////////////////////
             /////////////////////////////////
-            if (useRect.Bottom > 0 || useRect.Right > 0)
+            if (useRect2.Bottom > 0 || useRect2.Right > 0)
+            {
                 // don't draw it if it's completely off screen
                 layoutVisual.Arrange(CurrentElementRect, this);
+                visual.ArrangedBounds = useRect2;
+            }
             /////////////////////////////////
             /////////////////////////////////
 
             PopRect();
-            if (layoutVisual.IsClipsContent && !useRect.IsEmpty)
-                PopClip(useRect);
+            if (layoutVisual.IsClipsContent && !useRect2.IsEmpty)
+                PopClip(useRect2);
 
             VisualLineage.PopVisual();
 
@@ -399,6 +418,7 @@ namespace Das.Views.Rendering
             }
 
             visual.AcceptChanges(ChangeType.Arrange);
+            LayoutQueue.RemoveVisualFromArrangeQueue(visual);
 
             //_tabs = _tabs.Substring(0, _tabs.Length - 1);
         }
@@ -412,7 +432,7 @@ namespace Das.Views.Rendering
                                                           out ValueRenderRectangle rightLabelRect)
             where TRenderRectangle : IRenderRectangle
         {
-            var leftLabelRect = ValueRenderRectangle.Empty;
+            var beforeLabelRect = ValueRenderRectangle.Empty;
             rightLabelRect = ValueRenderRectangle.Empty;
 
             var leftMargin = 0.0;
@@ -424,9 +444,10 @@ namespace Das.Views.Rendering
                 GetLastMeasure(beforeLeft) is { } leftWants &&
                 !leftWants.IsEmpty)
             {
-                leftLabelRect = new ValueRenderRectangle(rect.Left, rect.Top,
+                beforeLabelRect = new ValueRenderRectangle(rect.Left, rect.Top,
                     leftWants.Width, leftWants.Height, rect.Offset);
-                DrawElement(beforeLeft, leftLabelRect);
+                DrawElement(beforeLeft, beforeLabelRect);
+                
 
                 var beforeMargin = beforeLeft.Margin.Left;
 
@@ -438,14 +459,14 @@ namespace Das.Views.Rendering
                 GetLastMeasure(afterLabel) is { } rightWants &&
                 !rightWants.IsEmpty)
             {
-                var rx = (rect.Width - (rightWants.Width + leftLabelRect.Width)) + leftMargin;
+                var rx = (rect.Width - (rightWants.Width + beforeLabelRect.Width)) + leftMargin;
                 var ry = rect.Top + afterLabel.Top?.GetQuantity(0) ?? 0;
 
                 rightLabelRect = new ValueRenderRectangle(rx, ry,
                     rightWants.Width, rightWants.Height, rect.Offset);
             }
 
-            rect = rect.Reduce<TRenderRectangle>(leftLabelRect.Width, 0, rightLabelRect.Width, 0);
+            rect = rect.Reduce<TRenderRectangle>(beforeLabelRect.Width, 0, rightLabelRect.Width, 0);
         }
 
         private static Boolean CanDrawVisual(ref IVisualElement visual)
@@ -486,7 +507,7 @@ namespace Das.Views.Rendering
 
         public IViewPerspective Perspective { get; }
 
-        protected Point2D CurrentLocation => CurrentElementRect.Location;
+        protected ValuePoint2D CurrentLocation => CurrentElementRect.Location;
 
         protected Dictionary<IVisualElement, ValueCube> LastRenderPositions { get; }
 
@@ -495,18 +516,19 @@ namespace Das.Views.Rendering
         protected abstract ValueRectangle GetCurrentClip();
 
 
-        protected void OnDrawBorder<TRectangle, TShape, TBrush, TThickness>(TRectangle rect,
-                                                                            TShape thickness,
-                                                                            TBrush brush,
+
+        protected void OnDrawBorder<TRectangle,TThickness>(TRectangle rect,
+                                                           IBoxValue<IBrush> color,
+                                                           //IBoxValue<>
+                                                                            //VisualBorder border,
+                                                                            ValueThickness thickness,
                                                                             TThickness cornerRadius)
             where TRectangle : IRectangle
-            where TShape : IThickness
-            where TBrush : IBrush
             where TThickness : IThickness
         {
             if (!cornerRadius.IsEmpty)
             {
-                if (!(brush is SolidColorBrush scb))
+                if (!(color.Bottom is SolidColorBrush scb))
                     throw new NotImplementedException();
 
                 var p = new Pen(scb.Color, Convert.ToInt32(thickness.Left));
@@ -524,18 +546,61 @@ namespace Das.Views.Rendering
             var bottomRightInside = rect.BottomRight;
 
             var leftRect = new ValueRectangle(topLeftOutside, thickness.Left, sumHeight);
-            FillRectangle(leftRect, brush);
+            FillRectangle(leftRect, color.Left);
 
             var topRect = new ValueRectangle(topLeftOutside, sumWidth, thickness.Top);
-            FillRectangle(topRect, brush);
+            FillRectangle(topRect, color.Top);
 
             var rightRect = new ValueRectangle(rect.Right, topLeftOutside.Y, thickness.Right, sumHeight);
-            FillRectangle(rightRect, brush);
+            FillRectangle(rightRect, color.Right);
 
             var bottomRect = new ValueRectangle(topLeftOutside.X, bottomRightInside.Y,
                 sumWidth, thickness.Bottom);
-            FillRectangle(bottomRect, brush);
+            FillRectangle(bottomRect, color.Bottom);
         }
+
+
+        //protected void OnDrawBorder<TRectangle, TShape, TBrush, TThickness>(TRectangle rect,
+        //                                                                    TShape thickness,
+        //                                                                    TBrush brush,
+        //                                                                    TThickness cornerRadius)
+        //    where TRectangle : IRectangle
+        //    where TShape : IThickness
+        //    where TBrush : IBrush
+        //    where TThickness : IThickness
+        //{
+        //    if (!cornerRadius.IsEmpty)
+        //    {
+        //        if (!(brush is SolidColorBrush scb))
+        //            throw new NotImplementedException();
+
+        //        var p = new Pen(scb.Color, Convert.ToInt32(thickness.Left));
+
+        //        DrawRoundedRect(rect, p, cornerRadius);
+        //        return;
+        //    }
+
+        //    var sumHeight = rect.Height + thickness.Top + thickness.Bottom;
+        //    var sumWidth = rect.Width + thickness.Left + thickness.Right;
+
+        //    var topLeftOutside = new ValuePoint2D(rect.Left - thickness.Left,
+        //        rect.Top - thickness.Top);
+
+        //    var bottomRightInside = rect.BottomRight;
+
+        //    var leftRect = new ValueRectangle(topLeftOutside, thickness.Left, sumHeight);
+        //    FillRectangle(leftRect, brush);
+
+        //    var topRect = new ValueRectangle(topLeftOutside, sumWidth, thickness.Top);
+        //    FillRectangle(topRect, brush);
+
+        //    var rightRect = new ValueRectangle(rect.Right, topLeftOutside.Y, thickness.Right, sumHeight);
+        //    FillRectangle(rightRect, brush);
+
+        //    var bottomRect = new ValueRectangle(topLeftOutside.X, bottomRightInside.Y,
+        //        sumWidth, thickness.Bottom);
+        //    FillRectangle(bottomRect, brush);
+        //}
 
         protected abstract void PopClip<TRectangle>(TRectangle rect)
             where TRectangle : IRectangle;
@@ -550,14 +615,22 @@ namespace Das.Views.Rendering
             CurrentElementRect = _locations.Peek();
         }
 
-        private void PushRect(RenderRectangle rect)
+        private void PushRect(ValueRenderRectangle rect)
         {
             _currentZ++;
             _locations.Push(rect);
             CurrentElementRect = rect;
         }
 
-        private void SetElementRenderPosition(RenderRectangle useRect,
+        //private void PushRect(RenderRectangle rect)
+        //{
+        //    _currentZ++;
+        //    _locations.Push(rect);
+        //    CurrentElementRect = rect;
+        //}
+
+        private void SetElementRenderPosition(//RenderRectangle useRect,
+            ValueRenderRectangle useRect,
                                               IVisualElement element)
         {
             var currentClip = GetCurrentClip();
@@ -590,17 +663,16 @@ namespace Das.Views.Rendering
         }
         //private String _tabs = String.Empty;
 
-        [ThreadStatic]
-        private static RenderRectangle? _fairyRect;
+        //[ThreadStatic]
+        //private static RenderRectangle? _fairyRect;
 
         private readonly Dictionary<IVisualElement, ValueSize> _lastMeasurements;
-        private readonly ILayoutQueue _layoutQueue;
 
-        private readonly Stack<RenderRectangle> _locations;
+        private readonly Stack<ValueRenderRectangle> _locations;
         protected readonly IBoxModel _boxModel;
         private readonly Object _renderLock;
 
         private Int32 _currentZ;
-        protected RenderRectangle CurrentElementRect;
+        protected ValueRenderRectangle CurrentElementRect;
     }
 }

@@ -7,13 +7,13 @@ using Das.Views.Styles;
 
 namespace Das.Views
 {
-    public interface IVisualBootstrapper : IPropertyProvider,
-                                           ILayoutQueue
+    public interface IVisualBootstrapper : IPropertyProvider
     {
         IStyleContext StyleContext { get; }
 
-
         IUiProvider UiProvider { get; }
+
+        ILayoutQueue LayoutQueue { get; }
 
 
         IVisualElement Instantiate(Type type);

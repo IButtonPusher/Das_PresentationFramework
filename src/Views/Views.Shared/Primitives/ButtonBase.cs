@@ -41,11 +41,11 @@ namespace Das.Views.Controls
             ? value : 
             _currentVisualStateType | value;
 
-            if (SetValue(ref _currentVisualStateType, val, OnCurrentSelectorChanged,
-                nameof(CurrentVisualStateType)))
-            {
-                InvalidateArrange();
-            }
+            //if (SetValue(ref _currentVisualStateType, val, OnCurrentSelectorChanged,
+            //    nameof(CurrentVisualStateType)))
+            //{
+            //    InvalidateArrange();
+            //}
         }
 
         protected void RemoveStyleSelector(VisualStateType value)
@@ -158,7 +158,7 @@ namespace Das.Views.Controls
 
         private void OnCurrentSelectorChanged(VisualStateType value)
         {
-            InvalidateArrange();
+            //InvalidateArrange();
         }
 
         public override String ToString()

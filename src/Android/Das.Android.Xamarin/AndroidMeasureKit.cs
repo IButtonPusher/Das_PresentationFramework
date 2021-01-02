@@ -22,8 +22,10 @@ namespace Das.Xamarin.Android
                                  Dictionary<IVisualElement, ValueSize> lastMeasurements,
                                  IStyleContext styleContext,
                                  DisplayMetrics displayMetrics,
-                                 IVisualLineage visualLineage)
-        : base(surrogateProvider, lastMeasurements, styleContext, visualLineage)
+                                 IVisualLineage visualLineage,
+                                 ILayoutQueue layoutQueue)
+        : base(surrogateProvider, lastMeasurements, 
+            styleContext, visualLineage,layoutQueue)
         {
             _windowManager = windowManager;
             _fontProvider = fontProvider;

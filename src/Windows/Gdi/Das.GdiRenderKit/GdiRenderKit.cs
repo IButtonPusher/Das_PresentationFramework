@@ -130,14 +130,13 @@ namespace Das.Gdi.Kits
             imageProvider = new GdiImageProvider();
             var lastMeasure = new Dictionary<IVisualElement, ValueSize>();
             var visualLineage = new VisualLineage();
-            var layoutQueue = new LayoutQueue();
 
             measureContext = new GdiMeasureContext(this, lastMeasure,
-                styleContext, visualLineage);
+                styleContext, visualLineage, VisualBootstrapper.LayoutQueue);
 
             renderContext = new GdiRenderContext(viewPerspective,
                 MeasureContext.Graphics, this, lastMeasure,
-                renderPositions, styleContext, visualLineage, layoutQueue);
+                renderPositions, styleContext, visualLineage, VisualBootstrapper.LayoutQueue);
 
             Container.ResolveTo<IImageProvider>(imageProvider);
             Container.ResolveTo<IUiProvider>(new GdiUiProvider(windowProvider));

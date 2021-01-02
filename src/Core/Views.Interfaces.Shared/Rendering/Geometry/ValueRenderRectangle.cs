@@ -227,7 +227,9 @@ namespace Das.Views.Rendering.Geometry
             return new ValueRenderRectangle(X + point.X, Y + point.Y, Size, Offset);
         }
 
-        public IPoint2D Location => TopLeft;
+        IPoint2D IPointContainer.Location => Location;
+
+        public ValuePoint2D Location => TopLeft;
 
         public IRenderSize Size => new ValueRenderSize(Width, Height, Offset);
 
@@ -315,6 +317,26 @@ namespace Das.Views.Rendering.Geometry
             if (res is TRectangle fku)
                 return fku;
             throw new InvalidOperationException();
+        }
+
+        public static ValueRenderRectangle operator *(ValueRenderRectangle rect, 
+                                                      Double val)
+        {
+            if (val.AreEqualEnough(1))
+                return rect;
+
+            if (rect.IsEmpty)
+                return rect;
+
+            //if (rect == null)
+            //    return null!;
+
+            return new ValueRenderRectangle(rect.X * val,
+                rect.Y * val,
+                rect.Size.Width * val,
+                rect.Size.Height * val,
+                new ValuePoint2D(rect.Offset.X * val,
+                    rect.Offset.Y * val));
         }
 
         private readonly Int32 _hash;

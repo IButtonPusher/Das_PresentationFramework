@@ -1,4 +1,5 @@
 ﻿using System;
+using Das.Views.BoxModel;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 

@@ -12,6 +12,8 @@ namespace Das.Views.Rendering
         ValueSize GetLastMeasure(IVisualElement element);
         
         IVisualLineage VisualLineage { get; }
+
+        ILayoutQueue LayoutQueue { get; }
         
         /// <summary>
         /// Returns the Size + Width properties of the visual, if set.

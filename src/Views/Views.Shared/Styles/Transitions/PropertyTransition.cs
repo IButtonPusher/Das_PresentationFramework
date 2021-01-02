@@ -54,7 +54,7 @@ namespace Das.Views.Styles.Transitions
         public TransitionFunctionType Timing { get; }
 
         private readonly IDependencyProperty _property;
-        private readonly IVisualElement _visual;
+        protected readonly IVisualElement _visual;
 
         protected T CurrentEndValue;
 

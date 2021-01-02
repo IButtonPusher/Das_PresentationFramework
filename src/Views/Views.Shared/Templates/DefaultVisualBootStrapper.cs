@@ -20,12 +20,9 @@ namespace Das.Views.Templates
             StyleContext = styleContext;
             _dependencyResolver = dependencyResolver;
             _propertyProvider = propertyProvider;
-            _layoutQueue = layoutQueue;
-
+            LayoutQueue = layoutQueue;
 
             _defaultConstructorLock = new Object();
-
-            //_bindingConstructors = new Dictionary<Type, ConstructorInfo>();
             _defaultConstructors = new Dictionary<Type, ConstructorInfo>();
         }
 
@@ -38,14 +35,12 @@ namespace Das.Views.Templates
         public IDataTemplate? TryResolveFromContext(Object dataContext)
         {
             return _dependencyResolver.TryResolve<IDataTemplate>(dataContext.GetType(),
-                out var dataTemplate) ? dataTemplate : null;
+                out var dataTemplate)
+                ? dataTemplate
+                : null;
         }
 
-        //public IDataTemplate? TryResolveFromContext<T>(T dataContext)
-        //{
-        //    return _dependencyResolver.TryResolve<IDataTemplate<T>>(typeof(T),
-        //        out var dataTemplate) ? dataTemplate : null;
-        //}
+        public ILayoutQueue LayoutQueue { get; }
 
         public IVisualElement Instantiate(Type type)
         {
@@ -94,25 +89,21 @@ namespace Das.Views.Templates
             var obj = InstantiateCopyBase(visual);
 
             if (dataContext != null)
-            {
                 throw new NotImplementedException();
-                //if (dataContext != null && obj is IBindableElement bindable)
-                //    bindable.DataContext = dataContext;
-            }
-            
+            //if (dataContext != null && obj is IBindableElement bindable)
+            //    bindable.DataContext = dataContext;
 
-           
 
             return obj;
         }
 
-        public TVisualElement InstantiateCopy<TVisualElement>(TVisualElement visual) 
+        public TVisualElement InstantiateCopy<TVisualElement>(TVisualElement visual)
             where TVisualElement : IVisualElement
         {
             return InstantiateCopyBase(visual);
         }
 
-        public IVisualElement InstantiateCopy(IVisualElement visual, 
+        public IVisualElement InstantiateCopy(IVisualElement visual,
                                               Object? dataContext)
         {
             var obj = InstantiateCopyBase(visual);
@@ -136,27 +127,11 @@ namespace Das.Views.Templates
 
         public IUiProvider UiProvider => _uiProvider ??= _dependencyResolver.Resolve<IUiProvider>();
 
-        private TVisualElement InstantiateCopyBase<TVisualElement>(TVisualElement visual)
-            where TVisualElement : IVisualElement
+
+        public IPropertyAccessor GetPropertyAccessor(Type declaringType,
+                                                     String propertyName)
         {
-            var obj = Instantiate<TVisualElement>(visual.GetType());
-
-            RunOnBoth<IPanelElement>(visual, obj, CopyChildren);
-            
-            RunOnBoth<IContentVisual>(visual, obj, CopyContent);
-
-            RunOnBoth<IContentPresenter>(visual, obj, (o, c) =>
-                c.ContentTemplate = o.ContentTemplate);
-
-            RunOnBoth<IVisualElement>(visual, obj, CopyDependencyProperties);
-
-            RunOnBoth<IBindableElement>(visual, obj, (o, c) =>
-            {
-                foreach (var binding in o.GetBindings()) 
-                    c.AddBinding(binding);
-            });
-
-            return obj;
+            return _propertyProvider.GetPropertyAccessor(declaringType, propertyName);
         }
 
         private void CopyChildren(IPanelElement fromPanel,
@@ -168,7 +143,7 @@ namespace Das.Views.Templates
                 toPanel.AddChild(iAmCopy);
             }
         }
-        
+
         private void CopyContent(IContentContainer fromPanel,
                                  IContentContainer toPanel)
         {
@@ -177,24 +152,49 @@ namespace Das.Views.Templates
                 toPanel.Content = null;
                 return;
             }
-            
+
             var iAmCopy = InstantiateCopyBase(fromPanel.Content);
             toPanel.Content = iAmCopy;
         }
 
         private static void CopyDependencyProperties(IVisualElement fromVisual,
-                                              IVisualElement toVisual)
+                                                     IVisualElement toVisual)
         {
             foreach (var dp in DependencyProperty.GetDependencyPropertiesForType(fromVisual.GetType()))
             {
                 var val = dp.GetValue(fromVisual);
                 if (val == null)
                     continue;
-                
+
                 dp.SetValueNoTransitions(toVisual, val);
             }
         }
-        
+
+        private TVisualElement InstantiateCopyBase<TVisualElement>(TVisualElement visual)
+            where TVisualElement : IVisualElement
+        {
+            var obj = Instantiate<TVisualElement>(visual.GetType());
+
+            RunOnBoth<IPanelElement>(visual, obj, CopyChildren);
+
+            RunOnBoth<IContentVisual>(visual, obj, CopyContent);
+
+            RunOnBoth<IContentPresenter>(visual, obj, (o,
+                                                       c) =>
+                c.ContentTemplate = o.ContentTemplate);
+
+            RunOnBoth<IVisualElement>(visual, obj, CopyDependencyProperties);
+
+            RunOnBoth<IBindableElement>(visual, obj, (o,
+                                                      c) =>
+            {
+                foreach (var binding in o.GetBindings())
+                    c.AddBinding(binding);
+            });
+
+            return obj;
+        }
+
         private static void RunOnBoth<TVisual>(IVisualElement original,
                                                IVisualElement copy,
                                                Action<TVisual, TVisual> action)
@@ -211,24 +211,7 @@ namespace Das.Views.Templates
         private readonly Dictionary<Type, ConstructorInfo> _defaultConstructors;
         private readonly IResolver _dependencyResolver;
         private readonly IPropertyProvider _propertyProvider;
-        private readonly ILayoutQueue _layoutQueue;
+
         private IUiProvider? _uiProvider;
-
-
-        public IPropertyAccessor GetPropertyAccessor(Type declaringType, 
-                                                     String propertyName)
-        {
-            return _propertyProvider.GetPropertyAccessor(declaringType, propertyName);
-        }
-
-        public void QueueVisualForMeasure(IVisualElement visual)
-        {
-            _layoutQueue.QueueVisualForMeasure(visual);
-        }
-
-        public void QueueVisualForArrange(IVisualElement visual)
-        {
-            _layoutQueue.QueueVisualForArrange(visual);
-        }
     }
 }

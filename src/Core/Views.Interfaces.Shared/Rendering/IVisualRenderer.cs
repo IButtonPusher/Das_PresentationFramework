@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
+using Das.Views.Rendering.Geometry;
 
 namespace Das.Views.Rendering
 {
@@ -14,5 +15,7 @@ namespace Das.Views.Rendering
 
         ValueSize Measure(IRenderSize availableSpace,
                           IMeasureContext measureContext);
+
+        ValueRenderRectangle ArrangedBounds { get; set; }
     }
 }

@@ -9,29 +9,12 @@ namespace Das.Views.Transforms
     public readonly struct TransformationMatrix : IEquatable<TransformationMatrix>
     {
         public TransformationMatrix(Double scaleX,
-                                Double skewX,
-                                Double skewY,
-                                Double scaleY,
-                                Double offsetX,
-                                Double offsetY)
-            : this(scaleX, skewX, skewY, scaleY, offsetX, offsetY,
-                scaleX.AreEqualEnough(1.0) &&
-                scaleY.AreEqualEnough(1.0) &&
-                skewX.IsZero() &&
-                skewY.IsZero() &&
-                offsetX.IsZero() &&
-                offsetY.IsZero())
-        {
-
-        }
-
-        private TransformationMatrix(Double scaleX,
-                                 Double skewX,
-                                 Double skewY,
-                                 Double scaleY,
-                                 Double offsetX,
-                                 Double offsetY,
-                                 Boolean isIdentity)
+                                    Double skewX,
+                                    Double skewY,
+                                    Double scaleY,
+                                    Double offsetX,
+                                    Double offsetY)
+                                 //Boolean isIdentity)
         {
             ScaleX = scaleX;
             SkewX = skewX;
@@ -50,7 +33,12 @@ namespace Das.Views.Transforms
             if (String.IsNullOrEmpty(_aboutMe))
                 _aboutMe = "Identity";
 
-            IsIdentity = isIdentity;
+            IsIdentity = offsetX.IsZero() &&
+                         offsetY.IsZero() &&
+                         scaleX.AreEqualEnough(1.0) &&
+                         scaleY.AreEqualEnough(1.0) &&
+                         skewX.IsZero() &&
+                         skewY.IsZero();
         }
 
 
@@ -100,8 +88,7 @@ namespace Das.Views.Transforms
                 Step(SkewY, target.SkewY, percentComplete),
                 Step(ScaleY, target.ScaleY, percentComplete),
                 Step(OffsetX, target.OffsetX, percentComplete),
-                Step(OffsetY, target.OffsetY, percentComplete),
-                target.IsIdentity);
+                Step(OffsetY, target.OffsetY, percentComplete));
         }
 
         private static Double Step(Double current,

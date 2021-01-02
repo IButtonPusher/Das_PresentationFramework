@@ -12,6 +12,31 @@ namespace Das.Views.Styles.Declarations
         
         Appearance,
         BackgroundColor,
+
+        Border,
+        BorderColor,
+        BorderStyle,
+        BorderWidth,
+        
+        BorderBottom,
+        BorderBottomColor,
+        BorderBottomStyle,
+        BorderBottomWidth,
+
+        BorderLeft,
+        BorderLeftColor,
+        BorderLeftStyle,
+        BorderLeftWidth,
+
+        BorderRight,
+        BorderRightColor,
+        BorderRightStyle,
+        BorderRightWidth,
+
+        BorderTop,
+        BorderTopColor,
+        BorderTopStyle,
+        BorderTopWidth,
         
         BorderRadius,
         BorderRadiusBottom,

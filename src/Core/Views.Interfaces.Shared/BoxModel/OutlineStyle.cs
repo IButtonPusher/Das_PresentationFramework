@@ -1,7 +1,7 @@
 ﻿using System;
 // ReSharper disable UnusedMember.Global
 
-namespace Das.Views.Styles.Declarations
+namespace Das.Views.BoxModel
 {
     public enum OutlineStyle
     {

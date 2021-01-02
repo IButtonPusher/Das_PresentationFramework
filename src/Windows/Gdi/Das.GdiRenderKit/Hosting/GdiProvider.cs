@@ -142,7 +142,7 @@ namespace Das.Gdi
         {
             var renderer = new BitmapRenderer(form,
                 RenderKit.MeasureContext, RenderKit.RenderContext);
-            var _ = new LoopViewUpdater<Bitmap>(form, renderer);
+            var _ = new LoopViewUpdater<Bitmap>(form, renderer, RenderKit.RenderContext.LayoutQueue);
             return renderer;
         }
 

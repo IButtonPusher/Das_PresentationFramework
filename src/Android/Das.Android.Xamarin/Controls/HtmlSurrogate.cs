@@ -12,6 +12,7 @@ using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
+using Das.Views.Rendering.Geometry;
 using Das.Views.Styles.Application;
 using Das.Views.Styles.Declarations;
 using Das.Views.Templates;
@@ -40,6 +41,12 @@ namespace Das.Xamarin.Android.Controls
                                  IMeasureContext measureContext)
         {
             return availableSpace.ToValueSize();
+        }
+
+        public ValueRenderRectangle ArrangedBounds
+        {
+            get => _htmlPanel.ArrangedBounds;
+            set => _htmlPanel.ArrangedBounds = value;
         }
 
         public void InvalidateMeasure()
@@ -157,6 +164,12 @@ namespace Das.Xamarin.Android.Controls
         {
             get => _htmlPanel.BorderRadius;
             set => _htmlPanel.BorderRadius = value;
+        }
+
+        public VisualBorder Border
+        {
+            get => _htmlPanel.Border;
+            set => _htmlPanel.Border = value;
         }
 
         public Boolean IsEnabled

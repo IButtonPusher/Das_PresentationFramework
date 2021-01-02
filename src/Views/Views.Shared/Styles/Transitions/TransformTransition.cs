@@ -18,9 +18,6 @@ namespace Das.Views.Styles.Transitions
         protected override TransformationMatrix GetCurrentValue(Double runningPct)
         {
             var res = CurrentStartValue.Transition(CurrentEndValue, runningPct);
-            
-            System.Diagnostics.Debug.WriteLine("current transform for transition: " + res);
-            
             return res;
 
         }

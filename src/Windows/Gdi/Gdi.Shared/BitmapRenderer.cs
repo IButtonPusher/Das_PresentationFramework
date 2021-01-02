@@ -25,19 +25,17 @@ namespace Das.Gdi
             _visualHost = viewHost;
 
             _visualHost.AvailableSizeChanged += OnHostSizeChanged;
-            
+
             _measureContext = measureContext;
             _renderContext = renderContext;
+            _layoutQueue = measureContext.LayoutQueue;
             _gdiDevice = new GdiDevice(backgroundColor,
                 _viewHost.AvailableSize);
-                //Convert.ToInt32(_viewHost.AvailableSize.Width),
-                //Convert.ToInt32(_viewHost.AvailableSize.Height));
+
             _renderRect = new Rectangle(0, 0, 1, 1);
 
             _hostRect = new ValueRectangle(0, 0, viewHost.AvailableSize);
         }
-
-      
 
         public BitmapRenderer(IViewHost<Bitmap> viewHost,
                               GdiMeasureContext measureContext,
@@ -244,6 +242,40 @@ namespace Das.Gdi
         private Boolean DoRender(Graphics g,
                                  IVisualElement view)
         {
+            if (!view.IsRequiresArrange && !_renderContext.LayoutQueue.HasVisualsNeedingArrange)
+                return false;
+
+            _renderContext.Graphics = g;
+
+            if (view.IsRequiresArrange || true)
+            {
+                var renderTo = new ValueRectangle(0, 0,
+                    Math.Min(_hostRect.Width, _renderRect.Width),
+                    Math.Min(_hostRect.Height, _renderRect.Height));
+
+                _renderContext.DrawMainElement(view, renderTo, _viewHost);
+            }
+
+            while (_layoutQueue.TryDequeueVisualNeedingArrange(out var arrangeMe))
+            {
+            //    if (arrangeMe.ArrangedBounds.IsEmpty)
+            //        continue;
+
+            //    _renderContext.DrawElement(arrangeMe, arrangeMe.ArrangedBounds);
+            }
+
+            lock (_eventLock)
+            {
+                if (_eventCounter > 0)
+                    _rendering!.Invoke(this, EventArgs.Empty);
+            }
+
+            return true;
+        }
+
+        private Boolean DoRender2(Graphics g,
+                                 IVisualElement view)
+        {
             if (!view.IsRequiresArrange)
                 return false;
 
@@ -253,7 +285,6 @@ namespace Das.Gdi
             
             _renderContext.Graphics = g;
             _renderContext.DrawMainElement(view, renderTo, _viewHost);
-            //_renderContext.DrawMainElement(view, _renderRect, _viewHost);
 
             lock (_eventLock)
             {
@@ -268,6 +299,7 @@ namespace Das.Gdi
         private readonly Object _lock;
         private readonly GdiMeasureContext _measureContext;
         private readonly GdiRenderContext _renderContext;
+        private readonly ILayoutQueue _layoutQueue;
         private readonly Rectangle _renderRect;
         private ValueRectangle _hostRect;
         private readonly IViewHost<Bitmap> _viewHost;

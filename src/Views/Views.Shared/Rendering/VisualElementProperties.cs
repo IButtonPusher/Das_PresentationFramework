@@ -84,7 +84,7 @@ namespace Das.Views
 
         public static readonly DependencyProperty<IVisualElement, IVisualTemplate?> TemplateProperty =
             DependencyProperty<IVisualElement, IVisualTemplate?>.Register(
-                nameof(Template), default, OnTemplateChanged);
+                nameof(Template), default);
 
         public IVisualTemplate? Template
         {
@@ -177,6 +177,16 @@ namespace Das.Views
         {
             get => BorderRadiusProperty.GetValue(this);
             set => BorderRadiusProperty.SetValue(this, value);
+        }
+
+        public static readonly DependencyProperty<IVisualElement, VisualBorder> BorderProperty =
+            DependencyProperty<IVisualElement, VisualBorder>.Register(
+                nameof(Border), VisualBorder.Empty);
+
+        public VisualBorder Border
+        {
+            get => BorderProperty.GetValue(this);
+            set => BorderProperty.SetValue(this, value);
         }
         
 

@@ -16,11 +16,13 @@ namespace Das.Views
     {
         public LoopViewUpdater(IViewHost<TAsset> viewHost,
                                IRenderer<TAsset> renderer,
+                               ILayoutQueue layoutQueue,
                                Int32 maxFramesPerSecond = 60)
             : base(maxFramesPerSecond)
         {
             _viewHost = viewHost;
             _renderer = renderer;
+            _layoutQueue = layoutQueue;
 
             _viewHost.HostCreated += OnHostReady;
         }
@@ -32,7 +34,8 @@ namespace Das.Views
             return TaskEx.CompletedTask;
         }
 
-        protected override Boolean IsChanged => _viewHost.IsChanged || _viewHost.StyleContext.IsChanged;
+        protected override Boolean IsChanged => _viewHost.IsChanged || _viewHost.StyleContext.IsChanged ||
+                                                _layoutQueue.HasVisualsNeedingArrange;
 
         protected override Boolean Update()
         {
@@ -49,6 +52,7 @@ namespace Das.Views
         }
 
         private readonly IRenderer<TAsset> _renderer;
+        private readonly ILayoutQueue _layoutQueue;
 
         private readonly IViewHost<TAsset> _viewHost;
     }

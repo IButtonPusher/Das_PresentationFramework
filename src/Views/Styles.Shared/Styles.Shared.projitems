@@ -39,7 +39,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\LineHeightDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\MarginDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\MultiValueDeclaration.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Declarations\Outline\OutlineStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Outline\OutlineColorDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Outline\OutlineDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Outline\OutlineStyleDeclaration.cs" />

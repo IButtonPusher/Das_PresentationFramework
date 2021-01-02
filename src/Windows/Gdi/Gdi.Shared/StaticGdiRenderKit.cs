@@ -40,7 +40,7 @@ namespace Das.Gdi.Kits
             var layoutQueue = new LayoutQueue();
 
             MeasureContext = new GdiMeasureContext(defaultSurrogates, lastMeasure,
-                _styleContext, visualLineage);
+                _styleContext, visualLineage, layoutQueue);
 
             RenderContext = new GdiRenderContext(viewPerspective,
                 MeasureContext.Graphics, defaultSurrogates, lastMeasure,

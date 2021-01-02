@@ -18,8 +18,10 @@ namespace Das.Views.Measuring
         protected BaseMeasureContext(IVisualSurrogateProvider surrogateProvider,
                                      Dictionary<IVisualElement, ValueSize> lastMeasurements,
                                      IStyleContext styleContext,
-                                     IVisualLineage visualLineage)
-            : base(lastMeasurements, styleContext, surrogateProvider, visualLineage)
+                                     IVisualLineage visualLineage,
+                                     ILayoutQueue layoutQueue)
+            : base(lastMeasurements, styleContext, 
+                surrogateProvider, visualLineage, layoutQueue)
         {
             _contextBounds = ValueSize.Empty;
             _lastMeasurements = lastMeasurements;
@@ -82,7 +84,10 @@ namespace Das.Views.Measuring
                 lock (_measureLock)
                 {
                     if (_lastMeasurements.TryGetValue(element, out var val))
+                    {
+                        LayoutQueue.RemoveVisualFromMeasureQueue(element);
                         return val;
+                    }
                 }
 
                 // measure anyways if we know nothing of it...?
@@ -98,7 +103,7 @@ namespace Das.Views.Measuring
             var res = MeasureElementImpl(layoutElement, availableSpace);
             ////////////////////////
             
-            
+            LayoutQueue.RemoveVisualFromMeasureQueue(element);
             element.AcceptChanges(ChangeType.Measure);
             return res;
         }

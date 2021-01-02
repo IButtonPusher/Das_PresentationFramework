@@ -52,8 +52,6 @@ namespace Das.Xamarin.Android.Input
         }
 
 
-      
-
         public Boolean TryCaptureMouseInput(IVisualElement view)
         {
             return _inputHandler.TryCaptureMouseInput(view);
@@ -256,58 +254,6 @@ namespace Das.Xamarin.Android.Input
             
 
         }
-
-
-        //public Boolean OnTouch(View? v,
-        //                       MotionEvent? e)
-        //{
-        //    if (e?.Action == MotionEventActions.Up)
-        //    {
-        //        //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS TOUCH UP");
-
-        //        if (_leftButtonWentDown != null)
-        //        {
-
-        //        }
-        //        else
-        //        {}
-                
-        //        //IsInteracting = false;
-        //        //SleepTime = 0;
-
-        //        // gesture detector not detecting anything for when you lift the finger after dragging
-        //        // this is needed because otherwise swipes that aren't flings won't register
-        //        var pos = GetPosition(e);
-
-        //        if (_leftButtonWentDown != null)
-        //        {
-        //            var distance = pos.Distance(_leftButtonWentDown);
-                    
-        //            if (distance < _touchSlop)
-        //            {}
-        //        }
-
-        //        var args = new MouseUpEventArgs(pos,
-        //            _leftButtonWentDown, MouseButtons.Left, this, false);
-        //        if (_inputHandler.OnMouseInput(args,
-        //            InputAction.LeftMouseButtonUp))
-        //        {
-        //            IsInteracting = false;
-        //            SleepTime = 0;
-        //        }
-
-        //        _leftButtonWentDown = default;
-        //    }
-
-        //    var res = _gestureDetector.OnTouchEvent(e);
-            
-        //    if (!res)
-        //    {}
-        //    else
-        //    {}
-            
-        //    return res;
-        //}
 
         public Int32 SleepTime;
         

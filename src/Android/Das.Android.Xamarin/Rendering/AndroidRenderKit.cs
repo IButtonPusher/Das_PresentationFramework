@@ -129,7 +129,6 @@ namespace Das.Xamarin.Android
                           AndroidFontProvider fontProvider,
                           IViewState viewState,
                           IUiProvider uiProvider,
-                          //IVisualLineage visualLineage,
                           ref AndroidMeasureKit measureContext,
                           ref AndroidRenderContext renderContext,
                           ref RefreshRenderContext refreshRenderContext)
@@ -144,7 +143,7 @@ namespace Das.Xamarin.Android
             var layoutQueue = new LayoutQueue();
 
             measureContext = new AndroidMeasureKit(windowManager, fontProvider, 
-                this, lastMeasures,styleContext, displayMetrics, visualLineage);
+                this, lastMeasures,styleContext, displayMetrics, visualLineage, layoutQueue);
 
             var visualPositions = new Dictionary<IVisualElement, ValueCube>();
 

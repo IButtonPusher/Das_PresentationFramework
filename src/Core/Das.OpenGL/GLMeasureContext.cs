@@ -18,8 +18,10 @@ namespace Das.OpenGL
                                 IVisualSurrogateProvider surrogateProvider,
                                 Dictionary<IVisualElement, ValueSize> lastMeasurements,
                                 IStyleContext styleContext,
-                                IVisualLineage visualLineage)
-        : base(surrogateProvider, lastMeasurements,styleContext, visualLineage)
+                                IVisualLineage visualLineage,
+                                ILayoutQueue layoutQueue)
+        : base(surrogateProvider, lastMeasurements, 
+            styleContext, visualLineage, layoutQueue)
         {
             _fontProvider = fontProvider;
         }

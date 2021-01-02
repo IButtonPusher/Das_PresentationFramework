@@ -186,12 +186,10 @@ namespace Das.Xamarin.Android
                     RenderKit.MeasureContext.MeasureMainView(_view,
                         new ValueRenderSize(_measured), _viewState);
 
-
                     willInvalidate = true;
                 }
                 else if (_view.IsRequiresArrange || _inputContext.IsInteracting)
                     willInvalidate = true;
-
 
                 if (willInvalidate)
                 {

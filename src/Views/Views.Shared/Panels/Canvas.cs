@@ -43,8 +43,6 @@ namespace Das.Views.Panels
         public override void Arrange(IRenderSize availableSpace, 
                                      IRenderContext renderContext)
         {
-            System.Diagnostics.Debug.WriteLine(">> arranging canvas");
-
             foreach (var child in Children.GetAllChildren())
             {
                 var childWants = renderContext.GetLastMeasure(child);
@@ -60,8 +58,6 @@ namespace Das.Views.Panels
 
                 renderContext.DrawElement(child,drawMe);
             }
-
-            System.Diagnostics.Debug.WriteLine("<< arranged canvas");
         }
 
         protected override void OnDistributeDataContextToChildren(Object? newValue)

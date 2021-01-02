@@ -397,6 +397,9 @@ namespace Das.Views
                                   IEnumerable<Action<TVisual, TValue, TValue>> onChangeds,
                                   Boolean isDeclineTransitions)
         {
+            if (Name == nameof(IVisualElement.Transform) && isDeclineTransitions)
+            {}
+
             var oldValue = GetOldValue(forVisual);
 
             if (value is IBrush && oldValue != null) { }

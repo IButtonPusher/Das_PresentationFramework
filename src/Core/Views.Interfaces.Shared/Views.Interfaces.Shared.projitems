@@ -9,14 +9,19 @@
     <Import_RootNamespace>Das.Views</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BorderSide.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BoxValues.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxShadow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxShadowLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\OutlineStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\VisualBorder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\IThemeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\ApplyVisualStyles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IAttributeDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IQuantifiedRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\IQuantifiedValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IDependencyProperty{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\PropertyMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ILayoutQueue.cs" />

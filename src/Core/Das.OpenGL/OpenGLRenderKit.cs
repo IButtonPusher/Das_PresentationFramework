@@ -26,7 +26,7 @@ namespace Das.OpenGL
             var layoutQueue = new LayoutQueue();
             
             MeasureContext = new GLMeasureContext(fontProvider, this, 
-                lastMeasurements, styleContext, visualLineage);
+                lastMeasurements, styleContext, visualLineage, layoutQueue);
             
             RenderContext = new GLRenderContext(new BasePerspective(),
                  glContext, fontProvider, this, styleContext, 

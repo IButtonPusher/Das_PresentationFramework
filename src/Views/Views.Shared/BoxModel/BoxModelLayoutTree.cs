@@ -22,36 +22,12 @@ namespace Das.Views.Layout
             _netTransform = TransformationMatrix.Identity;
         }
 
-        //public ValueRenderRectangle PushVisualBox<TRenderRectangle>(TRenderRectangle drawBounds, 
-        //                                                            ITransform transform,
-        //                                                            IThickness margin, 
-        //                                                            IThickness border,
-        //                                                            ValueRectangle currentClip) 
-        //    where TRenderRectangle : IRenderRectangle
-        //{
-        //    //_fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
-            
-        //    //_fairyRect.Update(drawBounds,
-        //    //    CurrentElementRect.Offset, margin, border);
-        //    //var useRect = _fairyRect;
-
-        //    //useRect.Update(drawBounds, CurrentElementRect.Offset, margin, border);
-
-        //    //useRect += CurrentElementRect.Location;
-        //    var useRect = ComputeContentBounds(drawBounds, margin, border);
-        //    PushRect(useRect);
-
-        //    _transforms.Push(transform.Value);
-
-        //    //SetElementRenderPosition(useRect, visual);
-        //    return useRect;
-        //}
-
         public void PushTransform(TransformationMatrix transform)
         {
             _transforms.Push(transform);
 
             _netTransform += transform;
+            
         }
 
         public ValueRenderRectangle PushContentBounds(ValueRenderRectangle bounds)
@@ -156,7 +132,7 @@ namespace Das.Views.Layout
                 h -= border.Height;
             }
 
-            return new ValueRenderRectangle(left, top, w, h, rect.Offset);
+            return new ValueRenderRectangle(left, top, w, h, rect.Size.Offset);
         }
 
        

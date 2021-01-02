@@ -62,6 +62,8 @@ namespace Das.Views
         Visibility Visibility { get; set; }
         
         QuantifiedThickness BorderRadius { get; set; }
+
+        VisualBorder Border {get; set; }
         
         Boolean IsEnabled { get; set; }
 

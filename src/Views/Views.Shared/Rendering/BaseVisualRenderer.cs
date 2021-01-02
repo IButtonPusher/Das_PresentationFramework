@@ -2,6 +2,7 @@
 using Das.Views.Core.Geometry;
 using Das.Views.Mvvm;
 using Das.Views.Rendering;
+using Das.Views.Rendering.Geometry;
 
 namespace Das.Views
 {
@@ -13,6 +14,8 @@ namespace Das.Views
 
         public abstract ValueSize Measure(IRenderSize availableSpace, 
                                           IMeasureContext measureContext);
+
+        public ValueRenderRectangle ArrangedBounds { get; set; }
 
         public abstract void InvalidateMeasure();
 

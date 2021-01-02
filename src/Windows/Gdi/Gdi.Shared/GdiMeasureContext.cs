@@ -18,8 +18,10 @@ namespace Das.Gdi
         public GdiMeasureContext(IVisualSurrogateProvider surrogateProvider,
                                  Dictionary<IVisualElement, ValueSize> lastMeasurements,
                                  IStyleContext styleContext,
-                                 IVisualLineage visualLineage)
-        : base(surrogateProvider, lastMeasurements, styleContext, visualLineage)
+                                 IVisualLineage visualLineage,
+                                 ILayoutQueue layoutQueue)
+        : base(surrogateProvider, lastMeasurements, 
+            styleContext, visualLineage, layoutQueue)
         {
             var bmp = new Bitmap(1, 1);
             Graphics = Graphics.FromImage(bmp);
