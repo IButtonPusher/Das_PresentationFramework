@@ -4,6 +4,6 @@ namespace Das.Views.Styles.Application
 {
     public interface IStyleApplication
     {
-        void Execute();
+        void Execute(Boolean isUpdate);
     }
 }

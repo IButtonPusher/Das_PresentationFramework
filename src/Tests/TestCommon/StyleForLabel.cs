@@ -3,6 +3,7 @@ using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Styles;
+// ReSharper disable VirtualMemberCallInConstructor
 
 namespace TestCommon
 {

@@ -25,7 +25,9 @@ namespace Das.Views
 
             var bg = renderContext.GetStyleSetter<SolidColorBrush>(StyleSetterType.Background, this);
 
-            renderContext.FillRectangle(availableSpace.ToFullRectangle(), bg);
+            var r = availableSpace.ToFullRectangle();
+
+            renderContext.FillRectangle(r, bg);
         }
 
         public override ValueSize Measure(IRenderSize availableSpace,

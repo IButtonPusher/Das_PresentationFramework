@@ -14,7 +14,7 @@ namespace Das.Views
 
         public Boolean IsNotZero() => Quantity.IsNotZero();
 
-        public Boolean IsZero() => Quantity.IsNotZero();
+        public Boolean IsZero() => Quantity.IsZero();
 
         public static readonly QuantifiedDouble Zero = new QuantifiedDouble(0, LengthUnits.None);
 
@@ -69,11 +69,28 @@ namespace Das.Views
 
             var unitStr = value.Substring(endOfValue + 1);
 
-            var units = unitStr == "%" 
-                ? LengthUnits.Percent 
-                : ExtensionMethods.GetEnumValue(unitStr, LengthUnits.None);
-            
-            var val = Double.Parse(value.Substring(0, endOfValue + 1));
+            LengthUnits units;
+            if (unitStr == "%")
+                units = LengthUnits.Percent;
+            else if (ExtensionMethods.TryGetEnumValue<LengthUnits>(unitStr, out var u))
+                units = u;
+            else
+            {
+                units = LengthUnits.None;
+                //quantifiedDouble = Zero;
+                //return false;
+            }
+
+            //var units = unitStr == "%" 
+            //    ? LengthUnits.Percent 
+            //    : ExtensionMethods.GetEnumValue(unitStr, LengthUnits.None, false);
+
+            if (!Double.TryParse(value.Substring(0, endOfValue + 1), out var val))
+            {
+                quantifiedDouble = default;
+                return false;
+            }
+            //var val = Double.Parse(value.Substring(0, endOfValue + 1));
 
             quantifiedDouble = new QuantifiedDouble(val, units);
             return true;

@@ -7,9 +7,9 @@ namespace Das.Views.Styles.Declarations
     public abstract class ValueDeclaration<T> : DeclarationBase,
                                                 IStyleValueDeclaration
     {
-        public ValueDeclaration(T value,
-                                IStyleVariableAccessor variableAccessor,
-                                DeclarationProperty property)
+        protected ValueDeclaration(T value,
+                                   IStyleVariableAccessor variableAccessor,
+                                   DeclarationProperty property)
             : base(variableAccessor, property)
         {
             Value = value;

@@ -53,6 +53,14 @@ namespace Das.Views.Core.Geometry
             Depth = depth;
         }
 
+        IPoint2D IRectangle.TopLeft => TopLeft;
+
+        IPoint2D IRectangle.TopRight => TopRight;
+
+        IPoint2D IRectangle.BottomLeft => BottomLeft;
+
+        IPoint2D IRectangle.BottomRight => BottomRight;
+
         public Point2D BottomLeft => new Point2D(Left, Top + Height);
 
         public Point2D BottomRight => new Point2D(Left + Width, Top + Height);
@@ -89,7 +97,7 @@ namespace Das.Views.Core.Geometry
             return GeometryHelper.Minus(this, subtract);
         }
 
-        public Point2D Location => TopLeft;
+        public IPoint2D Location => TopLeft;
 
         public ISize Size => new ValueSize(Width, Height);
 

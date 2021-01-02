@@ -26,9 +26,9 @@ namespace Das.Views.Rendering
         }
 
         public virtual ValueSize Measure(IVisualElement container,
-                                         Orientations orientation, 
-                                 IRenderSize availableSpace, 
-                                 IMeasureContext measureContext)
+                                         Orientations orientation,
+                                         IRenderSize availableSpace,
+                                         IMeasureContext measureContext)
         {
             lock (_measureLock)
             {
@@ -45,11 +45,14 @@ namespace Das.Views.Rendering
                 var maxHeight = 0.0;
 
                 ElementsRendered.Clear();
-                
-                //for (var c = 0; c < elements.Count; c++)
-                _visuals.RunOnEachChild(child =>
+
+                foreach (var child in _visuals.GetAllChildren())
                 {
-                    //  var child = elements[c];
+
+                //}
+
+                //_visuals.RunOnEachChild(child =>
+                //{
                     _currentlyRendering.Add(child);
 
                     current.Size = measureContext.MeasureElement(child, remainingSize);
@@ -101,11 +104,11 @@ namespace Das.Views.Rendering
                             remainingSize.Height -= current.Height;
                             break;
                     }
-                });
+                }//);
 
                 var margin = measureContext.GetStyleSetter<Thickness>(StyleSetterType.Margin, container);
 
-                return new ValueSize(Math.Max(totalWidth, maxWidth) + margin.Width, 
+                return new ValueSize(Math.Max(totalWidth, maxWidth) + margin.Width,
                     Math.Max(totalHeight, maxHeight) + margin.Height);
 
                 //totalWidth = Math.Max(totalWidth, maxWidth);
@@ -116,8 +119,8 @@ namespace Das.Views.Rendering
         }
 
         public virtual void Arrange(Orientations orientation,
-                            IRenderRectangle bounds, 
-                            IRenderContext renderContext)
+                                    IRenderRectangle bounds, 
+                                    IRenderContext renderContext)
         {
             var offset = bounds.Location;
 
@@ -134,10 +137,8 @@ namespace Das.Views.Rendering
         protected virtual ValueSize SetChildSize(IVisualElement child,
                                             RenderRectangle current)
         {
-            if (current.Width > 500)
-            {}
-            
             ElementsRendered[child] = new ValueRenderRectangle(current);
+
             return ValueSize.Empty;
         }
 
@@ -248,20 +249,6 @@ namespace Das.Views.Rendering
 
             return current;
         }
-
-        //protected virtual ValueRenderRectangle GetCoreTargetRect(IVisualElement visual)
-        //{
-        //    return ElementsRendered[visual];
-        //}
-
-        //public Boolean TryGetRenderedElement(IVisualElement element,
-        //                                     out ValueRenderRectangle pos)
-        //{
-        //    lock (_measureLock)
-        //    {
-        //        return ElementsRendered.TryGetValue(element, out pos);
-        //    }
-        //}
 
         protected readonly IVisualCollection _visuals;
         protected readonly Boolean _isWrapContent;

@@ -40,6 +40,10 @@ namespace Das.Views.Styles
                 appliedStyle.AppliedRules.Add(appliedRule);
             }
 
+            appliedStyle.EnsureInverseForFilteredSelectors();
+
+            TrySetVisualStyle(visual, appliedStyle);
+
             if (appliedStyle.AppliedRules.Count == 0)
                 return default;
 
@@ -61,7 +65,7 @@ namespace Das.Views.Styles
             if (appliedStyle != null)
             {
                 TrySetVisualStyle(visual, appliedStyle);
-                appliedStyle.Execute();
+                appliedStyle.Execute(false);
             }
         }
 
@@ -86,10 +90,10 @@ namespace Das.Views.Styles
             //}
         }
 
-        private IAppliedStyleRule? BuildAppliedRule(AppliedStyle appliedStyle,
-                                                    IStyleRule rule,
-                                                    IVisualElement rootVisual,
-                                                    IVisualLineage visualLineage)
+        private AppliedStyleRule? BuildAppliedRule(AppliedStyle appliedStyle,
+                                                   IStyleRule rule,
+                                                   IVisualElement rootVisual,
+                                                   IVisualLineage visualLineage)
         {
             var appliedRule = new AppliedStyleRule(rule);
 

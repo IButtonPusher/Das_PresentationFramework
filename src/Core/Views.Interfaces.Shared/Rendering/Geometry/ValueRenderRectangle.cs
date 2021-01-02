@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Geometry;
+// ReSharper disable UnusedMember.Global
 
 namespace Das.Views.Rendering.Geometry
 {
@@ -71,6 +72,12 @@ namespace Das.Views.Rendering.Geometry
 
             Offset = offset;
 
+            TopLeft = new ValuePoint2D(X, Y);
+            TopRight = new ValuePoint2D(X + Width, Y);
+            BottomLeft = new ValuePoint2D(X, Y + Height);
+            BottomRight = new ValuePoint2D(X + Width, Y + Height);
+
+
             _hash = 0;
             _hash = GeometryHelper.BuildRectHash(this);
         }
@@ -102,6 +109,11 @@ namespace Das.Views.Rendering.Geometry
             Height = height;
             Offset = offset;
 
+            TopLeft = new ValuePoint2D(X, Y);
+            TopRight = new ValuePoint2D(X + Width, Y);
+            BottomLeft = new ValuePoint2D(X, Y + Height);
+            BottomRight = new ValuePoint2D(X + Width, Y + Height);
+
             _hash = 0;
             _hash = GeometryHelper.BuildRectHash(this);
         }
@@ -109,13 +121,31 @@ namespace Das.Views.Rendering.Geometry
         public static readonly ValueRenderRectangle Empty = new ValueRenderRectangle(0, 0, 0, 0,
             ValuePoint2D.Empty);
 
-        public Point2D BottomLeft => new Point2D(Left, Top + Height);
 
-        public Point2D BottomRight => new Point2D(Left + Width, Top + Height);
 
-        public Point2D TopLeft => new Point2D(Left, Top);
+        IPoint2D IRectangle.TopLeft => TopLeft;
 
-        public Point2D TopRight => new Point2D(Left + Width, Top);
+        IPoint2D IRectangle.TopRight => TopRight;
+
+        IPoint2D IRectangle.BottomLeft => BottomLeft;
+
+        IPoint2D IRectangle.BottomRight => BottomRight;
+
+        public readonly ValuePoint2D TopLeft;
+
+        public readonly ValuePoint2D TopRight;
+
+        public readonly ValuePoint2D BottomLeft;
+
+        public readonly ValuePoint2D BottomRight;
+
+        //public Point2D BottomLeft => new Point2D(Left, Top + Height);
+
+        //public Point2D BottomRight => new Point2D(Left + Width, Top + Height);
+
+        //public Point2D TopLeft => new Point2D(Left, Top);
+
+        //public Point2D TopRight => new Point2D(Left + Width, Top);
 
         public Double X { get; }
 
@@ -197,7 +227,7 @@ namespace Das.Views.Rendering.Geometry
             return new ValueRenderRectangle(X + point.X, Y + point.Y, Size, Offset);
         }
 
-        public Point2D Location => TopLeft;
+        public IPoint2D Location => TopLeft;
 
         public IRenderSize Size => new ValueRenderSize(Width, Height, Offset);
 
@@ -260,7 +290,12 @@ namespace Das.Views.Rendering.Geometry
 
         public override Boolean Equals(Object obj)
         {
-            return obj is IRectangle r && GeometryHelper.AreRectsEqual(this, r);
+            return obj is IRenderRectangle r && GeometryHelper.AreRenderRectsEquals(this, r);
+        }
+
+        public Boolean Equals(IRenderRectangle other)
+        {
+            return GeometryHelper.AreRenderRectsEquals(this, other);
         }
 
         public override Int32 GetHashCode()

@@ -41,17 +41,38 @@ namespace Das.Views.Core.Geometry
             Width = width;
             Height = height;
 
+            TopLeft = new ValuePoint2D(X, Y);
+            TopRight = new ValuePoint2D(X + Width, Y);
+            BottomLeft = new ValuePoint2D(X, Y + Height);
+            BottomRight = new ValuePoint2D(X + Width, Y + Height);
+
             _hash = 0;
             _hash = GeometryHelper.BuildRectHash(this);
         }
 
-        public Point2D BottomLeft => new Point2D(Left, Top + Height);
+        IPoint2D IRectangle.TopLeft => TopLeft;
 
-        public Point2D BottomRight => new Point2D(Left + Width, Top + Height);
+        IPoint2D IRectangle.TopRight => TopRight;
 
-        public Point2D TopLeft => new Point2D(Left, Top);
+        IPoint2D IRectangle.BottomLeft => BottomLeft;
 
-        public Point2D TopRight => new Point2D(Left + Width, Top);
+        IPoint2D IRectangle.BottomRight => BottomRight;
+
+        public readonly ValuePoint2D TopLeft;
+
+        public readonly ValuePoint2D TopRight;
+
+        public readonly ValuePoint2D BottomLeft;
+
+        public readonly ValuePoint2D BottomRight;
+
+        //public Point2D BottomLeft => new Point2D(Left, Top + Height);
+
+        //public Point2D BottomRight => new Point2D(Left + Width, Top + Height);
+
+        //public Point2D TopLeft => new Point2D(Left, Top);
+
+        //public Point2D TopRight => new Point2D(Left + Width, Top);
 
         public Double X { get; }
 
@@ -96,7 +117,7 @@ namespace Das.Views.Core.Geometry
             return _hash;
         }
 
-        public Point2D Location => TopLeft;
+        public IPoint2D Location => TopLeft;
 
         public ISize Size => new ValueSize(Width, Height);
 

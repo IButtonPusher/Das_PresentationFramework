@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Das.Views.Core.Geometry
 {
-    public readonly struct QuantifiedThickness
+    public readonly struct QuantifiedThickness : IBoxValue<QuantifiedDouble>
     {
         public QuantifiedThickness(QuantifiedDouble all)
             : this(all, all, all, all)
@@ -23,10 +23,10 @@ namespace Das.Views.Core.Geometry
                                    QuantifiedDouble right,
                                    QuantifiedDouble bottom)
         {
-            Left = left;
-            Top = top;
-            Right = right;
-            Bottom = bottom;
+            _left = left;
+            _top = top;
+            _right = right;
+            _bottom = bottom;
 
             IsEmpty = left.IsZero() &&
                        right.IsZero() &&
@@ -36,7 +36,7 @@ namespace Das.Views.Core.Geometry
 
         public override String ToString()
         {
-            return IsEmpty ? "0" : $"{Left} {Top} {Right} {Bottom}";
+            return IsEmpty ? "0" : $"{_left} {_top} {_right} {_bottom}";
         }
 
         public static QuantifiedThickness Parse(String value)
@@ -82,10 +82,18 @@ namespace Das.Views.Core.Geometry
 
         public static readonly QuantifiedThickness Empty = new QuantifiedThickness(0, 0, 0, 0);
 
-        private readonly QuantifiedDouble Left;
-        private readonly QuantifiedDouble Top;
-        private readonly QuantifiedDouble Right;
-        private readonly QuantifiedDouble Bottom;
+        public QuantifiedDouble Left => _left;
+
+        public QuantifiedDouble Right => _right;
+
+        public QuantifiedDouble Top => _top;
+
+        public QuantifiedDouble Bottom => _bottom;
+
+        private readonly QuantifiedDouble _left;
+        private readonly QuantifiedDouble _top;
+        private readonly QuantifiedDouble _right;
+        private readonly QuantifiedDouble _bottom;
 
         public Boolean IsEmpty { get; }
 
@@ -94,10 +102,10 @@ namespace Das.Views.Core.Geometry
             where TSize : ISize
         {
             return new ValueThickness(
-                Left.GetQuantity(size.Width),
-                Top.GetQuantity(size.Height),
-                Right.GetQuantity(size.Width),
-                Bottom.GetQuantity(size.Height));
+                _left.GetQuantity(size.Width),
+                _top.GetQuantity(size.Height),
+                _right.GetQuantity(size.Width),
+                _bottom.GetQuantity(size.Height));
         }
     }
 }

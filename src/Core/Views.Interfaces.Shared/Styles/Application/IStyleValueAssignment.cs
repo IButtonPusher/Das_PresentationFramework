@@ -18,5 +18,11 @@ namespace Das.Views.Styles.Application
 
     public interface IStyleValueAssignment : IStyleApplication
     {
+        /// <summary>
+        /// Checks if the assignments are to the same property
+        /// </summary>
+        Boolean DoOverlap(IStyleValueAssignment other);
+
+        IVisualElement Visual { get; }
     }
 }

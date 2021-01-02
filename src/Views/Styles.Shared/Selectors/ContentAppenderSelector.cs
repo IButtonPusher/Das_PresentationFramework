@@ -28,6 +28,14 @@ namespace Das.Views.Styles.Selectors
             return TypeSelector.IsFilteringOnVisualState();
         }
 
+        public IStyleSelector ToUnfiltered()
+        {
+            if (!IsFilteringOnVisualState())
+                return this;
+
+            return new ContentAppenderSelector(TypeSelector.ToUnfiltered(), AppendType);
+        }
+
         public Boolean Equals(IStyleSelector other)
         {
             return other is ContentAppenderSelector contenty &&

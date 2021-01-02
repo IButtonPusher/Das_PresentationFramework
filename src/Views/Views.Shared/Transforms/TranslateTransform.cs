@@ -1,16 +1,14 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Transforms
 {
     public class TranslateTransform : ITransform
     {
-        public QuantifiedDouble X { get; }
-
-        public QuantifiedDouble Y { get; }
-
         public TranslateTransform(QuantifiedDouble x)
-        : this(x, QuantifiedDouble.Zero)
-        { }
+            : this(x, QuantifiedDouble.Zero)
+        {
+        }
 
         public TranslateTransform(QuantifiedDouble x,
                                   QuantifiedDouble y)
@@ -21,12 +19,21 @@ namespace Das.Views.Transforms
             IsIdentity = X.IsZero() && Y.IsZero();
 
             Value = IsIdentity
-                ? ValueTranslation.Identity
-                : new ValueTranslation(1, 0, 0, 1, x, y);
+                ? TransformationMatrix.Identity
+                : new TransformationMatrix(1, 0, 0, 1, x, y);
         }
 
         public Boolean IsIdentity { get; }
 
-        public ValueTranslation Value { get; }
+        public TransformationMatrix Value { get; }
+
+        public QuantifiedDouble X { get; }
+
+        public QuantifiedDouble Y { get; }
+
+        public override String ToString()
+        {
+            return "Translate - X: " + X + " Y: " + Y;
+        }
     }
 }

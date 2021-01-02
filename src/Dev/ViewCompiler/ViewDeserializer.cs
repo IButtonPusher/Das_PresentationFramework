@@ -15,18 +15,24 @@ namespace ViewCompiler
                                     IViewDeserializer
     {
         //public ViewDeserializer(ISerializerSettings settings) : base(settings)
-        public ViewDeserializer() : base(GetSettings())
+        public ViewDeserializer() 
+            : this(GetSettings())
         {
+        }
+
+        private ViewDeserializer(DasSettings settings) : base(settings)
+        {
+            settings.AttributeValueSurrogates = new AttributeBindingSurrogate(TypeManipulator);
             RootNode = NullNode.Instance;
         }
 
 
-        private static DasSettings GetSettings()
+        private static DasSettings GetSettings()//IPropertyProvider propertyProvider)
         {
             var settings = DasSettings.Default;
             settings.NotFoundBehavior = TypeNotFound.NullValue;
             settings.PropertySearchDepth = TextPropertySearchDepths.AsTypeInNamespacesAndSystem;
-            settings.AttributeValueSurrogates = new AttributeBindingSurrogate();
+            //settings.AttributeValueSurrogates = new AttributeBindingSurrogate(propertyProvider);
             settings.TypeSearchNameSpaces = new[]
             {
                 "Das.Views.Controls",
@@ -118,7 +124,8 @@ namespace ViewCompiler
             {
                 case IVisualElement visualElement:
                     var current = node.Parent;
-                    if (current != NullNode.Instance && current?.Value is IVisualContainer container)
+                    if (!ReferenceEquals(current, NullNode.Instance) && 
+                        current?.Value is IVisualContainer container)
                     {
                         if (container.Children.Contains(visualElement))
                             container.OnChildDeserialized(visualElement, node);
@@ -128,7 +135,7 @@ namespace ViewCompiler
                     }
                     else
                     {
-                        current = current.Parent;
+                        //current = current.Parent;
                     }
 
                     break;

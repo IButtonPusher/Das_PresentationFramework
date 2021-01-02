@@ -15,8 +15,7 @@ namespace Das.Views.DataBinding
         public DeferredPropertyBinding(String sourcePropertyName,
                                        String targetPropertyName,
                                        IPropertyAccessor propertyAccessor,
-                                       IValueConverter? converter = null)
-            //: this(sourcePropertyName)
+                                       IValueConverter? converter)
         {
             _propertyAccessor = propertyAccessor;
             SourcePropertyName = sourcePropertyName;
@@ -60,10 +59,6 @@ namespace Das.Views.DataBinding
                     !(TargetPropertyName is { } targetPropertyName))
                     throw new NotImplementedException();
 
-                //if (targetPropertyName == nameof(IBindableElement.DataContext))
-                //{
-
-                //}
 
                 if (count > 1)
                     return this;
@@ -124,14 +119,6 @@ namespace Das.Views.DataBinding
                 return null;
 
             return _propertyAccessor.GetPropertyValue(dataContext);
-
-            //var prop = dataContext.GetType().GetProperty(SourcePropertyName);
-            //var prop = GetBindingProperty(dataContext.GetType(), SourcePropertyName);
-            //if (prop == null)
-            //    return null;
-            //return prop.GetValue(dataContext, null);
-
-            //return GetPropertyValue(dataContext.GetType(), SourcePropertyName, dataContext);
         }
     }
 }

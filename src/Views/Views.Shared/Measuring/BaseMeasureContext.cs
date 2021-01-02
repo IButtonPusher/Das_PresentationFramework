@@ -85,7 +85,8 @@ namespace Das.Views.Measuring
                         return val;
                 }
 
-                return ValueSize.Empty;
+                // measure anyways if we know nothing of it...?
+                //return ValueSize.Empty;
             }
 
             VisualLineage.PushVisual(element);

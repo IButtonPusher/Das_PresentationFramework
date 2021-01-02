@@ -25,7 +25,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\AppearanceDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\AppearanceType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\BorderRadiusDeclaration.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Declarations\BoxShadow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\BoxShadowDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\ColorDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\CursorType.cs" />
@@ -39,6 +38,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\FontSizeDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\LineHeightDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\MarginDeclaration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Declarations\MultiValueDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Outline\OutlineStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Outline\OutlineColorDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Outline\OutlineDeclaration.cs" />
@@ -59,7 +59,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Transition\MultiTransitionDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Transition\TransitionDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Transition\TransitionDurationDeclaration.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Declarations\Transition\TransitionFunctionType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Transition\TransitionFunctionDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\Transition\TransitionPropertyDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\ValueDeclaration.cs" />

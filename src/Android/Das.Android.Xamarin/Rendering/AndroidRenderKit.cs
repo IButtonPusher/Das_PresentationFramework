@@ -141,6 +141,8 @@ namespace Das.Xamarin.Android
             
             var lastMeasures = new Dictionary<IVisualElement, ValueSize>();
 
+            var layoutQueue = new LayoutQueue();
+
             measureContext = new AndroidMeasureKit(windowManager, fontProvider, 
                 this, lastMeasures,styleContext, displayMetrics, visualLineage);
 
@@ -150,10 +152,10 @@ namespace Das.Xamarin.Android
 
             renderContext = new AndroidRenderContext(viewPerspective,
                 fontProvider, viewState, this, visualPositions,
-                lastMeasures, styleContext, visualLineage);
+                lastMeasures, styleContext, visualLineage, layoutQueue);
             
-            refreshRenderContext = new RefreshRenderContext(viewPerspective, this, visualPositions,
-                lastMeasures, styleContext, visualLineage);
+            refreshRenderContext = new RefreshRenderContext(viewPerspective, this, 
+                visualPositions, lastMeasures, styleContext, visualLineage, layoutQueue);
 
             Container.ResolveTo<IImageProvider>(imageProvider);
             Container.ResolveTo(uiProvider);

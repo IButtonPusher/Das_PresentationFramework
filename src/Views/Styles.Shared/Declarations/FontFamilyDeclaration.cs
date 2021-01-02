@@ -11,31 +11,7 @@ namespace Das.Views.Styles.Declarations
             : base(GetFontFamily(fontFamily, variableAccessor),
                 variableAccessor, DeclarationProperty.FontFamily)
         {
-            //var fn = FunctionBuilder.GetFunction(fontFamily, variableAccessor);
-
-            //var val = fn.GetValue();
-
-            //switch (val)
-            //{
-            //    case String str:
-            //        _fontFamily = str;
-            //        break;
-
-            //    case Object?[] fallbacks:
-
-            //        foreach (var fallback in fallbacks)
-            //            if (fallback is String strValid)
-            //            {
-            //                //todo: ensure the font face exists + is valid etc
-            //                _fontFamily = strValid;
-            //                break;
-            //            }
-
-            //        break;
-            //}
-
-
-            //_fontFamily = fontFamily;
+           
         }
         
         private static String GetFontFamily(String fontFamily,

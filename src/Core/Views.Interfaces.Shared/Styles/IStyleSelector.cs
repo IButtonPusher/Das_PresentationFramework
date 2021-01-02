@@ -12,5 +12,11 @@ namespace Das.Views.Styles
         /// Returns true if this selector should only apply to a visual in certain states
         /// </summary>
         Boolean IsFilteringOnVisualState();
+
+        /// <summary>
+        /// returns a selector without any visual state selectors
+        /// </summary>
+        /// <returns></returns>
+        IStyleSelector ToUnfiltered();
     }
 }

@@ -10,6 +10,7 @@ using Das.Views.Construction.Styles;
 using Das.Views.Styles;
 using Das.Views.Styles.Construction;
 using Xunit;
+// ReSharper disable All
 
 namespace Dpf.Tests
 {
@@ -20,7 +21,7 @@ namespace Dpf.Tests
         {
             var css = GetFileContents("material-switch.css");
             var nodes = CssNodeBuilder.GetMarkupNodes(css).ToArray();
-            var selectors = new List<IStyleSelector>();
+            //var selectors = new List<IStyleSelector>();
             var rules = new List<IStyleRule>();
 
             var styleContext = DefaultStyleContext.Instance;

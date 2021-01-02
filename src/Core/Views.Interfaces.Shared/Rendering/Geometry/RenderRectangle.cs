@@ -41,12 +41,12 @@ namespace Das.Views.Rendering.Geometry
         }
 
         public void Update<TPoint, TRenderRectangle, TThickness>(TRenderRectangle rect,
-                                                     TPoint parentOffset,
-                                                     TThickness margin,
-                                                     TThickness border)
+                                                                 TPoint parentOffset,
+                                                                 TThickness margin,
+                                                                 TThickness border)
             where TPoint : IPoint2D
             where TRenderRectangle : IRenderRectangle
-        where TThickness : IThickness
+            where TThickness : IThickness
         {
             _left = rect.Left + margin.Left - parentOffset.X;
             _top = rect.Top + margin.Top - parentOffset.Y;
@@ -55,7 +55,7 @@ namespace Das.Views.Rendering.Geometry
             _offset = rect.Offset;
 
 
-            if (border.IsEmpty) 
+            if (border.IsEmpty)
                 return;
 
             _left += border.Left;
@@ -65,13 +65,13 @@ namespace Das.Views.Rendering.Geometry
         }
 
         public void Update<TPoint>(Double x,
-                                            Double y,
-                                            Double width,
-                                            Double height,
-                                            TPoint parentOffset,
-                                            TPoint offset,
-                                            Thickness margin,
-                                            Thickness border)
+                                   Double y,
+                                   Double width,
+                                   Double height,
+                                   TPoint parentOffset,
+                                   TPoint offset,
+                                   Thickness margin,
+                                   Thickness border)
             where TPoint : IPoint2D
         {
             _left = x + margin.Left - parentOffset.X;
@@ -111,12 +111,9 @@ namespace Das.Views.Rendering.Geometry
             return GeometryHelper.MinusVertical(this, subtract);
         }
 
-        //new IRenderSize IRenderRectangle.Size => new ValueRenderSize(base.Size);
-
         public IPoint2D Offset  
         {
             get => _offset;
-            //set => _offset = value;
         }
 
         IRenderSize IRenderSize.Reduce(Thickness padding)
@@ -203,6 +200,11 @@ namespace Das.Views.Rendering.Geometry
                 rect.Size.Height * val,
                 new ValuePoint2D(rect.Offset.X * val,
                     rect.Offset.Y * val));
+        }
+
+        public Boolean Equals(IRenderRectangle other)
+        {
+            return GeometryHelper.AreRenderRectsEquals(this, other);
         }
     }
 }

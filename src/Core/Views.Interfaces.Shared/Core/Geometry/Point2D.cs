@@ -60,7 +60,8 @@ namespace Das.Views.Core.Geometry
 
         public static Point2D Empty { get; }
 
-        public static IPoint2D operator +(Point2D p1, IPoint2D p2)
+        public static IPoint2D operator +(Point2D p1, 
+                                          IPoint2D p2)
         {
             if (p2 == null)
                 return p1.DeepCopy();
@@ -80,6 +81,11 @@ namespace Das.Views.Core.Geometry
                 return new Size(0 - p2.X, 0 - p2.Y);
 
             return new Size(p1.X - p2.X, p1.Y - p2.Y);
+        }
+
+        public Boolean Equals(IPoint2D other)
+        {
+            return GeometryHelper.ArePoints2DEqual(this, other);
         }
 
         public override String ToString()

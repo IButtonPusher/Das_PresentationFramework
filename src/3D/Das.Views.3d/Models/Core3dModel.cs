@@ -28,6 +28,7 @@ namespace Das.Views.Extended
             throw new NotImplementedException();
         }
 
+        // ReSharper disable once CoVariantArrayConversion
         IMesh[] IVisual3dElement.Meshes => Meshes;
     }
 }

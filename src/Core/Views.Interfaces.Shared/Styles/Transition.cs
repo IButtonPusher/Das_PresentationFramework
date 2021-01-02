@@ -1,5 +1,6 @@
 ﻿using System;
 using Das.Views.Styles;
+using Das.Views.Transitions;
 
 namespace Das.Views.Rendering
 {
@@ -8,7 +9,7 @@ namespace Das.Views.Rendering
         public Transition(StyleSetterType setterType,
                           TimeSpan duration,
                           TimeSpan delay, 
-                          TransitionTiming timing)
+                          TransitionFunctionType timing)
         {
             SetterType = setterType;
             Duration = duration;
@@ -24,6 +25,6 @@ namespace Das.Views.Rendering
 
         public TimeSpan Delay { get; }
 
-        public TransitionTiming Timing { get; }
+        public TransitionFunctionType Timing { get; }
     }
 }

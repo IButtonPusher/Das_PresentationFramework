@@ -37,13 +37,15 @@ namespace Das.Gdi.Kits
 
             var lastMeasure = new Dictionary<IVisualElement, ValueSize>();
             var visualLineage = new VisualLineage();
+            var layoutQueue = new LayoutQueue();
 
             MeasureContext = new GdiMeasureContext(defaultSurrogates, lastMeasure,
                 _styleContext, visualLineage);
 
             RenderContext = new GdiRenderContext(viewPerspective,
                 MeasureContext.Graphics, defaultSurrogates, lastMeasure,
-                new Dictionary<IVisualElement, ValueCube>(), _styleContext, new VisualLineage());
+                new Dictionary<IVisualElement, ValueCube>(), 
+                _styleContext, visualLineage, layoutQueue);
         }
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;

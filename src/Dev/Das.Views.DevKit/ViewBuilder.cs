@@ -9,6 +9,7 @@ using Das.Views.Rendering;
 using Das.Views.Rendering.Geometry;
 using Das.Views.Styles;
 using Das.Views.Templates;
+// ReSharper disable All
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 #pragma warning disable 8618

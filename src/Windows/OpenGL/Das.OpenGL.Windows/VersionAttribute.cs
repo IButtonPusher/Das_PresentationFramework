@@ -40,6 +40,7 @@ namespace Das.OpenGL.Windows
         /// <param name="enumeration">The enumeration.</param>
         /// <returns>The <see cref="VersionAttribute"/> defined on <paramref name="enumeration "/>, or null of none exists.</returns>
         public static VersionAttribute GetVersionAttribute(Enum enumeration) =>
+            // ReSharper disable once AssignNullToNotNullAttribute
             enumeration
                 .GetType()
                 .GetMember(enumeration.ToString())

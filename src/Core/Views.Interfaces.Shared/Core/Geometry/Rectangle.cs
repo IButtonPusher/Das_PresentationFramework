@@ -152,11 +152,22 @@ namespace Das.Views.Core.Geometry
 
         ISize IPointContainer.Size => Size;
 
+        IPoint2D IPointContainer.Location => Location;
+
         public Point2D Location
         {
             get => TopLeft;
             set => TopLeft = value;
         }
+
+        IPoint2D IRectangle.TopLeft => TopLeft;
+
+        IPoint2D IRectangle.TopRight => TopRight;
+
+        IPoint2D IRectangle.BottomLeft => BottomLeft;
+
+        IPoint2D IRectangle.BottomRight => BottomRight;
+
 
         public Point2D TopLeft
         {

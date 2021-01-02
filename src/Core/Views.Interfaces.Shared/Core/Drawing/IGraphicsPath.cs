@@ -8,15 +8,16 @@ namespace Das.Views.Core.Drawing
         void LineTo<TPoint>(TPoint p1)
             where TPoint : IPoint2D;
 
-        //void AddLine<TPoint>(TPoint p1,
-        //                     TPoint p2)
-        //    where TPoint : IPoint2D;
-
-        void AddArc<TRectangle>(TRectangle arc, 
+        void AddArc<TRectangle>(TRectangle arc,
                                 Single startAngle,
                                 Single endAngle)
             where TRectangle : IRectangle;
 
         void CloseFigure();
+
+        void SetRoundedRectangle<TThickness, TRect>(TRect bounds,
+                                                    TThickness cornerRadii)
+            where TThickness : IThickness
+            where TRect : IRectangle;
     }
 }

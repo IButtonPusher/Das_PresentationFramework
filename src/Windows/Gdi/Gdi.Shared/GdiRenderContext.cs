@@ -25,9 +25,10 @@ namespace Das.Gdi
                                 Dictionary<IVisualElement, ValueSize> lastMeasures,
                                 Dictionary<IVisualElement, ValueCube> renderPositions,
                                 IStyleContext styleContext,
-                                IVisualLineage visualLineage)
+                                IVisualLineage visualLineage,
+                                ILayoutQueue layoutQueue)
             : base(perspective, surrogateProvider, renderPositions,
-                lastMeasures, styleContext, visualLineage)
+                lastMeasures, styleContext, visualLineage, layoutQueue)
         {
             _testPen = new Pen(Color.Yellow, 1);
             Graphics = nullGraphics;
@@ -39,7 +40,7 @@ namespace Das.Gdi
                                                        Double radius,
                                                        TPen pen)
         {
-            var c = GetAbsolutePoint(center);
+            var c = _boxModel.GetAbsolutePoint(center, ZoomLevel);
 
             var usePen = GdiTypeConverter.GetPen(pen);
             var asRect = new Rectangle(Convert.ToInt32(c.X - radius),
@@ -117,12 +118,13 @@ namespace Das.Gdi
             }
 
             //var useRect = GetAbsoluteGdiRectangle(rect);
-            var useRect = GetAbsoluteRect(rect);
+            var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
             var usePen = GdiTypeConverter.GetPen(pen);
 
             using (var path = new GdiGraphicsPath())
             {
-                CreateRoundedRectangle(path, useRect, cornerRadii);
+                path.SetRoundedRectangle(useRect, cornerRadii);
+                //CreateRoundedRectangle(path, useRect, cornerRadii);
                 Graphics.DrawPath(usePen, path.Path);
             }
 
@@ -168,7 +170,7 @@ namespace Das.Gdi
                                                      Double endAngle,
                                                      TBrush brush)
         {
-            var c = GetAbsolutePoint(center);
+            var c = _boxModel.GetAbsolutePoint(center, ZoomLevel);
 
             var useBrush = GdiTypeConverter.GetBrush(brush);
             var asRect = new RectangleF((Single) (c.X - radius), (Single) (c.Y - radius),
@@ -201,12 +203,13 @@ namespace Das.Gdi
             }
 
             //var useRect = GetAbsoluteGdiRectangle(rect);
-            var useRect = GetAbsoluteRect(rect);
+            var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
             var useBrush = GdiTypeConverter.GetBrush(brush);
 
             using (var path = new GdiGraphicsPath())
             {
-                CreateRoundedRectangle(path, useRect, cornerRadii);
+                path.SetRoundedRectangle(useRect, cornerRadii);
+                //CreateRoundedRectangle(path, useRect, cornerRadii);
                 Graphics.FillPath(useBrush, path.Path);
             }
 
@@ -252,7 +255,7 @@ namespace Das.Gdi
 
         private Point GetAbsoluteGdiPoint(IPoint2D relativePoint2D)
         {
-            var to = GetAbsolutePoint(relativePoint2D);
+            var to = _boxModel.GetAbsolutePoint(relativePoint2D, ZoomLevel);
             return new Point(Convert.ToInt32(to.X),
                 Convert.ToInt32(to.Y));
         }
@@ -260,14 +263,15 @@ namespace Das.Gdi
         private Rectangle GetAbsoluteGdiRectangle(
             IRectangle relativeRect)
         {
-            var absRect = GetAbsoluteRect(relativeRect);
+            var absRect = _boxModel.GetAbsoluteRect(relativeRect, ZoomLevel);
             return GdiTypeConverter.GetRect(absRect);
         }
 
         private RectangleF GetAbsoluteGdiRectangleF<TRectangle>(TRectangle relativeRect)
             where TRectangle : IRectangle
         {
-            var absRect = GetAbsoluteRect(relativeRect);
+            //var absRect = GetAbsoluteRect(relativeRect);
+            var absRect = _boxModel.GetAbsoluteRect(relativeRect, ZoomLevel);
             return GdiTypeConverter.GetRect(absRect);
         }
 

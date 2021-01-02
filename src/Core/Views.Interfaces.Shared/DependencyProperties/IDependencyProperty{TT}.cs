@@ -1,9 +1,10 @@
 ﻿using System;
 using Das.Views.Styles;
+using Das.Views.Transitions;
 
 namespace Das.Views
 {
-   public interface IDependencyProperty<TVisual, TValue> 
+   public interface IDependencyProperty<TVisual, TValue>
        where TVisual : IVisualElement
     {
         void AddOnChangedHandler(Action<TVisual, TValue, TValue> handler);
@@ -13,6 +14,9 @@ namespace Das.Views
 
         void AddOnChangingHandler(TVisual forVisual,
                                   Func<TVisual, TValue, TValue, Boolean> handler);
+
+        void AddTransition(TVisual visual,
+                           ITransition<TValue> transition);
 
         TValue GetValue(TVisual forVisual);
 
@@ -32,5 +36,8 @@ namespace Das.Views
 
         void SetValue(TVisual forVisual,
                       TValue value);
+
+        void SetValueNoTransitions(TVisual forVisual,
+                                   TValue value);
     }
 }

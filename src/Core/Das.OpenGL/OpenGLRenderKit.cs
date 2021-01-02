@@ -23,12 +23,14 @@ namespace Das.OpenGL
             var lastMeasurements = new Dictionary<IVisualElement, ValueSize>();
             var lastRender = new Dictionary<IVisualElement, ValueCube>();
             var visualLineage = new VisualLineage();
+            var layoutQueue = new LayoutQueue();
             
             MeasureContext = new GLMeasureContext(fontProvider, this, 
                 lastMeasurements, styleContext, visualLineage);
             
             RenderContext = new GLRenderContext(new BasePerspective(),
-                 glContext, fontProvider, this, styleContext, visualLineage, lastRender);
+                 glContext, fontProvider, this, styleContext, 
+                 visualLineage, lastRender, layoutQueue);
         }
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;

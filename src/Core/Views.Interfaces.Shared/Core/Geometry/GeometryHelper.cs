@@ -166,6 +166,20 @@ namespace Das.Views.Core.Geometry
                    left.Width.AreEqualEnough(right.Width);
         }
 
+        public static Boolean ArePoints2DEqual<TPoint>(TPoint left,
+                                                       IPoint2D right)
+            where TPoint : IPoint2D
+        {
+            return left.X.AreEqualEnough(right.X) && left.Y.AreEqualEnough(right.Y);
+        }
+
+        public static Boolean AreRenderRectsEquals<TRect>(TRect left,
+                                                          IRenderRectangle right)
+            where TRect : IRenderRectangle
+        {
+            return AreRectsEqual(left, right) && left.Offset.Equals(right.Offset);
+        }
+
         public static Int32 BuildRectHash<TRect>(TRect me)
             where TRect : IRectangle
         {

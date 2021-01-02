@@ -12,7 +12,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)IDataPoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pie\IPieData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pie\PieChart.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Pie\PieChart2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pie\PieLegendItem.cs" />
   </ItemGroup>
 </Project>

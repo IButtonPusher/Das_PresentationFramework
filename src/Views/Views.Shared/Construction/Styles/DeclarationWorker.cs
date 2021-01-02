@@ -11,7 +11,10 @@ using Das.Views.Styles;
 using Das.Views.Styles.Application;
 using Das.Views.Styles.Declarations;
 using Das.Views.Styles.Declarations.Transform;
+using Das.Views.Styles.Declarations.Transition;
+using Das.Views.Styles.Transitions;
 using Das.Views.Transforms;
+using Das.Views.Transitions;
 
 namespace Das.Views.Construction.Styles
 {
@@ -48,6 +51,12 @@ namespace Das.Views.Construction.Styles
         {
             foreach (var declaration in declarations)
             {
+                if (declaration is IStyleMultiValueDeclaration<TransitionDeclaration> transitions)
+                {
+                    ApplyTransitionsToVisual(visual, transitions);
+                    continue;
+                }
+
                 var assignment = ApplyDeclarationToVisual(visual,
                     declaration);
 
@@ -56,10 +65,31 @@ namespace Das.Views.Construction.Styles
             }
         }
 
+        private static void ApplyTransitionsToVisual(IVisualElement visual,
+            IStyleMultiValueDeclaration<TransitionDeclaration> transitions)
+        {
+            foreach (var transition in transitions.Values)
+            {
+                if (visual.TryGetDependencyProperty(transition.TransitionProperty.Value,
+                    out var dependencyProperty))
+                {
+                    var res = TransitionBuilder.BuildTransition(visual, dependencyProperty,
+                        transition.Duration.ToTimeSpan(),
+                        transition.Delay?.ToTimeSpan() ?? TimeSpan.Zero,
+                        transition.TimingFunction?.Value ?? TransitionFunctionType.Ease);
+
+                    dependencyProperty.AddTransition(visual, res);
+                }
+
+                
+               // transition.Property
+            }
+        }
+
         private static IStyleValueAssignment? ApplyDeclarationToVisual(IVisualElement visual,
                                                                        IStyleDeclaration declaration)
         {
-            if (visual.TryGetDependencyProperty(declaration.Property, //declarationValue, 
+            if (visual.TryGetDependencyProperty(declaration.Property, 
                 out var dependencyProperty))
             {
                 Debug.WriteLine("Setting " + visual.GetType().Name + "->" + dependencyProperty +
@@ -95,17 +125,26 @@ namespace Das.Views.Construction.Styles
             switch (declaration)
             {
                 case TransformDeclaration xform:
-                    return ConvertTransform(xform);
+                    return ConvertTransform(xform).Value;
 
                 case IStyleValueDeclaration scalar:
                     var res = scalar.Value;
                     res = ConvertDeclarationValue(res);
                     return res;
 
+                //case IStyleMultiValueDeclaration multiScalar:
+                //    return GetMultiScalarValues(multiScalar);
+
             }
 
             throw new NotImplementedException();
         }
+
+        //private static IEnumerable<Object?> GetMultiScalarValues(IStyleMultiValueDeclaration multi)
+        //{
+        //    foreach (var value in multi.Values)
+        //        yield return ConvertDeclarationValue(value);
+        //}
 
         private static Object? ConvertDeclarationValue(Object? value)
         {

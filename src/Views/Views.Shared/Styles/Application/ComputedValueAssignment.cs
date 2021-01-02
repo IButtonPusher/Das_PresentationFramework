@@ -1,25 +1,34 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Styles.Application
 {
-    public class ComputedValueAssignment : IStyleValueAssignment
+    public class ComputedValueAssignment : IPropertyValueAssignment
     {
-        private readonly IVisualElement _visual;
-        private readonly IDependencyProperty _dependencyProperty;
-        private readonly Func<IVisualElement, Object?> _valueBuilder;
-
         public ComputedValueAssignment(IVisualElement visual,
                                        IDependencyProperty dependencyProperty,
                                        Func<IVisualElement, Object?> valueBuilder)
         {
-            _visual = visual;
-            _dependencyProperty = dependencyProperty;
+            Visual = visual;
+            Property = dependencyProperty;
             _valueBuilder = valueBuilder;
         }
 
-        public void Execute()
+        public IVisualElement Visual { get; }
+
+        public Boolean DoOverlap(IStyleValueAssignment other)
         {
-            _dependencyProperty.SetComputedValueFromStyle(_visual, _valueBuilder);
+            return other is ComputedValueAssignment applied &&
+                   applied.Property.Equals(Property);
         }
+
+        public void Execute(Boolean isUpdate)
+        {
+            Property.SetComputedValueFromStyle(Visual, _valueBuilder);
+        }
+
+        public IDependencyProperty Property { get; }
+
+        private readonly Func<IVisualElement, Object?> _valueBuilder;
     }
 }

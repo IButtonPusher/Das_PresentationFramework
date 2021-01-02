@@ -33,10 +33,17 @@ namespace Das.Views.Panels
             return new ValueSize(useWidth, useHeight);
         }
 
+        public override Boolean IsRequiresArrange
+        {
+            get => base.IsRequiresArrange || Children.IsRequiresArrange;
+            protected set => base.IsRequiresArrange = value;
+
+        }
+
         public override void Arrange(IRenderSize availableSpace, 
                                      IRenderContext renderContext)
         {
-            //var iWant = renderContext.GetLastMeasure(this);
+            System.Diagnostics.Debug.WriteLine(">> arranging canvas");
 
             foreach (var child in Children.GetAllChildren())
             {
@@ -53,6 +60,8 @@ namespace Das.Views.Panels
 
                 renderContext.DrawElement(child,drawMe);
             }
+
+            System.Diagnostics.Debug.WriteLine("<< arranged canvas");
         }
 
         protected override void OnDistributeDataContextToChildren(Object? newValue)

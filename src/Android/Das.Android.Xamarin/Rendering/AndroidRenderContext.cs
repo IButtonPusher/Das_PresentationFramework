@@ -22,9 +22,10 @@ namespace Das.Xamarin.Android
                                     Dictionary<IVisualElement, ValueCube> renderPositions,
                                     Dictionary<IVisualElement, ValueSize> lastMeasurements,
                                     IStyleContext styleContext,
-                                    IVisualLineage visualLineage)
+                                    IVisualLineage visualLineage,
+                                    ILayoutQueue layoutQueue)
             : base(perspective, surrogateProvider, renderPositions, lastMeasurements, 
-                styleContext, visualLineage)
+                styleContext, visualLineage, layoutQueue)
         {
             _fontProvider = fontProvider;
             _paint = new Paint();
@@ -126,9 +127,10 @@ namespace Das.Xamarin.Android
             _paint.SetStyle(Paint.Style.Stroke);
             SetColor(pen);
 
-            var useRect = GetAbsoluteRect(rect);
+            var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
             var path = new AndroidGraphicsPath();
-            CreateRoundedRectangle(path, useRect, cornerRadii);
+            path.SetRoundedRectangle(useRect, cornerRadii);
+            //CreateRoundedRectangle(path, useRect, cornerRadii);
             GetCanvas().DrawPath(path.Path, _paint);
 
             //GetCanvas().DrawRoundRect(GetAbsoluteAndroidRectF(rect),
@@ -199,7 +201,7 @@ namespace Das.Xamarin.Android
                                                                TPoint location)
         {
             var renderer = _fontProvider.GetRenderer(font, VisualLineage);
-            var dest = GetAbsolutePoint(location);
+            var dest = _boxModel.GetAbsolutePoint(location, ZoomLevel);
             renderer.Canvas = GetCanvas();
             renderer.DrawString(s, brush, dest);
         }
@@ -210,7 +212,7 @@ namespace Das.Xamarin.Android
                                                                    TBrush brush)
         {
             var renderer = _fontProvider.GetRenderer(font, VisualLineage);
-            var dest = GetAbsoluteRect(location);
+            var dest = _boxModel.GetAbsoluteRect(location, ZoomLevel);
             renderer.Canvas = GetCanvas();
             renderer.DrawStringInRect(s, brush, dest);
         }
@@ -242,9 +244,10 @@ namespace Das.Xamarin.Android
             _paint.SetStyle(Paint.Style.Fill);
             SetColor(brush);
             //var target = GetAbsoluteAndroidRectF(rect);
-            var useRect = GetAbsoluteRect(rect);
+            var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
             var path = new AndroidGraphicsPath();
-            CreateRoundedRectangle(path, useRect, cornerRadii);
+            path.SetRoundedRectangle(useRect, cornerRadii);
+            //CreateRoundedRectangle(path, useRect, cornerRadii);
             GetCanvas().DrawPath(path.Path, _paint);
             //GetCanvas().DrawRoundRect(target,
             //    Convert.ToSingle(cornerRadius),

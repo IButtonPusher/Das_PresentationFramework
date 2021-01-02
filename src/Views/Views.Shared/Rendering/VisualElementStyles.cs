@@ -57,6 +57,29 @@ namespace Das.Views
                 case DeclarationProperty.Transform:
                     dependencyProperty = TransformProperty;
                     break;
+
+                case DeclarationProperty.Top:
+                    dependencyProperty = TopProperty;
+                    break;
+
+                case DeclarationProperty.Left:
+                    dependencyProperty = LeftProperty;
+                    break;
+
+                case DeclarationProperty.Right:
+                    dependencyProperty = RightProperty;
+                    break;
+
+                case DeclarationProperty.Bottom:
+                    dependencyProperty = BottomProperty;
+                    break;
+
+                case DeclarationProperty.BoxShadow:
+                    dependencyProperty = BoxShadowProperty;
+                    break;
+
+                case DeclarationProperty.Transition:
+                    break;
             }
 
             property = dependencyProperty!;

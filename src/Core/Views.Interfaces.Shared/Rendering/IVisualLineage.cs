@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace Das.Views.Rendering
 {
     /// <summary>
+    /// The Logical hierarchy of visuals.  Does not deal with coordinates, margins, etc
     /// Allows traversal of the visual hierarchy starting from the visual
     /// currently being rendered up to the root of the visual tree
     /// </summary>

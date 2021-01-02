@@ -38,11 +38,6 @@ namespace Das.Views.DataBinding
             return base.Update(dataContext, targetVisual);
         }
 
-        public override void UpdateDataContext(Object? dataContext)
-        {
-            base.UpdateDataContext(dataContext);
-        }
-
         public override Object Clone()
         {
             return new DataContextBinding(TargetPropertyName, Converter);

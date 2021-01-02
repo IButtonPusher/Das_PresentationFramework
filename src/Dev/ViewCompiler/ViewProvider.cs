@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Das.Serializer;
 using Das.Views;
+// ReSharper disable All
 
 namespace ViewCompiler
 {
@@ -21,7 +22,7 @@ namespace ViewCompiler
         public async Task<IVisualElement> GetView(FileInfo file)
         {
             var bldr = await _builder.GetViewBuilder(file);
-            return bldr;
+            return bldr ?? throw new NullReferenceException();
         }
 
         private readonly ViewBuilderProvider _builder;

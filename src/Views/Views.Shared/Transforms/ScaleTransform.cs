@@ -24,12 +24,13 @@ namespace Das.Views.Transforms
             IsIdentity = ScaleX.AreEqualEnough(1.0) && ScaleY.AreEqualEnough(1.0);
 
             Value = IsIdentity 
-                ? ValueTranslation.Identity 
-                : new ValueTranslation(scaleX, 0, 0, scaleY, 0, 0);
+                ? TransformationMatrix.Identity 
+                : new TransformationMatrix(scaleX, 0, 0, scaleY, 0, 0);
         }
+
 
         public Boolean IsIdentity { get; }
 
-        public ValueTranslation Value { get; }
+        public TransformationMatrix Value { get; }
     }
 }

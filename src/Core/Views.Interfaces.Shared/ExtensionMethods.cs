@@ -16,7 +16,29 @@ namespace Das.Views
             {
             }
         }
-        
+
+        public static Boolean TryGetEnumValue<TEnum>(String name,
+                                                     out TEnum value)
+            where TEnum : struct
+        {
+            if (name.Length == 0)
+                goto fail;
+
+            name = name.IndexOf('-') > 0
+                ? name.Replace("-", "")
+                : name;
+
+            if (Enum.TryParse<TEnum>(name, true, out var val))
+            {
+                value = val;
+                return true;
+            }
+
+            fail:
+            value = default!;
+            return false;
+        }
+
         public static TEnum GetEnumValue<TEnum>(String name,
                                                    TEnum defaultValue)
             where TEnum : struct

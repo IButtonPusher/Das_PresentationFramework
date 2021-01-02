@@ -16,6 +16,7 @@ namespace Das.Views.Styles.Transitions
         {
             _duration = duration;
             _delay = delay;
+            
         }
 
         public virtual void Start(CancellationToken cancel)
@@ -35,18 +36,18 @@ namespace Das.Views.Styles.Transitions
         }
 
 
-        protected static Double GetNextValue(Double pctComplete,
-                                             Easing easing)
-        {
-            switch (easing)
-            {
-                case Easing.QuadraticOut:
-                    return GetEaseOut(pctComplete);
+        //protected static Double GetNextValue(Double pctComplete,
+        //                                     Easing easing)
+        //{
+        //    switch (easing)
+        //    {
+        //        case Easing.QuadraticOut:
+        //            return GetEaseOut(pctComplete);
 
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(easing), easing, null);
-            }
-        }
+        //        default:
+        //            throw new ArgumentOutOfRangeException(nameof(easing), easing, null);
+        //    }
+        //}
 
         protected virtual void OnFinished(Boolean wasCancelled)
         {

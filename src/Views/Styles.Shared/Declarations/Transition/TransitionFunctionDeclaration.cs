@@ -1,4 +1,5 @@
 ﻿using System;
+using Das.Views.Transitions;
 
 namespace Das.Views.Styles.Declarations.Transition
 {

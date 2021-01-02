@@ -11,7 +11,7 @@ namespace Das.Views.Transforms
 
         public Boolean IsIdentity => true;
 
-        public ValueTranslation Value => ValueTranslation.Identity;
+        public TransformationMatrix Value => TransformationMatrix.Identity;
 
         public static readonly IdentityTransform Instance = new IdentityTransform();
     }

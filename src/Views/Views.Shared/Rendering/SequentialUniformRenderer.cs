@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Das.Extensions;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
@@ -21,7 +20,7 @@ namespace Das.Views.Rendering
         {
             _maxHeight = _maxWidth = 0;
             //_currentMax = ValueSize.Empty;
-            _positions = new Dictionary<IVisualElement, ValuePoint2D>();
+            //_positions = new Dictionary<IVisualElement, ValuePoint2D>();
             _lastOrientation = Orientations.Vertical;
         }
 
@@ -35,7 +34,7 @@ namespace Das.Views.Rendering
             {
                 _maxWidth = _maxHeight = 0;
                 _lastOrientation = orientation;
-                _positions.Clear();
+                //_positions.Clear();
 
                 _currentlyRendering.Clear();
 
@@ -51,7 +50,8 @@ namespace Das.Views.Rendering
 
 
                 //for (var c = 0; c < elements.Count; c++)
-                _visuals.RunOnEachChild(child =>
+                //_visuals.RunOnEachChild(child =>
+                foreach (var child in _visuals.GetAllChildren())
                 {
                     // var child = elements[c];
                     _currentlyRendering.Add(child);
@@ -105,7 +105,7 @@ namespace Das.Views.Rendering
                             remainingSize.Height -= current.Height;
                             break;
                     }
-                });
+                }//);
 
                 var margin = measureContext.GetStyleSetter<Thickness>(StyleSetterType.Margin, container);
 
@@ -174,6 +174,6 @@ namespace Das.Views.Rendering
         private Orientations _lastOrientation;
         
 
-        private readonly Dictionary<IVisualElement, ValuePoint2D> _positions;
+        //private readonly Dictionary<IVisualElement, ValuePoint2D> _positions;
     }
 }

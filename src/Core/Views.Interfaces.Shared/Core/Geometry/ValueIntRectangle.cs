@@ -28,7 +28,7 @@ namespace Das.Views.Core.Geometry
             
         }
 
-        public Point2D Location { get; }
+        public IPoint2D Location { get; }
 
         public ISize Size { get; }
 

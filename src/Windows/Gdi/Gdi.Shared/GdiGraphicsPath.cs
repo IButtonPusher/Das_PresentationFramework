@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Drawing.Drawing2D;
-using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
+using Das.Views.Rendering;
 
 namespace Gdi.Shared
 {
-    public class GdiGraphicsPath : IGraphicsPath
+    public class GdiGraphicsPath : GraphicsPathBase
     {
         public GdiGraphicsPath()
         {
@@ -20,28 +20,26 @@ namespace Gdi.Shared
         }
 
 
-        public void LineTo<TPoint>(TPoint p1) 
-            where TPoint : IPoint2D
+        public override void LineTo<TPoint>(TPoint p1)
         {
             Path.AddLine(I4(p1.X), I4(p1.Y), I4(p1.X), I4(p1.Y));
         }
 
-        public void AddArc<TRectangle>(TRectangle arc, 
-                                       Single startAngle, 
-                                       Single endAngle) 
-            where TRectangle : IRectangle
+        public override void AddArc<TRectangle>(TRectangle arc, 
+                                                Single startAngle, 
+                                                Single endAngle)
         {
             Path.AddArc(I4(arc.X), I4(arc.Y), I4(arc.Width), I4(arc.Height), 
                 startAngle, endAngle);
         }
 
-        public void CloseFigure()
+        public override void CloseFigure()
         {
             Path.CloseFigure();
             
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             Path.Dispose();
         }

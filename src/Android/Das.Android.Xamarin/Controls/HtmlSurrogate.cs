@@ -5,6 +5,7 @@ using Android.Content;
 using Android.Views;
 using Android.Webkit;
 using Das.Views;
+using Das.Views.BoxModel;
 using Das.Views.Controls;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
@@ -94,28 +95,28 @@ namespace Das.Xamarin.Android.Controls
             set => _htmlPanel.Height = value;
         }
 
-        QuantifiedDouble? IVisualElement.Left
+        QuantifiedDouble? IBoxValue<QuantifiedDouble?>.Left
         {
             get => _htmlPanel.Left;
-            set => _htmlPanel.Left = value;
+            //set => _htmlPanel.Left = value;
         }
 
-        QuantifiedDouble? IVisualElement.Right
+        QuantifiedDouble? IBoxValue<QuantifiedDouble?>.Right
         {
             get => _htmlPanel.Right;
-            set => _htmlPanel.Right = value;
+            //set => _htmlPanel.Right = value;
         }
 
-        QuantifiedDouble? IVisualElement.Top
+        QuantifiedDouble? IBoxValue<QuantifiedDouble?>.Top
         {
             get => _htmlPanel.Top;
-            set => _htmlPanel.Top = value;
+            //set => _htmlPanel.Top = value;
         }
 
-        QuantifiedDouble? IVisualElement.Bottom
+        QuantifiedDouble? IBoxValue<QuantifiedDouble?>.Bottom
         {
             get => _htmlPanel.Bottom;
-            set => _htmlPanel.Bottom = value;
+            //set => _htmlPanel.Bottom = value;
         }
 
         public HorizontalAlignments HorizontalAlignment
@@ -164,7 +165,7 @@ namespace Das.Xamarin.Android.Controls
             set => _htmlPanel.IsEnabled = value;
         }
 
-        ITransform IVisualElement.Transform
+        TransformationMatrix IVisualElement.Transform
         {
             get => _htmlPanel.Transform;
             set => _htmlPanel.Transform = value;
@@ -194,6 +195,8 @@ namespace Das.Xamarin.Android.Controls
         }
 
         public Int32 ZIndex => _htmlPanel.ZIndex;
+
+        public IBoxShadow BoxShadow => _htmlPanel.BoxShadow;
 
         Int32 IVisualElement.Id => _htmlPanel.Id;
 

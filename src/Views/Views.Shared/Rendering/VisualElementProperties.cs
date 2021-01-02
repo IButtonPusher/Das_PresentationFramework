@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Das.Views.BoxModel;
 using Das.Views.Controls;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
+using Das.Views.DependencyProperties;
 using Das.Views.Transforms;
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
@@ -14,8 +16,6 @@ namespace Das.Views
 {
     public abstract partial class VisualElement
     {
-        
-        
         public virtual Boolean IsRequiresMeasure
         {
             get => _isRequiresMeasure;
@@ -84,8 +84,7 @@ namespace Das.Views
 
         public static readonly DependencyProperty<IVisualElement, IVisualTemplate?> TemplateProperty =
             DependencyProperty<IVisualElement, IVisualTemplate?>.Register(
-                nameof(Template),
-                default);
+                nameof(Template), default, OnTemplateChanged);
 
         public IVisualTemplate? Template
         {
@@ -237,14 +236,24 @@ namespace Das.Views
             set => BottomProperty.SetValue(this, value);
         }
 
-        public static readonly DependencyProperty<IVisualElement, ITransform> TransformProperty =
-            DependencyProperty<IVisualElement, ITransform>.Register(
-                nameof(Transform), IdentityTransform.Instance);
+        public static readonly DependencyProperty<IVisualElement, TransformationMatrix> TransformProperty =
+            DependencyProperty<IVisualElement, TransformationMatrix>.Register(
+                nameof(Transform), TransformationMatrix.Identity, PropertyMetadata.AffectsArrange);
 
-        public ITransform Transform
+        public TransformationMatrix Transform
         {
             get => TransformProperty.GetValue(this);
             set => TransformProperty.SetValue(this, value);
+        }
+
+        public static readonly DependencyProperty<IVisualElement, IBoxShadow> BoxShadowProperty =
+            DependencyProperty<IVisualElement, IBoxShadow>.Register(
+                nameof(BoxShadow), Das.Views.BoxModel.BoxShadow.Empty);
+
+        public IBoxShadow BoxShadow
+        {
+            get => BoxShadowProperty.GetValue(this);
+            set => BoxShadowProperty.SetValue(this, value);
         }
 
 

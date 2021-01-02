@@ -96,7 +96,7 @@ namespace Das.Views
 
         protected IVisualElement GetElementForLayout(IVisualElement element)
         {
-            _surrogateProvider.EnsureSurrogate(ref element);
+            _surrogateProvider.TrySetSurrogate(ref element);
 
             if (element.Template is {Content: { } validTemplateContent})
                 return validTemplateContent;

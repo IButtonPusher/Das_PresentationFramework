@@ -1,92 +1,74 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using Das.Views.Core.Drawing;
+using Das.Views.DependencyProperties;
 using Das.Views.Styles;
-using Das.Views.Transforms;
+using Das.Views.Transitions;
 
 namespace Das.Views
 {
     public class DependencyProperty<TVisual, TValue> : IDependencyProperty<TVisual, TValue>,
-                                                       IDependencyProperty
+                                                       IDependencyProperty<TValue>
         where TVisual : IVisualElement
     {
-        public DependencyProperty(String propertyName,
-                                  TValue defaultValue)
+        private DependencyProperty(String propertyName,
+                                   TValue defaultValue,
+                                   PropertyMetadata metaData)
         {
             _delegateLock = new Object();
-            _propertyName = propertyName;
-            _defaultValue = defaultValue;
-            
+            Name = propertyName;
+            DefaultValue = defaultValue;
+            _metaData = metaData;
+
             _values = new ConcurrentDictionary<TVisual, TValue>();
             _computedValues = new ConcurrentDictionary<TVisual, Func<IVisualElement, Object?>>();
-            
+
             _changings = new ConcurrentDictionary<TVisual, List<Func<TVisual, TValue, TValue, Boolean>>>();
             _changeds = new ConcurrentDictionary<TVisual, HashSet<Action<TVisual, TValue, TValue>>>();
             _knownVisuals = new ConcurrentDictionary<TVisual, Byte>();
             _staticChangeds = new List<Action<TVisual, TValue, TValue>>();
+            _transitions = new ConcurrentDictionary<TVisual, ITransition<TValue>>();
         }
 
         Object? IDependencyProperty.GetValue(IVisualElement visual)
         {
-            if (visual is TVisual tv)
-                return GetValue(tv);
+            var tv = GetValue<IVisualElement, TVisual>(visual);
+            return GetValue(tv);
+        }
 
-            throw new InvalidCastException(visual + " cannot be cast to type " + typeof(TVisual));
+        public TValue GetValue(IVisualElement visual)
+        {
+            var tv = GetValue<IVisualElement, TVisual>(visual);
+            return GetValue(tv);
+        }
+
+        void IDependencyProperty.SetValueNoTransitions(IVisualElement visual,
+                                                       Object? value)
+        {
+            SetRuntimeValueImpl(visual, value, false, true);
         }
 
         void IDependencyProperty.SetValue(IVisualElement visual,
                                           Object? value)
         {
-            if (value is TranslateTransform)
-            {}
-
-            SetRuntimeValueImpl(visual, value, false);
+            SetRuntimeValueImpl(visual, value, false, false);
         }
 
-        private static TOut GetValue<TIn, TOut>(TIn value)
+        void IDependencyProperty.SetValueFromStyle(IVisualElement visual,
+                                                   Object? value)
         {
-            if (Equals(value, default))
-                return default!;
-            
-            if (!(value is TOut tv))
-                throw new InvalidCastException(value + " cannot be cast to type " + typeof(TOut));
-
-            return tv;
+            SetRuntimeValueImpl(visual, value, true, false);
         }
 
-        private void SetRuntimeValueImpl(IVisualElement visual,
-                                         Object? value,
-                                         Boolean isFromStyle)
-        {
-            var tv = GetValue<IVisualElement, TVisual>(visual);
-
-            switch (value)
-            {
-                case null:
-                    SetValue(tv, default!);
-                    break;
-
-                case TValue valid:
-                    SetValue(tv, valid);
-                    break;
-
-                default:
-                    throw new InvalidCastException(value + " cannot be cast to type " + typeof(TValue));
-            }
-        }
-
-        void IDependencyProperty.SetValueFromStyle(IVisualElement visual, Object? value)
-        {
-            SetRuntimeValueImpl(visual, value, true);
-        }
-
-        void IDependencyProperty.SetComputedValueFromStyle(IVisualElement visual, 
+        void IDependencyProperty.SetComputedValueFromStyle(IVisualElement visual,
                                                            Func<IVisualElement, Object?> value)
         {
             var tv = GetValue<IVisualElement, TVisual>(visual);
             _values.TryRemove(tv, out _);
-            
+
             _computedValues[tv] = value;
             EnsureKnown(tv);
         }
@@ -96,15 +78,35 @@ namespace Das.Views
         {
             var tVisual = GetValue<IVisualElement, TVisual>(visual);
 
-            AddOnChangedHandler(tVisual, (v, was, now) => onChange(this));
+            AddOnChangedHandler(tVisual, (v,
+                                          was,
+                                          now) => onChange(this));
         }
 
+        void IDependencyProperty.AddTransition(IVisualElement visual,
+                                               ITransition transition)
+        {
+            var tv = GetValue<IVisualElement, TVisual>(visual);
+            var ttransition = GetValue<ITransition, ITransition<TValue>>(transition);
+            AddTransition(tv, ttransition);
+        }
 
-        public String Name => _propertyName;
+        public TValue DefaultValue { get; }
+
+        Object? IDependencyProperty.DefaultValue => DefaultValue;
+
+
+        public String Name { get; }
 
         public Type PropertyType => typeof(TValue);
 
         public Type VisualType => typeof(TVisual);
+
+        public Boolean Equals(IDependencyProperty other)
+        {
+            return other is DependencyProperty<TVisual, TValue> valid &&
+                   String.Equals(valid.Name, Name);
+        }
 
         public void AddOnChangedHandler(Action<TVisual, TValue, TValue> handler)
         {
@@ -134,31 +136,20 @@ namespace Das.Views
             }
         }
 
-        private Boolean TryGetKnownOrComputedValue(TVisual forVisual,
-                                                   out TValue value)
+        public void AddTransition(TVisual forVisual,
+                                  ITransition<TValue> transition)
         {
-            if (_values.TryGetValue(forVisual, out value))
-                return true;
-            
-            if (_computedValues.TryGetValue(forVisual, out var computer))
-            {
-                var computed = computer(forVisual);
-                value = GetValue<Object, TValue>(computed!);
-                return true;
-            }
-            
-            value = default!;
-            return false;
+            _transitions[forVisual] = transition;
         }
 
         public TValue GetValue(TVisual forVisual)
         {
             if (!TryGetKnownOrComputedValue(forVisual, out var good))
             {
-                good = _defaultValue;
+                good = DefaultValue;
                 EnsureKnown(forVisual);
             }
-            
+
             return good;
         }
 
@@ -183,18 +174,9 @@ namespace Das.Views
         {
             SetValueImpl(forVisual, value,
                 GetOnChanging(forVisual, WrapOnChanging(onChanging)),
-                GetOnChanged(forVisual, WrapOnChanged(onChanged)));
+                GetOnChanged(forVisual, WrapOnChanged(onChanged)), false);
         }
-        
-        public void SetValue(TVisual forVisual,
-                             TValue value,
-                             Action<TValue, TValue> onChanged)
-        {
-            SetValueImpl(forVisual, value,
-                GetOnChanging(forVisual, null),
-                GetOnChanged(forVisual, WrapOnChanged(onChanged)));
-        }
-        
+
 
         public void SetValue(TVisual forVisual,
                              TValue value,
@@ -203,21 +185,20 @@ namespace Das.Views
         {
             SetValueImpl(forVisual, value,
                 GetOnChanging(forVisual, onChanging),
-                GetOnChanged(forVisual, onChanged));
+                GetOnChanged(forVisual, onChanged), false);
         }
 
 
         public void SetValue(TVisual forVisual,
                              TValue value)
         {
-            SetValueImpl(forVisual, value,
-                GetOnChanging(forVisual, null),
-                GetOnChanged(forVisual, null));
+            SetValueImpl(forVisual, value, false);
         }
 
-        public override String ToString()
+        public void SetValueNoTransitions(TVisual forVisual,
+                                          TValue value)
         {
-            return _propertyName;
+            SetValueImpl(forVisual, value, true);
         }
 
         public static DependencyProperty<TVisual, TValue> Register(String propertyName,
@@ -230,13 +211,35 @@ namespace Das.Views
         }
 
         public static DependencyProperty<TVisual, TValue> Register(String propertyName,
-                                                                   TValue defaultValue)
+                                                                   TValue defaultValue,
+                                                                   PropertyMetadata metadata)
         {
-            var dep = new DependencyProperty<TVisual, TValue>(propertyName, defaultValue);
+            var dep = new DependencyProperty<TVisual, TValue>(propertyName, defaultValue, metadata);
 
             DependencyProperty.NotifyTypeRegistration(dep);
 
             return dep;
+        }
+
+
+        public static DependencyProperty<TVisual, TValue> Register(String propertyName,
+                                                                   TValue defaultValue)
+        {
+            return Register(propertyName, defaultValue, PropertyMetadata.None);
+        }
+
+        public void SetValue(TVisual forVisual,
+                             TValue value,
+                             Action<TValue, TValue> onChanged)
+        {
+            SetValueImpl(forVisual, value,
+                GetOnChanging(forVisual, null),
+                GetOnChanged(forVisual, WrapOnChanged(onChanged)), false);
+        }
+
+        public override String ToString()
+        {
+            return Name;
         }
 
         private void EnsureKnown(TVisual forVisual)
@@ -258,6 +261,14 @@ namespace Das.Views
         {
             EnsureKnown(forVisual);
             return new List<Func<TVisual, TValue, TValue, Boolean>>();
+        }
+
+        private TValue GetOldValue(TVisual forVisual)
+        {
+            if (_values.TryGetValue(forVisual, out var was))
+                return was;
+
+            return DefaultValue;
         }
 
         private IEnumerable<Action<TVisual, TValue, TValue>> GetOnChanged(TVisual forVisual,
@@ -313,10 +324,27 @@ namespace Das.Views
             }
         }
 
+
+        private static TOut GetValue<TIn, TOut>(TIn value)
+        {
+            if (Equals(value, default))
+                return default!;
+
+            if (!(value is TOut tv))
+                throw new InvalidCastException(value + " cannot be cast to type " + typeof(TOut));
+
+            return tv;
+        }
+
+        private Boolean HasMetadataFlag(PropertyMetadata flag)
+        {
+            return (_metaData & flag) == flag;
+        }
+
         private void OnVisualDisposed(IVisualElement visual)
         {
             visual.Disposed -= OnVisualDisposed;
-            
+
             if (!(visual is TVisual valid))
                 return;
 
@@ -326,41 +354,108 @@ namespace Das.Views
             _computedValues.TryRemove(valid, out _);
             _changeds.TryRemove(valid, out _);
             _changings.TryRemove(valid, out _);
+            _transitions.TryRemove(valid, out _);
+        }
+
+        private void SetRuntimeValueImpl(IVisualElement visual,
+                                         Object? value,
+                                         // ReSharper disable once UnusedParameter.Local
+                                         Boolean isFromStyle,
+                                         Boolean isDeclineTransitions)
+        {
+            var tv = GetValue<IVisualElement, TVisual>(visual);
+            var tValue = GetValue<Object?, TValue>(value);
+            SetValueImpl(tv, tValue, isDeclineTransitions);
+
+            //switch (value)
+            //{
+            //    case null:
+            //        SetValue(tv, default!);
+            //        break;
+
+            //    case TValue valid:
+            //        SetValue(tv, valid);
+            //        break;
+
+            //    default:
+            //        throw new InvalidCastException(value + " cannot be cast to type " + typeof(TValue));
+            //}
+        }
+
+        private void SetValueImpl(TVisual forVisual,
+                                  TValue value,
+                                  Boolean isDeclineTransitions)
+        {
+            SetValueImpl(forVisual, value,
+                GetOnChanging(forVisual, null),
+                GetOnChanged(forVisual, null), isDeclineTransitions);
         }
 
         private void SetValueImpl(TVisual forVisual,
                                   TValue value,
                                   IEnumerable<Func<TVisual, TValue, TValue, Boolean>> onChangers,
-                                  IEnumerable<Action<TVisual, TValue, TValue>> onChangeds)
+                                  IEnumerable<Action<TVisual, TValue, TValue>> onChangeds,
+                                  Boolean isDeclineTransitions)
         {
-            if (_values.TryGetValue(forVisual, out var was))
-            {
-                if (Equals(was, value))
-                    return;
-            }
-            else
-            {
-                //was unknown, setting it to default - no point
-                if (Equals(value, _defaultValue))
-                    return;
+            var oldValue = GetOldValue(forVisual);
 
-                was = _defaultValue;
-            }
+            if (value is IBrush && oldValue != null) { }
 
-            foreach (var oc in onChangers)
-                if (!oc(forVisual, was, value))
-                    return;
+            if (Equals(value, oldValue))
+                return; //trying to set it to the same value - no point  
+
+            if (!isDeclineTransitions)
+                // let subscribers veto this change if desired but not if we're updating as part of 
+                // a transition
+                foreach (var oc in onChangers)
+                    if (!oc(forVisual, oldValue, value))
+                        return;
+
+            if (!isDeclineTransitions && _transitions.TryGetValue(forVisual, out var transition))
+            {
+                transition.SetValue(oldValue, value);
+                return;
+            }
 
             _values[forVisual] = value;
 
-            foreach (var oc in onChangeds) oc(forVisual, was, value);
+            foreach (var oc in onChangeds)
+                oc(forVisual, oldValue, value);
 
-            forVisual.RaisePropertyChanged(_propertyName, value);
+            forVisual.RaisePropertyChanged(Name, value);
+
+            if (HasMetadataFlag(PropertyMetadata.AffectsMeasure))
+                forVisual.InvalidateMeasure();
+
+            else if (HasMetadataFlag(PropertyMetadata.AffectsArrange))
+            {
+                Debug.WriteLine("invalidate arrange per dep prop change");
+                forVisual.InvalidateArrange();
+            }
+        }
+
+        private Boolean TryGetKnownOrComputedValue(TVisual forVisual,
+                                                   out TValue value)
+        {
+            if (_values.TryGetValue(forVisual, out value))
+                return true;
+
+            if (_computedValues.TryGetValue(forVisual, out var computer))
+            {
+                var computed = computer(forVisual);
+                value = GetValue<Object, TValue>(computed!);
+                return true;
+            }
+
+            value = default!;
+            return false;
         }
 
         private static Action<TVisual, TValue, TValue> WrapOnChanged(Action<TValue, TValue> onChanged)
         {
-            void Wrapped(TVisual _, TValue oldValue, TValue newValue)
+            void Wrapped(TVisual _,
+                         TValue oldValue,
+                         TValue newValue)
             {
                 onChanged(oldValue, newValue);
             }
@@ -371,7 +466,9 @@ namespace Das.Views
         private static Func<TVisual, TValue, TValue, Boolean> WrapOnChanging(
             Func<TValue, TValue, Boolean> onChanging)
         {
-            Boolean Wrapped(TVisual _, TValue oldValue, TValue newValue)
+            Boolean Wrapped(TVisual _,
+                            TValue oldValue,
+                            TValue newValue)
             {
                 return onChanging(oldValue, newValue);
             }
@@ -380,15 +477,14 @@ namespace Das.Views
         }
 
         private readonly ConcurrentDictionary<TVisual, HashSet<Action<TVisual, TValue, TValue>>> _changeds;
-        //private readonly ConcurrentDictionary<TVisual, List<Action<TVisual, TValue, TValue>>> _changeds;
         private readonly ConcurrentDictionary<TVisual, List<Func<TVisual, TValue, TValue, Boolean>>> _changings;
-        private readonly TValue _defaultValue;
+
+        private readonly ConcurrentDictionary<TVisual, Func<IVisualElement, Object?>> _computedValues;
         private readonly Object _delegateLock;
         private readonly ConcurrentDictionary<TVisual, Byte> _knownVisuals;
-        private readonly String _propertyName;
+        private readonly PropertyMetadata _metaData;
         private readonly List<Action<TVisual, TValue, TValue>> _staticChangeds;
+        private readonly ConcurrentDictionary<TVisual, ITransition<TValue>> _transitions;
         private readonly ConcurrentDictionary<TVisual, TValue> _values;
-        
-        private readonly ConcurrentDictionary<TVisual, Func<IVisualElement, Object?>> _computedValues;
     }
 }

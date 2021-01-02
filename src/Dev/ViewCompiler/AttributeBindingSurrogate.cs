@@ -7,13 +7,21 @@ namespace Das.Views.DevKit
 {
     public class AttributeBindingSurrogate : IAttributeValueSurrogates
     {
+        private readonly IPropertyProvider _propertyProvider;
+
+        public AttributeBindingSurrogate(IPropertyProvider propertyProvider)
+        {
+            _propertyProvider = propertyProvider;
+        }
+
         public Boolean TryGetValue(ITextNode node, 
                                    String attributeName,
                                    String attributeText, 
                                    out Object value)
         {
             if (attributeName != "Binding" || 
-                node.Value == null)
+                node.Value == null || 
+                node.Type == null)
             {
                 goto fail;
             }
@@ -27,7 +35,9 @@ namespace Das.Views.DevKit
 
             if (gargs.Length == 0)
             {
-                value = new DeferredPropertyBinding(attributeText, "Binding", null);
+                var propBinding = _propertyProvider.GetPropertyAccessor(node.Type, "Binding");
+
+                value = new DeferredPropertyBinding(attributeText, "Binding", propBinding, null);
                 return true;
             }
 

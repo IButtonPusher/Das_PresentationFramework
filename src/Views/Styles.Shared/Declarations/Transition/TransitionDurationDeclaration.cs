@@ -12,6 +12,26 @@ namespace Das.Views.Styles.Declarations.Transition
         {
         }
 
+        public TimeSpan ToTimeSpan()
+        {
+            switch (Units)
+            {
+                case TimeUnit.Ms:
+                    return TimeSpan.FromMilliseconds(Value);
+
+                case TimeUnit.S:
+                    return TimeSpan.FromSeconds(Value);
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public override String ToString()
+        {
+            return Value + "" + Units;
+        }
+
         public static Boolean IsValidQuantity(String value)
         {
             return IsValidQuantity(value, TimeUnit.Invalid, _defaultQuantitySearch);

@@ -7,6 +7,7 @@ using Das.Views.Construction;
 using Das.Views.Construction.Styles;
 using Das.Views.Controls;
 using Das.Views.Core.Geometry;
+using Das.Views.Layout;
 using Das.Views.Styles;
 using Das.Views.Styles.Construction;
 using Das.Views.Templates;
@@ -98,7 +99,8 @@ namespace Das.Views
                                                                  IStyleContext styleContext,
                                                                  IPropertyProvider propertyProvider)
         {
-            return new DefaultVisualBootstrapper(resolver, styleContext, propertyProvider);
+            return new DefaultVisualBootstrapper(resolver, styleContext, propertyProvider,
+                new LayoutQueue());
         }
 
         private static IStyledVisualBuilder GetStyleVisualBuilder(IVisualBootstrapper visualBootstrapper,
@@ -132,16 +134,23 @@ namespace Das.Views
                 visualTypeResolver, styleVisualBuilder, propertyProvider);
         }
 
-        public void EnsureSurrogate(ref IVisualElement element)
+        public Boolean TrySetSurrogate(ref IVisualElement element)
         {
             if (_surrogateInstances.TryGetValue(element, out var surrogate))
+            {
                 element = surrogate;
-            else if (_surrogateTypeBuilders.TryGetValue(element.GetType(), out var bldr))
+                return true;
+            }
+
+            if (_surrogateTypeBuilders.TryGetValue(element.GetType(), out var bldr))
             {
                 var res = bldr(element);
                 _surrogateInstances[element] = res;
                 element = res;
+                return true;
             }
+
+            return false;
         }
 
         public IResolver Container { get; }

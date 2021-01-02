@@ -9,12 +9,21 @@
     <Import_RootNamespace>Das.Views</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxShadow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxShadowLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\IThemeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\ApplyVisualStyles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IAttributeDictionary.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IBoxModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IQuantifiedRectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxValue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IDependencyProperty{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\PropertyMetadata.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ILayoutQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transitions\ITransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IAppliedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IAppliedStyleRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IPropertyValueAssignment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IStyleApplication.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IStyleCondition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IStyleValueAssignment.cs" />
@@ -42,12 +51,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\ContentAppendType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\DeclarationProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\ICascadingStyle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleDeclaration{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleMultiValueDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleValueDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleVariableAccessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IVisualStyleProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\ITransform.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Transforms\ValueTranslation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transforms\TransformationMatrix.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transitions\TransitionFunctionType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Visuals\IContentVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\IButtonBase{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\IToggleButton{T}.cs" />
@@ -223,10 +233,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSetterType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleTypeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transition.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Styles\TransitionTiming.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\IDataTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\IMultiDataTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\ITemplatableVisual.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Templates\IVisualBootstrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IVisualBootstrapper.cs" />
   </ItemGroup>
 </Project>

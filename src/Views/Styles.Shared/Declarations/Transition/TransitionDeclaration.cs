@@ -1,4 +1,5 @@
 ﻿using System;
+using Das.Views.Transitions;
 
 namespace Das.Views.Styles.Declarations.Transition
 {
@@ -42,7 +43,16 @@ namespace Das.Views.Styles.Declarations.Transition
                     variableAccessor);
 
         }
-        
+
+        public override String ToString()
+        {
+            var str = TransitionProperty.Value + " " + Duration;
+            if (Delay != null)
+                str += Delay;
+
+            return str;
+        }
+
         public TransitionPropertyDeclaration TransitionProperty { get; }
         
         public TransitionDurationDeclaration Duration { get; }

@@ -19,8 +19,10 @@ namespace Das.OpenGL
                                IVisualSurrogateProvider surrogateProvider,
                                IStyleContext styleContext,
                                IVisualLineage visualLineage,
-                               Dictionary<IVisualElement, ValueCube> renderPositions)
-            : base(perspective, surrogateProvider, styleContext, visualLineage, renderPositions)
+                               Dictionary<IVisualElement, ValueCube> renderPositions,
+                               ILayoutQueue layoutQueue)
+            : base(perspective, surrogateProvider, styleContext, 
+                visualLineage, renderPositions, layoutQueue)
         {
             _openGlContext = openGlContext;
             _fontProvider = fontProvider;
@@ -40,7 +42,7 @@ namespace Das.OpenGL
                                                                TBrush brush,
                                                                TPoint location)
         {
-            var to = GetAbsolutePoint(location);
+            var to = _boxModel.GetAbsolutePoint(location, ZoomLevel);
             var renderer = _fontProvider.GetRenderer(font);
             renderer.DrawString(s, brush, to);
         }
@@ -166,7 +168,7 @@ namespace Das.OpenGL
         public override void DrawRect<TRectangle, TPen>(TRectangle rect,
                                                         TPen pen)
         {
-            var points = new IPoint2D[] { rect.TopLeft, rect.TopRight,
+            var points = new[] { rect.TopLeft, rect.TopRight,
                 rect.BottomRight, rect.BottomLeft };
 
             DrawLines(pen, points);

@@ -14,13 +14,15 @@ namespace Das.Views.Templates
     {
         public DefaultVisualBootstrapper(IResolver dependencyResolver,
                                          IStyleContext styleContext,
-                                         IPropertyProvider propertyProvider)
+                                         IPropertyProvider propertyProvider,
+                                         ILayoutQueue layoutQueue)
         {
             StyleContext = styleContext;
             _dependencyResolver = dependencyResolver;
             _propertyProvider = propertyProvider;
+            _layoutQueue = layoutQueue;
 
-            
+
             _defaultConstructorLock = new Object();
 
             //_bindingConstructors = new Dictionary<Type, ConstructorInfo>();
@@ -189,7 +191,7 @@ namespace Das.Views.Templates
                 if (val == null)
                     continue;
                 
-                dp.SetValue(toVisual, val);
+                dp.SetValueNoTransitions(toVisual, val);
             }
         }
         
@@ -209,6 +211,7 @@ namespace Das.Views.Templates
         private readonly Dictionary<Type, ConstructorInfo> _defaultConstructors;
         private readonly IResolver _dependencyResolver;
         private readonly IPropertyProvider _propertyProvider;
+        private readonly ILayoutQueue _layoutQueue;
         private IUiProvider? _uiProvider;
 
 
@@ -216,6 +219,16 @@ namespace Das.Views.Templates
                                                      String propertyName)
         {
             return _propertyProvider.GetPropertyAccessor(declaringType, propertyName);
+        }
+
+        public void QueueVisualForMeasure(IVisualElement visual)
+        {
+            _layoutQueue.QueueVisualForMeasure(visual);
+        }
+
+        public void QueueVisualForArrange(IVisualElement visual)
+        {
+            _layoutQueue.QueueVisualForArrange(visual);
         }
     }
 }

@@ -14,7 +14,12 @@ namespace Das.Views.Styles.Selectors
         {
             return false;
         }
-        
+
+        public virtual IStyleSelector ToUnfiltered()
+        {
+            return this;
+        }
+
         public virtual Boolean TryGetContentAppendType(out ContentAppendType appendType)
         {
             appendType = ContentAppendType.Invalid;

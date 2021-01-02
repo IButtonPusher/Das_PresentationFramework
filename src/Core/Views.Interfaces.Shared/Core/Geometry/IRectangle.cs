@@ -7,13 +7,13 @@ namespace Das.Views.Core.Geometry
                                   IPointContainer,
                                   IEquatable<IRectangle>
     {
-        Point2D BottomLeft { get; }
+        IPoint2D BottomLeft { get; }
 
-        Point2D BottomRight { get; }
+        IPoint2D BottomRight { get; }
 
-        Point2D TopLeft { get; }
+        IPoint2D TopLeft { get; }
 
-        Point2D TopRight { get; }
+        IPoint2D TopRight { get; }
 
         Double X { get; }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
@@ -76,6 +77,9 @@ namespace Das.Gdi
             _height = iheight;
 
             _dcGraphics = Graphics.FromHdc(_memoryDeviceContext);
+            
+            _dcGraphics.SmoothingMode = SmoothingMode.AntiAlias;
+            _dcGraphics.InterpolationMode = InterpolationMode.NearestNeighbor;
 
             if (backgroundColor != null)
                 _dcGraphics.Clear(backgroundColor.Value);

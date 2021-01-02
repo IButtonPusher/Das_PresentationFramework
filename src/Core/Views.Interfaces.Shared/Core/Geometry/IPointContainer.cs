@@ -5,7 +5,7 @@ namespace Das.Views.Core.Geometry
 {
     public interface IPointContainer
     {
-        Point2D Location { get; }
+        IPoint2D Location { get; }
 
         ISize Size { get; }
 

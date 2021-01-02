@@ -5,6 +5,12 @@ namespace Das.Views.Core.Geometry
 {
     public readonly struct  ValueThickness : IThickness
     {
+        public ValueThickness(Double all)
+        : this(all, all, all, all)
+        {
+            
+        }
+
         public ValueThickness(Double left, 
                               Double top,
                               Double right, 

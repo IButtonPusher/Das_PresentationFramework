@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Controls;
@@ -41,11 +42,13 @@ namespace Das.Views
         {
             IsRequiresMeasure = true;
             IsRequiresArrange = true;
+            _visualBootstrapper.QueueVisualForMeasure(this);
         }
 
         public virtual void InvalidateArrange()
         {
             IsRequiresArrange = true;
+            _visualBootstrapper.QueueVisualForArrange(this);
         }
 
         public virtual void AcceptChanges(ChangeType changeType)
@@ -124,6 +127,39 @@ namespace Das.Views
         protected virtual void OnTemplateSet(IVisualTemplate? newValue)
         {
             
+        }
+
+        protected virtual void OnTemplateChanged(IVisualTemplate? oldValue,
+                                                 IVisualTemplate? newValue)
+        {
+            if (oldValue?.Content is { } oldValid)
+                oldValid.PropertyChanged -= OnTemplatePropertyChanged;
+
+            if (newValue?.Content is {} newValid)
+                newValid.PropertyChanged += OnTemplatePropertyChanged;
+        }
+
+        private void OnTemplatePropertyChanged(Object sender,
+                                               PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(IsRequiresArrange):
+                    InvalidateArrange();
+                    break;
+
+                case nameof(IsRequiresMeasure):
+                    InvalidateMeasure();
+                    break;
+            }
+        }
+
+        private static void OnTemplateChanged(IVisualElement visual,
+                                              IVisualTemplate? oldValue,
+                                              IVisualTemplate? newValue)
+        {
+            if (visual is VisualElement visualElement)
+                visualElement.OnTemplateChanged(oldValue, newValue);
         }
     }
 }

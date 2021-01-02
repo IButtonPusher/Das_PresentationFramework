@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 
 namespace Das.Views.Core.Geometry
 {
-    public class Cube : Rectangle, ISize3d, 
+    public class Cube : Rectangle, 
+                        ISize3d, 
                         ICube
     {
         public Cube(Point2D location, 

@@ -1,39 +1,38 @@
 ﻿using System;
 using Android.Graphics;
-using Das.Views.Core.Drawing;
-using Das.Views.Core.Geometry;
+using Das.Views.Rendering;
 
 namespace Das.Xamarin.Android.Rendering
 {
-    public class AndroidGraphicsPath : IGraphicsPath
+    public class AndroidGraphicsPath : GraphicsPathBase
     {
         public AndroidGraphicsPath()
         {
             Path = new Path();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             
         }
 
-        public void LineTo<TPoint>(TPoint p1) where TPoint : IPoint2D
+        public override void LineTo<TPoint>(TPoint p1) 
         {
             Path.LineTo(R4(p1.X), R4(p1.Y));
         }
 
         private static Single R4(Double value) => Convert.ToSingle(value);
 
-        public void AddArc<TRectangle>(TRectangle arc, 
-                                       Single startAngle, 
-                                       Single endAngle) where TRectangle : IRectangle
+        public override void AddArc<TRectangle>(TRectangle arc, 
+                                                Single startAngle, 
+                                                Single endAngle)
         {
 
             Path.AddArc(R4(arc.Left), R4(arc.Top), R4(arc.Right), R4(arc.Bottom),
                 startAngle, endAngle);
         }
 
-        public void CloseFigure()
+        public override void CloseFigure()
         {
             Path.Close();
         }

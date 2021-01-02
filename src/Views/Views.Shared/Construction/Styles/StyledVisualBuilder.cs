@@ -109,21 +109,7 @@ namespace Das.Views.Construction
                     template = visualTemplate;
                     return true;
                 }
-
             }
-
-
-            //var items = from r in style.Rules.OfType<DependencyPropertyValueRule>()
-            //    where r.Selector.Property.Name == nameof(IVisualElement.Template)
-            //    select r;
-
-            //var goodRule = items.FirstOrDefault();
-
-            //if (goodRule?.Declaration.Value is IVisualTemplate visualTemplate)
-            //{
-            //    template = visualTemplate;
-            //    return true;
-            //}
 
             template = default!;
             return false;

@@ -71,6 +71,11 @@ namespace Das.Views.Core.Geometry
             return new ValuePoint2D(X - offset.X, Y - offset.Y);
         }
 
+        public Boolean Equals(IPoint2D other)
+        {
+            return GeometryHelper.ArePoints2DEqual(this, other);
+        }
+
         public Boolean IsOrigin { get; }
     }
 }

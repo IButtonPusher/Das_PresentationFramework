@@ -6,6 +6,8 @@ using Das.Serializer.Objects;
 using Das.Views.DevKit;
 using Das.Views.Panels;
 using Das.Views.Rendering;
+// ReSharper disable All
+#pragma warning disable 8604
 
 namespace ViewCompiler
 {
@@ -32,7 +34,7 @@ namespace ViewCompiler
             var il = OpenConstructor(typeBuilder);
 
 
-            IVisualRenderer current = viewBuilder.Content;
+            IVisualRenderer current = viewBuilder.Content ?? throw new NullReferenceException();
             var bldr = Reconstruct(current, il);
             SetContent(typeof(IContentContainer), bldr, il);
 
@@ -44,7 +46,7 @@ namespace ViewCompiler
 
         private TypeBuilder GetBuilder(ViewBuilder viewBuilder, String viewName)
         {
-            var bindingType = _serializer.TypeInferrer.GetTypeFromClearName(viewBuilder.Binding);
+            //var bindingType = _serializer.TypeInferrer.GetTypeFromClearName(viewBuilder.Binding);
             //var viewInterface = typeof(View<>).MakeGenericType(bindingType);
 
             var typeBuilder = _codeGenerator.GetTypeBuilder(viewName);

@@ -11,6 +11,7 @@ using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Rendering.Geometry;
 using Das.Views.Styles;
+using Das.Views.Transitions;
 
 namespace Das.Views.Defaults
 {
@@ -36,9 +37,9 @@ namespace Das.Views.Defaults
                 StyleSetterType.Transition, new[]
                 {
                     new Transition(StyleSetterType.Margin, TimeSpan.FromSeconds(0.3),
-                        TimeSpan.Zero, TransitionTiming.Ease),
+                        TimeSpan.Zero, TransitionFunctionType.Ease),
                     new Transition(StyleSetterType.Width, TimeSpan.FromSeconds(0.3),
-                        TimeSpan.Zero, TransitionTiming.Ease)
+                        TimeSpan.Zero, TransitionFunctionType.Ease)
                 });
             _styleRegistry.RegisterStyleSetter(_indicator,
                 StyleSetterType.HorizontalAlignment, HorizontalAlignments.Left);
@@ -168,12 +169,18 @@ namespace Das.Views.Defaults
 
             if (!(_lastStyleContext is { })) 
                 return false;
-            
-            _styleRegistry.RegisterStyleSetter(_indicator,
-                StyleSetterType.Margin, new Thickness(pos.Left + _scrollPanel.HorizontalOffset,
-                    0, 0, 0));
-            _styleRegistry.RegisterStyleSetter(_indicator,
-                StyleSetterType.Width, pos.Width);
+
+            //var margin = new Thickness(pos.Left + _scrollPanel.HorizontalOffset,
+            //    0, 0, 0);
+
+            _indicator.Margin = new QuantifiedThickness(pos.Left + _scrollPanel.HorizontalOffset,
+                0, 0, 0);
+            _indicator.Width = pos.Width;
+
+            //_styleRegistry.RegisterStyleSetter(_indicator,
+            //    StyleSetterType.Margin, margin);
+            //_styleRegistry.RegisterStyleSetter(_indicator,
+            //    StyleSetterType.Width, pos.Width);
 
             return true;
         }

@@ -37,22 +37,6 @@ namespace Das.Views.Styles.Declarations
                     BlurRadius = new QuantityDeclaration(tokens[2],
                         variableAccessor, DeclarationProperty.BoxShadow);
                     break;
-
-                //case 3:
-                //    OffsetY = new QuantityDeclaration(tokens[1],
-                //        variableAccessor, DeclarationProperty.BoxShadow);
-
-                //    goto case 2;
-
-                //case 2:
-                //    OffsetX = new QuantityDeclaration(tokens[0],
-                //        variableAccessor, DeclarationProperty.BoxShadow);
-                //    goto case 1;
-
-                //case 1:
-                //    Color = new ColorDeclaration(tokens[tokens.Count - 1], DeclarationProperty.BoxShadow,
-                //        variableAccessor);
-                //    break;
             }
 
             OffsetY = new QuantityDeclaration(tokens[1],

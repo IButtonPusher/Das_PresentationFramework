@@ -8,7 +8,7 @@ using Das.Serializer;
 
 namespace Das.Views.DataBinding
 {
-    public class OneWayCollectionBinding : SourceBinding
+    public sealed class OneWayCollectionBinding : SourceBinding
     {
         public OneWayCollectionBinding(INotifyPropertyChanged source,
                                        String sourceProperty,

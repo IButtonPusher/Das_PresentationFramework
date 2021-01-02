@@ -3,29 +3,41 @@ using System.Threading.Tasks;
 
 namespace Das.Views.Styles.Application
 {
-    public class AppliedValueAssignment : IStyleValueAssignment
+    public class AppliedValueAssignment : IPropertyValueAssignment
     {
         public AppliedValueAssignment(IVisualElement visual,
                                       IDependencyProperty dependencyProperty,
                                       Object? value)
         {
-            _visual = visual;
+            Visual = visual;
             _dependencyProperty = dependencyProperty;
             _value = value;
         }
 
-        public void Execute()
+        public void Execute(Boolean isUpdate)
         {
-            _dependencyProperty.SetValue(_visual, _value);
+            if (isUpdate)
+                _dependencyProperty.SetValue(Visual, _value);
+            else
+                _dependencyProperty.SetValueNoTransitions(Visual, _value);
+        }
+
+        public Boolean DoOverlap(IStyleValueAssignment other)
+        {
+            return other is AppliedValueAssignment applied &&
+                   applied._dependencyProperty.Equals(_dependencyProperty);
         }
 
         public override String ToString()
         {
-            return _visual + "." + _dependencyProperty.Name + " = " + _visual;
+            return Visual + "." + _dependencyProperty.Name + " = " + _value;
         }
 
         private readonly IDependencyProperty _dependencyProperty;
         private readonly Object? _value;
-        private readonly IVisualElement _visual;
+
+        public IVisualElement Visual { get; }
+
+        public IDependencyProperty Property => _dependencyProperty;
     }
 }

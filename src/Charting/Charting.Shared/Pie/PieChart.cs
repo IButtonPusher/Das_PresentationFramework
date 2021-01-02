@@ -30,7 +30,7 @@ namespace Das.Views.Charting.Pie
             _random = new Random();
             _outline = new Pen(Color.DarkGray, 1);
             _legendOutline = new Pen(new Color(203, 212, 225), 1);
-            _legendItems = new List<PieLegendItem<TKey, TValue>>();
+            _legendItems = new List<PieLegendItem>();
             _legendItemSizes = new List<ISize>();
             _legendBackground = new SolidColorBrush(Color.White);
         }
@@ -45,10 +45,8 @@ namespace Das.Views.Charting.Pie
                                      IRenderContext renderContext)
         {
             var side = Math.Min(availableSpace.Width, availableSpace.Height);
-            if (side.IsZero() ||
-                //!(Binding is {} binding))
-                !(DataContext is {} binding))
-                //|| !(DataContext is {} dc))
+            if (side.IsZero() || !(DataContext is {} binding))
+                
             {
                 return;
             }
@@ -57,9 +55,9 @@ namespace Das.Views.Charting.Pie
                 renderContext.ColorPalette.Background);
 
             var radius = side / 2;
-            var center = new Point2D(availableSpace.Width - side + radius,
+            var center = new ValuePoint2D(availableSpace.Width - side + radius,
                 availableSpace.Height - side + side / 2);
-            //var currentValue = binding.GetValue(DataContext);
+            
             var currentValue = binding as IPieData<TKey, TValue>;
             if (currentValue == null)
                 return;
@@ -135,9 +133,6 @@ namespace Das.Views.Charting.Pie
             }
         }
 
-        //public override void Dispose()
-        //{
-        //}
 
         private IBrush GetBrush(IPieData<TKey, TValue> value, 
                                 IDataPoint<TKey, TValue> current)
@@ -188,8 +183,6 @@ namespace Das.Views.Charting.Pie
             return _desiredSize;
         }
 
-        //override datac
-
         protected override void OnDataContextChanged(Object? newValue)
         {
             lock (_legendLock)
@@ -218,56 +211,21 @@ namespace Das.Views.Charting.Pie
 
                 var brush = GetBrush(currentValue, current);
 
-                var legendItem = new PieLegendItem<TKey, TValue>(_templateResolver);
-                //legendItem.SetBoundValue(current);
+                var legendItem = new PieLegendItem(_templateResolver);
+                
                 legendItem.DataContext = current;
                 legendItem.Brush = brush;
                 lock (_legendLock)
                     _legendItems.Add(legendItem);
             }
-            
-            
         }
-
-        //public override void SetBoundValue(IPieData<TKey, TValue> value)
-        //{
-        //    lock (_legendLock)
-        //    {
-        //        foreach (var item in _legendItems)
-        //        {
-        //            item.Dispose();
-        //        }
-
-        //        _legendItems.Clear();
-        //        _legendItemSizes.Clear();
-        //    }
-
-            
-        //    base.SetBoundValue(value);
-
-        //    var data = value.Items.OrderByDescending(v => v.Value).ToArray();
-        //    var pntCnt = data.Length;
-
-        //    for (var c = 0; c < pntCnt; c++)
-        //    {
-        //        var current = data[c];
-
-        //        var brush = GetBrush(value, current);
-
-        //        var legendItem = new PieLegendItem<TKey, TValue>(_templateResolver);
-        //        legendItem.SetBoundValue(current);
-        //        legendItem.Brush = brush;
-        //        lock (_legendLock)
-        //            _legendItems.Add(legendItem);
-        //    }
-        //}
 
         private readonly Dictionary<TKey, IBrush> _defaultedColors;
 
         private readonly Size _desiredSize;
 
         private readonly SolidColorBrush _legendBackground;
-        private readonly List<PieLegendItem<TKey, TValue>> _legendItems;
+        private readonly List<PieLegendItem> _legendItems;
         private readonly Object _legendLock;
         private readonly List<ISize> _legendItemSizes;
         private readonly Pen _legendOutline;

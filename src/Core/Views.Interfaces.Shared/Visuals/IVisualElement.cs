@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Das.Views.BoxModel;
 using Das.Views.Controls;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
@@ -18,7 +19,8 @@ namespace Das.Views
                                       IDisposable,
                                       INotifyPropertyChanged,
                                       ITemplatableVisual,
-                                      IEquatable<IVisualElement>
+                                      IEquatable<IVisualElement>,
+                                      IQuantifiedRectangle
 
     {
         /// <summary>
@@ -46,13 +48,6 @@ namespace Das.Views
 
         QuantifiedDouble? Height { get; set; }
 
-        QuantifiedDouble? Left { get; set; }
-
-        QuantifiedDouble? Right { get; set; }
-
-        QuantifiedDouble? Top { get; set; }
-
-        QuantifiedDouble? Bottom { get; set; }
 
         HorizontalAlignments HorizontalAlignment { get; set; }
 
@@ -70,7 +65,7 @@ namespace Das.Views
         
         Boolean IsEnabled { get; set; }
 
-        ITransform Transform { get; set; }
+        TransformationMatrix Transform { get; set; }
 
         Boolean TryGetDependencyProperty(DeclarationProperty declarationProperty,
                                          out IDependencyProperty dependencyProperty);
@@ -86,5 +81,7 @@ namespace Das.Views
         Boolean IsMarkupNameAlias(String markupTag);
         
         Int32 ZIndex { get; }
+
+        IBoxShadow  BoxShadow { get; }
     }
 }

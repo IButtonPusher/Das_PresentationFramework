@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+#pragma warning disable 8604
 
 namespace ViewCompiler
 {
@@ -28,7 +29,7 @@ namespace ViewCompiler
 
             var serializer = new ViewDeserializer();
             var viewBuilderProvider = new ViewBuilderProvider(serializer);
-            var typeMani = serializer.TypeManipulator;//  new TypeManipulator(settings, new NodePool(settings, new NodeTypeProvider()));
+            //var typeMani = serializer.TypeManipulator;//  new TypeManipulator(settings, new NodePool(settings, new NodeTypeProvider()));
 
             var typeBuilder = new ViewTypeBuilder(serializer, serializer.ObjectManipulator,//  maniPedi,
                 serializer.Settings);

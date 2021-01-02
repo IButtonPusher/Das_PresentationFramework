@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Extensions;
+// ReSharper disable UnusedMember.Global
 
 namespace Das.Views.Core.Drawing
 {
@@ -13,12 +14,19 @@ namespace Das.Views.Core.Drawing
             Opacity = 1;
         }
 
+        public SolidColorBrush(Color color,
+                               Double opacity)
+        {
+            Color = Color.FromArgb(Convert.ToByte(opacity * 255), color.R, color.G, color.B);
+            Opacity = opacity;
+        }
+
         public SolidColorBrush(Byte red,
                                Byte green,
                                Byte blue,
                                Double alpha)
         {
-            Color = Color.FromRgb(red, green, blue);
+            Color = Color.FromArgb(Convert.ToByte(alpha * 255), red, green, blue);
             Opacity = alpha;
         }
         
@@ -42,7 +50,7 @@ namespace Das.Views.Core.Drawing
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(Color, other.Color);
+            return Color.Equals(other.Color);
         }
 
         public static SolidColorBrush Black { get; } = new SolidColorBrush(Color.Black);
@@ -57,11 +65,11 @@ namespace Das.Views.Core.Drawing
 
         public virtual Boolean IsInvisible => Color.A == 0;
 
-        public Double Opacity { get; set; } = 1;
+        public Double Opacity { get;  }
 
         public IBrush GetWithOpacity(Double opacity)
         {
-            return new SolidColorBrush(Color) { Opacity = opacity};
+            return new SolidColorBrush(Color, opacity);
         }
 
         public static SolidColorBrush LightGray => _lightGray.Value;
@@ -89,7 +97,15 @@ namespace Das.Views.Core.Drawing
                                               Byte g, 
                                               Byte b)
         {
-            return new SolidColorBrush(new Color(r, g, b));
+            return new SolidColorBrush(Color.FromRgb(r, g, b));
+        }
+
+        public static SolidColorBrush FromArgb(Byte alpha,
+                                               Byte r, 
+                                              Byte g, 
+                                              Byte b)
+        {
+            return new SolidColorBrush(Color.FromArgb(alpha, r, g, b));
         }
 
         public override Int32 GetHashCode()

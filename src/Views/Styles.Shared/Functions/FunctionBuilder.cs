@@ -5,12 +5,33 @@ using System.Text;
 
 namespace Das.Views.Styles.Functions
 {
-    public class FunctionBuilder
+    public static class FunctionBuilder
     {
         public static IFunction GetFunction(String text,
                                             IStyleVariableAccessor variableAccessor)
         {
             return GetFunctionImpl(text, true, variableAccessor);
+        }
+
+        public static T GetValue<T>(String text,
+                                    IStyleVariableAccessor variableAccessor)
+        {
+            var fn = GetFunction(text, variableAccessor);
+            switch (fn.GetValue())
+            {
+                case T good:
+                    return good;
+
+                default:
+                    throw new InvalidCastException();
+            }
+        }
+
+        public static Object? GetValue(String text,
+                                       IStyleVariableAccessor variableAccessor)
+        {
+            var fn = GetFunction(text, variableAccessor);
+            return fn.GetValue();
         }
 
         private static IFunction GetFunctionImpl(String text,

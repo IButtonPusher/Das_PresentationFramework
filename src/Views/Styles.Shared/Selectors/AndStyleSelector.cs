@@ -75,5 +75,42 @@ namespace Das.Views.Styles.Selectors
         {
             return _selectors.Any(s => s.IsFilteringOnVisualState());
         }
+
+        public IStyleSelector ToUnfiltered()
+        {
+            if (!IsFilteringOnVisualState())
+                return this;
+
+            var andy = new AndStyleSelector();
+
+            for (var c = 0; c < _selectors.Count; c++)
+            {
+                var selector = _selectors[c];
+
+                var unf = selector.ToUnfiltered();
+
+                if (unf == AllStyleSelector.Instance)
+                {
+                    if (c < _selectors.Count - 1 && _selectors[c + 1] is CombinatorSelector)
+                        c++;
+
+                    continue;
+                }
+
+                andy._selectors.Add(unf);
+            }
+
+            if (andy._selectors.Last() is CombinatorSelector combinator)
+            {
+                andy._selectors.Remove(combinator);
+            }
+
+            return andy._selectors.Count switch
+            {
+                0 => AllStyleSelector.Instance,
+                1 => andy._selectors[0],
+                _ => andy
+            };
+        }
     }
 }

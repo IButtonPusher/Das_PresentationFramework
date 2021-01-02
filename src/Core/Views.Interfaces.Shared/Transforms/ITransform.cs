@@ -6,6 +6,6 @@ namespace Das.Views.Transforms
     {
         Boolean IsIdentity {get;}
 
-        ValueTranslation Value { get; }
+        TransformationMatrix Value { get; }
     }
 }
