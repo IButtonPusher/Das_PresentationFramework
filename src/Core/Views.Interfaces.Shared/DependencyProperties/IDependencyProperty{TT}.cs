@@ -20,9 +20,9 @@ namespace Das.Views
 
         TValue GetValue(TVisual forVisual);
 
-        TValue GetValue(TVisual forVisual,
-                        IStyleProvider contextStyle,
-                        Func<TVisual, IStyleProvider, TValue> getDefault);
+        //TValue GetValue(TVisual forVisual,
+        //                IStyleProvider contextStyle,
+        //                Func<TVisual, IStyleProvider, TValue> getDefault);
 
         void SetValue(TVisual forVisual,
                       TValue value,

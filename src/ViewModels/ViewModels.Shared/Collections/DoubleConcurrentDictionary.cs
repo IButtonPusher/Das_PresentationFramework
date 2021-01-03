@@ -100,7 +100,7 @@ namespace Das.ViewModels.Collections
                                TKey2 k2, 
                                Func<TKey1, TKey2, TValue> factory)
         {
-            var innerD = _backingDictionary.GetOrAdd(k1, key1 => new ConcurrentDictionary<TKey2, TValue>());
+            var innerD = _backingDictionary.GetOrAdd(k1, _ => new ConcurrentDictionary<TKey2, TValue>());
             return innerD.GetOrAdd(k2, key2 => factory(k1, key2));
         }
 

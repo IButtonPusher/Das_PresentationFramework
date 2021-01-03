@@ -34,6 +34,12 @@ namespace Das.Views.Core.Geometry
                        bottom.IsZero();
         }
 
+        public static implicit operator QuantifiedThickness(Double value)
+        {
+            var all = new QuantifiedDouble(value, LengthUnits.Px);
+            return new QuantifiedThickness(all);
+        }
+
         public override String ToString()
         {
             return IsEmpty ? "0" : $"{_left} {_top} {_right} {_bottom}";
@@ -90,11 +96,6 @@ namespace Das.Views.Core.Geometry
                 Top.Transition(target.Top, percentComplete),
                 Right.Transition(target.Right, percentComplete),
                 Bottom.Transition(target.Bottom, percentComplete));
-
-            //return new QuantifiedThickness((target.Left - Left) * percentComplete,
-            //    (target.Top - Top) * percentComplete,
-            //    (target.Right - Right) * percentComplete,
-            //    (target.Bottom - Bottom) * percentComplete);
         }
 
         public static readonly QuantifiedThickness Empty = new QuantifiedThickness(0, 0, 0, 0);

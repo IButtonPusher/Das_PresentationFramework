@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Container;
 using Das.Serializer;
+using Das.Views.Colors;
 using Das.Views.Construction;
 using Das.Views.Construction.Styles;
 using Das.Views.Controls;
@@ -16,42 +17,42 @@ namespace Das.Views
 {
     public abstract class BaseRenderKit : IVisualSurrogateProvider
     {
-        protected BaseRenderKit(IStyleContext styleContext,
+        protected BaseRenderKit(IThemeProvider themeProvider,
                                 IStringPrimitiveScanner attributeScanner,
                                 ITypeInferrer typeInferrer,
                                 IPropertyProvider propertyProvider,
                                 Dictionary<IVisualElement, ValueCube> renderPositions)
-            : this(new BaseResolver(), styleContext, attributeScanner,
+            : this(new BaseResolver(), themeProvider, attributeScanner,
                 typeInferrer, propertyProvider, renderPositions)
         {
         }
 
         protected BaseRenderKit(IResolver resolver,
-                                IStyleContext styleContext,
+                                IThemeProvider themeProvider,
                                 IStringPrimitiveScanner attributeScanner,
                                 ITypeInferrer typeInferrer,
                                 IPropertyProvider propertyProvider,
                                 Dictionary<IVisualElement, ValueCube> renderPositions)
-        : this(resolver, styleContext, attributeScanner, typeInferrer, propertyProvider, 
-            GetVisualBootstrapper(resolver, styleContext, propertyProvider), renderPositions)
+        : this(resolver, themeProvider, attributeScanner, typeInferrer, propertyProvider, 
+            GetVisualBootstrapper(resolver, themeProvider, propertyProvider), renderPositions)
         {
            
         }
 
         protected BaseRenderKit(IResolver resolver,
-                                IStyleContext styleContext,
+                                IThemeProvider themeProvider,
                                 IStringPrimitiveScanner attributeScanner,
                                 ITypeInferrer typeInferrer,
                                 IPropertyProvider propertyProvider,
                                 IVisualBootstrapper visualBootstrapper,
                                 Dictionary<IVisualElement, ValueCube> renderPositions)
         : this(resolver, 
-            styleContext, 
+            themeProvider, 
             attributeScanner, 
             typeInferrer, 
             propertyProvider,
             visualBootstrapper,
-            GetAppliedStyleBuilder(visualBootstrapper, typeInferrer, propertyProvider),
+            GetAppliedStyleBuilder(visualBootstrapper, typeInferrer, propertyProvider, themeProvider),
             //GetStyleVisualBuilder(visualBootstrapper, typeInferrer, propertyProvider),
             renderPositions)
         
@@ -60,7 +61,7 @@ namespace Das.Views
         }
 
         protected BaseRenderKit(IResolver resolver,
-                                IStyleContext styleContext,
+                                IThemeProvider themeProvider,
                                 IStringPrimitiveScanner attributeScanner,
                                 ITypeInferrer typeInferrer,
                                 IPropertyProvider propertyProvider,
@@ -68,7 +69,7 @@ namespace Das.Views
                                 IAppliedStyleBuilder appliedStyleBuilder,
                                 //IStyledVisualBuilder styledVisualBuilder,
                                 Dictionary<IVisualElement, ValueCube> renderPositions)
-            : this(resolver, styleContext, visualBootstrapper, 
+            : this(resolver, themeProvider, visualBootstrapper, 
                 GetViewInflater(visualBootstrapper, attributeScanner, 
                     typeInferrer, propertyProvider, appliedStyleBuilder),// styledVisualBuilder),
                 renderPositions)
@@ -78,12 +79,12 @@ namespace Das.Views
         }
         
         protected BaseRenderKit(IResolver resolver,
-                                IStyleContext styleContext,
+                                IThemeProvider themeProvider,
                                 IVisualBootstrapper visualBootstrapper,
                                 IViewInflater viewInflater,
                                 Dictionary<IVisualElement, ValueCube> renderPositions)
         {
-            _styleContext = styleContext;
+            //_styleContext = styleContext;
             _renderPositions = renderPositions;
             Container = resolver;
             
@@ -98,19 +99,20 @@ namespace Das.Views
         }
         
         private static IVisualBootstrapper GetVisualBootstrapper(IResolver resolver,
-                                                                 IStyleContext styleContext,
+                                                                 IThemeProvider themeProvider,
                                                                  IPropertyProvider propertyProvider)
         {
-            return new DefaultVisualBootstrapper(resolver, styleContext, propertyProvider,
+            return new DefaultVisualBootstrapper(resolver, themeProvider, propertyProvider,
                 new LayoutQueue());
         }
 
         private static IAppliedStyleBuilder GetAppliedStyleBuilder(IVisualBootstrapper visualBootstrapper,
                                                                    ITypeInferrer typeInferrer,
-                                                                   IPropertyProvider propertyProvider)
+                                                                   IPropertyProvider propertyProvider,
+                                                                   IThemeProvider themeProvider)
         {
             var styleInflater = new DefaultStyleInflater(typeInferrer);
-            var styleProvider = new VisualStyleProvider(styleInflater);
+            var styleProvider = new VisualStyleProvider(styleInflater, themeProvider);
             var declarationWorker = new DeclarationWorker(visualBootstrapper);
             var appliedStyleBuilder = new AppliedRuleBuilder(styleProvider, declarationWorker,
                 propertyProvider);
@@ -175,7 +177,7 @@ namespace Das.Views
 
         public IResolver Container { get; }
 
-        public IStyleContext StyleContext => _styleContext;
+        //public IStyleContext StyleContext => _styleContext;
 
         public IViewInflater ViewInflater { get; }
 
@@ -188,7 +190,7 @@ namespace Das.Views
             _surrogateTypeBuilders[typeof(T)] = builder;
         }
 
-        protected readonly IStyleContext _styleContext;
+        //protected readonly IStyleContext _styleContext;
         protected readonly Dictionary<IVisualElement, ValueCube> _renderPositions;
         private readonly Dictionary<IVisualElement, IVisualSurrogate> _surrogateInstances;
         private readonly Dictionary<Type, Func<IVisualElement, IVisualSurrogate>> _surrogateTypeBuilders;

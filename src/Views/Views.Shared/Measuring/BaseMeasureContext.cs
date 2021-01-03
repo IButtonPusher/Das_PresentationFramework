@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Extensions;
+using Das.Views.Colors;
 using Das.Views.Controls;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Rendering;
-using Das.Views.Styles;
 
 namespace Das.Views.Measuring
 {
@@ -17,10 +17,11 @@ namespace Das.Views.Measuring
     {
         protected BaseMeasureContext(IVisualSurrogateProvider surrogateProvider,
                                      Dictionary<IVisualElement, ValueSize> lastMeasurements,
-                                     IStyleContext styleContext,
+                                     IThemeProvider themeProvider,
+                                     //IStyleContext styleContext,
                                      IVisualLineage visualLineage,
                                      ILayoutQueue layoutQueue)
-            : base(lastMeasurements, styleContext, 
+            : base(lastMeasurements, themeProvider,
                 surrogateProvider, visualLineage, layoutQueue)
         {
             _contextBounds = ValueSize.Empty;
@@ -112,22 +113,22 @@ namespace Das.Views.Measuring
         public abstract ValueSize MeasureString(String s,
                                                 IFont font);
 
-        public ValueSize GetStyleDesiredSize(IVisualElement element)
-        {
-            //var viewState = GetViewState;
-            var styles = ViewState.StyleContext;
-            //var zoom = ViewState.ZoomLevel;
+        //public ValueSize GetStyleDesiredSize(IVisualElement element)
+        //{
+        //    //var viewState = GetViewState;
+        //    var styles = ViewState.StyleContext;
+        //    //var zoom = ViewState.ZoomLevel;
 
-            var specificHeight = styles.GetStyleSetter<Double>(StyleSetterType.Height, element,
-                VisualLineage);
+        //    var specificHeight = styles.GetStyleSetter<Double>(StyleSetterType.Height, element,
+        //        VisualLineage);
 
-            var specificWidth = styles.GetStyleSetter<Double>(StyleSetterType.Width, element,
-                VisualLineage);
+        //    var specificWidth = styles.GetStyleSetter<Double>(StyleSetterType.Width, element,
+        //        VisualLineage);
 
 
-            return new ValueSize(Double.IsNaN(specificWidth) ? 0 : specificWidth,
-                Double.IsNaN(specificHeight) ? 0 : specificHeight);
-        }
+        //    return new ValueSize(Double.IsNaN(specificWidth) ? 0 : specificWidth,
+        //        Double.IsNaN(specificHeight) ? 0 : specificHeight);
+        //}
 
         public virtual ValueSize ContextBounds => _contextBounds;
 

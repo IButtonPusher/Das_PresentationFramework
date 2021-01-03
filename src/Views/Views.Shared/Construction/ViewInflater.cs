@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Das.Serializer;
-using Das.Views.Construction.Styles;
 using Das.Views.Controls;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
@@ -97,7 +96,8 @@ namespace Das.Views.Construction
             IVisualElement? contentVisual = null;
 
             //-------------------------------
-            var contentContainer = _visualBootstrapper.Instantiate<IContentVisual>(visualType);
+            var contentContainer = _visualBootstrapper.Instantiate<IContentVisual>(visualType)
+                                   ?? throw new InvalidOperationException();
             //await applyStyles(contentContainer, node, visualLineage, this);
             //-------------------------------
 
@@ -119,8 +119,8 @@ namespace Das.Views.Construction
                     else if (childObjRes.ChildType == ChildNodeType.PropertyValue &&
                              childObjRes.VisualProperty is { } prop)
                     {
-                        Object oContentContainer = contentContainer;
-                        prop.SetPropertyValue(ref oContentContainer, childObjRes.Child);
+                        //Object oContentContainer = contentContainer;
+                        prop.SetPropertyValue(ref contentContainer, childObjRes.Child);
                         //prop.SetValue(contentContainer, childObjRes.Child, null);
                     }
 
@@ -145,7 +145,7 @@ namespace Das.Views.Construction
             }
 
 
-            contentContainer.Content = contentVisual;
+            contentContainer!.Content = contentVisual;
 
             if (contentVisual != null)
                 visualLineage.AssertPopVisual(contentVisual);
@@ -330,8 +330,8 @@ namespace Das.Views.Construction
                     childObjRes.VisualProperty is { } prop)
                 {
                     // visual is a property value, not a child visual
-                    Object oVisual = visual;
-                    prop.SetPropertyValue(ref oVisual, childObjRes.Child);
+                    //Object oVisual = visual;
+                    prop.SetPropertyValue(ref visual, childObjRes.Child);
                     //prop.SetValue(visual, childObjRes.Child, null);
                 }
                 else if (childObjRes.Child is IVisualElement childVisual)

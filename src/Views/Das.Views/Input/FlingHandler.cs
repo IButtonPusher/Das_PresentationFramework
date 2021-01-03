@@ -42,24 +42,9 @@ namespace Das.Views.Input
                 if (sumX.IsZero() && sumY.IsZero())
                     return true;
 
-                var pctX = validHorizontalRange.Max != 0
-                    ? (Double) sumX / validHorizontalRange.Max
-                    : 0;
-                
-                var pctY = validVeticalRange.Max != 0
-                    ? (Double) sumY / validVeticalRange.Max
-                    : 0;
-
-                var msX = Math.Max(pctX * _maxFlingMs, sumX);
-                var msY = Math.Max(pctY * _maxFlingMs, sumY);
-
                 var ms = Math.Max(
-                    Math.Abs(msX),
-                    Math.Abs(msY));
-                
-                //var ms = Math.Max(
-                //    Math.Abs(sumX),
-                //    Math.Abs(sumY));
+                    Math.Abs(sumX),
+                    Math.Abs(sumY));
                 ms = Math.Max(ms, 500);
 
                 var duration = TimeSpan.FromMilliseconds(ms);
@@ -74,6 +59,67 @@ namespace Das.Views.Input
 
             return true;
         }
+
+        //public Boolean OnInput(FlingEventArgs args)
+        //{
+        //    lock (_flingLock)
+        //    {
+        //        if (_flingHost.CanFlingHorizontal && args.VelocityX != 0)
+        //            _velocityX = 0 - args.VelocityX;
+
+        //        if (_flingHost.CanFlingVertical && args.VelocityY != 0)
+        //            _velocityY = args.VelocityY;
+
+        //        if (_velocityX.IsZero() && _velocityY.IsZero())
+        //            return true;
+
+
+        //        _currentTransition?.Cancel();
+
+        //        var sumX = Convert.ToInt32(_velocityX / 3);
+        //        var sumY = Convert.ToInt32(_velocityY / 3);
+
+        //        var validVeticalRange = _flingHost.GetVerticalMinMaxFling();
+        //        sumY = validVeticalRange.GetValueInRange(sumY);
+
+        //        var validHorizontalRange = _flingHost.GetHorizontalMinMaxFling();
+        //        sumX = validHorizontalRange .GetValueInRange(sumX);
+
+        //        if (sumX.IsZero() && sumY.IsZero())
+        //            return true;
+
+        //        var pctX = validHorizontalRange.Max != 0
+        //            ? (Double) sumX / validHorizontalRange.Max
+        //            : 0;
+                
+        //        var pctY = validVeticalRange.Max != 0
+        //            ? (Double) sumY / validVeticalRange.Max
+        //            : 0;
+
+        //        var msX = Math.Max(pctX * _maxFlingMs, sumX);
+        //        var msY = Math.Max(pctY * _maxFlingMs, sumY);
+
+        //        var ms = Math.Max(
+        //            Math.Abs(msX),
+        //            Math.Abs(msY));
+                
+        //        //var ms = Math.Max(
+        //        //    Math.Abs(sumX),
+        //        //    Math.Abs(sumY));
+        //        ms = Math.Max(ms, 500);
+
+        //        var duration = TimeSpan.FromMilliseconds(ms);
+
+        //        _currentTransition = new FlingTransition(duration, sumX, sumY, _flingHost);
+        //        _currentTransition.Start();
+
+                
+        //        _flingHost.OnFlingStarting(sumX, sumY);
+
+        //    }
+
+        //    return true;
+        //}
 
         public InputAction HandlesActions => InputAction.Fling;
 
@@ -99,6 +145,6 @@ namespace Das.Views.Input
         private Double _velocityX;
         private Double _velocityY;
 
-        private const Int32 _maxFlingMs = 3000;
+        //private const Int32 _maxFlingMs = 3000;
     }
 }

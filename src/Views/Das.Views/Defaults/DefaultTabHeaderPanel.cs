@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
-using Das.Views.Input;
 using Das.Views.ItemsControls;
 using Das.Views.Panels;
 using Das.Views.Rendering;
@@ -29,36 +28,16 @@ namespace Das.Views.Defaults
             _indicator = new HorizontalRule(visualBootstrapper)
             {
                 HorizontalAlignment = HorizontalAlignments.Left,
-                Background = visualBootstrapper.StyleContext.ColorPalette.Accent
+                Background = visualBootstrapper.ColorPalette.Secondary
             };
             MarginProperty.AddTransition(_indicator, new ThicknessTransition(_indicator,
                 MarginProperty, TimeSpan.FromSeconds(0.3), TimeSpan.Zero, TransitionFunctionType.Ease));
             WidthProperty.AddTransition(_indicator, new QuantifiedDoubleTransition(_indicator,
                 WidthProperty,TimeSpan.FromSeconds(0.3), TimeSpan.Zero, TransitionFunctionType.Ease));
 
-            //_styleRegistry = visualBootstrapper.StyleContext;
-
-            //var accent = visualBootstrapper.StyleContext.ColorPalette.Accent;
-
             _separator = new HorizontalRule(visualBootstrapper);
-            //_styleRegistry.RegisterStyleSetter(_indicator,
-            //    StyleSetterType.Transition, new[]
-            //    {
-            //        new Transition(StyleSetterType.Margin, TimeSpan.FromSeconds(0.3),
-            //            TimeSpan.Zero, TransitionFunctionType.Ease),
-            //        new Transition(StyleSetterType.Width, TimeSpan.FromSeconds(0.3),
-            //            TimeSpan.Zero, TransitionFunctionType.Ease)
-            //    });
-
-            //_styleRegistry.RegisterStyleSetter(_indicator,
-            //    StyleSetterType.HorizontalAlignment, HorizontalAlignments.Left);
-
-            //_styleRegistry.RegisterStyleSetter(_indicator,
-            //    StyleSetterType.Background, accent);
-            //_styleRegistry.RegisterStyleSetter(_separator,
-            //    StyleSetterType.Background, SolidColorBrush.LightGray);
-
-            Background = visualBootstrapper.StyleContext.ColorPalette.Background;
+          
+            Background = visualBootstrapper.ColorPalette.Background;
 
             var stackPanel = new UniformStackPanel(visualBootstrapper)
             {
@@ -91,8 +70,7 @@ namespace Das.Views.Defaults
         public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
-            _lastStyleContext = renderContext;
-            _lastElementLocator = renderContext;
+            //_lastStyleContext = renderContext;
 
             // SCROLL PANEL
             var tabPageRect = new ValueRenderRectangle(
@@ -139,7 +117,7 @@ namespace Das.Views.Defaults
         public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
         {
-            _lastStyleContext = measureContext;
+            //_lastStyleContext = measureContext;
 
             if (!(_itemsControl is { } valid) ||
                 !(valid.ItemsSource is { }))
@@ -169,26 +147,28 @@ namespace Das.Views.Defaults
 
         private Boolean MoveIndicatorRect()
         {
-            if (!(_itemsControl.SelectedTab is { } valid) ||
-                !(_lastElementLocator?.TryGetLastRenderBounds(valid) is { } pos))
+            if (!(_itemsControl.SelectedTab is { } valid))
                 return false;
+
+            var pos = valid.ArrangedBounds;
+
+            //if (!(_itemsControl.SelectedTab is { } valid) ||
+            //    !(_lastElementLocator?.TryGetLastRenderBounds(valid) is { } pos))
+            //    return false;
 
             _indicatorRect = new Rectangle(pos.Left + _scrollPanel.HorizontalOffset, 0, pos.Size);
 
-            if (!(_lastStyleContext is { })) 
-                return false;
+            //if (!(_lastStyleContext is { })) 
+            //    return false;
 
-            //var margin = new Thickness(pos.Left + _scrollPanel.HorizontalOffset,
-            //    0, 0, 0);
-
+            _indicator.SuspendLayout();
             _indicator.Margin = new QuantifiedThickness(pos.Left + _scrollPanel.HorizontalOffset,
                 0, 0, 0);
+            _indicator.ResumeLayout();
+            System.Diagnostics.Debug.WriteLine("setting indicator width to: " + pos.Width); 
             _indicator.Width = pos.Width;
 
-            //_styleRegistry.RegisterStyleSetter(_indicator,
-            //    StyleSetterType.Margin, margin);
-            //_styleRegistry.RegisterStyleSetter(_indicator,
-            //    StyleSetterType.Width, pos.Width);
+          
 
             return true;
         }
@@ -198,7 +178,7 @@ namespace Das.Views.Defaults
         {
             switch (e.PropertyName)
             {
-                case nameof(ITabControl.SelectedTab) when _lastStyleContext is { }:
+                case nameof(ITabControl.SelectedTab): //when _lastStyleContext is { }:
                     if (_itemsControl.SelectedTab is { })
                         MoveIndicatorRect();
                     break;
@@ -218,11 +198,9 @@ namespace Das.Views.Defaults
         private readonly HorizontalRule _separator;
         private Size _indicatord;
         private Rectangle _indicatorRect;
-        private IElementLocator? _lastElementLocator;
-        private IStyleProvider? _lastStyleContext;
+        //private IStyleProvider? _lastStyleContext;
 
 
         private Size _tabsUsed;
-        //private readonly IStyleContext _styleRegistry;
     }
 }

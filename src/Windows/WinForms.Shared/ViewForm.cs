@@ -100,7 +100,7 @@ namespace Das.Views.Winforms
             protected set => _contents.SetView(value);
         }
 
-        public virtual IStyleContext StyleContext => _contents.StyleContext;
+        //public virtual IStyleContext StyleContext => _contents.StyleContext;
 
         public Double ZoomLevel
         {

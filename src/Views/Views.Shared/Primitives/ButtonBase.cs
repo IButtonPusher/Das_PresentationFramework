@@ -155,6 +155,9 @@ namespace Das.Views.Controls
             set => InteractiveVisualProperties.IsMouseOverProperty.SetValue(this, value);
         }
 
+       
+
+
         public IObservableCommand? Command { get; set; }
 
         protected virtual void OnCurrentSelectorChanged(VisualStateType value)

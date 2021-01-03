@@ -37,7 +37,13 @@ namespace Das.Views.Core.Drawing
             Color = Color.FromRgb(red, green, blue);
             Opacity = 1;
         }
-        
+
+        public SolidColorBrush(String hex)
+        {
+            Color = Color.FromHex(hex);
+            Opacity = Color.A / 255.0;
+        }
+
 
         public Boolean Equals(IBrush other)
         {

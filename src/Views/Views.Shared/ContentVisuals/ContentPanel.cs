@@ -2,8 +2,10 @@
 using System.ComponentModel;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
+using Das.Views.Core.Writing;
 using Das.Views.DataBinding;
 using Das.Views.Defaults;
+using Das.Views.Primitives;
 using Das.Views.Rendering;
 using Das.Views.Rendering.Geometry;
 
@@ -106,6 +108,24 @@ namespace Das.Views.Panels
 
 
             return new ValueSize(useWidth, useHeight);
+        }
+
+        public String FontName
+        {
+            get => TextBase.FontNameProperty.GetValue(this);
+            set => TextBase.FontNameProperty.SetValue(this, value);
+        }
+
+        public Double FontSize
+        {
+            get => TextBase.FontSizeProperty.GetValue(this);
+            set => TextBase.FontSizeProperty.SetValue(this, value);
+        }
+
+        public FontStyle FontWeight
+        {
+            get => TextBase.FontWeightProperty.GetValue(this);
+            set => TextBase.FontWeightProperty.SetValue(this, value);
         }
 
         public override void InvalidateMeasure()
@@ -290,7 +310,14 @@ namespace Das.Views.Panels
                 default:
                     //no content yet
 
-                    Content = _contentTemplate.BuildVisual(newValue);
+                    var justAdded = _contentTemplate.BuildVisual(newValue);
+                    if (justAdded is IFontVisual fonty)
+                    {
+                        fonty.FontSize = FontSize;
+                        fonty.FontName = FontName;
+                        fonty.FontWeight = FontWeight;
+                    }
+                    Content = justAdded;
                     break;
             }
         }

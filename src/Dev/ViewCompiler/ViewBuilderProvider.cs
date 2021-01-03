@@ -40,17 +40,17 @@ namespace ViewCompiler
 
             bldr.Serializer = _serializer;
 
-            var styleContext = DefaultStyleContext.Instance;
+            //var styleContext = DefaultStyleContext.Instance;
             
             //var styleContext = new BaseStyleContext(DefaultStyle.Instance,
             //    new DefaultColorPalette());
 
-            foreach (var style in _serializer.GetStyles())
-                styleContext.RegisterStyle(style.Item1, style.Item2);
+            //foreach (var style in _serializer.GetStyles())
+            //    styleContext.RegisterStyle(style.Item1, style.Item2);
 
             _serializer.PostDeserialize();
 
-            bldr.StyleContext = styleContext;
+            //bldr.StyleContext = styleContext;
 
             return await Task.FromResult(bldr);
         }

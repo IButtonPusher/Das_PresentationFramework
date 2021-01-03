@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Das.Views.Styles;
 
 namespace Das.Views.Panels
 {
@@ -11,9 +10,9 @@ namespace Das.Views.Panels
 
             : base(visualBootstrapper)
         {
-            StyleContext = visualBootstrapper.StyleContext;
+          //  StyleContext = visualBootstrapper.StyleContext;
         }
 
-        public IStyleContext StyleContext { get; }
+        //public IStyleContext StyleContext { get; }
     }
 }

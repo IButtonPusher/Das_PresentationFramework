@@ -13,6 +13,6 @@ namespace Das.Views.Panels
 
         IVisualElement Element { get; set; }
 
-        IStyleContext StyleContext { get; set; }
+        //IStyleContext StyleContext { get; set; }
     }
 }

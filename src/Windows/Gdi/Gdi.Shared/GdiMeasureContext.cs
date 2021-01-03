@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using Das.Gdi.Core;
 using Das.Views;
+using Das.Views.Colors;
 using Das.Views.Controls;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
@@ -17,11 +18,11 @@ namespace Das.Gdi
     {
         public GdiMeasureContext(IVisualSurrogateProvider surrogateProvider,
                                  Dictionary<IVisualElement, ValueSize> lastMeasurements,
-                                 IStyleContext styleContext,
+                                 IThemeProvider themeProvider,
                                  IVisualLineage visualLineage,
                                  ILayoutQueue layoutQueue)
         : base(surrogateProvider, lastMeasurements, 
-            styleContext, visualLineage, layoutQueue)
+            themeProvider, visualLineage, layoutQueue)
         {
             var bmp = new Bitmap(1, 1);
             Graphics = Graphics.FromImage(bmp);

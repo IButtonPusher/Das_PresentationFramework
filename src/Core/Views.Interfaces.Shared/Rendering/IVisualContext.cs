@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Das.Views.Colors;
 using Das.Views.Core.Geometry;
-using Das.Views.Styles;
 
 namespace Das.Views.Rendering
 {
-    public interface IVisualContext : IStyleProvider
+    public interface IVisualContext : IThemeProvider //: IStyleProvider
     {
         Double ZoomLevel { get; }
 

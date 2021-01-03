@@ -39,7 +39,7 @@ namespace Das.Views.Rendering
         ValueSize MeasureString(String s,
                                 IFont font);
 
-        ValueSize GetStyleDesiredSize(IVisualElement element);
+        //ValueSize GetStyleDesiredSize(IVisualElement element);
 
 
     }

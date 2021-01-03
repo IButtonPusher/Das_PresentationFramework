@@ -7,8 +7,7 @@ namespace TestCommon
 {
     public sealed class TestBorderStyle : ElementStyle
     {
-        public TestBorderStyle(IVisualElement element) : base(element,
-            DefaultStyleContext.Instance)
+        public TestBorderStyle(IVisualElement element) : base(element)
             //new BaseStyleContext(DefaultStyle.Instance, new DefaultColorPalette()))
         {
             AddSetter(StyleSetterType.BorderThickness, new Thickness(1,2,3,4));

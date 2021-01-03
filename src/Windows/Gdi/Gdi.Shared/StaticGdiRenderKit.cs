@@ -30,7 +30,7 @@ namespace Das.Gdi.Kits
                                    ITypeInferrer typeInferrer,
                                    IPropertyProvider propertyProvider,
                                    Dictionary<IVisualElement, ValueCube> renderPositions)
-            : base(DefaultStyleContext.Instance,
+            : base(BaselineThemeProvider.Instance,
                 attributeScanner, typeInferrer, propertyProvider, renderPositions)
         {
             var defaultSurrogates = new BaseSurrogateProvider();
@@ -40,12 +40,12 @@ namespace Das.Gdi.Kits
             var layoutQueue = new LayoutQueue();
 
             MeasureContext = new GdiMeasureContext(defaultSurrogates, lastMeasure,
-                _styleContext, visualLineage, layoutQueue);
+                BaselineThemeProvider.Instance, visualLineage, layoutQueue);
 
             RenderContext = new GdiRenderContext(viewPerspective,
                 MeasureContext.Graphics, defaultSurrogates, lastMeasure,
                 new Dictionary<IVisualElement, ValueCube>(), 
-                _styleContext, visualLineage, layoutQueue);
+                BaselineThemeProvider.Instance, visualLineage, layoutQueue);
         }
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;

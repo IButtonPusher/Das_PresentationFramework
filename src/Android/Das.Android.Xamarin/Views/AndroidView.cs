@@ -4,29 +4,28 @@ using Android.Content;
 using Android.OS;
 using Android.Views;
 using Das.Views;
+using Das.Views.Colors;
 using Das.Views.Controls;
 
 using Das.Views.Core.Geometry;
 using Das.Views.Input;
 using Das.Views.Rendering;
-using Das.Views.Styles;
 using Das.Xamarin.Android.Controls;
 using Das.Xamarin.Android.Input;
-using Das.Xamarin.Android.Mvvm;
 
 namespace Das.Xamarin.Android
 {
     public class AndroidView : ViewGroup
-                               //IViewState
     {
         // ReSharper disable once UnusedMember.Global
         public AndroidView(IVisualElement view,
                            Context context,
                            IWindowManager windowManager,
-                           AndroidUiProvider uiProvider)
+                           IUiProvider uiProvider,
+                           IThemeProvider themeProvider)
             : this(view, context,
                 BuildRenderKit(context, windowManager, uiProvider,
-                    DefaultStyleContext.Instance),
+                    themeProvider),
                     //new BaseStyleContext(DefaultStyle.Instance, new DefaultColorPalette())),
                 uiProvider)
         {
@@ -160,17 +159,17 @@ namespace Das.Xamarin.Android
 
         private static AndroidRenderKit BuildRenderKit(Context context,
                                                        IWindowManager windowManager,
-                                                       AndroidUiProvider uiProvider,
-                                                       IStyleContext styleContext)
+                                                       IUiProvider uiProvider,
+                                                       IThemeProvider themeProvider)
         {
             var displayMetrics = context.Resources?.DisplayMetrics ?? throw new NullReferenceException();
 
 
-            var viewState = new AndroidViewState(displayMetrics, styleContext);
+            var viewState = new AndroidViewState(displayMetrics);
 
             var fontProvider = new AndroidFontProvider(displayMetrics);
             return new AndroidRenderKit(new BasePerspective(), viewState,
-                fontProvider, windowManager, uiProvider, styleContext, displayMetrics);
+                fontProvider, windowManager, uiProvider, themeProvider, displayMetrics);
         }
 
 
@@ -182,7 +181,7 @@ namespace Das.Xamarin.Android
 
                 if (_view.IsRequiresMeasure)
                 {
-                    RenderKit.StyleContext.AcceptChanges();
+                    //RenderKit.StyleContext.AcceptChanges();
                     RenderKit.MeasureContext.MeasureMainView(_view,
                         new ValueRenderSize(_measured), _viewState);
 

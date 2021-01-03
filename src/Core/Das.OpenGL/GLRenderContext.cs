@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Das.Views;
+using Das.Views.Colors;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
@@ -17,11 +18,11 @@ namespace Das.OpenGL
                                IGLContext openGlContext,
                                IFontProvider fontProvider,
                                IVisualSurrogateProvider surrogateProvider,
-                               IStyleContext styleContext,
+                               IThemeProvider themeProvider,
                                IVisualLineage visualLineage,
                                Dictionary<IVisualElement, ValueCube> renderPositions,
                                ILayoutQueue layoutQueue)
-            : base(perspective, surrogateProvider, styleContext, 
+            : base(perspective, surrogateProvider, themeProvider, 
                 visualLineage, renderPositions, layoutQueue)
         {
             _openGlContext = openGlContext;

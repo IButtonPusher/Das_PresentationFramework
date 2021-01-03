@@ -43,6 +43,9 @@ namespace Das.Views
 
         public virtual void InvalidateMeasure()
         {
+            if (_isLayoutSuspended)
+                return;
+
             IsRequiresMeasure = true;
             IsRequiresArrange = true;
             _visualBootstrapper.LayoutQueue.QueueVisualForMeasure(this);
@@ -50,6 +53,9 @@ namespace Das.Views
 
         public virtual void InvalidateArrange()
         {
+            if (_isLayoutSuspended)
+                return;
+
             IsRequiresArrange = true;
             _visualBootstrapper.LayoutQueue.QueueVisualForArrange(this);
         }
@@ -116,13 +122,12 @@ namespace Das.Views
         public override String ToString()
         {
             return GetType().Name;
-            //+ " req arrange: " + IsRequiresArrange +
-            //" measure: " + IsRequiresMeasure;
         }
 
        
         private static Int32 _currentId;
         private ValueSize _measuredSize;
+        private Boolean _isLayoutSuspended;
 
 
         protected readonly IVisualBootstrapper _visualBootstrapper;
@@ -132,37 +137,14 @@ namespace Das.Views
             
         }
 
-        //protected virtual void OnTemplateChanged(IVisualTemplate? oldValue,
-        //                                         IVisualTemplate? newValue)
-        //{
-        //    if (oldValue?.Content is { } oldValid)
-        //        oldValid.PropertyChanged -= OnTemplatePropertyChanged;
+        public virtual void SuspendLayout()
+        {
+            _isLayoutSuspended = true;
+        }
 
-        //    if (newValue?.Content is {} newValid)
-        //        newValid.PropertyChanged += OnTemplatePropertyChanged;
-        //}
-
-        //private void OnTemplatePropertyChanged(Object sender,
-        //                                       PropertyChangedEventArgs e)
-        //{
-        //    switch (e.PropertyName)
-        //    {
-        //        case nameof(IsRequiresArrange):
-        //            InvalidateArrange();
-        //            break;
-
-        //        case nameof(IsRequiresMeasure):
-        //            InvalidateMeasure();
-        //            break;
-        //    }
-        //}
-
-        //private static void OnTemplateChanged(IVisualElement visual,
-        //                                      IVisualTemplate? oldValue,
-        //                                      IVisualTemplate? newValue)
-        //{
-        //    if (visual is VisualElement visualElement)
-        //        visualElement.OnTemplateChanged(oldValue, newValue);
-        //}
+        public virtual void ResumeLayout()
+        {
+            _isLayoutSuspended = false;
+        }
     }
 }

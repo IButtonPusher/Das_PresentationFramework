@@ -47,11 +47,6 @@ namespace Das.Views.Rendering
 
                 foreach (var child in _visuals.GetAllChildren())
                 {
-
-                //}
-
-                //_visuals.RunOnEachChild(child =>
-                //{
                     _currentlyRendering.Add(child);
 
                     current.Size = measureContext.MeasureElement(child, remainingSize);

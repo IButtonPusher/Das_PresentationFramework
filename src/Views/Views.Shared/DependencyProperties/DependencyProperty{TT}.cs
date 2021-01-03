@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.DependencyProperties;
-using Das.Views.Styles;
 using Das.Views.Transitions;
 
 namespace Das.Views
@@ -152,18 +151,18 @@ namespace Das.Views
             return good;
         }
 
-        public TValue GetValue(TVisual forVisual,
-                               IStyleProvider contextStyle,
-                               Func<TVisual, IStyleProvider, TValue> getDefault)
-        {
-            if (!TryGetKnownOrComputedValue(forVisual, out var good))
-            {
-                good = getDefault(forVisual, contextStyle);
-                EnsureKnown(forVisual);
-            }
+        //public TValue GetValue(TVisual forVisual,
+        //                       IStyleProvider contextStyle,
+        //                       Func<TVisual, IStyleProvider, TValue> getDefault)
+        //{
+        //    if (!TryGetKnownOrComputedValue(forVisual, out var good))
+        //    {
+        //        good = getDefault(forVisual, contextStyle);
+        //        EnsureKnown(forVisual);
+        //    }
 
-            return good;
-        }
+        //    return good;
+        //}
 
         public void SetValue(TVisual forVisual,
                              TValue value,
@@ -381,6 +380,9 @@ namespace Das.Views
                                   IEnumerable<Action<TVisual, TValue, TValue>> onChangeds,
                                   Boolean isDeclineTransitions)
         {
+            if (value is IBrush)
+            {}
+
             var oldValue = GetOldValue(forVisual);
 
             if (value is IBrush && oldValue != null) { }

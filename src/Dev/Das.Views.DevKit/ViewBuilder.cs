@@ -137,7 +137,7 @@ namespace Das.Views.DevKit
 
         public String Binding { get; set; }
 
-        public IStyleContext StyleContext { get; set; }
+        //public IStyleContext StyleContext { get; set; }
 
         //public void SetBoundValue(Object? value)
         //{

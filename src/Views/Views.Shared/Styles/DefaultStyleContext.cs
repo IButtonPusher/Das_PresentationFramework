@@ -9,7 +9,7 @@ namespace Das.Views.Styles
         
         
         private DefaultStyleContext() : base(DefaultStyle.Instance,
-            new DefaultColorPalette(), new StyleVariableAccessor())
+            Styles.ColorPalette.Baseline, new StyleVariableAccessor())
         {
         }
     }

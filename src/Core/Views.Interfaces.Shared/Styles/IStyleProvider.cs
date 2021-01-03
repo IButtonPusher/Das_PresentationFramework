@@ -12,9 +12,9 @@ namespace Das.Views.Styles
         /// <summary>
         ///     Falls back to StyleSelector.None if a different value is passed and no setter is found
         /// </summary>
-        T GetStyleSetter<T>(StyleSetterType setterType,
-                            VisualStateType type,
-                            IVisualElement element);
+        //T GetStyleSetter<T>(StyleSetterType setterType,
+        //                    VisualStateType type,
+        //                    IVisualElement element);
 
     }
 }

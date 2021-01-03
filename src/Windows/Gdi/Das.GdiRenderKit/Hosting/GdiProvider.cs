@@ -51,9 +51,9 @@ namespace Das.Gdi
                                            TRectangle rect)
             where TRectangle : IRectangle
         {
-            var styleContext = view.StyleContext;
+            //var styleContext = view.StyleContext;
 
-            var control = new GdiHostedElement(view, styleContext);
+            var control = new GdiHostedElement(view);
             var form = new ViewWindow(control);
             Cook(form);
 
@@ -66,9 +66,9 @@ namespace Das.Gdi
 
         public ViewWindow Show(IView view)
         {
-            var styleContext = view.StyleContext;
+            //var styleContext = view.StyleContext;
 
-            var control = new GdiHostedElement(view, styleContext);
+            var control = new GdiHostedElement(view);
             var form = new ViewWindow(control);
             Cook(form);
 
@@ -92,8 +92,7 @@ namespace Das.Gdi
                                                  IView view)
             where TViewModel : IViewModel
         {
-            var styleContext = view.StyleContext;
-            var control = new GdiHostedElement(view, styleContext);
+            var control = new GdiHostedElement(view);
             
             Cook(control);
 
@@ -107,8 +106,7 @@ namespace Das.Gdi
         public GdiHostedElement HostStatic<TViewModel>(TViewModel viewModel
                                                        , IView view)
         {
-            var styleContext = view.StyleContext;
-            var control = new GdiHostedElement(view, styleContext);
+            var control = new GdiHostedElement(view);
             var renderer = new BitmapRenderer(control,
                 RenderKit.MeasureContext, RenderKit.RenderContext);
 
@@ -124,9 +122,8 @@ namespace Das.Gdi
                                            IBindableElement view)
             //where TViewModel : IViewModel
         {
-            var styleContext = RenderKit.StyleContext;
 
-            var control = new GdiHostedElement(view, styleContext);
+            var control = new GdiHostedElement(view);
             var form = new ViewWindow(control);
             Cook(form);
 
@@ -151,7 +148,7 @@ namespace Das.Gdi
         {
             var perspective = new BasePerspective();
             var kit = new GdiRenderKit(perspective, windowProvider,
-                DefaultStyleContext.Instance,
+                BaselineThemeProvider.Instance,
                 container);
             return kit;
         }

@@ -9,6 +9,9 @@ namespace Das.Views.Styles.Application
                                       IDependencyProperty dependencyProperty,
                                       Object? value)
         {
+            if (dependencyProperty.Name == "Background")
+            {}
+
             Visual = visual;
             _dependencyProperty = dependencyProperty;
             _value = value;

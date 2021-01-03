@@ -162,6 +162,17 @@ namespace Das.Views.Styles.Functions
                         return default;
 
                     return new SolidColorBrush(red, green, blue);
+
+                case String str:
+                    if (str.StartsWith("#"))
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                    break;
             }
 
             return default;

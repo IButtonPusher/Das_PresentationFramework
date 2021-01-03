@@ -1,16 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using Das.Views.Core.Drawing;
 using Das.Views.Styles;
 
 namespace Das.Views.Construction.Styles
 {
     public class StyleVariableAccessor : IStyleVariableAccessor
     {
-        public StyleVariableAccessor()
+        public StyleVariableAccessor(IColorPalette colorPalette)
         {
             _lock = new Object();
             _values = new Dictionary<String, Object?>();
             _promises = new Dictionary<String, Delegate>();
+
+            foreach (var kvp in colorPalette)
+            {
+                var name = $"--mat-{kvp.Key.ToString().ToLower()}";
+                SetVariableValue(name, kvp.Value);
+
+                if (kvp.Value is SolidColorBrush scb)
+                {
+                    //var rgb = $"{scb.Color.R},{scb.Color.G},{scb.Color.B}";
+                    var rgb = new Object[] {scb.Color.R, scb.Color.G, scb.Color.B};
+                    SetVariableValue($"{name}-rgb", rgb);
+                }
+            }
         }
 
         public T GetVariableValue<T>(String variableName)

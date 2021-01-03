@@ -13,14 +13,14 @@ namespace Das.ViewModels
     {
         public BaseObservableCommand(Action execute,
                                      IUiProvider uiThread)
-            : this(execute, p => true, uiThread)
+            : this(execute, _ => true, uiThread)
         {
         }
 
 
         public BaseObservableCommand(Func<Task> execute,
                                      IUiProvider uiThread)
-            : this(execute, p => true, uiThread)
+            : this(execute, _ => true, uiThread)
         {
             _uiProvider = uiThread;
             _executeAsync = execute;
@@ -33,7 +33,7 @@ namespace Das.ViewModels
                                      String propertyName,
                                      IUiProvider uiProvider)
             : this(execute,
-                o => typeManipulator.GetPropertyValue<Boolean>(viewModel, propertyName),
+                _ => typeManipulator.GetPropertyValue<Boolean>(viewModel, propertyName),
                 uiProvider)
         {
             _propertyName = propertyName;

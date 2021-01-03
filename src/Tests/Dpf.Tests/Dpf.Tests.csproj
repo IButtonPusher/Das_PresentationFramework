@@ -44,10 +44,11 @@
     <Compile Include="StyleInflaterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StyleSelectorTests.cs" />
+    <Compile Include="TestThemeProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Das.Serializer.Split">
-      <Version>0.0.16-alpha</Version>
+      <Version>0.0.17-alpha</Version>
     </PackageReference>
     <PackageReference Include="xunit">
       <Version>2.4.1</Version>

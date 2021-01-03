@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Das.Views</RootNamespace>
     <AssemblyName>Das.Views.Interfaces</AssemblyName>    
-	 <LangVersion>8.0</LangVersion>
+	 <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>    
   </PropertyGroup>
   <PropertyGroup>
@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="Das.Container.Interfaces" Version="0.0.8-alpha" />
-    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.15-alpha" />
+    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.17-alpha" />
   </ItemGroup>
 
   <ItemGroup>

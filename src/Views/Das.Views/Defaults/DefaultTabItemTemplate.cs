@@ -26,8 +26,8 @@ namespace Das.Views.Defaults
         {
             var btn = new ToggleButton(_visualBootstrapper)
             {
-                DataContext = dataContext,
-                
+                FontSize = 15,
+                DataContext = dataContext
             };
 
 

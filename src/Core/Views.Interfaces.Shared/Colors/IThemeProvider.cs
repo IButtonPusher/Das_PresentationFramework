@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Das.Views.Core.Drawing;
 
 namespace Das.Views.Colors

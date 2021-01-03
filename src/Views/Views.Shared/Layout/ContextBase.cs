@@ -1,46 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Das.Views.Colors;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Layout;
 using Das.Views.Rendering;
-using Das.Views.Styles;
 
 namespace Das.Views
 {
     public abstract class ContextBase : IVisualContext
     {
         protected ContextBase(Dictionary<IVisualElement, ValueSize> lastMeasurements,
-                              IStyleContext styleContext,
+                              IThemeProvider themeProvider,
+                              //IStyleContext styleContext,
                               IVisualSurrogateProvider surrogateProvider,
                               IVisualLineage visualLineage,
                               ILayoutQueue layoutQueue)
         {
             _measureLock = new Object();
             _lastMeasurements = lastMeasurements;
-            _styleContext = styleContext;
+            //_styleContext = styleContext;
             _surrogateProvider = surrogateProvider;
+            _themeProvider = themeProvider;
             VisualLineage = visualLineage;
             LayoutQueue = layoutQueue;
             ViewState = NullViewState.Instance;
             
         }
 
-        public T GetStyleSetter<T>(StyleSetterType setterType,
-                                   IVisualElement element)
-        {
-            return ViewState.StyleContext.GetStyleSetter<T>(setterType, element, VisualLineage);
-        }
+        //public T GetStyleSetter<T>(StyleSetterType setterType,
+        //                           IVisualElement element)
+        //{
+        //    return ViewState.StyleContext.GetStyleSetter<T>(setterType, element, VisualLineage);
+        //}
 
-        public T GetStyleSetter<T>(StyleSetterType setterType,
-                                   VisualStateType type,
-                                   IVisualElement element)
-        {
-            return ViewState.StyleContext.GetStyleSetter<T>(setterType, type, 
-                element, VisualLineage);
-        }
+        //public T GetStyleSetter<T>(StyleSetterType setterType,
+        //                           VisualStateType type,
+        //                           IVisualElement element)
+        //{
+        //    return ViewState.StyleContext.GetStyleSetter<T>(setterType, type, 
+        //        element, VisualLineage);
+        //}
 
 
         public ValueSize GetLastMeasure(IVisualElement element)
@@ -104,9 +106,10 @@ namespace Das.Views
 
         private readonly Dictionary<IVisualElement, ValueSize> _lastMeasurements;
         protected readonly Object _measureLock;
-        private readonly IStyleContext _styleContext;
+        //private readonly IStyleContext _styleContext;
         private readonly IVisualSurrogateProvider _surrogateProvider;
+        protected readonly IThemeProvider _themeProvider;
 
-        public IColorPalette ColorPalette => _styleContext.ColorPalette;
+        public IColorPalette ColorPalette => _themeProvider.ColorPalette; //_styleContext.ColorPalette;
     }
 }

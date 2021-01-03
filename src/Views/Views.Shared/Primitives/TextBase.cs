@@ -33,11 +33,11 @@ namespace Das.Views.Primitives
         public static readonly DependencyProperty<ITextVisual, IBrush?> TextBrushProperty =
             DependencyProperty<ITextVisual, IBrush?>.Register(nameof(TextBrush), default);
 
-        public static readonly DependencyProperty<ITextVisual, FontStyle> FontWeightProperty =
-            DependencyProperty<ITextVisual, FontStyle>.Register(
+        public static readonly DependencyProperty<IFontVisual, FontStyle> FontWeightProperty =
+            DependencyProperty<IFontVisual, FontStyle>.Register(
                 nameof(FontWeight), FontStyle.Regular, OnFontWeightChanged);
 
-        private static void OnFontWeightChanged(ITextVisual visual,
+        private static void OnFontWeightChanged(IFontVisual visual,
                                                 FontStyle arg2,
                                                 FontStyle arg3)
         {
@@ -56,11 +56,11 @@ namespace Das.Views.Primitives
             set => FontWeightProperty.SetValue(this, value);
         }
 
-        public static readonly DependencyProperty<ITextVisual, String> FontNameProperty =
-            DependencyProperty<ITextVisual, String>.Register(
+        public static readonly DependencyProperty<IFontVisual, String> FontNameProperty =
+            DependencyProperty<IFontVisual, String>.Register(
                 nameof(FontName), "Segoe UI", OnFontNameChanged);
 
-        private static void OnFontNameChanged(ITextVisual visual,
+        private static void OnFontNameChanged(IFontVisual visual,
                                               String arg2,
                                               String arg3)
         {
@@ -74,11 +74,11 @@ namespace Das.Views.Primitives
             set => FontNameProperty.SetValue(this, value);
         }
 
-        public static readonly DependencyProperty<ITextVisual, Double> FontSizeProperty =
-            DependencyProperty<ITextVisual, Double>.Register(
+        public static readonly DependencyProperty<IFontVisual, Double> FontSizeProperty =
+            DependencyProperty<IFontVisual, Double>.Register(
                 nameof(FontSize), 10, OnFontSizeChanged);
 
-        private static void OnFontSizeChanged(ITextVisual visual,
+        private static void OnFontSizeChanged(IFontVisual visual,
                                               Double arg2,
                                               Double arg3)
         {

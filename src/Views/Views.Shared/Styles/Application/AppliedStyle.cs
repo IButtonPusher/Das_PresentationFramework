@@ -23,23 +23,15 @@ namespace Das.Views.Styles.Application
 
                 var asUnfilteredSelector = rule.RuleTemplate.Selector.ToUnfiltered();
 
-                foreach (var apple in AppliedRules)
+                foreach (var applied in AppliedRules)
                 {
-                    if (ReferenceEquals(apple, rule))
+                    if (ReferenceEquals(applied, rule))
                         continue;
 
-                    if (!apple.RuleTemplate.Selector.Equals(asUnfilteredSelector))
+                    if (!applied.RuleTemplate.Selector.Equals(asUnfilteredSelector))
                         continue;
 
-                    apple.EnsureDefaultAssignments(rule);
-
-                    //foreach (var filteredAssignment in rule.Assignments)
-                    //{
-                    //    if (!apple.HasOverlappingAssignment(filteredAssignment))
-                    //    {
-                    //        apple.AddDefaultAssignment(filteredAssignment);
-                    //    }
-                    //}
+                    applied.EnsureDefaultAssignments(rule);
 
                     break;
                 }

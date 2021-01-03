@@ -3,6 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Transitions;
 
+#if !NET40
+using TaskEx = System.Threading.Tasks.Task;
+#endif
+
 namespace Das.Views.Styles.Transitions
 {
     public abstract class PropertyTransition<T> : BaseTransition,
@@ -31,7 +35,7 @@ namespace Das.Views.Styles.Transitions
             CurrentStartValue = startValue;
             CurrentEndValue = endValue;
 
-            Task.Run(() => RunUpdates(CancellationToken.None)).ConfigureAwait(false);
+            TaskEx.Run(() => RunUpdates(CancellationToken.None)).ConfigureAwait(false);
         }
 
         protected override void OnFinished(Boolean wasCancelled)

@@ -5,12 +5,12 @@ using Android.Util;
 using Android.Views;
 using Das.Extensions;
 using Das.Views;
+using Das.Views.Colors;
 using Das.Views.Controls;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Measuring;
 using Das.Views.Rendering;
-using Das.Views.Styles;
 
 namespace Das.Xamarin.Android
 {
@@ -20,12 +20,12 @@ namespace Das.Xamarin.Android
                                  AndroidFontProvider fontProvider,
                                  IVisualSurrogateProvider surrogateProvider,
                                  Dictionary<IVisualElement, ValueSize> lastMeasurements,
-                                 IStyleContext styleContext,
+                                 IThemeProvider themeProvider,
                                  DisplayMetrics displayMetrics,
                                  IVisualLineage visualLineage,
                                  ILayoutQueue layoutQueue)
         : base(surrogateProvider, lastMeasurements, 
-            styleContext, visualLineage,layoutQueue)
+            themeProvider, visualLineage,layoutQueue)
         {
             _windowManager = windowManager;
             _fontProvider = fontProvider;

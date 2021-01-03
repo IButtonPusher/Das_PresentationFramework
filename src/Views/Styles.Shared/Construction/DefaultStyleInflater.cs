@@ -19,7 +19,7 @@ namespace Das.Views.Styles.Construction
             var selectorBuilder = new CssStyleSelectorBuilder(visualAliases);
 
             var ruleBuilder = new CssRuleBuilder(selectorBuilder,
-                DefaultStyleContext.Instance.VariableAccessor);
+                new StyleVariableAccessor(BaselineThemeProvider.Instance.ColorPalette));
 
             return ruleBuilder;
         }

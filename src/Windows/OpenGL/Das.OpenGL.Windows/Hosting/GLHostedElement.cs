@@ -7,9 +7,8 @@ namespace Das.OpenGL.Windows
 {
     public class GLHostedElement : HostedViewControl
     {
-        public GLHostedElement(IVisualElement view, 
-                               IStyleContext styleContext) 
-            : base(view, styleContext)
+        public GLHostedElement(IVisualElement view) 
+            : base(view)
         {
             IsLoaded = true;
         }

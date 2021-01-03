@@ -22,7 +22,7 @@
     <ToggleButton Content="hello"
                   Style="mat-toggle-button"/>
 
-    <ToggleButton>
+    <!--<ToggleButton>
       <Template>
         <Label>
           hello 2 u 2
@@ -34,7 +34,7 @@
       <Template>
         <Label Text="{Content}" />
       </Template>
-    </ToggleButton>
+    </ToggleButton>-->
 
   </StackPanel>
 

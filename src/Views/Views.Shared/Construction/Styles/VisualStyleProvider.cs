@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using AsyncResults.ForEach;
+using Das.Views.Colors;
 using Das.Views.Styles;
 
 namespace Das.Views.Construction
 {
     public class VisualStyleProvider : IVisualStyleProvider
     {
-        public VisualStyleProvider(IStyleInflater styleInflater)
+        public VisualStyleProvider(IStyleInflater styleInflater,
+                                   IThemeProvider themeProvider)
         {
             _styleInflater = styleInflater;
+            ThemeProvider = themeProvider;
 
             _lockStylesByClassName = new Object();
             _stylesByClassName = new Dictionary<String, HashSet<IStyleRule>>();
@@ -69,6 +72,8 @@ namespace Das.Views.Construction
                 }
             }
         }
+
+        public IThemeProvider ThemeProvider { get; }
 
         public async Task<IStyleSheet?> GetStyleByNameAsync(String name)
         {

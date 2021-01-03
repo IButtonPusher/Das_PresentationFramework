@@ -55,7 +55,7 @@ namespace Das.OpenGL
 
             
             
-            var kit = new OpenGLRenderKit(fontProvider, context, DefaultStyleContext.Instance);
+            var kit = new OpenGLRenderKit(fontProvider, context, BaselineThemeProvider.Instance);
 
             var renderer = new GLFormViewRenderer(element, kit, context);
             var _ = new LoopViewUpdater(renderer, element, _taskScheduler);

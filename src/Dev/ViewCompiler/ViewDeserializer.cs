@@ -156,17 +156,17 @@ namespace ViewCompiler
                 return false;
             }
 
-            if (typeof(ElementStyle).IsAssignableFrom(styleType))
-            {
-                var ctorToUse = styleType.GetConstructor(
-                    new[] {typeof(IVisualElement)});
-                if (ctorToUse == null)
-                    throw new InvalidOperationException(
-                        $"Style '{styleName}' does not have a valid constructor that accepts a single parameter of type: {nameof(IVisualElement)}.");
+            //if (typeof(ElementStyle).IsAssignableFrom(styleType))
+            //{
+            //    var ctorToUse = styleType.GetConstructor(
+            //        new[] {typeof(IVisualElement)});
+            //    if (ctorToUse == null)
+            //        throw new InvalidOperationException(
+            //            $"Style '{styleName}' does not have a valid constructor that accepts a single parameter of type: {nameof(IVisualElement)}.");
 
-                style = (ElementStyle) Activator.CreateInstance(styleType, element);
-                return true;
-            }
+            //    style = (ElementStyle) Activator.CreateInstance(styleType, element);
+            //    return true;
+            //}
 
             if (typeof(TypeStyle).IsAssignableFrom(styleType))
             {

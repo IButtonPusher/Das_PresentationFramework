@@ -15,18 +15,18 @@ namespace WinForms.Shared
                                               IBoundElementContainer, 
                                               IWindowsViewHost
     {
-        protected HostedViewControl(IVisualElement view,
-                                    IStyleContext styleContext)
-            : this(styleContext)
+        protected HostedViewControl(IVisualElement view)
+                                    //IStyleContext styleContext)
+            : this()//styleContext)
         {
             View = view;
         }
 
 #pragma warning disable 8618
-        protected HostedViewControl(IStyleContext styleContext)
+        protected HostedViewControl()//IStyleContext styleContext)
 #pragma warning restore 8618
         {
-            StyleContext = styleContext;
+            //StyleContext = styleContext;
             _zoomLevel = 1;
         }
 
@@ -40,7 +40,7 @@ namespace WinForms.Shared
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public SizeToContent SizeToContent { get; set; }
 
-        public IStyleContext StyleContext { get; set; }
+        //public IStyleContext StyleContext { get; set; }
 
         public Thickness RenderMargin { get; } = Thickness.Empty;
 

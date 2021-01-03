@@ -21,18 +21,14 @@ namespace Dpf.Tests
         {
             var css = GetFileContents("material-switch.css");
             var nodes = CssNodeBuilder.GetMarkupNodes(css).ToArray();
-            //var selectors = new List<IStyleSelector>();
-            var rules = new List<IStyleRule>();
-
-            var styleContext = DefaultStyleContext.Instance;
             
+            var rules = new List<IStyleRule>();
 
             var visualAliases = new VisualAliasProvider();
             var selectorBuilder = new CssStyleSelectorBuilder(visualAliases);
+            var themeProvider = BaselineThemeProvider.Instance;
             
-            var variableAccessor = new StyleVariableAccessor();
-
-            var defaultStyle = DefaultStyleContext.Instance;
+            var variableAccessor = new StyleVariableAccessor(themeProvider.ColorPalette);
 
             var ruleBuilder = new CssRuleBuilder(selectorBuilder, variableAccessor);
 
@@ -59,7 +55,7 @@ namespace Dpf.Tests
             //var xml = GetResourceContents("abc");
             
             var inflater = new DefaultStyleInflater(Serializer.TypeInferrer);
-            var provider = new VisualStyleProvider(inflater);
+            var provider = new VisualStyleProvider(inflater, new TestThemeProvider());
 
             var bob = provider.GetStyleByNameAsync("mat-toggle-button").Result;
 

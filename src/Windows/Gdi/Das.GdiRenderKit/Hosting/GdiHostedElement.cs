@@ -14,9 +14,8 @@ namespace Das.Gdi.Controls
     public class GdiHostedElement : HostedViewControl,
                                     IViewHost<Bitmap>
     {
-        public GdiHostedElement(IVisualElement view,
-                                IStyleContext styleContext)
-            : base(view, styleContext)
+        public GdiHostedElement(IVisualElement view)
+            : base(view)
         {
             View = view;
             _lockBmp = new Object();

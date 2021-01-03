@@ -26,9 +26,9 @@ namespace Das.OpenGL.Windows
             //where TViewModel : IViewModel
         {
             //var styleContext = view.StyleContext;
-            var styleContext = DefaultStyleContext.Instance;
+            //var styleContext = DefaultStyleContext.Instance;
 
-            var control = new GLHostedElement(view, styleContext);
+            var control = new GLHostedElement(view);
             var form = new GLForm(control);
 
             view.DataContext = viewModel;
@@ -43,9 +43,9 @@ namespace Das.OpenGL.Windows
                                        TRectangle rect) 
             where TRectangle : IRectangle
         {
-            var styleContext = view.StyleContext;
+           // var styleContext = view.StyleContext;
 
-            var control = new GLHostedElement(view, styleContext);
+            var control = new GLHostedElement(view);
             var form = new GLForm(control);
 
             form.Bounds = new System.Drawing.Rectangle(
@@ -63,9 +63,9 @@ namespace Das.OpenGL.Windows
         public GLForm Show<TViewModel>(TViewModel viewModel, 
                                        IView view)
         {
-            var styleContext = view.StyleContext;
+            //var styleContext = view.StyleContext;
 
-            var control = new GLHostedElement(view, styleContext);
+            var control = new GLHostedElement(view);
             var form = new GLForm(control);
 
             view.DataContext = viewModel;

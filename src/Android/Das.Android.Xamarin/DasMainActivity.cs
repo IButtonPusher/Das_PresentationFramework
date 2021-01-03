@@ -5,6 +5,7 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Support.V7.App;
 using Das.Views;
+using Das.Views.Colors;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 using Das.Xamarin.Android.Mvvm;
@@ -16,19 +17,22 @@ namespace Das.Xamarin.Android
     public abstract class DasMainActivity : AppCompatActivity 
                                             //IViewState
     {
-        protected virtual IStyleContext GetStyleContext()
-        {
-            return DefaultStyleContext.Instance;
-            //return new BaseStyleContext(DefaultStyle.Instance,
-            //    new DefaultColorPalette());
-        }
+        //protected virtual IStyleContext GetStyleContext()
+        //{
+        //    return DefaultStyleContext.Instance;
+        //    //return new BaseStyleContext(DefaultStyle.Instance,
+        //    //    new DefaultColorPalette());
+        //}
+
+        protected virtual IThemeProvider GetThemeProvider() => BaselineThemeProvider.Instance;
 
         protected sealed override async void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Platform.Init(this, savedInstanceState);
 
-            _styleContext = GetStyleContext();
+            //_styleContext = GetStyleContext();
+            var themeProvider = GetThemeProvider();
 
             var displayMetrics = Resources?.DisplayMetrics ?? throw new NullReferenceException();
             //ZoomLevel = displayMetrics.ScaledDensity;
@@ -40,10 +44,10 @@ namespace Das.Xamarin.Android
             var windowManager = WindowManager ?? throw new NullReferenceException(
                 "WindowManager cannot be null");
             
-            var viewState = new AndroidViewState(displayMetrics, _styleContext);
+            var viewState = new AndroidViewState(displayMetrics);
 
             var renderKit = new AndroidRenderKit(new BasePerspective(), viewState, 
-                fontProvider, windowManager, uiProvider, _styleContext, displayMetrics);
+                fontProvider, windowManager, uiProvider, themeProvider, displayMetrics);
 
             _view = await GetMainViewAsync(renderKit, uiProvider);
 
@@ -110,7 +114,7 @@ namespace Das.Xamarin.Android
 
         //public Double ZoomLevel { get; private set; } = 1.0;
 
-        private IStyleContext? _styleContext;
+        //private IStyleContext? _styleContext;
         private IVisualElement? _view;
     }
 }

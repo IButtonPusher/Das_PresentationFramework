@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Das.Container;
 using Das.Serializer;
 using Das.Views;
+using Das.Views.Colors;
 using Das.Views.Construction;
 using Das.Views.Controls;
 using Das.Views.Core;
@@ -41,13 +42,13 @@ namespace Das.Gdi.Kits
 
         public GdiRenderKit(IViewPerspective viewPerspective,
                             IWindowProvider<IVisualHost> windowProvider,
-                            IStyleContext styleContext,
+                            IThemeProvider themeProvider,
                             IResolver container)
-            : base(container, styleContext, Serializer.AttributeParser, Serializer.TypeInferrer,
+            : base(container, themeProvider, Serializer.AttributeParser, Serializer.TypeInferrer,
                 Serializer.TypeManipulator, new Dictionary<IVisualElement, ValueCube>())
         {
             _windowProvider = windowProvider;
-            Init(windowProvider, styleContext, viewPerspective, _renderPositions,
+            Init(windowProvider, themeProvider, viewPerspective, _renderPositions,
                 ref _imageProvider!, ref _measureContext!, ref _renderContext!);
         }
 
@@ -120,7 +121,7 @@ namespace Das.Gdi.Kits
 
         [SuppressMessage("ReSharper", "RedundantAssignment")]
         private void Init(IWindowProvider<IVisualHost> windowProvider,
-                          IStyleContext styleContext,
+                          IThemeProvider themeProvider,
                           IViewPerspective viewPerspective,
                           Dictionary<IVisualElement, ValueCube> renderPositions,
                           ref GdiImageProvider? imageProvider,
@@ -132,15 +133,15 @@ namespace Das.Gdi.Kits
             var visualLineage = new VisualLineage();
 
             measureContext = new GdiMeasureContext(this, lastMeasure,
-                styleContext, visualLineage, VisualBootstrapper.LayoutQueue);
+                themeProvider, visualLineage, VisualBootstrapper.LayoutQueue);
 
             renderContext = new GdiRenderContext(viewPerspective,
                 MeasureContext.Graphics, this, lastMeasure,
-                renderPositions, styleContext, visualLineage, VisualBootstrapper.LayoutQueue);
+                renderPositions, themeProvider, visualLineage, VisualBootstrapper.LayoutQueue);
 
             Container.ResolveTo<IImageProvider>(imageProvider);
             Container.ResolveTo<IUiProvider>(new GdiUiProvider(windowProvider));
-            Container.ResolveTo(styleContext);
+            Container.ResolveTo(themeProvider);
 
             windowProvider.WindowShown += OnWindowShown;
 

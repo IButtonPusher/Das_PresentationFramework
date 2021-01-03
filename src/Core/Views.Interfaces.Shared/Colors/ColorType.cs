@@ -5,11 +5,17 @@ namespace Das.Views.Colors
     public enum ColorType
     {
         Primary,
-        OnPrimary,
-        Accent,
+        PrimaryVariant,
+        Secondary,
+        SecondaryVariant,
         Background,
-        OnBackground,
         Surface,
+        Error,
+
+        OnPrimary,
+        OnSecondary,
+        OnBackground,
         OnSurface,
+        OnError
     }
 }

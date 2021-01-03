@@ -124,7 +124,7 @@ namespace Das.ViewModels
 
         public async Task AddAsync(IEnumerable<T> items)
         {
-            await DoTransaction(k =>
+            await DoTransaction(_ =>
             {
                 foreach (var item in items)
                     AddImpl(item);
@@ -143,7 +143,7 @@ namespace Das.ViewModels
 
         public async Task Synchronize(IEnumerable<T> items)
         {
-            await DoTransaction(k =>
+            await DoTransaction(_ =>
             {
                 var itemSearch = new HashSet<T>(items);
                 var remove = _backingCollection.Where(b => !itemSearch.Contains(b)).ToArray();
@@ -170,7 +170,7 @@ namespace Das.ViewModels
                                              Func<T, TOther, Boolean> equate,
                                              Func<TOther, T> forNew)
         {
-            await DoAsyncTransaction(async k =>
+            await DoAsyncTransaction(async _ =>
             {
                 if (args.OldItems is { } goneNow)
                 {
@@ -302,7 +302,7 @@ namespace Das.ViewModels
         {
             var arr = new List<T>(items);
 
-            await DoTransaction(arr, (a, b) => { RemoveImpl(b); }).ConfigureAwait(false);
+            await DoTransaction(arr, (_, b) => { RemoveImpl(b); }).ConfigureAwait(false);
         }
 
 
@@ -311,7 +311,7 @@ namespace Das.ViewModels
         {
             var arr = new List<T>(items);
 
-            return await DoTransaction(arr, (a, b) =>
+            return await DoTransaction(arr, (_, b) =>
             {
                 if (RemoveImpl(b))
                     progress.Report(b);
@@ -324,7 +324,7 @@ namespace Das.ViewModels
 
         public async Task Remove(IEnumerable<T> items)
         {
-            await DoTransaction(k =>
+            await DoTransaction(_ =>
             {
                 foreach (var item in items)
                 {

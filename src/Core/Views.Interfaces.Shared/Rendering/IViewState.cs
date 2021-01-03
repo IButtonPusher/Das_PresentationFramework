@@ -12,7 +12,7 @@ namespace Das.Views.Rendering
     {
         //IStyleProvider StyleProvider { get; }
         
-        IStyleContext StyleContext { get; }
+        //IStyleContext StyleContext { get; }
 
     }
 }

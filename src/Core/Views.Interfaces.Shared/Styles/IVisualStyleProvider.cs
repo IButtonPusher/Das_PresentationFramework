@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Das.Views.Colors;
 using Das.Views.Construction;
 
 namespace Das.Views.Styles
@@ -11,6 +12,8 @@ namespace Das.Views.Styles
     public interface IVisualStyleProvider
     {
         IAsyncEnumerable<IStyleRule> GetStylesByClassNameAsync(String className);
+
+        IThemeProvider ThemeProvider { get; }
 
         /// <summary>
         /// Finds styles in xml resource files

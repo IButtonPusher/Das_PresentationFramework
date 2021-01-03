@@ -4,6 +4,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Das.Container;
 using Das.Serializer;
+using Das.Views.Colors;
+using Das.Views.Core.Drawing;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Styles;
@@ -13,12 +15,13 @@ namespace Das.Views.Templates
     public class DefaultVisualBootstrapper : IVisualBootstrapper
     {
         public DefaultVisualBootstrapper(IResolver dependencyResolver,
-                                         IStyleContext styleContext,
+                                         IThemeProvider themeProvider,
                                          IPropertyProvider propertyProvider,
                                          ILayoutQueue layoutQueue)
         {
-            StyleContext = styleContext;
+            //StyleContext = styleContext;
             _dependencyResolver = dependencyResolver;
+            _themeProvider = themeProvider;
             _propertyProvider = propertyProvider;
             LayoutQueue = layoutQueue;
 
@@ -47,7 +50,7 @@ namespace Das.Views.Templates
             throw new NotImplementedException();
         }
 
-        public IStyleContext StyleContext { get; }
+        //public IStyleContext StyleContext { get; }
 
         public TVisualElement Instantiate<TVisualElement>(Type type)
             where TVisualElement : IVisualElement
@@ -124,6 +127,8 @@ namespace Das.Views.Templates
 
         //    return obj;
         //}
+
+        public IColorPalette ColorPalette => _themeProvider.ColorPalette;
 
         public IUiProvider UiProvider => _uiProvider ??= _dependencyResolver.Resolve<IUiProvider>();
 
@@ -210,6 +215,7 @@ namespace Das.Views.Templates
         private readonly Object _defaultConstructorLock;
         private readonly Dictionary<Type, ConstructorInfo> _defaultConstructors;
         private readonly IResolver _dependencyResolver;
+        private readonly IThemeProvider _themeProvider;
         private readonly IPropertyProvider _propertyProvider;
 
         private IUiProvider? _uiProvider;

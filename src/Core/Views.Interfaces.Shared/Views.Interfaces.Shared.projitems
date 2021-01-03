@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IDependencyProperty{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\PropertyMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ILayoutQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\IFontVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\ITextVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transitions\ITransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IAppliedStyle.cs" />
@@ -234,7 +235,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\AssignedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleContext.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleSheet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\VisualStateType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSetterType.cs" />

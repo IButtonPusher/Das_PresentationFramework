@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace Das.Views.Core.Drawing
@@ -78,6 +79,28 @@ namespace Das.Views.Core.Drawing
                                      Byte b)
         {
             return new Color(alpha, r, g, b);
+        }
+
+        public static Color FromHex(String hex)
+        {
+            var start = hex[0] == '#' ? 1 : 0;
+
+            switch (hex.Length - start)
+            {
+                case 6:
+                    return FromRgb(Byte.Parse(hex.Substring(start, 2), NumberStyles.HexNumber),
+                        Byte.Parse(hex.Substring(start + 2, 2), NumberStyles.HexNumber),
+                        Byte.Parse(hex.Substring(start + 4, 2), NumberStyles.HexNumber));
+
+                case 8:
+                    return FromArgb(Byte.Parse(hex.Substring(start, 2), NumberStyles.HexNumber),
+                        Byte.Parse(hex.Substring(start + 2, 2), NumberStyles.HexNumber),
+                        Byte.Parse(hex.Substring(start + 4, 2), NumberStyles.HexNumber),
+                        Byte.Parse(hex.Substring(start + 6, 2), NumberStyles.HexNumber));
+
+                default:
+                    throw new InvalidOperationException();
+            }
         }
 
         public override Int32 GetHashCode()

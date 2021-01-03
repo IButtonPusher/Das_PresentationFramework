@@ -108,17 +108,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\BuildAssignments.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\ComputedValueAssignment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\PseudoVisualAssignment.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Styles\BaseStyleContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\BaselineThemeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\CascadingAssignedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Declarations\ObjectDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\DependencyPropertyValueRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Selectors\DependencyPropertySelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSheet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\ColorPalette.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Styles\DefaultColorPalette.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\DefaultStyle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Styles\DefaultStyleContext.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Styles\ElementStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Selectors\VisualTypeStyleSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSheetHelper.cs" />
@@ -126,7 +123,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\BrushTransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\DoublePropertyTransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\DoubleTransition.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Styles\ScopedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Style.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\Easing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\PropertyTransition.cs" />

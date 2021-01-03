@@ -76,11 +76,11 @@ namespace Das.Views
         
         ILabel? AfterLabel { get; set; }
 
-        /// <summary>
-        /// Tags in markup that are meant to identify this visual.
-        /// </summary>
-        /// <example>label = Label, input can be TextBox, Button, CheckBox, etc </example>
-        Boolean IsMarkupNameAlias(String markupTag);
+        ///// <summary>
+        ///// Tags in markup that are meant to identify this visual.
+        ///// </summary>
+        ///// <example>label = Label, input can be TextBox, Button, CheckBox, etc </example>
+        //Boolean IsMarkupNameAlias(String markupTag);
         
         Int32 ZIndex { get; }
 

@@ -34,7 +34,7 @@ namespace Das.Views
             return TaskEx.CompletedTask;
         }
 
-        protected override Boolean IsChanged => _viewHost.IsChanged || _viewHost.StyleContext.IsChanged ||
+        protected override Boolean IsChanged => _viewHost.IsChanged || //_viewHost.StyleContext.IsChanged ||
                                                 _layoutQueue.HasVisualsNeedingArrange;
 
         protected override Boolean Update()
@@ -46,7 +46,7 @@ namespace Das.Views
             _viewHost.Asset = asset;
             _viewHost.Invalidate();
 
-            _viewHost.StyleContext.AcceptChanges();
+            //_viewHost.StyleContext.AcceptChanges();
 
             return true;
         }
@@ -70,7 +70,7 @@ namespace Das.Views
                 TaskCreationOptions.LongRunning, taskScheduler);
         }
 
-        protected override Boolean IsChanged => _viewHost.IsChanged || _viewHost.StyleContext.IsChanged;
+        protected override Boolean IsChanged => _viewHost.IsChanged; //|| _viewHost.StyleContext.IsChanged;
 
         protected override void Initialize()
         {

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Gdi.Core;
 using Das.Views;
+using Das.Views.Colors;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
@@ -24,11 +25,11 @@ namespace Das.Gdi
                                 IVisualSurrogateProvider surrogateProvider,
                                 Dictionary<IVisualElement, ValueSize> lastMeasures,
                                 Dictionary<IVisualElement, ValueCube> renderPositions,
-                                IStyleContext styleContext,
+                                IThemeProvider themeProvider,
                                 IVisualLineage visualLineage,
                                 ILayoutQueue layoutQueue)
             : base(perspective, surrogateProvider, renderPositions,
-                lastMeasures, styleContext, visualLineage, layoutQueue)
+                lastMeasures, themeProvider, visualLineage, layoutQueue)
         {
             _testPen = new Pen(Color.Yellow, 1);
             Graphics = nullGraphics;

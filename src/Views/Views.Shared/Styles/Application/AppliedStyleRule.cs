@@ -70,15 +70,15 @@ namespace Das.Views.Styles.Application
             if (!(exampleAssignment is IPropertyValueAssignment propertyValue))
                 throw new NotImplementedException();
 
-            var apple = new AppliedValueAssignment(propertyValue.Visual, propertyValue.Property,
+            var applied = new AppliedValueAssignment(propertyValue.Visual, propertyValue.Property,
                 propertyValue.Property.DefaultValue);
-            return apple;
+            return applied;
         }
 
         public void AddDefaultAssignment(IStyleValueAssignment exampleAssignment)
         {
-            var apple = GetDefaultAssignment(exampleAssignment);
-            Assignments.Add(apple);
+            var applied = GetDefaultAssignment(exampleAssignment);
+            Assignments.Add(applied);
         }
 
         public void Execute(Boolean isUpdate)

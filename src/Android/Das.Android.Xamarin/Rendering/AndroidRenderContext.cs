@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Android.Graphics;
 using Das.Extensions;
 using Das.Views;
+using Das.Views.Colors;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
-using Das.Views.Styles;
 using Das.Xamarin.Android.Rendering;
 
 namespace Das.Xamarin.Android
@@ -21,11 +21,11 @@ namespace Das.Xamarin.Android
                                     IVisualSurrogateProvider surrogateProvider,
                                     Dictionary<IVisualElement, ValueCube> renderPositions,
                                     Dictionary<IVisualElement, ValueSize> lastMeasurements,
-                                    IStyleContext styleContext,
+                                    IThemeProvider themeProvider,
                                     IVisualLineage visualLineage,
                                     ILayoutQueue layoutQueue)
             : base(perspective, surrogateProvider, renderPositions, lastMeasurements, 
-                styleContext, visualLineage, layoutQueue)
+                themeProvider, visualLineage, layoutQueue)
         {
             _fontProvider = fontProvider;
             _paint = new Paint();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.BoxModel;
+using Das.Views.Colors;
 using Das.Views.Controls;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
@@ -13,7 +14,6 @@ using Das.Views.Input;
 using Das.Views.Layout;
 using Das.Views.Panels;
 using Das.Views.Rendering.Geometry;
-using Das.Views.Styles;
 
 namespace Das.Views.Rendering
 {
@@ -22,14 +22,14 @@ namespace Das.Views.Rendering
     {
         protected BaseRenderContext(IViewPerspective perspective,
                                     IVisualSurrogateProvider surrogateProvider,
-                                    IStyleContext styleContext,
+                                    IThemeProvider themeProvider,
                                     IVisualLineage visualLineage,
                                     Dictionary<IVisualElement, ValueCube> renderPositions,
                                     ILayoutQueue layoutQueue)
             : this(perspective, surrogateProvider,
                 renderPositions,
                 new Dictionary<IVisualElement, ValueSize>(),
-                styleContext, visualLineage, layoutQueue)
+                themeProvider, visualLineage, layoutQueue)
         {
         }
 
@@ -37,16 +37,16 @@ namespace Das.Views.Rendering
                                     IVisualSurrogateProvider surrogateProvider,
                                     Dictionary<IVisualElement, ValueCube> renderPositions,
                                     Dictionary<IVisualElement, ValueSize> lastMeasurements,
-                                    IStyleContext styleContext,
+                                    IThemeProvider themeProvider,
                                     IVisualLineage visualLineage,
                                     ILayoutQueue layoutQueue)
-            : base(lastMeasurements, styleContext, surrogateProvider, 
+            : base(lastMeasurements, themeProvider, surrogateProvider, 
                 visualLineage, layoutQueue)
         {
             RenderPositions = renderPositions;
             LastRenderPositions = new Dictionary<IVisualElement, ValueCube>();
 
-            _lastMeasurements = lastMeasurements;
+            //_lastMeasurements = lastMeasurements;
             
             _renderLock = new Object();
             Perspective = perspective;
@@ -228,7 +228,7 @@ namespace Das.Views.Rendering
             {
                 ViewState = viewState;
 
-                FillRectangle(rect, viewState.StyleContext.ColorPalette.Background);
+                FillRectangle(rect, _themeProvider.ColorPalette.Background);
 
                 LastRenderPositions.Clear();
                 foreach (var kvp in RenderPositions) LastRenderPositions[kvp.Key] = kvp.Value;
@@ -666,7 +666,7 @@ namespace Das.Views.Rendering
         //[ThreadStatic]
         //private static RenderRectangle? _fairyRect;
 
-        private readonly Dictionary<IVisualElement, ValueSize> _lastMeasurements;
+        //private readonly Dictionary<IVisualElement, ValueSize> _lastMeasurements;
 
         private readonly Stack<ValueRenderRectangle> _locations;
         protected readonly IBoxModel _boxModel;

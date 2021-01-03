@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Das.Views;
+using Das.Views.Colors;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
-using Das.Views.Styles;
 
 namespace Das.Xamarin.Android.Rendering
 {
@@ -15,11 +15,11 @@ namespace Das.Xamarin.Android.Rendering
                                     IVisualSurrogateProvider surrogateProvider,
                                     Dictionary<IVisualElement, ValueCube> renderPositions,
                                     Dictionary<IVisualElement, ValueSize> lastMeasurements,
-                                    IStyleContext styleContext,
+                                    IThemeProvider themeProvider,
                                     IVisualLineage visualLineage,
                                     ILayoutQueue layoutQueue)
             : base(perspective, surrogateProvider, renderPositions, 
-                lastMeasurements, styleContext, visualLineage, layoutQueue)
+                lastMeasurements, themeProvider, visualLineage, layoutQueue)
         {
             
         }

@@ -7,6 +7,7 @@ using Android.Views;
 using Das.Container;
 using Das.Serializer;
 using Das.Views;
+using Das.Views.Colors;
 using Das.Views.Construction;
 using Das.Views.Core;
 using Das.Views.Core.Geometry;
@@ -14,7 +15,6 @@ using Das.Views.Layout;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 using Das.Xamarin.Android.Images;
-using Das.Xamarin.Android.Mvvm;
 using Das.Xamarin.Android.Rendering;
 // ReSharper disable UnusedMember.Global
 
@@ -28,17 +28,17 @@ namespace Das.Xamarin.Android
                                 AndroidFontProvider fontProvider,
                                 IWindowManager windowManager,
                                 IUiProvider uiProvider,
-                                IStyleContext styleContext,
+                                IThemeProvider themeProvider,
                                 DisplayMetrics displayMetrics,
                                 IResolver container)
-        : base(container, styleContext, Serializer.AttributeParser, 
+        : base(container, themeProvider, Serializer.AttributeParser, 
             Serializer.TypeInferrer, Serializer.TypeManipulator, 
             new Dictionary<IVisualElement, ValueCube>())
         {
             ViewState = viewState;
             DisplayMetrics = displayMetrics;
             
-            Init(windowManager, styleContext, viewPerspective, displayMetrics, 
+            Init(windowManager, themeProvider, viewPerspective, displayMetrics, 
                 fontProvider, viewState, uiProvider, 
                 ref _measureContext!, ref _renderContext!, ref _refreshRenderContext!);
         }
@@ -47,11 +47,11 @@ namespace Das.Xamarin.Android
                                 IViewState viewState,
                                 AndroidFontProvider fontProvider,
                                 IWindowManager windowManager,
-                                AndroidUiProvider uiProvider,
-                                IStyleContext styleContext,
+                                IUiProvider uiProvider,
+                                IThemeProvider themeProvider,
                                 DisplayMetrics displayMetrics)
             : this(viewPerspective, viewState, fontProvider, windowManager, uiProvider,
-                styleContext, displayMetrics, new BaseResolver(TimeSpan.FromSeconds(5)))
+                themeProvider, displayMetrics, new BaseResolver(TimeSpan.FromSeconds(5)))
         {
             
         }
@@ -123,7 +123,7 @@ namespace Das.Xamarin.Android
         
         [SuppressMessage("ReSharper", "RedundantAssignment")]
         private void Init(IWindowManager windowManager,
-                          IStyleContext styleContext,
+                          IThemeProvider themeProvider,
                           IViewPerspective viewPerspective,
                           DisplayMetrics displayMetrics,
                           AndroidFontProvider fontProvider,
@@ -143,7 +143,7 @@ namespace Das.Xamarin.Android
             var layoutQueue = new LayoutQueue();
 
             measureContext = new AndroidMeasureKit(windowManager, fontProvider, 
-                this, lastMeasures,styleContext, displayMetrics, visualLineage, layoutQueue);
+                this, lastMeasures,themeProvider, displayMetrics, visualLineage, layoutQueue);
 
             var visualPositions = new Dictionary<IVisualElement, ValueCube>();
 
@@ -151,14 +151,14 @@ namespace Das.Xamarin.Android
 
             renderContext = new AndroidRenderContext(viewPerspective,
                 fontProvider, viewState, this, visualPositions,
-                lastMeasures, styleContext, visualLineage, layoutQueue);
+                lastMeasures, themeProvider, visualLineage, layoutQueue);
             
             refreshRenderContext = new RefreshRenderContext(viewPerspective, this, 
-                visualPositions, lastMeasures, styleContext, visualLineage, layoutQueue);
+                visualPositions, lastMeasures, themeProvider, visualLineage, layoutQueue);
 
             Container.ResolveTo<IImageProvider>(imageProvider);
             Container.ResolveTo(uiProvider);
-            Container.ResolveTo(styleContext);
+            Container.ResolveTo(themeProvider);
 
         }
 
