@@ -173,8 +173,6 @@ namespace Das.Views.Rendering
         private Double _maxWidth;
         private Double _maxHeight;
         private Orientations _lastOrientation;
-        
 
-        //private readonly Dictionary<IVisualElement, ValuePoint2D> _positions;
     }
 }

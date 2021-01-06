@@ -1,9 +1,11 @@
 ﻿using System;
+using Das.Views.DependencyProperties;
 using Das.Views.Transitions;
 
 namespace Das.Views
 {
-    public interface IDependencyProperty : IEquatable<IDependencyProperty>
+    public interface IDependencyProperty : IEquatable<IDependencyProperty>,
+                                           INamedProperty
     {
         Object? GetValue(IVisualElement visual);
 
@@ -23,16 +25,11 @@ namespace Das.Views
         void AddOnChangedHandler(IVisualElement visual,
                                  Action<IDependencyProperty> onChange);
 
-        //ITransition BuildTransition(Double duration,
-                                    //Double? delay);
-
         void AddTransition(IVisualElement visual,
                            ITransition transition);
 
         Object? DefaultValue { get; }
 
-        String Name { get; }
-        
         Type PropertyType { get; }
         
         Type VisualType { get; }

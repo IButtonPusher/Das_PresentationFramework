@@ -40,36 +40,15 @@ namespace Das.ViewModels
         : base(backingCollection, hashCheck)
         {
             _lock = new ReaderWriterAsync();
-            //_hashCheck = hashCheck;
-            //_backingCollection = backingCollection;
-            
-            //Count = _hashCheck.Count;
-            //_addedInTransaction = new ConcurrentQueue<T>();
-            //_removedInTransaction = new ConcurrentQueue<T>();
-            
         }
 
+        // ReSharper disable once UnusedMember.Global
         public AsyncObservableCollection2(params IEnumerable<T>[] itemses)
             : this(SelectFromMany(itemses))
         {
         }
 
-        //public override void Dispose()
-        //{
-        //    base.Dispose();
-        //    //CollectionChanged = null;
-        //    //_backingCollection.CollectionChanged -= OnBackingCollectionChanged;
-
-        //    //foreach (var bc in _backingCollection.OfType<IDisposable>())
-        //    //    bc.Dispose();
-
-        //    //INotifyPropertyChanged exp = _backingCollection;
-        //    //exp.PropertyChanged -= OnBackingCollectionPropertyChanged;
-
-        //    //_backingCollection.Clear();
-        // //   Count = 0;
-        //}
-
+       
         public async IAsyncEnumerator<T> GetAsyncEnumerator(
 #pragma warning disable 8424
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -83,11 +62,6 @@ namespace Das.ViewModels
             }
         }
 
-        //private IEnumerable<Boolean> AddRangeImpl(IEnumerable<T> items)
-        //{
-        //    foreach (var item in items)
-        //        yield return AddImpl(item);
-        //}
 
         public async Task RunOnEach(Action<T> action)
         {
@@ -137,7 +111,7 @@ namespace Das.ViewModels
 
         public async Task AddAsync(IEnumerable<T> items)
         {
-            await DoTransaction(k =>
+            await DoTransaction(_ =>
             {
                 foreach (var item in items)
                     AddImpl(item);
@@ -157,30 +131,6 @@ namespace Das.ViewModels
         public async Task Synchronize(IEnumerable<T> items)
         {
             await _lock.WriteAsync(this, items, (t, i) => t.SynchronizeImpl(i));
-
-            //await DoTransaction(k =>
-            //{
-            //    var itemSearch = new HashSet<T>(items);
-            //    var remove = _backingCollection.Where(b => !itemSearch.Contains(b)).ToArray();
-            //    for (var c = 0; c < remove.Length; c++)
-            //    {
-            //        _count--;
-            //        _backingCollection.Remove(remove[c]);
-            //        _hashCheck.Remove(remove[c]);
-            //    }
-
-            //    var add = itemSearch.Where(b => !_hashCheck.Contains(b)).ToArray();
-            //    for (var c = 0; c < add.Length; c++)
-            //    {
-            //        _count++;
-            //        _backingCollection.Add(add[c]);
-            //        _hashCheck.Add(add[c]);
-            //    }
-            //});
-
-            //OnCollectionReset();
-
-            //await OnCollectionReset().ConfigureAwait(false);
         }
 
         public async Task Synchonize<TOther>(NotifyCollectionChangedEventArgs args,
@@ -191,30 +141,6 @@ namespace Das.ViewModels
             {
                 await t.SynchronizeImpl(a, e, f);
             });
-
-            //await DoAsyncTransaction(async k =>
-            //{
-            //    if (args.OldItems is { } goneNow)
-            //    {
-            //        var going = goneNow.OfType<TOther>().ToArray();
-
-            //        var rip = await SelectAsync(u => going.Any(g => equate(u, g)));
-            //        await TryRemove(rip);
-            //    }
-
-            //    if (args.NewItems is IList someList)
-            //    {
-            //        var addMany = new List<T>();
-
-            //        foreach (var added in someList.OfType<TOther>())
-            //        {
-            //            var letsAdd = forNew(added);
-            //            addMany.Add(letsAdd);
-            //        }
-
-            //        await AddAsync(addMany);
-            //    }
-            //}).ConfigureAwait(false);
         }
 
         public async Task Synchonize<TOther>(IEnumerable<TOther> args,
@@ -255,86 +181,17 @@ namespace Das.ViewModels
                     a(t, item);
                 }
             });
-
-            //var ds = datas.ToArray();
-
-            //void LetsRun()
-            //{
-            //    foreach (var d in ds!)
-            //        action(this, d);
-            //}
-
-            //await DoTransactionCore(LetsRun).ConfigureAwait(false);
         }
-
-        //public async Task DoTransaction<TInput>(IAsyncEnumerable<TInput> datas,
-        //                                        Action<IAsyncObservableCollection<T>, TInput> action)
-        //{
-        //    var ds = await datas.ToArrayAsync();
-
-        //    void LetsRun()
-        //    {
-        //        foreach (var d in ds!)
-        //            action(this, d);
-        //    }
-
-        //    await DoTransactionCore(LetsRun).ConfigureAwait(false);
-        //}
 
 
         public async Task AddRangeAsync(IEnumerable<T> items)
         {
-
             await _lock.WriteAsync(this, items, (t, ioi) => t.AddRangeImpl(ioi));
-            //await DoTransaction(items, (_, item) => { AddImpl(item); }).ConfigureAwait(false);
-
-            //var newItems = await _lock.WriteAsync(this, items, (t, adding) =>
-            //{
-            //    var added = new List<T>();
-
-            //    foreach (var item in adding)
-            //    {
-            //        if (t.AddImpl(item))
-            //            added.Add(item);
-            //    }
-
-            //    return added;
-
-            //}).ConfigureAwait(false);
-
-            //if (newItems.Count == 0)
-            //    return;
-
-            //var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, newItems);
-            //await NotifyCollectionChangedAsync(args);
-
         }
 
         public async Task AddRangeAsync(IAsyncEnumerable<T> items)
         {
             await _lock.WriteAsync(this, items, async (t, ioi) => await t.AddRangeImpl(ioi));
-
-            //var newItems = await _lock.WriteTaskAsync(this, items, async (t, adding) =>
-            //{
-            //    var added = new List<T>();
-
-            //    await foreach (var item in adding)
-            //    {
-            //        if (t.AddImpl(item))
-            //            added.Add(item);
-            //    }
-
-            //    return added;
-
-            //}).ConfigureAwait(false);
-
-            //if (newItems.Count == 0)
-            //    return;
-
-            //var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, newItems);
-            //await NotifyCollectionChangedAsync(args);
-
-            //await DoTransaction(items, (_, item) => { AddImpl(item); }).ConfigureAwait(false);
         }
 
         public async Task<Boolean> ContainsAsync(T item)
@@ -372,25 +229,6 @@ namespace Das.ViewModels
         public async Task<Boolean> TryRemoveAsync(T item)
         {
             return await _lock.WriteAsync(this, item, (t,i) => t.RemoveImpl(i));
-
-            //var dude = true;
-
-            //await DoTransaction(k =>
-            //{
-            //    if (!_hashCheck.Remove(item))
-            //    {
-            //        dude = false;
-            //        return;
-            //    }
-
-            //    _count--;
-            //    _backingCollection.Remove(item);
-            //    _removedInTransaction.Enqueue(item);
-
-            //}).ConfigureAwait(false);
-
-            //return dude;
-            //return await _lock.WriteAsync(item, RemoveImpl);
         }
 
 
@@ -433,20 +271,6 @@ namespace Das.ViewModels
         public async Task Remove(IEnumerable<T> items)
         {
             await _lock.WriteAsync(this, items, (t,ioi) => t.RemoveImpl(ioi));
-
-            //await DoTransaction(k =>
-            //{
-            //    foreach (var item in items)
-            //    {
-            //        if (!_hashCheck.Remove(item))
-            //            continue;
-
-            //        _count--;
-            //        _backingCollection.Remove(item);
-
-            //        _removedInTransaction.Enqueue(item);
-            //    }
-            //}).ConfigureAwait(false);
         }
 
         public async Task ClearAsync()
@@ -456,12 +280,6 @@ namespace Das.ViewModels
                 t.ClearImpl();
                 return -0;
             });
-
-            //if (Count == 0)
-            //    return;
-
-            //await DoTransaction(_ => ClearImpl()).ConfigureAwait(false);
-            //await OnCollectionReset().ConfigureAwait(false);
         }
 
         public override async Task<IReadOnlyList<T>> SelectAsync(Func<T, Boolean> predicate)
@@ -690,108 +508,13 @@ namespace Das.ViewModels
 
         T IReadOnlyList<T>.this[Int32 index] => GetAt(index);
 
+        // ReSharper disable once UnusedMember.Global
         public T[] ToArray()
         {
             return _lock.Read(() => _backingCollection.ToArray());
         }
 
-        //private Boolean AddImpl(T item)
-        //{
-        //    if (!_hashCheck.Add(item))
-        //        return false;
-        //    _count++;
-        //    _backingCollection.Add(item);
-
-        //    return true;
-        //}
-
-        //private void BuildTransactionSummary(ref NotifyCollectionChangedEventArgs? args)
-        //{
-        //    if (CollectionChanged == null)
-        //    {
-        //        _addedInTransaction.Clear();
-        //        _removedInTransaction.Clear();
-
-        //        return;
-        //    }
-
-        //    var added = new List<T>();
-        //    while (_addedInTransaction.TryDequeue(out var a))
-        //        added.Add(a);
-
-        //    var removed = new List<T>();
-        //    while (_removedInTransaction.TryDequeue(out var r))
-        //        removed.Add(r);
-
-
-        //    if (added.Count > 0 && removed.Count == 0)
-        //        args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added);
-        //    else if (added.Count == 0 && removed.Count > 0)
-        //        args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed);
-        //    else if ((added.Count > 0 || removed.Count > 0) && !added.SequenceEqual(removed))
-        //        args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, added, removed);
-        //}
-
-        //private void ClearImpl()
-        //{
-        //    _hashCheck.Clear();
-        //    _count = 0;
-        //    _backingCollection.Clear();
-        //}
-
-        //public void DoBlockingTransaction(Action<IAsyncObservableCollection<T>> action)
-        //{
-        //    var args = _lock.Write(this, t => t.DoTransactionImpl(() => action(t)));
-        //    if (args == null)
-        //        return;
-
-        //    NotifyCollectionChanged(args);
-        //}
-
-        //public async Task<Boolean> DoTransaction<TInput>(IEnumerable<TInput> datas,
-        //                                                 Func<IAsyncObservableCollection<T>, TInput, Boolean> action)
-        //{
-        //    var ds = datas.ToArray();
-
-        //    void LetsRun()
-        //    {
-        //        foreach (var d in ds!)
-        //            action(this, d);
-        //    }
-
-        //    return await DoTransactionCore(LetsRun);
-        //}
-
-        //private async Task<Boolean> DoTransactionCore(Action action)
-        //{
-        //    var args = await _lock.WriteAsync(action, DoTransactionImpl);
-        //    if (args == null)
-        //        return false;
-
-        //    await NotifyCollectionChangedAsync(args).ConfigureAwait(false);
-
-        //    return true;
-        //}
-
-
-        //private NotifyCollectionChangedEventArgs? DoTransactionImpl(Action action)
-        //{
-        //    NotifyCollectionChangedEventArgs? args = null;
-
-        //    SuspendUp();
-
-        //    try
-        //    {
-        //        action();
-        //    }
-        //    finally
-        //    {
-        //        if (SuspendDown() == 0)
-        //            BuildTransactionSummary(ref args);
-        //    }
-
-        //    return args;
-        //}
+       
 
         public async Task<T> FirstOrDefaultAsync<TDerived>(Func<TDerived, Boolean> predicate)
             where TDerived : class, T
@@ -820,113 +543,13 @@ namespace Das.ViewModels
                 yield return r;
         }
 
-        //private Boolean GetIsSuspended()
-        //{
-        //    var canI = 0;
-        //    Interlocked.Exchange(ref canI, __suspendCounter);
-        //    return canI > 0;
-        //}
-
         // ReSharper disable once UnusedMember.Global
         public Int32 IndexOf(T item)
         {
             return _lock.Read(_backingCollection, item, (b,i) => b.IndexOf(i));
         }
 
-        //private void InsertImpl(Int32 index, T value)
-        //{
-        //    if (!_hashCheck.Add(value))
-        //        return;
-
-        //    _count++;
-
-        //    _backingCollection.Insert(index, value);
-        //}
-
-        //private void NotifyCollectionChanged(NotifyCollectionChangedEventArgs args)
-        //{
-        //    if (!TryGetChangeHandler(out var change))
-        //        return;
-
-        //    _lock.Write(() =>
-        //    {
-        //        if (args != null)
-        //            change.Invoke(this, args);
-
-        //        RaisePropertyChanged(nameof(Count), Count);
-        //        RaisePropertyChanged(IndexerName);
-        //    });
-        //}
-
-        //private async Task NotifyCollectionChangedAsync(NotifyCollectionChangedEventArgs args)
-        //{
-        //    if (!TryGetChangeHandler(out var change))
-        //        return;
-
-        //    await _lock.WriteAsync(args, change, (rdrr, c) =>
-        //    {
-        //        if (rdrr != null)
-        //            c.Invoke(this, rdrr);
-
-        //        RaisePropertyChanged(nameof(Count), Count);
-        //        RaisePropertyChanged(IndexerName);
-        //    }).ConfigureAwait(false);
-        //}
-
-        //private void OnBackingCollectionChanged(Object sender, NotifyCollectionChangedEventArgs e)
-        //{
-        //    if (GetIsSuspended())
-        //    {
-        //        if (e.NewItems != null)
-        //            foreach (var item in e.NewItems.OfType<T>())
-        //                _addedInTransaction.Enqueue(item);
-
-        //        if (e.OldItems != null)
-        //            foreach (var item in e.OldItems.OfType<T>())
-        //                _removedInTransaction.Enqueue(item);
-
-        //        return;
-        //    }
-
-        //    CollectionChanged?.Invoke(this, e);
-        //}
-
-        //private void OnBackingCollectionPropertyChanged(Object sender, PropertyChangedEventArgs e)
-        //{
-        //    RaisePropertyChanged(e.PropertyName);
-        //}
-
-        //protected async Task OnCollectionReset()
-        //{
-        //    if (!TryGetChangeHandler(out var changed))
-        //        return;
-
-        //    await _lock.WriteAsync(this, changed, (t,c) =>
-        //    {
-        //        c.Invoke(t, new NotifyCollectionChangedEventArgs
-        //            (NotifyCollectionChangedAction.Reset));
-        //    }).ConfigureAwait(false);
-        //}
-
-        //private void RemoveAtImpl(Int32 index)
-        //{
-        //    var item = _backingCollection[index];
-        //    _hashCheck.Remove(item);
-
-        //    _count--;
-
-        //    _backingCollection.RemoveAt(index);
-        //}
-
-        //private Boolean RemoveImpl(T item)
-        //{
-        //    if (!_hashCheck.Remove(item))
-        //        return false;
-        //    _count--;
-        //    _backingCollection.Remove(item);
-
-        //    return true;
-        //}
+       
 
         private static IEnumerable<T> SelectFromMany(IEnumerable<T>[] many)
         {
@@ -935,37 +558,12 @@ namespace Das.ViewModels
                 yield return i;
         }
 
-        //private Int32 SuspendDown()
-        //{
-        //    return Interlocked.Decrement(ref __suspendCounter);
-        //}
-
-        //private void SuspendUp()
-        //{
-        //    Interlocked.Increment(ref __suspendCounter);
-        //}
-
+      
         public override String ToString()
         {
             return typeof(T).Name + "Items: " + _count;
         }
 
-        //private Boolean TryGetChangeHandler(out NotifyCollectionChangedEventHandler changed)
-        //{
-        //    changed = CollectionChanged!;
-        //    return changed != null;
-        //}
-
-        
-
-        //private readonly ConcurrentQueue<T> _addedInTransaction;
-
-        //protected readonly ObservableCollection<T> _backingCollection;
-        //protected readonly List<T> _backingCollection;
-        
-        //private readonly ConcurrentQueue<T> _removedInTransaction;
-        
-        //private Int32 __suspendCounter;
         private readonly IReaderWriterAsync _lock;
 
     }

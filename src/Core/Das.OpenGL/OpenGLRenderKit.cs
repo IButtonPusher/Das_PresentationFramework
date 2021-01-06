@@ -6,7 +6,6 @@ using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Layout;
 using Das.Views.Rendering;
-using Das.Views.Styles;
 
 namespace Das.OpenGL
 {

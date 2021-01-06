@@ -1,4 +1,5 @@
 ﻿using System;
+using Das.Views.Core.Drawing;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 
@@ -10,13 +11,12 @@ namespace Das.Views.Layout
         
         private NullViewState()
         {
-            StyleContext = new NullStyleContext();
+            
         }
         
         
         public Double ZoomLevel => 1.0;
 
-
-        public IStyleContext StyleContext { get; }
+        public IColorPalette ColorPalette => BaselineThemeProvider.Instance.ColorPalette;
     }
 }

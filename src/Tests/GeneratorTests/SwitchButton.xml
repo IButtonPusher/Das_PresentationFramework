@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Style Name="mat-toggle-button"
+       TargetType="ToggleButton">
+  
+  <Setters>
+
+    <Setter Property="Template">
+
+      <Canvas class="mat-switch">
+        <input type="checkbox"
+               IsChecked="{Binding IsChecked}"/>
+        <span>Switch</span>
+      </Canvas>
+
+    </Setter>
+
+  </Setters>
+
+  <!-- CSS -->
+  <!-- source: https://codepen.io/finnhvman/pen/pOeyjE -->
+  <Rules>
+    .mat-switch {
+    color: rgba(var(--mat-onsurface-rgb, 0, 0, 0), 0.87);
+    display: inline-block;
+    font-family: var(--mat-font, "Roboto", "Segoe UI", BlinkMacSystemFont, system-ui, -apple-system);
+    font-size: 16px;
+    line-height: 1.5;
+    position: relative;
+    z-index: 0;
+    }
+
+    /* Input */
+
+    .mat-switch > input {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: rgba(var(--mat-onsurface-rgb, 0, 0, 0), 0.38);
+    border-radius: 50%;
+    display: block;
+    height: 40px;
+    margin: 0;
+    opacity: 0;
+    outline: none;
+    pointer-events: none;
+    position: absolute;
+    right: 6px;
+    top: -8px;
+    transform: scale(1);
+    transition: opacity 0.3s 0.1s, transform 0.2s 0.1s;
+    width: 40px;
+    z-index: -1;
+    }
+
+    /* Span */
+
+    .mat-switch > span {
+    cursor: pointer;
+    display: inline-block;
+    width: 100%;
+    }
+
+    /* Track */
+
+    .mat-switch > span::before {
+    background-color: rgba(var(--mat-onbackground-rgb, 0, 0, 0), 0.38);
+    border-radius: 7px;
+    content: "";
+    display: inline-block;
+    float: right;
+    height: 14px;
+    margin: 5px 0 5px 10px;
+    transition: background-color 0.2s, opacity 0.2s;
+    vertical-align: top;
+    width: 36px;
+    }
+
+    /* Thumb */
+
+    .mat-switch > span::after {
+    background-color: rgb(var(--mat-background-rgb, 255, 255, 255));
+    border-radius: 50%;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    content: "";
+    height: 20px;
+    position: absolute;
+    right: 16px;
+    top: 2px;
+    transition: background-color 0.2s, transform 0.2s;
+    width: 20px;
+    }
+
+    /* Checked */
+
+    .mat-switch > input:checked {
+    background-color: rgb(var(--mat-primary-rgb, 33, 150, 243));
+    right: -10px;
+    }
+
+    .mat-switch > input:checked + span::before { background-color: rgba(var(--mat-primary-rgb, 33, 150, 243), 0.6); }
+
+    .mat-switch > input:checked + span::after {
+    background-color: rgb(var(--mat-primary-rgb, 33, 150, 243));
+    transform: translateX(16px);
+    }
+
+    /* Hover, Focus */
+
+    .mat-switch:hover > input { opacity: 0.04; }
+
+    .mat-switch > input:focus { opacity: 0.12; }
+
+    .mat-switch:hover > input:focus { opacity: 0.16; }
+
+    /* Active */
+
+    .mat-switch > input:active {
+    opacity: 1;
+    transform: scale(0);
+    transition: transform 0s, opacity 0s;
+    }
+
+    .mat-switch > input:active + span::before { background-color: rgba(var(--mat-primary-rgb, 33, 150, 243), 0.6); }
+
+    .mat-switch > input:checked:active + span::before { background-color: rgba(var(--mat-onsurface-rgb, 0, 0, 0), 0.38); }
+
+    /* Disabled */
+
+    .mat-switch > input:disabled { opacity: 0; }
+
+    .mat-switch > input:disabled + span {
+    color: rgb(var(--mat-onsurface-rgb, 0, 0, 0));
+    cursor: default;
+    opacity: 0.38;
+    }
+
+    .mat-switch > input:disabled + span::before { background-color: rgba(var(--mat-onsurface-rgb, 0, 0, 0), 0.38); }
+
+    .mat-switch > input:checked:disabled + span::before { background-color: rgba(var(--mat-primary-rgb, 33, 150, 243), 0.6); }
+  </Rules>
+
+
+
+
+</Style>

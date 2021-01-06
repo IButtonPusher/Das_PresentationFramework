@@ -1,7 +1,8 @@
 ﻿using Das.Views.Panels;
-using Das.Views.Styles;
 using System;
 using Das.Views;
+using Das.Views.Colors;
+using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Hosting;
 using Das.Views.Rendering;
@@ -15,10 +16,14 @@ namespace WinForms.Shared
                                               IBoundElementContainer, 
                                               IWindowsViewHost
     {
-        protected HostedViewControl(IVisualElement view)
+        private readonly IThemeProvider _themeProvider;
+
+        protected HostedViewControl(IVisualElement view,
+                                    IThemeProvider themeProvider)
                                     //IStyleContext styleContext)
             : this()//styleContext)
         {
+            _themeProvider = themeProvider;
             View = view;
         }
 
@@ -78,5 +83,6 @@ namespace WinForms.Shared
         }
 
         //public IVisualRenderer Visual => View;
+        public IColorPalette ColorPalette => _themeProvider.ColorPalette;
     }
 }

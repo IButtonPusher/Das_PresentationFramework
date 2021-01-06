@@ -120,7 +120,7 @@ namespace Das.Views.Rendering
             var offset = bounds.Location;
 
 
-            foreach (var kvp in GetRenderables(orientation, bounds, renderContext))
+            foreach (var kvp in GetRenderables(orientation, bounds))
             {
                 if (offset.IsOrigin)
                     renderContext.DrawElement(kvp.Key, kvp.Value);
@@ -145,8 +145,7 @@ namespace Das.Views.Rendering
 
         protected virtual IEnumerable<KeyValuePair<IVisualElement, ValueRenderRectangle>> GetRenderables(
             Orientations orientation,
-            IRenderRectangle bounds,
-            IVisualContext context)
+            IRenderRectangle bounds )
         {
             lock (_measureLock)
             {
@@ -158,7 +157,7 @@ namespace Das.Views.Rendering
                     current = GetElementBounds(child, current);
 
                     current = GetElementRenderBounds(child, current, orientation,
-                        bounds, context);
+                        bounds);
 
                     yield return new KeyValuePair<IVisualElement, ValueRenderRectangle>(child, current);
                 }
@@ -168,8 +167,7 @@ namespace Das.Views.Rendering
         private static ValueRenderRectangle GetElementRenderBounds(IVisualElement child,
                                                                    ValueRenderRectangle current,
                                                                    Orientations orientation,
-                                                                   IRenderRectangle bounds,
-                                                                   IVisualContext context)
+                                                                   IRenderRectangle bounds)
         {
             var useX = current.X;
             var useY = current.Y;

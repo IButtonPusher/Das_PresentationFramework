@@ -165,7 +165,7 @@ namespace Das.Xamarin.Android
             var displayMetrics = context.Resources?.DisplayMetrics ?? throw new NullReferenceException();
 
 
-            var viewState = new AndroidViewState(displayMetrics);
+            var viewState = new AndroidViewState(displayMetrics, themeProvider);
 
             var fontProvider = new AndroidFontProvider(displayMetrics);
             return new AndroidRenderKit(new BasePerspective(), viewState,

@@ -40,11 +40,7 @@ namespace Das.Views.Styles.Application
                             var defaultAssignment = GetDefaultAssignment(subAssignment);
                             myPseudo.AddAssignment(defaultAssignment);
                         }
-
                     }
-
-
-
                 }
                 else
                 {

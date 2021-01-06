@@ -17,12 +17,7 @@ namespace Das.Xamarin.Android
     public abstract class DasMainActivity : AppCompatActivity 
                                             //IViewState
     {
-        //protected virtual IStyleContext GetStyleContext()
-        //{
-        //    return DefaultStyleContext.Instance;
-        //    //return new BaseStyleContext(DefaultStyle.Instance,
-        //    //    new DefaultColorPalette());
-        //}
+       
 
         protected virtual IThemeProvider GetThemeProvider() => BaselineThemeProvider.Instance;
 
@@ -44,7 +39,7 @@ namespace Das.Xamarin.Android
             var windowManager = WindowManager ?? throw new NullReferenceException(
                 "WindowManager cannot be null");
             
-            var viewState = new AndroidViewState(displayMetrics);
+            var viewState = new AndroidViewState(displayMetrics, themeProvider);
 
             var renderKit = new AndroidRenderKit(new BasePerspective(), viewState, 
                 fontProvider, windowManager, uiProvider, themeProvider, displayMetrics);
@@ -71,50 +66,16 @@ namespace Das.Xamarin.Android
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        //public void RegisterStyleSetter(IVisualElement element, 
-        //                                StyleSetterType setterType, 
-        //                                StyleSelector selector, 
-        //                                Object value)
-        //{
-        //    CurrentStyleContext.RegisterStyleSetter(element, setterType, selector, value);
-        //}
+       
 
-        //public IColorPalette ColorPalette => CurrentStyleContext.ColorPalette;
+        public override async void OnBackPressed()
+        {
+            var handled = await BackButtonCommand();
+            if (!handled)
+                base.OnBackPressed();
+        }
 
-        //public override async void OnBackPressed()
-        //{
-        //    var handled = await BackButtonCommand();
-        //    if (!handled)
-        //        base.OnBackPressed();
-        //}
-
-        //public T GetStyleSetter<T>(StyleSetterType setterType,
-        //                           IVisualElement element)
-        //    => GetStyleSetter<T>(setterType, StyleSelector.None, element);
-
-        //public T GetStyleSetter<T>(StyleSetterType setterType, 
-        //                           StyleSelector selector, 
-        //                           IVisualElement element)
-        //{
-        //    return CurrentStyleContext.GetStyleSetter<T>(setterType, selector, element);
-        //}
-
-        //protected IStyleContext CurrentStyleContext =>
-        //    _styleContext //?? _view?.StyleContext 
-        //    ?? throw new NullReferenceException();
         
-
-        //public void RegisterStyleSetter(IVisualElement element, 
-        //                                StyleSetterType setterType,
-        //                                Object value)
-        //{
-        //    CurrentStyleContext.RegisterStyleSetter(element, setterType, value);
-        //}
-
-
-        //public Double ZoomLevel { get; private set; } = 1.0;
-
-        //private IStyleContext? _styleContext;
         private IVisualElement? _view;
     }
 }

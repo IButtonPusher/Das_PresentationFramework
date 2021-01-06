@@ -7,7 +7,6 @@ using Das.Views.Core.Geometry;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Rendering.Geometry;
-using Das.Views.Styles;
 using Das.Views.Templates;
 // ReSharper disable All
 

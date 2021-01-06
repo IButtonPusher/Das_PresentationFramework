@@ -17,16 +17,14 @@ namespace Das.ViewModels.Collections
         public TValue this[TKey1 k1, TKey2 k2]
         {
             get => _backingDictionary[k1][k2];
-            set
-            {
-                if (!_backingDictionary.TryGetValue(k1, out var d2))
-                {
-                    d2 = new ConcurrentDictionary<TKey2, TValue>();
-                    _backingDictionary[k1] = d2;
-                }
-
-                d2[k2] = value;
-            }
+            set => AddOrUpdate(k1, k2, value);
+            
+            //if (!_backingDictionary.TryGetValue(k1, out var d2))
+            //{
+            //    d2 = new ConcurrentDictionary<TKey2, TValue>();
+            //    _backingDictionary[k1] = d2;
+            //}
+            //d2[k2] = value;
         }
 
         public ICollection<Tuple<TKey1, TKey2>> Keys
@@ -50,6 +48,9 @@ namespace Das.ViewModels.Collections
             foreach (var kvp in keyVals)
                 updating[kvp] = kvp;
         }
+
+        private static ConcurrentDictionary<TKey2, TValue> BuildNewSecondary(TKey1 k1) 
+            => new ConcurrentDictionary<TKey2, TValue>();
 
         public void Clear()
         {
@@ -125,6 +126,15 @@ namespace Das.ViewModels.Collections
                     yield return kvp.Value;
         }
 
+        public IEnumerable<KeyValuePair<TKey2, TValue>> GetValues(TKey1 k1)
+        {
+            if (!_backingDictionary.TryGetValue(k1, out var vals))
+                yield break;
+
+            foreach (var kvp in vals)
+                yield return kvp;
+        }
+
         public IEnumerable<TValue> GetValues(TKey1 k1, Func<TKey2, Boolean> predicate)
         {
             if (!_backingDictionary.TryGetValue(k1, out var d2))
@@ -135,9 +145,38 @@ namespace Das.ViewModels.Collections
                     yield return kvp.Value;
         }
 
+        public Boolean TryRemove(TKey1 k1,
+                                 out ConcurrentDictionary<TKey2, TValue> removed)
+        {
+            return _backingDictionary.TryRemove(k1, out removed);
+        }
+
         public void Remove(TKey1 k1)
         {
             _backingDictionary.TryRemove(k1, out _);
+        }
+
+        public Boolean TryRemove(TKey1 k1,
+                                 TKey2 k2,
+                                 out TValue value)
+        {
+            if (!_backingDictionary.TryGetValue(k1, out var dic) || 
+                !dic.TryRemove(k2, out value))
+                goto fail;
+
+            return true;
+
+            fail:
+            value = default!;
+            return false;
+        }
+
+        public void AddOrUpdate(TKey1 k1,
+                                TKey2 k2,
+                                TValue value)
+        {
+            var dic = _backingDictionary.GetOrAdd(k1, BuildNewSecondary);
+            dic[k2] = value;
         }
 
         public Boolean TryAdd(TKey1 k1,

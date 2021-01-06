@@ -110,7 +110,7 @@ namespace Das.Xamarin.Android
                                 IStyleContext styleContext, 
                                 IVisualBootstrapper visualBootstrapper, 
                                 IViewInflater viewInflater) 
-            : base(resolver, styleContext, visualBootstrapper, viewInflater,
+            : base(resolver, visualBootstrapper, viewInflater,
                 new Dictionary<IVisualElement, ValueCube>())
         {
             ViewState = viewState;

@@ -32,7 +32,7 @@ namespace Das.Gdi.Kits
                             IStyleContext styleContext,
                             IVisualBootstrapper visualBootstrapper,
                             IViewInflater viewInflater)
-            : base(resolver, styleContext, visualBootstrapper, viewInflater,
+            : base(resolver, visualBootstrapper, viewInflater,
                 new Dictionary<IVisualElement, ValueCube>())
         {
             _windowProvider = windowProvider;

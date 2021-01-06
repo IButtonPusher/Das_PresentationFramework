@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Views.DataBinding;
-using Das.Views.Styles;
 
 namespace Das.Views.Panels
 {

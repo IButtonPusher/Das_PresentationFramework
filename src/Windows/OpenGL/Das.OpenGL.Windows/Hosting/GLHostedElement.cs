@@ -1,14 +1,15 @@
 ﻿using System;
 using Das.Views;
-using Das.Views.Styles;
+using Das.Views.Colors;
 using WinForms.Shared;
 
 namespace Das.OpenGL.Windows
 {
     public class GLHostedElement : HostedViewControl
     {
-        public GLHostedElement(IVisualElement view) 
-            : base(view)
+        public GLHostedElement(IVisualElement view,
+                               IThemeProvider themeProvider) 
+            : base(view, themeProvider)
         {
             IsLoaded = true;
         }

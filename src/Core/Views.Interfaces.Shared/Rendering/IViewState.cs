@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Das.Views.Styles;
+using Das.Views.Core.Drawing;
 
 namespace Das.Views.Rendering
 {
@@ -10,9 +10,7 @@ namespace Das.Views.Rendering
     public interface IViewState : //IStyleProvider,
                                   IDisplayMetrics
     {
-        //IStyleProvider StyleProvider { get; }
-        
-        //IStyleContext StyleContext { get; }
+        IColorPalette ColorPalette { get; }
 
     }
 }

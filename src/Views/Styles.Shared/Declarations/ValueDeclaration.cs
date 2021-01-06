@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Das.Views.Styles.Declarations
 {
     public abstract class ValueDeclaration<T> : DeclarationBase,
-                                                IStyleValueDeclaration
+                                                IStyleValueDeclaration<T>
     {
         protected ValueDeclaration(T value,
                                    IStyleVariableAccessor variableAccessor,

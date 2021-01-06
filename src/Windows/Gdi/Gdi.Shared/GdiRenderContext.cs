@@ -10,7 +10,6 @@ using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
-using Das.Views.Styles;
 using Gdi.Shared;
 using Color = Das.Views.Core.Drawing.Color;
 using Pen = Das.Views.Core.Drawing.Pen;

@@ -105,6 +105,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\AppliedStyleCondition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\AppliedStyleRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\AppliedValueAssignment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\AppliedValueAssignment{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\BuildAssignments.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\ComputedValueAssignment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\PseudoVisualAssignment.cs" />
@@ -115,7 +116,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Selectors\DependencyPropertySelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSheet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\ColorPalette.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Styles\DefaultStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Selectors\VisualTypeStyleSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSheetHelper.cs" />

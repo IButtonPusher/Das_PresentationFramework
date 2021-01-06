@@ -8,7 +8,6 @@ using Das.Views.Colors;
 using Das.Views.Core.Drawing;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
-using Das.Views.Styles;
 
 namespace Das.Views.Templates
 {

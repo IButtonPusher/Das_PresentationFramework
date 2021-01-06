@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace Das.Views.Styles.Application
 {
-    public class AppliedValueAssignment : IPropertyValueAssignment
+    public class AppliedValueAssignment<TVisual, TValue> : IPropertyValueAssignment<TVisual, TValue>
+        where TVisual : IVisualElement
     {
-        public AppliedValueAssignment(IVisualElement visual,
-                                      IDependencyProperty dependencyProperty,
-                                      Object? value)
+        public AppliedValueAssignment(TVisual visual,
+                                      IDependencyProperty<TVisual, TValue> dependencyProperty,
+                                      TValue value)
         {
             Visual = visual;
             Property = dependencyProperty;
@@ -28,15 +28,19 @@ namespace Das.Views.Styles.Application
                    applied.Property.Equals(Property);
         }
 
-        public IVisualElement Visual { get; }
+        public TValue Value => _value;
 
-        public IDependencyProperty Property { get; }
+        IVisualElement IStyleValueAssignment.Visual => Visual;
+
+        public TVisual Visual { get; }
+
+        public IDependencyProperty<TVisual, TValue> Property { get; }
 
         public override String ToString()
         {
             return Visual + "." + Property.Name + " = " + _value;
         }
 
-        private readonly Object? _value;
+        private readonly TValue _value;
     }
 }

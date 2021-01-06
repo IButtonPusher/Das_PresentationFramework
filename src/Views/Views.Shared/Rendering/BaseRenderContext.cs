@@ -228,7 +228,8 @@ namespace Das.Views.Rendering
             {
                 ViewState = viewState;
 
-                FillRectangle(rect, _themeProvider.ColorPalette.Background);
+                //FillRectangle(rect, _themeProvider.ColorPalette.Background);
+                FillRectangle(rect, viewState.ColorPalette.Background);
 
                 LastRenderPositions.Clear();
                 foreach (var kvp in RenderPositions) LastRenderPositions[kvp.Key] = kvp.Value;

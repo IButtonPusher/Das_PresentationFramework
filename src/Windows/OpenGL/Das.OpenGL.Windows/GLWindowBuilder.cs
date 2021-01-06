@@ -1,7 +1,6 @@
 ﻿using System;
 using Das.Views;
 using Das.Views.Core.Geometry;
-using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Windows;
 using Das.Views.Styles;
@@ -21,23 +20,23 @@ namespace Das.OpenGL.Windows
             _nativeWindowClassName = nativeWindowClassName;
         }
 
-        public GLForm Show<TViewModel>(TViewModel viewModel, 
-                                       IBindableElement view)
-            //where TViewModel : IViewModel
-        {
-            //var styleContext = view.StyleContext;
-            //var styleContext = DefaultStyleContext.Instance;
+        //public GLForm Show<TViewModel>(TViewModel viewModel, 
+        //                               IBindableElement view)
+        //    //where TViewModel : IViewModel
+        //{
+        //    //var styleContext = view.StyleContext;
+        //    //var styleContext = DefaultStyleContext.Instance;
 
-            var control = new GLHostedElement(view);
-            var form = new GLForm(control);
+        //    var control = new GLHostedElement(view);
+        //    var form = new GLForm(control);
 
-            view.DataContext = viewModel;
-            //view.SetDataContext(viewModel);
+        //    view.DataContext = viewModel;
+        //    //view.SetDataContext(viewModel);
 
-            WindowShown?.Invoke(form);
+        //    WindowShown?.Invoke(form);
 
-            return form;
-        }
+        //    return form;
+        //}
 
         public GLForm Show<TRectangle>(IView view,
                                        TRectangle rect) 
@@ -45,7 +44,8 @@ namespace Das.OpenGL.Windows
         {
            // var styleContext = view.StyleContext;
 
-            var control = new GLHostedElement(view);
+            var control = new GLHostedElement(view,
+                BaselineThemeProvider.Instance);
             var form = new GLForm(control);
 
             form.Bounds = new System.Drawing.Rectangle(
@@ -65,7 +65,7 @@ namespace Das.OpenGL.Windows
         {
             //var styleContext = view.StyleContext;
 
-            var control = new GLHostedElement(view);
+            var control = new GLHostedElement(view, BaselineThemeProvider.Instance);
             var form = new GLForm(control);
 
             view.DataContext = viewModel;

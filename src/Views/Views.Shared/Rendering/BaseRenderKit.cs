@@ -47,7 +47,6 @@ namespace Das.Views
                                 IVisualBootstrapper visualBootstrapper,
                                 Dictionary<IVisualElement, ValueCube> renderPositions)
         : this(resolver, 
-            themeProvider, 
             attributeScanner, 
             typeInferrer, 
             propertyProvider,
@@ -61,15 +60,13 @@ namespace Das.Views
         }
 
         protected BaseRenderKit(IResolver resolver,
-                                IThemeProvider themeProvider,
                                 IStringPrimitiveScanner attributeScanner,
                                 ITypeInferrer typeInferrer,
                                 IPropertyProvider propertyProvider,
                                 IVisualBootstrapper visualBootstrapper,
                                 IAppliedStyleBuilder appliedStyleBuilder,
-                                //IStyledVisualBuilder styledVisualBuilder,
                                 Dictionary<IVisualElement, ValueCube> renderPositions)
-            : this(resolver, themeProvider, visualBootstrapper, 
+            : this(resolver, visualBootstrapper, 
                 GetViewInflater(visualBootstrapper, attributeScanner, 
                     typeInferrer, propertyProvider, appliedStyleBuilder),// styledVisualBuilder),
                 renderPositions)
@@ -79,7 +76,6 @@ namespace Das.Views
         }
         
         protected BaseRenderKit(IResolver resolver,
-                                IThemeProvider themeProvider,
                                 IVisualBootstrapper visualBootstrapper,
                                 IViewInflater viewInflater,
                                 Dictionary<IVisualElement, ValueCube> renderPositions)
@@ -120,30 +116,11 @@ namespace Das.Views
             return appliedStyleBuilder;
         }
 
-        //private static IStyledVisualBuilder GetStyleVisualBuilder(IVisualBootstrapper visualBootstrapper,
-        //                                                          ITypeInferrer typeInferrer,
-        //                                                          IPropertyProvider propertyProvider)
-        //{
-        //    //var styleInflater = new DefaultStyleInflater(typeInferrer);
-        //    //var styleProvider = new VisualStyleProvider(styleInflater);
-        //    //var declarationWorker = new DeclarationWorker(visualBootstrapper);
-        //    //var appliedStyleBuilder = new AppliedRuleBuilder(styleProvider, declarationWorker,
-        //    //    propertyProvider);
-
-        //    var appliedStyleBuilder = GetAppliedStyleBuilder(visualBootstrapper, typeInferrer, 
-        //        propertyProvider);
-
-        //    var styledVisualBuilder = new StyledVisualBuilder(visualBootstrapper, 
-        //        appliedStyleBuilder.StyleProvider, propertyProvider, appliedStyleBuilder);
-
-        //    return styledVisualBuilder;
-        //}
-
         private static IViewInflater GetViewInflater(IVisualBootstrapper visualBootstrapper,
                                                      IStringPrimitiveScanner attributeScanner,
                                                      ITypeInferrer typeInferrer,
                                                      IPropertyProvider propertyProvider,
-                                                     //IStyledVisualBuilder styleVisualBuilder,
+                                                     
                                                      IAppliedStyleBuilder appliedStyleBuilder)
         {
             var bindingBuilder = new BindingBuilder(typeInferrer, propertyProvider);
@@ -177,7 +154,6 @@ namespace Das.Views
 
         public IResolver Container { get; }
 
-        //public IStyleContext StyleContext => _styleContext;
 
         public IViewInflater ViewInflater { get; }
 
@@ -189,8 +165,7 @@ namespace Das.Views
         {
             _surrogateTypeBuilders[typeof(T)] = builder;
         }
-
-        //protected readonly IStyleContext _styleContext;
+        
         protected readonly Dictionary<IVisualElement, ValueCube> _renderPositions;
         private readonly Dictionary<IVisualElement, IVisualSurrogate> _surrogateInstances;
         private readonly Dictionary<Type, Func<IVisualElement, IVisualSurrogate>> _surrogateTypeBuilders;

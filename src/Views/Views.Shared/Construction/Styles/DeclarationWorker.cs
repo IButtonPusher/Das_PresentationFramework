@@ -66,7 +66,7 @@ namespace Das.Views.Construction.Styles
         }
 
         private static void ApplyTransitionsToVisual(IVisualElement visual,
-            IStyleMultiValueDeclaration<TransitionDeclaration> transitions)
+                                                     IStyleMultiValueDeclaration<TransitionDeclaration> transitions)
         {
             foreach (var transition in transitions.Values)
             {
@@ -80,9 +80,6 @@ namespace Das.Views.Construction.Styles
 
                     dependencyProperty.AddTransition(visual, res);
                 }
-
-                
-               // transition.Property
             }
         }
 
@@ -119,6 +116,30 @@ namespace Das.Views.Construction.Styles
                     return new AppliedValueAssignment(visual, property, declarationValue);
             }
         }
+
+        //private static IStyleValueAssignment<TVisual, TValue>  ApplyDeclarationToDependencyProperty<
+        //    TVisual, TValue>(TVisual visual,
+        //                     IDependencyProperty<TVisual, TValue>  property,
+        //                     IStyle declaration)
+        //where TVisual : IVisualElement
+        //{
+        //    var declarationValue = GetDeclarationValue(declaration);
+
+        //    switch (declarationValue)
+        //    {
+        //        case Func<IVisualElement, Object?> computed:
+        //            return new ComputedValueAssignment(visual, property, computed);
+
+        //        default:
+        //            return new AppliedValueAssignment<TVisual, TValue>(visual, property, declarationValue);
+        //    }
+        //}
+
+        //public static TValue GetDeclarationValue<TVisual, TValue>(IStyleDeclaration<TValue> declaration)
+        //{
+
+        //}
+
 
         public static Object? GetDeclarationValue(IStyleDeclaration declaration)
         {

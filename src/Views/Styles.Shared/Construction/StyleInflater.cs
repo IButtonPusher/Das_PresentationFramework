@@ -46,18 +46,16 @@ namespace Das.Views.Styles.Construction
         {
             var node = GetRootNode(xml);
 
-            if (node.TryGetAttributeValue(nameof(NamedTargetedStyle.Name), out var styleName))
-                if (node.TryGetAttributeValue(nameof(NamedTargetedStyle.TargetType), out var targetTypeName))
-                {
-                    var targetType = _visualTypeResolver.GetType(targetTypeName);
+            if (!node.TryGetAttributeValue(nameof(NamedTargetedStyle.Name), out var styleName) || 
+                !node.TryGetAttributeValue(nameof(NamedTargetedStyle.TargetType), out var targetTypeName))
+                throw new NotImplementedException();
 
-                    var rules = GetStyleRules(node.Children, targetType);
+            var targetType = _visualTypeResolver.GetType(targetTypeName);
 
-                    var namedStyle = new NamedTargetedStyle(styleName, targetType, rules);
-                    return namedStyle;
-                }
+            var rules = GetStyleRules(node.Children, targetType);
 
-            throw new NotImplementedException();
+            var namedStyle = new NamedTargetedStyle(styleName, targetType, rules);
+            return namedStyle;
         }
 
         public async Task<IStyleSheet> InflateResourceXmlAsync(String resourceName)
@@ -78,7 +76,9 @@ namespace Das.Views.Styles.Construction
         {
             foreach (var child in children)
             foreach (var rule in GetStyleRules(child, targetType))
+            {
                 yield return rule;
+            }
         }
 
         private IEnumerable<IStyleRule> GetStyleRules(IMarkupNode child,
@@ -89,7 +89,9 @@ namespace Das.Views.Styles.Construction
                 case nameof(IStyle.Setters):
                     foreach (var setterNode in child.Children)
                     foreach (var rule in GetStyleRules(setterNode, targetType))
+                    {
                         yield return rule;
+                    }
 
                     break;
 
@@ -105,11 +107,12 @@ namespace Das.Views.Styles.Construction
                     var css = child.InnerText;
                     if (css != null)
                         foreach (var cssRule in _cssRuleBuilder.GetRules(css))
+                        {
                             yield return cssRule;
+                        }
 
                     break;
             }
-
         }
 
         private readonly ICssRuleBuilder _cssRuleBuilder;

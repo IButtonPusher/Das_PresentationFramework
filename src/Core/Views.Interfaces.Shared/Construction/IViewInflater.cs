@@ -22,9 +22,8 @@ namespace Das.Views.Construction
         /// <param name="xml">the markup text</param>
         /// <param name="namespaceHints">A dictionary where keys are namespaces and values are
         /// assemblies in which they are located</param>
-        /// <returns></returns>
         Task<TVisualElement> InflateXmlAsync<TVisualElement>(String xml,
-                                                       IDictionary<String, String> namespaceHints)
+                                                             IDictionary<String, String> namespaceHints)
             where TVisualElement : IVisualElement;
 
         Task<TVisualElement> InflateResourceXmlAsync<TVisualElement>(String resourceName)

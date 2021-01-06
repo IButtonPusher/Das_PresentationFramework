@@ -11,7 +11,7 @@ namespace Das.OpenGL.Windows
     {
         public OpenGLPanel(IVisualElement view, 
                            IStyleContext styleContext)
-            : base(view)
+            : base(view, styleContext)
         {
             var bldr = new GLWindowBuilder("OpenGLSurface");
             var boot = new GLBootStrapper(bldr);

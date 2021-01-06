@@ -24,10 +24,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\IQuantifiedValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IDependencyProperty{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\INamedProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\PropertyMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ILayoutQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\IFontVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\ITextVisual.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IPropertyValueAssignment{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleValueDeclaration{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transitions\ITransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IAppliedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IAppliedStyleRule.cs" />
