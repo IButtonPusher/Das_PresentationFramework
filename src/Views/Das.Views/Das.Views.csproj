@@ -48,8 +48,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Das.Container" Version="0.0.11-alpha" />
-    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.17-alpha" />
+    <PackageReference Include="Das.Container" Version="0.0.12-alpha" />
+    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.18-alpha" />
+    <PackageReference Include="System.Memory" Version="4.5.4" />
   </ItemGroup>
 
   <ItemGroup>

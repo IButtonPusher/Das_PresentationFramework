@@ -88,9 +88,10 @@ namespace Das.Xamarin.Android
                                 IStringPrimitiveScanner attributeScanner,
                                 ITypeInferrer typeInferrer, 
                                 IPropertyProvider propertyProvider, 
-                                IVisualBootstrapper visualBootstrapper) 
-            : base(resolver, styleContext, attributeScanner, typeInferrer, propertyProvider, 
-                visualBootstrapper,new Dictionary<IVisualElement, ValueCube>())
+                                IVisualBootstrapper visualBootstrapper,
+                                IVisualStyleProvider styleProvider) 
+            : base(resolver, attributeScanner, typeInferrer, propertyProvider, 
+                visualBootstrapper,new Dictionary<IVisualElement, ValueCube>(), styleProvider)
         {
             ViewState = viewState;
             DisplayMetrics = displayMetrics;

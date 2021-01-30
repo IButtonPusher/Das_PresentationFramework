@@ -12,9 +12,7 @@ namespace Das.Views.Styles.Declarations
             : base(GetBrush(value, variableAccessor),
                 variableAccessor, property)
         {
-            //var fnCall2 = FunctionBuilder.GetFunction(value, variableAccessor);
-            //var fnVal2 = fnCall2.GetValue();
-            //_brush = fnVal2 as IBrush;
+           
         }
 
         private static IBrush? GetBrush(String value,
@@ -24,14 +22,5 @@ namespace Das.Views.Styles.Declarations
             var fnVal = fnCall.GetValue();
             return fnVal as IBrush;
         }
-        
-        //public override String ToString()
-        //{
-        //    return "Color: " + Property + " - " + _brush;
-        //}
-
-        //private readonly IBrush? _brush;
-
-
     }
 }

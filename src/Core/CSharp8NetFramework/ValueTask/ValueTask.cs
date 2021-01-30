@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Sources;
+#pragma warning disable 8618
 #pragma warning disable 8625
 
 // ReSharper disable All

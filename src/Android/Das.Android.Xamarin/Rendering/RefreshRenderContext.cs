@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Das.Views;
 using Das.Views.Colors;
 using Das.Views.Controls;
@@ -18,48 +19,29 @@ namespace Das.Xamarin.Android.Rendering
                                     IThemeProvider themeProvider,
                                     IVisualLineage visualLineage,
                                     ILayoutQueue layoutQueue)
-            : base(perspective, surrogateProvider, renderPositions, 
+            : base(perspective, surrogateProvider, renderPositions,
                 lastMeasurements, themeProvider, visualLineage, layoutQueue)
         {
-            
         }
 
-        //public override IImage? GetImage(Stream stream)
-        //{
-        //    throw new NotSupportedException();
-        //}
-
-        //public override IImage? GetImage(Stream stream, 
-        //                                 Double maximumWidthPct)
-        //{
-        //    throw new NotSupportedException();
-        //}
-
-        //public override IImage GetNullImage()
-        //{
-        //    throw new NotSupportedException();
-        //}
-
-        public override  void DrawImage<TRectangle>(IImage img, 
-                                                    TRectangle destination)
+        public override void DrawEllipse<TPoint, TPen>(TPoint center,
+                                                       Double radius,
+                                                       TPen pen)
         {
         }
 
-        public override void DrawRoundedRect<TRectangle, TPen, TThickness>(TRectangle rect, TPen pen, TThickness cornerRadii)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void DrawString<TFont, TBrush, TPoint>(String s,
-                                                               TFont font,
-                                                               TBrush brush,
-                                                               TPoint location)
+        public override void DrawFrame(IFrame frame)
         {
         }
 
-        public override  void DrawImage<TRectangle1, TRectangle2>(IImage img,
-                                                                  TRectangle1 sourceRect,
-                                                                  TRectangle2 destination)
+        public override void DrawImage<TRectangle>(IImage img,
+                                                   TRectangle destination)
+        {
+        }
+
+        public override void DrawImage<TRectangle1, TRectangle2>(IImage img,
+                                                                 TRectangle1 sourceRect,
+                                                                 TRectangle2 destination)
         {
         }
 
@@ -69,13 +51,9 @@ namespace Das.Xamarin.Android.Rendering
         {
         }
 
-        public override void DrawLines(IPen pen, IPoint2D[] points)
+        public override void DrawLines(IPen pen,
+                                       IPoint2D[] points)
         {
-        }
-
-        public override void FillRoundedRectangle<TRectangle, TBrush, TThickness>(TRectangle rect, TBrush brush, TThickness cornerRadii)
-        {
-            throw new NotImplementedException();
         }
 
         public override void DrawRect<TRectangle, TPen>(TRectangle rect,
@@ -83,21 +61,18 @@ namespace Das.Xamarin.Android.Rendering
         {
         }
 
-       
-
-        protected override void PushClip<TRectangle>(TRectangle rect)
+        public override void DrawRoundedRect<TRectangle, TPen, TThickness>(TRectangle rect,
+                                                                           TPen pen,
+                                                                           TThickness cornerRadii)
         {
-            
+            throw new NotImplementedException();
         }
 
-        protected override void PopClip<TRectangle>(TRectangle rect)
+        public override void DrawString<TFont, TBrush, TPoint>(String s,
+                                                               TFont font,
+                                                               TBrush brush,
+                                                               TPoint location)
         {
-            
-        }
-
-        protected override ValueRectangle GetCurrentClip()
-        {
-            return ValueRectangle.Empty;
         }
 
         public override void DrawString<TFont, TBrush, TRectangle>(String s,
@@ -115,18 +90,28 @@ namespace Das.Xamarin.Android.Rendering
         {
         }
 
-        public override void DrawEllipse<TPoint, TPen>(TPoint center,
-                                                       Double radius,
-                                                       TPen pen)
-        {
-        }
-
-        public override void DrawFrame(IFrame frame)
-        {
-        }
-
         public override void FillRectangle<TRectangle, TBrush>(TRectangle rect,
                                                                TBrush brush)
+        {
+        }
+
+        public override void FillRoundedRectangle<TRectangle, TBrush, TThickness>(TRectangle rect,
+            TBrush brush,
+            TThickness cornerRadii)
+        {
+        }
+
+        protected override ValueRectangle GetCurrentClip()
+        {
+            return ValueRectangle.Empty;
+        }
+
+        protected override void PopClip<TRectangle>(TRectangle rect)
+        {
+        }
+
+
+        protected override void PushClip<TRectangle>(TRectangle rect)
         {
         }
     }

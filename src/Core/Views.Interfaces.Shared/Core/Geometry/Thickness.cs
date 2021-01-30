@@ -39,6 +39,12 @@ namespace Das.Views.Core.Geometry
 
         public Double Top { get; }
 
+        public Boolean AreAllSidesEqual()
+        {
+            return Left.AreEqualEnough(Top) && Left.AreEqualEnough(Right) &&
+                   Left.AreEqualEnough(Bottom);
+        }
+
         public Double Right { get; }
 
         public Double Bottom { get; }

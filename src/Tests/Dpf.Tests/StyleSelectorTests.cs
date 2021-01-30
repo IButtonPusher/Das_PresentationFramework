@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Das.Serializer;
 using Das.Views.Construction;
+using Das.Views.Construction.Styles;
+using Das.Views.Styles;
 using Das.Views.Styles.Construction;
 using Xunit;
 
@@ -24,6 +26,7 @@ namespace Dpf.Tests
         private static readonly DasSerializer _serializer = new DasSerializer();
 
         private static readonly IStyleInflater _styleInflator = new DefaultStyleInflater(
-            _serializer.TypeInferrer);
+            _serializer.TypeInferrer,
+            new StyleVariableAccessor(BaselineThemeProvider.Instance.ColorPalette));
     }
 }

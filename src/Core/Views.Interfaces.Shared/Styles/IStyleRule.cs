@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Das.Views.Styles
 {
-    public interface IStyleRule
+    public interface IStyleRule : IEquatable<IStyleRule>
     {
         /// <summary>
         /// Filters for which visual(s) will be styled by this rule

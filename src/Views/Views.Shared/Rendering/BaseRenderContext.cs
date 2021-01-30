@@ -268,44 +268,14 @@ namespace Das.Views.Rendering
 
             var layoutVisual = GetElementForLayout(visual);
 
-            //var styles = ViewState.StyleContext;
-
-            //var selector = layoutVisual is IHandleInput interactive
-            //    ? interactive.CurrentVisualStateType
-            //    : VisualStateType.None;
-
             var border = layoutVisual.Border;
             var borderThickness = border.GetThickness(rect);
 
-            //var border = styles.GetStyleSetter<IThickness>(StyleSetterType.BorderThickness,
-            //    selector, layoutVisual, VisualLineage);
-
             IThickness margin = layoutVisual.Margin.GetValue(rect);
-            //if (margin.IsEmpty)
-            //    margin = styles.GetStyleSetter<IThickness>(StyleSetterType.Margin,
-            //        selector, layoutVisual, VisualLineage);
             
-
-            //_fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
-
-            //_fairyRect.Update(rect,
-            //    CurrentElementRect.Offset, margin, border);
-
-            //var useRect = _fairyRect;
-
-            //useRect.Update(rect, CurrentElementRect.Offset, margin, border);
-
-            /////////
-            //var useRect2 = _boxModel.PushVisualBox(rect, visual.Transform, margin, border,
-            //    GetCurrentClip());
             var useRect2 = _boxModel.ComputeContentBounds(rect, margin, borderThickness);
 
             _boxModel.PushTransform(visual.Transform);
-
-            /////////
-            
-            //if (!useRect.Equals(useRect2))
-            //{}
 
             var radius = layoutVisual.BorderRadius.GetValue(rect);
 
@@ -320,26 +290,11 @@ namespace Das.Views.Rendering
                         useRect2.Y + layer.OffsetY.GetQuantity(rect.Height), useRect2.Width, h);
                     var colorVals = new BoxValues<IBrush>(layer.Color);
                     OnDrawBorder(shadowRect, colorVals, thickness, radius);
-                   // OnDrawBorder(shadowRect, thickness, layer.Color, radius);
-
-                    //var h = useRect.Height + layer.SpreadRadius.GetQuantity(rect.Height);
-
-                    //var shadowRect = new ValueRectangle(useRect.X + layer.OffsetX.GetQuantity(rect.Width),
-                    //    useRect.Y + layer.OffsetY.GetQuantity(rect.Height), useRect.Width, h);
-                    //OnDrawBorder(shadowRect, thickness, layer.Color, radius);
                 }
             }
 
-            //if (!border.IsEmpty && !visual.BoxShadow.IsEmpty)
-            //{
-               
-
-            //}
-
             var background = layoutVisual.Background;
-                             //??
-                             //styles.GetStyleSetter<SolidColorBrush>(StyleSetterType.Background,
-                             //    selector, layoutVisual, VisualLineage);
+                             
             if (background?.IsInvisible == false)
             {
                 if (radius.IsEmpty)
@@ -349,27 +304,10 @@ namespace Das.Views.Rendering
             }
 
             if (!border.IsEmpty)
-            {
-                
-
-                //var brush = border.
-                    //styles.GetStyleSetter<IBrush>(StyleSetterType.BorderBrush, selector,
-                    //layoutVisual, VisualLineage);
-
-                //if (!brush.IsInvisible)
-                    OnDrawBorder(useRect2, border, borderThickness, radius);
-            }
-
-            
+                OnDrawBorder(useRect2, border, borderThickness, radius);
 
             useRect2 = _boxModel.PushContentBounds(useRect2);
 
-            //useRect += CurrentLocation;
-
-            //if (!useRect.Equals(useRect2))
-            //{}
-
-            //PushRect(useRect);
             PushRect(useRect2);
 
             SetElementRenderPosition(useRect2, visual);

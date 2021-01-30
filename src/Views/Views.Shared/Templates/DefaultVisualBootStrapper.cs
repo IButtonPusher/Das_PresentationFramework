@@ -8,6 +8,7 @@ using Das.Views.Colors;
 using Das.Views.Core.Drawing;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
+using Das.Views.Styles.Construction;
 
 namespace Das.Views.Templates
 {
@@ -16,12 +17,13 @@ namespace Das.Views.Templates
         public DefaultVisualBootstrapper(IResolver dependencyResolver,
                                          IThemeProvider themeProvider,
                                          IPropertyProvider propertyProvider,
-                                         ILayoutQueue layoutQueue)
+                                         ILayoutQueue layoutQueue,
+                                         IAppliedStyleBuilder styleBuilder)
         {
-            //StyleContext = styleContext;
             _dependencyResolver = dependencyResolver;
             _themeProvider = themeProvider;
             _propertyProvider = propertyProvider;
+            _styleBuilder = styleBuilder;
             LayoutQueue = layoutQueue;
 
             _defaultConstructorLock = new Object();
@@ -42,14 +44,19 @@ namespace Das.Views.Templates
                 : null;
         }
 
+        //public IAppliedStyleBuilder StyleBuilder => _styleBuilder;
+
+        public void ApplyCoreStyle(IVisualElement visual)
+        {
+            _styleBuilder.ApplyVisualCoreStyles(visual, this);
+        }
+
         public ILayoutQueue LayoutQueue { get; }
 
         public IVisualElement Instantiate(Type type)
         {
             throw new NotImplementedException();
         }
-
-        //public IStyleContext StyleContext { get; }
 
         public TVisualElement Instantiate<TVisualElement>(Type type)
             where TVisualElement : IVisualElement
@@ -76,6 +83,7 @@ namespace Das.Views.Templates
             if (ctor == null)
                 throw new MissingMethodException(type.Name, "constructor");
             var res = (TVisualElement) ctor.Invoke(new Object[] {this});
+            //_styleBuilder.ApplyVisualCoreStyles(res, this);
             return res;
         }
 
@@ -114,18 +122,6 @@ namespace Das.Views.Templates
 
             return obj;
         }
-
-        //public TVisualElement InstantiateCopy<TVisualElement, TViewModel>(TVisualElement visual,
-        //                                                                  TViewModel dataContext)
-        //    where TVisualElement : IBindableElement
-        //{
-        //    var obj = InstantiateCopyBase(visual);
-
-        //    if (dataContext != null && obj is IBindableElement bindable)
-        //        bindable.DataContext = dataContext;
-
-        //    return obj;
-        //}
 
         public IColorPalette ColorPalette => _themeProvider.ColorPalette;
 
@@ -193,7 +189,9 @@ namespace Das.Views.Templates
                                                       c) =>
             {
                 foreach (var binding in o.GetBindings())
+                {
                     c.AddBinding(binding);
+                }
             });
 
             return obj;
@@ -210,12 +208,12 @@ namespace Das.Views.Templates
             action(vOriginal, vCopy);
         }
 
-        //private readonly Dictionary<Type, ConstructorInfo> _bindingConstructors;
         private readonly Object _defaultConstructorLock;
         private readonly Dictionary<Type, ConstructorInfo> _defaultConstructors;
         private readonly IResolver _dependencyResolver;
-        private readonly IThemeProvider _themeProvider;
         private readonly IPropertyProvider _propertyProvider;
+        private readonly IAppliedStyleBuilder _styleBuilder;
+        private readonly IThemeProvider _themeProvider;
 
         private IUiProvider? _uiProvider;
     }

@@ -28,6 +28,12 @@ namespace Das.Views.Styles
 
         IStyleSelector IStyleRule.Selector => Selector;
 
+        public Boolean Equals(IStyleRule other)
+        {
+            return other is DependencyPropertyValueRule dpvr &&
+                   dpvr.Selector.Equals(Selector);
+        }
+
         public override String ToString()
         {
             return Selector + " => " + Declaration;

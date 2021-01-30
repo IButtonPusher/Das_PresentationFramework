@@ -10,7 +10,7 @@ using View = Android.Views.View;
 namespace Das.Xamarin.Android
 {
     /// <summary>
-    /// Android view that measures and arranges 
+    /// Android view that measures and arranges DPF visuals that are not delegated to surrogates
     /// </summary>
     public class AndroidPaintView : View
     {
@@ -19,24 +19,18 @@ namespace Das.Xamarin.Android
                                 IVisualElement view)
             : base(context)
         {
-            //RenderKit = renderKit;
-
             _renderContext = renderKit.RenderContext;
             _measureContext = renderKit.MeasureContext;
-            
-            //_measured = Size.Empty;
             _targetRect = ValueRectangle.Empty;
             _view = view;
-            //_displayMetrics = renderKit.DisplayMetrics;
+            
             _viewState = renderKit.RenderContext.ViewState ?? throw new NullReferenceException();
-
-            //var _ = RefreshLoop();
         }
-
-        //public AndroidRenderKit RenderKit { get; }
 
         protected override void OnDraw(Canvas? canvas)
         {
+            //System.Diagnostics.Debug.WriteLine("[OKYN] AndroidPaintView->OnDraw( " + canvas + ")");
+
             if (canvas == null)
                 return;
 
@@ -53,7 +47,7 @@ namespace Das.Xamarin.Android
             var h = MeasuredHeight;
 
             var sz = new ValueRenderSize(w, h);
-            //_measured = 
+            
             _measureContext.MeasureMainView(_view, sz, _viewState);
 
             _targetRect = new ValueRectangle(
@@ -66,10 +60,10 @@ namespace Das.Xamarin.Android
         private readonly AndroidMeasureKit _measureContext;
         private readonly AndroidRenderContext _renderContext;
 
-        //private readonly DisplayMetrics _displayMetrics;
+        
         private readonly IVisualElement _view;
         private readonly IViewState _viewState;
-        //private Size _measured;
+        
         private ValueRectangle _targetRect;
     }
 }

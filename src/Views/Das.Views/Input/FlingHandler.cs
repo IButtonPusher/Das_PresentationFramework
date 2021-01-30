@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Extensions;
-using Das.Views.Styles;
 
 namespace Das.Views.Input
 {
@@ -18,11 +17,50 @@ namespace Das.Views.Input
         {
             lock (_flingLock)
             {
-                if (_flingHost.CanFlingHorizontal && args.VelocityX != 0)
-                    _velocityX = 0 - args.VelocityX;
+                if (args.VelocityX != 0)
+                {
+                    switch (_flingHost.HorizontalFlingMode)
+                    {
+                        case FlingMode.None:
+                            break;
 
-                if (_flingHost.CanFlingVertical && args.VelocityY != 0)
-                    _velocityY = args.VelocityY;
+                        case FlingMode.Default:
+                            _velocityX = args.VelocityX;
+                            break;
+
+                        case FlingMode.Inverted:
+                            _velocityX = 0 - args.VelocityX;
+                            break;
+
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+
+                //if (_flingHost.CanFlingHorizontal && args.VelocityX != 0)
+                //    _velocityX = 0 - args.VelocityX;
+
+                if (args.VelocityY != 0)
+                {
+                    switch (_flingHost.VerticalFlingMode)
+                    {
+                        case FlingMode.None:
+                            break;
+
+                        case FlingMode.Default:
+                            _velocityY = args.VelocityY;
+                            break;
+
+                        case FlingMode.Inverted:
+                            _velocityY = 0 - args.VelocityY;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+
+                //if (_flingHost.CanFlingVertical && args.VelocityY != 0)
+                //    _velocityY = args.VelocityY;
 
                 if (_velocityX.IsZero() && _velocityY.IsZero())
                     return true;
@@ -31,13 +69,14 @@ namespace Das.Views.Input
                 _currentTransition?.Cancel();
 
                 var sumX = Convert.ToInt32(_velocityX / 3);
-                var sumY = Convert.ToInt32(_velocityY / 3);
+                //var sumY = Convert.ToInt32(_velocityY / 3);
+                var sumY = Convert.ToInt32(_velocityY / 1.5);
 
                 var validVeticalRange = _flingHost.GetVerticalMinMaxFling();
                 sumY = validVeticalRange.GetValueInRange(sumY);
 
                 var validHorizontalRange = _flingHost.GetHorizontalMinMaxFling();
-                sumX = validHorizontalRange .GetValueInRange(sumX);
+                sumX = validHorizontalRange.GetValueInRange(sumX);
 
                 if (sumX.IsZero() && sumY.IsZero())
                     return true;
@@ -49,7 +88,12 @@ namespace Das.Views.Input
 
                 var duration = TimeSpan.FromMilliseconds(ms);
 
-                _currentTransition = new FlingTransition(duration, sumX, sumY, _flingHost);
+                System.Diagnostics.Debug.WriteLine("Created fling transition x,y: " + sumX +
+                                                   "," + sumY + " duration: " + duration +
+                                                   " based on: " + args);
+
+                _currentTransition = new FlingTransition(duration, sumX, sumY, 
+                    _flingHost, args);
                 _currentTransition.Start();
 
                 
@@ -60,70 +104,8 @@ namespace Das.Views.Input
             return true;
         }
 
-        //public Boolean OnInput(FlingEventArgs args)
-        //{
-        //    lock (_flingLock)
-        //    {
-        //        if (_flingHost.CanFlingHorizontal && args.VelocityX != 0)
-        //            _velocityX = 0 - args.VelocityX;
-
-        //        if (_flingHost.CanFlingVertical && args.VelocityY != 0)
-        //            _velocityY = args.VelocityY;
-
-        //        if (_velocityX.IsZero() && _velocityY.IsZero())
-        //            return true;
-
-
-        //        _currentTransition?.Cancel();
-
-        //        var sumX = Convert.ToInt32(_velocityX / 3);
-        //        var sumY = Convert.ToInt32(_velocityY / 3);
-
-        //        var validVeticalRange = _flingHost.GetVerticalMinMaxFling();
-        //        sumY = validVeticalRange.GetValueInRange(sumY);
-
-        //        var validHorizontalRange = _flingHost.GetHorizontalMinMaxFling();
-        //        sumX = validHorizontalRange .GetValueInRange(sumX);
-
-        //        if (sumX.IsZero() && sumY.IsZero())
-        //            return true;
-
-        //        var pctX = validHorizontalRange.Max != 0
-        //            ? (Double) sumX / validHorizontalRange.Max
-        //            : 0;
-                
-        //        var pctY = validVeticalRange.Max != 0
-        //            ? (Double) sumY / validVeticalRange.Max
-        //            : 0;
-
-        //        var msX = Math.Max(pctX * _maxFlingMs, sumX);
-        //        var msY = Math.Max(pctY * _maxFlingMs, sumY);
-
-        //        var ms = Math.Max(
-        //            Math.Abs(msX),
-        //            Math.Abs(msY));
-                
-        //        //var ms = Math.Max(
-        //        //    Math.Abs(sumX),
-        //        //    Math.Abs(sumY));
-        //        ms = Math.Max(ms, 500);
-
-        //        var duration = TimeSpan.FromMilliseconds(ms);
-
-        //        _currentTransition = new FlingTransition(duration, sumX, sumY, _flingHost);
-        //        _currentTransition.Start();
-
-                
-        //        _flingHost.OnFlingStarting(sumX, sumY);
-
-        //    }
-
-        //    return true;
-        //}
-
+       
         public InputAction HandlesActions => InputAction.Fling;
-
-        public VisualStateType CurrentVisualStateType => VisualStateType.None;
 
         public Boolean OnInput(MouseDownEventArgs args)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 
@@ -10,8 +11,29 @@ namespace Das.Views.Rendering
 
         public abstract void LineTo<TPoint>(TPoint p1) where TPoint : IPoint2D;
 
-        public abstract void AddArc<TRectangle>(TRectangle arc, Single startAngle, Single endAngle)
+        public abstract void AddLine<TPoint>(TPoint p1,
+                                             TPoint p2) where TPoint : IPoint2F;
+
+        public abstract void AddArc<TRectangle>(TRectangle arc,
+                                                Single startAngle,
+                                                Single endAngle)
             where TRectangle : IRectangle;
+
+        public abstract void AddBezier(Single x1,
+                                       Single y1,
+                                       Single x2,
+                                       Single y2,
+                                       Single x3,
+                                       Single y3,
+                                       Single x4,
+                                       Single y4);
+
+        public abstract void AddBezier(IPoint2F p1,
+                                       IPoint2F p2,
+                                       IPoint2F p3,
+                                       IPoint2F p4);
+
+        public abstract void StartFigure();
 
         public abstract void CloseFigure();
 
@@ -76,5 +98,9 @@ namespace Das.Views.Rendering
 
             CloseFigure();
         }
+
+        public IPathData PathData => throw new NotImplementedException();
+
+        protected static Single R4(Double val) => Convert.ToSingle(val);
     }
 }

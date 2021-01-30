@@ -10,12 +10,13 @@ namespace Das.Views.Input
         public FlingTransition(TimeSpan duration,
                                Double flingX,
                                Double flingY,
-                               IFlingHost host)
-            : base(duration, TimeSpan.Zero)
+                               IFlingHost host,
+                               FlingEventArgs args)
+            : base(duration, TimeSpan.Zero, Easing.QuadraticOut)
         {
-            System.Diagnostics.Debug.WriteLine("Created fling transition x,y: " + flingX + 
-                                               "," + flingY + " duration: " + duration + 
-                                               " visual: " + host);
+            //System.Diagnostics.Debug.WriteLine("Created fling transition x,y: " + flingX + 
+            //                                   "," + flingY + " duration: " + duration + 
+            //                                   " visual: " + host);
             
             _flingX = flingX;
             _flingY = flingY;
@@ -24,6 +25,7 @@ namespace Das.Views.Input
             _startY = host.CurrentY;
             
             _host = host;
+            _args = args;
             _cancellationSource = new CancellationTokenSource();
         }
 
@@ -39,16 +41,12 @@ namespace Das.Views.Input
 
         protected override void OnUpdate(Double runningPct)
         {
-            _updateCounter++;
-            
             var flungX = _host.CurrentX - _startX;
             var flungY = _host.CurrentY - _startY;
             
             var currentX = _flingX * runningPct - flungX;
             var currentY = _flingY * runningPct - flungY;
-            
-            if (_updateCounter == 3)
-            {}
+
 
             _host.OnFlingStep(currentX, currentY);
         }
@@ -57,6 +55,7 @@ namespace Das.Views.Input
         {
             base.OnFinished(wasCancelled);
             _host.OnFlingEnded(wasCancelled);
+            _args.SetHandled(true);
         }
 
         private readonly CancellationTokenSource _cancellationSource;
@@ -64,11 +63,10 @@ namespace Das.Views.Input
         private readonly Double _flingX;
         private readonly Double _flingY;
 
-        private Int32 _updateCounter;
-        
         private readonly Double _startX;
         private readonly Double _startY;
         
         private readonly IFlingHost _host;
+        private readonly FlingEventArgs _args;
     }
 }

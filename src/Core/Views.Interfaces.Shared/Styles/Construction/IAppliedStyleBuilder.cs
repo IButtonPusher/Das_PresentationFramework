@@ -10,16 +10,22 @@ namespace Das.Views.Styles.Construction
     {
         IAppliedStyle? BuildAppliedStyle(IStyleSheet style,
                                          IVisualElement visual,
-                                         IVisualLineage visualLineage);
+                                         IVisualLineage visualLineage,
+                                         IVisualBootstrapper visualBootstrapper);
 
         Task ApplyVisualStylesAsync(IVisualElement visual,
                                     IAttributeDictionary attributeDictionary,
-                                    IVisualLineage visualLineage);
+                                    IVisualLineage visualLineage,
+                                    IVisualBootstrapper visualBootstrapper);
 
         Task ApplyVisualStylesAsync(IVisualElement visual,
-                               IAttributeDictionary attributeDictionary,
-                               IVisualLineage visualLineage,
-                               IViewInflater viewInflater);
+                                    IAttributeDictionary attributeDictionary,
+                                    IVisualLineage visualLineage,
+                                    IViewInflater viewInflater,
+                                    IVisualBootstrapper visualBootstrapper);
+
+        void ApplyVisualCoreStyles(IVisualElement visual,
+                                   IVisualBootstrapper visualBootstrapper);
 
         IVisualStyleProvider StyleProvider { get; }
     }

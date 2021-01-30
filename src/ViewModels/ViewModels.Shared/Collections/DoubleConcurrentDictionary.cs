@@ -179,12 +179,23 @@ namespace Das.ViewModels.Collections
             dic[k2] = value;
         }
 
+        public Boolean TryAdd(TKey1 k1)
+        {
+            return _backingDictionary.TryAdd(k1, new ConcurrentDictionary<TKey2, TValue>());
+        }
+
         public Boolean TryAdd(TKey1 k1,
                               TKey2 k2,
                               TValue value)
         {
             return _backingDictionary.TryAdd(k1, new ConcurrentDictionary<TKey2, TValue>()) 
                    | _backingDictionary[k1].TryAdd(k2, value);
+        }
+
+        public Boolean TryGetValue(TKey1 k1,
+                                   out ConcurrentDictionary<TKey2, TValue> inner)
+        {
+            return _backingDictionary.TryGetValue(k1, out inner);
         }
 
         public Boolean TryGetValue(TKey1 k1, 

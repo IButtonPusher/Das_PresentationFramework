@@ -25,6 +25,7 @@ namespace Das.Xamarin.Android.Input
         {
             _hostView = hostView;
             _inputHandler = inputHandler;
+            _activeInputActions = InputAction.None;
             
             var viewConfig = ViewConfiguration.Get(context) ?? throw new NotSupportedException();
 
@@ -73,11 +74,13 @@ namespace Das.Xamarin.Android.Input
 
         public Boolean OnDoubleTap(MotionEvent? e)
         {
+            //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS ON DOUBLE TAP: " + e);
             return false;
         }
 
         public Boolean OnDoubleTapEvent(MotionEvent? e)
         {
+            //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS GENERIC DOUBLE TAP EVENT: " + e);
             return false;
         }
 
@@ -88,11 +91,14 @@ namespace Das.Xamarin.Android.Input
 
         public void OnGenericMotionEvent(MotionEvent? e)
         {
+            //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS GENERIC MOTION EVENT: " + e);
+
             _gestureDetector.OnTouchEvent(e);
         }
 
         public void OnTouchEvent(MotionEvent? e)
         {
+            //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS TOUCH EVENT: " + e);
             _gestureDetector.OnTouchEvent(e);
         }
 
@@ -101,7 +107,11 @@ namespace Das.Xamarin.Android.Input
             if (!(e is { } eve))
                 return false;
 
-            IsInteracting = true;
+            //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS OnDown.");
+
+            //AddInteraction(InputAction.LeftMouseButtonDown);
+            //IsInteracting = true;
+            
 
             var pos = GetPosition(eve);
             
@@ -117,13 +127,25 @@ namespace Das.Xamarin.Android.Input
             return true;
         }
 
+        private void AddInteraction(InputAction action)
+        {
+            _activeInputActions |= action;
+        }
+
+        private void RemoveInteraction(InputAction action)
+        {
+            _activeInputActions &= ~action;
+            if (_activeInputActions == 0)
+                _activeInputActions = InputAction.None;
+        }
+
         public Boolean OnFling(MotionEvent? e1,
                                MotionEvent? e2,
                                Single velocityX,
                                Single velocityY)
         {
-            System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS FLING vx: " + velocityX + 
-                                               " vy: " + velocityY);
+            //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS FLING vx: " + velocityX + 
+            //                                   " vy: " + velocityY);
             
             if (e1 == null)
                 return false;
@@ -137,12 +159,30 @@ namespace Das.Xamarin.Android.Input
                 Math.Abs(vy) >= MinimumFlingVelocity)
             {
                 var flingArgs = new FlingEventArgs(vx * _dpiRatio, 
-                    vy * _dpiRatio, pos, this);
-                _inputHandler.OnMouseInput(flingArgs, InputAction.Fling);
+                    vy * _dpiRatio, pos, this, RemoveFlingInteraction);
+
+                AddInteraction(InputAction.Fling);
+
+                if (!_inputHandler.OnMouseInput(flingArgs, InputAction.Fling))
+                {
+                    flingArgs.SetHandled(false);
+                    //RemoveInteraction(InputAction.Fling);
+                }
             }
 
             return true;
         }
+
+        private void RemoveFlingInteraction()
+        {
+            //System.Diagnostics.Debug.WriteLine("[OKYN] removing fling interaction");
+            RemoveInteraction(InputAction.Fling);
+        }
+
+        //private void OnFlingCompleted(Task<Boolean> obj)
+        //{
+        //    RemoveInteraction(InputAction.Fling);
+        //}
 
         public void OnLongPress(MotionEvent? e)
         {
@@ -154,6 +194,9 @@ namespace Das.Xamarin.Android.Input
                                 Single distanceX,
                                 Single distanceY)
         {
+            //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS SCROLL.");
+
+
             if (e1 == null || e2 == null)
                 return false;
 
@@ -186,7 +229,7 @@ namespace Das.Xamarin.Android.Input
             if (e == null)
                 return false;
 
-            System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS SINGLE TAP UP.");
+            //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS SINGLE TAP UP.");
 
             var pos = GetPosition(e);
 
@@ -196,9 +239,10 @@ namespace Das.Xamarin.Android.Input
             if (_inputHandler.OnMouseInput(args,
                 InputAction.LeftMouseButtonUp))
             {
-                //_hostView.Invalidate();
+                
             }
-            IsInteracting = false;
+            //IsInteracting = false;
+            RemoveInteraction(InputAction.LeftMouseButtonDown);
             _leftButtonWentDown = default;
 
             return false;
@@ -214,8 +258,22 @@ namespace Das.Xamarin.Android.Input
         {
             var res = _gestureDetector.OnTouchEvent(e);
 
-            System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS TOUCH " + e?.Action +
-                                               " handled by gesture detector? " + res);
+            if (e == null)
+                return res;
+
+            //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS TOUCH " + e.Action +
+            //                                   " handled by gesture detector? " + res);
+
+            switch (e.Action)
+            {
+                case MotionEventActions.Down:
+                    AddInteraction(InputAction.LeftMouseButtonDown);
+                    break;
+
+                case MotionEventActions.Up:
+                    RemoveInteraction(InputAction.LeftMouseButtonDown);
+                    break;
+            }
             
             if (res)
                 return true;
@@ -232,20 +290,23 @@ namespace Das.Xamarin.Android.Input
             var distance = pos.Distance(_leftButtonWentDown);
             var willHandle = distance >= _touchSlop;
             
-            System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS TOUCH UP.  Distance from down:" +
-                                               distance + " will handle: " + willHandle);
+            //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS TOUCH UP.  Distance from down:" +
+            //                                   distance + " will handle: " + willHandle);
 
             if (!willHandle)
                 return false;
 
-            var args = new MouseUpEventArgs(pos,
+            var mouseUpArgs = new MouseUpEventArgs(pos,
                 _leftButtonWentDown, MouseButtons.Left, this, false);
-            if (_inputHandler.OnMouseInput(args,
+            if (_inputHandler.OnMouseInput(mouseUpArgs,
                 InputAction.LeftMouseButtonUp))
             {
-                IsInteracting = false;
-                SleepTime = 0;
+                
             }
+
+            RemoveInteraction(InputAction.LeftMouseButtonDown);
+            //IsInteracting = false;
+            SleepTime = 0;
 
             _leftButtonWentDown = default;
 
@@ -310,8 +371,10 @@ namespace Das.Xamarin.Android.Input
 
             return new ValuePoint2D(eve.GetX(), eve.GetY());
         }
-        
-        public Boolean IsInteracting { get; private set; }
+
+        public Boolean IsInteracting => _activeInputActions != InputAction.None; 
+
+        private InputAction _activeInputActions;
 
         private readonly GestureDetectorCompat _gestureDetector;
         private readonly View _hostView;

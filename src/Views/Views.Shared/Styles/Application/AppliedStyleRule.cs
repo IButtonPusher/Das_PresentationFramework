@@ -19,8 +19,10 @@ namespace Das.Views.Styles.Application
             return RuleTemplate.Selector.IsFilteringOnVisualState();
         }
 
-        public void EnsureDefaultAssignments(AppliedStyleRule other)
+        public Boolean EnsureDefaultAssignments(AppliedStyleRule other)
         {
+            var isAnyDefaulted = false;
+
             foreach (var filteredAssignment in other.Assignments)
             {
                 if (filteredAssignment is PseudoVisualAssignment pseudo)
@@ -39,15 +41,21 @@ namespace Das.Views.Styles.Application
                         {
                             var defaultAssignment = GetDefaultAssignment(subAssignment);
                             myPseudo.AddAssignment(defaultAssignment);
+                            isAnyDefaulted = true;
                         }
                     }
                 }
                 else
                 {
                     if (!HasOverlappingAssignment(filteredAssignment))
+                    {
                         AddDefaultAssignment(filteredAssignment);
+                        isAnyDefaulted = true;
+                    }
                 }
             }
+
+            return isAnyDefaulted;
         }
 
         public Boolean HasOverlappingAssignment(IStyleValueAssignment assignment)
@@ -82,6 +90,9 @@ namespace Das.Views.Styles.Application
             foreach (var condition in Conditions)
                 if (!condition.CanExecute())
                     return;
+
+            if (Conditions.Count > 0)
+            {}
 
             foreach (var assignment in Assignments)
                 assignment.Execute(isUpdate);

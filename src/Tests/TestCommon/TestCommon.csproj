@@ -16,7 +16,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Das.Serializer.Split" Version="0.0.17-alpha" />
+    <PackageReference Include="Das.Serializer.Split" Version="0.0.18-alpha" />
   </ItemGroup>
   
   <ItemGroup>

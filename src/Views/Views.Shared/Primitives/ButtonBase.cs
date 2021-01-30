@@ -4,7 +4,7 @@ using Das.ViewModels;
 using Das.Views.Core.Geometry;
 using Das.Views.Panels;
 using Das.Views.Rendering;
-using Das.Views.Styles;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
@@ -22,49 +22,11 @@ namespace Das.Views.Controls
         protected ButtonBase(IVisualBootstrapper visualBootstrapper)
         : base(visualBootstrapper)
         {
-            _currentVisualStateType = VisualStateType.None;
+            //_currentVisualStateType = VisualStateType.None;
             _lastRenderSize = Size.Empty;
         }
 
-        //protected override Thickness? GetPadding(IStyleProvider styleContext)
-        //{
-        //    return styleContext.GetStyleSetter<Thickness>(StyleSetterType.Padding,
-        //        CurrentVisualStateType, this);
-        //}
-
-        public VisualStateType CurrentVisualStateType
-        {
-            get => _currentVisualStateType;
-        }
-
-        protected void AddStyleSelector(VisualStateType value)
-        {
-            var val = _currentVisualStateType == VisualStateType.None 
-            ? value : 
-            _currentVisualStateType | value;
-
-            SetValue(ref _currentVisualStateType, val, OnCurrentSelectorChanged,
-                nameof(CurrentVisualStateType));
-
-            //if (SetValue(ref _currentVisualStateType, val, OnCurrentSelectorChanged,
-            //    nameof(CurrentVisualStateType)))
-            //{
-            //    InvalidateArrange();
-            //}
-        }
-
-        protected void RemoveStyleSelector(VisualStateType value)
-        {
-            var val = _currentVisualStateType & ~value;
-
-            if (val == 0)
-            {
-                val = VisualStateType.None;
-            }
-
-            SetValue(ref _currentVisualStateType, val, OnCurrentSelectorChanged,
-                nameof(CurrentVisualStateType));
-        }
+        //public VisualStateType CurrentVisualStateType => _currentVisualStateType;
 
         public virtual Boolean OnInput(MouseClickEventArgs args)
         {
@@ -77,7 +39,9 @@ namespace Das.Views.Controls
             if (ClickMode != clickType || !(Command is {} cmd))
                 return;
 
-            if (DataContext is {} boundValue)
+            if (CommandParameter is {} validParameter)
+                cmd.ExecuteAsync(validParameter).ConfigureAwait(false);
+            else if (DataContext is {} boundValue)
                 cmd.ExecuteAsync(boundValue).ConfigureAwait(false);
             else
                 cmd.ExecuteAsync().ConfigureAwait(false);
@@ -92,9 +56,11 @@ namespace Das.Views.Controls
 
         public virtual Boolean OnInput(MouseDownEventArgs args)
         {
-            args.InputContext.TryCaptureMouseInput(this);
+            if (args.InputContext.TryCaptureMouseInput(this))
+                IsActive = true;
 
-            AddStyleSelector(VisualStateType.Active);
+
+            //AddStyleSelector(VisualStateType.Active);
 
             ClickToAction(ClickMode.Press);
             return true;
@@ -102,10 +68,7 @@ namespace Das.Views.Controls
 
         public virtual Boolean OnInput(MouseOverEventArgs args)
         {
-            if (args.IsMouseOver)
-                AddStyleSelector(VisualStateType.Hover);
-            else
-                RemoveStyleSelector(VisualStateType.Hover);
+            IsMouseOver = args.IsMouseOver;
 
             return true;
         }
@@ -119,7 +82,6 @@ namespace Das.Views.Controls
 
         public virtual Boolean OnInput(MouseUpEventArgs args)
         {
-            RemoveStyleSelector(VisualStateType.Active);
             args.InputContext.TryReleaseMouseCapture(this);
 
             if (args.PositionWentDown != null && Math.Abs(args.PositionWentDown.X -
@@ -156,14 +118,10 @@ namespace Das.Views.Controls
         }
 
        
-
+        public Object? CommandParameter { get; set; }
 
         public IObservableCommand? Command { get; set; }
 
-        protected virtual void OnCurrentSelectorChanged(VisualStateType value)
-        {
-            //InvalidateArrange();
-        }
 
         public override String ToString()
         {
@@ -172,7 +130,7 @@ namespace Das.Views.Controls
 
 
         private ClickMode _clickMode;
-        private VisualStateType _currentVisualStateType;
+        //private VisualStateType _currentVisualStateType;
 
         public abstract InputVisualType InputType { get; }
     }

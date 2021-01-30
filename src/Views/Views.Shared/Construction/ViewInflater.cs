@@ -35,7 +35,6 @@ namespace Das.Views.Construction
                             IBindingBuilder bindingBuilder,
                             IValueConverterProvider converterProvider,
                             IVisualTypeResolver visualTypeResolver,
-                            //IStyledVisualBuilder styledVisualBuilder,
                             IPropertyProvider typeManipulator,
                             IAppliedStyleBuilder appliedStyleBuilder)
         {
@@ -44,7 +43,6 @@ namespace Das.Views.Construction
             _bindingBuilder = bindingBuilder;
             _converterProvider = converterProvider;
             _visualTypeResolver = visualTypeResolver;
-            //_styledVisualBuilder = styledVisualBuilder;
             _typeManipulator = typeManipulator;
             _appliedStyleBuilder = appliedStyleBuilder;
             _attributeValueScanner = xmlAttributeParser;
@@ -221,13 +219,11 @@ namespace Das.Views.Construction
             if (useType == typeof(QuantifiedDouble))
                 return QuantifiedDouble.Parse(strValue);
 
-            //var bob = prop.PropertyType.ReflectedType;
-
             var valueConverter = _converterProvider.GetDefaultConverter(useType);
 
             var propVal = valueConverter != null
                 ? valueConverter.Convert(strValue)
-                : _attributeValueScanner.GetValue(strValue, useType);
+                : _attributeValueScanner.GetValue(strValue, useType, false);
 
             return propVal;
         }
@@ -284,8 +280,6 @@ namespace Das.Views.Construction
                     await InflateAndAddChildNodesAsync(node, visual, dataContextType,
                         nameSpaceAssemblySearch, visualLineage,
                         _appliedStyleBuilder.ApplyVisualStylesAsync).ConfigureAwait(false);
-                //_styledVisualBuilder.ApplyStylesToVisualAsync).ConfigureAwait(false);
-
 
                 if (node.InnerText is { } innerText &&
                     innerText.Trim() is { } validInnerText && validInnerText.Length > 0 &&
@@ -305,7 +299,7 @@ namespace Das.Views.Construction
 
             //////////////////////////////////////////
             // have to apply styles after children are instantiated as some styles specify child selectors
-            await applyStyles(visual, node, visualLineage, this);
+            await applyStyles(visual, node, visualLineage, this, _visualBootstrapper);
             //////////////////////////////////////////
 
             SetHardCodedValues(visual, node, bindings);

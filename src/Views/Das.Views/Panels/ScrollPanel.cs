@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Geometry;
 using Das.Views.Input;
 using Das.Views.Rendering;
 using Das.Views.Rendering.Geometry;
-using Das.Views.Styles;
 
 namespace Das.Views.Panels
 {
@@ -32,9 +30,9 @@ namespace Das.Views.Panels
         }
 
 
-        Boolean IFlingHost.CanFlingVertical => IsScrollsVertical;
+        FlingMode IFlingHost.VerticalFlingMode => IsScrollsVertical ? FlingMode.Default : FlingMode.None;
 
-        Boolean IFlingHost.CanFlingHorizontal => IsScrollsHorizontal;
+        FlingMode IFlingHost.HorizontalFlingMode => IsScrollsHorizontal ? FlingMode.Inverted : FlingMode.None;
 
         Double IFlingHost.CurrentX => HorizontalOffset;
 
@@ -58,14 +56,6 @@ namespace Das.Views.Panels
         void IFlingHost.OnFlingStarting(Double totalHorizontalChange,
                                         Double totalVerticalChange)
         {
-            if (totalVerticalChange.IsNotZero())
-                Debug.WriteLine("**Starting fling when y scroll: " + VerticalOffset +
-                                " delta: " + totalVerticalChange);
-
-            if (totalHorizontalChange.IsNotZero())
-                Debug.WriteLine("**Starting fling when x scroll: " + HorizontalOffset +
-                                " delta: " + totalHorizontalChange);
-
             OnScrollTransitionStarting?.Invoke(totalHorizontalChange, totalVerticalChange);
         }
 
@@ -81,8 +71,8 @@ namespace Das.Views.Panels
 
         public void OnFlingEnded(Boolean wasCancelled)
         {
-            Debug.WriteLine("***end of fling v-offset: " + VerticalOffset + 
-                            " h: " + HorizontalOffset + "***");
+            //Debug.WriteLine("***end of fling v-offset: " + VerticalOffset + 
+            //                " h: " + HorizontalOffset + "***");
 
             if (_inputContext is { } inputContext)
                 inputContext.TryReleaseMouseCapture(this);
@@ -160,11 +150,6 @@ namespace Das.Views.Panels
             
             return false;
         }
-
-        /// <summary>
-        ///     todo: possibly...
-        /// </summary>
-        public VisualStateType CurrentVisualStateType => VisualStateType.None;
 
         public InputAction HandlesActions => InputAction.MouseDrag |
                                              InputAction.MouseWheel |

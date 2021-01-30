@@ -17,7 +17,7 @@ namespace Das.Views.Styles.Transitions
                                      TimeSpan duration,
                                      TimeSpan delay,
                                      TransitionFunctionType timing)
-            : base(duration, delay)
+            : base(duration, delay, Easing.QuadraticOut)
         {
             _visual = visual;
             _property = property;

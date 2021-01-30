@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Styles.Selectors
 {
@@ -9,7 +10,7 @@ namespace Das.Views.Styles.Selectors
             Property = property;
         }
 
-        public IDependencyProperty Property {get;}
+        public IDependencyProperty Property { get; }
 
         public sealed override Boolean Equals(IStyleSelector other)
         {
@@ -17,7 +18,16 @@ namespace Das.Views.Styles.Selectors
                    depSel.Property.Name == Property.Name &&
                    depSel.Property.VisualType == Property.VisualType &&
                    depSel.Property.PropertyType == Property.PropertyType;
+        }
 
+        public override IStyleSelector ToUnfiltered()
+        {
+            return AllStyleSelector.Instance;
+        }
+
+        public override String ToString()
+        {
+            return Property.Name;
         }
     }
 }

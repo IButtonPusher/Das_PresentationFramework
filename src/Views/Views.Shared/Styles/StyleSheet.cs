@@ -11,12 +11,28 @@ namespace Das.Views.Styles
         public StyleSheet(IEnumerable<IStyleRule> rules)
         {
             VisualTypeStyles = new ConcurrentDictionary<Type, IStyleSheet>();
-            _rules = new List<IStyleRule>(rules);
+            _rules = new HashSet<IStyleRule>(rules);
         }
 
         public IEnumerable<IStyleRule> Rules => _rules;
 
         public IDictionary<Type, IStyleSheet> VisualTypeStyles { get; }
+
+        public IStyleSheet AddDefaultRules(IEnumerable<IStyleRule> rules)
+        {
+            var anyNew = false;
+            var newRules = new HashSet<IStyleRule>(_rules);
+            foreach (var rule in rules)
+            {
+                if (newRules.Add(rule))
+                    anyNew = true;
+            }
+
+            if (!anyNew)
+                return this;
+
+            return new StyleSheet(newRules);
+        }
 
         public IEnumerable<IStyleSetter> StyleSetters
         {
@@ -32,6 +48,6 @@ namespace Das.Views.Styles
             throw new NotImplementedException();
         }
 
-        protected readonly List<IStyleRule> _rules;
+        protected readonly HashSet<IStyleRule> _rules;
     }
 }

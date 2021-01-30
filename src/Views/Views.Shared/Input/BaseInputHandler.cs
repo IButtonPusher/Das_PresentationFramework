@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
-using Das.Views.Styles;
 
 namespace Das.Views.Input
 {
@@ -46,9 +45,6 @@ namespace Das.Views.Input
             if (_handledMouseDown != null && (action == InputAction.LeftMouseButtonUp ||
                                               action == InputAction.RightMouseButtonUp))
                 _handledMouseDown = null;
-
-            //if (action == InputAction.MouseDrag && handledBy == null)
-            //{}
 
             return handledBy !=null;
         }
@@ -143,8 +139,19 @@ namespace Das.Views.Input
                         element is IHandleInput<MouseDownEventArgs> leftDowner)
                     {
                         _handledMouseDown = leftDowner;
-                        if (element.CurrentVisualStateType.Contains(VisualStateType.Active))
-                            _mouseActiveElement = leftDowner;
+
+                        if (element is IInteractiveVisual iinteractive && iinteractive.IsActive)
+                        {
+                            if (_mouseActiveElement != iinteractive)
+                            {
+                                if (_mouseActiveElement is { } mae)
+                                    mae.IsActive = false;
+                                _mouseActiveElement = iinteractive;
+                            }
+                        }
+
+                        //if (element.CurrentVisualStateType.Contains(VisualStateType.Active))
+                        //    _mouseActiveElement = leftDowner;
                     }
 
                     break;
@@ -163,7 +170,6 @@ namespace Das.Views.Input
                         IsHandlesAction(element, InputAction.LeftClick) && 
                         element is IHandleInput<MouseClickEventArgs> clickMe)
                     {
-                        
                         // ReSharper disable once PatternNeverMatches - RS YOU'RE WRONG
                         if (margs is MouseUpEventArgs {IsValidForClick: false})
                             break;
@@ -174,8 +180,6 @@ namespace Das.Views.Input
                             //handles mouse up but didn't handle this one so don't give him the click
                             break;
                         }
-                        
-                        
 
                         var clickArgs = new MouseClickEventArgs(margs.Position,
                             MouseButtons.Left, 1, margs.InputContext);
@@ -368,7 +372,8 @@ namespace Das.Views.Input
         private IHandleInput<MouseDownEventArgs>? _handledMouseDown;
         private IVisualElement? _inputCapturingMouse;
         // ReSharper disable once NotAccessedField.Local
-        private IHandleInput<MouseDownEventArgs>? _mouseActiveElement;
+        //private IHandleInput<MouseDownEventArgs>? _mouseActiveElement;
+        private IInteractiveVisual? _mouseActiveElement;
         private IHandleInput<MouseOverEventArgs>? _lastMouseOverVisual;
         private IInputContext? _lastInputContext;
     }

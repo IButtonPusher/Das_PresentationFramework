@@ -30,12 +30,6 @@ namespace Das.Views.Construction.Styles
                     return new AndStyleSelector(selectors);
             }
 
-            //if (selectors.Count == 1)
-            //    return selectors[0];
-
-            
-
-            //return GetSelectorFromParts(selectors, combinator);
         }
 
         private void GetSelectorParts(IMarkupNode cssNode,
@@ -73,24 +67,20 @@ namespace Das.Views.Construction.Styles
 
                     case '>':
                         currentAndSelectors.Add(new CombinatorSelector(Combinator.Child));
-                        //combinators.Add(Combinator.Child);
                         break;
 
                     case '+':
                         currentAndSelectors.Add(new CombinatorSelector(Combinator.AdjacentSibling));
-                        //combinators.Add(Combinator.AdjacentSibling);
                         break;
 
                     case '~':
                         currentAndSelectors.Add(new CombinatorSelector(Combinator.AdjacentSibling));
-                        //combinators.Add(Combinator.GeneralSibling);
                         break;
 
                     case '|':
                         if (currentToken[1] == '|')
                         {
                             currentAndSelectors.Add(new CombinatorSelector(Combinator.Column));
-                            //combinators.Add(Combinator.Column);
                         }
 
                         break;
@@ -122,18 +112,12 @@ namespace Das.Views.Construction.Styles
 
                             // PSEUDO
                             // input:checked
-                            //var stateName = currentToken.Substring(colonIndex + 1);
                             var stateType = GetStateType(currentToken, colonIndex);
 
                             var visualStateSelector = new VisualStateSelector(typeSelector, stateType);
-                            //return visualStateSelector;
+                            
 
                             currentAndSelectors.Add(visualStateSelector);
-
-                            //var stateSelector = GetVisualStateSelector(stateName);
-                            //var typeAndStateSelector = new AndStyleSelector(typeSelector, stateSelector);
-                            //currentAndSelectors.Add(typeAndStateSelector);
-                            //currentAndSelectors.Add(stateSelector);
                         }
                         else
                         {
@@ -146,49 +130,6 @@ namespace Das.Views.Construction.Styles
             }
         }
 
-        //private IStyleSelector GetSelectorFromParts(List<IStyleSelector> selectors,
-        //                                        List<Combinator> combinators)
-        //{
-        //    if (selectors.Count == 1)
-        //        return selectors[0];
-
-        //    var resultSelector = selectors[0];
-        //    selectors.RemoveAt(0);
-
-        //    foreach (var combinator in combinators)
-        //    {
-        //        switch (combinator)
-        //        {
-        //            case Combinator.Child:
-        //                resultSelector = new ChildSelector(
-        //                    resultSelector, selectors[0]);
-        //                selectors.RemoveAt(0);
-                        
-        //                break;
-
-        //            case Combinator.AdjacentSibling:
-        //                resultSelector = new AdjacentSiblingSelector(
-        //                    resultSelector, selectors[0]);
-        //                selectors.RemoveAt(0);
-                        
-
-        //                break;
-        //        }
-        //    }
-
-        //    if (selectors.Count > 0)
-        //        throw new InvalidOperationException();
-
-        //    return resultSelector;
-           
-        //}
-
-        //private static IStyleSelector ThrowForWrongCount(Int32 needed,
-        //                                                 Combinator combinator)
-        //{
-        //    throw new InvalidOperationException(needed + " selectors are required for combinator: " 
-        //                                               + combinator);
-        //}
 
         private static IStyleSelector GetClassStyleSelector(String currentToken)
         {
@@ -196,19 +137,14 @@ namespace Das.Views.Construction.Styles
             if (colonIndex == -1)
                 return new ClassStyleSelector(currentToken);
 
-            //var andSelectors = new List<IStyleSelector>();
-
             var className = currentToken.Substring(0, colonIndex);
             var classSelector = new ClassStyleSelector(className);
-            //andSelectors.Add(new ClassStyleSelector(className));
+            
 
             var stateType = GetStateType(currentToken, colonIndex);
 
             var visualStateSelector = new VisualStateSelector(classSelector, stateType);
                 return visualStateSelector;
-                //andSelectors.Add(GetVisualStateSelector(stateName));
-
-                //return new AndStyleSelector(andSelectors);
         }
 
         private static VisualStateType GetStateType(String currentToken,
@@ -240,25 +176,6 @@ namespace Das.Views.Construction.Styles
 
             return result;
         }
-
-        //private static IStyleSelector GetVisualStateSelector(String stateText)
-        //{
-        //    var colonIndex = stateText.IndexOf(':');
-        //    if (colonIndex == -1)
-        //        return GetVisualStateSelectorImpl(stateText);
-
-        //    var tokens = stateText.Split(':');
-
-        //    return new AndStyleSelector(tokens.Select(GetVisualStateSelectorImpl));
-        //}
-
-        //private static VisualStateSelector GetVisualStateSelectorImpl(String stateText)
-        //{
-        //    if (!Enum.TryParse<VisualStateType>(stateText, true, out var stateType))
-        //        throw new NotImplementedException();
-
-        //    return new VisualStateSelector(stateType);
-        //}
 
         private IStyleSelector GetVisualTypeSelector(String currentToken)
         {

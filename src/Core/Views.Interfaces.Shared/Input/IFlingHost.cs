@@ -5,9 +5,13 @@ namespace Das.Views.Input
 {
     public interface IFlingHost
     {
-        Boolean CanFlingVertical { get; }
+        FlingMode VerticalFlingMode { get; }
 
-        Boolean CanFlingHorizontal { get; }
+        FlingMode HorizontalFlingMode { get; }
+
+        //Boolean CanFlingVertical { get; }
+
+        //Boolean CanFlingHorizontal { get; }
         
         Double CurrentX { get; }
         

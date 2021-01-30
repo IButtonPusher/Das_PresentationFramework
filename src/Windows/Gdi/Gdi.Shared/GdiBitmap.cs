@@ -114,6 +114,8 @@ namespace Gdi.Shared
             throw new NotImplementedException();
         }
 
+        public Int64 SizeInBytes => _stream?.Length ?? -1;
+
         public void UnwrapLocked<T>(Action<T> action)
         {
             lock (_unwrapLock)

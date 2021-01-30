@@ -14,13 +14,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Collections\AsyncObservableCollection2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\AsyncObservableCollectionBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\DoubleConcurrentDictionary.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Invocations\PollyAction.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Invocations\PollyFunc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InvokableViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ObservableRangeCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NotifyPropertyChangedBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SelectableCollection{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SelectableEnumCollection{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Selectable{T}.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Invocations\" />
   </ItemGroup>
 </Project>

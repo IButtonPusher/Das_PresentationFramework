@@ -9,10 +9,18 @@ namespace Das.Views
 {
     public interface IVisualBootstrapper : IPropertyProvider
     {
-        //IStyleContext StyleContext { get; }
         IColorPalette ColorPalette { get; }
 
         IUiProvider UiProvider { get; }
+
+        //IAppliedStyleBuilder StyleBuilder { get; }
+
+        /// <summary>
+        /// Sets Type-specific styles for the provided visual.  If a 'class' or 'style' is provided,
+        /// that isn't included here.
+        /// </summary>
+        /// <param name="visual"></param>
+        void ApplyCoreStyle(IVisualElement visual);
 
         ILayoutQueue LayoutQueue { get; }
 

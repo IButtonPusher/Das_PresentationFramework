@@ -30,7 +30,6 @@ namespace Das.Views.Styles.Selectors
         {
             // if we're filtering on a property of a visual then the whole filter has to be discareded
             return AllStyleSelector.Instance;
-            //return BaseSelector;
         }
 
         public override String ToString()

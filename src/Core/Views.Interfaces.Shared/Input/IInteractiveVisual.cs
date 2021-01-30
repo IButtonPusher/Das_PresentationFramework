@@ -9,7 +9,7 @@ namespace Das.Views
     {
         //InputAction HandlesActions { get; }
 
-        Boolean IsActive { get; }
+        Boolean IsActive { get; set; }
 
         Boolean IsFocused { get; }
 

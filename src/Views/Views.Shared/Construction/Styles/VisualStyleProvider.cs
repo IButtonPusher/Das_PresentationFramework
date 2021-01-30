@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using AsyncResults.ForEach;
+using Das.Container;
+using Das.ViewModels.Collections;
 using Das.Views.Colors;
 using Das.Views.Styles;
 
@@ -10,11 +13,27 @@ namespace Das.Views.Construction
 {
     public class VisualStyleProvider : IVisualStyleProvider
     {
+        [ContainerConstructor]
         public VisualStyleProvider(IStyleInflater styleInflater,
                                    IThemeProvider themeProvider)
+        : this(styleInflater, themeProvider, new Dictionary<Type, IEnumerable<IStyleRule>>())
+        {
+            
+        }
+
+        public VisualStyleProvider(IStyleInflater styleInflater,
+                                   IThemeProvider themeProvider,
+                                   IDictionary<Type, IEnumerable<IStyleRule>> visualTypeRules)
         {
             _styleInflater = styleInflater;
-            ThemeProvider = themeProvider;
+            _cachedTypeStyleRules = new ConcurrentDictionary<Type, HashSet<IStyleRule>>();
+            _visualTypeRules = new ConcurrentDictionary<Type, List<IStyleRule>>();
+            foreach (var kvpp in visualTypeRules)
+            {
+                _visualTypeRules[kvpp.Key] = new List<IStyleRule>(kvpp.Value);
+            }
+
+            _themeProvider = themeProvider;
 
             _lockStylesByClassName = new Object();
             _stylesByClassName = new Dictionary<String, HashSet<IStyleRule>>();
@@ -24,56 +43,93 @@ namespace Das.Views.Construction
 
             _resourcesLock = new Object();
             _resourcesRead = new HashSet<String>();
+
+            _typeClassStyles = new DoubleConcurrentDictionary<Type, String, IStyleSheet>();
+            _typeStyleStyles = new DoubleConcurrentDictionary<Type, String, IStyleSheet>();
         }
 
-        public async IAsyncEnumerable<IStyleRule> GetStylesByClassNameAsync(String className)
+        public async Task<IStyleSheet?> GetStyleForVisualAsync(IVisualElement visual,
+                                                               IAttributeDictionary attributeDictionary)
         {
-            lock (_lockStylesByClassName)
-            {
-                if (_stylesByClassName.TryGetValue(className, out var styles))
-                {
-                    foreach (var style in styles)
-                    {
-                        yield return style;
-                    }
+            if (TryGetExistingStyle(visual, out var existing))
+                return existing;
 
-                    yield break;
-                }
+            var typeStyles = BuildCoreTypeStyles(visual.GetType());
+
+            if (attributeDictionary.TryGetAttributeValue("class", out var className))
+            {
+                if (String.IsNullOrEmpty(className))
+                    return GetSheetFromRules(typeStyles);
+
+                var rules = await GetStylesByClassNameAsync(className).ToArrayAsync();
+
+                var res = new NamedStyle(className, rules);
+                return res;
             }
 
-            var thisExe = Assembly.GetExecutingAssembly();
-            var streamNames = thisExe.GetManifestResourceNames();
-
-            foreach (var name in streamNames)
+            if (attributeDictionary.TryGetAttributeValue("Style", out var styleName))
             {
-                if (!name.EndsWith(".css", StringComparison.OrdinalIgnoreCase))
-                    continue;
+                var rules = await GetStyleByNameAsync(styleName);
 
-                lock (_resourcesLock)
+                if (rules != null)
                 {
-                    if (!_resourcesRead.Add(name))
-                        continue;
+                    if (typeStyles.Count > 0)
+                        return rules.AddDefaultRules(typeStyles);
+
+                    return rules;
                 }
 
-                var resourceStyles = await _styleInflater.InflateResourceCssAsync(name).ConfigureAwait(false);
-
-                if (resourceStyles == null)
-                    continue;
-
-                foreach (var rule in resourceStyles.Rules)
-                {
-                    if (!rule.Selector.TryGetClassName(out var selectorClassName))
-                        continue;
-
-                    TryAddRuleByClassName(selectorClassName, rule);
-
-                    if (String.Equals(selectorClassName, className))
-                        yield return rule;
-                }
+                //return await GetStyleByNameAsync(styleName);
             }
+
+            return GetSheetFromRules(typeStyles);
         }
 
-        public IThemeProvider ThemeProvider { get; }
+        private static Boolean TryGetExistingStyle(IVisualElement visual,
+                                                   out IStyleSheet existing)
+        {
+            if (visual.Style is { } appliedStyle && appliedStyle.StyleTemplate is { } styleSheet)
+            {
+                // visual's style already populated.  Probably shouldn't be here but seems no harm for now...
+                existing = styleSheet;
+                return true;
+            }
+
+            existing = default!;
+            return false;
+        }
+
+        public IStyleSheet? GetCoreStyleForVisual(IVisualElement visual)
+        {
+            if (TryGetExistingStyle(visual, out var existing))
+                return existing;
+
+            var typeStyles = BuildCoreTypeStyles(visual.GetType());
+            return GetSheetFromRules(typeStyles);
+        }
+
+        private static IStyleSheet? GetSheetFromRules(IEnumerable<IStyleRule> rules)
+        {
+            var ruleItems = new List<IStyleRule>(rules);
+            if (ruleItems.Count == 0)
+                return default;
+
+            return new StyleSheet(ruleItems);
+        }
+
+        private HashSet<IStyleRule> BuildCoreTypeStyles(Type type)
+        {
+            var typeStyles = new HashSet<IStyleRule>();
+            var currentType = type;
+            do
+            {
+                AddTypeStyles(currentType, typeStyles);
+                currentType = currentType.BaseType;
+            } while (currentType != null &&
+                     typeof(IVisualElement).IsAssignableFrom(currentType));
+
+            return typeStyles;
+        }
 
         public async Task<IStyleSheet?> GetStyleByNameAsync(String name)
         {
@@ -123,28 +179,67 @@ namespace Das.Views.Construction
             return default;
         }
 
-        public async Task<IStyleSheet?> GetStyleForVisualAsync(IVisualElement visual,
-                                                               IAttributeDictionary attributeDictionary)
+        private void AddTypeStyles(Type type,
+                                   HashSet<IStyleRule> rules)
         {
-            if (visual.Style is { } appliedStyle && appliedStyle.StyleTemplate is { } styleSheet)
-                return styleSheet;
+            if (!_visualTypeRules.TryGetValue(type, out var typeRules))
+                return;
 
-            if (attributeDictionary.TryGetAttributeValue("class", out var className))
+            foreach (var rule in typeRules)
             {
-                if (String.IsNullOrEmpty(className))
-                    return default;
+                if (!rules.Contains(rule))
+                    rules.Add(rule);
+            }
+        }
 
-                var rules = await GetStylesByClassNameAsync(className).ToArrayAsync();
 
-                var res = new NamedStyle(className, rules);
-                return res;
+        private async IAsyncEnumerable<IStyleRule> GetStylesByClassNameAsync(String className)
+        {
+            lock (_lockStylesByClassName)
+            {
+                if (_stylesByClassName.TryGetValue(className, out var styles))
+                {
+                    foreach (var style in styles)
+                    {
+                        yield return style;
+                    }
+
+                    yield break;
+                }
             }
 
-            if (attributeDictionary.TryGetAttributeValue("Style", out var styleName))
-                return await GetStyleByNameAsync(styleName);
+            var thisExe = Assembly.GetExecutingAssembly();
+            var streamNames = thisExe.GetManifestResourceNames();
 
-            return default;
+            foreach (var name in streamNames)
+            {
+                if (!name.EndsWith(".css", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                lock (_resourcesLock)
+                {
+                    if (!_resourcesRead.Add(name))
+                        continue;
+                }
+
+                var resourceStyles = await _styleInflater.InflateResourceCssAsync(name).ConfigureAwait(false);
+
+                if (resourceStyles == null)
+                    continue;
+
+                foreach (var rule in resourceStyles.Rules)
+                {
+                    if (!rule.Selector.TryGetClassName(out var selectorClassName))
+                        continue;
+
+                    TryAddRuleByClassName(selectorClassName, rule);
+
+                    if (String.Equals(selectorClassName, className))
+                        yield return rule;
+                }
+            }
         }
+
 
         private void TryAddRuleByClassName(String className,
                                            IStyleRule rule)
@@ -167,9 +262,19 @@ namespace Das.Views.Construction
         private readonly Object _resourcesLock;
 
         private readonly HashSet<String> _resourcesRead;
+        private readonly ConcurrentDictionary<Type, HashSet<IStyleRule>> _cachedTypeStyleRules;
 
         private readonly IStyleInflater _styleInflater;
         private readonly Dictionary<String, HashSet<IStyleRule>> _stylesByClassName;
         private readonly Dictionary<String, IStyleSheet?> _stylesByName;
+        private readonly DoubleConcurrentDictionary<Type, String, IStyleSheet> _typeClassStyles;
+        private readonly DoubleConcurrentDictionary<Type, String, IStyleSheet> _typeStyleStyles;
+        
+        /// <summary>
+        /// specific to a type, no type inheritance factored in
+        /// </summary>
+        private readonly IDictionary<Type, List<IStyleRule>> _visualTypeRules;
+
+        private IThemeProvider _themeProvider;
     }
 }

@@ -70,11 +70,12 @@ namespace ViewCompiler
 
         public IEnumerable<Tuple<IStyle, IVisualElement>> GetStyles(ITextNode node)
         {
-            if (node.Attributes.TryGetValue(nameof(Style), out var styleName))
+            //if (node.Attributes.TryGetValue(nameof(Style), out var styleName))
+            if (node.TryGetAttribute(nameof(Style), false, out var styleName))
                 switch (node.Value)
                 {
                     case IVisualElement visualElement:
-                        if (TryGetElementStyle(visualElement, styleName, out var found))
+                        if (TryGetElementStyle(visualElement, styleName.Value, out var found))
                             yield return new Tuple<IStyle, IVisualElement>(found, visualElement);
                         break;
                     default:

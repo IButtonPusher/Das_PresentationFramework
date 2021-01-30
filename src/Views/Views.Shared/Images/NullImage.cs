@@ -24,46 +24,11 @@ namespace Das.Views.Images
             return other.IsEmpty;
         }
 
-        //public ISize DeepCopy()
-        //{
-        //    return ValueSize.Empty;
-        //}
-
         public Double Height => 0;
 
         public Boolean IsEmpty => true;
 
         public Double Width => 0;
-
-        //public ISize Minus(ISize subtract)
-        //{
-        //    return new ValueSize(0 - subtract.Width, 0 - subtract.Height);
-        //}
-
-        //public ISize Divide(Double pct)
-        //{
-        //    return GeometryHelper.Divide(ValueSize.Empty, pct);
-        //}
-
-        //public ISize PlusVertical(ISize adding)
-        //{
-        //    return GeometryHelper.PlusVertical(ValueSize.Empty, adding);
-        //}
-
-        //public ISize Reduce(Thickness padding)
-        //{
-        //    return GeometryHelper.Reduce(ValueSize.Empty, padding);
-        //}
-
-        //public Double CenterY(ISize item)
-        //{
-        //    return GeometryHelper.CenterY(ValueSize.Empty, item);
-        //}
-
-        //public Double CenterX(ISize item)
-        //{
-        //    return GeometryHelper.CenterX(ValueSize.Empty, item);
-        //}
 
         public void Dispose()
         {
@@ -106,6 +71,8 @@ namespace Das.Views.Images
         {
             throw new NotSupportedException();
         }
+
+        public Int64 SizeInBytes => 0;
 
         void IImage.UnwrapLocked<T>(Action<T> action)
         {

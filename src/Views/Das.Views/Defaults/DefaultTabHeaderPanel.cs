@@ -70,8 +70,6 @@ namespace Das.Views.Defaults
         public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
         {
-            //_lastStyleContext = renderContext;
-
             // SCROLL PANEL
             var tabPageRect = new ValueRenderRectangle(
                 tabsLeft, 0,
@@ -83,7 +81,7 @@ namespace Das.Views.Defaults
             // BOTTOM SEPARATOR
             var separatorRect = new ValueRenderRectangle(
                 /* X */ tabsLeft,
-                /* Y */ _tabsUsed.Height + SEPARATOR_GAP_TOP,
+                /* Y */ _tabsUsed.Height, //+ SEPARATOR_GAP_TOP,
                 /* W */ _tabsUsed.Width,
                 /* H */ SEPARATOR_LINE_HEIGHT,
                 availableSpace.Offset);
@@ -106,7 +104,7 @@ namespace Das.Views.Defaults
 
                 var indicatorRect = new ValueRenderRectangle(
                     0 - _scrollPanel.HorizontalOffset,
-                    availableSpace.Height - (SEPARATOR_GAP_BOTTOM + INDICATOR_LINE_HEIGHT),
+                    availableSpace.Height - (/*SEPARATOR_GAP_BOTTOM +*/ INDICATOR_LINE_HEIGHT),
                     _indicatord,
                     indicatorOffset);
 
@@ -117,8 +115,6 @@ namespace Das.Views.Defaults
         public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
         {
-            //_lastStyleContext = measureContext;
-
             if (!(_itemsControl is { } valid) ||
                 !(valid.ItemsSource is { }))
                 return base.Measure(availableSpace, measureContext);
@@ -140,9 +136,9 @@ namespace Das.Views.Defaults
 
 
             return new ValueSize(_tabsUsed.Width, _tabsUsed.Height +
-                                                  INDICATOR_LINE_HEIGHT +
+                                                  INDICATOR_LINE_HEIGHT /*+
                                                   SEPARATOR_GAP_TOP +
-                                                  SEPARATOR_GAP_BOTTOM);
+                                                  SEPARATOR_GAP_BOTTOM*/);
         }
 
         private Boolean MoveIndicatorRect()
@@ -152,20 +148,13 @@ namespace Das.Views.Defaults
 
             var pos = valid.ArrangedBounds;
 
-            //if (!(_itemsControl.SelectedTab is { } valid) ||
-            //    !(_lastElementLocator?.TryGetLastRenderBounds(valid) is { } pos))
-            //    return false;
-
             _indicatorRect = new Rectangle(pos.Left + _scrollPanel.HorizontalOffset, 0, pos.Size);
-
-            //if (!(_lastStyleContext is { })) 
-            //    return false;
 
             _indicator.SuspendLayout();
             _indicator.Margin = new QuantifiedThickness(pos.Left + _scrollPanel.HorizontalOffset,
                 0, 0, 0);
             _indicator.ResumeLayout();
-            System.Diagnostics.Debug.WriteLine("setting indicator width to: " + pos.Width); 
+            //System.Diagnostics.Debug.WriteLine("setting indicator width to: " + pos.Width); 
             _indicator.Width = pos.Width;
 
           
@@ -189,8 +178,8 @@ namespace Das.Views.Defaults
 
         private const Int32 SEPARATOR_LINE_HEIGHT = 1;
         private const Int32 INDICATOR_LINE_HEIGHT = 3;
-        private const Int32 SEPARATOR_GAP_TOP = 10;
-        private const Int32 SEPARATOR_GAP_BOTTOM = 5;
+        //private const Int32 SEPARATOR_GAP_TOP = 10;
+        //private const Int32 SEPARATOR_GAP_BOTTOM = 5;
         private readonly HorizontalRule _indicator;
 
         private readonly ITabControl _itemsControl;

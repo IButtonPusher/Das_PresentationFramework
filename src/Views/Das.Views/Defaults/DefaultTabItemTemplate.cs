@@ -1,6 +1,7 @@
 ﻿using System;
 using Das.Views.Controls;
 using Das.Views.Core.Enums;
+using Das.Views.Core.Geometry;
 
 namespace Das.Views.Defaults
 {
@@ -24,11 +25,19 @@ namespace Das.Views.Defaults
 
         public override IVisualElement BuildVisual(Object? dataContext)
         {
-            var btn = new ToggleButton(_visualBootstrapper)
-            {
-                FontSize = 15,
-                DataContext = dataContext
-            };
+            var btn = _visualBootstrapper.Instantiate<ToggleButton>();
+            //_visualBootstrapper.StyleBuilder.ApplyVisualCoreStyles(btn, _visualBootstrapper);
+            _visualBootstrapper.ApplyCoreStyle(btn);
+            btn.FontSize = 15;
+            btn.Background = null;
+            btn.DataContext = dataContext;
+            btn.Padding = new QuantifiedThickness(5, 10, 5, 10);
+
+            //var btn = new ToggleButton(_visualBootstrapper)
+            //{
+            //    FontSize = 15,
+            //    DataContext = dataContext
+            //};
 
 
 

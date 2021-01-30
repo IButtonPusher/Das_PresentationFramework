@@ -88,6 +88,8 @@ namespace Das.Xamarin.Android
             throw new NotImplementedException();
         }
 
+        public Int64 SizeInBytes => _stream?.Length ?? -1;
+
         //ISize ISize.Divide(Double pct)
         //{
         //    return GeometryHelper.Divide(this, pct);

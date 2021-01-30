@@ -11,12 +11,27 @@ namespace Das.Views.Styles.Transitions
 {
     public abstract class BaseTransition
     {
-        public BaseTransition(TimeSpan duration,
-                              TimeSpan delay)
+        protected BaseTransition(TimeSpan duration,
+                                 TimeSpan delay,
+                                 Easing easing)
         {
             _duration = duration;
             _delay = delay;
-            
+
+            switch (easing)
+            {
+                case Easing.QuadraticOut:
+                    _getCurrentPercent = EaseOutQuadratic;
+                    break;
+
+                case Easing.QuintOut:
+                    _getCurrentPercent = EaseOutQuint;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(easing), easing, null);
+            }
+
         }
 
         public virtual void Start(CancellationToken cancel)
@@ -29,25 +44,17 @@ namespace Das.Views.Styles.Transitions
             return 1 - (1 - pctComplete) * (1 - pctComplete);
         }
 
-
-        protected static Double GetEaseOut(Double pctComplete)
+        protected static Double EaseOutQuint(Double pctComplete)
         {
             return 1 - Math.Pow(1.0 - pctComplete, 5);
         }
 
 
-        //protected static Double GetNextValue(Double pctComplete,
-        //                                     Easing easing)
+        //protected static Double GetEaseOut(Double pctComplete)
         //{
-        //    switch (easing)
-        //    {
-        //        case Easing.QuadraticOut:
-        //            return GetEaseOut(pctComplete);
-
-        //        default:
-        //            throw new ArgumentOutOfRangeException(nameof(easing), easing, null);
-        //    }
+        //    return 1 - Math.Pow(1.0 - pctComplete, 5);
         //}
+
 
         protected virtual void OnFinished(Boolean wasCancelled)
         {
@@ -70,7 +77,8 @@ namespace Das.Views.Styles.Transitions
                 var runningPct = Math.Min(
                     running.ElapsedMilliseconds / _duration.TotalMilliseconds, 1);
 
-                runningPct = EaseOutQuadratic(runningPct);
+                //runningPct = EaseOutQuadratic(runningPct);
+                runningPct = _getCurrentPercent(runningPct);
 
                 OnUpdate(runningPct);
 
@@ -78,11 +86,12 @@ namespace Das.Views.Styles.Transitions
                     break;
             }
 
-            OnFinished(!cancel.IsCancellationRequested);
+            OnFinished(cancel.IsCancellationRequested);
         }
 
         private const Int32 SIXTY_FPS = 1000 / 60;
         private readonly TimeSpan _delay;
         private readonly TimeSpan _duration;
+        private readonly Func<Double, Double> _getCurrentPercent;
     }
 }

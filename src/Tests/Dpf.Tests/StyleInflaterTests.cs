@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Dpf.Tests
 {
-    public class StyleInflaterTests
+    public class StyleInflaterTests : TestBase
     {
         [Fact]
         public void ParseMaterialSwitchCss()
@@ -54,8 +54,10 @@ namespace Dpf.Tests
         {
             //var xml = GetResourceContents("abc");
             
-            var inflater = new DefaultStyleInflater(Serializer.TypeInferrer);
-            var provider = new VisualStyleProvider(inflater, new TestThemeProvider());
+            var inflater = new DefaultStyleInflater(Serializer.TypeInferrer,
+                new StyleVariableAccessor(BaselineThemeProvider.Instance.ColorPalette));
+            var provider = new VisualStyleProvider(inflater, new TestThemeProvider(),
+                new ConcurrentDictionary<Type, IEnumerable<IStyleRule>>());
 
             var bob = provider.GetStyleByNameAsync("mat-toggle-button").Result;
 
@@ -71,14 +73,6 @@ namespace Dpf.Tests
 
         private static readonly DasSerializer Serializer = new DasSerializer();
 
-        private static String GetFileContents(String fileName)
-        {
-            var fullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                "Files",
-                fileName);
-
-            return File.ReadAllText(fullName);
-
-        }
+       
     }
 }

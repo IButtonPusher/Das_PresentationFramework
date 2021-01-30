@@ -38,8 +38,7 @@ namespace Das.Views.Controls
                         availableSpace.Offset);
                 }
 
-            var rect = new Rectangle(Point2D.Empty, availableSpace);
-            //var zoom = renderContext.ViewState?.ZoomLevel ?? 1;
+            var rect = new ValueRectangle(ValuePoint2D.Empty, availableSpace);
 
             renderContext.DrawImage(img, rect);
         }
@@ -69,29 +68,12 @@ namespace Das.Views.Controls
         public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
         {
-            //var zoom = measureContext.ViewState?.ZoomLevel ?? 1;
-
-            //if (!(DataContext is {} dc))
-            //    return Size.Empty;
-
-            
             if (!(Image is {} currentImage))
                 return ValueSize.Empty;
             var size = measureContext.MeasureImage(currentImage);
-            
-            //_currentImage = Image ??  GetBoundValue(DataContext!);
-            //if (_currentImage == null || _currentImage.IsEmpty)
-            //    return ValueSize.Empty;
-            
-            //var size = measureContext.MeasureImage(_currentImage);
-            //var forced = measureContext.GetStyleSetter<Size>(StyleSetter.Size, this)
-            //             * zoom;
-            //if (forced != null && !Size.Empty.Equals(forced))
-            //    return size;
 
-
-            var width = Width ?? Double.NaN; //measureContext.GetStyleSetter<Double>(StyleSetterType.Width, this);// * zoom;
-            var height = Height ?? Double.NaN; //measureContext.GetStyleSetter<Double>(StyleSetterType.Height, this);// * zoom;
+            var width = Width ?? Double.NaN; 
+            var height = Height ?? Double.NaN;
 
             if (!Double.IsNaN(width) && !Double.IsNaN(height))
                 return new ValueSize(width, height);

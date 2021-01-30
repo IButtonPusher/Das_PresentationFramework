@@ -63,7 +63,6 @@ namespace Das.Views.Construction
 
             var res = await GetVisualAsync(node, null, nsAsmSearch, lineage,
                 _appliedStyleBuilder.ApplyVisualStylesAsync).ConfigureAwait(false);
-                //_styledVisualBuilder.ApplyStylesToVisualAsync).ConfigureAwait(false);
 
             Debug.WriteLine("Inflated visual in " + sw.ElapsedMilliseconds + " ms");
 

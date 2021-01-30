@@ -7,6 +7,7 @@ using Das.Views.Construction.Styles;
 using Das.Views.Controls;
 using Das.Views.DataBinding;
 using Das.Views.Input;
+using Das.Views.Layout;
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles.Application;
@@ -30,24 +31,27 @@ namespace Das.Views.Styles
 
         public IAppliedStyle? BuildAppliedStyle(IStyleSheet style,
                                                 IVisualElement visual,
-                                                IVisualLineage visualLineage)
+                                                IVisualLineage visualLineage,
+                                                IVisualBootstrapper visualBootstrapper)
         {
             var appliedStyle = new AppliedStyle(style);
 
             foreach (var rule in style.Rules)
             {
-                var appliedRule = BuildAppliedRule(appliedStyle, rule, visual, visualLineage);
+                var appliedRule = BuildAppliedRule(appliedStyle, rule, visual, visualLineage,
+                    visualBootstrapper);
                 if (appliedRule == null)
                     continue;
 
-                appliedStyle.AppliedRules.Add(appliedRule);
+                appliedStyle.AddAppliedRule(appliedRule);
             }
 
             appliedStyle.EnsureInverseForFilteredSelectors();
 
             TrySetVisualStyle(visual, appliedStyle);
 
-            if (appliedStyle.AppliedRules.Count == 0)
+            //if (appliedStyle._appliedRules.Count == 0)
+            if (!appliedStyle.HasAppliedRules)
                 return default;
 
             return appliedStyle;
@@ -55,7 +59,8 @@ namespace Das.Views.Styles
 
         public async Task ApplyVisualStylesAsync(IVisualElement visual, 
                                                  IAttributeDictionary attributeDictionary,
-                                                 IVisualLineage visualLineage)
+                                                 IVisualLineage visualLineage,
+                                                 IVisualBootstrapper visualBootstrapper)
         {
             var useStyle = await _styleProvider.GetStyleForVisualAsync(visual, attributeDictionary);
             if (useStyle == null)
@@ -63,7 +68,7 @@ namespace Das.Views.Styles
 
             TrySetVisualClass(visual, attributeDictionary);
 
-            var appliedStyle = BuildAppliedStyle(useStyle, visual, visualLineage);
+            var appliedStyle = BuildAppliedStyle(useStyle, visual, visualLineage, visualBootstrapper);
 
             if (appliedStyle != null)
             {
@@ -75,7 +80,8 @@ namespace Das.Views.Styles
         private async Task EnsureStyleVisualTemplates(IVisualElement visual,
             IStyleSheet style,
             IViewInflater viewInflater,
-            IVisualLineage visualLineage)
+            IVisualLineage visualLineage,
+            IVisualBootstrapper visualBootstrapper)
         {
             if (!TryGetVisualTemplate(style, out var visualTemplate) ||
                 !(visualTemplate is DeferredVisualTemplate deferred))
@@ -97,7 +103,7 @@ namespace Das.Views.Styles
 
             visualLineage.AssertPopVisual(contentVisual);
 
-            BuildAppliedStyle(style, visual, visualLineage);
+            BuildAppliedStyle(style, visual, visualLineage, visualBootstrapper);
         }
 
         private static Boolean TryGetVisualTemplate(IStyleSheet style,
@@ -123,25 +129,42 @@ namespace Das.Views.Styles
         public async Task ApplyVisualStylesAsync(IVisualElement visual,
                                                  IAttributeDictionary attributeDictionary,
                                                  IVisualLineage visualLineage,
-                                                 IViewInflater viewInflater)
+                                                 IViewInflater viewInflater,
+                                                 IVisualBootstrapper visualBootstrapper)
         {
             var useStyle = await _styleProvider.GetStyleForVisualAsync(visual, attributeDictionary);
             if (useStyle == null)
                 return;
 
-            await EnsureStyleVisualTemplates(visual, useStyle, viewInflater, visualLineage);
+            await EnsureStyleVisualTemplates(visual, useStyle, viewInflater, 
+                visualLineage, visualBootstrapper);
 
             TrySetVisualClass(visual, attributeDictionary);
 
-            var appliedStyle = BuildAppliedStyle(useStyle, visual, visualLineage);
+            var appliedStyle = BuildAppliedStyle(useStyle, visual, visualLineage, visualBootstrapper);
 
             if (appliedStyle != null)
             {
                 TrySetVisualStyle(visual, appliedStyle);
                 appliedStyle.Execute(false);
             }
+        }
 
-            //return ApplyVisualStylesAsync(visual, attributeDictionary, visualLineage);
+        public void ApplyVisualCoreStyles(IVisualElement visual,
+                                          IVisualBootstrapper visualBootstrapper)
+        {
+            var useStyle = _styleProvider.GetCoreStyleForVisual(visual);
+            if (useStyle == null)
+                return;
+            
+            var visualLineage = new VisualLineage();
+            var appliedStyle = BuildAppliedStyle(useStyle, visual, visualLineage, visualBootstrapper);
+
+            if (appliedStyle != null)
+            {
+                TrySetVisualStyle(visual, appliedStyle);
+                appliedStyle.Execute(false);
+            }
         }
 
         public IVisualStyleProvider StyleProvider { get; }
@@ -149,7 +172,8 @@ namespace Das.Views.Styles
         private AppliedStyleRule? BuildAppliedRule(AppliedStyle appliedStyle,
                                                    IStyleRule rule,
                                                    IVisualElement rootVisual,
-                                                   IVisualLineage visualLineage)
+                                                   IVisualLineage visualLineage,
+                                                   IVisualBootstrapper visualBootstrapper)
         {
             var appliedRule = new AppliedStyleRule(rule);
 
@@ -157,7 +181,7 @@ namespace Das.Views.Styles
                 rootVisual, rule.Selector, visualLineage))
             {
                 var assignments = _declarationWorker.BuildStyleValueAssignments(
-                    appliesTo, visualLineage, rule);
+                    appliesTo, visualLineage, rule, visualBootstrapper);
 
                 foreach (var valueAssignment in assignments)
                     appliedRule.Assignments.Add(valueAssignment);
@@ -199,11 +223,44 @@ namespace Das.Views.Styles
 
                     break;
 
+                case VisualStateSelector stateSelector:
+                    if (IsVisualSelectable(appliedStyle, appliedRule, rootVisual,
+                        stateSelector, visualLineage))
+                        yield return rootVisual;
+                    break;
+
                 default:
                     if (IsVisualSelectable(rootVisual, selector, visualLineage))
                         yield return rootVisual;
                     break;
             }
+        }
+
+        private static Boolean IsVisualSelectable(AppliedStyle appliedStyle,
+                                                  AppliedStyleRule appliedRule,
+                                                  IVisualElement currentVisual,
+                                                  VisualStateSelector stateSelector,
+                                                  IVisualLineage visualLineage)
+        {
+            if (!IsVisualSelectable(currentVisual,
+                stateSelector.BaseSelector, visualLineage))
+                return false;
+
+            foreach (var stateType in GetStateTypes(stateSelector.StateType))
+            {
+                if (!TryGetStateFilterItems(stateType, currentVisual,
+                    out var dependencyProperty, out var value))
+                    continue;
+
+                appliedStyle.MonitorPropertyChange(dependencyProperty, currentVisual);
+
+                var condition = new AppliedStyleCondition(currentVisual, dependencyProperty,
+                    value!.Value);
+
+                appliedRule.Conditions.Add(condition);
+            }
+
+            return true;
         }
 
         private static IEnumerable<IVisualElement> GetSelectableVisualsImpl(AppliedStyle appliedStyle,
@@ -283,25 +340,30 @@ namespace Das.Views.Styles
 
                     case VisualStateSelector stateSelector:
 
-                        if (!IsVisualSelectable(currentVisual, stateSelector.BaseSelector, visualLineage))
+                        if (!IsVisualSelectable(appliedStyle, appliedRule, currentVisual,
+                                stateSelector, visualLineage))
                             yield break;
 
-                        foreach (var stateType in GetStateTypes(stateSelector.StateType))
-                        {
-                            if (!TryGetStateFilterItems(stateType, currentVisual,
-                                out var dependencyProperty, out var value))
-                                continue;
+                        //if (!IsVisualSelectable(appliedStyle, currentVisual, 
+                        //    stateSelector.BaseSelector, visualLineage))
+                        //    yield break;
 
-                            appliedStyle.MonitorPropertyChange(dependencyProperty, currentVisual);
+                        //foreach (var stateType in GetStateTypes(stateSelector.StateType))
+                        //{
+                        //    if (!TryGetStateFilterItems(stateType, currentVisual,
+                        //        out var dependencyProperty, out var value))
+                        //        continue;
 
-                            //dependencyProperty.AddOnChangedHandler(currentVisual,
-                            //    d => appliedStyle.Execute());
+                        //    appliedStyle.MonitorPropertyChange(dependencyProperty, currentVisual);
 
-                            var condition = new AppliedStyleCondition(currentVisual, dependencyProperty,
-                                value!.Value);
+                        //    //dependencyProperty.AddOnChangedHandler(currentVisual,
+                        //    //    d => appliedStyle.Execute());
 
-                            appliedRule.Conditions.Add(condition);
-                        }
+                        //    var condition = new AppliedStyleCondition(currentVisual, dependencyProperty,
+                        //        value!.Value);
+
+                        //    appliedRule.Conditions.Add(condition);
+                        //}
 
                         goto default;
 
@@ -353,7 +415,11 @@ namespace Das.Views.Styles
                     return res;
 
                 case DependencyPropertySelector _:
-                    return false;
+                    return true;
+                    //visual.TryGetDependencyProperty(depSel.)
+                    //depSel.Property
+
+                    //return false;
 
                 case ClassStyleSelector classSelector:
 
@@ -362,10 +428,8 @@ namespace Das.Views.Styles
                     return className == classSelector.ClassName;
 
                 case ContentAppenderSelector contentAppender:
-                    var res2 = IsVisualSelectable(visual, contentAppender.TypeSelector, visualLineage);
-                    if (res2)
-                    {
-                    }
+                    var res2 = IsVisualSelectable(visual, 
+                        contentAppender.TypeSelector, visualLineage);
 
                     return res2;
 
@@ -374,6 +438,9 @@ namespace Das.Views.Styles
                     // with a type selector (presumably...)
                     return IsVisualSelectable(visual, stateSelector.BaseSelector, visualLineage);
 
+
+                case AllStyleSelector _:
+                    return true;
 
                 default:
                     throw new NotImplementedException();
@@ -451,7 +518,6 @@ namespace Das.Views.Styles
                     nameof(IVisualElement.Class));
                 if (propAccessor.CanWrite)
                 {
-                    //Object oVisual = visual;
                     propAccessor.SetPropertyValue(ref visual, className);
                 }
             }
@@ -464,7 +530,6 @@ namespace Das.Views.Styles
                 nameof(IVisualElement.Style));
             if (propAccessor.CanWrite)
             {
-                //Object oVisual = visual;
                 propAccessor.SetPropertyValue(ref visual, styleSheet);
             }
         }

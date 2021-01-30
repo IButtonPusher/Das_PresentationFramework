@@ -6,6 +6,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+// ReSharper disable All
 
 namespace Microsoft.Runtime.CompilerServices
 {

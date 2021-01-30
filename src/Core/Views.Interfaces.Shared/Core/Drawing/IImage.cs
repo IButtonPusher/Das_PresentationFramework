@@ -5,12 +5,12 @@ using Das.Views.Core.Geometry;
 
 namespace Das.Views.Core.Drawing
 {
-    public interface IImage : ISize, 
+    public interface IImage : ISize,
                               IDisposable
     {
-        Boolean IsNullImage { get; }
-
         Boolean IsDisposed { get; }
+
+        Boolean IsNullImage { get; }
 
         Task SaveAsync(FileInfo path);
 
@@ -25,6 +25,7 @@ namespace Das.Views.Core.Drawing
         void UnwrapLocked<T>(Action<T> action);
 
         Task<TResult> UseImage<TImage, TParam, TResult>(
-            TParam param1, Func<TImage, TParam, TResult> action);
+            TParam param1,
+            Func<TImage, TParam, TResult> action);
     }
 }

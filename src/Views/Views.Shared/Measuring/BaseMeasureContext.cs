@@ -140,23 +140,18 @@ namespace Das.Views.Measuring
             }
         }
 
-      
+
 
         private ValueSize MeasureElementImpl<TRenderSize>(IVisualElement element,
-                                             TRenderSize availableSpace)
-        where TRenderSize : IRenderSize
+                                                          TRenderSize availableSpace)
+            where TRenderSize : IRenderSize
         {
             if (element.Visibility == Visibility.Collapsed)
                 return ValueSize.Empty;
 
-            //var styles = ViewState.StyleContext;
-
-
             var margin = element.Margin.GetValue(availableSpace);
             var border = element.Border;
             var borderThickness = border.GetThickness(availableSpace);
-            //var border = styles.GetStyleSetter<Thickness>(StyleSetterType.BorderThickness, element,
-            //    VisualLineage);
 
             ValueSize desiredSize;
             Double extraWidth;
@@ -169,7 +164,7 @@ namespace Das.Views.Measuring
                 extraWidth = 0;
                 extraHeight = 0;
             }
-            
+
             else
             {
                 extraWidth = margin.Width + borderThickness.Width;
@@ -212,7 +207,7 @@ namespace Das.Views.Measuring
 
             var useHeight = desiredSize.Height;
             var useWidth = desiredSize.Width;
-            
+
 
             if (element.BeforeLabel is { } beforeLabel)
             {

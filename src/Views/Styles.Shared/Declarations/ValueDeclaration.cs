@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 namespace Das.Views.Styles.Declarations
 {
-    public abstract class ValueDeclaration<T> : DeclarationBase,
+    public class ValueDeclaration<T> : DeclarationBase,
                                                 IStyleValueDeclaration<T>
     {
-        protected ValueDeclaration(T value,
+        public ValueDeclaration(T value,
                                    IStyleVariableAccessor variableAccessor,
                                    DeclarationProperty property)
             : base(variableAccessor, property)

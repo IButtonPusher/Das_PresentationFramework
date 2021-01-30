@@ -63,6 +63,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\ValueDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\VerticalAlignDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Declarations\VerticalAlignType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DefaultStyles\BasePrimitiveStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyPropertyValueRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Functions\FunctionBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Functions\IFunction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Functions\LiteralFunction.cs" />

@@ -15,6 +15,11 @@ using Das.Xamarin.Android.Input;
 
 namespace Das.Xamarin.Android
 {
+    /// <summary>
+    /// ViewGroup that contains the AndroidPaintView for 'normal' visuals as well as surrogated visuals,
+    /// when applicable
+    /// </summary>
+    /// <see cref="AndroidPaintView"/>
     public class AndroidView : ViewGroup
     {
         // ReSharper disable once UnusedMember.Global
@@ -26,7 +31,6 @@ namespace Das.Xamarin.Android
             : this(view, context,
                 BuildRenderKit(context, windowManager, uiProvider,
                     themeProvider),
-                    //new BaseStyleContext(DefaultStyle.Instance, new DefaultColorPalette())),
                 uiProvider)
         {
         }
@@ -56,12 +60,17 @@ namespace Das.Xamarin.Android
             //                                   renderKit.DisplayMetrics.ScaledDensity);
 
             _paintView = new AndroidPaintView(context, renderKit, view);
-            // ReSharper disable once VirtualMemberCallInConstructor
+            
             AddView(_paintView);
 
             var inputHandler = new BaseInputHandler(RenderKit.RenderContext);
 
             _inputContext = new AndroidInputContext(this, context, inputHandler, _viewState);
+        }
+
+        public sealed override void AddView(View? child)
+        {
+            base.AddView(child);
         }
 
         public Double ZoomLevel { get; }
@@ -90,8 +99,14 @@ namespace Das.Xamarin.Android
             var hasSurrogates = ChildCount > 1;
 
             if (hasSurrogates)
+            {
                 RenderKit.RefreshRenderContext.DrawMainElement(_view,
                     new ValueRectangle(0, 0, _targetRect.Width, _targetRect.Height), _viewState);
+                _view.InvalidateArrange();
+            }
+
+            //WriteLine("AndroidView->OnLayout surrogates: " + hasSurrogates +
+            //          " view needs arrange: " + _view.IsRequiresArrange);
 
             var count = ChildCount;
             for (var c = 0; c < count; c++)
@@ -99,7 +114,10 @@ namespace Das.Xamarin.Android
                 var current = GetChildAt(c);
 
                 if (current == null)
+                {
+                    //WriteLine("Current child is null!");
                     continue;
+                }
 
                 if (hasSurrogates && current is IVisualSurrogate surrogate)
                 {
@@ -114,8 +132,22 @@ namespace Das.Xamarin.Android
                 }
 
 
+                //WriteLine("Calling layout on " + current + " ltrb: " + left + "," + top + "," + right +
+                //          "," + bottom);
                 current.Layout(left, top, right, bottom);
             }
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private static void WriteLine(String msg)
+        {
+            System.Diagnostics.Debug.WriteLine("[OKYN] " + msg);
+        }
+
+        protected override void Dispose(Boolean disposing)
+        {
+            base.Dispose(disposing);
+            _loopHandler.Dispose();
         }
 
         protected override void OnMeasure(Int32 widthMeasureSpec,
@@ -181,7 +213,6 @@ namespace Das.Xamarin.Android
 
                 if (_view.IsRequiresMeasure)
                 {
-                    //RenderKit.StyleContext.AcceptChanges();
                     RenderKit.MeasureContext.MeasureMainView(_view,
                         new ValueRenderSize(_measured), _viewState);
 
@@ -192,10 +223,12 @@ namespace Das.Xamarin.Android
 
                 if (willInvalidate)
                 {
-                    _paintView.Invalidate();
+                    //_paintView.Invalidate();
                     
                     if (ChildCount > 1)
                         Invalidate();
+                    //WriteLine("Invalidating paint view");
+                    _paintView.Invalidate();
                     
                     _inputContext.SleepTime = 0;
                     await Task.Yield();
@@ -203,7 +236,7 @@ namespace Das.Xamarin.Android
                 else
                 {
                     //if (_inputContext.SleepTime == 0)
-                    //    System.Diagnostics.Debug.WriteLine("[OKYN] frame skipped!");
+                    //    WriteLine("frame skipped!");
 
                     _inputContext.SleepTime = Math.Min(++_inputContext.SleepTime, 50);
 
@@ -222,8 +255,7 @@ namespace Das.Xamarin.Android
 
         private readonly IVisualElement _view;
 
-        // ReSharper disable once NotAccessedField.Local
-        private Handler _loopHandler;
+        private readonly Handler _loopHandler;
 
         private Size _measured;
         private readonly IViewState _viewState;

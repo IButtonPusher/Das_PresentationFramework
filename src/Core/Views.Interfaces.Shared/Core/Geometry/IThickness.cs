@@ -12,10 +12,6 @@ namespace Das.Views.Core.Geometry
 
         Double Top { get; }
 
-        //Double Width { get; }
-
-        //Double Height { get; }
-
-        //Boolean IsEmpty { get; }
+        Boolean AreAllSidesEqual();
     }
 }

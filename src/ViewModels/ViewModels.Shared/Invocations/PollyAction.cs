@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.ViewModels.Invocations
 {
@@ -8,7 +9,9 @@ namespace Das.ViewModels.Invocations
         private readonly TInput2 _input2;
         private readonly Action<TInput1, TInput2> _action;
 
-        public PollyAction(TInput1 input1, TInput2 input2, Action<TInput1, TInput2> action)
+        public PollyAction(TInput1 input1,
+                           TInput2 input2,
+                           Action<TInput1, TInput2> action)
         {
             _input1 = input1;
             _input2 = input2;
@@ -26,7 +29,8 @@ namespace Das.ViewModels.Invocations
         private readonly TInput1 _input1;
         private readonly Action<TInput1> _action;
 
-        public PollyAction(TInput1 input1, Action<TInput1> action)
+        public PollyAction(TInput1 input1,
+                           Action<TInput1> action)
         {
             _input1 = input1;
             _action = action;
@@ -43,7 +47,8 @@ namespace Das.ViewModels.Invocations
         private readonly TInput2 _input2;
         private readonly Action<TInput1, TInput2> _action;
 
-        public PollyLateAction(TInput2 input2, Action<TInput1, TInput2> action)
+        public PollyLateAction(TInput2 input2,
+                               Action<TInput1, TInput2> action)
         {
             _input2 = input2;
             _action = action;

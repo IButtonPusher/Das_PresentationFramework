@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Views.Core;
 using Das.Views.Core.Enums;
@@ -20,19 +19,17 @@ namespace Das.Views.Construction.Styles
 {
     public class DeclarationWorker : IDeclarationWorker
     {
-        public DeclarationWorker(IVisualBootstrapper visualBootstrapper)
-        {
-            _visualBootstrapper = visualBootstrapper;
-        }
+        
 
         public IEnumerable<IStyleValueAssignment> BuildStyleValueAssignments(IVisualElement visual,
             IVisualLineage visualLineage,
-            IStyleRule rule)
+            IStyleRule rule,
+            IVisualBootstrapper visualBootstrapper)
         {
             if (rule.Selector.TryGetContentAppendType(out var contentAppend))
             {
                 yield return new PseudoVisualAssignment(visual, contentAppend,
-                    rule, _visualBootstrapper, visualLineage, BuildStyleValueAssignments);
+                    rule, visualBootstrapper, visualLineage, BuildStyleValueAssignments);
             }
             else
             {
@@ -89,15 +86,15 @@ namespace Das.Views.Construction.Styles
             if (visual.TryGetDependencyProperty(declaration.Property, 
                 out var dependencyProperty))
             {
-                Debug.WriteLine("Setting " + visual.GetType().Name + "->" + dependencyProperty +
-                                " = " + declaration);
+                //Debug.WriteLine("Setting " + visual.GetType().Name + "->" + dependencyProperty +
+                //                " = " + declaration);
 
                 return ApplyDeclarationToDependencyProperty(visual,
                     dependencyProperty, declaration);
             }
 
-            Debug.WriteLine("No dependency property found for " + declaration.Property +
-                            " on " + visual);
+            //Debug.WriteLine("No dependency property found for " + declaration.Property +
+            //                " on " + visual);
             return default;
         }
 
@@ -277,7 +274,5 @@ namespace Das.Views.Construction.Styles
             //xform.Function.
             throw new NotImplementedException();
         }
-
-        private readonly IVisualBootstrapper _visualBootstrapper;
     }
 }

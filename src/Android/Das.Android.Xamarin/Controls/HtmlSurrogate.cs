@@ -35,7 +35,7 @@ namespace Das.Xamarin.Android.Controls
             _htmlPanel.PropertyChanged += OnControlPropertyChanged;
 
             _hasPendingContent = htmlPanel.Markup != null || htmlPanel.Uri != null;
-        }
+        } 
 
         public ValueSize Measure(IRenderSize availableSpace,
                                  IMeasureContext measureContext)

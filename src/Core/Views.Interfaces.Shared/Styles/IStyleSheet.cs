@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 
 namespace Das.Views.Styles
@@ -15,5 +16,12 @@ namespace Das.Views.Styles
                                out T value);
 
         IDictionary<Type, IStyleSheet> VisualTypeStyles { get; }
+
+        /// <summary>
+        /// Adds rules if the current style sheet doesn't already contain an equivalent,
+        /// and returns a new style sheet. 
+        /// </summary>
+        [Pure]
+        IStyleSheet AddDefaultRules(IEnumerable<IStyleRule> rules);
     }
 }

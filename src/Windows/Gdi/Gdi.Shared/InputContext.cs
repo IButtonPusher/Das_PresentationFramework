@@ -35,6 +35,7 @@ namespace Das.Gdi
                     pos = GetPosition(m.LParam);
                     _leftButtonWentDown = pos;
 
+                    //System.Diagnostics.Debug.WriteLine("on l button down");
                     _inputHandler.OnMouseInput(
                         new MouseDownEventArgs(pos, MouseButtons.Left, this),
                         InputAction.LeftMouseButtonDown);
@@ -98,7 +99,7 @@ namespace Das.Gdi
                             if (Math.Abs(vx) >= MinimumFlingVelocity ||
                                 Math.Abs(vy) >= MinimumFlingVelocity)
                             {
-                                flingArgs = new FlingEventArgs(vx, vy, pos, this);
+                                flingArgs = new FlingEventArgs(vx, vy, pos, this, null);
                             }
                         }
                     }
@@ -114,7 +115,7 @@ namespace Das.Gdi
                     _nextToLastDragTimestamp = 0;
                     _lastDragTimestamp = 0;
 
-
+                    //System.Diagnostics.Debug.WriteLine("on l button up");
                     _inputHandler.OnMouseInput(lBtnArgs, 
                         InputAction.LeftMouseButtonUp);
 

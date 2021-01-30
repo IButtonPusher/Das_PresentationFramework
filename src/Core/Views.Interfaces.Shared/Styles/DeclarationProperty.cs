@@ -71,6 +71,12 @@ namespace Das.Views.Styles.Declarations
         OutlineOffset,
         OutlineStyle,
         OutlineWidth,
+
+        Padding,
+        PaddingBottom,
+        PaddingLeft,
+        PaddingRight,
+        PaddingTop,
         
         PointerEvents,
         Position,

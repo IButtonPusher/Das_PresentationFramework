@@ -11,6 +11,7 @@ using Das.Views.Core.Geometry;
 using Das.Views.Layout;
 using Das.Views.Styles;
 using Das.Views.Styles.Construction;
+using Das.Views.Styles.DefaultStyles;
 using Das.Views.Templates;
 
 namespace Das.Views
@@ -23,7 +24,8 @@ namespace Das.Views
                                 IPropertyProvider propertyProvider,
                                 Dictionary<IVisualElement, ValueCube> renderPositions)
             : this(new BaseResolver(), themeProvider, attributeScanner,
-                typeInferrer, propertyProvider, renderPositions)
+                typeInferrer, propertyProvider, renderPositions,
+                GetAppliedStyleBuilder(propertyProvider, GetStyleProvider(typeInferrer, themeProvider)))
         {
         }
 
@@ -33,26 +35,38 @@ namespace Das.Views
                                 ITypeInferrer typeInferrer,
                                 IPropertyProvider propertyProvider,
                                 Dictionary<IVisualElement, ValueCube> renderPositions)
-        : this(resolver, themeProvider, attributeScanner, typeInferrer, propertyProvider, 
-            GetVisualBootstrapper(resolver, themeProvider, propertyProvider), renderPositions)
+        : this(resolver, themeProvider, attributeScanner, typeInferrer, propertyProvider, renderPositions,
+            GetAppliedStyleBuilder(propertyProvider, GetStyleProvider(typeInferrer, themeProvider)))
+            //GetStyleProvider(typeInferrer, themeProvider))
+        {}
+
+        protected BaseRenderKit(IResolver resolver,
+                                IThemeProvider themeProvider,
+                                IStringPrimitiveScanner attributeScanner,
+                                ITypeInferrer typeInferrer,
+                                IPropertyProvider propertyProvider,
+                                Dictionary<IVisualElement, ValueCube> renderPositions,
+                                IAppliedStyleBuilder styleBuilder)
+        : this(resolver, attributeScanner, typeInferrer, propertyProvider, 
+            GetVisualBootstrapper(resolver, themeProvider, propertyProvider, styleBuilder), 
+            renderPositions, styleBuilder.StyleProvider)
         {
            
         }
 
         protected BaseRenderKit(IResolver resolver,
-                                IThemeProvider themeProvider,
                                 IStringPrimitiveScanner attributeScanner,
                                 ITypeInferrer typeInferrer,
                                 IPropertyProvider propertyProvider,
                                 IVisualBootstrapper visualBootstrapper,
-                                Dictionary<IVisualElement, ValueCube> renderPositions)
+                                Dictionary<IVisualElement, ValueCube> renderPositions,
+                                IVisualStyleProvider styleProvider)
         : this(resolver, 
             attributeScanner, 
             typeInferrer, 
             propertyProvider,
             visualBootstrapper,
-            GetAppliedStyleBuilder(visualBootstrapper, typeInferrer, propertyProvider, themeProvider),
-            //GetStyleVisualBuilder(visualBootstrapper, typeInferrer, propertyProvider),
+            GetAppliedStyleBuilder(propertyProvider, styleProvider),
             renderPositions)
         
         {
@@ -68,7 +82,7 @@ namespace Das.Views
                                 Dictionary<IVisualElement, ValueCube> renderPositions)
             : this(resolver, visualBootstrapper, 
                 GetViewInflater(visualBootstrapper, attributeScanner, 
-                    typeInferrer, propertyProvider, appliedStyleBuilder),// styledVisualBuilder),
+                    typeInferrer, propertyProvider, appliedStyleBuilder),
                 renderPositions)
         
         {
@@ -96,24 +110,40 @@ namespace Das.Views
         
         private static IVisualBootstrapper GetVisualBootstrapper(IResolver resolver,
                                                                  IThemeProvider themeProvider,
-                                                                 IPropertyProvider propertyProvider)
+                                                                 IPropertyProvider propertyProvider,
+                                                                 IAppliedStyleBuilder styleBuilder)
         {
             return new DefaultVisualBootstrapper(resolver, themeProvider, propertyProvider,
-                new LayoutQueue());
+                new LayoutQueue(), styleBuilder);
         }
 
-        private static IAppliedStyleBuilder GetAppliedStyleBuilder(IVisualBootstrapper visualBootstrapper,
-                                                                   ITypeInferrer typeInferrer,
-                                                                   IPropertyProvider propertyProvider,
-                                                                   IThemeProvider themeProvider)
+        private static IAppliedStyleBuilder GetAppliedStyleBuilder(IPropertyProvider propertyProvider,
+                                                                   IVisualStyleProvider styleProvider)
         {
-            var styleInflater = new DefaultStyleInflater(typeInferrer);
-            var styleProvider = new VisualStyleProvider(styleInflater, themeProvider);
-            var declarationWorker = new DeclarationWorker(visualBootstrapper);
+            //var variableAccessor = new StyleVariableAccessor(themeProvider.ColorPalette);
+
+            //var styleInflater = new DefaultStyleInflater(typeInferrer, variableAccessor);
+            //var styleProvider = new VisualStyleProvider(styleInflater, themeProvider,
+            //    new BasePrimitiveStyle(variableAccessor));
+            //    //new ConcurrentDictionary<Type, IEnumerable<IStyleRule>>());
+
+            var declarationWorker = new DeclarationWorker();
             var appliedStyleBuilder = new AppliedRuleBuilder(styleProvider, declarationWorker,
                 propertyProvider);
 
             return appliedStyleBuilder;
+        }
+
+        private static IVisualStyleProvider GetStyleProvider(ITypeInferrer typeInferrer,
+                                                             IThemeProvider themeProvider)
+        {
+            var variableAccessor = new StyleVariableAccessor(themeProvider.ColorPalette);
+
+            var styleInflater = new DefaultStyleInflater(typeInferrer, variableAccessor);
+            var styleProvider = new VisualStyleProvider(styleInflater, themeProvider,
+                //new ConcurrentDictionary<Type, IEnumerable<IStyleRule>>());
+                new BasePrimitiveStyle(variableAccessor));
+            return styleProvider;
         }
 
         private static IViewInflater GetViewInflater(IVisualBootstrapper visualBootstrapper,

@@ -9,6 +9,7 @@ namespace Das.Views.Construction.Styles
     {
         IEnumerable<IStyleValueAssignment> BuildStyleValueAssignments(IVisualElement visual,
                                                                      IVisualLineage visualLineage,
-                                                                     IStyleRule rule);
+                                                                     IStyleRule rule,
+                                                                     IVisualBootstrapper visualBootstrapper);
     }
 }

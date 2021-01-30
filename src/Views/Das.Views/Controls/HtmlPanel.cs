@@ -21,7 +21,24 @@ namespace Das.Views.Controls
         public Uri? Uri
         {
             get => _uri;
-            set => SetValue(ref _uri, value);
+            private set => SetValue(ref _uri, value);
+        }
+
+        public void SetUri(Uri? value)
+        {
+            if (value == null)
+            {
+                Uri = value;
+                return;
+            }
+
+            if (value.Scheme == "http")
+            {
+                //ensure https
+                value = new Uri("https://" + value.Authority + value.AbsolutePath);
+            }
+
+            Uri = value;
         }
 
         public override void Arrange(IRenderSize availableSpace,

@@ -19,6 +19,11 @@ namespace Das.Views.Styles
         
         public IStyleDeclaration[] Declarations { get; }
 
+        public Boolean Equals(IStyleRule other)
+        {
+            return other.Selector.Equals(Selector);
+        }
+
         public override String ToString()
         {
             return Selector + " - " + Declarations.Length + " declarations";

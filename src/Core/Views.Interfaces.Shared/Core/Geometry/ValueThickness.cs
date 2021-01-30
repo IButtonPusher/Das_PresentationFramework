@@ -33,6 +33,12 @@ namespace Das.Views.Core.Geometry
                    other.Height.AreEqualEnough(Height);
         }
 
+        public Boolean AreAllSidesEqual()
+        {
+            return Left.AreEqualEnough(Top) && Left.AreEqualEnough(Right) &&
+                   Left.AreEqualEnough(Bottom);
+        }
+
         public override String ToString()
         {
             return $"T: {Top} R: {Right} B: {Bottom} L: {Left}";

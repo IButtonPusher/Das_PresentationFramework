@@ -3,8 +3,11 @@ using System;
 using System.IO;
 using System.Text;
 using Das.Serializer;
+using Das.Views.Construction.Styles;
+using Das.Views.Styles;
 using Das.Views.Styles.Construction;
 using Microsoft.CodeAnalysis.Text;
+// ReSharper disable All
 
 namespace Das.Views
 {
@@ -19,9 +22,10 @@ namespace Das.Views
 
         public void Execute(GeneratorExecutionContext context)
         {
-            var syntaxTrees = context.AdditionalFiles;
+            //var syntaxTrees = context.AdditionalFiles;
             var serializer = new DasSerializer();
-            var styler = new DefaultStyleInflater(serializer.TypeInferrer);
+            var styler = new DefaultStyleInflater(serializer.TypeInferrer,
+                new StyleVariableAccessor(BaselineThemeProvider.Instance.ColorPalette));
 
             var allMyFiles = context.AdditionalFiles;
 

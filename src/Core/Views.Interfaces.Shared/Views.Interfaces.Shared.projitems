@@ -19,14 +19,18 @@
     <Compile Include="$(MSBuildThisFileDirectory)Colors\IThemeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\ApplyVisualStyles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IAttributeDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IPathData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IPoint2F.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IQuantifiedRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValuePoint2F.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\IQuantifiedValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IDependencyProperty{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\INamedProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\PropertyMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ILayoutQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\FlingMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\IFontVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\ITextVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IPropertyValueAssignment{T}.cs" />
@@ -232,7 +236,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IViewPerspective.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IViewState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IVisualContext.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Visuals\IStatefulVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Visuals\IVisualElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IVisualRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\AssignedStyle.cs" />

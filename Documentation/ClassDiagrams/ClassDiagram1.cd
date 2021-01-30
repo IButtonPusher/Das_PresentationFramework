@@ -20,7 +20,7 @@
     <TypeIdentifier />
   </Interface>
   <Interface Name="Das.Views.Construction.IStyleInflater">
-    <Position X="7.25" Y="4.75" Width="4.75" />
+    <Position X="1.5" Y="5.75" Width="4.75" />
     <TypeIdentifier />
   </Interface>
   <Font Name="Segoe UI" Size="9" />

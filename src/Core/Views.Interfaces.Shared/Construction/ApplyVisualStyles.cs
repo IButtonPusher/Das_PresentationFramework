@@ -7,5 +7,6 @@ namespace Das.Views.Construction
     public delegate Task ApplyVisualStyles(IVisualElement visual,
                                            IAttributeDictionary attributeDictionary,
                                            IVisualLineage visualLineage,
-                                           IViewInflater viewInflater);
+                                           IViewInflater viewInflater,
+                                           IVisualBootstrapper visualBootstrapper);
 }

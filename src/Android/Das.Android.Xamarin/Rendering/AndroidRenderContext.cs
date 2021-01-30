@@ -127,19 +127,59 @@ namespace Das.Xamarin.Android
             _paint.SetStyle(Paint.Style.Stroke);
             SetColor(pen);
 
-            var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
-            var path = new AndroidGraphicsPath();
-            path.SetRoundedRectangle(useRect, cornerRadii);
-            //CreateRoundedRectangle(path, useRect, cornerRadii);
-            GetCanvas().DrawPath(path.Path, _paint);
+            RoundedRectImpl(rect, cornerRadii);
 
-            //GetCanvas().DrawRoundRect(GetAbsoluteAndroidRectF(rect),
-            //    Convert.ToSingle(cornerRadii.Left),
-            //    Convert.ToSingle(cornerRadii.Top),
-            //    _paint);
+            //var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
+
+            //if (cornerRadii.AreAllSidesEqual())
+            //{
+            //    var androidRect = new RectF(Convert.ToSingle(useRect.Left),
+            //        Convert.ToSingle(useRect.Top),
+            //        Convert.ToSingle(useRect.Right),
+            //        Convert.ToSingle(useRect.Bottom));
+
+            //    var sRadius = Convert.ToSingle(cornerRadii.Left);
+
+            //    GetCanvas().DrawRoundRect(androidRect, sRadius, sRadius, _paint);
+
+            //    return;
+            //}
+
+            
+            //var path = new AndroidGraphicsPath();
+            //path.SetRoundedRectangle(useRect, cornerRadii);
+            //GetCanvas().DrawPath(path.Path, _paint);
         }
 
-        
+        /// <summary>
+        /// _paint.SetStyle and SetColor have to be called before this
+        /// </summary>
+        private void RoundedRectImpl<TRectangle, TThickness>(TRectangle rect,
+                                                                       TThickness cornerRadii)
+            where TRectangle : IRectangle
+            where TThickness : IThickness
+        {
+            var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
+
+            if (cornerRadii.AreAllSidesEqual())
+            {
+                var androidRect = new RectF(Convert.ToSingle(useRect.Left),
+                    Convert.ToSingle(useRect.Top),
+                    Convert.ToSingle(useRect.Right),
+                    Convert.ToSingle(useRect.Bottom));
+
+                var sRadius = Convert.ToSingle(cornerRadii.Left);
+
+                GetCanvas().DrawRoundRect(androidRect, sRadius, sRadius, _paint);
+
+                return;
+            }
+
+            
+            var path = new AndroidGraphicsPath();
+            path.SetRoundedRectangle(useRect, cornerRadii);
+            GetCanvas().DrawPath(path.Path, _paint);
+        }
 
         protected override void PushClip<TRectangle>(TRectangle rect)
         {
@@ -243,16 +283,29 @@ namespace Das.Xamarin.Android
         {
             _paint.SetStyle(Paint.Style.Fill);
             SetColor(brush);
-            //var target = GetAbsoluteAndroidRectF(rect);
-            var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
-            var path = new AndroidGraphicsPath();
-            path.SetRoundedRectangle(useRect, cornerRadii);
-            //CreateRoundedRectangle(path, useRect, cornerRadii);
-            GetCanvas().DrawPath(path.Path, _paint);
-            //GetCanvas().DrawRoundRect(target,
-            //    Convert.ToSingle(cornerRadius),
-            //    Convert.ToSingle(cornerRadius),
-            //    _paint);
+            
+            RoundedRectImpl(rect, cornerRadii);
+
+            //var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
+
+            //if (cornerRadii.AreAllSidesEqual())
+            //{
+            //    var androidRect = new RectF(Convert.ToSingle(useRect.Left),
+            //        Convert.ToSingle(useRect.Top),
+            //        Convert.ToSingle(useRect.Right),
+            //        Convert.ToSingle(useRect.Bottom));
+
+            //    var sRadius = Convert.ToSingle(cornerRadii.Left);
+
+            //    GetCanvas().DrawRoundRect(androidRect, sRadius, sRadius, _paint);
+
+            //    return;
+            //}
+
+            //var path = new AndroidGraphicsPath();
+            //path.SetRoundedRectangle(useRect, cornerRadii);
+            
+            //GetCanvas().DrawPath(path.Path, _paint);
         }
 
         private Point GetAbsoluteAndroidPoint(IPoint2D relativePoint2D)
@@ -267,14 +320,7 @@ namespace Das.Xamarin.Android
             return new Point(
                 Convert.ToInt32(CurrentLocation.X + relativePoint2D.X),
                 Convert.ToInt32(CurrentLocation.Y + relativePoint2D.Y));
-
-            //var to = GetAbsolutePoint(relativePoint2D);
-            //return new Point(Convert.ToInt32(to.X),
-            //    Convert.ToInt32(to.Y));
         }
-
-        //[ThreadStatic]
-        //private static RectF? _rectF;
 
         [ThreadStatic]
         private static Rect? _rect;
@@ -326,41 +372,6 @@ namespace Das.Xamarin.Android
         }
 
 
-        //private RectF GetAbsoluteAndroidRectF<TRectangle>(TRectangle rect)
-        //    where TRectangle : IRectangle
-        //{
-        //    _rectF ??= new RectF();
-
-
-        //    if (ZoomLevel.AreDifferent(1.0))
-        //    {
-        //        _rectF.Left =
-        //            Convert.ToSingle((rect.Left + CurrentLocation.X) * ZoomLevel); // X
-        //        _rectF.Top =
-        //            Convert.ToSingle((rect.Top + CurrentLocation.Y) * ZoomLevel); // Y
-
-        //        _rectF.Right =
-        //            Convert.ToSingle((rect.Right + CurrentLocation.X) * ZoomLevel);
-
-        //        _rectF.Bottom =
-        //            Convert.ToSingle((rect.Bottom + CurrentLocation.Y) * ZoomLevel);
-
-        //        return _rectF;
-                
-        //    }
-
-        //    _rectF.Left =
-        //        Convert.ToSingle(rect.Left + CurrentLocation.X);
-
-        //    _rectF.Top =
-        //    Convert.ToSingle(rect.Top + CurrentLocation.Y);
-        //    _rectF.Right =
-        //    Convert.ToSingle(rect.Right + CurrentLocation.X);
-        //    _rectF.Bottom =
-        //        Convert.ToSingle(rect.Bottom + CurrentLocation.Y);
-        //    return _rectF;
-        //}
-
         private Rect GetAbsoluteAndroidRect<TRectangle>(TRectangle rect)
         where TRectangle : IRectangle
         {
@@ -383,80 +394,7 @@ namespace Das.Xamarin.Android
             return Canvas ?? throw new NullReferenceException("Canvas must be set");
         }
 
-        //public override IImage GetNullImage()
-        //{
-        //    var bmp = BitmapFactory.DecodeByteArray(Array.Empty<Byte>(), 0, 0);
-        //    return new AndroidBitmap(bmp!);
-        //}
-
-        //private static IImage? GetScaledImage(Bitmap? img,
-        //                                           Double imgMaxWidth)
-        //{
-        //    if (img == null || img.Width < imgMaxWidth)
-        //        return new AndroidBitmap(img);
-
-        //    var scaleRatio = imgMaxWidth / img.Width;
-
-        //    var scaledBitmap = Bitmap.CreateScaledBitmap(img, 
-        //        Convert.ToInt32(img.Width * scaleRatio),
-        //        Convert.ToInt32(img.Height * scaleRatio), true);
-        //    img.Dispose();
-        //    return new AndroidBitmap(scaledBitmap);
-        //}
-
-        //public override IImage? GetImage(Stream stream, 
-        //                                 Double maximumWidthPct)
-        //{
-        //    var imgMaxWidth = _displayMetrics.WidthPixels * maximumWidthPct;
-
-        //    if (!stream.CanSeek)
-        //    {
-        //        var img = BitmapFactory.DecodeStream(stream);
-        //        return GetScaledImage(img, imgMaxWidth);
-        //    }
-
-
-        //    var options = new Options
-        //    {
-        //        InJustDecodeBounds = true
-        //    };
-
-        //    DecodeStream(stream, null, options);
-
-        //    var scale = 1;
-        //    while (options.OutWidth * (1 / Math.Pow(scale, 2)) > 
-        //           imgMaxWidth) {
-        //        scale++;
-        //    }
-
-        //    if (scale == 1)
-        //        return GetImage(stream);
-
-        //    options = new Options
-        //    {
-        //        InSampleSize = scale - 1
-        //    };
-
-        //    var bmp = BitmapFactory.DecodeStream(stream, null,
-        //        options);
-
-        //    return GetScaledImage(bmp, imgMaxWidth);
-        //}
-
-        //public override IImage? GetImage(Byte[] bytes)
-        //{
-        //    using (var ms = new MemoryStream(bytes))
-        //        return GetImage(ms);
-        //}
-
-        //public override IImage? GetImage(Stream stream)
-        //{
-        //    var bmp = BitmapFactory.DecodeStream(stream);
-        //    if (bmp == null)
-        //        return default;
-
-        //    return new AndroidBitmap(bmp);
-        //}
+       
 
         private void SetColor(IPen pen)
         {

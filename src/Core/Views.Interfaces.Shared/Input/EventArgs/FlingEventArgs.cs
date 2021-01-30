@@ -9,10 +9,12 @@ namespace Das.Views.Input
         public FlingEventArgs(Double velocityX,
                               Double velocityY,
                               IPoint2D position,
-                              IInputContext inputContext)
+                              IInputContext inputContext,
+                              Action? onFlingComplete)
         {
             VelocityX = velocityX;
             VelocityY = velocityY;
+            _onFlingComplete = onFlingComplete;
             Position = position;
             InputContext = inputContext;
         }
@@ -20,18 +22,25 @@ namespace Das.Views.Input
         public readonly Double VelocityX;
 
         public readonly Double VelocityY;
+        private readonly Action? _onFlingComplete;
 
         public IPoint2D Position { get; }
 
         public FlingEventArgs Offset(IPoint2D offset)
         {
-            return new FlingEventArgs(VelocityX, VelocityY, Position.Offset(offset), InputContext);
+            return new(VelocityX, VelocityY, Position.Offset(offset), InputContext, _onFlingComplete);
         }
 
-        public FlingEventArgs Offset(Double pct)
+
+        public void SetHandled(Boolean value)
         {
-            return new FlingEventArgs(VelocityX * pct, VelocityY * pct, 
-                Position.Offset(pct), InputContext);
+            if (_onFlingComplete is { } something)
+                something();
+        }
+
+        public override String ToString()
+        {
+            return GetType().Name + " vX: " + VelocityX + " vY: " + VelocityY;
         }
 
         public InputAction Action => InputAction.Fling;

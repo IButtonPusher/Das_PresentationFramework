@@ -22,7 +22,7 @@ namespace Das.Views.Styles
                                 Transition transition,
                                 AssignedStyle assignedStyle,
                                 Action<AssignedStyle> updater)
-            : base(transition.Duration, transition.Delay)
+            : base(transition.Duration, transition.Delay, Easing.QuadraticOut)
         {
             Double finalValue;
             _initialValue = initialValue is Double d ? d : 0;

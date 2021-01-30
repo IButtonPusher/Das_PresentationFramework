@@ -9,7 +9,7 @@ namespace Das.Views.Input
         Boolean OnInput(T args);
     }
 
-    public interface IHandleInput : IStatefulVisual
+    public interface IHandleInput //: IStatefulVisual
     {
         InputAction HandlesActions { get; }
     }

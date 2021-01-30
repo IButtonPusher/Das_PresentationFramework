@@ -82,10 +82,11 @@ namespace Das.Gdi.Kits
                             IStringPrimitiveScanner attributeScanner,
                             ITypeInferrer typeInferrer,
                             IPropertyProvider propertyProvider,
-                            IVisualBootstrapper visualBootstrapper)
-            : base(resolver, styleContext, attributeScanner, typeInferrer,
+                            IVisualBootstrapper visualBootstrapper,
+                            IVisualStyleProvider styleProvider)
+            : base(resolver, attributeScanner, typeInferrer,
                 propertyProvider, visualBootstrapper,
-                new Dictionary<IVisualElement, ValueCube>())
+                new Dictionary<IVisualElement, ValueCube>(), styleProvider)
         {
             _windowProvider = windowProvider;
             Init(windowProvider, styleContext, viewPerspective, _renderPositions,

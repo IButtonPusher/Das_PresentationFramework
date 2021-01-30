@@ -8,6 +8,7 @@ using Das.Views.Defaults;
 using Das.Views.Primitives;
 using Das.Views.Rendering;
 using Das.Views.Rendering.Geometry;
+using Das.Views.Styles.Declarations;
 
 namespace Das.Views.Panels
 {
@@ -371,6 +372,19 @@ namespace Das.Views.Panels
                     Content = _contentTemplate.BuildVisual(newValue);
                     break;
             }
+        }
+
+        public override Boolean TryGetDependencyProperty(DeclarationProperty declarationProperty,
+                                                         out IDependencyProperty property)
+        {
+            switch (declarationProperty)
+            {
+                case DeclarationProperty.Padding:
+                    property = PaddingProperty;
+                    return true;
+            }
+
+            return base.TryGetDependencyProperty(declarationProperty, out property);
         }
 
 

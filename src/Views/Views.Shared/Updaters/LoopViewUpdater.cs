@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Rendering;
-
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
+
 #endif
 
 namespace Das.Views
@@ -27,13 +27,6 @@ namespace Das.Views
             _viewHost.HostCreated += OnHostReady;
         }
 
-        private Task OnHostReady()
-        {
-            _viewHost.HostCreated -= OnHostReady;
-            Task.Factory.StartNew(GameLoop, TaskCreationOptions.LongRunning);
-            return TaskEx.CompletedTask;
-        }
-
         protected override Boolean IsChanged => _viewHost.IsChanged || //_viewHost.StyleContext.IsChanged ||
                                                 _layoutQueue.HasVisualsNeedingArrange;
 
@@ -51,16 +44,26 @@ namespace Das.Views
             return true;
         }
 
-        private readonly IRenderer<TAsset> _renderer;
+        private Task OnHostReady()
+        {
+            _viewHost.HostCreated -= OnHostReady;
+            Task.Factory.StartNew(GameLoop, TaskCreationOptions.LongRunning);
+            return TaskEx.CompletedTask;
+        }
+
         private readonly ILayoutQueue _layoutQueue;
+
+        private readonly IRenderer<TAsset> _renderer;
 
         private readonly IViewHost<TAsset> _viewHost;
     }
 
     public class LoopViewUpdater : BaseLoopUpdater
     {
-        public LoopViewUpdater(IRenderer renderer, IViewHost viewHost,
-                               TaskScheduler taskScheduler, Int32 maxFramesPerSecond = 60)
+        public LoopViewUpdater(IRenderer renderer,
+                               IViewHost viewHost,
+                               TaskScheduler taskScheduler,
+                               Int32 maxFramesPerSecond = 60)
             : base(maxFramesPerSecond)
         {
             _renderer = renderer;

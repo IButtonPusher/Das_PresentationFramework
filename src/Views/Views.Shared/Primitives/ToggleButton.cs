@@ -1,8 +1,5 @@
 ﻿using System;
-using Das.Views.Core.Geometry;
 using Das.Views.Input;
-using Das.Views.Rendering;
-using Das.Views.Styles;
 
 namespace Das.Views.Controls
 {
@@ -30,36 +27,10 @@ namespace Das.Views.Controls
             DependencyProperty<IToggleButton, Boolean?>.Register(
                 nameof(IsChecked), false);
 
-        public override ValueSize Measure(IRenderSize availableSpace, IMeasureContext measureContext)
-        {
-            var res = base.Measure(availableSpace, measureContext);
-
-            if (Style != null)
-            {}
-
-            return res;
-        }
-
         public Boolean? IsChecked
         {
             get => IsCheckedProperty.GetValue(this);
-            set => IsCheckedProperty.SetValue(this, value, OnIsCheckedChanged);
-        }
-
-        private void OnIsCheckedChanged(Boolean? oldValue,
-                                        Boolean? value)
-        {
-            switch (value)
-            {
-                case true:
-                    AddStyleSelector(VisualStateType.Checked);
-                    break;
-
-                case false:
-                    RemoveStyleSelector(VisualStateType.Checked);
-                    break;
-            }
-
+            set => IsCheckedProperty.SetValue(this, value);//, OnIsCheckedChanged);
         }
     }
 }

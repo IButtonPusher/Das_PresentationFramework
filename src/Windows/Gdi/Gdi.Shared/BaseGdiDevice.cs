@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
@@ -78,8 +79,9 @@ namespace Das.Gdi
 
             _dcGraphics = Graphics.FromHdc(_memoryDeviceContext);
             
+            _dcGraphics.TextRenderingHint = TextRenderingHint.AntiAlias;
             _dcGraphics.SmoothingMode = SmoothingMode.AntiAlias;
-            _dcGraphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+            _dcGraphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
             if (backgroundColor != null)
                 _dcGraphics.Clear(backgroundColor.Value);
