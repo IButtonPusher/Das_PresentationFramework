@@ -94,6 +94,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BaseVisualRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\ColumnRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\GraphicsPathBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\PathData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\PathPointType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\RenderedVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\SequentialRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\SequentialUniformRenderer.cs" />

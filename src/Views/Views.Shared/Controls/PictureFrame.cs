@@ -9,18 +9,13 @@ using Das.Views.Rendering;
 namespace Das.Views.Controls
 {
     // ReSharper disable once UnusedMember.Global
+    // ReSharper disable once UnusedType.Global
     public class PictureFrame : BindableElement
     {
         public PictureFrame(IVisualBootstrapper visualBootstrapper) 
             : base(visualBootstrapper)
         {
         }
-
-        //public PictureFrame(IDataBinding<IImage> value,
-        //                    IVisualBootstrapper visualBootstrapper) 
-        //    : base(value, visualBootstrapper)
-        //{
-        //}
 
         public override void Arrange(IRenderSize availableSpace,
                                      IRenderContext renderContext)
@@ -43,12 +38,6 @@ namespace Das.Views.Controls
             renderContext.DrawImage(img, rect);
         }
 
-        //public override IVisualElement DeepCopy()
-        //{
-        //    var res = (PictureFrame)base.DeepCopy();
-            
-        //}
-
         public override void Dispose()
         {
             base.Dispose();
@@ -56,14 +45,7 @@ namespace Das.Views.Controls
             if (!(Image is { } img)) return;
             img.Dispose();
             Image = null;
-
-            //_currentImage?.Dispose();
         }
-
-        //protected override void OnDataContextChanged(Object? newValue)
-        //{
-        //    base.OnDataContextChanged(newValue);
-        //}
 
         public override ValueSize Measure(IRenderSize availableSpace,
                                           IMeasureContext measureContext)
@@ -103,7 +85,5 @@ namespace Das.Views.Controls
             get => ImageProperty.GetValue(this);
             set => ImageProperty.SetValue(this, value);
         }
-
-        //private IImage? _currentImage;
     }
 }

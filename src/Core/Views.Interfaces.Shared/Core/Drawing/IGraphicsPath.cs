@@ -35,11 +35,22 @@ namespace Das.Views.Core.Drawing
 
         void CloseFigure();
 
+        ValueSize Size { get; }
+
         void SetRoundedRectangle<TThickness, TRect>(TRect bounds,
                                                     TThickness cornerRadii)
             where TThickness : IThickness
             where TRect : IRectangle;
 
         IPathData PathData { get; }
+
+        public IColor Stroke { get; set; }
+
+        public IBrush? Fill { get; set; }
+
+        /// <summary>
+        /// Gets the underlying system specific object
+        /// </summary>
+        T Unwrap<T>();
     }
 }

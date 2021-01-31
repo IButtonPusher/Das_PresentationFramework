@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +23,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <CodeAnalysisRuleSet>..\..\Das.Presentation.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,11 +33,14 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,11 +54,12 @@
     <Compile Include="StyleSelectorTests.cs" />
     <Compile Include="SvgTests.cs" />
     <Compile Include="TestBase.cs" />
+    <Compile Include="TestImageProvider.cs" />
     <Compile Include="TestThemeProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Das.Serializer.Split">
-      <Version>0.0.18-alpha</Version>
+      <Version>0.0.20-alpha</Version>
     </PackageReference>
     <PackageReference Include="xunit">
       <Version>2.4.1</Version>
@@ -78,6 +87,10 @@
     <ProjectReference Include="..\..\Views\Das.Views\Das.Views.csproj">
       <Project>{bb6f35ef-5375-44d1-8398-0480a61d2bd6}</Project>
       <Name>Das.Views</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Windows\Gdi\Das.GdiRenderKit\Das.Gdi.csproj">
+      <Project>{23274743-b205-4c69-bb7e-b3fb5cf979cf}</Project>
+      <Name>Das.Gdi</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

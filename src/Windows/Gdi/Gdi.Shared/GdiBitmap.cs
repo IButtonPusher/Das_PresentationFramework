@@ -8,28 +8,17 @@ using Das.Views.Core.Geometry;
 
 namespace Gdi.Shared
 {
-    public class GdiBitmap: IImage
+    public class GdiBitmap : IImage
     {
-        private readonly Image _bmp;
-        private readonly Object _unwrapLock;
-        private readonly Stream? _stream;
-        private readonly Boolean _isEmpty;
-
-        //private static Int32 _count;
-
         public GdiBitmap(Image bmp,
                          Stream? stream)
         {
-            //Debug.WriteLine("Create bmp " + (++_count));
-
             _unwrapLock = new Object();
 
             _bmp = bmp;
             _stream = stream;
-            _isEmpty = bmp.Width == 1 && bmp.Height == 1;
+            IsNullImage = bmp.Width == 1 && bmp.Height == 1;
         }
-
-        private Boolean _isDisposed;
 
         Boolean IEquatable<ISize>.Equals(ISize other)
         {
@@ -38,40 +27,23 @@ namespace Gdi.Shared
 
         Double ISize.Height => _bmp.Height;
 
-        Boolean ISize.IsEmpty => _isEmpty;
+        Boolean ISize.IsEmpty => IsNullImage;
 
         Double ISize.Width => _bmp.Width;
-
-        //public ISize PlusVertical(ISize adding)
-        //{
-        //    return GeometryHelper.PlusVertical(this, adding);
-        //}
-
-        //public ISize Reduce(Thickness padding)
-        //{
-        //    return GeometryHelper.Reduce(this, padding);
-        //}
-
-        //ISize ISize.Minus(ISize subtract)
-        //{
-        //    return GeometryHelper.Minus(this, subtract);
-        //}
 
         void IDisposable.Dispose()
         {
             if (_isDisposed)
                 return;
 
-            //Debug.WriteLine("Dispose bmp " + (--_count));
-
             _isDisposed = true;
             _bmp.Dispose();
 
-            if (_stream is {} stream)
+            if (_stream is { } stream)
                 stream.Dispose();
         }
 
-        public Boolean IsNullImage => _isEmpty;
+        public Boolean IsNullImage { get; }
 
         Boolean IImage.IsDisposed => _isDisposed;
 
@@ -94,11 +66,6 @@ namespace Gdi.Shared
             _bmp.Save(ms, ImageFormat.Png);
             ms.Position = 0;
             return ms;
-
-            //var ms = new MemoryStream();
-            //_bmp.Save(ms, ImageFormat.Png);
-            //ms.Position = 0;
-            //return ms;
         }
 
         Task<Boolean> IImage.TrySave(FileInfo path)
@@ -114,7 +81,6 @@ namespace Gdi.Shared
             throw new NotImplementedException();
         }
 
-        public Int64 SizeInBytes => _stream?.Length ?? -1;
 
         public void UnwrapLocked<T>(Action<T> action)
         {
@@ -124,34 +90,19 @@ namespace Gdi.Shared
                     action(good);
                 else
                     throw new NotImplementedException();
-                
             }
         }
 
-        public Double CenterY(ISize item)
-        {
-            return GeometryHelper.CenterY(this, item);
-        }
-
-        public Double CenterX(ISize item)
-        {
-            return GeometryHelper.CenterX(this, item);
-        }
-
-        //ISize ISize.Divide(Double pct)
-        //{
-        //    return new ValueSize(_bmp.Width * pct, _bmp.Height * pct);
-        //}
-
-        Task<TResult> IImage.UseImage<TImage, TParam, TResult>(TParam param1, 
+        Task<TResult> IImage.UseImage<TImage, TParam, TResult>(TParam param1,
                                                                Func<TImage, TParam, TResult> action)
         {
             throw new NotImplementedException();
         }
 
-        //ISize IDeepCopyable<ISize>.DeepCopy()
-        //{
-        //    return new ValueSize(_bmp.Width, _bmp.Height);
-        //}
+        private readonly Image _bmp;
+        private readonly Stream? _stream;
+        private readonly Object _unwrapLock;
+
+        private Boolean _isDisposed;
     }
 }

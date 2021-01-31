@@ -5,8 +5,8 @@ namespace Das.Views.Core.Drawing
 {
     public interface IPathData
     {
-        IPoint2F[] Points { get; set; }
+        IPoint2F[] Points { get;  }
 
-        Byte[] Types { get; set; }
+        Byte[] Types { get;  }
     }
 }

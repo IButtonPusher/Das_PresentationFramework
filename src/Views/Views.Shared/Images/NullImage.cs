@@ -58,7 +58,7 @@ namespace Das.Views.Images
         {
             #if NET40
 
-            return TaskEx.FromResult<Boolean>(false);
+            return TaskEx.FromResult(false);
 
             #else
 

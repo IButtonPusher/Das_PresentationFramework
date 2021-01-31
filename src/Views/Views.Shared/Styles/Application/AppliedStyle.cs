@@ -76,7 +76,7 @@ namespace Das.Views.Styles.Application
             if (!_monitoredProperties.TryAdd(visual, property, 1))
                 return;
 
-            property.AddOnChangedHandler(visual, d => Execute(true));
+            property.AddOnChangedHandler(visual, _ => Execute(true));
         }
 
         private readonly List<AppliedStyleRule> _appliedRules;

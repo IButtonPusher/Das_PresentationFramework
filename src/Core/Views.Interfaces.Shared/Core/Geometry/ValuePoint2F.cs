@@ -22,5 +22,10 @@ namespace Das.Views.Core.Geometry
         public Single Y { get; }
 
         public static readonly ValuePoint2F Empty = new(0, 0);
+
+        public override String ToString()
+        {
+            return "X: " + X + " Y: " + Y;
+        }
     }
 }

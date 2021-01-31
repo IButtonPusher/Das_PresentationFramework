@@ -5,7 +5,7 @@ using Das.Views.Core.Geometry;
 
 namespace Das.Views.Rendering
 {
-    public interface IVisualContext : IThemeProvider //: IStyleProvider
+    public interface IVisualContext : IThemeProvider
     {
         Double ZoomLevel { get; }
 
@@ -14,7 +14,7 @@ namespace Das.Views.Rendering
         IVisualLineage VisualLineage { get; }
 
         ILayoutQueue LayoutQueue { get; }
-        
+
         /// <summary>
         /// Returns the Size + Width properties of the visual, if set.
         /// </summary>

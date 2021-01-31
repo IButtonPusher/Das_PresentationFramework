@@ -42,7 +42,7 @@ namespace XamarinAndroidTest
         {
             var vm = new TestVm();
             vm.Name = "hello world";
-            IView view = new TestView(renderKit.VisualBootstrapper);
+            IView view = new TestView(renderKit.VisualBootstrapper, renderKit.ImageProvider);
             view .DataContext = vm;
             return Task.FromResult<IVisualElement>(view);
         }

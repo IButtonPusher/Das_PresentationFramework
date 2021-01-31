@@ -37,6 +37,8 @@ namespace Das.Views.Rendering
 
         public abstract void CloseFigure();
 
+        public abstract ValueSize Size { get; }
+
         // https://github.com/koszeggy/KGySoft.Drawing/blob/625e71e38a0d2e2c94821629f34e797ceae4015c/KGySoft.Drawing/Drawing/_Extensions/GraphicsExtensions.cs#L287
         public void SetRoundedRectangle<TThickness, TRect>(TRect bounds,
                                                            TThickness cornerRadii)
@@ -99,7 +101,13 @@ namespace Das.Views.Rendering
             CloseFigure();
         }
 
-        public IPathData PathData => throw new NotImplementedException();
+        public abstract IPathData PathData { get; }
+
+        public virtual IColor Stroke { get; set; } = Color.Black;
+
+        public virtual IBrush? Fill { get; set; }
+
+        public abstract T Unwrap<T>();
 
         protected static Single R4(Double val) => Convert.ToSingle(val);
     }

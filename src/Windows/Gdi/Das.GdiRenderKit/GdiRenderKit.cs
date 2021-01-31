@@ -33,7 +33,7 @@ namespace Das.Gdi.Kits
                             IVisualBootstrapper visualBootstrapper,
                             IViewInflater viewInflater)
             : base(resolver, visualBootstrapper, viewInflater,
-                new Dictionary<IVisualElement, ValueCube>())
+                new Dictionary<IVisualElement, ValueCube>(), new GdiImageProvider())
         {
             _windowProvider = windowProvider;
             Init(windowProvider, styleContext, viewPerspective, _renderPositions,
@@ -45,7 +45,8 @@ namespace Das.Gdi.Kits
                             IThemeProvider themeProvider,
                             IResolver container)
             : base(container, themeProvider, Serializer.AttributeParser, Serializer.TypeInferrer,
-                Serializer.TypeManipulator, new Dictionary<IVisualElement, ValueCube>())
+                Serializer.TypeManipulator, new Dictionary<IVisualElement, ValueCube>(),
+                new GdiImageProvider())
         {
             _windowProvider = windowProvider;
             Init(windowProvider, themeProvider, viewPerspective, _renderPositions,
@@ -66,7 +67,7 @@ namespace Das.Gdi.Kits
                             ITypeInferrer typeInferrer,
                             IPropertyProvider propertyProvider)
             : base(styleContext, attributeScanner, typeInferrer, propertyProvider,
-                new Dictionary<IVisualElement, ValueCube>())
+                new Dictionary<IVisualElement, ValueCube>(),new GdiImageProvider())
         {
             _windowProvider = windowProvider;
             Init(windowProvider, styleContext, viewPerspective, 
@@ -83,10 +84,11 @@ namespace Das.Gdi.Kits
                             ITypeInferrer typeInferrer,
                             IPropertyProvider propertyProvider,
                             IVisualBootstrapper visualBootstrapper,
-                            IVisualStyleProvider styleProvider)
+                            IVisualStyleProvider styleProvider,
+                            IImageProvider imageProvider)
             : base(resolver, attributeScanner, typeInferrer,
                 propertyProvider, visualBootstrapper,
-                new Dictionary<IVisualElement, ValueCube>(), styleProvider)
+                new Dictionary<IVisualElement, ValueCube>(), styleProvider, imageProvider)
         {
             _windowProvider = windowProvider;
             Init(windowProvider, styleContext, viewPerspective, _renderPositions,
@@ -99,6 +101,8 @@ namespace Das.Gdi.Kits
         IMeasureContext IRenderKit.MeasureContext => _measureContext;
 
         IRenderContext IRenderKit.RenderContext => _renderContext;
+
+        
 
 
         public GdiMeasureContext MeasureContext => _measureContext;

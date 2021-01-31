@@ -2,6 +2,7 @@
 using Das.Serializer;
 using Das.Views;
 using Das.Views.Colors;
+using Das.Views.Core;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Layout;
@@ -15,10 +16,11 @@ namespace Das.OpenGL
     {
         public OpenGLRenderKit(IFontProvider fontProvider, 
                                IGLContext glContext,
-                               IThemeProvider themeProvider)
+                               IThemeProvider themeProvider,
+                               IImageProvider imageProvider)
         : base(themeProvider, Serializer.AttributeParser, 
             Serializer.TypeInferrer, Serializer.TypeManipulator,
-            new Dictionary<IVisualElement, ValueCube>())
+            new Dictionary<IVisualElement, ValueCube>(), imageProvider)
         {
             var lastMeasurements = new Dictionary<IVisualElement, ValueSize>();
             var lastRender = new Dictionary<IVisualElement, ValueCube>();

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
+using Das.Views.Core;
 using Das.Views.Core.Geometry;
 
 namespace Das.Views.Images.Svg
@@ -10,23 +12,40 @@ namespace Das.Views.Images.Svg
     /// <summary>
     ///     https://github.com/svg-net
     /// </summary>
-    public class SvgPathBuilder : TypeConverter
+    public class SvgPathBuilder //: TypeConverter
     {
-        public override Object ConvertFrom(ITypeDescriptorContext context,
-                                           CultureInfo culture,
-                                           Object value)
-        {
-            if (value is String s)
-                return Parse(s.AsSpan());
+        private readonly IImageProvider _imageProvider;
 
-            return base.ConvertFrom(context, culture, value)!;
+        public SvgPathBuilder(IImageProvider imageProvider)
+        {
+            _imageProvider = imageProvider;
         }
 
-        /// <summary>
-        ///     Parses the specified string into a collection of path segments.
-        /// </summary>
-        /// <param name="path">A <see cref="string" /> containing path data.</param>
-        public static SvgPathSegmentList Parse(ReadOnlySpan<Char> path)
+        //public override Object ConvertFrom(ITypeDescriptorContext context,
+        //                                   CultureInfo culture,
+        //                                   Object value)
+        //{
+        //    if (value is String s)
+        //        return Parse(s.AsSpan());
+
+        //    return base.ConvertFrom(context, culture, value)!;
+        //}
+
+        public SvgImage Parse(SvgDocument doc)
+        {
+            var path = doc.Path?.D ?? throw new NullReferenceException();
+            return Parse(doc.Width, doc.Height, path.AsSpan());
+        }
+
+        //public static SvgImage Parse(String path)
+        //{
+        //    return Parse(path.AsSpan());
+        //}
+
+        
+        private SvgImage Parse(Double width,
+                                      Double height,
+                                      ReadOnlySpan<Char> path)
         {
             var segments = new SvgPathSegmentList();
 
@@ -51,14 +70,14 @@ namespace Das.Views.Images.Svg
                         {
                             var commandSetTrimmed = pathTrimmed.Slice(start, length).Trim();
                             var state = new CoordinateParserState(ref commandSetTrimmed);
-                            CreatePathSegment(commandSetTrimmed[0], segments, ref state, ref commandSetTrimmed);
+                            CreatePathSegments(commandSetTrimmed[0], segments, state, commandSetTrimmed);
                         }
 
                         if (pathLength == i + 1)
                         {
                             var commandSetTrimmed = pathTrimmed.Slice(i, 1).Trim();
                             var state = new CoordinateParserState(ref commandSetTrimmed);
-                            CreatePathSegment(commandSetTrimmed[0], segments, ref state, ref commandSetTrimmed);
+                            CreatePathSegments(commandSetTrimmed[0], segments, state, commandSetTrimmed);
                         }
                     }
                     else if (pathLength == i + 1)
@@ -71,7 +90,7 @@ namespace Das.Views.Images.Svg
                         {
                             var commandSetTrimmed = pathTrimmed.Slice(start, length).Trim();
                             var state = new CoordinateParserState(ref commandSetTrimmed);
-                            CreatePathSegment(commandSetTrimmed[0], segments, ref state, ref commandSetTrimmed);
+                            CreatePathSegments(commandSetTrimmed[0], segments, state, commandSetTrimmed);
                         }
                     }
                 }
@@ -81,13 +100,14 @@ namespace Das.Views.Images.Svg
                 Trace.TraceError("Error parsing path \"{0}\": {1}", path.ToString(), exc.Message);
             }
 
-            return segments;
+            return new SvgImage(width, height, segments, _imageProvider);
         }
 
-        private static void CreatePathSegment(Char command,
-                                              SvgPathSegmentList segments,
-                                              ref CoordinateParserState state,
-                                              ref ReadOnlySpan<Char> chars)
+        private static //IEnumerable<SvgPathSegment> 
+            void CreatePathSegments(Char command,
+                                                                     SvgPathSegmentList segments,
+                                                                     CoordinateParserState state,
+                                                                     ReadOnlySpan<Char> chars)
         {
             var isRelative = Char.IsLower(command);
             // http://www.w3.org/TR/SVG11/paths.html#PathDataGeneralInformation
@@ -99,15 +119,24 @@ namespace Das.Views.Images.Svg
                 {
                     if (CoordinateParser.TryGetFloat(out var coords0, ref chars, ref state)
                         && CoordinateParser.TryGetFloat(out var coords1, ref chars, ref state))
-                        segments.Add(
-                            new SvgMoveToSegment(
-                                ToAbsolute(coords0, coords1, segments, isRelative)));
+                    {
+                        var mov = new SvgMoveToSegment(
+                            ToAbsolute(coords0, coords1, segments, isRelative));
+
+                        segments.Add(mov);
+                        //yield return mov;
+                    }
+
                     while (CoordinateParser.TryGetFloat(out coords0, ref chars, ref state)
                            && CoordinateParser.TryGetFloat(out coords1, ref chars, ref state))
-                        segments.Add(
-                            new SvgLineSegment(
-                                segments.Last.End,
-                                ToAbsolute(coords0, coords1, segments, isRelative)));
+                    {
+                        var line = new SvgLineSegment(segments.Last.End,
+                            ToAbsolute(coords0, coords1, segments, isRelative));
+
+                        segments.Add(line);
+
+                        //yield return line;
+                    }
                 }
                     break;
                 case 'A': // elliptical arc
@@ -120,16 +149,22 @@ namespace Das.Views.Images.Svg
                            && CoordinateParser.TryGetBool(out var sweep, ref chars, ref state)
                            && CoordinateParser.TryGetFloat(out var coords3, ref chars, ref state)
                            && CoordinateParser.TryGetFloat(out var coords4, ref chars, ref state))
+                    {
                         // A|a rx ry x-axis-rotation large-arc-flag sweep-flag x y
-                        segments.Add(
-                            new SvgArcSegment(
-                                segments.Last.End,
-                                coords0,
-                                coords1,
-                                coords2,
-                                size ? SvgArcSize.Large : SvgArcSize.Small,
-                                sweep ? SvgArcSweep.Positive : SvgArcSweep.Negative,
-                                ToAbsolute(coords3, coords4, segments, isRelative)));
+
+                        var arc = new SvgArcSegment(
+                            segments.Last.End,
+                            coords0,
+                            coords1,
+                            coords2,
+                            size ? SvgArcSize.Large : SvgArcSize.Small,
+                            sweep ? SvgArcSweep.Positive : SvgArcSweep.Negative,
+                            ToAbsolute(coords3, coords4, segments, isRelative));
+                        
+                        segments.Add(arc);
+
+                        //yield return arc;
+                    }
                 }
                     break;
                 case 'L': // lineto
@@ -137,30 +172,43 @@ namespace Das.Views.Images.Svg
                 {
                     while (CoordinateParser.TryGetFloat(out var coords0, ref chars, ref state)
                            && CoordinateParser.TryGetFloat(out var coords1, ref chars, ref state))
-                        segments.Add(
-                            new SvgLineSegment(
-                                segments.Last.End,
-                                ToAbsolute(coords0, coords1, segments, isRelative)));
+                    {
+                        var line = new SvgLineSegment(
+                            segments.Last.End,
+                            ToAbsolute(coords0, coords1, segments, isRelative));
+
+                        segments.Add(line);
+                        //yield return line;
+                    }
                 }
                     break;
                 case 'H': // horizontal lineto
                 case 'h': // relative horizontal lineto
                 {
                     while (CoordinateParser.TryGetFloat(out var coords0, ref chars, ref state))
-                        segments.Add(
-                            new SvgLineSegment(
-                                segments.Last.End,
-                                ToAbsolute(coords0, segments.Last.End.Y, segments, isRelative, false)));
+                    {
+                        var line = new SvgLineSegment(
+                            segments.Last.End,
+                            ToAbsolute(coords0, segments.Last.End.Y, segments, isRelative, false));
+
+                        segments.Add(line);
+
+                        //yield return line;
+                    }
                 }
                     break;
                 case 'V': // vertical lineto
                 case 'v': // relative vertical lineto
                 {
                     while (CoordinateParser.TryGetFloat(out var coords0, ref chars, ref state))
-                        segments.Add(
-                            new SvgLineSegment(
-                                segments.Last.End,
-                                ToAbsolute(segments.Last.End.X, coords0, segments, false, isRelative)));
+                    {
+                        var line = new SvgLineSegment(
+                            segments.Last.End,
+                            ToAbsolute(segments.Last.End.X, coords0, segments, false, isRelative));
+
+                        segments.Add(line);
+                        //yield return line;
+                    }
                 }
                     break;
                 case 'Q': // quadratic bézier curveto
@@ -170,11 +218,15 @@ namespace Das.Views.Images.Svg
                            && CoordinateParser.TryGetFloat(out var coords1, ref chars, ref state)
                            && CoordinateParser.TryGetFloat(out var coords2, ref chars, ref state)
                            && CoordinateParser.TryGetFloat(out var coords3, ref chars, ref state))
-                        segments.Add(
-                            new SvgQuadraticCurveSegment(
-                                segments.Last.End,
-                                ToAbsolute(coords0, coords1, segments, isRelative),
-                                ToAbsolute(coords2, coords3, segments, isRelative)));
+                    {
+                        var quad = new SvgQuadraticCurveSegment(
+                            segments.Last.End,
+                            ToAbsolute(coords0, coords1, segments, isRelative),
+                            ToAbsolute(coords2, coords3, segments, isRelative));
+
+                        segments.Add(quad);
+                        //yield return quad;
+                    }
                 }
                     break;
                 case 'T': // shorthand/smooth quadratic bézier curveto
@@ -187,11 +239,14 @@ namespace Das.Views.Images.Svg
                         var controlPoint = lastQuadCurve != null
                             ? Reflect(lastQuadCurve.ControlPoint, segments.Last.End)
                             : segments.Last.End;
-                        segments.Add(
-                            new SvgQuadraticCurveSegment(
-                                segments.Last.End,
-                                controlPoint,
-                                ToAbsolute(coords0, coords1, segments, isRelative)));
+
+                        var quad = new SvgQuadraticCurveSegment(
+                            segments.Last.End,
+                            controlPoint,
+                            ToAbsolute(coords0, coords1, segments, isRelative));
+
+                        segments.Add(quad);
+                        //yield return quad;
                     }
                 }
                     break;
@@ -204,12 +259,16 @@ namespace Das.Views.Images.Svg
                            && CoordinateParser.TryGetFloat(out var coords3, ref chars, ref state)
                            && CoordinateParser.TryGetFloat(out var coords4, ref chars, ref state)
                            && CoordinateParser.TryGetFloat(out var coords5, ref chars, ref state))
-                        segments.Add(
-                            new SvgCubicCurveSegment(
-                                segments.Last.End,
-                                ToAbsolute(coords0, coords1, segments, isRelative),
-                                ToAbsolute(coords2, coords3, segments, isRelative),
-                                ToAbsolute(coords4, coords5, segments, isRelative)));
+                    {
+                        var cube = new SvgCubicCurveSegment(
+                            segments.Last.End,
+                            ToAbsolute(coords0, coords1, segments, isRelative),
+                            ToAbsolute(coords2, coords3, segments, isRelative),
+                            ToAbsolute(coords4, coords5, segments, isRelative));
+
+                        segments.Add(cube);
+                        //yield return cube;
+                    }
                 }
                     break;
                 case 'S': // shorthand/smooth curveto
@@ -224,19 +283,24 @@ namespace Das.Views.Images.Svg
                         var controlPoint = lastCubicCurve != null
                             ? Reflect(lastCubicCurve.SecondControlPoint, segments.Last.End)
                             : segments.Last.End;
-                        segments.Add(
-                            new SvgCubicCurveSegment(
-                                segments.Last.End,
-                                controlPoint,
-                                ToAbsolute(coords0, coords1, segments, isRelative),
-                                ToAbsolute(coords2, coords3, segments, isRelative)));
+
+                        var cube = new SvgCubicCurveSegment(
+                            segments.Last.End,
+                            controlPoint,
+                            ToAbsolute(coords0, coords1, segments, isRelative),
+                            ToAbsolute(coords2, coords3, segments, isRelative));
+
+                        segments.Add(cube);
+                        //yield return cube;
                     }
                 }
                     break;
                 case 'Z': // closepath
                 case 'z': // relative closepath
                 {
-                    segments.Add(new SvgClosePathSegment());
+                    var bye = new SvgClosePathSegment();
+                    segments.Add(bye);
+                    //yield return bye;
                 }
                     break;
             }

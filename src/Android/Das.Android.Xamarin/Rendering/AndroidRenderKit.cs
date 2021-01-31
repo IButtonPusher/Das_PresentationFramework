@@ -33,7 +33,8 @@ namespace Das.Xamarin.Android
                                 IResolver container)
         : base(container, themeProvider, Serializer.AttributeParser, 
             Serializer.TypeInferrer, Serializer.TypeManipulator, 
-            new Dictionary<IVisualElement, ValueCube>())
+            new Dictionary<IVisualElement, ValueCube>(), 
+            new AndroidImageProvider(displayMetrics))
         {
             ViewState = viewState;
             DisplayMetrics = displayMetrics;
@@ -67,7 +68,8 @@ namespace Das.Xamarin.Android
                                 ITypeInferrer typeInferrer,
                                 IPropertyProvider propertyProvider)
             : base(styleContext, attributeScanner, typeInferrer, propertyProvider,
-                new Dictionary<IVisualElement, ValueCube>())
+                new Dictionary<IVisualElement, ValueCube>(),
+                new AndroidImageProvider(displayMetrics))
         {
             ViewState = viewState;
             DisplayMetrics = displayMetrics;
@@ -89,9 +91,11 @@ namespace Das.Xamarin.Android
                                 ITypeInferrer typeInferrer, 
                                 IPropertyProvider propertyProvider, 
                                 IVisualBootstrapper visualBootstrapper,
-                                IVisualStyleProvider styleProvider) 
+                                IVisualStyleProvider styleProvider,
+                                IImageProvider imageProvider) 
             : base(resolver, attributeScanner, typeInferrer, propertyProvider, 
-                visualBootstrapper,new Dictionary<IVisualElement, ValueCube>(), styleProvider)
+                visualBootstrapper,new Dictionary<IVisualElement, ValueCube>(), styleProvider,
+                imageProvider)
         {
             ViewState = viewState;
             DisplayMetrics = displayMetrics;
@@ -112,7 +116,8 @@ namespace Das.Xamarin.Android
                                 IVisualBootstrapper visualBootstrapper, 
                                 IViewInflater viewInflater) 
             : base(resolver, visualBootstrapper, viewInflater,
-                new Dictionary<IVisualElement, ValueCube>())
+                new Dictionary<IVisualElement, ValueCube>(),
+                new AndroidImageProvider(displayMetrics))
         {
             ViewState = viewState;
             DisplayMetrics = displayMetrics;

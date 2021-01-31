@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
+using Das.Gdi.Core;
 using Das.Views;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
@@ -115,6 +117,30 @@ namespace Gdi.Shared
         }
 
         public Double DeviceEffectiveDpi => 1.0;
+
+        public IGraphicsPath GetNewGraphicsPath()
+        {
+            return new GdiGraphicsPath();
+        }
+
+        public IImage GetImage(IGraphicsPath path,
+                               IColor foreground)
+        {
+            var gdiPath = path.Unwrap<GraphicsPath>();
+            var size = path.Size.ToRoundedSize();
+            var bmp = new Bitmap(size.Width, size.Height);
+
+            using (var g = Graphics.FromImage(bmp))
+            {
+                var p = new Das.Views.Core.Drawing.Pen(foreground, 1);
+                using (var usePen = GdiTypeConverter.GetPen(p))
+                {
+                    g.DrawPath(usePen, gdiPath);
+                }
+            }
+
+            return new GdiBitmap(bmp, null);
+        }
 
         public void SetVisualHost(IVisualHost visualHost)
         {

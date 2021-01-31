@@ -39,7 +39,7 @@ namespace Das.Views.DataBinding
         {
             var sourceValue = GetSourceValue();
 
-            if (_notifyingCollection == sourceValue)
+            if (ReferenceEquals(_notifyingCollection, sourceValue))
                 return;
             
             switch (sourceValue)

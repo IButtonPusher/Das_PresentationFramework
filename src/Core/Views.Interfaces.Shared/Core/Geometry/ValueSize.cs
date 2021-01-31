@@ -41,20 +41,6 @@ namespace Das.Views.Core.Geometry
 
         public Double Width { get; }
 
-        //public ISize Reduce(Thickness padding)
-        //{
-        //    return GeometryHelper.Reduce(this, padding);
-        //}
-
-        //public ISize Minus(ISize subtract)
-        //{
-        //    return GeometryHelper.Minus(this, subtract);
-        //}
-
-        //public ValueSize PlusVertical(ISize adding)
-        //{
-        //    return GeometryHelper.PlusVertical(this, adding);
-        //}
 
         /// <summary>
         /// Returns a ValueSize with the minimum value of width and height between this
@@ -94,20 +80,9 @@ namespace Das.Views.Core.Geometry
         /// </summary>
         public Boolean IsValid { get; }
 
-        public ISize DeepCopy()
-        {
-            return new ValueSize(Width, Height);
-        }
-
-        public Double CenterY(ISize item)
-        {
-            return GeometryHelper.CenterY(this, item);
-        }
-
-        public Double CenterX(ISize item)
-        {
-            return GeometryHelper.CenterX(this, item);
-        }
+        public ValueRoundedSize ToRoundedSize() => new ValueRoundedSize(
+            Convert.ToInt32(Width),
+            Convert.ToInt32(Height));
 
         public static readonly ValueSize Empty = new ValueSize(0, 0);
 

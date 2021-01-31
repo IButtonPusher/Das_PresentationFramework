@@ -44,7 +44,7 @@ namespace Das.Xamarin.Android
         {
             _androidActivity = androidActivity;
 
-            System.Threading.Tasks.Task.Factory.StartNew(t => RunAction(action, input), input);
+            System.Threading.Tasks.Task.Factory.StartNew(_ => RunAction(action, input), input);
         }
 
         private void RunAction(Func<TInput, TOutput> action,

@@ -76,9 +76,9 @@ namespace Das.Views
         {
             var tVisual = GetValue<IVisualElement, TVisual>(visual);
 
-            AddOnChangedHandler(tVisual, (v,
-                                          was,
-                                          now) => onChange(this));
+            AddOnChangedHandler(tVisual, (_,
+                                          _,
+                                          _) => onChange(this));
         }
 
         void IDependencyProperty.AddTransition(IVisualElement visual,

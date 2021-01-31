@@ -180,7 +180,8 @@ namespace Das.Views.Charting.Pie
                 side += widestLegend;
             _desiredSize.Width = side;
 
-            return _desiredSize;
+            return availableSpace.ToValueSize();
+            //return _desiredSize;
         }
 
         protected override void OnDataContextChanged(Object? newValue)

@@ -6,6 +6,9 @@ using Android.Util;
 using Das.Extensions;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
+using Das.Views.Core.Geometry;
+using Das.Xamarin.Android.Rendering;
+using Path = Android.Graphics.Path;
 
 namespace Das.Xamarin.Android.Images
 {
@@ -31,6 +34,8 @@ namespace Das.Xamarin.Android.Images
 
             return new AndroidBitmap(bmp, null);
         }
+
+
 
         public IImage? GetDeviceScaledImage(Stream stream,
                                             Double maximumWidthPct,
@@ -109,10 +114,38 @@ namespace Das.Xamarin.Android.Images
 
         public Double DeviceEffectiveDpi => 1.0;
 
+        public IGraphicsPath GetNewGraphicsPath()
+        {
+            return new AndroidGraphicsPath();
+        }
+
+        public IImage GetImage(IGraphicsPath path,
+                               IColor foreground)
+        {
+            //var size = path.Size.ToRoundedSize();
+            var size = new ValueRoundedSize(24, 24);
+            var androidPath = path.Unwrap<Path>();
+
+            var bmp = Bitmap.CreateBitmap(size.Width, size.Height, Bitmap.Config.Argb8888)
+                ?? throw new InvalidOperationException();
+
+            var canvas = new Canvas(bmp);
+            using (var paint = new Paint())
+            {
+                paint.SetStyle(Paint.Style.Stroke);
+                paint.SetARGB(foreground.A, foreground.R, foreground.G, foreground.B);
+                //canvas.SetColor(pen);
+                canvas.DrawPath(androidPath, paint);
+            }
+
+            return new AndroidBitmap(bmp, null);
+        }
+
+
         private IImage GetScaledImage(Bitmap? img,
-                                             Stream? stream,
-                                              Double imgDesiredWidth,
-                                              Boolean isPreserveStream)
+                                      Stream? stream,
+                                      Double imgDesiredWidth,
+                                      Boolean isPreserveStream)
         {
             if (img == null)
             {

@@ -18,7 +18,7 @@ namespace Das.OpenGL.Windows
             var context = boot.GetContext(this);
 
             var fontProvider = GLBootStrapper.GetFontProvider(context);
-            var kit = new OpenGLRenderKit(fontProvider, context, styleContext);
+            var kit = new OpenGLRenderKit(fontProvider, context, styleContext, new GLImageProvider());
 
             var renderer = new PanelRenderer(this, context);
             var _ = new PanelUpdater(Render, kit, renderer, boot.Scheduler);

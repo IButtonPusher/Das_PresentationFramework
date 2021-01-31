@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using Das.Serializer;
 using Das.Views;
-
 using Das.Views.Core.Geometry;
 using Das.Views.Layout;
 using Das.Views.Rendering;
 using Das.Views.Styles;
+using Gdi.Shared;
 
 #pragma warning disable CS0067
 
@@ -31,7 +31,8 @@ namespace Das.Gdi.Kits
                                    IPropertyProvider propertyProvider,
                                    Dictionary<IVisualElement, ValueCube> renderPositions)
             : base(BaselineThemeProvider.Instance,
-                attributeScanner, typeInferrer, propertyProvider, renderPositions)
+                attributeScanner, typeInferrer, propertyProvider, renderPositions,
+                new GdiImageProvider())
         {
             var defaultSurrogates = new BaseSurrogateProvider();
 

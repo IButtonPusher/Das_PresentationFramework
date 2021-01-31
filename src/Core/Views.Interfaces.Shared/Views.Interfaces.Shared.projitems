@@ -25,6 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValuePoint2F.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueRoundedSize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\IQuantifiedValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IDependencyProperty{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\INamedProperty.cs" />
@@ -96,14 +97,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Colors\HatchBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\HatchStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\IColorPalette.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IImageProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Images\IImageProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\SolidColorBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\Color.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\Colors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\IBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\IColor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IFrame.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IImage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Images\IImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IPen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\Pen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Enums\Alignment.cs" />
@@ -250,5 +251,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Templates\IMultiDataTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\ITemplatableVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IVisualBootstrapper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Images\" />
   </ItemGroup>
 </Project>

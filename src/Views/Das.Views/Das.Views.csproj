@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>8</LangVersion>
+    <LangVersion>9</LangVersion>
 	<Nullable>enable</Nullable>
 	<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>    
   </PropertyGroup>
@@ -49,7 +49,7 @@
 
   <ItemGroup>
     <PackageReference Include="Das.Container" Version="0.0.12-alpha" />
-    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.18-alpha" />
+    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.20-alpha" />
     <PackageReference Include="System.Memory" Version="4.5.4" />
   </ItemGroup>
 

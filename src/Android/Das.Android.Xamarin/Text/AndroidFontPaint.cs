@@ -63,7 +63,7 @@ namespace Das.Xamarin.Android
 
             if (_isCacheStaticLayouts)
             {
-                var layout = GetOrCreateStaticLayout(s, txt => Convert.ToSingle(bounds.Width));
+                var layout = GetOrCreateStaticLayout(s, _ => Convert.ToSingle(bounds.Width));
                 DrawStringWithCachedLayout(brush, bounds.X, bounds.Y, layout);
                 return;
             }

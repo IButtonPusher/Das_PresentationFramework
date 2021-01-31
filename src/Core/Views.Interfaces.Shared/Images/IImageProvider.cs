@@ -34,5 +34,10 @@ namespace Das.Views.Core
         IImage GetNullImage();
 
         Double DeviceEffectiveDpi { get; }
+
+        IGraphicsPath GetNewGraphicsPath();
+
+        IImage GetImage(IGraphicsPath path,
+                        IColor foreground);
     }
 }

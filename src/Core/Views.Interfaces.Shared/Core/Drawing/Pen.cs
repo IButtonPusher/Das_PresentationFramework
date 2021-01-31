@@ -6,7 +6,8 @@ namespace Das.Views.Core.Drawing
     public class Pen : IPen,
                        IEquatable<IPen>
     {
-        public Pen(Color color, Int32 thickness)
+        public Pen(IColor color, 
+                   Int32 thickness)
         {
             Color = color;
             Thickness = thickness;
@@ -29,11 +30,11 @@ namespace Das.Views.Core.Drawing
             return Equals(Color, other.Color) && Thickness == other.Thickness;
         }
 
-        IColor IPen.Color => Color;
+        public IColor Color { get; }
 
         public Int32 Thickness { get; }
 
-        public Color Color { get; }
+        //public Color Color { get; }
 
 
         public override Boolean Equals(Object obj)

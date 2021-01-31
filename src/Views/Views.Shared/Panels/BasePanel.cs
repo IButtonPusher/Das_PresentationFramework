@@ -80,7 +80,7 @@ namespace Das.Views.Panels
 
         public virtual Boolean Contains(IVisualElement element)
         {
-            return _children.IsTrueForAnyChild(element, (child, e) =>
+            return _children.IsTrueForAnyChild(element, (child, _) =>
             {
                 if (child == element)
                     return true;

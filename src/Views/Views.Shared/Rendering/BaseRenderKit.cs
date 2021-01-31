@@ -7,6 +7,7 @@ using Das.Views.Colors;
 using Das.Views.Construction;
 using Das.Views.Construction.Styles;
 using Das.Views.Controls;
+using Das.Views.Core;
 using Das.Views.Core.Geometry;
 using Das.Views.Layout;
 using Das.Views.Styles;
@@ -22,10 +23,11 @@ namespace Das.Views
                                 IStringPrimitiveScanner attributeScanner,
                                 ITypeInferrer typeInferrer,
                                 IPropertyProvider propertyProvider,
-                                Dictionary<IVisualElement, ValueCube> renderPositions)
+                                Dictionary<IVisualElement, ValueCube> renderPositions,
+                                IImageProvider imageProvider)
             : this(new BaseResolver(), themeProvider, attributeScanner,
                 typeInferrer, propertyProvider, renderPositions,
-                GetAppliedStyleBuilder(propertyProvider, GetStyleProvider(typeInferrer, themeProvider)))
+                GetAppliedStyleBuilder(propertyProvider, GetStyleProvider(typeInferrer, themeProvider)), imageProvider)
         {
         }
 
@@ -34,9 +36,10 @@ namespace Das.Views
                                 IStringPrimitiveScanner attributeScanner,
                                 ITypeInferrer typeInferrer,
                                 IPropertyProvider propertyProvider,
-                                Dictionary<IVisualElement, ValueCube> renderPositions)
+                                Dictionary<IVisualElement, ValueCube> renderPositions,
+                                IImageProvider imageProvider)
         : this(resolver, themeProvider, attributeScanner, typeInferrer, propertyProvider, renderPositions,
-            GetAppliedStyleBuilder(propertyProvider, GetStyleProvider(typeInferrer, themeProvider)))
+            GetAppliedStyleBuilder(propertyProvider, GetStyleProvider(typeInferrer, themeProvider)), imageProvider)
             //GetStyleProvider(typeInferrer, themeProvider))
         {}
 
@@ -46,10 +49,11 @@ namespace Das.Views
                                 ITypeInferrer typeInferrer,
                                 IPropertyProvider propertyProvider,
                                 Dictionary<IVisualElement, ValueCube> renderPositions,
-                                IAppliedStyleBuilder styleBuilder)
+                                IAppliedStyleBuilder styleBuilder,
+                                IImageProvider imageProvider)
         : this(resolver, attributeScanner, typeInferrer, propertyProvider, 
             GetVisualBootstrapper(resolver, themeProvider, propertyProvider, styleBuilder), 
-            renderPositions, styleBuilder.StyleProvider)
+            renderPositions, styleBuilder.StyleProvider, imageProvider)
         {
            
         }
@@ -60,14 +64,15 @@ namespace Das.Views
                                 IPropertyProvider propertyProvider,
                                 IVisualBootstrapper visualBootstrapper,
                                 Dictionary<IVisualElement, ValueCube> renderPositions,
-                                IVisualStyleProvider styleProvider)
+                                IVisualStyleProvider styleProvider,
+                                IImageProvider imageProvider)
         : this(resolver, 
             attributeScanner, 
             typeInferrer, 
             propertyProvider,
             visualBootstrapper,
             GetAppliedStyleBuilder(propertyProvider, styleProvider),
-            renderPositions)
+            renderPositions, imageProvider)
         
         {
 
@@ -79,11 +84,12 @@ namespace Das.Views
                                 IPropertyProvider propertyProvider,
                                 IVisualBootstrapper visualBootstrapper,
                                 IAppliedStyleBuilder appliedStyleBuilder,
-                                Dictionary<IVisualElement, ValueCube> renderPositions)
+                                Dictionary<IVisualElement, ValueCube> renderPositions,
+                                IImageProvider imageProvider)
             : this(resolver, visualBootstrapper, 
                 GetViewInflater(visualBootstrapper, attributeScanner, 
                     typeInferrer, propertyProvider, appliedStyleBuilder),
-                renderPositions)
+                renderPositions, imageProvider)
         
         {
 
@@ -92,10 +98,12 @@ namespace Das.Views
         protected BaseRenderKit(IResolver resolver,
                                 IVisualBootstrapper visualBootstrapper,
                                 IViewInflater viewInflater,
-                                Dictionary<IVisualElement, ValueCube> renderPositions)
+                                Dictionary<IVisualElement, ValueCube> renderPositions,
+                                IImageProvider imageProvider)
         {
             //_styleContext = styleContext;
             _renderPositions = renderPositions;
+            ImageProvider = imageProvider;
             Container = resolver;
             
             _surrogateInstances = new Dictionary<IVisualElement, IVisualSurrogate>();
@@ -120,13 +128,6 @@ namespace Das.Views
         private static IAppliedStyleBuilder GetAppliedStyleBuilder(IPropertyProvider propertyProvider,
                                                                    IVisualStyleProvider styleProvider)
         {
-            //var variableAccessor = new StyleVariableAccessor(themeProvider.ColorPalette);
-
-            //var styleInflater = new DefaultStyleInflater(typeInferrer, variableAccessor);
-            //var styleProvider = new VisualStyleProvider(styleInflater, themeProvider,
-            //    new BasePrimitiveStyle(variableAccessor));
-            //    //new ConcurrentDictionary<Type, IEnumerable<IStyleRule>>());
-
             var declarationWorker = new DeclarationWorker();
             var appliedStyleBuilder = new AppliedRuleBuilder(styleProvider, declarationWorker,
                 propertyProvider);
@@ -189,6 +190,8 @@ namespace Das.Views
 
 
         public virtual IVisualBootstrapper VisualBootstrapper { get; }
+
+        public IImageProvider ImageProvider { get; }
 
         public virtual void RegisterSurrogate<T>(Func<IVisualElement, IVisualSurrogate> builder)
             where T : IVisualElement

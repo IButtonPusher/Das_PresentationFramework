@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Das.Container;
 using Das.Views.Construction;
 using Das.Views.Controls;
+using Das.Views.Core;
 using Das.Views.Rendering;
 
 namespace Das.Views
@@ -18,6 +19,8 @@ namespace Das.Views
         IVisualBootstrapper VisualBootstrapper { get; }
         
         IViewInflater ViewInflater { get; }
+
+        IImageProvider ImageProvider { get; }
 
         void RegisterSurrogate<T>(Func<IVisualElement, IVisualSurrogate> builder)
             where T : IVisualElement;

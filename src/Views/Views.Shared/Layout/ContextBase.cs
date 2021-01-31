@@ -30,21 +30,6 @@ namespace Das.Views
             
         }
 
-        //public T GetStyleSetter<T>(StyleSetterType setterType,
-        //                           IVisualElement element)
-        //{
-        //    return ViewState.StyleContext.GetStyleSetter<T>(setterType, element, VisualLineage);
-        //}
-
-        //public T GetStyleSetter<T>(StyleSetterType setterType,
-        //                           VisualStateType type,
-        //                           IVisualElement element)
-        //{
-        //    return ViewState.StyleContext.GetStyleSetter<T>(setterType, type, 
-        //        element, VisualLineage);
-        //}
-
-
         public ValueSize GetLastMeasure(IVisualElement element)
         {
             lock (_measureLock)
@@ -76,19 +61,6 @@ namespace Das.Views
             size = new ValueSize(w, h);
             return true;
 
-            //var width = visual.Width ?? GetStyleSetter<Double>(StyleSetterType.Width, visual);
-
-            //if (Double.IsNaN(width))
-            //    goto fail;
-
-            //var height = visual.Height ?? GetStyleSetter<Double>(StyleSetterType.Height, visual);
-
-            //if (Double.IsNaN(height))
-            //    goto fail;
-
-            //size = new ValueSize(width, height);
-            //return true;
-            
             fail:
             size = ValueSize.Empty;
             return false;
@@ -106,10 +78,9 @@ namespace Das.Views
 
         private readonly Dictionary<IVisualElement, ValueSize> _lastMeasurements;
         protected readonly Object _measureLock;
-        //private readonly IStyleContext _styleContext;
         private readonly IVisualSurrogateProvider _surrogateProvider;
         protected readonly IThemeProvider _themeProvider;
 
-        public IColorPalette ColorPalette => _themeProvider.ColorPalette; //_styleContext.ColorPalette;
+        public IColorPalette ColorPalette => _themeProvider.ColorPalette; 
     }
 }

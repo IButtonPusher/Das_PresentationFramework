@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 
@@ -59,12 +61,47 @@ namespace Gdi.Shared
             Path.StartFigure();
         }
 
-        private static PointF Pf(IPoint2F pf) => new PointF(pf.X, pf.Y);
+        private static PointF Pf(IPoint2F pf) => new(pf.X, pf.Y);
 
         public override void CloseFigure()
         {
             Path.CloseFigure();
             
+        }
+
+        public override ValueSize Size
+        {
+            get
+            {
+                var b = Path.GetBounds();
+                return new ValueSize(b.Width, b.Height);
+            }
+        }
+
+        public override IPathData PathData
+        {
+            get
+            {
+                var res = new Das.Views.Rendering.PathData(
+                    GetLocalPoints(Path.PathData.Points),
+                    Path.PathData.Types);
+
+                return res;
+            }
+        }
+
+        public override T Unwrap<T>()
+        {
+            if (Path is T good)
+                return good;
+
+            throw new InvalidCastException();
+        }
+
+        private static IEnumerable<IPoint2F> GetLocalPoints(IEnumerable<PointF> points)
+        {
+            foreach (var p in points)
+                yield return new ValuePoint2F(p.X, p.Y);
         }
 
         public override void Dispose()

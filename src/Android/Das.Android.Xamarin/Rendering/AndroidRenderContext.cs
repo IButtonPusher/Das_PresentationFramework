@@ -24,7 +24,7 @@ namespace Das.Xamarin.Android
                                     IThemeProvider themeProvider,
                                     IVisualLineage visualLineage,
                                     ILayoutQueue layoutQueue)
-            : base(perspective, surrogateProvider, renderPositions, lastMeasurements, 
+            : base(perspective, surrogateProvider, renderPositions, lastMeasurements,
                 themeProvider, visualLineage, layoutQueue)
         {
             _fontProvider = fontProvider;
@@ -46,8 +46,8 @@ namespace Das.Xamarin.Android
             throw new NotImplementedException();
         }
 
-        public override  void DrawImage<TRectangle>(IImage img, 
-                                                    TRectangle destination)
+        public override void DrawImage<TRectangle>(IImage img,
+                                                   TRectangle destination)
         {
             var bmp = img.Unwrap<Bitmap>();
             var dest = GetAbsoluteAndroidRect(destination);
@@ -65,7 +65,6 @@ namespace Das.Xamarin.Android
             //DrawImage(img, new ValueRectangle(0, 0, img.Width, img.Height), destination);
         }
 
-        
 
         public override void DrawImage<TRectangle1, TRectangle2>(IImage img,
                                                                  TRectangle1 srcRect,
@@ -91,7 +90,7 @@ namespace Das.Xamarin.Android
             GetCanvas().DrawLine(l1.X, l1.Y, l2.X, l2.Y, _paint);
         }
 
-        public override void DrawLines(IPen pen, 
+        public override void DrawLines(IPen pen,
                                        IPoint2D[] points)
         {
             if (points.Length < 2)
@@ -121,119 +120,15 @@ namespace Das.Xamarin.Android
         }
 
         public override void DrawRoundedRect<TRectangle, TPen, TThickness>(TRectangle rect,
-                                                               TPen pen,
-                                                               TThickness cornerRadii)
+                                                                           TPen pen,
+                                                                           TThickness cornerRadii)
         {
             _paint.SetStyle(Paint.Style.Stroke);
             SetColor(pen);
 
             RoundedRectImpl(rect, cornerRadii);
-
-            //var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
-
-            //if (cornerRadii.AreAllSidesEqual())
-            //{
-            //    var androidRect = new RectF(Convert.ToSingle(useRect.Left),
-            //        Convert.ToSingle(useRect.Top),
-            //        Convert.ToSingle(useRect.Right),
-            //        Convert.ToSingle(useRect.Bottom));
-
-            //    var sRadius = Convert.ToSingle(cornerRadii.Left);
-
-            //    GetCanvas().DrawRoundRect(androidRect, sRadius, sRadius, _paint);
-
-            //    return;
-            //}
-
-            
-            //var path = new AndroidGraphicsPath();
-            //path.SetRoundedRectangle(useRect, cornerRadii);
-            //GetCanvas().DrawPath(path.Path, _paint);
         }
 
-        /// <summary>
-        /// _paint.SetStyle and SetColor have to be called before this
-        /// </summary>
-        private void RoundedRectImpl<TRectangle, TThickness>(TRectangle rect,
-                                                                       TThickness cornerRadii)
-            where TRectangle : IRectangle
-            where TThickness : IThickness
-        {
-            var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
-
-            if (cornerRadii.AreAllSidesEqual())
-            {
-                var androidRect = new RectF(Convert.ToSingle(useRect.Left),
-                    Convert.ToSingle(useRect.Top),
-                    Convert.ToSingle(useRect.Right),
-                    Convert.ToSingle(useRect.Bottom));
-
-                var sRadius = Convert.ToSingle(cornerRadii.Left);
-
-                GetCanvas().DrawRoundRect(androidRect, sRadius, sRadius, _paint);
-
-                return;
-            }
-
-            
-            var path = new AndroidGraphicsPath();
-            path.SetRoundedRectangle(useRect, cornerRadii);
-            GetCanvas().DrawPath(path.Path, _paint);
-        }
-
-        protected override void PushClip<TRectangle>(TRectangle rect)
-        {
-            var canvas = GetCanvas();
-            
-            canvas.Save();
-
-            //System.Diagnostics.Debug.WriteLine("****** PUSH CLIP " + rect);
-
-            canvas.ClipRect(
-                Convert.ToInt32(rect.X),
-                Convert.ToInt32(rect.Y),
-                Convert.ToInt32(rect.Right),
-                Convert.ToInt32(rect.Bottom));
-          
-        }
-
-        protected override void PopClip<TRectangle>(TRectangle rect)
-        {
-            //System.Diagnostics.Debug.WriteLine("POP CLIP");
-            //_clipCount--;
-
-            var canvas = GetCanvas();
-            //var useRect = GetAbsoluteAndroidRect(rect);
-
-            canvas.Restore();
-
-            //System.Diagnostics.Debug.WriteLine("****** POP CLIP " + rect);
-           // GetCanvas().ClipRect(0, 0, 0, 0);
-            
-        }
-
-        protected override ValueRectangle GetCurrentClip()
-        {
-            var clip = GetCanvas().ClipBounds;
-            if (clip == null)
-                return ValueRectangle.Empty;
-            if (clip.Width() == 0 && clip.Height() == 0)
-                return ValueRectangle.Empty;
-
-            if (ZoomLevel.AreDifferent(1.0))
-            {
-                return new ValueRectangle(clip.Left / ZoomLevel, 
-                    clip.Top / ZoomLevel, 
-                    clip.Width() / ZoomLevel, 
-                    clip.Height() / ZoomLevel);
-            }
-            return new ValueRectangle(clip.Left, 
-                clip.Top, 
-                clip.Width(), 
-                clip.Height());
-
-        }
-        
 
         public override void DrawString<TFont, TBrush, TPoint>(String s,
                                                                TFont font,
@@ -283,7 +178,7 @@ namespace Das.Xamarin.Android
         {
             _paint.SetStyle(Paint.Style.Fill);
             SetColor(brush);
-            
+
             RoundedRectImpl(rect, cornerRadii);
 
             //var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
@@ -304,31 +199,62 @@ namespace Das.Xamarin.Android
 
             //var path = new AndroidGraphicsPath();
             //path.SetRoundedRectangle(useRect, cornerRadii);
-            
+
             //GetCanvas().DrawPath(path.Path, _paint);
         }
 
-        private Point GetAbsoluteAndroidPoint(IPoint2D relativePoint2D)
+        protected override ValueRectangle GetCurrentClip()
         {
-            if (ZoomLevel.AreDifferent(1.0))
-            {
-                return new Point(
-                    Convert.ToInt32((CurrentLocation.X + relativePoint2D.X) * ZoomLevel),
-                    Convert.ToInt32((CurrentLocation.Y + relativePoint2D.Y) * ZoomLevel));
-            }
+            var clip = GetCanvas().ClipBounds;
+            if (clip == null)
+                return ValueRectangle.Empty;
+            if (clip.Width() == 0 && clip.Height() == 0)
+                return ValueRectangle.Empty;
 
-            return new Point(
-                Convert.ToInt32(CurrentLocation.X + relativePoint2D.X),
-                Convert.ToInt32(CurrentLocation.Y + relativePoint2D.Y));
+            if (ZoomLevel.AreDifferent(1.0))
+                return new ValueRectangle(clip.Left / ZoomLevel,
+                    clip.Top / ZoomLevel,
+                    clip.Width() / ZoomLevel,
+                    clip.Height() / ZoomLevel);
+            return new ValueRectangle(clip.Left,
+                clip.Top,
+                clip.Width(),
+                clip.Height());
         }
 
-        [ThreadStatic]
-        private static Rect? _rect;
+        protected override void PopClip<TRectangle>(TRectangle rect)
+        {
+            //System.Diagnostics.Debug.WriteLine("POP CLIP");
+            //_clipCount--;
+
+            var canvas = GetCanvas();
+            //var useRect = GetAbsoluteAndroidRect(rect);
+
+            canvas.Restore();
+
+            //System.Diagnostics.Debug.WriteLine("****** POP CLIP " + rect);
+            // GetCanvas().ClipRect(0, 0, 0, 0);
+        }
+
+        protected override void PushClip<TRectangle>(TRectangle rect)
+        {
+            var canvas = GetCanvas();
+
+            canvas.Save();
+
+            //System.Diagnostics.Debug.WriteLine("****** PUSH CLIP " + rect);
+
+            canvas.ClipRect(
+                Convert.ToInt32(rect.X),
+                Convert.ToInt32(rect.Y),
+                Convert.ToInt32(rect.Right),
+                Convert.ToInt32(rect.Bottom));
+        }
 
         private static Rect BakeRect(Double left,
-                                Double top,
-                                Double right,
-                                Double bottom)
+                                     Double top,
+                                     Double right,
+                                     Double bottom)
         {
             if (_rect == null)
             {
@@ -345,7 +271,6 @@ namespace Das.Xamarin.Android
             _rect.Bottom = Convert.ToInt32(bottom);
 
             return _rect;
-
         }
 
         private static Rect BakeRect(Int32 left,
@@ -368,20 +293,29 @@ namespace Das.Xamarin.Android
             _rect.Bottom = bottom;
 
             return _rect;
+        }
 
+        private Point GetAbsoluteAndroidPoint(IPoint2D relativePoint2D)
+        {
+            if (ZoomLevel.AreDifferent(1.0))
+                return new Point(
+                    Convert.ToInt32((CurrentLocation.X + relativePoint2D.X) * ZoomLevel),
+                    Convert.ToInt32((CurrentLocation.Y + relativePoint2D.Y) * ZoomLevel));
+
+            return new Point(
+                Convert.ToInt32(CurrentLocation.X + relativePoint2D.X),
+                Convert.ToInt32(CurrentLocation.Y + relativePoint2D.Y));
         }
 
 
         private Rect GetAbsoluteAndroidRect<TRectangle>(TRectangle rect)
-        where TRectangle : IRectangle
+            where TRectangle : IRectangle
         {
             if (ZoomLevel.AreDifferent(1.0))
-            {
                 return new Rect(Convert.ToInt32((rect.Left + CurrentLocation.X) * ZoomLevel),
                     Convert.ToInt32((rect.Top + CurrentLocation.Y) * ZoomLevel),
                     Convert.ToInt32((rect.Right + CurrentLocation.X) * ZoomLevel),
                     Convert.ToInt32((rect.Bottom + CurrentLocation.Y) * ZoomLevel));
-            }
 
             return new Rect(Convert.ToInt32(rect.Left + CurrentLocation.X),
                 Convert.ToInt32(rect.Top + CurrentLocation.Y),
@@ -394,7 +328,36 @@ namespace Das.Xamarin.Android
             return Canvas ?? throw new NullReferenceException("Canvas must be set");
         }
 
-       
+        /// <summary>
+        ///     _paint.SetStyle and SetColor have to be called before this
+        /// </summary>
+        private void RoundedRectImpl<TRectangle, TThickness>(TRectangle rect,
+                                                             TThickness cornerRadii)
+            where TRectangle : IRectangle
+            where TThickness : IThickness
+        {
+            var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
+
+            if (cornerRadii.AreAllSidesEqual())
+            {
+                var androidRect = new RectF(Convert.ToSingle(useRect.Left),
+                    Convert.ToSingle(useRect.Top),
+                    Convert.ToSingle(useRect.Right),
+                    Convert.ToSingle(useRect.Bottom));
+
+                var sRadius = Convert.ToSingle(cornerRadii.Left);
+
+                GetCanvas().DrawRoundRect(androidRect, sRadius, sRadius, _paint);
+
+                return;
+            }
+
+
+            var path = new AndroidGraphicsPath();
+            path.SetRoundedRectangle(useRect, cornerRadii);
+            GetCanvas().DrawPath(path.Path, _paint);
+        }
+
 
         private void SetColor(IPen pen)
         {
@@ -414,9 +377,11 @@ namespace Das.Xamarin.Android
             }
         }
 
+        [ThreadStatic]
+        private static Rect? _rect;
+
         private readonly AndroidFontProvider _fontProvider;
 
         private readonly Paint _paint;
-        
     }
 }
