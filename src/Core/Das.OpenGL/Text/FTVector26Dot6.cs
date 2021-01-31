@@ -43,7 +43,7 @@ namespace Das.OpenGL.Text
         /// </summary>
         public Fixed26Dot6 X
         {
-            get => Fixed26Dot6.FromRawValue((int)x);
+            get => Fixed26Dot6.FromRawValue((Int32)x);
 
             set => x = (IntPtr)value.Value;
         }
@@ -53,7 +53,7 @@ namespace Das.OpenGL.Text
         /// </summary>
         public Fixed26Dot6 Y
         {
-            get => Fixed26Dot6.FromRawValue((int)y);
+            get => Fixed26Dot6.FromRawValue((Int32)y);
 
             set => y = (IntPtr)value.Value;
         }
@@ -68,7 +68,7 @@ namespace Das.OpenGL.Text
         /// <param name="left">A <see cref="FTVector26Dot6"/>.</param>
         /// <param name="right">Another <see cref="FTVector26Dot6"/>.</param>
         /// <returns>A value indicating equality.</returns>
-        public static bool operator ==(FTVector26Dot6 left, FTVector26Dot6 right) => left.Equals(right);
+        public static Boolean operator ==(FTVector26Dot6 left, FTVector26Dot6 right) => left.Equals(right);
 
         /// <summary>
         /// Compares two instances of <see cref="FTVector26Dot6"/> for inequality.
@@ -76,7 +76,7 @@ namespace Das.OpenGL.Text
         /// <param name="left">A <see cref="FTVector26Dot6"/>.</param>
         /// <param name="right">Another <see cref="FTVector26Dot6"/>.</param>
         /// <returns>A value indicating inequality.</returns>
-        public static bool operator !=(FTVector26Dot6 left, FTVector26Dot6 right) => !left.Equals(right);
+        public static Boolean operator !=(FTVector26Dot6 left, FTVector26Dot6 right) => !left.Equals(right);
 
         #endregion
 
@@ -87,14 +87,14 @@ namespace Das.OpenGL.Text
         /// </summary>
         /// <param name="other">A <see cref="FTVector26Dot6"/>.</param>
         /// <returns>A value indicating equality.</returns>
-        public bool Equals(FTVector26Dot6 other) => x == other.x && y == other.y;
+        public Boolean Equals(FTVector26Dot6 other) => x == other.x && y == other.y;
 
         /// <summary>
         /// Compares this instance of <see cref="FTVector26Dot6"/> to an object for equality.
         /// </summary>
         /// <param name="obj">An object.</param>
         /// <returns>A value indicating equality.</returns>
-        public override bool Equals(object obj)
+        public override Boolean Equals(Object obj)
         {
             if (obj is FTVector26Dot6)
                 return Equals((FTVector26Dot6)obj);
@@ -106,7 +106,7 @@ namespace Das.OpenGL.Text
         /// Gets a unique hash code for this instance.
         /// </summary>
         /// <returns>A hash code.</returns>
-        public override int GetHashCode() => x.GetHashCode() ^ y.GetHashCode();
+        public override Int32 GetHashCode() => x.GetHashCode() ^ y.GetHashCode();
 
         #endregion
     }

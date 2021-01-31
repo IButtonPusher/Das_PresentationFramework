@@ -23,6 +23,6 @@ namespace TestCommon.Company
         }
 
         public IEnumerable<IDataPoint<String, Double>> Items { get; }
-        public IDictionary<string, IBrush> ItemColors { get; }
+        public IDictionary<String, IBrush> ItemColors { get; }
     }
 }

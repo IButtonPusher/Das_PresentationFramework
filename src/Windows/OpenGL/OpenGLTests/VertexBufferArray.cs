@@ -14,14 +14,14 @@ namespace SharpGL.VertexBuffers
         public void Create()
         {
             //  Generate the vertex array.
-            uint[] ids = new uint[1];
+            UInt32[] ids = new UInt32[1];
             GL.GenVertexArrays(1, ids);
             vertexArrayObject = ids[0];
         }
 
         public void Delete()
         {
-            GL.DeleteVertexArrays(1, new uint[] { vertexArrayObject });
+            GL.DeleteVertexArrays(1, new UInt32[] { vertexArrayObject });
         }
 
         public void Bind()
@@ -37,11 +37,11 @@ namespace SharpGL.VertexBuffers
         /// <summary>
         /// Gets the vertex buffer array object.
         /// </summary>
-        public uint VertexBufferArrayObject
+        public UInt32 VertexBufferArrayObject
         {
             get { return vertexArrayObject; }
         }
 
-        private uint vertexArrayObject;
+        private UInt32 vertexArrayObject;
     }
 }

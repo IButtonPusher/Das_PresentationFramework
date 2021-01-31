@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.Threading.Tasks;
 using Das.Views.Core;
 using Das.Views.Core.Geometry;

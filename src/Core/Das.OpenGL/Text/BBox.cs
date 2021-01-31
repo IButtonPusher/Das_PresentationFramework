@@ -25,7 +25,7 @@ namespace Das.OpenGL.Text
         /// <param name="bottom">The bottom bound.</param>
         /// <param name="right">The right bound.</param>
         /// <param name="top">The upper bound.</param>
-        public BBox(int left, int bottom, int right, int top)
+        public BBox(Int32 left, Int32 bottom, Int32 right, Int32 top)
         {
             xMin = (IntPtr)left;
             yMin = (IntPtr)bottom;
@@ -40,22 +40,22 @@ namespace Das.OpenGL.Text
         /// <summary>
         /// Gets the horizontal minimum (left-most).
         /// </summary>
-        public int Left => (int)xMin;
+        public Int32 Left => (Int32)xMin;
 
         /// <summary>
         /// Gets the vertical minimum (bottom-most).
         /// </summary>
-        public int Bottom => (int)yMin;
+        public Int32 Bottom => (Int32)yMin;
 
         /// <summary>
         /// Gets the horizontal maximum (right-most).
         /// </summary>
-        public int Right => (int)xMax;
+        public Int32 Right => (Int32)xMax;
 
         /// <summary>
         /// Gets the vertical maximum (top-most).
         /// </summary>
-        public int Top => (int)yMax;
+        public Int32 Top => (Int32)yMax;
 
         #endregion
 
@@ -67,7 +67,7 @@ namespace Das.OpenGL.Text
         /// <param name="left">A <see cref="BBox"/>.</param>
         /// <param name="right">Another <see cref="BBox"/>.</param>
         /// <returns>A value indicating equality.</returns>
-        public static bool operator ==(BBox left, BBox right) => left.Equals(right);
+        public static Boolean operator ==(BBox left, BBox right) => left.Equals(right);
 
         /// <summary>
         /// Compares two instances of <see cref="BBox"/> for inequality.
@@ -75,7 +75,7 @@ namespace Das.OpenGL.Text
         /// <param name="left">A <see cref="BBox"/>.</param>
         /// <param name="right">Another <see cref="BBox"/>.</param>
         /// <returns>A value indicating inequality.</returns>
-        public static bool operator !=(BBox left, BBox right) => !left.Equals(right);
+        public static Boolean operator !=(BBox left, BBox right) => !left.Equals(right);
 
         #endregion
 
@@ -86,7 +86,7 @@ namespace Das.OpenGL.Text
         /// </summary>
         /// <param name="other">A <see cref="BBox"/>.</param>
         /// <returns>A value indicating equality.</returns>
-        public bool Equals(BBox other) =>
+        public Boolean Equals(BBox other) =>
             xMin == other.xMin &&
             yMin == other.yMin &&
             xMax == other.xMax &&
@@ -97,7 +97,7 @@ namespace Das.OpenGL.Text
         /// </summary>
         /// <param name="obj">An object.</param>
         /// <returns>A value indicating equality.</returns>
-        public override bool Equals(object obj)
+        public override Boolean Equals(Object obj)
         {
             if (obj is BBox)
                 return this.Equals((BBox)obj);
@@ -109,13 +109,13 @@ namespace Das.OpenGL.Text
         /// Gets a unique hash code for this instance.
         /// </summary>
         /// <returns>A hash code.</returns>
-        public override int GetHashCode() => xMin.GetHashCode() ^ yMin.GetHashCode() ^ xMax.GetHashCode() ^ yMax.GetHashCode();
+        public override Int32 GetHashCode() => xMin.GetHashCode() ^ yMin.GetHashCode() ^ xMax.GetHashCode() ^ yMax.GetHashCode();
 
         /// <summary>
         /// Gets a string that represents this instance.
         /// </summary>
         /// <returns>A string representation of this instance.</returns>
-        public override string ToString() => "Min: (" + (int)xMin + ", " + (int)yMin + "), Max: (" + (int)xMax + ", " + (int)yMax + ")";
+        public override String ToString() => "Min: (" + (Int32)xMin + ", " + (Int32)yMin + "), Max: (" + (Int32)xMax + ", " + (Int32)yMax + ")";
 
         #endregion
     }

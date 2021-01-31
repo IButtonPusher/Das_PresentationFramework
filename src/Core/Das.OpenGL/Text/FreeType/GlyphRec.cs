@@ -11,7 +11,7 @@ namespace Das.OpenGL.Text.FreeType
     {
         public IntPtr library;
         public IntPtr clazz;
-        public int format;
+        public Int32 format;
         public Vector advance;
     }
 }

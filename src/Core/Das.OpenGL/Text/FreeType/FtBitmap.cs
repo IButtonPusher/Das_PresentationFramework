@@ -6,13 +6,13 @@ namespace Das.OpenGL.Text.FreeType
     [StructLayout(LayoutKind.Sequential)]
     public class FtBitmap
     {
-        public int rows;
-        public int width;
-        public int pitch;
+        public Int32 rows;
+        public Int32 width;
+        public Int32 pitch;
         public IntPtr buffer;
-        public short num_grays;
-        public sbyte pixel_mode;
-        public sbyte palette_mode;
+        public Int16 num_grays;
+        public SByte pixel_mode;
+        public SByte palette_mode;
         public IntPtr palette;
     }
 }

@@ -11,7 +11,7 @@ namespace Das.OpenGL.Text.FreeType
         internal IntPtr library;
         internal IntPtr face;
         internal IntPtr next;
-        internal uint reserved;
+        internal UInt32 reserved;
         internal GenericRec generic;
 
         internal GlyphMetricsRec metrics;
@@ -22,12 +22,12 @@ namespace Das.OpenGL.Text.FreeType
         internal GlyphFormat format;
 
         internal BitmapRec bitmap;
-        internal int bitmap_left;
-        internal int bitmap_top;
+        internal Int32 bitmap_left;
+        internal Int32 bitmap_top;
 
         internal OutlineRec outline;
 
-        internal uint num_subglyphs;
+        internal UInt32 num_subglyphs;
         internal IntPtr subglyphs;
 
         internal IntPtr control_data;

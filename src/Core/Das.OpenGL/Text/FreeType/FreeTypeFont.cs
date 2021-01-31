@@ -20,26 +20,26 @@ namespace Das.OpenGL.Text
         internal IntPtr family_name;
         internal IntPtr style_name;
 
-        internal int num_fixed_sizes;
+        internal Int32 num_fixed_sizes;
         internal IntPtr available_sizes;
 
-        internal int num_charmaps;
+        internal Int32 num_charmaps;
         internal IntPtr charmaps;
 
         internal GenericRec generic;
 
         internal BBox bbox;
 
-        internal ushort units_per_EM;
-        internal short ascender;
-        internal short descender;
-        internal short height;
+        internal UInt16 units_per_EM;
+        internal Int16 ascender;
+        internal Int16 descender;
+        internal Int16 height;
 
-        internal short max_advance_width;
-        internal short max_advance_height;
+        internal Int16 max_advance_width;
+        internal Int16 max_advance_height;
 
-        internal short underline_position;
-        internal short underline_thickness;
+        internal Int16 underline_position;
+        internal Int16 underline_thickness;
 
         internal IntPtr glyph;
         internal IntPtr size;
@@ -55,6 +55,6 @@ namespace Das.OpenGL.Text
 
         private IntPtr @internal;
 
-        internal static int SizeInBytes => Marshal.SizeOf(typeof(FreeTypeFont));
+        internal static Int32 SizeInBytes => Marshal.SizeOf(typeof(FreeTypeFont));
     }
 }

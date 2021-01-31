@@ -6,8 +6,8 @@ namespace Das.OpenGL.Text.FreeType
     [StructLayout(LayoutKind.Sequential)]
     internal struct OutlineRec
     {
-        internal short n_contours;
-        internal short n_points;
+        internal Int16 n_contours;
+        internal Int16 n_points;
 
         internal IntPtr points;
         internal IntPtr tags;

@@ -10,7 +10,7 @@ namespace SharpGL.Shaders
     /// </summary>
     public class Shader
     {
-        public void Create(uint shaderType, string source)
+        public void Create(UInt32 shaderType, String source)
         {
             //  Create the OpenGL shader object.
             shaderObject = GL.CreateShader(shaderType);
@@ -35,20 +35,20 @@ namespace SharpGL.Shaders
             shaderObject = 0;
         }
 
-        public bool GetCompileStatus()
+        public Boolean GetCompileStatus()
         {
-            int[] parameters = new int[] { 0 };
+            Int32[] parameters = new Int32[] { 0 };
             GL.GetShaderiv(shaderObject, GL.GL_COMPILE_STATUS, parameters);
             return parameters[0] == GL.GL_TRUE;
         }
 
-        public string GetInfoLog()
+        public String GetInfoLog()
         {
             //  Get the info log length.
-            int[] infoLength = new int[] { 0 };
+            Int32[] infoLength = new Int32[] { 0 };
             GL.GetShaderiv(ShaderObject,
                 GL.GL_INFO_LOG_LENGTH, infoLength);
-            int bufSize = infoLength[0];
+            Int32 bufSize = infoLength[0];
 
             //  Get the compile info.
             StringBuilder il = new StringBuilder(bufSize);
@@ -60,12 +60,12 @@ namespace SharpGL.Shaders
         /// <summary>
         /// The OpenGL shader object.
         /// </summary>
-        private uint shaderObject;
+        private UInt32 shaderObject;
 
         /// <summary>
         /// Gets the shader object.
         /// </summary>
-        public uint ShaderObject
+        public UInt32 ShaderObject
         {
             get { return shaderObject; }
         }

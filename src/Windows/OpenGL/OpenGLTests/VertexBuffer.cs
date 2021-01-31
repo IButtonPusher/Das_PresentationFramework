@@ -15,12 +15,12 @@ namespace SharpGL.VertexBuffers
         public void Create()
         {
             //  Generate the vertex array.
-            uint[] ids = new uint[1];
+            UInt32[] ids = new UInt32[1];
             GL.GenBuffers(1, ids);
             vertexBufferObject = ids[0];
         }
 
-        public void SetData(uint attributeIndex, float[] rawData, bool isNormalised, int stride)
+        public void SetData(UInt32 attributeIndex, Single[] rawData, Boolean isNormalised, Int32 stride)
         {
             //  Set the data, specify its shape and assign it to a vertex attribute (so shaders can bind to it).
             GL.BufferData(GL.GL_ARRAY_BUFFER, rawData, GL.GL_STATIC_DRAW);
@@ -38,16 +38,16 @@ namespace SharpGL.VertexBuffers
             GL.BindBuffer(GL.GL_ARRAY_BUFFER, 0);
         }
 
-        public bool IsCreated() { return vertexBufferObject != 0; }
+        public Boolean IsCreated() { return vertexBufferObject != 0; }
 
         /// <summary>
         /// Gets the vertex buffer object.
         /// </summary>
-        public uint VertexBufferObject
+        public UInt32 VertexBufferObject
         {
             get { return vertexBufferObject; }
         }
 
-        private uint vertexBufferObject;
+        private UInt32 vertexBufferObject;
     }
 }

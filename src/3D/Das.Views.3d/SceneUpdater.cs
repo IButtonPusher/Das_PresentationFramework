@@ -15,7 +15,7 @@ namespace Das.Views.Extended
             Task.Factory.StartNew(GameLoop, TaskCreationOptions.LongRunning);
         }
 
-        protected override bool IsChanged => true;
+        protected override Boolean IsChanged => true;
         protected override Boolean Update()
         {
             _viewModel.Update();

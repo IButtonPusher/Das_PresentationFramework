@@ -5,15 +5,15 @@ namespace TestCommon.Company
 {
     public class ProductSold : IDataPoint<String, Double>
     {
-        public ProductSold(string description, double value)
+        public ProductSold(String description, Double value)
         {
             Description = description;
             Value = value;
         }
 
-        public string Description { get; }
-        public double Value { get; }
+        public String Description { get; }
+        public Double Value { get; }
 
-        public override string ToString() => Description + ": " + Value;
+        public override String ToString() => Description + ": " + Value;
     }
 }

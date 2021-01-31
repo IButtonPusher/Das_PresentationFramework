@@ -21,15 +21,15 @@ namespace Das.OpenGL.Text.FreeType
 
         public Vector Advance { get; }
 
-        public float HorizontalBearingX => GetFloat(_slotRect.metrics.horiBearingX);
+        public Single HorizontalBearingX => GetFloat(_slotRect.metrics.horiBearingX);
 
-        public float HorizontalBearingY => GetFloat(_slotRect.metrics.horiBearingY);
+        public Single HorizontalBearingY => GetFloat(_slotRect.metrics.horiBearingY);
 
-        public float Height => GetFloat(_slotRect.metrics.height);
+        public Single Height => GetFloat(_slotRect.metrics.height);
 
-        public float Width => GetFloat(_slotRect.metrics.width);
+        public Single Width => GetFloat(_slotRect.metrics.width);
      
-        private static float GetFloat(IntPtr ptr) =>
+        private static Single GetFloat(IntPtr ptr) =>
             Fixed26Dot6.FromRawValue((Int32)ptr).Value / 64f;
     }
 }

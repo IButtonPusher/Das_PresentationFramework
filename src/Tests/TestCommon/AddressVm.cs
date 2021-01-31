@@ -51,14 +51,14 @@ namespace TestCommon
             set => SetValue(ref _state, value);
         }
 
-        public bool Equals(AddressVm other)
+        public Boolean Equals(AddressVm other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             return _houseNumber == other._houseNumber && _street == other._street && _zipCode == other._zipCode && _city == other._city && _state == other._state;
         }
 
-        public override bool Equals(object obj)
+        public override Boolean Equals(Object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -66,7 +66,7 @@ namespace TestCommon
             return Equals((AddressVm) obj);
         }
 
-        public override int GetHashCode()
+        public override Int32 GetHashCode()
         {
             unchecked
             {

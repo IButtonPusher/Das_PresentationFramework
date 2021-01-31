@@ -150,12 +150,12 @@ namespace Das.Views.Transforms
                    OffsetY.Equals(other.OffsetY);
         }
 
-        public override bool Equals(object? obj)
+        public override Boolean Equals(Object? obj)
         {
             return obj is TransformationMatrix other && Equals(other);
         }
 
-        public override int GetHashCode()
+        public override Int32 GetHashCode()
         {
             unchecked
             {

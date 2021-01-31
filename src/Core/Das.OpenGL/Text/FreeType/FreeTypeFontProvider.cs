@@ -15,7 +15,7 @@ namespace Das.OpenGL.Text.FreeType
         {
             _context = context;
             _cached = new Dictionary<IFont, GLFont>();
-            _fontFiles = new Dictionary<string, Dictionary<FontStyle, FileInfo>>(
+            _fontFiles = new Dictionary<String, Dictionary<FontStyle, FileInfo>>(
                 StringComparer.OrdinalIgnoreCase);
 
             var ret = FT.FT_Init_FreeType(out var library);

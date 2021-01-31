@@ -58,7 +58,7 @@ namespace Triangulation
         }
 
 
-        public static int GetOrientation(Vector3 v0, Vector3 v1, Vector3 v2, Vector3 normal)
+        public static Int32 GetOrientation(Vector3 v0, Vector3 v1, Vector3 v2, Vector3 normal)
         {
            
             var res = (v0 - v1).Cross(v2 - v1);
@@ -118,8 +118,8 @@ namespace Triangulation
         {
             ConnectionEdge? prev = null, first = null;
             Dictionary<Vector3, Vector3> pointsHashSet = new Dictionary<Vector3, Vector3>();
-            int pointCount = 0;
-            for (int i = 0; i < points.Count; i++)
+            Int32 pointCount = 0;
+            for (Int32 i = 0; i < points.Count; i++)
             {
                 // we don't wanna have duplicates
                 Vector3 p0;
@@ -184,7 +184,7 @@ namespace Triangulation
 
             while (_mainPointList.PointCount > 2)
             {
-                bool guard = false;
+                Boolean guard = false;
                 foreach (var cur in _mainPointList.GetPolygonCirculator())
                 {
                     if (!IsConvex(cur, Normal))
@@ -202,13 +202,13 @@ namespace Triangulation
                         // Check if prev and next are still nonconvex. If not, then remove from non convex list
                         if (IsConvex(cur.Prev, Normal))
                         {
-                            int index = nonConvexPoints.FindIndex(x => x == cur.Prev);
+                            Int32 index = nonConvexPoints.FindIndex(x => x == cur.Prev);
                             if (index >= 0)
                                 nonConvexPoints.RemoveAt(index);
                         }
                         if (IsConvex(cur.Next, Normal))
                         {
-                            int index = nonConvexPoints.FindIndex(x => x == cur.Next);
+                            Int32 index = nonConvexPoints.FindIndex(x => x == cur.Next);
                             if (index >= 0)
                                 nonConvexPoints.RemoveAt(index);
                         }
@@ -228,7 +228,7 @@ namespace Triangulation
             return Result;
         }
 
-        private static bool PointsOnLine(Polygon pointList, Vector3 Normal)
+        private static Boolean PointsOnLine(Polygon pointList, Vector3 Normal)
         {
             foreach (var connectionEdge in pointList.GetPolygonCirculator())
             {
@@ -239,9 +239,9 @@ namespace Triangulation
             return true;
         }
 
-        private static bool IsConvex(ConnectionEdge curPoint, Vector3 Normal)
+        private static Boolean IsConvex(ConnectionEdge curPoint, Vector3 Normal)
         {
-            int orientation = GetOrientation(curPoint.Prev.Origin, curPoint.Origin, curPoint.Next.Origin,
+            Int32 orientation = GetOrientation(curPoint.Prev.Origin, curPoint.Origin, curPoint.Next.Origin,
                 Normal);
             return orientation == 1;
         }
@@ -521,9 +521,9 @@ namespace Triangulation
         //    return maxEdge;
         //}
 
-        private static bool IsPointInTriangle(Vector3 prevPoint, Vector3 curPoint, Vector3 nextPoint, 
-                                              List<ConnectionEdge> nonConvexPoints,
-                                              Vector3 Normal)
+        private static Boolean IsPointInTriangle(Vector3 prevPoint, Vector3 curPoint, Vector3 nextPoint, 
+                                                 List<ConnectionEdge> nonConvexPoints,
+                                                 Vector3 Normal)
         {
             foreach (var nonConvexPoint in nonConvexPoints)
             {
@@ -535,7 +535,7 @@ namespace Triangulation
             return false;
         }
 
-        public static bool PointInOrOnTriangle(Vector3 prevPoint, Vector3 curPoint, Vector3 nextPoint, Vector3 nonConvexPoint, Vector3 normal)
+        public static Boolean PointInOrOnTriangle(Vector3 prevPoint, Vector3 curPoint, Vector3 nextPoint, Vector3 nonConvexPoint, Vector3 normal)
         {
             var res0 = GetOrientation(prevPoint, nonConvexPoint, curPoint, normal);
             var res1 = GetOrientation(curPoint, nonConvexPoint, nextPoint, normal);
