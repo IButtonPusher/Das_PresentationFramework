@@ -1,14 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 
 namespace Das.Views.Images
 {
     public class NullImage : IImage
     {
-        public static NullImage Instance = new NullImage();
+        public static readonly NullImage Instance = new NullImage();
 
         #if NET40
         private static readonly Task _completedTask = TaskEx.CompletedTask;

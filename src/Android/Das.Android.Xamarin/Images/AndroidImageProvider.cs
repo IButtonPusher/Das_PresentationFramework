@@ -7,6 +7,7 @@ using Das.Extensions;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
+using Das.Views.Images;
 using Das.Xamarin.Android.Rendering;
 using Path = Android.Graphics.Path;
 

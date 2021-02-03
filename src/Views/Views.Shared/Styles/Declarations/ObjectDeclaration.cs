@@ -12,5 +12,12 @@ namespace Das.Views.Styles.Declarations
         }
         
         public DeclarationProperty Property => DeclarationProperty.Invalid;
+
+        public Boolean Equals(IStyleDeclaration other)
+        {
+            return other.Property == Property &&
+                   other is ObjectDeclaration obj &&
+                   Equals(obj.Value, Value);
+        }
     }
 }

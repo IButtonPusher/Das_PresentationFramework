@@ -48,12 +48,11 @@
     <Reference Include="Das.Container.Interfaces, Version=0.0.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Das.Container.Interfaces.0.0.8-alpha\lib\netstandard2.0\Das.Container.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="Das.Serializer, Version=0.0.20.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Das.Serializer.Split.0.0.20-alpha\lib\net45\Das.Serializer.dll</HintPath>
+    <Reference Include="Das.Serializer, Version=0.0.21.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Das.Serializer.Split.0.0.21-alpha\lib\net45\Das.Serializer.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Serializer.Interfaces, Version=0.0.20.0, Culture=neutral, PublicKeyToken=55ec9f54a6117381, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Das.Serializer.Interfaces.0.0.20-alpha\lib\net45\Serializer.Interfaces.dll</HintPath>
+    <Reference Include="Serializer.Interfaces, Version=0.0.21.0, Culture=neutral, PublicKeyToken=55ec9f54a6117381, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Das.Serializer.Interfaces.0.0.21-alpha\lib\net45\Serializer.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -102,21 +101,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\3D\Das.Views.3d\Das.Views.3d.csproj">
-      <Project>{38da919c-2399-4e7c-885a-02e71c785851}</Project>
-      <Name>Das.Views.3d</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Charting\Das.Views.Charting\Das.Views.Charting.csproj">
-      <Project>{2bf5a71d-f514-4b2c-a8b3-0450cae673ba}</Project>
-      <Name>Das.Views.Charting</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Core\Das.View.Interfaces\Das.Views.Interfaces.csproj">
       <Project>{694f0d45-3e66-40f3-be93-1aac0921befb}</Project>
       <Name>Das.Views.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Dev\Das.Views.DevKit\Das.Views.DevKit.csproj">
-      <Project>{3e6b415e-62a4-46ea-a718-4aa5c33263ac}</Project>
-      <Name>Das.Views.DevKit</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Tests\TestCommon\TestCommon.csproj">
       <Project>{6f5d2f7b-2d1d-4a5b-b1ae-654192afb3b8}</Project>

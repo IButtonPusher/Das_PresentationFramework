@@ -6,6 +6,7 @@ namespace Das.Views.Styles.Selectors
     public class DependencyPropertySelector : SelectorBase
     {
         public DependencyPropertySelector(IDependencyProperty property)
+        : base(property.GetHashCode())
         {
             Property = property;
         }

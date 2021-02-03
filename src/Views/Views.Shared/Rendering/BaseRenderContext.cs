@@ -10,6 +10,7 @@ using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
+using Das.Views.Images;
 using Das.Views.Input;
 using Das.Views.Layout;
 using Das.Views.Panels;
@@ -46,8 +47,6 @@ namespace Das.Views.Rendering
             RenderPositions = renderPositions;
             LastRenderPositions = new Dictionary<IVisualElement, ValueCube>();
 
-            //_lastMeasurements = lastMeasurements;
-            
             _renderLock = new Object();
             Perspective = perspective;
             CurrentElementRect = ValueRenderRectangle.Empty;
@@ -189,24 +188,6 @@ namespace Das.Views.Rendering
             where TPoint : IPoint2D
             where TBrush : IBrush;
 
-
-        //public void DrawElementAt<TPosition>(IVisualElement element,
-        //                                     TPosition location)
-        //    where TPosition : IPoint2D
-        //{
-        //    if (!_lastMeasurements.TryGetValue(element, out var size))
-        //        return;
-
-        //    _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
-
-        //    _fairyRect.X = location.X;
-        //    _fairyRect.Y = location.Y;
-        //    _fairyRect.Width = size.Width;
-        //    _fairyRect.Height = size.Height;
-
-        //    DrawElement(element, _fairyRect);
-        //}
-
         public abstract void DrawEllipse<TPoint, TPen>(TPoint center,
                                                        Double radius,
                                                        TPen pen)
@@ -228,7 +209,6 @@ namespace Das.Views.Rendering
             {
                 ViewState = viewState;
 
-                //FillRectangle(rect, _themeProvider.ColorPalette.Background);
                 FillRectangle(rect, viewState.ColorPalette.Background);
 
                 LastRenderPositions.Clear();
@@ -240,20 +220,6 @@ namespace Das.Views.Rendering
             }
         }
 
-
-        //public void DrawContentElement<TSize>(IVisualElement element,
-        //                                      TSize size)
-        //    where TSize : ISize
-        //{
-        //    _fairyRect ??= new RenderRectangle(0, 0, 0, 0, Point2D.Empty);
-
-        //    _fairyRect.X = 0;
-        //    _fairyRect.Y = 0;
-        //    _fairyRect.Width = size.Width;
-        //    _fairyRect.Height = size.Height;
-
-        //    DrawElement(element, _fairyRect);
-        //}
 
         public void DrawElement<TRenderRectangle>(IVisualElement visual,
                                                   TRenderRectangle rect)
@@ -281,7 +247,7 @@ namespace Das.Views.Rendering
 
             if (!visual.BoxShadow.IsEmpty)
             {
-                var thickness = borderThickness;//!border.IsEmpty ? border : new ValueThickness(1);
+                var thickness = borderThickness;
                 foreach (var layer in visual.BoxShadow)
                 {
                     var h = useRect2.Height + layer.SpreadRadius.GetQuantity(rect.Height);
@@ -498,49 +464,6 @@ namespace Das.Views.Rendering
             FillRectangle(bottomRect, color.Bottom);
         }
 
-
-        //protected void OnDrawBorder<TRectangle, TShape, TBrush, TThickness>(TRectangle rect,
-        //                                                                    TShape thickness,
-        //                                                                    TBrush brush,
-        //                                                                    TThickness cornerRadius)
-        //    where TRectangle : IRectangle
-        //    where TShape : IThickness
-        //    where TBrush : IBrush
-        //    where TThickness : IThickness
-        //{
-        //    if (!cornerRadius.IsEmpty)
-        //    {
-        //        if (!(brush is SolidColorBrush scb))
-        //            throw new NotImplementedException();
-
-        //        var p = new Pen(scb.Color, Convert.ToInt32(thickness.Left));
-
-        //        DrawRoundedRect(rect, p, cornerRadius);
-        //        return;
-        //    }
-
-        //    var sumHeight = rect.Height + thickness.Top + thickness.Bottom;
-        //    var sumWidth = rect.Width + thickness.Left + thickness.Right;
-
-        //    var topLeftOutside = new ValuePoint2D(rect.Left - thickness.Left,
-        //        rect.Top - thickness.Top);
-
-        //    var bottomRightInside = rect.BottomRight;
-
-        //    var leftRect = new ValueRectangle(topLeftOutside, thickness.Left, sumHeight);
-        //    FillRectangle(leftRect, brush);
-
-        //    var topRect = new ValueRectangle(topLeftOutside, sumWidth, thickness.Top);
-        //    FillRectangle(topRect, brush);
-
-        //    var rightRect = new ValueRectangle(rect.Right, topLeftOutside.Y, thickness.Right, sumHeight);
-        //    FillRectangle(rightRect, brush);
-
-        //    var bottomRect = new ValueRectangle(topLeftOutside.X, bottomRightInside.Y,
-        //        sumWidth, thickness.Bottom);
-        //    FillRectangle(bottomRect, brush);
-        //}
-
         protected abstract void PopClip<TRectangle>(TRectangle rect)
             where TRectangle : IRectangle;
 
@@ -561,15 +484,7 @@ namespace Das.Views.Rendering
             CurrentElementRect = rect;
         }
 
-        //private void PushRect(RenderRectangle rect)
-        //{
-        //    _currentZ++;
-        //    _locations.Push(rect);
-        //    CurrentElementRect = rect;
-        //}
-
-        private void SetElementRenderPosition(//RenderRectangle useRect,
-            ValueRenderRectangle useRect,
+        private void SetElementRenderPosition(ValueRenderRectangle useRect,
                                               IVisualElement element)
         {
             var currentClip = GetCurrentClip();
@@ -601,11 +516,7 @@ namespace Das.Views.Rendering
             }
         }
         //private String _tabs = String.Empty;
-
-        //[ThreadStatic]
-        //private static RenderRectangle? _fairyRect;
-
-        //private readonly Dictionary<IVisualElement, ValueSize> _lastMeasurements;
+        
 
         private readonly Stack<ValueRenderRectangle> _locations;
         protected readonly IBoxModel _boxModel;

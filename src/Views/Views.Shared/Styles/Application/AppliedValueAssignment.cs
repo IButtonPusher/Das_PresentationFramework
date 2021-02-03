@@ -17,7 +17,7 @@ namespace Das.Views.Styles.Application
         public void Execute(Boolean isUpdate)
         {
             if (isUpdate)
-                Property.SetValue(Visual, _value);
+                Property.SetValueFromStyle(Visual, _value);
             else
                 Property.SetValueNoTransitions(Visual, _value);
         }

@@ -25,18 +25,22 @@ namespace Das.Views.Construction
 
         static VisualTypeResolver()
         {
-            _defaultNamespaceSeed = new Dictionary<String, String>();
-            _defaultNamespaceSeed["Das.Views.Panels"] = "Das.Views";
-            _defaultNamespaceSeed["Das.Views.Controls"] = "Das.Views";
-            _defaultNamespaceSeed["Das.Views.DataBinding"] = "Das.Views";
-            _defaultNamespaceSeed["Das.Views.Templates"] = "Das.Views";
-            _defaultNamespaceSeed["Das.Views.Primitives"] = "Das.Views";
+            var dasViewsAsm = "Das.Views.dll";
 
-            _defaultNamespaceSeed["Das.Views"] = "Das.Views";
+            DefaultNamespaceSeed = new Dictionary<String, String>();
+            DefaultNamespaceSeed["Das.Views.Panels"] = dasViewsAsm;
+            DefaultNamespaceSeed["Das.Views.Controls"] = dasViewsAsm;
+            DefaultNamespaceSeed["Das.Views.DataBinding"] = dasViewsAsm;
+            DefaultNamespaceSeed["Das.Views.Templates"] = dasViewsAsm;
+            DefaultNamespaceSeed["Das.Views.Primitives"] = dasViewsAsm;
+
+            DefaultNamespaceSeed["Das.Views"] = dasViewsAsm;
 
             _defaultAliases = new Dictionary<String, VisualTypeTuple>();
             _defaultAliases["label"] = new VisualTypeTuple(typeof(Label));
             _defaultAliases["span"] = new VisualTypeTuple(typeof(SpanSlim), typeof(Span));
+            _defaultAliases["svg"] = new VisualTypeTuple(typeof(SvgPictureFrame), 
+                typeof(SvgPictureFrame));
         }
         
         public Dictionary<String, String> GetNamespaceAssemblySearch(IMarkupNode node,
@@ -49,12 +53,12 @@ namespace Das.Views.Construction
         public Type GetType(IMarkupNode node, 
                             String? genericArgName)
         {
-            return GetType(node, genericArgName, _defaultNamespaceSeed);
+            return GetType(node, genericArgName, DefaultNamespaceSeed);
         }
 
         public Type GetType(String name)
         {
-            return GetType(name, _defaultNamespaceSeed);
+            return GetType(name, DefaultNamespaceSeed);
         }
 
         public Type GetType(String name, 
@@ -129,6 +133,11 @@ namespace Das.Views.Construction
 
                         case "assembly":
                             asmName = subTokens[1];
+                            //if (!asmName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) &&
+                            //    !asmName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                            //{
+                            //    asmName += ".dll";
+                            //}
                             break;
                     }
                 }
@@ -148,7 +157,7 @@ namespace Das.Views.Construction
         private static readonly Char[] _namespaceSplitters = {':', '='};
         private readonly ITypeInferrer _typeInferrer;
         private readonly IDictionary<String, VisualTypeTuple> _typeAliases;
-        private static readonly Dictionary<String, String> _defaultNamespaceSeed;
+        public static readonly Dictionary<String, String> DefaultNamespaceSeed;
         private static readonly Dictionary<String, VisualTypeTuple> _defaultAliases;
     }
 }

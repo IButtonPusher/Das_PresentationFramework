@@ -11,6 +11,7 @@ namespace Das.Views.Styles
                                            ObjectDeclaration declaration)
         {
             Selector = selector;
+            _hashCode = selector.GetHashCode() & declaration.GetHashCode();
             Declaration = declaration;
         }
 
@@ -34,9 +35,21 @@ namespace Das.Views.Styles
                    dpvr.Selector.Equals(Selector);
         }
 
+        public override Boolean Equals(Object obj)
+        {
+            return obj is DependencyPropertyValueRule dpvr &&
+                   dpvr.Selector.Equals(Selector) &&
+                   dpvr.Declaration.Equals(Declaration);
+        }
+
+        public override Int32 GetHashCode() => _hashCode;
+        
+
         public override String ToString()
         {
             return Selector + " => " + Declaration;
         }
+
+        private readonly Int32 _hashCode;
     }
 }

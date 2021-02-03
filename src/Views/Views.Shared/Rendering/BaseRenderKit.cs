@@ -9,113 +9,179 @@ using Das.Views.Construction.Styles;
 using Das.Views.Controls;
 using Das.Views.Core;
 using Das.Views.Core.Geometry;
+using Das.Views.Images;
 using Das.Views.Layout;
 using Das.Views.Styles;
 using Das.Views.Styles.Construction;
-using Das.Views.Styles.DefaultStyles;
+
 using Das.Views.Templates;
 
 namespace Das.Views
 {
     public abstract class BaseRenderKit : IVisualSurrogateProvider
     {
-        protected BaseRenderKit(IThemeProvider themeProvider,
-                                IStringPrimitiveScanner attributeScanner,
-                                ITypeInferrer typeInferrer,
-                                IPropertyProvider propertyProvider,
-                                Dictionary<IVisualElement, ValueCube> renderPositions,
-                                IImageProvider imageProvider)
-            : this(new BaseResolver(), themeProvider, attributeScanner,
-                typeInferrer, propertyProvider, renderPositions,
-                GetAppliedStyleBuilder(propertyProvider, GetStyleProvider(typeInferrer, themeProvider)), imageProvider)
-        {
-        }
+        //protected BaseRenderKit(IThemeProvider themeProvider,
+        //                        IStringPrimitiveScanner attributeScanner,
+        //                        ITypeInferrer typeInferrer,
+        //                        IPropertyProvider propertyProvider,
+        //                        Dictionary<IVisualElement, ValueCube> renderPositions,
+        //                        IImageProvider imageProvider,
+        //                        IAssemblyList assemblyList,
+        //                        IXmlSerializer xmlSerializer)
+        //    : this(new BaseResolver(), themeProvider, attributeScanner,
+        //        typeInferrer, propertyProvider, renderPositions,
+        //        GetAppliedStyleBuilder(propertyProvider, GetStyleProvider(typeInferrer, themeProvider)), 
+        //        imageProvider, assemblyList, xmlSerializer)
+        //{
+        //}
 
-        protected BaseRenderKit(IResolver resolver,
-                                IThemeProvider themeProvider,
-                                IStringPrimitiveScanner attributeScanner,
-                                ITypeInferrer typeInferrer,
-                                IPropertyProvider propertyProvider,
-                                Dictionary<IVisualElement, ValueCube> renderPositions,
-                                IImageProvider imageProvider)
-        : this(resolver, themeProvider, attributeScanner, typeInferrer, propertyProvider, renderPositions,
-            GetAppliedStyleBuilder(propertyProvider, GetStyleProvider(typeInferrer, themeProvider)), imageProvider)
-            //GetStyleProvider(typeInferrer, themeProvider))
-        {}
+        //protected BaseRenderKit(IResolver resolver,
+        //                        IThemeProvider themeProvider,
+        //                        IStringPrimitiveScanner attributeScanner,
+        //                        ITypeInferrer typeInferrer,
+        //                        IPropertyProvider propertyProvider,
+        //                        Dictionary<IVisualElement, ValueCube> renderPositions,
+        //                        IImageProvider imageProvider,
+        //                        IAssemblyList assemblyList,
+        //                        IXmlSerializer xmlSerializer)
+        //: this(resolver, themeProvider, attributeScanner, typeInferrer, propertyProvider, renderPositions,
+        //    GetAppliedStyleBuilder(propertyProvider, GetStyleProvider(typeInferrer, themeProvider)), 
+        //    imageProvider, assemblyList, xmlSerializer)
+        //{}
 
-        protected BaseRenderKit(IResolver resolver,
-                                IThemeProvider themeProvider,
-                                IStringPrimitiveScanner attributeScanner,
-                                ITypeInferrer typeInferrer,
-                                IPropertyProvider propertyProvider,
-                                Dictionary<IVisualElement, ValueCube> renderPositions,
-                                IAppliedStyleBuilder styleBuilder,
-                                IImageProvider imageProvider)
-        : this(resolver, attributeScanner, typeInferrer, propertyProvider, 
-            GetVisualBootstrapper(resolver, themeProvider, propertyProvider, styleBuilder), 
-            renderPositions, styleBuilder.StyleProvider, imageProvider)
-        {
-           
-        }
+        //protected BaseRenderKit(IResolver resolver,
+        //                        IThemeProvider themeProvider,
+        //                        IStringPrimitiveScanner attributeScanner,
+        //                        ITypeInferrer typeInferrer,
+        //                        IPropertyProvider propertyProvider,
+        //                        Dictionary<IVisualElement, ValueCube> renderPositions,
+        //                        IAppliedStyleBuilder styleBuilder,
+        //                        IImageProvider imageProvider,
+        //                        IAssemblyList assemblyList,
+        //                        IXmlSerializer xmlSerializer)
+        //: this(resolver, attributeScanner, typeInferrer, propertyProvider, 
+        //    GetVisualBootstrapper(resolver, themeProvider, propertyProvider, styleBuilder), 
+        //    renderPositions, styleBuilder.StyleProvider, imageProvider, assemblyList, xmlSerializer)
+        //{
 
-        protected BaseRenderKit(IResolver resolver,
-                                IStringPrimitiveScanner attributeScanner,
-                                ITypeInferrer typeInferrer,
-                                IPropertyProvider propertyProvider,
-                                IVisualBootstrapper visualBootstrapper,
-                                Dictionary<IVisualElement, ValueCube> renderPositions,
-                                IVisualStyleProvider styleProvider,
-                                IImageProvider imageProvider)
-        : this(resolver, 
-            attributeScanner, 
-            typeInferrer, 
-            propertyProvider,
-            visualBootstrapper,
-            GetAppliedStyleBuilder(propertyProvider, styleProvider),
-            renderPositions, imageProvider)
-        
-        {
+        //}
 
-        }
+        //protected BaseRenderKit(IResolver resolver,
+        //                        IStringPrimitiveScanner attributeScanner,
+        //                        ITypeInferrer typeInferrer,
+        //                        IPropertyProvider propertyProvider,
+        //                        IVisualBootstrapper visualBootstrapper,
+        //                        Dictionary<IVisualElement, ValueCube> renderPositions,
+        //                        IVisualStyleProvider styleProvider,
+        //                        IImageProvider imageProvider,
+        //                        IAssemblyList assemblyList,
+        //                        IXmlSerializer xmlSerializer)
+        //: this(resolver, 
+        //    attributeScanner, 
+        //    typeInferrer, 
+        //    propertyProvider,
+        //    visualBootstrapper,
+        //    GetAppliedStyleBuilder(propertyProvider, styleProvider),
+        //    renderPositions, imageProvider, assemblyList, xmlSerializer)
 
-        protected BaseRenderKit(IResolver resolver,
-                                IStringPrimitiveScanner attributeScanner,
-                                ITypeInferrer typeInferrer,
-                                IPropertyProvider propertyProvider,
-                                IVisualBootstrapper visualBootstrapper,
-                                IAppliedStyleBuilder appliedStyleBuilder,
-                                Dictionary<IVisualElement, ValueCube> renderPositions,
-                                IImageProvider imageProvider)
-            : this(resolver, visualBootstrapper, 
-                GetViewInflater(visualBootstrapper, attributeScanner, 
-                    typeInferrer, propertyProvider, appliedStyleBuilder),
-                renderPositions, imageProvider)
-        
-        {
+        //{
 
-        }
-        
+        //}
+
+        //protected BaseRenderKit(IResolver resolver,
+        //                        IStringPrimitiveScanner attributeScanner,
+        //                        ITypeInferrer typeInferrer,
+        //                        IPropertyProvider propertyProvider,
+        //                        IVisualBootstrapper visualBootstrapper,
+        //                        IAppliedStyleBuilder appliedStyleBuilder,
+        //                        Dictionary<IVisualElement, ValueCube> renderPositions,
+        //                        IImageProvider imageProvider,
+        //                        IAssemblyList assemblyList,
+        //                        IXmlSerializer xmlSerializer)
+        //    : this(resolver, visualBootstrapper, 
+        //        GetViewInflater(visualBootstrapper, attributeScanner, 
+        //            typeInferrer, propertyProvider, appliedStyleBuilder, 
+        //            assemblyList, imageProvider, xmlSerializer),
+        //        renderPositions, imageProvider)
+
+        //{
+
+        //}
+
         protected BaseRenderKit(IResolver resolver,
                                 IVisualBootstrapper visualBootstrapper,
                                 IViewInflater viewInflater,
                                 Dictionary<IVisualElement, ValueCube> renderPositions,
                                 IImageProvider imageProvider)
         {
-            //_styleContext = styleContext;
             _renderPositions = renderPositions;
             ImageProvider = imageProvider;
             Container = resolver;
-            
+
             _surrogateInstances = new Dictionary<IVisualElement, IVisualSurrogate>();
             _surrogateTypeBuilders = new Dictionary<Type, Func<IVisualElement, IVisualSurrogate>>();
-            
+
             VisualBootstrapper = visualBootstrapper;
 
             ViewInflater = viewInflater;
 
             resolver.ResolveTo(visualBootstrapper);
         }
-        
+
+
+        protected BaseRenderKit(IImageProvider imageProvider,
+                                IMultiSerializer xmlSerializer,
+                                ISvgPathBuilder svgPathBuilder)
+            : this(imageProvider, xmlSerializer, new BaseResolver(),
+                BaselineThemeProvider.Instance,
+                GetStyleProvider(xmlSerializer.TypeInferrer, BaselineThemeProvider.Instance),
+                svgPathBuilder)
+        {
+
+        }
+
+        private BaseRenderKit(IImageProvider imageProvider,
+                              IMultiSerializer xmlSerializer,
+                              IResolver resolver,
+                              IThemeProvider themeProvider,
+                              IVisualStyleProvider styleProvider,
+                              ISvgPathBuilder svgPathBuilder)
+            : this(imageProvider, xmlSerializer, resolver, themeProvider,
+                GetAppliedStyleBuilder(xmlSerializer.TypeManipulator, styleProvider), svgPathBuilder)
+        {
+
+        }
+
+        private BaseRenderKit(IImageProvider imageProvider,
+                              IMultiSerializer xmlSerializer,
+                              IResolver resolver,
+                              IThemeProvider themeProvider,
+                              IAppliedStyleBuilder appliedStyleBuilder,
+                              ISvgPathBuilder svgPathBuilder)
+        : this(imageProvider, xmlSerializer, resolver, appliedStyleBuilder,
+            GetVisualBootstrapper(resolver, themeProvider, xmlSerializer.TypeManipulator,
+                appliedStyleBuilder), svgPathBuilder)
+        {
+
+        }
+
+        private BaseRenderKit(IImageProvider imageProvider,
+                              IMultiSerializer xmlSerializer,
+                              IResolver resolver,
+                              IAppliedStyleBuilder appliedStyleBuilder,
+                              IVisualBootstrapper visualBootstrapper,
+                              ISvgPathBuilder svgPathBuilder)
+        : this(resolver, visualBootstrapper, 
+            GetViewInflater(visualBootstrapper, xmlSerializer.AttributeParser,
+                xmlSerializer.TypeInferrer, xmlSerializer.TypeManipulator,
+                appliedStyleBuilder, xmlSerializer.AssemblyList, imageProvider,
+                xmlSerializer, svgPathBuilder), 
+            new Dictionary<IVisualElement, ValueCube>(), imageProvider)
+        {
+
+        }
+
+     
         private static IVisualBootstrapper GetVisualBootstrapper(IResolver resolver,
                                                                  IThemeProvider themeProvider,
                                                                  IPropertyProvider propertyProvider,
@@ -142,7 +208,6 @@ namespace Das.Views
 
             var styleInflater = new DefaultStyleInflater(typeInferrer, variableAccessor);
             var styleProvider = new VisualStyleProvider(styleInflater, themeProvider,
-                //new ConcurrentDictionary<Type, IEnumerable<IStyleRule>>());
                 new BasePrimitiveStyle(variableAccessor));
             return styleProvider;
         }
@@ -151,16 +216,22 @@ namespace Das.Views
                                                      IStringPrimitiveScanner attributeScanner,
                                                      ITypeInferrer typeInferrer,
                                                      IPropertyProvider propertyProvider,
-                                                     
-                                                     IAppliedStyleBuilder appliedStyleBuilder)
+                                                     IAppliedStyleBuilder appliedStyleBuilder,
+                                                     IAssemblyList assemblies,
+                                                     IImageProvider imageProvider,
+                                                     IXmlSerializer serializer,
+                                                     ISvgPathBuilder svgPathBuilder)
         {
-            var bindingBuilder = new BindingBuilder(typeInferrer, propertyProvider);
+            var resourceBuilder = new ResourceBuilder(imageProvider, serializer, svgPathBuilder);
+
+            var bindingBuilder = new BindingBuilder(typeInferrer, propertyProvider, 
+                assemblies, resourceBuilder);
             var converterProvider = new DefaultValueConverterProvider(visualBootstrapper);
             var visualTypeResolver = new VisualTypeResolver(typeInferrer);
 
             return new ViewInflater(visualBootstrapper, attributeScanner, 
                 typeInferrer, bindingBuilder, converterProvider, 
-                visualTypeResolver, //styleVisualBuilder, 
+                visualTypeResolver, 
                 propertyProvider, appliedStyleBuilder);
         }
 

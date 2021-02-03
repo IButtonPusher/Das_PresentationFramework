@@ -127,5 +127,10 @@ namespace Das.Views.Styles.Declarations
         protected readonly IStyleVariableAccessor _variableAccessor;
 
         public DeclarationProperty Property { get; }
+
+        public virtual Boolean Equals(IStyleDeclaration other)
+        {
+            return other.Property == Property;
+        }
     }
 }

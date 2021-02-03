@@ -44,9 +44,7 @@ namespace Das.Views.Templates
                 : null;
         }
 
-        //public IAppliedStyleBuilder StyleBuilder => _styleBuilder;
-
-        public void ApplyCoreStyle(IVisualElement visual)
+        public void ApplyVisualStyling(IVisualElement visual)
         {
             _styleBuilder.ApplyVisualCoreStyles(visual, this);
         }
@@ -81,7 +79,7 @@ namespace Das.Views.Templates
             }
 
             if (ctor == null)
-                throw new MissingMethodException(type.Name, "constructor");
+                throw new MissingMethodException(type.FullName, "constructor");
             var res = (TVisualElement) ctor.Invoke(new Object[] {this});
             //_styleBuilder.ApplyVisualCoreStyles(res, this);
             return res;

@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Das.Views.Core.Drawing;
 using Das.Views.DependencyProperties;
 using Das.Views.Transitions;
 
@@ -29,6 +28,14 @@ namespace Das.Views
             _knownVisuals = new ConcurrentDictionary<TVisual, Byte>();
             _staticChangeds = new List<Action<TVisual, TValue, TValue>>();
             _transitions = new ConcurrentDictionary<TVisual, ITransition<TValue>>();
+            _visualsSetByNotStyle = new ConcurrentDictionary<TVisual, Boolean>();
+
+            unchecked
+            {
+                _hashCode = typeof(TVisual).GetHashCode();
+                _hashCode = (_hashCode * 397) ^ typeof(TValue).GetHashCode();
+                _hashCode = (_hashCode * 397) ^ Name.GetHashCode();
+            }
         }
 
         Object? IDependencyProperty.GetValue(IVisualElement visual)
@@ -93,9 +100,6 @@ namespace Das.Views
 
         Object? IDependencyProperty.DefaultValue => DefaultValue;
 
-
-        public String Name { get; }
-
         public Type PropertyType => typeof(TValue);
 
         public Type VisualType => typeof(TVisual);
@@ -105,6 +109,10 @@ namespace Das.Views
             return other is DependencyProperty<TVisual, TValue> valid &&
                    String.Equals(valid.Name, Name);
         }
+
+
+        public String Name { get; }
+
 
         public void AddOnChangedHandler(Action<TVisual, TValue, TValue> handler)
         {
@@ -171,7 +179,7 @@ namespace Das.Views
         {
             SetValueImpl(forVisual, value,
                 GetOnChanging(forVisual, WrapOnChanging(onChanging)),
-                GetOnChanged(forVisual, WrapOnChanged(onChanged)), false);
+                GetOnChanged(forVisual, WrapOnChanged(onChanged)), false, false);
         }
 
 
@@ -182,20 +190,31 @@ namespace Das.Views
         {
             SetValueImpl(forVisual, value,
                 GetOnChanging(forVisual, onChanging),
-                GetOnChanged(forVisual, onChanged), false);
+                GetOnChanged(forVisual, onChanged), false, false);
         }
 
 
         public void SetValue(TVisual forVisual,
                              TValue value)
         {
-            SetValueImpl(forVisual, value, false);
+            SetValueImpl(forVisual, value, false, false);
         }
 
         public void SetValueNoTransitions(TVisual forVisual,
                                           TValue value)
         {
-            SetValueImpl(forVisual, value, true);
+            SetValueImpl(forVisual, value, true, false);
+        }
+
+        public override Boolean Equals(Object other)
+        {
+            return other is DependencyProperty<TVisual, TValue> sameType &&
+                   String.Equals(sameType.Name, Name);
+        }
+
+        public override Int32 GetHashCode()
+        {
+            return _hashCode;
         }
 
         public static DependencyProperty<TVisual, TValue> Register(String propertyName,
@@ -231,7 +250,8 @@ namespace Das.Views
         {
             SetValueImpl(forVisual, value,
                 GetOnChanging(forVisual, null),
-                GetOnChanged(forVisual, WrapOnChanged(onChanged)), false);
+                GetOnChanged(forVisual, WrapOnChanged(onChanged)),
+                false, false);
         }
 
         public override String ToString()
@@ -277,7 +297,9 @@ namespace Das.Views
             lock (_delegateLock)
             {
                 foreach (var item in _staticChangeds)
+                {
                     yield return item;
+                }
             }
 
             if (!_changeds.TryGetValue(forVisual, out var interested))
@@ -295,7 +317,9 @@ namespace Das.Views
             }
 
             foreach (var a in actions)
+            {
                 yield return a;
+            }
         }
 
 
@@ -317,7 +341,9 @@ namespace Das.Views
                 }
 
                 foreach (var f in funcs)
+                {
                     yield return f;
+                }
             }
         }
 
@@ -356,36 +382,40 @@ namespace Das.Views
 
         private void SetRuntimeValueImpl(IVisualElement visual,
                                          Object? value,
-                                         // ReSharper disable once UnusedParameter.Local
                                          Boolean isFromStyle,
                                          Boolean isDeclineTransitions)
         {
             var tv = GetValue<IVisualElement, TVisual>(visual);
             var tValue = GetValue<Object?, TValue>(value);
-            SetValueImpl(tv, tValue, isDeclineTransitions);
+            SetValueImpl(tv, tValue, isFromStyle, isDeclineTransitions);
         }
 
         private void SetValueImpl(TVisual forVisual,
                                   TValue value,
+                                  Boolean isFromStyle,
                                   Boolean isDeclineTransitions)
         {
             SetValueImpl(forVisual, value,
                 GetOnChanging(forVisual, null),
-                GetOnChanged(forVisual, null), isDeclineTransitions);
+                GetOnChanged(forVisual, null),
+                isFromStyle, isDeclineTransitions);
         }
 
+        /// <summary>
+        ///     All setters should pass through here...
+        /// </summary>
         private void SetValueImpl(TVisual forVisual,
                                   TValue value,
                                   IEnumerable<Func<TVisual, TValue, TValue, Boolean>> onChangers,
                                   IEnumerable<Action<TVisual, TValue, TValue>> onChangeds,
+                                  Boolean isFromStyle,
                                   Boolean isDeclineTransitions)
         {
-            if (value is IBrush)
-            {}
+            if (Name == "Border")
+            {
+            }
 
             var oldValue = GetOldValue(forVisual);
-
-            if (value is IBrush && oldValue != null) { }
 
             if (Equals(value, oldValue))
                 return; //trying to set it to the same value - no point  
@@ -394,19 +424,38 @@ namespace Das.Views
                 // let subscribers veto this change if desired but not if we're updating as part of 
                 // a transition
                 foreach (var oc in onChangers)
+                {
                     if (!oc(forVisual, oldValue, value))
                         return;
+                }
 
-            if (!isDeclineTransitions && _transitions.TryGetValue(forVisual, out var transition))
+            if (!isDeclineTransitions)
             {
-                transition.SetValue(oldValue, value);
-                return;
+                switch (isFromStyle)
+                {
+                    case true when _visualsSetByNotStyle.TryGetValue(forVisual,
+                        out var well) && well:
+                        return; // attempt to set a value via a style when that is no longer possible
+
+                    case false:
+                        _visualsSetByNotStyle[forVisual] = true;
+                        break;
+                }
+
+
+                if (_transitions.TryGetValue(forVisual, out var transition))
+                {
+                    transition.SetValue(oldValue, value);
+                    return;
+                }
             }
 
             _values[forVisual] = value;
 
             foreach (var oc in onChangeds)
+            {
                 oc(forVisual, oldValue, value);
+            }
 
             forVisual.RaisePropertyChanged(Name, value);
 
@@ -464,10 +513,18 @@ namespace Das.Views
 
         private readonly ConcurrentDictionary<TVisual, Func<IVisualElement, Object?>> _computedValues;
         private readonly Object _delegateLock;
+
+        private readonly Int32 _hashCode;
         private readonly ConcurrentDictionary<TVisual, Byte> _knownVisuals;
         private readonly PropertyMetadata _metaData;
         private readonly List<Action<TVisual, TValue, TValue>> _staticChangeds;
         private readonly ConcurrentDictionary<TVisual, ITransition<TValue>> _transitions;
         private readonly ConcurrentDictionary<TVisual, TValue> _values;
+
+        /// <summary>
+        ///     Once a property's value has been set by something other than a style (binding, direct set)
+        ///     it isn't eligible to be set by a style anymore
+        /// </summary>
+        private readonly ConcurrentDictionary<TVisual, Boolean> _visualsSetByNotStyle;
     }
 }

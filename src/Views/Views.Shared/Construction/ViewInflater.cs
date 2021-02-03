@@ -8,6 +8,7 @@ using Das.Views.Controls;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
 using Das.Views.Rendering;
+using Das.Views.Resources;
 using Das.Views.Styles.Construction;
 using Das.Views.Templates;
 
@@ -16,19 +17,7 @@ namespace Das.Views.Construction
     public partial class ViewInflater : InflaterBase,
                                         IViewInflater
     {
-        static ViewInflater()
-        {
-            _defaultNamespaceSeed = new Dictionary<String, String>();
-            _defaultNamespaceSeed["Das.Views.Panels"] = "Das.Views";
-            _defaultNamespaceSeed["Das.Views.Controls"] = "Das.Views";
-            _defaultNamespaceSeed["Das.Views.DataBinding"] = "Das.Views";
-            _defaultNamespaceSeed["Das.Views.Templates"] = "Das.Views";
-            _defaultNamespaceSeed["Das.Views.Primitives"] = "Das.Views";
-
-            _defaultNamespaceSeed["Das.Views"] = "Das.Views";
-        }
-
-
+        
         public ViewInflater(IVisualBootstrapper visualBootstrapper,
                             IStringPrimitiveScanner xmlAttributeParser,
                             ITypeInferrer typeInferrer,
@@ -53,7 +42,7 @@ namespace Das.Views.Construction
                                                    IVisualLineage visualLineage,
                                                    ApplyVisualStyles applyStyles)
         {
-            return GetVisualAsync(node, dataContextType, _defaultNamespaceSeed,
+            return GetVisualAsync(node, dataContextType, VisualTypeResolver.DefaultNamespaceSeed,
                 visualLineage, applyStyles);
         }
 
@@ -177,10 +166,10 @@ namespace Das.Views.Construction
             switch (onlyChild.Name)
             {
                 case nameof(MultiDataTemplate):
-                    var bindings = _bindingBuilder.GetBindingsDictionary(node,
-                        dataContextType, nameSpaceAssemblySearch);
+                    var dataBindings = (await _bindingBuilder.GetBindingsDictionaryAsync(node,
+                        dataContextType, nameSpaceAssemblySearch)).Values.OfType<IDataBinding>();
 
-                    dataContextType = _bindingBuilder.InferDataContextTypeFromBindings(bindings.Values,
+                    dataContextType = _bindingBuilder.InferDataContextTypeFromBindings(dataBindings,
                         dataContextType);
                     return await BuildDataTemplateAsync(onlyChild, dataContextType,
                         nameSpaceAssemblySearch, visualLineage, applyStyles).ConfigureAwait(false);
@@ -244,10 +233,13 @@ namespace Das.Views.Construction
                                                           IVisualLineage visualLineage,
                                                           ApplyVisualStyles applyStyles)
         {
-            var bindings = _bindingBuilder.GetBindingsDictionary(node,
+            var bindings = await _bindingBuilder.GetBindingsDictionaryAsync(node,
                 dataContextType, nameSpaceAssemblySearch);
 
-            dataContextType = _bindingBuilder.InferDataContextTypeFromBindings(bindings.Values,
+            var dataBindings = bindings.Values.OfType<IDataBinding>()
+                                       .ToArray();
+
+            dataContextType = _bindingBuilder.InferDataContextTypeFromBindings(dataBindings,
                 dataContextType);
 
             if (!node.TryGetAttributeValue("ContextType", out var currentGenericArgName))
@@ -291,10 +283,10 @@ namespace Das.Views.Construction
             }
             else throw new NotImplementedException();
 
-            if (bindings.Count > 0 && visual is IBindableElement bindable)
-                foreach (var binding in bindings)
+            if (dataBindings.Length > 0 && visual is IBindableElement bindable)
+                foreach (var binding in dataBindings)
                 {
-                    bindable.AddBinding(binding.Value);
+                    bindable.AddBinding(binding);
                 }
 
             //////////////////////////////////////////
@@ -400,35 +392,75 @@ namespace Das.Views.Construction
 
         private void SetHardCodedValues(IVisualElement visual,
                                         IMarkupNode node,
-                                        Dictionary<String, IDataBinding> bindings)
+                                        Dictionary<String, IPropertyBinding> bindings)
         {
-            var vType = visual.GetType();
+            //var vType = visual.GetType();
 
             foreach (var kvp in node.GetAllAttributes())
             {
-                if (bindings.ContainsKey(kvp.Key))
-                    continue;
+                SetHardCodedValue(visual, kvp, bindings);
 
-                var prop = _typeInferrer.FindPublicProperty(vType, kvp.Key);
+                //if (bindings.TryGetValue(kvp.Key, out var binding))
+                //{
+                //    if (binding is EmbeddedResourceBinding resourceBinding)
 
-                if (prop == null)
-                    continue;
+                //    continue;
+                //}
 
-                var propVal = GetPropertyValue(prop, kvp.Value);
+                //var prop = _typeInferrer.FindPublicProperty(vType, kvp.Key);
 
-                //var valueConverter = _converterProvider.GetDefaultConverter(prop.PropertyType);
+                //if (prop == null)
+                //    continue;
 
-                //var propVal = valueConverter != null
-                //    ? valueConverter.Convert(kvp.Value)
-                //    : _attributeValueScanner.GetValue(kvp.Value, prop.PropertyType);
+                //var propVal = GetPropertyValue(prop, kvp.Value);
+
+                ////var valueConverter = _converterProvider.GetDefaultConverter(prop.PropertyType);
+
+                ////var propVal = valueConverter != null
+                ////    ? valueConverter.Convert(kvp.Value)
+                ////    : _attributeValueScanner.GetValue(kvp.Value, prop.PropertyType);
 
 
-                if (propVal != null)
-                    prop.SetValue(visual, propVal, null);
+                //if (propVal != null)
+                //    prop.SetValue(visual, propVal, null);
             }
         }
 
-        private static readonly Dictionary<String, String> _defaultNamespaceSeed;
+        private void SetHardCodedValue(IVisualElement visual,
+                                       KeyValuePair<String, String> kvp,
+                                       Dictionary<String, IPropertyBinding> bindings)
+        {
+            var prop = _typeInferrer.FindPublicProperty(visual.GetType(), kvp.Key);
+
+            if (prop == null)
+                return;
+
+            Object? propVal;
+
+            if (bindings.TryGetValue(kvp.Key, out var binding))
+            {
+                if (binding is EmbeddedResourceBinding resourceBinding)
+                {
+                    propVal = resourceBinding.Value;
+                }
+                else
+                    return;
+            }
+            else
+                propVal = GetPropertyValue(prop, kvp.Value);
+
+            //var valueConverter = _converterProvider.GetDefaultConverter(prop.PropertyType);
+
+            //var propVal = valueConverter != null
+            //    ? valueConverter.Convert(kvp.Value)
+            //    : _attributeValueScanner.GetValue(kvp.Value, prop.PropertyType);
+
+
+            if (propVal != null)
+                prop.SetValue(visual, propVal, null);
+        }
+
+        //private static readonly Dictionary<String, String> _defaultNamespaceSeed;
         private readonly IAppliedStyleBuilder _appliedStyleBuilder;
 
 

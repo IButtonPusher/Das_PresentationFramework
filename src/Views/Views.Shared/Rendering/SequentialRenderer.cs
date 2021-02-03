@@ -24,6 +24,86 @@ namespace Das.Views.Rendering
             ElementsRendered = new Dictionary<IVisualElement, ValueRenderRectangle>();
         }
 
+        protected ValueThickness MeasureImpl(IVisualElement container,
+                                        IMeasureContext measureContext,
+                                        IRenderSize availableSpace,
+                                        Orientations orientation,
+                                        List<IVisualElement> currentlyRendering,
+                                        out Double maxWidth,
+                                        out Double maxHeight,
+                                        out Double totalWidth,
+                                        out Double totalHeight)
+        {
+            var remainingSize = new RenderSize(availableSpace.Width,
+                availableSpace.Height, availableSpace.Offset);
+            var current = new RenderRectangle();
+
+            totalHeight = 0.0;
+            totalWidth = 0.0;
+
+            maxWidth = 0.0;
+            maxHeight = 0.0;
+
+            foreach (var child in _visuals.GetAllChildren())
+            {
+                currentlyRendering.Add(child);
+
+
+                current.Size = measureContext.MeasureElement(child, remainingSize);
+                var offset = SetChildSize(child, current);
+                if (!offset.IsEmpty)
+                {
+                    current.Width += offset.Width;
+                    current.Height += offset.Height;
+                }
+
+                switch (orientation)
+                {
+                    case Orientations.Horizontal:
+                        if (current.Height > maxHeight)
+                            maxHeight = current.Height;
+
+                        if (_isWrapContent && current.Width + totalWidth > availableSpace.Width
+                                           && totalHeight + maxHeight < availableSpace.Height)
+                        {
+                            maxWidth = Math.Max(maxWidth, totalWidth);
+                            totalHeight += maxHeight;
+
+                            current.X = 0;
+                            current.Y += maxHeight;
+                            maxHeight = totalWidth = 0;
+                        }
+
+                        current.X += current.Width;
+                        totalWidth += current.Width;
+                        remainingSize.Width -= current.Width;
+                        break;
+                    case Orientations.Vertical:
+                        if (current.Width > totalWidth)
+                            totalWidth = current.Width;
+
+                        if (_isWrapContent && current.Height + totalHeight > availableSpace.Height
+                                           && totalWidth + maxWidth < availableSpace.Width)
+                        {
+                            maxHeight = Math.Max(maxHeight, totalHeight);
+                            totalWidth += maxWidth;
+
+                            current.Y = 0;
+                            current.X += maxHeight;
+                            maxWidth = totalHeight = 0;
+                        }
+
+                        current.Y += current.Height;
+                        totalHeight += current.Height;
+                        remainingSize.Height -= current.Height;
+                        break;
+                }
+            }
+
+            var margin = container.Margin.GetValue(availableSpace);
+            return margin;
+        }
+
         public virtual ValueSize Measure(IVisualElement container,
                                          Orientations orientation,
                                          IRenderSize availableSpace,
@@ -33,83 +113,82 @@ namespace Das.Views.Rendering
             {
                 _currentlyRendering.Clear();
 
-                var remainingSize = new RenderSize(availableSpace.Width,
-                    availableSpace.Height, availableSpace.Offset);
+                var margin = MeasureImpl(container, measureContext, availableSpace,
+                    orientation, _currentlyRendering,
+                    out var maxWidth, out var maxHeight,
+                    out var totalWidth, out var totalHeight);
 
-                var current = new RenderRectangle();
-                var totalHeight = 0.0;
-                var totalWidth = 0.0;
+                //var remainingSize = new RenderSize(availableSpace.Width,
+                //    availableSpace.Height, availableSpace.Offset);
 
-                var maxWidth = 0.0;
-                var maxHeight = 0.0;
+                //var current = new RenderRectangle();
+                //var totalHeight = 0.0;
+                //var totalWidth = 0.0;
 
-                ElementsRendered.Clear();
+                //var maxWidth = 0.0;
+                //var maxHeight = 0.0;
 
-                foreach (var child in _visuals.GetAllChildren())
-                {
-                    _currentlyRendering.Add(child);
+                //ElementsRendered.Clear();
 
-                    current.Size = measureContext.MeasureElement(child, remainingSize);
-                    var offset = SetChildSize(child, current);
-                    if (!offset.IsEmpty)
-                    {
-                        current.Width += offset.Width;
-                        current.Height += offset.Height;
-                    }
+                //foreach (var child in _visuals.GetAllChildren())
+                //{
+                //    _currentlyRendering.Add(child);
 
-                    switch (orientation)
-                    {
-                        case Orientations.Horizontal:
-                            if (current.Height > maxHeight)
-                                maxHeight = current.Height;
+                //    current.Size = measureContext.MeasureElement(child, remainingSize);
+                //    var offset = SetChildSize(child, current);
+                //    if (!offset.IsEmpty)
+                //    {
+                //        current.Width += offset.Width;
+                //        current.Height += offset.Height;
+                //    }
 
-                            if (_isWrapContent && current.Width + totalWidth > availableSpace.Width
-                                               && totalHeight + maxHeight < availableSpace.Height)
-                            {
-                                maxWidth = Math.Max(maxWidth, totalWidth);
-                                totalHeight += maxHeight;
+                //    switch (orientation)
+                //    {
+                //        case Orientations.Horizontal:
+                //            if (current.Height > maxHeight)
+                //                maxHeight = current.Height;
 
-                                current.X = 0;
-                                current.Y += maxHeight;
-                                maxHeight = totalWidth = 0;
-                            }
+                //            if (_isWrapContent && current.Width + totalWidth > availableSpace.Width
+                //                               && totalHeight + maxHeight < availableSpace.Height)
+                //            {
+                //                maxWidth = Math.Max(maxWidth, totalWidth);
+                //                totalHeight += maxHeight;
 
-                            current.X += current.Width;
-                            totalWidth += current.Width;
-                            remainingSize.Width -= current.Width;
-                            break;
-                        case Orientations.Vertical:
-                            if (current.Width > totalWidth)
-                                totalWidth = current.Width;
+                //                current.X = 0;
+                //                current.Y += maxHeight;
+                //                maxHeight = totalWidth = 0;
+                //            }
 
-                            if (_isWrapContent && current.Height + totalHeight > availableSpace.Height
-                                               && totalWidth + maxWidth < availableSpace.Width)
-                            {
-                                maxHeight = Math.Max(maxHeight, totalHeight);
-                                totalWidth += maxWidth;
+                //            current.X += current.Width;
+                //            totalWidth += current.Width;
+                //            remainingSize.Width -= current.Width;
+                //            break;
+                //        case Orientations.Vertical:
+                //            if (current.Width > totalWidth)
+                //                totalWidth = current.Width;
 
-                                current.Y = 0;
-                                current.X += maxHeight;
-                                maxWidth = totalHeight = 0;
-                            }
+                //            if (_isWrapContent && current.Height + totalHeight > availableSpace.Height
+                //                               && totalWidth + maxWidth < availableSpace.Width)
+                //            {
+                //                maxHeight = Math.Max(maxHeight, totalHeight);
+                //                totalWidth += maxWidth;
 
-                            current.Y += current.Height;
-                            totalHeight += current.Height;
-                            remainingSize.Height -= current.Height;
-                            break;
-                    }
-                }//);
+                //                current.Y = 0;
+                //                current.X += maxHeight;
+                //                maxWidth = totalHeight = 0;
+                //            }
 
-                //var margin = measureContext.GetStyleSetter<Thickness>(StyleSetterType.Margin, container);
-                var margin = container.Margin.GetValue(availableSpace);
+                //            current.Y += current.Height;
+                //            totalHeight += current.Height;
+                //            remainingSize.Height -= current.Height;
+                //            break;
+                //    }
+                //}
+
+                //var margin = container.Margin.GetValue(availableSpace);
 
                 return new ValueSize(Math.Max(totalWidth, maxWidth) + margin.Width,
                     Math.Max(totalHeight, maxHeight) + margin.Height);
-
-                //totalWidth = Math.Max(totalWidth, maxWidth);
-                //totalHeight = Math.Max(totalHeight, maxHeight);
-
-                //return new ValueSize(totalWidth + margin.Width, totalHeight + margin.Height);
             }
         }
 
@@ -179,12 +258,6 @@ namespace Das.Views.Rendering
 
                     var useHorzAlign = child.HorizontalAlignment;
 
-                    //var useHorzAlign = child.HorizontalAlignment != HorizontalAlignments.Default
-                    //    ? child.HorizontalAlignment
-                    //    : context.GetStyleSetter<HorizontalAlignments>(StyleSetterType.HorizontalAlignment, child);
-
-                    
-
                     switch (useHorzAlign)
                     {
                         case HorizontalAlignments.Right:
@@ -209,13 +282,7 @@ namespace Das.Views.Rendering
 
                 case Orientations.Horizontal:
 
-                    //useY = 0;
-
                     var useVertAlign = child.VerticalAlignment;
-
-                    //var useVertAlign = child.VerticalAlignment != VerticalAlignments.Default
-                    //    ? child.VerticalAlignment
-                    //    : context.GetStyleSetter<VerticalAlignments>(StyleSetterType.VerticalAlignment, child);
 
                     switch (useVertAlign)
                     {

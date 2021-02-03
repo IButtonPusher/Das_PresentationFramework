@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)BitmapRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GdiBitmap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GdiDevice.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GdiExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GdiGraphicsPath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GdiImageProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GdiMeasureContext.cs" />

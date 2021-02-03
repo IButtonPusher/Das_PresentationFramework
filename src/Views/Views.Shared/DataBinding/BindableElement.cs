@@ -52,7 +52,9 @@ namespace Das.Views.DataBinding
 
 
             foreach (var binding in _bindings)
+            {
                 binding.Dispose();
+            }
 
             _bindings.Clear();
         }
@@ -77,15 +79,27 @@ namespace Das.Views.DataBinding
                 lock (_lockBindings)
                 {
                     foreach (var binding in _bindings)
+                    {
                         if (binding is IVisualPropertySetter
                             {PropertyName: nameof(DataContext)} setter)
                         {
                             var res = setter.GetSourceValue(something);
                             return res;
                         }
+                    }
                 }
 
             return newValue;
+        }
+
+        protected override void OnTemplateSet(IVisualTemplate? newValue)
+        {
+            base.OnTemplateSet(newValue);
+
+            if (!(newValue?.Content is IBindableElement bindable))
+                return;
+
+            bindable.DataContext = this;
         }
 
         protected virtual void RefreshBoundValues(Object? dataContext)
@@ -102,16 +116,6 @@ namespace Das.Views.DataBinding
                     _bindings[c] = b.Update(dataContext, this);
                 }
             }
-        }
-
-        protected override void OnTemplateSet(IVisualTemplate? newValue)
-        {
-            base.OnTemplateSet(newValue);
-
-            if (!(newValue?.Content is IBindableElement bindable))
-                return;
-
-            bindable.DataContext = this;
         }
 
         protected readonly List<IDataBinding> _bindings;

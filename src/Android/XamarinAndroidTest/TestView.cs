@@ -4,7 +4,6 @@ using Das.Serializer;
 using Das.Views;
 using Das.Views.Controls;
 using Das.Views.Core;
-using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Images;
 using Das.Views.Images.Svg;
@@ -32,18 +31,18 @@ namespace XamarinAndroidTest
                 HorizontalAlignment = HorizontalAlignments.Center
             };
             var svg = GetEmbeddedImage("XamarinAndroidTest.Resources.cog.svg");
-            svg.Stroke = Color.Red;
-            svg.Fill = SolidColorBrush.Green;
+            //svg.Stroke = Color.Red;
+            //svg.Fill = SolidColorBrush.Green;
             pbSvg.Image =svg;
             Content = pbSvg;
 
 
         }
 
-        private SvgImage GetEmbeddedImage(String name)
+        private ISvgImage GetEmbeddedImage(String name)
         {
             var srl = new DasSerializer();
-            var bldr = new SvgPathBuilder(_imageProvider);
+            var bldr = new SvgPathBuilder(_imageProvider, srl);
 
             var asm = GetType().GetTypeInfo().Assembly;
 

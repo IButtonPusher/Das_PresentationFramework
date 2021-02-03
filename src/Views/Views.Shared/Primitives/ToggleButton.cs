@@ -30,7 +30,7 @@ namespace Das.Views.Controls
         public Boolean? IsChecked
         {
             get => IsCheckedProperty.GetValue(this);
-            set => IsCheckedProperty.SetValue(this, value);//, OnIsCheckedChanged);
+            set => IsCheckedProperty.SetValue(this, value);
         }
     }
 }

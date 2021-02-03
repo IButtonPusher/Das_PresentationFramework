@@ -3,8 +3,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
-using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
+using Das.Views.Images;
 
 namespace Gdi.Shared
 {

@@ -6,7 +6,7 @@ namespace Das.Views.Styles.Selectors
     {
         public static readonly AllStyleSelector Instance = new AllStyleSelector();
         
-        private AllStyleSelector()
+        private AllStyleSelector() : base(0)
         {
             
         }

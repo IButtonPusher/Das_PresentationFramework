@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 namespace Das.Views.Styles.Declarations
 {
     public class ValueDeclaration<T> : DeclarationBase,
-                                                IStyleValueDeclaration<T>
+                                       IStyleValueDeclaration<T>
     {
         public ValueDeclaration(T value,
-                                   IStyleVariableAccessor variableAccessor,
-                                   DeclarationProperty property)
+                                IStyleVariableAccessor variableAccessor,
+                                DeclarationProperty property)
             : base(variableAccessor, property)
         {
             Value = value;
@@ -20,13 +20,13 @@ namespace Das.Views.Styles.Declarations
             return Property + ": " + Value;
         }
 
-        Object? IStyleValueDeclaration.Value 
+        Object? IStyleValueDeclaration.Value
         {
             [DebuggerNonUserCode]
             [DebuggerStepThrough]
             get => Value;
         }
-        
+
 
         public T Value { get; }
     }

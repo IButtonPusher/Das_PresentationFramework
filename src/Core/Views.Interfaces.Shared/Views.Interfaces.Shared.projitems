@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Colors\IThemeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\ApplyVisualStyles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IAttributeDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\IResourceBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IPathData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IPoint2F.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IQuantifiedRectangle.cs" />
@@ -29,8 +30,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\IQuantifiedValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IDependencyProperty{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\INamedProperty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IPropertyBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\PropertyMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ILayoutQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Images\ISvgImage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Images\ISvgPathBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\FlingMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\IFontVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\ITextVisual.cs" />
@@ -251,8 +255,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)Templates\IMultiDataTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\ITemplatableVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IVisualBootstrapper.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Images\" />
   </ItemGroup>
 </Project>

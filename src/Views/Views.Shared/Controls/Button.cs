@@ -4,6 +4,7 @@ using Das.Views.Input;
 
 namespace Das.Views.Controls
 {
+    // ReSharper disable once UnusedType.Global
     public class Button : ButtonBase,
                           IButton
     {

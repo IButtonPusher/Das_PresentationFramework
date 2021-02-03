@@ -8,6 +8,7 @@ namespace Das.Views.Styles.Selectors
         public Combinator Combinator { get; }
 
         public CombinatorSelector(Combinator combinator)
+            : base((Int32) combinator)
         {
             Combinator = combinator;
         }

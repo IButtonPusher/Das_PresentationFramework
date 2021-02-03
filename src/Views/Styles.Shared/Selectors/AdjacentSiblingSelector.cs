@@ -11,6 +11,7 @@ namespace Das.Views.Styles.Selectors
     {
         public AdjacentSiblingSelector(IStyleSelector firstElementSelector,
                                        IStyleSelector secondElementSelector)
+            : base(firstElementSelector.GetHashCode() & secondElementSelector.GetHashCode())
         {
             FirstElementSelector = firstElementSelector;
             SecondElementSelector = secondElementSelector;

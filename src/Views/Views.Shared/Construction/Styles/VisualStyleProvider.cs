@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
-using AsyncResults.ForEach;
 using Das.Container;
 using Das.ViewModels.Collections;
 using Das.Views.Colors;
@@ -28,6 +27,8 @@ namespace Das.Views.Construction
             _styleInflater = styleInflater;
             _cachedTypeStyleRules = new ConcurrentDictionary<Type, HashSet<IStyleRule>>();
             _visualTypeRules = new ConcurrentDictionary<Type, List<IStyleRule>>();
+            _cookedTypeStyles = new ConcurrentDictionary<Type, IStyleSheet>();
+
             foreach (var kvpp in visualTypeRules)
             {
                 _visualTypeRules[kvpp.Key] = new List<IStyleRule>(kvpp.Value);
@@ -54,21 +55,34 @@ namespace Das.Views.Construction
             if (TryGetExistingStyle(visual, out var existing))
                 return existing;
 
-            var typeStyles = BuildCoreTypeStyles(visual.GetType());
+            var vType = visual.GetType();
 
-            if (attributeDictionary.TryGetAttributeValue("class", out var className))
+            //var typeStyles = GetOrBuildTypeStyleRules(visual.GetType());
+
+            if (attributeDictionary.TryGetAttributeValue("class", out var className) && 
+                !String.IsNullOrEmpty(className))
             {
-                if (String.IsNullOrEmpty(className))
-                    return GetSheetFromRules(typeStyles);
+                var typeStyles = GetOrBuildTypeStyleRules(vType);
 
-                var rules = await GetStylesByClassNameAsync(className).ToArrayAsync();
+                var classRules = new HashSet<IStyleRule>();
 
-                var res = new NamedStyle(className, rules);
+                await foreach (var r in GetStylesByClassNameAsync(className))
+                    classRules.Add(r);
+
+                foreach (var r in typeStyles)
+                {
+                    classRules.Add(r);
+                }
+
+                var res = new NamedStyle(className, classRules);
+                _typeClassStyles[vType, className] = res;
                 return res;
             }
 
             if (attributeDictionary.TryGetAttributeValue("Style", out var styleName))
             {
+                var typeStyles = GetOrBuildTypeStyleRules(vType);
+
                 var rules = await GetStyleByNameAsync(styleName);
 
                 if (rules != null)
@@ -82,7 +96,8 @@ namespace Das.Views.Construction
                 //return await GetStyleByNameAsync(styleName);
             }
 
-            return GetSheetFromRules(typeStyles);
+            // the visual should have had no class/Style specified by the time we get here
+            return GetOrBuildTypeStyle(vType);
         }
 
         private static Boolean TryGetExistingStyle(IVisualElement visual,
@@ -104,27 +119,60 @@ namespace Das.Views.Construction
             if (TryGetExistingStyle(visual, out var existing))
                 return existing;
 
-            var typeStyles = BuildCoreTypeStyles(visual.GetType());
-            return GetSheetFromRules(typeStyles);
+            return GetOrBuildTypeStyle(visual.GetType());
+
+            //var typeStyles = GetOrBuildTypeStyleRules(visual.GetType());
+            //return GetSheetFromRules(typeStyles);
         }
 
-        private static IStyleSheet? GetSheetFromRules(IEnumerable<IStyleRule> rules)
+        //private static IStyleSheet? GetSheetFromRules(IEnumerable<IStyleRule> rules)
+        //{
+        //    var ruleItems = new List<IStyleRule>(rules);
+        //    if (ruleItems.Count == 0)
+        //        return default;
+
+        //    return new StyleSheet(ruleItems);
+        //}
+
+        private IStyleSheet GetOrBuildTypeStyle(Type type)
         {
-            var ruleItems = new List<IStyleRule>(rules);
-            if (ruleItems.Count == 0)
-                return default;
-
-            return new StyleSheet(ruleItems);
+            return _cookedTypeStyles.GetOrAdd(type, BuildTypeStyle);
         }
 
-        private HashSet<IStyleRule> BuildCoreTypeStyles(Type type)
+        private IStyleSheet BuildTypeStyle(Type type)
+        {
+            var rules = GetOrBuildTypeStyleRules(type);
+            if (rules.Count == 0)
+                return StyleSheet.Empty;
+
+            return new StyleSheet(rules);
+        }
+
+        /// <summary>
+        /// Includes base types' style rules
+        /// </summary>
+        private HashSet<IStyleRule> GetOrBuildTypeStyleRules(Type type)
+        {
+            return _cachedTypeStyleRules.GetOrAdd(type, BuildTypeStyleRules);
+        }
+
+        private HashSet<IStyleRule> BuildTypeStyleRules(Type type)
         {
             var typeStyles = new HashSet<IStyleRule>();
             var currentType = type;
             do
             {
-                AddTypeStyles(currentType, typeStyles);
+                if (_visualTypeRules.TryGetValue(currentType, out var typeRules))
+                {
+                    foreach (var rule in typeRules)
+                    {
+                        //if (!typeStyles.Contains(rule))
+                        typeStyles.Add(rule);
+                    }
+                }
+
                 currentType = currentType.BaseType;
+
             } while (currentType != null &&
                      typeof(IVisualElement).IsAssignableFrom(currentType));
 
@@ -179,18 +227,18 @@ namespace Das.Views.Construction
             return default;
         }
 
-        private void AddTypeStyles(Type type,
-                                   HashSet<IStyleRule> rules)
-        {
-            if (!_visualTypeRules.TryGetValue(type, out var typeRules))
-                return;
+        //private void AddTypeStyles(Type type,
+        //                           HashSet<IStyleRule> rules)
+        //{
+        //    if (!_visualTypeRules.TryGetValue(type, out var typeRules))
+        //        return;
 
-            foreach (var rule in typeRules)
-            {
-                if (!rules.Contains(rule))
-                    rules.Add(rule);
-            }
-        }
+        //    foreach (var rule in typeRules)
+        //    {
+        //        if (!rules.Contains(rule))
+        //            rules.Add(rule);
+        //    }
+        //}
 
 
         private async IAsyncEnumerable<IStyleRule> GetStylesByClassNameAsync(String className)
@@ -262,7 +310,16 @@ namespace Das.Views.Construction
         private readonly Object _resourcesLock;
 
         private readonly HashSet<String> _resourcesRead;
+        
+        /// <summary>
+        /// Includes type-inherited style rules
+        /// </summary>
         private readonly ConcurrentDictionary<Type, HashSet<IStyleRule>> _cachedTypeStyleRules;
+
+        /// <summary>
+        /// cached style sheets for objects that have no affiliated class/style
+        /// </summary>
+        private readonly ConcurrentDictionary<Type, IStyleSheet> _cookedTypeStyles;
 
         private readonly IStyleInflater _styleInflater;
         private readonly Dictionary<String, HashSet<IStyleRule>> _stylesByClassName;

@@ -1,24 +1,26 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Styles.Selectors
 {
     public class ChildSelector : SelectorBase
     {
-        public IStyleSelector Parent{ get; }
-
-        public IStyleSelector Child { get; }
-
         public ChildSelector(IStyleSelector parentSelector,
-            IStyleSelector selectorForChild)
+                             IStyleSelector selectorForChild)
+            : base(parentSelector.GetHashCode() & selectorForChild.GetHashCode())
         {
             Parent = parentSelector;
             Child = selectorForChild;
         }
 
+        public IStyleSelector Child { get; }
+
+        public IStyleSelector Parent { get; }
+
         public override Boolean Equals(IStyleSelector other)
         {
             return other is ChildSelector childSelector &&
-                   Equals(childSelector.Parent, Parent) && 
+                   Equals(childSelector.Parent, Parent) &&
                    Equals(childSelector.Child, Child);
         }
 

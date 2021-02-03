@@ -1,11 +1,11 @@
 ﻿using System;
 using Das.ViewModels;
-using Das.Views.Charting;
-using Das.Views.Extended;
+
+
 
 namespace TestCommon.Company
 {
-    public interface ICompanyViewModel : ISceneViewModel,
+    public interface ICompanyViewModel : //ISceneViewModel,
                                          IEquatable<ICompanyViewModel>
     {
         ICompanyViewModel Self { get; }
@@ -14,7 +14,7 @@ namespace TestCommon.Company
 
         EmployeeViewModel SelectedEmployee { get; set; }
 
-        IPieData<String, Double> SalesReport { get; }
+        //IPieData<String, Double> SalesReport { get; }
 
         String Name { get; }
     }

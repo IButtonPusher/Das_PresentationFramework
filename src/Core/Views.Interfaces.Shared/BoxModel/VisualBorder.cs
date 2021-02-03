@@ -34,13 +34,19 @@ namespace Das.Views.BoxModel
         public ValueThickness GetThickness<TSize>(TSize available)
             where TSize : ISize
         {
-            return new ValueThickness(Left.GetQuantity(available.Width),
+            return new(Left.GetQuantity(available.Width),
                 Top.GetQuantity(available.Height),
                 Right.GetQuantity(available.Width),
                 Bottom.GetQuantity(available.Height));
         }
 
-        public static readonly VisualBorder Empty = new VisualBorder(BorderSide.Empty);
+        public override String ToString()
+        {
+            return "Border - T: " + Top + " R: " + Right + " B: "
+                   + Bottom + " L: " + Left;
+        }
+
+        public static readonly VisualBorder Empty = new(BorderSide.Empty);
 
         public BorderSide Left { get; }
 

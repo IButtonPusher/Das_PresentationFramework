@@ -20,7 +20,8 @@ namespace Das.OpenGL
                                IImageProvider imageProvider)
         : base(themeProvider, Serializer.AttributeParser, 
             Serializer.TypeInferrer, Serializer.TypeManipulator,
-            new Dictionary<IVisualElement, ValueCube>(), imageProvider)
+            new Dictionary<IVisualElement, ValueCube>(), imageProvider,
+            Serializer.AssemblyList, Serializer)
         {
             var lastMeasurements = new Dictionary<IVisualElement, ValueSize>();
             var lastRender = new Dictionary<IVisualElement, ValueCube>();
@@ -42,6 +43,6 @@ namespace Das.OpenGL
 
         public GLRenderContext RenderContext { get; }
 
-        protected static readonly DasSerializer Serializer = new DasSerializer();
+        protected static readonly DasSerializer Serializer = new();
     }
 }

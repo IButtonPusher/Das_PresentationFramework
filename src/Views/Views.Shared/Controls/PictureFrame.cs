@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Extensions;
-using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
+using Das.Views.Images;
 using Das.Views.Rendering;
 
 namespace Das.Views.Controls

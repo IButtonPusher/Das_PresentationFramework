@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
+using Das.Views.Images;
 using Das.Views.Input;
 
 namespace Das.Views.Rendering
@@ -15,7 +16,7 @@ namespace Das.Views.Rendering
         IViewState ViewState { get; }
 
         void DrawElement<TRenderRectangle>(IVisualElement visual,
-                                                       TRenderRectangle rect)
+                                           TRenderRectangle rect)
             where TRenderRectangle : IRenderRectangle;
 
         //void DrawContentElement<TSize>(IVisualElement element,
@@ -113,8 +114,8 @@ namespace Das.Views.Rendering
             where TBrush : IBrush;
 
         void FillRoundedRectangle<TRectangle, TBrush, TThickness>(TRectangle rect,
-                                                      TBrush brush,
-                                                      TThickness cornerRadii)
+                                                                  TBrush brush,
+                                                                  TThickness cornerRadii)
             where TRectangle : IRectangle
             where TBrush : IBrush
             where TThickness : IThickness;

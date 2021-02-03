@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Das.Views.Extended;
-using Das.Views.Extended.Runtime;
+
 using TestCommon.Company;
 
 namespace TestCommon
@@ -10,7 +9,7 @@ namespace TestCommon
                                  IEquatable<TestCompanyVm>
     {
         public TestCompanyVm() 
-            : base("ACME Inc.", MakeAScene())
+            : base("ACME Inc.")//, MakeAScene())
         {
             var address1 = new AddressVm
             {
@@ -42,23 +41,23 @@ namespace TestCommon
             Employees.AddRange(new List<EmployeeViewModel>{ larry, curly, moe, bob, john, bobJr });
         }
 
-        private static IScene MakeAScene()
-        {
-            //var fileName = @"E:\src\master_clones\ThirdParty\FbxWriter-master\FbxTest\bin\Debug\kettle.fbx";
-            //var fileName = @"E:\src\master_clones\ThirdParty\FbxWriter-master\FbxTest\bin\Debug\cube.fbx";
+        //private static IScene MakeAScene()
+        //{
+        //    //var fileName = @"E:\src\master_clones\ThirdParty\FbxWriter-master\FbxTest\bin\Debug\kettle.fbx";
+        //    //var fileName = @"E:\src\master_clones\ThirdParty\FbxWriter-master\FbxTest\bin\Debug\cube.fbx";
 
-            //var lodr = new CoreFbxLoader();
-            //var fi = new FileInfo(fileName);
-            //var cube = lodr.LoadModelAsync(fi).Result;
+        //    //var lodr = new CoreFbxLoader();
+        //    //var fi = new FileInfo(fileName);
+        //    //var cube = lodr.LoadModelAsync(fi).Result;
 
-            var cube2 = new TestCube();
-            return new CoreScene(new List<IMesh> { cube2 });
+        //    var cube2 = new TestCube();
+        //    return new CoreScene(new List<IMesh> { cube2 });
 
-            //return new CoreScene(cube.Meshes);
+        //    //return new CoreScene(cube.Meshes);
 
             
             
-        }
+        //}
 
         public Boolean Equals(TestCompanyVm other)
         {

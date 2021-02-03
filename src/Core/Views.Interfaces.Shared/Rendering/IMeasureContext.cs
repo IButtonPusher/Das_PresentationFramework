@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
+using Das.Views.Images;
 
 namespace Das.Views.Rendering
 {
@@ -38,9 +38,6 @@ namespace Das.Views.Rendering
 
         ValueSize MeasureString(String s,
                                 IFont font);
-
-        //ValueSize GetStyleDesiredSize(IVisualElement element);
-
 
     }
 }

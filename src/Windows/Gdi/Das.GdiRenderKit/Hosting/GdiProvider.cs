@@ -12,7 +12,6 @@ using Das.Views.DataBinding;
 using Das.Views.Mvvm;
 using Das.Views.Panels;
 using Das.Views.Rendering;
-using Das.Views.Styles;
 
 namespace Das.Gdi
 {
@@ -147,9 +146,9 @@ namespace Das.Gdi
                                            IResolver container)
         {
             var perspective = new BasePerspective();
-            var kit = new GdiRenderKit(perspective, windowProvider,
-                BaselineThemeProvider.Instance,
-                container);
+            var kit = new GdiRenderKit(perspective, windowProvider);
+                //BaselineThemeProvider.Instance,
+                //container);
             return kit;
         }
     }

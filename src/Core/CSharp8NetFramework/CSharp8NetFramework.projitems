@@ -9,6 +9,7 @@
     <Import_RootNamespace>CSharp8NetFramework</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AsyncTaskCompletionSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CancellationTokenEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\AsyncAwaiter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\AsyncSemaphore.cs" />

@@ -16,9 +16,9 @@ namespace AsyncResults.Enumerable
             _asyncEnumerator = asyncEnumerator;
         }
 
-        public object Current => _asyncEnumerator.Current;
+        public Object Current => _asyncEnumerator.Current;
 
-        public bool MoveNext() => _asyncEnumerator.MoveNextAsync().GetAwaiter().GetResult();
+        public Boolean MoveNext() => _asyncEnumerator.MoveNextAsync().GetAwaiter().GetResult();
 
         public void Reset() =>
             throw new NotSupportedException(

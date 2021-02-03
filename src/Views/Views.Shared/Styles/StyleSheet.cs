@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Das.Views.Styles
 {
@@ -12,7 +13,11 @@ namespace Das.Views.Styles
         {
             VisualTypeStyles = new ConcurrentDictionary<Type, IStyleSheet>();
             _rules = new HashSet<IStyleRule>(rules);
+
+            IsEmpty = _rules.Count == 0;
         }
+
+        public static readonly StyleSheet Empty = new(Enumerable.Empty<IStyleRule>());
 
         public IEnumerable<IStyleRule> Rules => _rules;
 
@@ -33,6 +38,8 @@ namespace Das.Views.Styles
 
             return new StyleSheet(newRules);
         }
+
+        public Boolean IsEmpty { get; }
 
         public IEnumerable<IStyleSetter> StyleSetters
         {

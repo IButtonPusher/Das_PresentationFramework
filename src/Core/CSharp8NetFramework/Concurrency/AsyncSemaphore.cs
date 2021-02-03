@@ -52,7 +52,7 @@ namespace System.Threading
                     return _completedTask;
                 }
 
-                var waiter = new TaskCompletionSource<Boolean>();
+                var waiter = new AsyncTaskCompletionSource<Boolean>();
                 _waiters.Enqueue(waiter);
 
                 cancellationToken.Register(
@@ -85,7 +85,7 @@ namespace System.Threading
                     return _completedTask;
                 }
 
-                var waiter = new TaskCompletionSource<Boolean>();
+                var waiter = new AsyncTaskCompletionSource<Boolean>();
                 _waiters.Enqueue(waiter);
                 return waiter.Task;
             }

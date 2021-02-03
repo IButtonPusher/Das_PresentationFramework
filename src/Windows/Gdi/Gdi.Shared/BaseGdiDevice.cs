@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 using Das.Views.Windows;
+using Gdi.Shared;
 
 namespace Das.Gdi
 {
@@ -47,7 +48,8 @@ namespace Das.Gdi
                 return default;
 
             var bmp = new Bitmap(_width, _height);
-            using (var g = Graphics.FromImage(bmp))
+            //using (var g = Graphics.FromImage(bmp))
+            using (var g = bmp.GetSmoothGraphics())
             {
                 if (backgroundColor != null)
                     g.Clear(backgroundColor.Value);

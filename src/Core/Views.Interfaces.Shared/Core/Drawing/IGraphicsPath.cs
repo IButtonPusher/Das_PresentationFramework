@@ -1,5 +1,6 @@
 ﻿using System;
 using Das.Views.Core.Geometry;
+using Das.Views.Images;
 
 namespace Das.Views.Core.Drawing
 {
@@ -52,5 +53,10 @@ namespace Das.Views.Core.Drawing
         /// Gets the underlying system specific object
         /// </summary>
         T Unwrap<T>();
+
+        IImage ToImage(Int32 width,
+                       Int32 height,
+                       IColor? stroke,
+                       IBrush? fill);
     }
 }

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
+using Das.Views.Images;
 
 namespace Das.Views.Core
 {
@@ -36,8 +37,5 @@ namespace Das.Views.Core
         Double DeviceEffectiveDpi { get; }
 
         IGraphicsPath GetNewGraphicsPath();
-
-        IImage GetImage(IGraphicsPath path,
-                        IColor foreground);
     }
 }

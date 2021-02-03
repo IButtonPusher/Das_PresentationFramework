@@ -22,6 +22,12 @@
     <ToggleButton Content="hello"
                   Style="mat-toggle-button"/>
 
+    <Button>
+      <svg Source="{Resource TestCommon.Resources.cog.svg}"
+           Fill="DarkGray" 
+           Stroke="DarkGray"/>
+    </Button>
+
     <!--<ToggleButton>
       <Template>
         <Label>

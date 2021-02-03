@@ -50,7 +50,6 @@ namespace Das.Views.Styles
 
             TrySetVisualStyle(visual, appliedStyle);
 
-            //if (appliedStyle._appliedRules.Count == 0)
             if (!appliedStyle.HasAppliedRules)
                 return default;
 
@@ -344,27 +343,6 @@ namespace Das.Views.Styles
                                 stateSelector, visualLineage))
                             yield break;
 
-                        //if (!IsVisualSelectable(appliedStyle, currentVisual, 
-                        //    stateSelector.BaseSelector, visualLineage))
-                        //    yield break;
-
-                        //foreach (var stateType in GetStateTypes(stateSelector.StateType))
-                        //{
-                        //    if (!TryGetStateFilterItems(stateType, currentVisual,
-                        //        out var dependencyProperty, out var value))
-                        //        continue;
-
-                        //    appliedStyle.MonitorPropertyChange(dependencyProperty, currentVisual);
-
-                        //    //dependencyProperty.AddOnChangedHandler(currentVisual,
-                        //    //    d => appliedStyle.Execute());
-
-                        //    var condition = new AppliedStyleCondition(currentVisual, dependencyProperty,
-                        //        value!.Value);
-
-                        //    appliedRule.Conditions.Add(condition);
-                        //}
-
                         goto default;
 
                     default:
@@ -416,10 +394,6 @@ namespace Das.Views.Styles
 
                 case DependencyPropertySelector _:
                     return true;
-                    //visual.TryGetDependencyProperty(depSel.)
-                    //depSel.Property
-
-                    //return false;
 
                 case ClassStyleSelector classSelector:
 
@@ -536,7 +510,6 @@ namespace Das.Views.Styles
 
         private readonly IDeclarationWorker _declarationWorker;
         private readonly IPropertyProvider _propertyProvider;
-
         private readonly IVisualStyleProvider _styleProvider;
     }
 }

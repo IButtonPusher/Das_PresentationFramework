@@ -6,30 +6,36 @@ using System.Threading.Tasks;
 using Das.Serializer;
 using Das.ViewModels.Collections;
 using Das.Views.DataBinding;
+using Das.Views.Resources;
 
 namespace Das.Views.Construction
 {
     public class BindingBuilder : IBindingBuilder
     {
         public BindingBuilder(ITypeInferrer typeInferrer,
-                              IPropertyProvider propertyProvider)
+                              IPropertyProvider propertyProvider,
+                              IAssemblyList assemblies,
+                              IResourceBuilder resourceBuilder)
         {
             _typeInferrer = typeInferrer;
             _propertyProvider = propertyProvider;
+            _assemblies = assemblies;
+            _resourceBuilder = resourceBuilder;
             _cachedPropertyAccessors = new DoubleConcurrentDictionary<Type, String, IPropertyAccessor>();
         }
 
-        public Dictionary<String, IDataBinding> GetBindingsDictionary(IMarkupNode node,
-                                                                      Type? dataContextType,
-                                                                      Dictionary<String, String>
-                                                                          nameSpaceAssemblySearch)
+        public async Task<Dictionary<String, IPropertyBinding>> GetBindingsDictionaryAsync(
+            IMarkupNode node,
+            Type? dataContextType,
+            Dictionary<String, String>
+                nameSpaceAssemblySearch)
         {
-            Dictionary<String, IDataBinding> bindings;
+            Dictionary<String, IPropertyBinding> bindings;
 
             if (dataContextType != null)
             {
-                bindings = new Dictionary<String, IDataBinding>();
-                foreach (var kvp in GetBindings(dataContextType, node, nameSpaceAssemblySearch))
+                bindings = new Dictionary<String, IPropertyBinding>();
+                await foreach (var kvp in GetBindings(dataContextType, node, nameSpaceAssemblySearch))
                 {
                     bindings.Add(kvp.Key, kvp.Value);
                 }
@@ -42,22 +48,6 @@ namespace Das.Views.Construction
         public Type? InferDataContextTypeFromBindings(IEnumerable<IDataBinding> bindings,
                                                       Type? currentGenericArg)
         {
-            //Type? genericChild;
-
-            //if (currentGenericArg != null)
-            //{
-            //    var childArgs = currentGenericArg?.GetGenericArguments();
-
-            //    if (childArgs != null && childArgs.Length > 0)
-            //    {
-            //        if (childArgs.Length == 1)
-            //        {
-            //            //genericChild = childArgs[0];
-            //        }
-            //        else throw new NotImplementedException();
-            //    }
-            //}
-
             foreach (var binding in bindings)
             {
                 switch (binding)
@@ -112,34 +102,17 @@ namespace Das.Views.Construction
             return currentGenericArg;
         }
 
-        //private static PropertyInfo? GetProperty(Type declaringType,
-        //                                         String propName)
-        //{
-        //    if (!propName.Contains(".")) 
-        //        return declaringType.GetProperty(propName);
 
-        //    var subPropTokens = propName.Split('.');
-        //    var propInfo = declaringType.GetProperty(subPropTokens[0]);
-        //    if (propInfo == null)
-        //        return null;
-
-        //    for (var c = 1; c < subPropTokens.Length; c++)
-        //    {
-        //        propInfo = BaseBinding.GetTypePropertyOrDie(propInfo.PropertyType, subPropTokens[c]);
-        //        if (propInfo == null)
-        //            return null;
-        //    }
-
-        //    return propInfo;
-        //}
-
-        private IEnumerable<KeyValuePair<String, IDataBinding>> GetBindings(Type dataContextType,
-                                                                            IMarkupNode node,
-                                                                            Dictionary<String, String>
-                                                                                nameSpaceAssemblySearch)
+        private async IAsyncEnumerable<KeyValuePair<String, IPropertyBinding>> GetBindings(
+            Type dataContextType,
+            IMarkupNode node,
+            Dictionary<String, String>
+                nameSpaceAssemblySearch)
         {
             foreach (var kvp in node.GetAllAttributes())
             {
+                var bindingType = BindingType.None;
+
                 var valTrim = kvp.Value.Trim();
                 if (valTrim.Length < 3 ||
                     valTrim[0] != '{' || valTrim[valTrim.Length - 1] != '}')
@@ -155,8 +128,14 @@ namespace Das.Views.Construction
 
                 switch (expressionTokens.Length)
                 {
-                    case 2 when expressionTokens[0] == "Binding":
+                    case 2 when expressionTokens[0] == DATA_BINDING:
                         propName = expressionTokens[1];
+                        bindingType = BindingType.Data;
+                        break;
+
+                    case 2 when expressionTokens[0] == RESOURCE_BINDING:
+                        propName = expressionTokens[1];
+                        bindingType = BindingType.Resource;
                         break;
 
                     case 1:
@@ -179,7 +158,7 @@ namespace Das.Views.Construction
                         if (groupTokens.Length != 2)
                             throw new NotImplementedException();
 
-                        if (groupTokens[0].Trim() == "Converter")
+                        if (groupTokens[0].Trim() == CONVERTER)
                         {
                             var coverterTypeName = groupTokens[1];
                             var converterTokens = coverterTypeName.Split('.');
@@ -200,22 +179,60 @@ namespace Das.Views.Construction
                 if (propName == ".")
                 {
                     var dcBinding = new DataContextBinding(kvp.Key, converter);
-                    yield return new KeyValuePair<String, IDataBinding>(kvp.Key, dcBinding);
+                    yield return new KeyValuePair<String, IPropertyBinding>(kvp.Key, dcBinding);
                     continue;
                 }
 
-                if (BaseBinding.GetBindingProperty(dataContextType, propName) == null)
-                    throw new MissingMemberException(dataContextType.Name, propName);
+                switch (bindingType)
+                {
+                    case BindingType.None:
+                        continue;
 
-                var propAccessor = _cachedPropertyAccessors.GetOrAdd(dataContextType, propName, (d,
-                        p) =>
-                    _propertyProvider.GetPropertyAccessor(d, p));
+                    case BindingType.Data:
+                        if (BaseBinding.GetBindingProperty(dataContextType, propName) == null)
+                            throw new MissingMemberException(dataContextType.Name, propName);
 
-                //var propAccessor = _propertyProvider.GetPropertyAccessor(dataContextType, propName);
+                        var propAccessor = _cachedPropertyAccessors.GetOrAdd(dataContextType, propName,
+                            (d,
+                             p) => _propertyProvider.GetPropertyAccessor(d, p));
 
-                var binding = new DeferredPropertyBinding(propName, kvp.Key, propAccessor, converter);
-                yield return new KeyValuePair<String, IDataBinding>(kvp.Key, binding);
+
+                        var dataBinding = new DeferredPropertyBinding(propName, kvp.Key, propAccessor, converter);
+                        yield return new KeyValuePair<String, IPropertyBinding>(kvp.Key, dataBinding);
+                        break;
+
+                    case BindingType.Resource:
+                        var resourceBinding = await GetEmbeddedResourceBinding(propName);
+                        if (resourceBinding != null)
+                            yield return new(kvp.Key, resourceBinding);
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
+        }
+
+        private async Task<EmbeddedResourceBinding?> GetEmbeddedResourceBinding(String path)
+        {
+            var tokens = path.Split('.');
+            if (tokens.Length < 3)
+                return default;
+
+            var asmName = tokens[0];
+
+            for (var c = 1; c < tokens.Length - 2; c++)
+                //if (_assemblies.TryGetAssembly(asmName + ".dll", out var foundAsm))
+                if (_assemblies.TryGetAssemblyByName(asmName, out var foundAsm))
+                {
+                    var obj = await _resourceBuilder.GetEmbeddedResourceAsync(path, tokens, foundAsm);
+                    if (obj == null)
+                        return default;
+
+                    return new EmbeddedResourceBinding(path, obj);
+                }
+
+            return default;
         }
 
         private Type GetType(String name,
@@ -234,11 +251,17 @@ namespace Das.Views.Construction
                    ?? throw new TypeLoadException(name);
         }
 
-        private static readonly Dictionary<String, IDataBinding> _emptyBindings =
-            new Dictionary<String, IDataBinding>();
+        private const String CONVERTER = "Converter";
+
+        private const String DATA_BINDING = "Binding";
+        private const String RESOURCE_BINDING = "Resource";
+
+        private static readonly Dictionary<String, IPropertyBinding> _emptyBindings = new();
+        private readonly IAssemblyList _assemblies;
 
         private readonly DoubleConcurrentDictionary<Type, String, IPropertyAccessor> _cachedPropertyAccessors;
         private readonly IPropertyProvider _propertyProvider;
+        private readonly IResourceBuilder _resourceBuilder;
 
         private readonly ITypeInferrer _typeInferrer;
     }

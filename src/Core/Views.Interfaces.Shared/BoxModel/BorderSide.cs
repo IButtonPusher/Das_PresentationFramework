@@ -22,7 +22,7 @@ namespace Das.Views.BoxModel
             IsEmpty = _quantity.IsZero();
         }
 
-        public static readonly BorderSide Empty = new BorderSide(0, LengthUnits.None, OutlineStyle.None,
+        public static readonly BorderSide Empty = new(0, LengthUnits.None, OutlineStyle.None,
             SolidColorBrush.Tranparent);
 
         public Double GetQuantity(Double available)
@@ -41,9 +41,14 @@ namespace Das.Views.BoxModel
             }
         }
 
+        public override String ToString()
+        {
+            return _quantity + " " + Units + " " + Color;
+        }
+
         public LengthUnits Units { get; }
 
-        public OutlineStyle Style {get;}
+        public OutlineStyle Style { get; }
 
         public IBrush Color { get; }
 

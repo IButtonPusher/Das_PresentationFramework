@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 
-namespace Das.Views.Core.Drawing
+namespace Das.Views.Images
 {
     public interface IImage : ISize,
                               IDisposable

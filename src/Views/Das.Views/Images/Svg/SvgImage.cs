@@ -9,7 +9,7 @@ using Das.Views.Images.Svg;
 
 namespace Das.Views.Images
 {
-    public class SvgImage : IImage
+    public class SvgImage : ISvgImage
     {
         public SvgImage(Double width,
                         Double height,
@@ -31,9 +31,23 @@ namespace Das.Views.Images
 
         public Double Width { get; }
 
-        public IColor Stroke { get; set; }
+        public IColor? Stroke { get; set; }
 
         public IBrush? Fill { get; set; }
+
+        public IImage ToStaticImage(IColor? stroke,
+                                    IBrush? fill)
+        {
+            using (var path = _imageProvider.GetNewGraphicsPath())
+            {
+                AddToPath(path);
+
+                var cooked = path.ToImage(Convert.ToInt32(Width),
+                    Convert.ToInt32(Height), stroke, fill);
+
+                return cooked;
+            }
+        }
 
 
         public Boolean Equals(ISize other)
@@ -75,17 +89,16 @@ namespace Das.Views.Images
             if (_cachedUnwrapped is T good)
                 return good;
 
-            using (var path = _imageProvider.GetNewGraphicsPath())
-            {
-                AddToPath(path);
+            if (!(Stroke is { } stroke))
+                return default!;
 
-                var cooked = _imageProvider.GetImage(path, Stroke);
-                var img = cooked.Unwrap<T>();
-                _cachedUnwrapped = img;
+            var cooked = ToStaticImage(stroke, Fill);
+            if (cooked == null)
+                return default!;
 
-                return img;
-
-            }
+            var img = cooked.Unwrap<T>();
+            _cachedUnwrapped = img;
+            return img;
         }
 
         public void UnwrapLocked<T>(Action<T> action)

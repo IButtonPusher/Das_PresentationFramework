@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Das.Serializer;
 using Das.Views;
 using Das.Views.Core.Geometry;
+using Das.Views.Images;
 using Das.Views.Layout;
 using Das.Views.Rendering;
 using Das.Views.Styles;
@@ -20,19 +21,24 @@ namespace Das.Gdi.Kits
         public StaticGdiRenderKit(IViewPerspective viewPerspective,
                                   IStringPrimitiveScanner attributeScanner,
                                   ITypeInferrer typeInferrer,
-                                  IPropertyProvider propertyProvider)
+                                  IPropertyProvider propertyProvider,
+                                  IAssemblyList assemblyList,
+                                  IMultiSerializer xmlSerializer)
         : this(viewPerspective, attributeScanner, typeInferrer, propertyProvider, 
-            new Dictionary<IVisualElement, ValueCube>())
+            new Dictionary<IVisualElement, ValueCube>(), assemblyList, xmlSerializer)
         {}
 
         private StaticGdiRenderKit(IViewPerspective viewPerspective,
                                    IStringPrimitiveScanner attributeScanner,
                                    ITypeInferrer typeInferrer,
                                    IPropertyProvider propertyProvider,
-                                   Dictionary<IVisualElement, ValueCube> renderPositions)
-            : base(BaselineThemeProvider.Instance,
-                attributeScanner, typeInferrer, propertyProvider, renderPositions,
-                new GdiImageProvider())
+                                   Dictionary<IVisualElement, ValueCube> renderPositions,
+                                   IAssemblyList assemblyList,
+                                   IMultiSerializer xmlSerializer)
+            : base(new GdiImageProvider(), xmlSerializer, NullSvgBuilder.Instance)
+            //: base(BaselineThemeProvider.Instance,
+            //    attributeScanner, typeInferrer, propertyProvider, renderPositions,
+            //    new GdiImageProvider(), assemblyList, xmlSerializer)
         {
             var defaultSurrogates = new BaseSurrogateProvider();
 

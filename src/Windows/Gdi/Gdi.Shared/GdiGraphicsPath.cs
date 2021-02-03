@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using Das.Gdi.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
+using Das.Views.Images;
 using Das.Views.Rendering;
 
 namespace Gdi.Shared
@@ -96,6 +98,37 @@ namespace Gdi.Shared
                 return good;
 
             throw new InvalidCastException();
+        }
+
+        public override IImage ToImage(Int32 width,
+                                       Int32 height,
+                                       IColor? stroke,
+                                       IBrush? fill)
+        {
+            var gdiPath = Path;
+            
+            var bmp = new Bitmap(width, height);
+
+            //using (var g = Graphics.FromImage(bmp))
+            using (var g = bmp.GetSmoothGraphics())
+            {
+                if (fill is { } set)
+                {
+                    var brush = GdiTypeConverter.GetBrush(set);
+                    g.FillPath(brush, gdiPath);
+                }
+
+                if (stroke is { } different)
+                {
+                    var p = new Das.Views.Core.Drawing.Pen(different, 1);
+                    using (var usePen = GdiTypeConverter.GetPen(p))
+                    {
+                        g.DrawPath(usePen, gdiPath);
+                    }
+                }
+            }
+
+            return new GdiBitmap(bmp, null);
         }
 
         private static IEnumerable<IPoint2F> GetLocalPoints(IEnumerable<PointF> points)

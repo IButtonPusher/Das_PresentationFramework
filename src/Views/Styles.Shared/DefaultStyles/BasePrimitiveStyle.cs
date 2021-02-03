@@ -8,7 +8,7 @@ using Das.Views.Panels;
 using Das.Views.Styles.Declarations;
 using Das.Views.Styles.Selectors;
 
-namespace Das.Views.Styles.DefaultStyles
+namespace Das.Views.Styles
 {
     public class BasePrimitiveStyle : Dictionary<Type, IEnumerable<IStyleRule>>
     {
@@ -22,7 +22,9 @@ namespace Das.Views.Styles.DefaultStyles
                         new BorderSide(1, LengthUnits.Px, OutlineStyle.Solid, SolidColorBrush.Black)),
                     DeclarationProperty.Border),
 
-                Rule(ContentPanel.PaddingProperty, 5, DeclarationProperty.Padding)
+                Rule(ContentPanel.PaddingProperty, 5, DeclarationProperty.Padding),
+                Rule(VisualElement.BackgroundProperty, VisualStateType.Active, SolidColorBrush.LightGray,
+                    DeclarationProperty.BackgroundColor)
             };
 
             this[typeof(ButtonBase)] = btnBaseItems;
@@ -62,7 +64,7 @@ namespace Das.Views.Styles.DefaultStyles
         private static VisualStateSelector Select<TValue>(VisualStateType state,
                                                           IDependencyProperty<TValue> property)
         {
-            return new VisualStateSelector(AllStyleSelector.Instance, state);
+            return new(AllStyleSelector.Instance, state);
             //return new VisualStateSelector(Select(property), state);
         }
 

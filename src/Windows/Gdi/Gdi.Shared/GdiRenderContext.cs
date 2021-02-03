@@ -9,6 +9,7 @@ using Das.Views.Colors;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
+using Das.Views.Images;
 using Das.Views.Rendering;
 using Gdi.Shared;
 using Color = Das.Views.Core.Drawing.Color;

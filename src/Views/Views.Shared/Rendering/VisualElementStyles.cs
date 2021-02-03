@@ -26,6 +26,10 @@ namespace Das.Views
                     dependencyProperty = BorderRadiusProperty;
                     break;
 
+                case DeclarationProperty.Border:
+                    dependencyProperty = BorderProperty;
+                    break;
+
                 case DeclarationProperty.Height:
                     dependencyProperty = HeightProperty;
                     break;

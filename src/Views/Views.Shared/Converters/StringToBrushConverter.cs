@@ -7,7 +7,7 @@ namespace Das.Views.Converters
 {
     public class StringToBrushConverter : BaseConverter<String, SolidColorBrush>
     {
-        public static StringToBrushConverter Instance { get; } = new StringToBrushConverter();
+        public static StringToBrushConverter Instance { get; } = new();
 
         public sealed override SolidColorBrush Convert(String input)
         {

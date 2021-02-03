@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CascadingStyle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Combinators\ChildCombinator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Combinators\CombinatorBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Combinators\DescendantCombinator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\Combinator.cs" />

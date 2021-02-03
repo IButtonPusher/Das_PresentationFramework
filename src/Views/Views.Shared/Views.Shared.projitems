@@ -14,12 +14,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BoxShadowLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\VisualCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\VisualCollectionHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\BindingType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\BindingBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\ChildNodeType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\ChildObjectResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\DefaultValueConverterProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\InflaterBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\MarkupNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Construction\ResourceBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\DeclarationWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\Styles\SelectorWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\Types\VisualTypeTuple.cs" />
@@ -32,8 +34,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Construction\XmlViewInflater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ContentVisuals\ContentPropertyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\CheckBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ImageViewBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\SvgPictureFrame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\QuantifiedThicknessConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToColorConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToVisualConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Images\NullSvgBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\InteractiveVisualProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BoxModelLayoutTree.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\ContextBase.cs" />
@@ -102,6 +108,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VisualElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VisualElementProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VisualElementStyles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\EmbeddedResourceBinding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\AppliedRuleBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\AppliedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\AppliedStyleCondition.cs" />

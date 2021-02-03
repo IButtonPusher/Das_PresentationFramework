@@ -11,6 +11,7 @@ using Das.Views.Colors;
 using Das.Views.Construction;
 using Das.Views.Core;
 using Das.Views.Core.Geometry;
+using Das.Views.Images.Svg;
 using Das.Views.Layout;
 using Das.Views.Rendering;
 using Das.Views.Styles;
@@ -30,11 +31,14 @@ namespace Das.Xamarin.Android
                                 IUiProvider uiProvider,
                                 IThemeProvider themeProvider,
                                 DisplayMetrics displayMetrics,
-                                IResolver container)
-        : base(container, themeProvider, Serializer.AttributeParser, 
-            Serializer.TypeInferrer, Serializer.TypeManipulator, 
-            new Dictionary<IVisualElement, ValueCube>(), 
-            new AndroidImageProvider(displayMetrics))
+                                IResolver container,
+                                AndroidImageProvider imageProvider)
+            : base(new AndroidImageProvider(displayMetrics), Serializer,
+                new SvgPathBuilder(imageProvider, Serializer))
+        //: base(container, themeProvider, Serializer.AttributeParser, 
+        //    Serializer.TypeInferrer, Serializer.TypeManipulator, 
+        //    new Dictionary<IVisualElement, ValueCube>(), 
+        //    new AndroidImageProvider(displayMetrics), Serializer.AssemblyList, Serializer)
         {
             ViewState = viewState;
             DisplayMetrics = displayMetrics;
@@ -52,58 +56,63 @@ namespace Das.Xamarin.Android
                                 IThemeProvider themeProvider,
                                 DisplayMetrics displayMetrics)
             : this(viewPerspective, viewState, fontProvider, windowManager, uiProvider,
-                themeProvider, displayMetrics, new BaseResolver(TimeSpan.FromSeconds(5)))
+                themeProvider, displayMetrics, new BaseResolver(TimeSpan.FromSeconds(5)),
+                new AndroidImageProvider(displayMetrics))
         {
             
         }
 
-        public AndroidRenderKit(IViewPerspective viewPerspective,
-                                IViewState viewState,
-                                IStyleContext styleContext,
-                                AndroidFontProvider fontProvider,
-                                IWindowManager windowManager,
-                                IUiProvider uiProvider,
-                                DisplayMetrics displayMetrics,
-                                IStringPrimitiveScanner attributeScanner,
-                                ITypeInferrer typeInferrer,
-                                IPropertyProvider propertyProvider)
-            : base(styleContext, attributeScanner, typeInferrer, propertyProvider,
-                new Dictionary<IVisualElement, ValueCube>(),
-                new AndroidImageProvider(displayMetrics))
-        {
-            ViewState = viewState;
-            DisplayMetrics = displayMetrics;
+        //public AndroidRenderKit(IViewPerspective viewPerspective,
+        //                        IViewState viewState,
+        //                        IStyleContext styleContext,
+        //                        AndroidFontProvider fontProvider,
+        //                        IWindowManager windowManager,
+        //                        IUiProvider uiProvider,
+        //                        DisplayMetrics displayMetrics,
+        //                        IStringPrimitiveScanner attributeScanner,
+        //                        ITypeInferrer typeInferrer,
+        //                        IPropertyProvider propertyProvider,
+        //                        IAssemblyList assemblyList,
+        //                        IXmlSerializer xmlSerializer)
+        //    : base(styleContext, attributeScanner, typeInferrer, propertyProvider,
+        //        new Dictionary<IVisualElement, ValueCube>(),
+        //        new AndroidImageProvider(displayMetrics), assemblyList, xmlSerializer)
+        //{
+        //    ViewState = viewState;
+        //    DisplayMetrics = displayMetrics;
 
-            Init(windowManager, styleContext, viewPerspective, displayMetrics,
-                fontProvider, viewState, uiProvider, 
-                ref _measureContext!, ref _renderContext!, ref _refreshRenderContext!);
-        }
+        //    Init(windowManager, styleContext, viewPerspective, displayMetrics,
+        //        fontProvider, viewState, uiProvider, 
+        //        ref _measureContext!, ref _renderContext!, ref _refreshRenderContext!);
+        //}
 
-        public AndroidRenderKit(IViewPerspective viewPerspective,
-                                IViewState viewState,
-                                IStyleContext styleContext,
-                                AndroidFontProvider fontProvider,
-                                IWindowManager windowManager,
-                                IUiProvider uiProvider,
-                                DisplayMetrics displayMetrics,
-                                IResolver resolver,
-                                IStringPrimitiveScanner attributeScanner,
-                                ITypeInferrer typeInferrer, 
-                                IPropertyProvider propertyProvider, 
-                                IVisualBootstrapper visualBootstrapper,
-                                IVisualStyleProvider styleProvider,
-                                IImageProvider imageProvider) 
-            : base(resolver, attributeScanner, typeInferrer, propertyProvider, 
-                visualBootstrapper,new Dictionary<IVisualElement, ValueCube>(), styleProvider,
-                imageProvider)
-        {
-            ViewState = viewState;
-            DisplayMetrics = displayMetrics;
+        //public AndroidRenderKit(IViewPerspective viewPerspective,
+        //                        IViewState viewState,
+        //                        IStyleContext styleContext,
+        //                        AndroidFontProvider fontProvider,
+        //                        IWindowManager windowManager,
+        //                        IUiProvider uiProvider,
+        //                        DisplayMetrics displayMetrics,
+        //                        IResolver resolver,
+        //                        IStringPrimitiveScanner attributeScanner,
+        //                        ITypeInferrer typeInferrer, 
+        //                        IPropertyProvider propertyProvider, 
+        //                        IVisualBootstrapper visualBootstrapper,
+        //                        IVisualStyleProvider styleProvider,
+        //                        IImageProvider imageProvider,
+        //                        IAssemblyList assemblyList,
+        //                        IXmlSerializer xmlSerializer) 
+        //    : base(resolver, attributeScanner, typeInferrer, propertyProvider, 
+        //        visualBootstrapper,new Dictionary<IVisualElement, ValueCube>(), styleProvider,
+        //        imageProvider, assemblyList, xmlSerializer)
+        //{
+        //    ViewState = viewState;
+        //    DisplayMetrics = displayMetrics;
 
-            Init(windowManager, styleContext, viewPerspective, displayMetrics,
-                fontProvider, viewState, uiProvider, 
-                ref _measureContext!, ref _renderContext!, ref _refreshRenderContext!);
-        }
+        //    Init(windowManager, styleContext, viewPerspective, displayMetrics,
+        //        fontProvider, viewState, uiProvider, 
+        //        ref _measureContext!, ref _renderContext!, ref _refreshRenderContext!);
+        //}
 
         public AndroidRenderKit(IViewPerspective viewPerspective,
                                 IViewState viewState,

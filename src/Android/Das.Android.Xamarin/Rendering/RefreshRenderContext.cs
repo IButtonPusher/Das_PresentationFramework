@@ -6,10 +6,15 @@ using Das.Views.Colors;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
+using Das.Views.Images;
 using Das.Views.Rendering;
 
 namespace Das.Xamarin.Android.Rendering
 {
+    /// <summary>
+    /// Faciliates size adjustments of visual elements without a full layout pass 
+    ///  when surrogates (native android views) are in the visual tree
+    /// </summary>
     public class RefreshRenderContext : BaseRenderContext
     {
         public RefreshRenderContext(IViewPerspective perspective,

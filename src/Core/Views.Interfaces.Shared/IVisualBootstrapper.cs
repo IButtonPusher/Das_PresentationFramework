@@ -13,14 +13,11 @@ namespace Das.Views
 
         IUiProvider UiProvider { get; }
 
-        //IAppliedStyleBuilder StyleBuilder { get; }
-
         /// <summary>
-        /// Sets Type-specific styles for the provided visual.  If a 'class' or 'style' is provided,
-        /// that isn't included here.
+        /// Sets values of dependency properties based on applicable setters
         /// </summary>
         /// <param name="visual"></param>
-        void ApplyCoreStyle(IVisualElement visual);
+        void ApplyVisualStyling(IVisualElement visual);
 
         ILayoutQueue LayoutQueue { get; }
 

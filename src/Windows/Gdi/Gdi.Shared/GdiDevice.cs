@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Geometry;
 using Das.Views.Windows;
+using Gdi.Shared;
 
 namespace Das.Gdi
 {
@@ -18,7 +19,8 @@ namespace Das.Gdi
                 
             
             _bmp = new Bitmap(width, height);
-            _dcGraphics = Graphics.FromImage(_bmp);
+            
+            _dcGraphics = _bmp.GetSmoothGraphics();
             
             _sizeLock = new Object();
             _backgroundColor = backgroundColor;
@@ -59,7 +61,7 @@ namespace Das.Gdi
                 //////////////////////////////////
                 
                 _bmp = new Bitmap(iwidth, iheight);
-                using (var g = Graphics.FromImage(_bmp))
+                using (var g = _bmp.GetSmoothGraphics())
                     g.Clear(_backgroundColor);
 
                 return true;
@@ -94,7 +96,7 @@ namespace Das.Gdi
                 if (!rendered)
                     return default;
 
-                using (var g = Graphics.FromImage(_bmp))
+                using (var g = _bmp.GetSmoothGraphics())
                 {
                     var imgHdc = g.GetHdc();
                     Native.BitBlt(imgHdc, 0, 0, _width, _height, _memoryDeviceContext, 

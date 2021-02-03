@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Drawing;
@@ -21,12 +22,19 @@ namespace Das.Gdi.Core
     {
         static GdiTypeConverter()
         {
-            _brushLock = new Object();
+            //_brushLock = new Object();
             _fonts = new ConcurrentDictionary<IFont, Font>();
             _pens = new ConcurrentDictionary<IPen, Pen>();
-            _brushes = new Dictionary<IBrush, Brush>();
-            _colorBrushes = new Dictionary<IColor, Brush>();
+            //_brushes = new Dictionary<IBrush, Brush>();
+            //_colorBrushes = new Dictionary<IColor, Brush>();
+
+            _threadedBrushes = new ThreadLocal<Dictionary<IBrush, Brush>>(GetNewBrushDictionary);
+            _threadedColorBrushes = new ThreadLocal<Dictionary<IColor, Brush>>(GetNewColorBrushDictionary);
         }
+
+        private static Dictionary<IBrush, Brush> GetNewBrushDictionary() => new();
+
+        private static Dictionary<IColor, Brush> GetNewColorBrushDictionary() => new();
 
         // ReSharper disable once UnusedMember.Global
         public static Boolean Equate(ISize dvSize, Size size)
@@ -37,7 +45,9 @@ namespace Das.Gdi.Core
 
         public static Brush GetBrush(IBrush brush)
         {
-            lock (_brushLock)
+            var _brushes = _threadedBrushes.Value;
+
+            //lock (_brushLock)
             {
                 //var brushes = Brushes.Value;
 
@@ -73,7 +83,8 @@ namespace Das.Gdi.Core
                                      Double opacity)
         {
             //var brushes = ColorBrushes.Value;
-            lock (_brushLock)
+            //lock (_brushLock)
+            var _colorBrushes = _threadedColorBrushes.Value;
             {
                 if (opacity.AreEqualEnough(1.0) && 
                     _colorBrushes.TryGetValue(color, out var found))
@@ -166,8 +177,13 @@ namespace Das.Gdi.Core
         private static readonly ConcurrentDictionary<IFont, Font> _fonts;
         private static readonly ConcurrentDictionary<IPen, Pen> _pens;
 
-        private static readonly Dictionary<IBrush, Brush> _brushes;
-        private static readonly Dictionary<IColor, Brush> _colorBrushes;
-        private static readonly Object _brushLock;
+        //private static readonly Dictionary<IBrush, Brush> _brushes;
+        //private static readonly Dictionary<IColor, Brush> _colorBrushes;
+
+        private static readonly ThreadLocal<Dictionary<IBrush, Brush>> _threadedBrushes;
+        private static readonly ThreadLocal<Dictionary<IColor, Brush>> _threadedColorBrushes;
+
+        
+        //private static readonly Object _brushLock;
     }
 }

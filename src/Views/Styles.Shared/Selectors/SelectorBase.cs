@@ -4,6 +4,11 @@ namespace Das.Views.Styles.Selectors
 {
     public abstract class SelectorBase : IStyleSelector
     {
+        protected SelectorBase(Int32 hashCode)
+        {
+            _hashCode = hashCode;
+        }
+
         public virtual Boolean TryGetClassName(out String className)
         {
             className = default!;
@@ -27,5 +32,9 @@ namespace Das.Views.Styles.Selectors
         }
 
         public abstract Boolean Equals(IStyleSelector other);
+
+        public sealed override Int32 GetHashCode() => _hashCode;
+
+        private readonly Int32 _hashCode;
     }
 }

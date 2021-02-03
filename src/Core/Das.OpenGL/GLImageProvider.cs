@@ -2,6 +2,7 @@
 using System.IO;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
+using Das.Views.Images;
 
 namespace Das.OpenGL
 {

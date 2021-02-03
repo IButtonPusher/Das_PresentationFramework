@@ -7,6 +7,7 @@ namespace Das.Views.Styles.Selectors
     {
         public VisualStateSelector(IStyleSelector selector,
                                    VisualStateType stateType)
+        : base((selector.GetHashCode() * 397) ^ (Int32)stateType)
         {
             BaseSelector = selector;
             StateType = stateType;

@@ -4,6 +4,7 @@ using System.Linq;
 using Android.Graphics;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
+using Das.Views.Images;
 using Das.Views.Rendering;
 
 namespace Das.Xamarin.Android.Rendering
@@ -127,6 +128,34 @@ namespace Das.Xamarin.Android.Rendering
                 return good;
 
             throw new InvalidCastException();
+        }
+
+        public override IImage ToImage(Int32 width,
+                                       Int32 height,
+                                       IColor? stroke,
+                                       IBrush? fill)
+        { var androidPath = Path;
+
+            var bmp = Bitmap.CreateBitmap(width, height, Bitmap.Config.Argb8888)
+                      ?? throw new InvalidOperationException();
+
+            var canvas = new Canvas(bmp);
+            using (var paint = new Paint())
+            {
+                if (fill is { } set)
+                {
+                    paint.SetBackgroundColor(set);
+                }
+
+                if (stroke is { } different)
+                {
+                    paint.SetStrokeColor(different);
+                }
+
+                canvas.DrawPath(androidPath, paint);
+            }
+
+            return new AndroidBitmap(bmp, null);
         }
 
         public Path Path { get; }

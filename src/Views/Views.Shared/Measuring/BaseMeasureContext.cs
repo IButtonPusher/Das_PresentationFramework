@@ -5,9 +5,9 @@ using Das.Extensions;
 using Das.Views.Colors;
 using Das.Views.Controls;
 using Das.Views.Core;
-using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
+using Das.Views.Images;
 using Das.Views.Rendering;
 
 namespace Das.Views.Measuring
@@ -18,7 +18,6 @@ namespace Das.Views.Measuring
         protected BaseMeasureContext(IVisualSurrogateProvider surrogateProvider,
                                      Dictionary<IVisualElement, ValueSize> lastMeasurements,
                                      IThemeProvider themeProvider,
-                                     //IStyleContext styleContext,
                                      IVisualLineage visualLineage,
                                      ILayoutQueue layoutQueue)
             : base(lastMeasurements, themeProvider,
@@ -30,12 +29,12 @@ namespace Das.Views.Measuring
 
         public virtual ValueSize MeasureImage(IImage img)
         {
-            return new ValueSize(img.Width, img.Height);
+            return new(img.Width, img.Height);
         }
 
         public ValueSize MeasureMainView<TRenderSize>(IVisualElement element,
-                                         TRenderSize availableSpace,
-                                         IViewState viewState)
+                                                      TRenderSize availableSpace,
+                                                      IViewState viewState)
             where TRenderSize : IRenderSize
         {
             //Debug.WriteLine("********** BEGIN MEASURE ***********");
@@ -52,24 +51,22 @@ namespace Das.Views.Measuring
                     _contextBounds = new ValueSize(zoomWidth, zoomHeight);
 
                 var availableSpace2 = new ValueRenderSize(zoomWidth, zoomHeight, availableSpace.Offset);
-                
+
                 //Debug.WriteLine("********** END MEASURE ***********");
                 return MeasureElement(element, availableSpace2);
             }
 
             if (_contextBounds.Width.AreDifferent(availableSpace.Width) ||
                 _contextBounds.Height.AreDifferent(availableSpace.Height))
-            {
                 _contextBounds = new ValueSize(availableSpace);
-            }
 
             var res = MeasureElement(element, availableSpace);
             //Debug.WriteLine("********** END MEASURE ***********");
             return res;
         }
 
-        public ValueSize MeasureRenderer<TRenderSize>(IVisualRenderer visualRenderer, 
-                                                      TRenderSize availableSpace) 
+        public ValueSize MeasureRenderer<TRenderSize>(IVisualRenderer visualRenderer,
+                                                      TRenderSize availableSpace)
             where TRenderSize : IRenderSize
         {
             throw new NotImplementedException();
@@ -78,10 +75,9 @@ namespace Das.Views.Measuring
 
         public virtual ValueSize MeasureElement<TRenderSize>(IVisualElement element,
                                                              TRenderSize availableSpace)
-        where TRenderSize : IRenderSize
+            where TRenderSize : IRenderSize
         {
             if (!element.IsRequiresMeasure)
-            {
                 lock (_measureLock)
                 {
                     if (_lastMeasurements.TryGetValue(element, out var val))
@@ -91,9 +87,8 @@ namespace Das.Views.Measuring
                     }
                 }
 
-                // measure anyways if we know nothing of it...?
-                //return ValueSize.Empty;
-            }
+            // measure anyways if we know nothing of it...?
+            //return ValueSize.Empty;
 
             VisualLineage.PushVisual(element);
             //_styleContext.PushVisual(element);
@@ -103,7 +98,7 @@ namespace Das.Views.Measuring
             ////////////////////////
             var res = MeasureElementImpl(layoutElement, availableSpace);
             ////////////////////////
-            
+
             LayoutQueue.RemoveVisualFromMeasureQueue(element);
             element.AcceptChanges(ChangeType.Measure);
             return res;
@@ -139,7 +134,6 @@ namespace Das.Views.Measuring
                 _lastMeasurements.Remove(element);
             }
         }
-
 
 
         private ValueSize MeasureElementImpl<TRenderSize>(IVisualElement element,

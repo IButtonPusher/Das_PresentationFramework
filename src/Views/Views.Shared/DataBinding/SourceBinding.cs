@@ -110,8 +110,6 @@ namespace Das.Views.DataBinding
         public override void Evaluate()
         {
             var value = GetSourceValue();
-
-
             SetTargetValue(value);
         }
 

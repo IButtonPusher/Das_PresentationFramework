@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
+using Das.Views.Images;
 
 namespace Das.Views.Rendering
 {
@@ -108,6 +109,11 @@ namespace Das.Views.Rendering
         public virtual IBrush? Fill { get; set; }
 
         public abstract T Unwrap<T>();
+
+        public abstract IImage ToImage(Int32 width,
+                                       Int32 height,
+                                       IColor? stroke,
+                                       IBrush? fill);
 
         protected static Single R4(Double val) => Convert.ToSingle(val);
     }

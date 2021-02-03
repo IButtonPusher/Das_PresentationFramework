@@ -14,17 +14,14 @@ namespace Das.Views.Rendering
     public class SequentialUniformRenderer : SequentialRenderer
     {
         public SequentialUniformRenderer(IVisualCollection visuals,
-            Boolean isWrapContent = false)
-        : base(visuals, isWrapContent)
+                                         Boolean isWrapContent = false)
+            : base(visuals, isWrapContent)
         {
             _maxHeight = _maxWidth = 0;
-            //_currentMax = ValueSize.Empty;
-            //_positions = new Dictionary<IVisualElement, ValuePoint2D>();
             _lastOrientation = Orientations.Vertical;
         }
 
-        public override ValueSize Measure(IVisualElement container, 
-                                          //IList<IVisualElement> elements,
+        public override ValueSize Measure(IVisualElement container,
                                           Orientations orientation, 
                                           IRenderSize availableSpace,
                                           IMeasureContext measureContext)
@@ -33,7 +30,6 @@ namespace Das.Views.Rendering
             {
                 _maxWidth = _maxHeight = 0;
                 _lastOrientation = orientation;
-                //_positions.Clear();
 
                 _currentlyRendering.Clear();
 
@@ -47,12 +43,8 @@ namespace Das.Views.Rendering
                 var maxWidth = 0.0;
                 var maxHeight = 0.0;
 
-
-                //for (var c = 0; c < elements.Count; c++)
-                //_visuals.RunOnEachChild(child =>
                 foreach (var child in _visuals.GetAllChildren())
                 {
-                    // var child = elements[c];
                     _currentlyRendering.Add(child);
 
                     current.Size = measureContext.MeasureElement(child, remainingSize);
@@ -104,11 +96,9 @@ namespace Das.Views.Rendering
                             remainingSize.Height -= current.Height;
                             break;
                     }
-                }//);
+                }
 
                 var margin = container.Margin.GetValue(availableSpace);
-
-                //var margin = measureContext.GetStyleSetter<Thickness>(StyleSetterType.Margin, container);
 
                 totalWidth = Math.Max(totalWidth, maxWidth);
                 totalHeight = Math.Max(totalHeight, maxHeight);

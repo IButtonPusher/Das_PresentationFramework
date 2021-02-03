@@ -10,8 +10,6 @@ namespace Das.Views.DataBinding
     public class DeferredPropertyBinding : BaseBinding,
                                            IVisualPropertySetter
     {
-        private readonly IPropertyAccessor _propertyAccessor;
-
         public DeferredPropertyBinding(String sourcePropertyName,
                                        String targetPropertyName,
                                        IPropertyAccessor propertyAccessor,
@@ -23,12 +21,28 @@ namespace Das.Views.DataBinding
             Converter = converter;
         }
 
+        public String PropertyName => TargetPropertyName;
+
+        public Object? GetSourceValue(Object? dataContext)
+        {
+            if (dataContext == null)
+                return null;
+
+            return _propertyAccessor.GetPropertyValue(dataContext);
+        }
+
+        public IValueConverter? Converter { get; }
+
 
         public String SourcePropertyName { get; }
 
         public String TargetPropertyName { get; }
-        
-        public IValueConverter? Converter { get; }
+
+        public override Object Clone()
+        {
+            return new DeferredPropertyBinding(SourcePropertyName, TargetPropertyName,
+                _propertyAccessor, Converter);
+        }
 
         public override Object? GetBoundValue(Object? dataContext)
         {
@@ -47,8 +61,8 @@ namespace Das.Views.DataBinding
             try
             {
                 var count = Interlocked.Add(ref _updateCounter, 1);
-                
-                
+
+
                 if (dataContext == null)
                 {
                     UpdateDataContext(dataContext);
@@ -74,7 +88,7 @@ namespace Das.Views.DataBinding
                 {
                     if (sourceProperty.CanWrite && !isCollection)
                     {
-                        var twoWay = new TwoWayBinding(notifyObject, sourceProperty, 
+                        var twoWay = new TwoWayBinding(notifyObject, sourceProperty,
                             bindingVisual, targetProperty, Converter, _propertyAccessor);
                         twoWay.Evaluate();
                         return twoWay;
@@ -87,12 +101,11 @@ namespace Das.Views.DataBinding
                         collectionBinding.Evaluate();
                         return collectionBinding;
                     }
-
                 }
 
                 // don't do two way if the source property is read only, a collection, or the object 
                 // isn't INotifyPropertyChanged
-                var oneWay = new SourceBinding(dataContext, sourceProperty, bindingVisual, 
+                var oneWay = new SourceBinding(dataContext, sourceProperty, bindingVisual,
                     targetProperty, Converter, _propertyAccessor);
                 oneWay.Evaluate();
                 return oneWay;
@@ -103,22 +116,8 @@ namespace Das.Views.DataBinding
             }
         }
 
-        public override Object Clone()
-        {
-            return new DeferredPropertyBinding(SourcePropertyName, TargetPropertyName,
-                _propertyAccessor, Converter);
-        }
+        private readonly IPropertyAccessor _propertyAccessor;
 
         private Int32 _updateCounter;
-
-        public String PropertyName => TargetPropertyName;
-
-        public Object? GetSourceValue(Object? dataContext)
-        {
-            if (dataContext == null)
-                return null;
-
-            return _propertyAccessor.GetPropertyValue(dataContext);
-        }
     }
 }

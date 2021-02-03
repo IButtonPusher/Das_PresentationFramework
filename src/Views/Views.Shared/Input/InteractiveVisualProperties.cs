@@ -1,4 +1,5 @@
 ﻿using System;
+using Das.Views.DependencyProperties;
 
 namespace Das.Views.Input
 {
@@ -6,7 +7,7 @@ namespace Das.Views.Input
     {
         public static readonly DependencyProperty<IInteractiveVisual, Boolean> IsActiveProperty =
             DependencyProperty<IInteractiveVisual, Boolean>.Register(
-                "IsActive", false);
+                "IsActive", false, PropertyMetadata.AffectsArrange);
 
         public static readonly DependencyProperty<IInteractiveVisual, Boolean> IsFocusedProperty =
             DependencyProperty<IInteractiveVisual, Boolean>.Register(

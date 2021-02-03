@@ -29,7 +29,7 @@ namespace Dpf.Tests
 
             var res = srl.FromXml<SvgDocument>(xml);
 
-            var bldr = new SvgPathBuilder(new TestImageProvider());
+            var bldr = new SvgPathBuilder(new TestImageProvider(), srl);
 
             //var bob = SvgPathBuilder.Parse(res.Path.D);
             var bob = bldr.Parse(res);
@@ -52,7 +52,8 @@ namespace Dpf.Tests
                 //m.Translate(offsetX, offsetY, MatrixOrder.Append);
                 path.Transform(m);
 
-                using (var g = Graphics.FromImage(bmp))
+                //using (var g = Graphics.FromImage(bmp))
+                using (var g = bmp.GetSmoothGraphics())
                 {
                     g.SmoothingMode = SmoothingMode.HighQuality;
                     g.InterpolationMode = InterpolationMode.HighQualityBicubic;

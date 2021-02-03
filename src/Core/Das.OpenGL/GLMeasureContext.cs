@@ -7,6 +7,7 @@ using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
+using Das.Views.Images;
 using Das.Views.Measuring;
 using Das.Views.Rendering;
 

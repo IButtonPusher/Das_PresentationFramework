@@ -26,6 +26,9 @@ namespace Das.Views.Construction
             if (typeof(QuantifiedThickness).IsAssignableFrom(visualPropertyType))
                 return QuantifiedThicknessConverter.Instance;
 
+            if (typeof(IColor).IsAssignableFrom(visualPropertyType))
+                return StringToColorConverter.Instance;
+
             if (typeof(IVisualElement).IsAssignableFrom(visualPropertyType))
                 return _stringToVisualConverter;
 

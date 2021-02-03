@@ -25,7 +25,7 @@ namespace Das.Views.Construction
 
         public Task<IVisualElement> InflateXmlAsync(String xml)
         {
-            return InflateXmlImpl(xml, _defaultNamespaceSeed);
+            return InflateXmlImpl(xml, VisualTypeResolver.DefaultNamespaceSeed);//  _defaultNamespaceSeed);
         }
 
         public Task<IVisualElement> InflateXmlAsync(String xml,

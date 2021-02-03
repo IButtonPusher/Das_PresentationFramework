@@ -8,6 +8,7 @@ using Das.Views.Colors;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
+using Das.Views.Images;
 using Das.Views.Rendering;
 using Das.Xamarin.Android.Rendering;
 
@@ -61,8 +62,6 @@ namespace Das.Xamarin.Android
 
                 GetCanvas().DrawBitmap(bmp, src, dest, _paint);
             }
-
-            //DrawImage(img, new ValueRectangle(0, 0, img.Width, img.Height), destination);
         }
 
 
@@ -82,8 +81,9 @@ namespace Das.Xamarin.Android
                                                               TPoint1 pt1,
                                                               TPoint2 pt2)
         {
-            _paint.SetStyle(Paint.Style.Stroke);
-            SetColor(pen);
+            _paint.SetStrokeColor(pen.Color);
+            //_paint.SetStyle(Paint.Style.Stroke);
+            //SetColor(pen);
             _paint.StrokeWidth = pen.Thickness;
             var l1 = GetAbsoluteAndroidPoint(pt1);
             var l2 = GetAbsoluteAndroidPoint(pt2);
@@ -96,8 +96,9 @@ namespace Das.Xamarin.Android
             if (points.Length < 2)
                 return;
 
-            _paint.SetStyle(Paint.Style.Stroke);
-            SetColor(pen);
+            _paint.SetStrokeColor(pen.Color);
+            //_paint.SetStyle(Paint.Style.Stroke);
+            //SetColor(pen);
 
             var canvas = GetCanvas();
 
@@ -114,8 +115,9 @@ namespace Das.Xamarin.Android
         public override void DrawRect<TRectangle, TPen>(TRectangle rect,
                                                         TPen pen)
         {
-            _paint.SetStyle(Paint.Style.Stroke);
-            SetColor(pen);
+            _paint.SetStrokeColor(pen.Color);
+            //_paint.SetStyle(Paint.Style.Stroke);
+            //SetColor(pen);
             GetCanvas().DrawRect(GetAbsoluteAndroidRect(rect), _paint);
         }
 
@@ -123,8 +125,9 @@ namespace Das.Xamarin.Android
                                                                            TPen pen,
                                                                            TThickness cornerRadii)
         {
-            _paint.SetStyle(Paint.Style.Stroke);
-            SetColor(pen);
+            _paint.SetStrokeColor(pen.Color);
+            //_paint.SetStyle(Paint.Style.Stroke);
+            //SetColor(pen);
 
             RoundedRectImpl(rect, cornerRadii);
         }
@@ -164,8 +167,9 @@ namespace Das.Xamarin.Android
         public override void FillRectangle<TRectangle, TBrush>(TRectangle rect,
                                                                TBrush brush)
         {
-            _paint.SetStyle(Paint.Style.Fill);
-            SetColor(brush);
+            //_paint.SetStyle(Paint.Style.Fill);
+            _paint.SetBackgroundColor(brush);
+            //SetColor(brush);
 
             var letsDraw = GetAbsoluteAndroidRect(rect);
 
@@ -176,8 +180,9 @@ namespace Das.Xamarin.Android
             TBrush brush,
             TThickness cornerRadii)
         {
-            _paint.SetStyle(Paint.Style.Fill);
-            SetColor(brush);
+            //_paint.SetStyle(Paint.Style.Fill);
+            _paint.SetBackgroundColor(brush);
+            //SetColor(brush);
 
             RoundedRectImpl(rect, cornerRadii);
 
@@ -359,23 +364,23 @@ namespace Das.Xamarin.Android
         }
 
 
-        private void SetColor(IPen pen)
-        {
-            _paint.SetARGB(pen.Color.A, pen.Color.R, pen.Color.G, pen.Color.B);
-        }
+        //private void SetColor(IPen pen)
+        //{
+        //    _paint.SetARGB(pen.Color.A, pen.Color.R, pen.Color.G, pen.Color.B);
+        //}
 
-        private void SetColor(IBrush brush)
-        {
-            switch (brush)
-            {
-                case SolidColorBrush scb:
-                    _paint.SetARGB(scb.Color.A, scb.Color.R, scb.Color.G, scb.Color.B);
-                    break;
+        //private void SetColor(IBrush brush)
+        //{
+        //    switch (brush)
+        //    {
+        //        case SolidColorBrush scb:
+        //            _paint.SetARGB(scb.Color.A, scb.Color.R, scb.Color.G, scb.Color.B);
+        //            break;
 
-                default:
-                    throw new NotImplementedException();
-            }
-        }
+        //        default:
+        //            throw new NotImplementedException();
+        //    }
+        //}
 
         [ThreadStatic]
         private static Rect? _rect;

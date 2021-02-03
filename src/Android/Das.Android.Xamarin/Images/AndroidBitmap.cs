@@ -2,8 +2,8 @@
 using System.IO;
 using System.Threading.Tasks;
 using Android.Graphics;
-using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
+using Das.Views.Images;
 
 namespace Das.Xamarin.Android
 {
@@ -70,11 +70,7 @@ namespace Das.Xamarin.Android
             return ms;
         }
 
-        public ISize PlusVertical(ISize adding)
-        {
-            return GeometryHelper.PlusVertical(this, adding);
-        }
-
+       
         Task<Boolean> IImage.TrySave(FileInfo path)
         {
             throw new NotImplementedException();
@@ -88,13 +84,7 @@ namespace Das.Xamarin.Android
             throw new NotImplementedException();
         }
 
-        public Int64 SizeInBytes => _stream?.Length ?? -1;
-
-        //ISize ISize.Divide(Double pct)
-        //{
-        //    return GeometryHelper.Divide(this, pct);
-        //}
-
+      
         public void UnwrapLocked<T>(Action<T> action)
         {
             lock (_unwrapLock)
@@ -104,16 +94,6 @@ namespace Das.Xamarin.Android
                 else
                     throw new NotImplementedException();
             }
-        }
-
-        public Double CenterY(ISize item)
-        {
-            return GeometryHelper.CenterY(this, item);
-        }
-
-        public Double CenterX(ISize item)
-        {
-            return GeometryHelper.CenterX(this, item);
         }
 
 

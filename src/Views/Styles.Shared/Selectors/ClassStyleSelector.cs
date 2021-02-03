@@ -1,18 +1,19 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Das.Views.Styles.Selectors
 {
     public class ClassStyleSelector : SelectorBase
     {
-        public String ClassName { get; }
-
-        public ClassStyleSelector(String className)
+        public ClassStyleSelector(String className) : base(String.Intern(className).GetHashCode())
         {
             if (!className.StartsWith(".", StringComparison.OrdinalIgnoreCase))
                 throw new InvalidOperationException();
-            
+
             ClassName = className.Substring(1);
         }
+
+        public String ClassName { get; }
 
         public sealed override Boolean Equals(IStyleSelector other)
         {

@@ -6,10 +6,10 @@ namespace Das.Views.Styles.Selectors
     public class VisualTypeStyleSelector : SelectorBase
     {
         public VisualTypeStyleSelector(Type visualType)
+            : base(visualType.GetHashCode())
         {
             VisualType = visualType;
         }
-
 
         public sealed override Boolean Equals(IStyleSelector other)
         {

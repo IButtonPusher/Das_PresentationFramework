@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
-using Das.Gdi.Core;
 using Das.Views;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
+using Das.Views.Images;
 
 namespace Gdi.Shared
 {
@@ -14,8 +13,6 @@ namespace Gdi.Shared
         public IImage? GetImage(Stream stream)
         {
             var img = Image.FromStream(stream);
-
-            //var bmp = new Bitmap(stream,);
             return new GdiBitmap(img, stream);
         }
 
@@ -47,18 +44,16 @@ namespace Gdi.Shared
             if (ratio <= maximumWidthPct)
                 return new GdiBitmap(bmp, stream is MemoryStream ? stream : null);
 
-            var scaleRatio = maximumWidth / bmp.Width; //maximumWidthPct * maximumWidth;
+            var scaleRatio = maximumWidth / bmp.Width; 
 
             using (stream)
             using (bmp)
             {
-                //var scaledBmp = new Bitmap(bmp, Convert.ToInt32(bmp.Width * scaleRatio),
-                //    Convert.ToInt32(bmp.Height * scaleRatio));
-
                 var scaledBmp = new Bitmap(Convert.ToInt32(bmp.Width * scaleRatio),
                     Convert.ToInt32(bmp.Height * scaleRatio));
 
-                using (var g = Graphics.FromImage(scaledBmp))
+                //using (var g = Graphics.FromImage(scaledBmp))
+                using (var g = scaledBmp.GetSmoothGraphics())
                 {
                     g.DrawImage(bmp, 
                         new Rectangle(0,0,scaledBmp.Width, scaledBmp.Height),
@@ -80,7 +75,8 @@ namespace Gdi.Shared
             var bmp2 = new Bitmap(Convert.ToInt32(width),
                 Convert.ToInt32(height));
 
-            using (var g = Graphics.FromImage(bmp2))
+            //using (var g = Graphics.FromImage(bmp2))
+            using (var g = bmp2.GetSmoothGraphics())
             {
                 g.DrawImage(bmp, 
                     new Rectangle(0,0,bmp2.Width, bmp2.Height),
@@ -88,8 +84,6 @@ namespace Gdi.Shared
                     GraphicsUnit.Pixel);
             }
 
-            //bmp = new Bitmap(bmp, Convert.ToInt32(width),
-            //    Convert.ToInt32(height));
             return new GdiBitmap(bmp2, null);
         }
 
@@ -123,24 +117,24 @@ namespace Gdi.Shared
             return new GdiGraphicsPath();
         }
 
-        public IImage GetImage(IGraphicsPath path,
-                               IColor foreground)
-        {
-            var gdiPath = path.Unwrap<GraphicsPath>();
-            var size = path.Size.ToRoundedSize();
-            var bmp = new Bitmap(size.Width, size.Height);
+        //public IImage GetImage(IGraphicsPath path,
+        //                       IColor foreground)
+        //{
+        //    var gdiPath = path.Unwrap<GraphicsPath>();
+        //    var size = path.Size.ToRoundedSize();
+        //    var bmp = new Bitmap(size.Width, size.Height);
 
-            using (var g = Graphics.FromImage(bmp))
-            {
-                var p = new Das.Views.Core.Drawing.Pen(foreground, 1);
-                using (var usePen = GdiTypeConverter.GetPen(p))
-                {
-                    g.DrawPath(usePen, gdiPath);
-                }
-            }
+        //    using (var g = Graphics.FromImage(bmp))
+        //    {
+        //        var p = new Das.Views.Core.Drawing.Pen(foreground, 1);
+        //        using (var usePen = GdiTypeConverter.GetPen(p))
+        //        {
+        //            g.DrawPath(usePen, gdiPath);
+        //        }
+        //    }
 
-            return new GdiBitmap(bmp, null);
-        }
+        //    return new GdiBitmap(bmp, null);
+        //}
 
         public void SetVisualHost(IVisualHost visualHost)
         {
