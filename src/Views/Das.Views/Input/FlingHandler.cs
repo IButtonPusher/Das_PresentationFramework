@@ -37,8 +37,6 @@ namespace Das.Views.Input
                     }
                 }
 
-                //if (_flingHost.CanFlingHorizontal && args.VelocityX != 0)
-                //    _velocityX = 0 - args.VelocityX;
 
                 if (args.VelocityY != 0)
                 {
@@ -59,18 +57,18 @@ namespace Das.Views.Input
                     }
                 }
 
-                //if (_flingHost.CanFlingVertical && args.VelocityY != 0)
-                //    _velocityY = args.VelocityY;
-
                 if (_velocityX.IsZero() && _velocityY.IsZero())
+                {
+                    args.SetHandled(true);
                     return true;
-
+                }
 
                 _currentTransition?.Cancel();
 
                 var sumX = Convert.ToInt32(_velocityX / 3);
+
                 //var sumY = Convert.ToInt32(_velocityY / 3);
-                var sumY = Convert.ToInt32(_velocityY / 1.5);
+                var sumY = Convert.ToInt32(_velocityY / 2);
 
                 var validVeticalRange = _flingHost.GetVerticalMinMaxFling();
                 sumY = validVeticalRange.GetValueInRange(sumY);

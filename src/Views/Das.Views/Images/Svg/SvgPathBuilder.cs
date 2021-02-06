@@ -24,7 +24,7 @@ namespace Das.Views.Images.Svg
             _serializer = serializer;
         }
 
-        public async Task<ISvgImage> LoadAsync(Stream stream)
+        public async Task<ISvgImage?> LoadAsync(Stream stream)
         {
             var doc = await _serializer.FromXmlAsync<SvgDocument>(stream);
             return Parse(doc);
@@ -33,75 +33,46 @@ namespace Das.Views.Images.Svg
         public ISvgImage Parse(SvgDocument doc)
         {
             var path = doc.Path?.D ?? throw new NullReferenceException();
-            return Parse(doc.Width, doc.Height, path);
-            //return Parse(doc.Width, doc.Height, path.AsSpan());
+
+            var width = doc.Width;
+            var height = doc.Height;
+
+            if (doc.Style is { } strStyle)
+            {
+                var styleTokens = strStyle.Split(';');
+
+                foreach (var token in styleTokens)
+                {
+                    var kvp = token.Split(':');
+                    if (kvp.Length != 2)
+                        continue;
+
+                    switch (kvp[0])
+                    {
+                        case nameof(width):
+                            if (QuantifiedDouble.TryParse(kvp[1], out var qWidth))
+                            {
+                                //todo: non-px value
+                                width = Convert.ToInt32(qWidth);
+                            }
+
+                            break;
+
+                        case nameof(height):
+                            if (QuantifiedDouble.TryParse(kvp[1], out var qHeight))
+                            {
+                                //todo: non-px value
+                                height = Convert.ToInt32(qHeight);
+                            }
+                            break;
+                    }
+                }
+            }
+            
+            return Parse(width, height, path);
+            
         }
 
-        //public static SvgImage Parse(String path)
-        //{
-        //    return Parse(path.AsSpan());
-        //}
-
-        
-        //private SvgImage Parse(Double width,
-        //                              Double height,
-        //                              ReadOnlySpan<Char> path)
-        //{
-        //    var segments = new SvgPathSegmentList();
-
-        //    //try
-        //    //{
-        //        var pathTrimmed = path.TrimEnd();
-        //        var commandStart = 0;
-        //        var pathLength = pathTrimmed.Length;
-
-        //        for (var i = 0; i < pathLength; ++i)
-        //        {
-        //            var currentChar = pathTrimmed[i];
-        //            if (Char.IsLetter(currentChar) && currentChar != 'e' && currentChar != 'E'
-        //            ) // e is used in scientific notiation. but not svg path
-        //            {
-        //                var start = commandStart;
-        //                var length = i - commandStart;
-        //                var command = pathTrimmed.Slice(start, length).Trim();
-        //                commandStart = i;
-
-        //                if (command.Length > 0)
-        //                {
-        //                    var commandSetTrimmed = pathTrimmed.Slice(start, length).Trim();
-        //                    var state = new CoordinateParserState(ref commandSetTrimmed);
-        //                    CreatePathSegments(commandSetTrimmed[0], segments, state, commandSetTrimmed);
-        //                }
-
-        //                if (pathLength == i + 1)
-        //                {
-        //                    var commandSetTrimmed = pathTrimmed.Slice(i, 1).Trim();
-        //                    var state = new CoordinateParserState(ref commandSetTrimmed);
-        //                    CreatePathSegments(commandSetTrimmed[0], segments, state, commandSetTrimmed);
-        //                }
-        //            }
-        //            else if (pathLength == i + 1)
-        //            {
-        //                var start = commandStart;
-        //                var length = i - commandStart + 1;
-        //                var command = pathTrimmed.Slice(start, length).Trim();
-
-        //                if (command.Length > 0)
-        //                {
-        //                    var commandSetTrimmed = pathTrimmed.Slice(start, length).Trim();
-        //                    var state = new CoordinateParserState(ref commandSetTrimmed);
-        //                    CreatePathSegments(commandSetTrimmed[0], segments, state, commandSetTrimmed);
-        //                }
-        //            }
-        //        }
-        //    //}
-        //    //catch (Exception exc)
-        //    //{
-        //    //    Trace.TraceError("Error parsing path \"{0}\": {1}", path.ToString(), exc.Message);
-        //    //}
-
-        //    return new SvgImage(width, height, segments, _imageProvider);
-        //}
 
         private ISvgImage Parse(Double width,
                                 Double height,
@@ -109,56 +80,50 @@ namespace Das.Views.Images.Svg
         {
             var segments = new SvgPathSegmentList();
 
-            //try
-            //{
-                var pathTrimmed = path.TrimEnd();
-                var commandStart = 0;
-                var pathLength = pathTrimmed.Length;
 
-                for (var i = 0; i < pathLength; ++i)
+            var pathTrimmed = path.TrimEnd();
+            var commandStart = 0;
+            var pathLength = pathTrimmed.Length;
+
+            for (var i = 0; i < pathLength; ++i)
+            {
+                var currentChar = pathTrimmed[i];
+                if (Char.IsLetter(currentChar) && currentChar != 'e' && currentChar != 'E'
+                ) // e is used in scientific notiation. but not svg path
                 {
-                    var currentChar = pathTrimmed[i];
-                    if (Char.IsLetter(currentChar) && currentChar != 'e' && currentChar != 'E'
-                    ) // e is used in scientific notiation. but not svg path
+                    var start = commandStart;
+                    var length = i - commandStart;
+                    var command = pathTrimmed.Substring(start, length).Trim();
+                    commandStart = i;
+
+                    if (command.Length > 0)
                     {
-                        var start = commandStart;
-                        var length = i - commandStart;
-                        var command = pathTrimmed.Substring(start, length).Trim();
-                        commandStart = i;
-
-                        if (command.Length > 0)
-                        {
-                            var commandSetTrimmed = pathTrimmed.Substring(start, length).Trim();
-                            var state = new CoordinateParserState(ref commandSetTrimmed);
-                            CreatePathSegments(commandSetTrimmed[0], segments, state, commandSetTrimmed);
-                        }
-
-                        if (pathLength == i + 1)
-                        {
-                            var commandSetTrimmed = pathTrimmed.Substring(i, 1).Trim();
-                            var state = new CoordinateParserState(ref commandSetTrimmed);
-                            CreatePathSegments(commandSetTrimmed[0], segments, state, commandSetTrimmed);
-                        }
+                        var commandSetTrimmed = pathTrimmed.Substring(start, length).Trim();
+                        var state = new CoordinateParserState(ref commandSetTrimmed);
+                        CreatePathSegments(commandSetTrimmed[0], segments, state, commandSetTrimmed);
                     }
-                    else if (pathLength == i + 1)
-                    {
-                        var start = commandStart;
-                        var length = i - commandStart + 1;
-                        var command = pathTrimmed.Substring(start, length).Trim();
 
-                        if (command.Length > 0)
-                        {
-                            var commandSetTrimmed = pathTrimmed.Substring(start, length).Trim();
-                            var state = new CoordinateParserState(ref commandSetTrimmed);
-                            CreatePathSegments(commandSetTrimmed[0], segments, state, commandSetTrimmed);
-                        }
+                    if (pathLength == i + 1)
+                    {
+                        var commandSetTrimmed = pathTrimmed.Substring(i, 1).Trim();
+                        var state = new CoordinateParserState(ref commandSetTrimmed);
+                        CreatePathSegments(commandSetTrimmed[0], segments, state, commandSetTrimmed);
                     }
                 }
-            //}
-            //catch (Exception exc)
-            //{
-            //    Trace.TraceError("Error parsing path \"{0}\": {1}", path.ToString(), exc.Message);
-            //}
+                else if (pathLength == i + 1)
+                {
+                    var start = commandStart;
+                    var length = i - commandStart + 1;
+                    var command = pathTrimmed.Substring(start, length).Trim();
+
+                    if (command.Length > 0)
+                    {
+                        var commandSetTrimmed = pathTrimmed.Substring(start, length).Trim();
+                        var state = new CoordinateParserState(ref commandSetTrimmed);
+                        CreatePathSegments(commandSetTrimmed[0], segments, state, commandSetTrimmed);
+                    }
+                }
+            }
 
             return new SvgImage(width, height, segments, _imageProvider);
         }

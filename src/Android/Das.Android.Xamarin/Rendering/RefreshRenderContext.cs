@@ -70,7 +70,7 @@ namespace Das.Xamarin.Android.Rendering
                                                                            TPen pen,
                                                                            TThickness cornerRadii)
         {
-            throw new NotImplementedException();
+            
         }
 
         public override void DrawString<TFont, TBrush, TPoint>(String s,

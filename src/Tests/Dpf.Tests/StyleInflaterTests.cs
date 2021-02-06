@@ -56,7 +56,7 @@ namespace Dpf.Tests
             
             var inflater = new DefaultStyleInflater(Serializer.TypeInferrer,
                 new StyleVariableAccessor(BaselineThemeProvider.Instance.ColorPalette));
-            var provider = new VisualStyleProvider(inflater, new TestThemeProvider(),
+            var provider = new VisualStyleProvider(inflater,
                 new ConcurrentDictionary<Type, IEnumerable<IStyleRule>>());
 
             var bob = provider.GetStyleByNameAsync("mat-toggle-button").Result;

@@ -102,30 +102,18 @@ namespace Das.Xamarin.Android.Controls
             set => _htmlPanel.Height = value;
         }
 
-        QuantifiedDouble? IBoxValue<QuantifiedDouble?>.Left
-        {
-            get => _htmlPanel.Left;
-            //set => _htmlPanel.Left = value;
-        }
+        QuantifiedDouble? IBoxValue<QuantifiedDouble?>.Left => _htmlPanel.Left;
 
-        QuantifiedDouble? IBoxValue<QuantifiedDouble?>.Right
-        {
-            get => _htmlPanel.Right;
-            //set => _htmlPanel.Right = value;
-        }
+        
+        QuantifiedDouble? IBoxValue<QuantifiedDouble?>.Right => _htmlPanel.Right;
 
-        QuantifiedDouble? IBoxValue<QuantifiedDouble?>.Top
-        {
-            get => _htmlPanel.Top;
-            //set => _htmlPanel.Top = value;
-        }
+        
+        QuantifiedDouble? IBoxValue<QuantifiedDouble?>.Top => _htmlPanel.Top;
 
-        QuantifiedDouble? IBoxValue<QuantifiedDouble?>.Bottom
-        {
-            get => _htmlPanel.Bottom;
-            //set => _htmlPanel.Bottom = value;
-        }
+        
+        QuantifiedDouble? IBoxValue<QuantifiedDouble?>.Bottom => _htmlPanel.Bottom;
 
+        
         public HorizontalAlignments HorizontalAlignment
         {
             get => _htmlPanel.HorizontalAlignment;
@@ -201,11 +189,6 @@ namespace Das.Xamarin.Android.Controls
             set => _htmlPanel.AfterLabel = value;
         }
 
-
-        public Boolean IsMarkupNameAlias(String markupTag)
-        {
-            return _htmlPanel.IsMarkupNameAlias(markupTag);
-        }
 
         public Int32 ZIndex => _htmlPanel.ZIndex;
 

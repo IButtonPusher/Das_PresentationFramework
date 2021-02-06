@@ -39,13 +39,6 @@ namespace Das.Views.Layout
 
             PushRect(bounds);
 
-            //if (transform is TranslateTransform)
-            //{}
-
-            //_transforms.Push(transform.Value);
-
-            //_netTransform += transform.Value;
-
             return bounds;
         }
 
@@ -57,9 +50,6 @@ namespace Das.Views.Layout
 
         public void PopCurrentBox()
         {
-            //var poppedTransform = _transforms.Pop();
-            //_netTransform -= poppedTransform;
-            //_currentZ--;
             _locations.Pop();
             CurrentElementRect = _locations.Peek();
         }
@@ -97,18 +87,6 @@ namespace Das.Views.Layout
             return new ValueRectangle(currentLocation.X + relativeRect.Left,
                 currentLocation.Y + relativeRect.Top,
                 relativeRect.Size);
-
-
-            //if (zoomLevel.AreDifferent(1.0))
-            //    return new ValueRectangle(
-            //        (relativeRect.X + currentLocation.X) * zoomLevel,
-            //        (relativeRect.Y + currentLocation.Y) * zoomLevel,
-            //        relativeRect.Width * zoomLevel,
-            //        relativeRect.Height * zoomLevel);
-
-            //return new ValueRectangle(currentLocation.X + relativeRect.Left,
-            //    currentLocation.Y + relativeRect.Top,
-            //    relativeRect.Size);
         }
 
 
@@ -122,7 +100,6 @@ namespace Das.Views.Layout
             var top = rect.Top + margin.Top - CurrentElementRect.Offset.Y;
             var w = rect.Width - margin.Width;
             var h = rect.Height - margin.Height;
-            //var offset = rect.Offset;
 
             if (!border.IsEmpty)
             {
@@ -139,7 +116,6 @@ namespace Das.Views.Layout
 
         private void PushRect(ValueRenderRectangle rect)
         {
-            //_currentZ++;
             _locations.Push(rect);
             CurrentElementRect = rect;
         }
@@ -150,7 +126,6 @@ namespace Das.Views.Layout
 
         private TransformationMatrix _netTransform;
 
-        //private Int32 _currentZ;
         protected ValueRenderRectangle CurrentElementRect;
 
         protected Dictionary<IVisualElement, ValueCube> RenderPositions { get; }

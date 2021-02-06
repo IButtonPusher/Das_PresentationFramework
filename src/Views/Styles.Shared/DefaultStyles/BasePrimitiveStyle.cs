@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Das.Views.BoxModel;
 using Das.Views.Controls;
 using Das.Views.Core.Drawing;
-using Das.Views.Panels;
+using Das.Views.Core.Geometry;
 using Das.Views.Styles.Declarations;
 using Das.Views.Styles.Selectors;
 
@@ -17,13 +17,13 @@ namespace Das.Views.Styles
             _variableAccessor = variableAccessor;
             var btnBaseItems = new List<IStyleRule>
             {
-                Rule(VisualElement.BorderRadiusProperty, 8, DeclarationProperty.BorderRadius),
-                Rule(VisualElement.BorderProperty, new VisualBorder(
+                Rule<QuantifiedThickness>(8, DeclarationProperty.BorderRadius),
+                Rule(new VisualBorder(
                         new BorderSide(1, LengthUnits.Px, OutlineStyle.Solid, SolidColorBrush.Black)),
                     DeclarationProperty.Border),
 
-                Rule(ContentPanel.PaddingProperty, 5, DeclarationProperty.Padding),
-                Rule(VisualElement.BackgroundProperty, VisualStateType.Active, SolidColorBrush.LightGray,
+                Rule<QuantifiedThickness>(5, DeclarationProperty.Padding),
+                Rule<IBrush?>(VisualStateType.Active, SolidColorBrush.LightGray,
                     DeclarationProperty.BackgroundColor)
             };
 
@@ -31,29 +31,26 @@ namespace Das.Views.Styles
 
             this[typeof(ToggleButton)] = new[]
             {
-                Rule(VisualElement.BackgroundProperty, VisualStateType.Checked, SolidColorBrush.LightGray,
+                Rule<IBrush?>(VisualStateType.Checked, SolidColorBrush.LightGray,
                     DeclarationProperty.BackgroundColor),
-                Rule(VisualElement.BackgroundProperty, VisualStateType.Active, SolidColorBrush.LightGray,
+                Rule<IBrush?>(VisualStateType.Active, SolidColorBrush.LightGray,
                     DeclarationProperty.BackgroundColor)
             };
         }
 
-        private IStyleRule Rule<TValue>(IDependencyProperty<TValue> property,
-                                        TValue value,
+        private IStyleRule Rule<TValue>(TValue value,
                                         DeclarationProperty declarationProperty)
         {
             return new DependencyPropertyValueRule<TValue>(
                 AllStyleSelector.Instance,
-                //Select(property),
                 new ValueDeclaration<TValue>(value, _variableAccessor, declarationProperty));
         }
 
-        private IStyleRule Rule<TValue>(IDependencyProperty<TValue> property,
-                                        VisualStateType state,
+        private IStyleRule Rule<TValue>(VisualStateType state,
                                         TValue value,
                                         DeclarationProperty declarationProperty)
         {
-            return new StyleValueRule(Select(state, property),
+            return new StyleValueRule(Select(state),
                 new List<IStyleDeclaration>
                 {
                     new ValueDeclaration<TValue>(value, _variableAccessor, declarationProperty)
@@ -61,18 +58,10 @@ namespace Das.Views.Styles
         }
 
 
-        private static VisualStateSelector Select<TValue>(VisualStateType state,
-                                                          IDependencyProperty<TValue> property)
+        private static VisualStateSelector Select(VisualStateType state)
         {
             return new(AllStyleSelector.Instance, state);
-            //return new VisualStateSelector(Select(property), state);
         }
-
-        //private static IStyleSelector Select<TValue>(IDependencyProperty<TValue> property)
-        //{
-        //    return AllStyleSelector.Instance;
-        //    //return new DependencyPropertySelector(property);
-        //}
 
         private readonly IStyleVariableAccessor _variableAccessor;
     }

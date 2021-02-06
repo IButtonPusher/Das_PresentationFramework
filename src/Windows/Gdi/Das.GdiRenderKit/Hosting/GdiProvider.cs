@@ -146,7 +146,7 @@ namespace Das.Gdi
                                            IResolver container)
         {
             var perspective = new BasePerspective();
-            var kit = new GdiRenderKit(perspective, windowProvider);
+            var kit = new GdiRenderKit(perspective, windowProvider, container);
                 //BaselineThemeProvider.Instance,
                 //container);
             return kit;

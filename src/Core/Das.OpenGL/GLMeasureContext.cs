@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Das.Views;
 using Das.Views.Colors;
 using Das.Views.Controls;
-using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Images;

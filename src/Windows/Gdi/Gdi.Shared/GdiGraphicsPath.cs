@@ -109,7 +109,6 @@ namespace Gdi.Shared
             
             var bmp = new Bitmap(width, height);
 
-            //using (var g = Graphics.FromImage(bmp))
             using (var g = bmp.GetSmoothGraphics())
             {
                 if (fill is { } set)
@@ -121,7 +120,8 @@ namespace Gdi.Shared
                 if (stroke is { } different)
                 {
                     var p = new Das.Views.Core.Drawing.Pen(different, 1);
-                    using (var usePen = GdiTypeConverter.GetPen(p))
+                    //using (var usePen = GdiTypeConverter.GetPen(p))
+                    var usePen = GdiTypeConverter.GetPen(p);
                     {
                         g.DrawPath(usePen, gdiPath);
                     }

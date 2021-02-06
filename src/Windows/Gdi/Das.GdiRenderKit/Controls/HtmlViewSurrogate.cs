@@ -232,11 +232,6 @@ namespace Das.Views.Gdi.Controls
         }
 
 
-        public Boolean IsMarkupNameAlias(String markupTag)
-        {
-            return _htmlPanel.IsMarkupNameAlias(markupTag);
-        }
-
         public Int32 ZIndex => _htmlPanel.ZIndex;
 
         public IBoxShadow BoxShadow => _htmlPanel.BoxShadow;

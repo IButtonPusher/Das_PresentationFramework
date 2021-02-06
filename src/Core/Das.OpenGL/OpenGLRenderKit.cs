@@ -5,6 +5,7 @@ using Das.Views.Colors;
 using Das.Views.Core;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
+using Das.Views.Images.Svg;
 using Das.Views.Layout;
 using Das.Views.Rendering;
 
@@ -18,10 +19,12 @@ namespace Das.OpenGL
                                IGLContext glContext,
                                IThemeProvider themeProvider,
                                IImageProvider imageProvider)
-        : base(themeProvider, Serializer.AttributeParser, 
-            Serializer.TypeInferrer, Serializer.TypeManipulator,
-            new Dictionary<IVisualElement, ValueCube>(), imageProvider,
-            Serializer.AssemblyList, Serializer)
+            : base(imageProvider, Serializer, 
+                new SvgPathBuilder(imageProvider, Serializer), null)
+        //: base(themeProvider, Serializer.AttributeParser, 
+        //    Serializer.TypeInferrer, Serializer.TypeManipulator,
+        //    new Dictionary<IVisualElement, ValueCube>(), imageProvider,
+        //    Serializer.AssemblyList, Serializer)
         {
             var lastMeasurements = new Dictionary<IVisualElement, ValueSize>();
             var lastRender = new Dictionary<IVisualElement, ValueCube>();

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using Das.Serializer;
 using Das.Views.Core;
 using Das.Views.Images;
 
@@ -13,7 +12,6 @@ namespace Das.Views.Construction
     public class ResourceBuilder : IResourceBuilder
     {
         public ResourceBuilder(IImageProvider imageProvider,
-                               IXmlSerializer serializer,
                                ISvgPathBuilder svgBuilder)
         {
             _imageProvider = imageProvider;

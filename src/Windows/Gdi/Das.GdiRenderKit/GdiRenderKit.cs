@@ -48,7 +48,18 @@ namespace Das.Gdi.Kits
         public GdiRenderKit(IViewPerspective viewPerspective,
                             IWindowProvider<IVisualHost> windowProvider)
             : base(GetDefaultImageBuilder(), Serializer,
-                new SvgPathBuilder(GetDefaultImageBuilder(), Serializer))
+                new SvgPathBuilder(GetDefaultImageBuilder(), Serializer), null)
+        {
+            _windowProvider = windowProvider;
+            Init(windowProvider, BaselineThemeProvider.Instance, viewPerspective, _renderPositions,
+                ref _imageProvider!, ref _measureContext!, ref _renderContext!);
+        }
+
+        public GdiRenderKit(IViewPerspective viewPerspective,
+                            IWindowProvider<IVisualHost> windowProvider,
+                            IResolver container)
+            : base(GetDefaultImageBuilder(), Serializer,
+                new SvgPathBuilder(GetDefaultImageBuilder(), Serializer), container)
         {
             _windowProvider = windowProvider;
             Init(windowProvider, BaselineThemeProvider.Instance, viewPerspective, _renderPositions,

@@ -11,27 +11,7 @@ namespace Das.Views.Styles.Declarations
                                       DeclarationProperty property)
             : base(QuantifiedDouble.Parse(value),  variableAccessor, property)
         {
-            //var endOfValue = -1;
-
-            //for (var c = value.Length - 1; c >= 0; c--)
-            //{
-            //    if (!Char.IsDigit(value[c])) 
-            //        continue;
-                
-            //    endOfValue = c;
-            //    break;
-            //}
-
-            //if (endOfValue == -1)
-            //    return;
-
-            //var unitStr = value.Substring(endOfValue + 1);
-
-            //Units = unitStr == "%" 
-            //    ? LengthUnits.Percent 
-            //    : GetEnumValue(unitStr, LengthUnits.None);
-            
-            //Value = Double.Parse(value.Substring(0, endOfValue + 1));
+           
         }
 
         public static Boolean IsValidQuantity(String value)
@@ -64,13 +44,6 @@ namespace Das.Views.Styles.Declarations
             return Double.TryParse(value.Substring(0, endOfValue + 1), out _);
         }
 
-        //public override String ToString()
-        //{
-        //    return Property + ": " + Value + " " + Units;
-        //}
-
-
-        //public Double Value { get; }
         public LengthUnits Units => Value.Units;
     }
 }

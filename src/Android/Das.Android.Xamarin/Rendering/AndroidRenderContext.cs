@@ -97,8 +97,6 @@ namespace Das.Xamarin.Android
                 return;
 
             _paint.SetStrokeColor(pen.Color);
-            //_paint.SetStyle(Paint.Style.Stroke);
-            //SetColor(pen);
 
             var canvas = GetCanvas();
 
@@ -116,8 +114,6 @@ namespace Das.Xamarin.Android
                                                         TPen pen)
         {
             _paint.SetStrokeColor(pen.Color);
-            //_paint.SetStyle(Paint.Style.Stroke);
-            //SetColor(pen);
             GetCanvas().DrawRect(GetAbsoluteAndroidRect(rect), _paint);
         }
 
@@ -126,12 +122,8 @@ namespace Das.Xamarin.Android
                                                                            TThickness cornerRadii)
         {
             _paint.SetStrokeColor(pen.Color);
-            //_paint.SetStyle(Paint.Style.Stroke);
-            //SetColor(pen);
-
             RoundedRectImpl(rect, cornerRadii);
         }
-
 
         public override void DrawString<TFont, TBrush, TPoint>(String s,
                                                                TFont font,
@@ -167,9 +159,7 @@ namespace Das.Xamarin.Android
         public override void FillRectangle<TRectangle, TBrush>(TRectangle rect,
                                                                TBrush brush)
         {
-            //_paint.SetStyle(Paint.Style.Fill);
             _paint.SetBackgroundColor(brush);
-            //SetColor(brush);
 
             var letsDraw = GetAbsoluteAndroidRect(rect);
 
@@ -180,32 +170,9 @@ namespace Das.Xamarin.Android
             TBrush brush,
             TThickness cornerRadii)
         {
-            //_paint.SetStyle(Paint.Style.Fill);
             _paint.SetBackgroundColor(brush);
-            //SetColor(brush);
 
             RoundedRectImpl(rect, cornerRadii);
-
-            //var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
-
-            //if (cornerRadii.AreAllSidesEqual())
-            //{
-            //    var androidRect = new RectF(Convert.ToSingle(useRect.Left),
-            //        Convert.ToSingle(useRect.Top),
-            //        Convert.ToSingle(useRect.Right),
-            //        Convert.ToSingle(useRect.Bottom));
-
-            //    var sRadius = Convert.ToSingle(cornerRadii.Left);
-
-            //    GetCanvas().DrawRoundRect(androidRect, sRadius, sRadius, _paint);
-
-            //    return;
-            //}
-
-            //var path = new AndroidGraphicsPath();
-            //path.SetRoundedRectangle(useRect, cornerRadii);
-
-            //GetCanvas().DrawPath(path.Path, _paint);
         }
 
         protected override ValueRectangle GetCurrentClip()
@@ -229,16 +196,8 @@ namespace Das.Xamarin.Android
 
         protected override void PopClip<TRectangle>(TRectangle rect)
         {
-            //System.Diagnostics.Debug.WriteLine("POP CLIP");
-            //_clipCount--;
-
             var canvas = GetCanvas();
-            //var useRect = GetAbsoluteAndroidRect(rect);
-
             canvas.Restore();
-
-            //System.Diagnostics.Debug.WriteLine("****** POP CLIP " + rect);
-            // GetCanvas().ClipRect(0, 0, 0, 0);
         }
 
         protected override void PushClip<TRectangle>(TRectangle rect)
@@ -249,8 +208,7 @@ namespace Das.Xamarin.Android
 
             //System.Diagnostics.Debug.WriteLine("****** PUSH CLIP " + rect);
 
-            canvas.ClipRect(
-                Convert.ToInt32(rect.X),
+            canvas.ClipRect(Convert.ToInt32(rect.X),
                 Convert.ToInt32(rect.Y),
                 Convert.ToInt32(rect.Right),
                 Convert.ToInt32(rect.Bottom));
@@ -357,36 +315,15 @@ namespace Das.Xamarin.Android
                 return;
             }
 
-
             var path = new AndroidGraphicsPath();
             path.SetRoundedRectangle(useRect, cornerRadii);
             GetCanvas().DrawPath(path.Path, _paint);
         }
 
 
-        //private void SetColor(IPen pen)
-        //{
-        //    _paint.SetARGB(pen.Color.A, pen.Color.R, pen.Color.G, pen.Color.B);
-        //}
-
-        //private void SetColor(IBrush brush)
-        //{
-        //    switch (brush)
-        //    {
-        //        case SolidColorBrush scb:
-        //            _paint.SetARGB(scb.Color.A, scb.Color.R, scb.Color.G, scb.Color.B);
-        //            break;
-
-        //        default:
-        //            throw new NotImplementedException();
-        //    }
-        //}
-
         [ThreadStatic]
         private static Rect? _rect;
-
         private readonly AndroidFontProvider _fontProvider;
-
         private readonly Paint _paint;
     }
 }

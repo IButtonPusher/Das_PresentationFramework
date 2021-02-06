@@ -80,10 +80,7 @@ namespace Das.Views.Collections
                     if (!(child is IBindableElement bindable))
                         continue;
 
-                    //if (bindable.TryGetDataContextBinding(out var dbBinding))
-                    //    dbBinding.UpdateDataContext(dataContext);
-                    //else
-                        bindable.DataContext = dataContext;
+                    bindable.DataContext = dataContext;
                 }
             }
         }
@@ -105,15 +102,6 @@ namespace Das.Views.Collections
             where TVisualAs :  IVisualElement
         {
             AddRange(elements.OfType<TVisual>());
-            
-            //lock (_lockChildren)
-            //{
-            //    foreach (var element in elements)
-            //    {
-            //        if (element is TVisual valid)
-            //            _children.Add(valid);
-            //    }
-            //}
         }
         
         public void RemoveAt(Int32 index)
@@ -429,21 +417,7 @@ namespace Das.Views.Collections
                 if (value is TVisual vis)
                     this[index] = vis;
             } 
-            //get
-            //{
-
-            //    lock (_lockChildren)
-            //        return _children[index];
-
-            //}
-            //set
-            //{
-            //    if (!(value is TVisual visual))
-            //        return;
-
-            //    lock (_lockChildren)
-            //        _children[index] = visual;
-            //}
+            
         }
         
         void ICollection.CopyTo(Array array,

@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Das.Container;
 using Das.ViewModels.Collections;
-using Das.Views.Colors;
 using Das.Views.Styles;
 
 namespace Das.Views.Construction
@@ -13,15 +12,14 @@ namespace Das.Views.Construction
     public class VisualStyleProvider : IVisualStyleProvider
     {
         [ContainerConstructor]
-        public VisualStyleProvider(IStyleInflater styleInflater,
-                                   IThemeProvider themeProvider)
-        : this(styleInflater, themeProvider, new Dictionary<Type, IEnumerable<IStyleRule>>())
+        // ReSharper disable once UnusedMember.Global
+        public VisualStyleProvider(IStyleInflater styleInflater)
+        : this(styleInflater, new Dictionary<Type, IEnumerable<IStyleRule>>())
         {
             
         }
 
         public VisualStyleProvider(IStyleInflater styleInflater,
-                                   IThemeProvider themeProvider,
                                    IDictionary<Type, IEnumerable<IStyleRule>> visualTypeRules)
         {
             _styleInflater = styleInflater;
@@ -34,7 +32,7 @@ namespace Das.Views.Construction
                 _visualTypeRules[kvpp.Key] = new List<IStyleRule>(kvpp.Value);
             }
 
-            _themeProvider = themeProvider;
+            //_themeProvider = themeProvider;
 
             _lockStylesByClassName = new Object();
             _stylesByClassName = new Dictionary<String, HashSet<IStyleRule>>();
@@ -46,7 +44,7 @@ namespace Das.Views.Construction
             _resourcesRead = new HashSet<String>();
 
             _typeClassStyles = new DoubleConcurrentDictionary<Type, String, IStyleSheet>();
-            _typeStyleStyles = new DoubleConcurrentDictionary<Type, String, IStyleSheet>();
+            //_typeStyleStyles = new DoubleConcurrentDictionary<Type, String, IStyleSheet>();
         }
 
         public async Task<IStyleSheet?> GetStyleForVisualAsync(IVisualElement visual,
@@ -56,8 +54,6 @@ namespace Das.Views.Construction
                 return existing;
 
             var vType = visual.GetType();
-
-            //var typeStyles = GetOrBuildTypeStyleRules(visual.GetType());
 
             if (attributeDictionary.TryGetAttributeValue("class", out var className) && 
                 !String.IsNullOrEmpty(className))
@@ -92,8 +88,6 @@ namespace Das.Views.Construction
 
                     return rules;
                 }
-
-                //return await GetStyleByNameAsync(styleName);
             }
 
             // the visual should have had no class/Style specified by the time we get here
@@ -121,18 +115,8 @@ namespace Das.Views.Construction
 
             return GetOrBuildTypeStyle(visual.GetType());
 
-            //var typeStyles = GetOrBuildTypeStyleRules(visual.GetType());
-            //return GetSheetFromRules(typeStyles);
         }
 
-        //private static IStyleSheet? GetSheetFromRules(IEnumerable<IStyleRule> rules)
-        //{
-        //    var ruleItems = new List<IStyleRule>(rules);
-        //    if (ruleItems.Count == 0)
-        //        return default;
-
-        //    return new StyleSheet(ruleItems);
-        //}
 
         private IStyleSheet GetOrBuildTypeStyle(Type type)
         {
@@ -227,19 +211,6 @@ namespace Das.Views.Construction
             return default;
         }
 
-        //private void AddTypeStyles(Type type,
-        //                           HashSet<IStyleRule> rules)
-        //{
-        //    if (!_visualTypeRules.TryGetValue(type, out var typeRules))
-        //        return;
-
-        //    foreach (var rule in typeRules)
-        //    {
-        //        if (!rules.Contains(rule))
-        //            rules.Add(rule);
-        //    }
-        //}
-
 
         private async IAsyncEnumerable<IStyleRule> GetStylesByClassNameAsync(String className)
         {
@@ -325,13 +296,14 @@ namespace Das.Views.Construction
         private readonly Dictionary<String, HashSet<IStyleRule>> _stylesByClassName;
         private readonly Dictionary<String, IStyleSheet?> _stylesByName;
         private readonly DoubleConcurrentDictionary<Type, String, IStyleSheet> _typeClassStyles;
-        private readonly DoubleConcurrentDictionary<Type, String, IStyleSheet> _typeStyleStyles;
+        
         
         /// <summary>
         /// specific to a type, no type inheritance factored in
         /// </summary>
         private readonly IDictionary<Type, List<IStyleRule>> _visualTypeRules;
 
-        private IThemeProvider _themeProvider;
+        //private IThemeProvider _themeProvider;
+        //private readonly DoubleConcurrentDictionary<Type, String, IStyleSheet> _typeStyleStyles;
     }
 }

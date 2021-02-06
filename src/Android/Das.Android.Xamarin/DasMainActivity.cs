@@ -4,10 +4,14 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Support.V7.App;
+using Android.Util;
+using Das.Container;
 using Das.Views;
 using Das.Views.Colors;
+using Das.Views.Core;
 using Das.Views.Rendering;
 using Das.Views.Styles;
+using Das.Xamarin.Android.Images;
 using Das.Xamarin.Android.Mvvm;
 using Xamarin.Essentials;
 
@@ -41,11 +45,12 @@ namespace Das.Xamarin.Android
                                                                  // ReSharper disable once UnusedParameter.Global
                                                                  IUiProvider uiProvider);
 
+        protected virtual IResolver GetDependencyContainer() => new BaseResolver();
 
-        protected virtual IThemeProvider GetThemeProvider()
-        {
-            return BaselineThemeProvider.Instance;
-        }
+        protected virtual IThemeProvider GetThemeProvider() => BaselineThemeProvider.Instance;
+
+        protected virtual IImageProvider GetImageProvider(DisplayMetrics displayMetrics)
+            => new AndroidImageProvider(displayMetrics);
 
         protected sealed override async void OnCreate(Bundle? savedInstanceState)
         {
@@ -66,8 +71,12 @@ namespace Das.Xamarin.Android
 
             var viewState = new AndroidViewState(displayMetrics, themeProvider);
 
+            var resolver = GetDependencyContainer();
+            var imageProvider = GetImageProvider(displayMetrics);
+
             var renderKit = new AndroidRenderKit(new BasePerspective(), viewState,
-                fontProvider, windowManager, uiProvider, themeProvider, displayMetrics);
+                fontProvider, windowManager, uiProvider, themeProvider, 
+                displayMetrics, resolver, imageProvider);
 
             _view = await GetMainViewAsync(renderKit, uiProvider);
 

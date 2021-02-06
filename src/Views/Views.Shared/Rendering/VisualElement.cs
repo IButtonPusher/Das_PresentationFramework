@@ -113,12 +113,6 @@ namespace Das.Views
             return ReferenceEquals(this, other);
         }
 
-        public virtual Boolean IsMarkupNameAlias(String markupTag)
-        {
-            return false;
-        }
-
-
         public override String ToString()
         {
             return GetType().Name;

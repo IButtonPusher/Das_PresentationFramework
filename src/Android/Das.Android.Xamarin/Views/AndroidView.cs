@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Android.Content;
 using Android.OS;
 using Android.Views;
+using Das.Container;
 using Das.Views;
 using Das.Views.Colors;
 using Das.Views.Controls;
@@ -10,7 +11,9 @@ using Das.Views.Controls;
 using Das.Views.Core.Geometry;
 using Das.Views.Input;
 using Das.Views.Rendering;
+using Das.Views.Styles;
 using Das.Xamarin.Android.Controls;
+using Das.Xamarin.Android.Images;
 using Das.Xamarin.Android.Input;
 
 namespace Das.Xamarin.Android
@@ -27,10 +30,12 @@ namespace Das.Xamarin.Android
                            Context context,
                            IWindowManager windowManager,
                            IUiProvider uiProvider,
-                           IThemeProvider themeProvider)
+                           IThemeProvider? themeProvider,
+                           IResolver? resolver)
             : this(view, context,
                 BuildRenderKit(context, windowManager, uiProvider,
-                    themeProvider),
+                    themeProvider ?? BaselineThemeProvider.Instance,
+                    resolver ?? new BaseResolver()),
                 uiProvider)
         {
         }
@@ -192,7 +197,8 @@ namespace Das.Xamarin.Android
         private static AndroidRenderKit BuildRenderKit(Context context,
                                                        IWindowManager windowManager,
                                                        IUiProvider uiProvider,
-                                                       IThemeProvider themeProvider)
+                                                       IThemeProvider themeProvider,
+                                                       IResolver resolver)
         {
             var displayMetrics = context.Resources?.DisplayMetrics ?? throw new NullReferenceException();
 
@@ -201,7 +207,8 @@ namespace Das.Xamarin.Android
 
             var fontProvider = new AndroidFontProvider(displayMetrics);
             return new AndroidRenderKit(new BasePerspective(), viewState,
-                fontProvider, windowManager, uiProvider, themeProvider, displayMetrics);
+                fontProvider, windowManager, uiProvider, themeProvider, displayMetrics,
+                resolver, new AndroidImageProvider(displayMetrics));
         }
 
 

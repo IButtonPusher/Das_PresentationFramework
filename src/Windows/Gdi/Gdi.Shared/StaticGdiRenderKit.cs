@@ -18,27 +18,15 @@ namespace Das.Gdi.Kits
     public class StaticGdiRenderKit : BaseRenderKit, 
                                       IRenderKit 
     { 
-        public StaticGdiRenderKit(IViewPerspective viewPerspective,
-                                  IStringPrimitiveScanner attributeScanner,
-                                  ITypeInferrer typeInferrer,
-                                  IPropertyProvider propertyProvider,
-                                  IAssemblyList assemblyList,
-                                  IMultiSerializer xmlSerializer)
-        : this(viewPerspective, attributeScanner, typeInferrer, propertyProvider, 
-            new Dictionary<IVisualElement, ValueCube>(), assemblyList, xmlSerializer)
-        {}
+        //public StaticGdiRenderKit(IViewPerspective viewPerspective,
+        //                          IMultiSerializer xmlSerializer)
+        //: this(viewPerspective, xmlSerializer)
+        //{}
 
-        private StaticGdiRenderKit(IViewPerspective viewPerspective,
-                                   IStringPrimitiveScanner attributeScanner,
-                                   ITypeInferrer typeInferrer,
-                                   IPropertyProvider propertyProvider,
-                                   Dictionary<IVisualElement, ValueCube> renderPositions,
-                                   IAssemblyList assemblyList,
+        public StaticGdiRenderKit(IViewPerspective viewPerspective,
                                    IMultiSerializer xmlSerializer)
-            : base(new GdiImageProvider(), xmlSerializer, NullSvgBuilder.Instance)
-            //: base(BaselineThemeProvider.Instance,
-            //    attributeScanner, typeInferrer, propertyProvider, renderPositions,
-            //    new GdiImageProvider(), assemblyList, xmlSerializer)
+            : base(new GdiImageProvider(), xmlSerializer, 
+                NullSvgBuilder.Instance, null)
         {
             var defaultSurrogates = new BaseSurrogateProvider();
 

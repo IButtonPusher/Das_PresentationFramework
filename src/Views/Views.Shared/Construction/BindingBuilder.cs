@@ -57,8 +57,6 @@ namespace Das.Views.Construction
                         switch (deferredPropertyBinding.TargetPropertyName)
                         {
                             case nameof(IItemsControl.ItemsSource) when currentGenericArg != null:
-                                //var sourceProp = currentGenericArg.GetProperty(
-                                //    deferredPropertyBinding.SourcePropertyName);
 
                                 var sourceProp = BaseBinding.GetBindingProperty(currentGenericArg,
                                     deferredPropertyBinding.SourcePropertyName);
@@ -86,9 +84,6 @@ namespace Das.Views.Construction
                                 var dcProp = BaseBinding.GetBindingProperty(currentGenericArg,
                                     deferredPropertyBinding.SourcePropertyName);
 
-                                //var dcProp = currentGenericArg?.GetProperty(
-                                //    deferredPropertyBinding.SourcePropertyName);
-
                                 if (dcProp is { } validProp)
                                     return validProp.PropertyType;
 
@@ -111,7 +106,7 @@ namespace Das.Views.Construction
         {
             foreach (var kvp in node.GetAllAttributes())
             {
-                var bindingType = BindingType.None;
+                BindingType bindingType;
 
                 var valTrim = kvp.Value.Trim();
                 if (valTrim.Length < 3 ||
@@ -140,6 +135,7 @@ namespace Das.Views.Construction
 
                     case 1:
                         propName = expressionTokens[0];
+                        bindingType = BindingType.Data;
                         break;
 
                     default:
@@ -185,9 +181,6 @@ namespace Das.Views.Construction
 
                 switch (bindingType)
                 {
-                    case BindingType.None:
-                        continue;
-
                     case BindingType.Data:
                         if (BaseBinding.GetBindingProperty(dataContextType, propName) == null)
                             throw new MissingMemberException(dataContextType.Name, propName);
