@@ -9,11 +9,13 @@ namespace Das.Views
     public abstract class BaseVisualRenderer : NotifyPropertyChangedBase,
                                                IVisualRenderer
     {
-        public abstract void Arrange(IRenderSize availableSpace, 
-                                     IRenderContext renderContext);
+        public abstract void Arrange<TRenderSize>(TRenderSize availableSpace, 
+                                                 IRenderContext renderContext)
+            where TRenderSize : IRenderSize;
 
-        public abstract ValueSize Measure(IRenderSize availableSpace, 
-                                          IMeasureContext measureContext);
+        public abstract ValueSize Measure<TRenderSize>(TRenderSize availableSpace, 
+                                                       IMeasureContext measureContext)
+            where TRenderSize : IRenderSize;
 
         public ValueRenderRectangle ArrangedBounds { get; set; }
 

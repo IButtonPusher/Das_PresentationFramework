@@ -50,8 +50,8 @@ namespace Das.Views
         }
 
 
-        public override ValueSize Measure(IRenderSize availableSpace,
-                                          IMeasureContext measureContext)
+        public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                                      IMeasureContext measureContext)
         {
             if (!(_headerPanel is { } header))
                 return ValueSize.Empty;
@@ -82,8 +82,8 @@ namespace Das.Views
                 _headerUses.Height + _contentUses.Height);
         }
 
-        public override void Arrange(IRenderSize availableSpace,
-                                     IRenderContext renderContext)
+        public override void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                                 IRenderContext renderContext)
         {
             var targetRect = new ValueRenderRectangle(0, 0,
                 availableSpace.Width,
@@ -262,7 +262,10 @@ namespace Das.Views
                                                  IDataTemplate? newValue)
         {
             if (_headerPanel is { } oldValid)
+            {
                 _children.Remove(oldValid);
+                oldValid.Dispose();
+            }
 
             return true;
         }

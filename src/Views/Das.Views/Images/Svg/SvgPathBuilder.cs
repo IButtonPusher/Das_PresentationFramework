@@ -26,7 +26,13 @@ namespace Das.Views.Images.Svg
 
         public async Task<ISvgImage?> LoadAsync(Stream stream)
         {
-            var doc = await _serializer.FromXmlAsync<SvgDocument>(stream);
+            var doc = await _serializer.FromXmlAsync<SvgDocument>(stream).ConfigureAwait(false);
+            return Parse(doc);
+        }
+
+        public ISvgImage? Load(Stream stream)
+        {
+            var doc = _serializer.FromXml<SvgDocument>(stream);
             return Parse(doc);
         }
 

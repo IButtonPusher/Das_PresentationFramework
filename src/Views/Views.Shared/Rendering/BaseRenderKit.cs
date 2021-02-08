@@ -61,8 +61,8 @@ namespace Das.Views
         }
 
 #pragma warning disable 8618
+
         private BaseRenderKit(ref IResolver? resolver,
-#pragma warning restore 8618
                               IImageProvider imageProvider, 
                               Dictionary<IVisualElement, ValueCube> renderPositions)
         {
@@ -76,6 +76,8 @@ namespace Das.Views
             _surrogateInstances = new Dictionary<IVisualElement, IVisualSurrogate>();
             _surrogateTypeBuilders = new Dictionary<Type, Func<IVisualElement, IVisualSurrogate>>();
         }
+
+#pragma warning restore 8618
 
        
         private static IVisualBootstrapper GetVisualBootstrapper(IResolver resolver,

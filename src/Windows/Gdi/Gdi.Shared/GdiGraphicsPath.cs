@@ -7,6 +7,7 @@ using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Images;
 using Das.Views.Rendering;
+using Das.Views.Transforms;
 
 namespace Gdi.Shared
 {
@@ -15,19 +16,19 @@ namespace Gdi.Shared
         public GdiGraphicsPath()
         {
             Path = new GraphicsPath();
+            
+            //Path.Transform();
         }
 
-        public override void AddLine<TPoint>(TPoint p1, 
-                                    TPoint p2) 
-            //where TPoint : IPoint2D
+        public override void AddLine<TPoint>(TPoint p1,
+                                             TPoint p2)
         {
-            Path.AddLine(I4(p1.X), I4(p1.Y), I4(p2.X), I4(p2.Y));
+            Path.AddLine(R4(p1.X), R4(p1.Y), R4(p2.X), R4(p2.Y));
         }
-
 
         public override void LineTo<TPoint>(TPoint p1)
         {
-            Path.AddLine(I4(p1.X), I4(p1.Y), I4(p1.X), I4(p1.Y));
+            Path.AddLine(R4(p1.X), R4(p1.Y), R4(p1.X), R4(p1.Y));
         }
 
         public override void AddArc<TRectangle>(TRectangle arc, 
@@ -71,6 +72,18 @@ namespace Gdi.Shared
             
         }
 
+        public override void Transform(TransformationMatrix matrix)
+        {
+            var gdiMatrix = new Matrix(Convert.ToSingle(matrix.ScaleX),
+                Convert.ToSingle(matrix.SkewX),
+                Convert.ToSingle(matrix.SkewY),
+                Convert.ToSingle(matrix.ScaleY),
+                Convert.ToSingle(matrix.OffsetX),
+                Convert.ToSingle(matrix.OffsetY));
+                
+            Path.Transform(gdiMatrix);
+        }
+
         public override ValueSize Size
         {
             get
@@ -84,6 +97,12 @@ namespace Gdi.Shared
         {
             get
             {
+                //for (var c = 0; c < Path.PathData.Points.Length; c++)
+                //{
+                //    System.Diagnostics.Debug.WriteLine(c + "\t" + Path.PathData.Points[c] + "\t"
+                //                                       + (Int32)Path.PathData.Types[c]);
+                //}
+
                 var res = new Das.Views.Rendering.PathData(
                     GetLocalPoints(Path.PathData.Points),
                     Path.PathData.Types);

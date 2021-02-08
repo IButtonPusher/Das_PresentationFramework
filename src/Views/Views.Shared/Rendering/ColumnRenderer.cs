@@ -21,19 +21,19 @@ namespace Das.Views.Rendering
         public Dictionary<Int32, Double> RowHeights { get; }
 
 
-        public override void Arrange(Orientations orientation,
-                                     IRenderRectangle bounds,
-                                     IRenderContext renderContext)
+        public override void Arrange<TRenderRect>(Orientations orientation,
+                                                  TRenderRect bounds,
+                                                 IRenderContext renderContext)
         {
             _currentRow = 0;
             _currentY = 0;
             base.Arrange(orientation, bounds, renderContext);
         }
 
-        public override ValueSize Measure(IVisualElement container,
-                                          Orientations orientation,
-                                          IRenderSize availableSpace,
-                                          IMeasureContext measureContext)
+        public override ValueSize Measure<TRenderSize>(IVisualElement container,
+                                                      Orientations orientation,
+                                                      TRenderSize availableSpace,
+                                                      IMeasureContext measureContext)
         {
             _currentRow = 0;
             _currentY = 0;

@@ -16,6 +16,7 @@ namespace Das.Views.Controls
                                        IHandleInput<MouseDownEventArgs>,
                                        IHandleInput<MouseUpEventArgs>,
                                        IHandleInput<MouseOverEventArgs>,
+                                       IHandleInput<LostCaptureEventArgs>,
                                        IButtonBase
     {
         protected ButtonBase(IVisualBootstrapper visualBootstrapper)
@@ -24,8 +25,8 @@ namespace Das.Views.Controls
             _lastRenderSize = Size.Empty;
         }
 
-        public override void Arrange(IRenderSize availableSpace,
-                                     IRenderContext renderContext)
+        public override void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                                 IRenderContext renderContext)
         {
             _lastRenderSize = availableSpace;
             base.Arrange(availableSpace, renderContext);
@@ -99,6 +100,12 @@ namespace Das.Views.Controls
         public Object? CommandParameter { get; set; }
 
 
+        public Boolean OnInput(LostCaptureEventArgs args)
+        {
+            IsActive = false;
+            return true;
+        }
+
         public override String ToString()
         {
             return base.ToString() + " - " + DataContext;
@@ -120,7 +127,8 @@ namespace Das.Views.Controls
         private const InputAction I_HANDLE_INPUT = InputAction.LeftMouseButtonDown |
                                                    InputAction.LeftMouseButtonUp |
                                                    InputAction.LeftClick |
-                                                   InputAction.MouseOver;
+                                                   InputAction.MouseOver | 
+                                                   InputAction.LostCapture;
 
         private ClickMode _clickMode;
         private ISize _lastRenderSize;

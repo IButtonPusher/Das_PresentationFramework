@@ -59,16 +59,16 @@ namespace Das.Views.Panels
             set => OrientationProperty.SetValue(this, value);
         }
 
-        public override ValueSize Measure(IRenderSize availableSpace,
-                                          IMeasureContext measureContext)
+        public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                                      IMeasureContext measureContext)
         {
             return _renderer.Measure(this, //GetChildrenToRender(), 
                 Orientation,
                 availableSpace, measureContext);
         }
 
-        public override void Arrange(IRenderSize availableSpace,
-                                     IRenderContext renderContext)
+        public override void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                                 IRenderContext renderContext)
         {
             _renderer.Arrange(Orientation, availableSpace.ToFullRectangle(), renderContext);
         }

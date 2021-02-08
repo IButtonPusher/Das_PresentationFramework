@@ -23,20 +23,21 @@ namespace Das.Views
             
             _measuredSize = ValueSize.Empty;
             Id = Interlocked.Increment(ref _currentId);
-            ArrangedBounds = ValueRenderRectangle.Empty;
         }
 
-        public virtual ValueSize Measure(IRenderSize availableSpace,
-                                         IMeasureContext measureContext)
+        public virtual ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                                      IMeasureContext measureContext)
+            where TRenderSize : IRenderSize
         {
             measureContext.TryGetElementSize(this, availableSpace, out _measuredSize);
             return _measuredSize;
         }
 
-        public ValueRenderRectangle ArrangedBounds { get; set; }
+        public virtual ValueRenderRectangle ArrangedBounds { get; set; }
 
-        public virtual void Arrange(IRenderSize availableSpace,
-                                    IRenderContext renderContext)
+        public virtual void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                                 IRenderContext renderContext)
+            where TRenderSize : IRenderSize
         {
            //intentionally left blank
         }

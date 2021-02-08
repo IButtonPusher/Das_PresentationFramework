@@ -14,7 +14,6 @@ namespace Das.Views.Transforms
                                     Double scaleY,
                                     Double offsetX,
                                     Double offsetY)
-                                 //Boolean isIdentity)
         {
             ScaleX = scaleX;
             SkewX = skewX;

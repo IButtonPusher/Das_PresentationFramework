@@ -1,4 +1,5 @@
 ﻿using System;
+using Das.Extensions;
 using Das.Views.Core.Drawing;
 using Das.Views.Images;
 
@@ -11,9 +12,13 @@ namespace Das.Views.Controls
         {
         }
 
-        protected override Boolean TryGetImage(out IImage image)
+        protected override Boolean TryGetImage(Int32 width,
+                                               Int32 height,
+                                               out IImage image)
         {
-            if (_image is { } img)
+            if (_image is { } img && 
+                img.Width.AreEqualEnough(width) && 
+                img.Height.AreEqualEnough(height))
             {
                 image = img;
                 return true;
@@ -23,9 +28,14 @@ namespace Das.Views.Controls
                 (Stroke != null || 
                  Fill != null))
             {
-                image = source.ToStaticImage(Stroke, Fill);
+                image = source.ToStaticImage(width, height, Stroke, Fill)!;
+
+                if (_image is { } ripImg)
+                    ripImg.Dispose();
+                
+
                 _image = image;
-                return true;
+                return _image != null;
             }
 
             image = default!;

@@ -1,4 +1,5 @@
-﻿using Das.Views.Core.Drawing;
+﻿using System;
+using Das.Views.Core.Drawing;
 
 namespace Das.Views.Images
 {
@@ -8,7 +9,12 @@ namespace Das.Views.Images
 
         IBrush? Fill { get; }
 
-        IImage ToStaticImage(IColor? stroke,
+        IImage? ToStaticImage(IColor? stroke,
+                              IBrush? fill);
+
+        IImage? ToStaticImage(Int32 width,
+                              Int32 height,
+                              IColor? stroke,
                               IBrush? fill);
 
         void AddToPath(IGraphicsPath graphicsPath);

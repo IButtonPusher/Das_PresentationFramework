@@ -365,14 +365,10 @@ namespace Das.Views.Input
 
         private readonly IElementLocator _elementLocator;
 
-        //private readonly Double _offsetMultiplier;
-        //private readonly Boolean _isOffsetPositions;
 
-        //private static InputAction 
         private IHandleInput<MouseDownEventArgs>? _handledMouseDown;
         private IVisualElement? _inputCapturingMouse;
-        // ReSharper disable once NotAccessedField.Local
-        //private IHandleInput<MouseDownEventArgs>? _mouseActiveElement;
+        
         private IInteractiveVisual? _mouseActiveElement;
         private IHandleInput<MouseOverEventArgs>? _lastMouseOverVisual;
         private IInputContext? _lastInputContext;

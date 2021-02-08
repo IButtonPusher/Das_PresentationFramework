@@ -67,16 +67,23 @@ namespace Das.Views.Defaults
             tabControl.PropertyChanged += OnTabPropertyChanged;
         }
 
-        public override void Arrange(IRenderSize availableSpace,
-                                     IRenderContext renderContext)
+        public override void Dispose()
+        {
+            _itemsControl.PropertyChanged -= OnTabPropertyChanged;
+            base.Dispose();
+        }
+
+        public override void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                                  IRenderContext renderContext)
         {
             // SCROLL PANEL
             var tabPageRect = new ValueRenderRectangle(
                 tabsLeft, 0,
                 availableSpace.Width,
                 availableSpace.Height,
-                new ValuePoint2D(0, 0));
-            renderContext.DrawElement(_scrollPanel, tabPageRect);
+                availableSpace.Offset);
+                //new ValuePoint2D(0, 0));
+            //renderContext.DrawElement(_scrollPanel, tabPageRect);
 
             // BOTTOM SEPARATOR
             var separatorRect = new ValueRenderRectangle(
@@ -86,8 +93,8 @@ namespace Das.Views.Defaults
                 /* H */ SEPARATOR_LINE_HEIGHT,
                 availableSpace.Offset);
 
-            renderContext.DrawElement(_separator, separatorRect);
-
+            //renderContext.DrawElement(_separator, separatorRect);
+            
 
             // INDICATOR
             if (_indicatorRect.IsEmpty)
@@ -110,10 +117,14 @@ namespace Das.Views.Defaults
 
                 renderContext.DrawElement(_indicator, indicatorRect);
             }
+
+
+            renderContext.DrawElement(_separator, separatorRect);
+            renderContext.DrawElement(_scrollPanel, tabPageRect);
         }
 
-        public override ValueSize Measure(IRenderSize availableSpace,
-                                          IMeasureContext measureContext)
+        public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                                       IMeasureContext measureContext)
         {
             if (!(_itemsControl is { } valid) ||
                 !(valid.ItemsSource is { }))
@@ -148,10 +159,15 @@ namespace Das.Views.Defaults
 
             var pos = valid.ArrangedBounds;
 
-            _indicatorRect = new Rectangle(pos.Left + _scrollPanel.HorizontalOffset, 0, pos.Size);
+            var x = pos.Left + _scrollPanel.HorizontalOffset - _scrollPanel.ArrangedBounds.Left;
+
+            _indicatorRect = new Rectangle(x,
+                //pos.Left + _scrollPanel.HorizontalOffset, 
+                0, pos.Size);
 
             _indicator.SuspendLayout();
-            _indicator.Margin = new QuantifiedThickness(pos.Left + _scrollPanel.HorizontalOffset,
+            _indicator.Margin = new QuantifiedThickness(x,
+                //pos.Left + _scrollPanel.HorizontalOffset,
                 0, 0, 0);
             _indicator.ResumeLayout();
             //System.Diagnostics.Debug.WriteLine("setting indicator width to: " + pos.Width); 

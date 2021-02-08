@@ -192,8 +192,10 @@ namespace Das.Views.Panels
             set => SetValue(ref _verticalOffset, value, OnOffsetChanged);
         }
 
-        public override void Arrange(IRenderSize availableSpace,
-                                     IRenderContext renderContext)
+        public override ValueRenderRectangle ArrangedBounds { get; set; }
+
+        public override void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                                  IRenderContext renderContext)
         {
             if (!(Content is { } content))
                 return;
@@ -233,8 +235,8 @@ namespace Das.Views.Panels
         }
 
 
-        public override ValueSize Measure(IRenderSize availableSpace,
-                                          IMeasureContext measureContext)
+        public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                                      IMeasureContext measureContext)
         {
             _lastAvailable = availableSpace;
 

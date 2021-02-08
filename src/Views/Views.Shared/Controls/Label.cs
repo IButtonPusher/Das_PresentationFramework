@@ -22,16 +22,16 @@ namespace Das.Views.Controls
 
       
 
-        public override void Arrange(IRenderSize availableSpace,
-                                     IRenderContext renderContext)
+        public override void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                                  IRenderContext renderContext)
         {
             var brush = TextBrush ?? renderContext.ColorPalette.OnBackground;
             renderContext.DrawString(Text, Font, brush, Point2D.Empty);
         }
 
 
-        public override ValueSize Measure(IRenderSize availableSpace,
-                                          IMeasureContext measureContext)
+        public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                                      IMeasureContext measureContext)
         {
             //var font = GetFont(measureContext);
             var size = measureContext.MeasureString(Text, Font);

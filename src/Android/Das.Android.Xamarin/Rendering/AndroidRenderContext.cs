@@ -82,8 +82,6 @@ namespace Das.Xamarin.Android
                                                               TPoint2 pt2)
         {
             _paint.SetStrokeColor(pen.Color);
-            //_paint.SetStyle(Paint.Style.Stroke);
-            //SetColor(pen);
             _paint.StrokeWidth = pen.Thickness;
             var l1 = GetAbsoluteAndroidPoint(pt1);
             var l2 = GetAbsoluteAndroidPoint(pt2);
@@ -193,7 +191,7 @@ namespace Das.Xamarin.Android
                 clip.Width(),
                 clip.Height());
         }
-
+        
         protected override void PopClip<TRectangle>(TRectangle rect)
         {
             var canvas = GetCanvas();
@@ -205,8 +203,6 @@ namespace Das.Xamarin.Android
             var canvas = GetCanvas();
 
             canvas.Save();
-
-            //System.Diagnostics.Debug.WriteLine("****** PUSH CLIP " + rect);
 
             canvas.ClipRect(Convert.ToInt32(rect.X),
                 Convert.ToInt32(rect.Y),

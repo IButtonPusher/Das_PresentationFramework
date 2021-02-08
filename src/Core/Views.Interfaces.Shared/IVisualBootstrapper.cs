@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Das.Serializer;
 using Das.Views.Core.Drawing;
 using Das.Views.DataBinding;
-using Das.Views.Panels;
 
 namespace Das.Views
 {
@@ -44,9 +43,10 @@ namespace Das.Views
         IVisualElement InstantiateCopy(IVisualElement visual,
                                        Object? dataContext);
 
-        void ResolveTo<TViewModel, TView>()
-            where TView : IView;
-
         IDataTemplate? TryResolveFromContext(Object dataContext);
+
+        Object Resolve(Type type);
+
+        T Resolve<T>();
     }
 }

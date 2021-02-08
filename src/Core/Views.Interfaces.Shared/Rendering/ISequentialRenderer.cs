@@ -7,13 +7,15 @@ namespace Das.Views.Rendering
 {
     public interface ISequentialRenderer
     {
-        void Arrange(Orientations orientation,
-                     IRenderRectangle availableSpace,
-                     IRenderContext renderContext);
+        void Arrange<TRenderRect>(Orientations orientation,
+                                  TRenderRect availableSpace,
+                                  IRenderContext renderContext)
+            where TRenderRect : IRenderRectangle;
 
-        ValueSize Measure(IVisualElement container,
-                          Orientations orientation,
-                          IRenderSize availableSpace,
-                          IMeasureContext measureContext);
+        ValueSize Measure<TRenderSize>(IVisualElement container,
+                                      Orientations orientation,
+                                      TRenderSize availableSpace,
+                                      IMeasureContext measureContext)
+            where TRenderSize : IRenderSize;
     }
 }

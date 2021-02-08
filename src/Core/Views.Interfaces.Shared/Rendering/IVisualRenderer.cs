@@ -10,11 +10,13 @@ namespace Das.Views.Rendering
     /// </summary>
     public interface IVisualRenderer : IMeasureAndArrange
     {
-        void Arrange(IRenderSize availableSpace,
-                     IRenderContext renderContext);
+        void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                  IRenderContext renderContext)
+            where TRenderSize : IRenderSize;
 
-        ValueSize Measure(IRenderSize availableSpace,
-                          IMeasureContext measureContext);
+        ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                       IMeasureContext measureContext)
+            where TRenderSize : IRenderSize;
 
         ValueRenderRectangle ArrangedBounds { get; set; }
     }

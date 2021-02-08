@@ -14,30 +14,39 @@ namespace Das.Views.Controls
         {
         }
 
-        public override void Arrange(IRenderSize availableSpace,
-                                     IRenderContext renderContext)
+        public override void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                                  IRenderContext renderContext)
         {
-            if (!TryGetImage(out var img))
+            if (!TryGetImage(Convert.ToInt32(availableSpace.Width),
+                Convert.ToInt32(availableSpace.Height),
+                out var img))
                 return;
 
-            if (!availableSpace.Width.AreEqualEnough(img.Width) ||
-                !availableSpace.Height.AreEqualEnough(availableSpace.Height))
-                if (availableSpace.Height < img.Height)
-                {
-                    var scale = availableSpace.Height / img.Height;
-                    availableSpace = new ValueRenderSize(img.Width * scale, availableSpace.Height,
-                        availableSpace.Offset);
-                }
+            ValueRectangle rect;
 
-            var rect = new ValueRectangle(ValuePoint2D.Empty, availableSpace);
+            if ((!availableSpace.Width.AreEqualEnough(img.Width) ||
+                 !availableSpace.Height.AreEqualEnough(availableSpace.Height)) &&
+                availableSpace.Height < img.Height)
+            {
+                var scale = availableSpace.Height / img.Height;
+                rect = new ValueRectangle(ValuePoint2D.Empty,
+                    new ValueRenderSize(img.Width * scale, availableSpace.Height,
+                        availableSpace.Offset));
+                //availableSpace = new ValueRenderSize(img.Width * scale, availableSpace.Height,
+                //        availableSpace.Offset);
+            }
+            else
+                rect = new ValueRectangle(ValuePoint2D.Empty, availableSpace);
 
             renderContext.DrawImage(img, rect);
         }
 
-        public override ValueSize Measure(IRenderSize availableSpace,
-                                          IMeasureContext measureContext)
+        public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                                       IMeasureContext measureContext)
         {
-            if (!TryGetImage(out var img))
+            if (!TryGetImage(Convert.ToInt32(availableSpace.Width),
+                Convert.ToInt32(availableSpace.Height),
+                out var img))
                 return ValueSize.Empty;
 
             var size = measureContext.MeasureImage(img);
@@ -63,6 +72,8 @@ namespace Das.Views.Controls
             return size;
         }
 
-        protected abstract Boolean TryGetImage(out IImage image);
+        protected abstract Boolean TryGetImage(Int32 width,
+                                               Int32 height,
+                                               out IImage image);
     }
 }

@@ -53,15 +53,15 @@ namespace Das.Views.Panels
 
         IDataTemplate? IItemsControl.ItemTemplate => ItemTemplate;
 
-        public override ValueSize Measure(IRenderSize availableSpace,
-                                          IMeasureContext measureContext)
+        public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                                      IMeasureContext measureContext)
         {
             var res = _renderer.Measure(this, Orientation, availableSpace, measureContext);
             return res;
         }
 
-        public override void Arrange(IRenderSize availableSpace,
-                                     IRenderContext renderContext)
+        public override void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                                 IRenderContext renderContext)
         {
             _renderer.Arrange(Orientation, availableSpace.ToFullRectangle(), renderContext);
         }

@@ -22,5 +22,10 @@ namespace Das.Views.Images
 
             #endif
         }
+
+        public ISvgImage? Load(Stream stream)
+        {
+            return default;
+        }
     }
 }

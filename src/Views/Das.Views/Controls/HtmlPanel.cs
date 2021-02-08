@@ -41,14 +41,14 @@ namespace Das.Views.Controls
             Uri = value;
         }
 
-        public override void Arrange(IRenderSize availableSpace,
-                                     IRenderContext renderContext)
+        public override void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                                 IRenderContext renderContext)
         {
             throw new NotSupportedException("A surrogate control is required for this control");
         }
 
-        public override ValueSize Measure(IRenderSize availableSpace,
-                                          IMeasureContext measureContext)
+        public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                                      IMeasureContext measureContext)
         {
             throw new NotSupportedException("A surrogate control is required for this control");
         }

@@ -17,8 +17,8 @@ namespace Das.Views
            InvalidateMeasure();
         }
 
-        public override void Arrange(IRenderSize availableSpace,
-                                     IRenderContext renderContext)
+        public override void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                                 IRenderContext renderContext)
         {
             //Debug.WriteLine("arrange hrule");
 
@@ -30,8 +30,8 @@ namespace Das.Views
             renderContext.FillRectangle(r, bg);
         }
 
-        public override ValueSize Measure(IRenderSize availableSpace,
-                                          IMeasureContext measureContext)
+        public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                                      IMeasureContext measureContext)
         {
             //Debug.WriteLine("measure hrule");
 

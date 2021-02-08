@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Das.Extensions;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Images.Svg;
+using Das.Views.Transforms;
 
 namespace Das.Views.Images
 {
@@ -16,6 +18,8 @@ namespace Das.Views.Images
                         IEnumerable<SvgPathSegment> segments,
                         IImageProvider imageProvider)
         {
+            _unwrapLock = new Object();
+
             _imageProvider = imageProvider;
             Width = width;
             Height = height;
@@ -35,15 +39,37 @@ namespace Das.Views.Images
 
         public IBrush? Fill { get; set; }
 
-        public IImage ToStaticImage(IColor? stroke,
-                                    IBrush? fill)
+        public IImage? ToStaticImage(IColor? stroke,
+                                     IBrush? fill)
         {
+            return ToStaticImage(Convert.ToInt32(Width), Convert.ToInt32(Height), 
+                stroke, fill);
+        }
+
+        public IImage? ToStaticImage(Int32 width,
+                                     Int32 height,
+                                     IColor? stroke,
+                                     IBrush? fill)
+        {
+            if (width.IsZero() || height.IsZero())
+                return default;
+
             using (var path = _imageProvider.GetNewGraphicsPath())
             {
                 AddToPath(path);
 
-                var cooked = path.ToImage(Convert.ToInt32(Width),
-                    Convert.ToInt32(Height), stroke, fill);
+                if (Width.AreDifferent(width) || 
+                    Height.AreDifferent(height))
+                {
+                    var scaleX = width / Width;
+                    var scaleY = height / Height;
+
+                    var xformMatrix = new TransformationMatrix(scaleX, 0, 0, scaleY, 0, 0);
+                    path.Transform(xformMatrix);
+                }
+
+                var cooked = path.ToImage(width,
+                    height, stroke, fill);
 
                 return cooked;
             }
@@ -103,7 +129,11 @@ namespace Das.Views.Images
 
         public void UnwrapLocked<T>(Action<T> action)
         {
-            throw new NotImplementedException();
+            lock (_unwrapLock)
+            {
+                var u = Unwrap<T>();
+                action(u);
+            }
         }
 
         public Task<TResult> UseImage<TImage, TParam, TResult>(TParam param1,
@@ -124,5 +154,6 @@ namespace Das.Views.Images
 
         private readonly IImageProvider _imageProvider;
         private Object? _cachedUnwrapped;
+        private readonly Object _unwrapLock;
     }
 }

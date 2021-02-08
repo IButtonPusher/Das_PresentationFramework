@@ -111,28 +111,20 @@ namespace Das.Gdi
                                                                TPen pen,
                                                                TThickness cornerRadii)
         {
-            //if (cornerRadius == 0)
             if (cornerRadii.IsEmpty)
             {
                 DrawRect(rect, pen);
                 return;
             }
 
-            //var useRect = GetAbsoluteGdiRectangle(rect);
             var useRect = _boxModel.GetAbsoluteRect(rect, ZoomLevel);
             var usePen = GdiTypeConverter.GetPen(pen);
 
             using (var path = new GdiGraphicsPath())
             {
                 path.SetRoundedRectangle(useRect, cornerRadii);
-                //CreateRoundedRectangle(path, useRect, cornerRadii);
                 Graphics.DrawPath(usePen, path.Path);
             }
-
-            //using (GraphicsPath path = CreateRoundedRectangle(useRect, cornerRadii))
-            //{
-            //    Graphics.DrawPath(usePen, path);
-            //}
         }
 
         public override void DrawString<TFont, TBrush, TPoint>(String s,
@@ -148,7 +140,8 @@ namespace Das.Gdi
 
             var color = GdiTypeConverter.GetColor(scb.Color);
             var useFont = GdiTypeConverter.GetFont(font);
-            TextRenderer.DrawText(Graphics, s, useFont, loc, color);
+            TextRenderer.DrawText(Graphics, s, useFont, loc, color,
+                TextFormatFlags.PreserveGraphicsClipping);
         }
 
         public override void DrawString<TFont, TBrush, TRectangle>(String s,
@@ -211,11 +204,6 @@ namespace Das.Gdi
                 path.SetRoundedRectangle(useRect, cornerRadii);
                 Graphics.FillPath(useBrush, path.Path);
             }
-
-            //using (GraphicsPath path = CreateRoundedRectangle(useRect, cornerRadii))
-            //{
-            //    Graphics.FillPath(useBrush, path);
-            //}
         }
 
         protected override ValueRectangle GetCurrentClip()
@@ -269,142 +257,9 @@ namespace Das.Gdi
         private RectangleF GetAbsoluteGdiRectangleF<TRectangle>(TRectangle relativeRect)
             where TRectangle : IRectangle
         {
-            //var absRect = GetAbsoluteRect(relativeRect);
             var absRect = _boxModel.GetAbsoluteRect(relativeRect, ZoomLevel);
             return GdiTypeConverter.GetRect(absRect);
         }
-
-        //// https://github.com/koszeggy/KGySoft.Drawing/blob/625e71e38a0d2e2c94821629f34e797ceae4015c/KGySoft.Drawing/Drawing/_Extensions/GraphicsExtensions.cs#L287
-        //private static GraphicsPath CreateRoundedRectangle<TThickness>(Rectangle bounds, 
-        //                                                               TThickness cornerRadii)
-        //where TThickness : IThickness
-        //{
-        //    var radiusTopLeft = Convert.ToInt32(cornerRadii.Left);
-        //    var radiusTopRight = Convert.ToInt32(cornerRadii.Top);
-        //    var radiusBottomRight = Convert.ToInt32(cornerRadii.Right);
-        //    var radiusBottomLeft = Convert.ToInt32(cornerRadii.Bottom);
-
-        //    var size = new Size(radiusTopLeft << 1, radiusTopLeft << 1);
-        //    var arc = new Rectangle(bounds.Location, size);
-        //    GraphicsPath path = new GraphicsPath();
-
-        //    // top left arc
-        //    if (radiusTopLeft == 0)
-        //        path.AddLine(arc.Location, arc.Location);
-        //    else
-        //        path.AddArc(arc, 180, 90);
-
-        //    // top right arc
-        //    if (radiusTopRight != radiusTopLeft)
-        //    {
-        //        size = new Size(radiusTopRight << 1, radiusTopRight << 1);
-        //        arc.Size = size;
-        //    }
-
-        //    arc.X = bounds.Right - size.Width;
-        //    if (radiusTopRight == 0)
-        //        path.AddLine(arc.Location, arc.Location);
-        //    else
-        //        path.AddArc(arc, 270, 90);
-
-        //    // bottom right arc
-        //    if (radiusTopRight != radiusBottomRight)
-        //    {
-        //        size = new Size(radiusBottomRight << 1, radiusBottomRight << 1);
-        //        arc.X = bounds.Right - size.Width;
-        //        arc.Size = size;
-        //    }
-
-        //    arc.Y = bounds.Bottom - size.Height;
-        //    if (radiusBottomRight == 0)
-        //        path.AddLine(arc.Location, arc.Location);
-        //    else
-        //        path.AddArc(arc, 0, 90);
-
-        //    // bottom left arc
-        //    if (radiusBottomRight != radiusBottomLeft)
-        //    {
-        //        arc.Size = new Size(radiusBottomLeft << 1, radiusBottomLeft << 1);
-        //        arc.Y = bounds.Bottom - arc.Height;
-        //    }
-
-        //    arc.X = bounds.Left;
-        //    if (radiusBottomLeft == 0)
-        //        path.AddLine(arc.Location, arc.Location);
-        //    else
-        //        path.AddArc(arc, 90, 90);
-
-        //    path.CloseFigure();
-        //    return path;
-        //}
-        
-
-        //// https://stackoverflow.com/questions/33853434/how-to-draw-a-rounded-rectangle-in-c-sharp
-        
-        //private static GraphicsPath RoundedRect<TThickness>(Rectangle bounds,
-        //                                                    TThickness cornerRadii)
-        //where TThickness : IThickness
-        //{
-        //    //var radius = Convert.ToInt32(cornerRadius);
-
-        //    var tlRadius = Convert.ToInt32(cornerRadii.Left);
-        //    var tlDiameter = tlRadius * 2;
-        //    var tlSize = new Size(tlDiameter, tlDiameter);
-        //    var tlArc = new Rectangle(bounds.Location, tlSize);
-
-        //    //var arc = new Rectangle(bounds.Left, bounds.Top,)
-
-        //    var trRadius = Convert.ToInt32(cornerRadii.Top);
-        //    var trDiameter = trRadius * 2;
-        //    var trSize = new Size(trDiameter, trDiameter);
-        //    var trArc = new Rectangle(bounds.Location, trSize);
-
-        //    var brRadius = Convert.ToInt32(cornerRadii.Right);
-        //    var brDiameter = brRadius * 2;
-        //    var brSize = new Size(brDiameter, brDiameter);
-        //    var brArc = new Rectangle(bounds.Location, brSize);
-
-        //    var blRadius = Convert.ToInt32(cornerRadii.Bottom);
-        //    var blDiameter = blRadius * 2;
-        //    var blSize = new Size(blDiameter, blDiameter);
-        //    var blArc = new Rectangle(bounds.Location, blSize);
-
-        //    var arc = new Rectangle(bounds.Location.X, bounds.Location.Y,
-        //        tlRadius + trRadius, brRadius + blRadius);
-
-        //    //var diameter = radius * 2;
-        //    //var size = new Size(diameter, diameter);
-        //    //var arc = new Rectangle(bounds.Location, size);
-
-        //    //don't dispose this here derp
-        //    GraphicsPath path = new GraphicsPath();
-        //    {
-        //        //if (radius == 0)
-        //        if (cornerRadii.IsEmpty)
-        //        {
-        //            path.AddRectangle(bounds);
-        //            return path;
-        //        }
-
-        //        // top left arc  
-        //        path.AddArc(tlArc, 180, 90);
-
-        //        // top right arc  
-        //        tlArc.X = bounds.Right - diameter;
-        //        path.AddArc(tlArc, 270, 90);
-
-        //        // bottom right arc  
-        //        brArc.Y = bounds.Bottom - diameter;
-        //        path.AddArc(brArc, 0, 90);
-
-        //        // bottom left arc 
-        //        blArc.X = bounds.Left;
-        //        path.AddArc(blArc, 90, 90);
-
-        //        path.CloseFigure();
-        //        return path;
-        //    }
-        //}
 
         private readonly IPen _testPen;
         private Int32 _clipCounter;

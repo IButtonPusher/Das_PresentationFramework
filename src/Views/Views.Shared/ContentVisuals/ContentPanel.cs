@@ -64,8 +64,8 @@ namespace Das.Views.Panels
             set => PaddingProperty.SetValue(this, value);
         }
 
-        public override ValueSize Measure(IRenderSize availableSpace,
-                                          IMeasureContext measureContext)
+        public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                                      IMeasureContext measureContext)
         {
             var contentCanHave = GetMeasureSpace(measureContext, availableSpace,
                 out var padding,
@@ -102,7 +102,7 @@ namespace Das.Views.Panels
             if (Double.IsInfinity(useWidth) || useWidth < _contentMeasured.Width)
             {
                 useWidth = _contentMeasured.Width;
-                //if (padding != null)
+                
                 if (!padding.IsEmpty)
                     useWidth += padding.Width;
             }
@@ -148,8 +148,8 @@ namespace Das.Views.Panels
             base.InvalidateArrange();
         }
 
-        public override void Arrange(IRenderSize availableSpace,
-                                     IRenderContext renderContext)
+        public override void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                                 IRenderContext renderContext)
         {
             if (Content is { } content)
             {
@@ -167,13 +167,14 @@ namespace Das.Views.Panels
             IsRequiresArrange = false;
         }
 
+
         protected virtual IRenderSize GetMeasureSpace(IVisualContext styleContext,
                                                       IRenderSize availableSpace,
                                                       out ValueThickness padding,
                                                       out ValueSize mySize)
         {
             padding = Padding.GetValue(availableSpace);
-            //padding = GetPadding(styleContext);
+            
             styleContext.TryGetElementSize(this, availableSpace, out mySize);
 
             IRenderSize useAvailable;
@@ -198,7 +199,7 @@ namespace Das.Views.Panels
                                                                   out ValueSize mySize)
         {
             padding = Padding.GetValue(availableSpace);
-            //padding = GetPadding(visualContext);
+            
             visualContext.TryGetElementSize(this, availableSpace, out mySize);
 
 
@@ -225,15 +226,9 @@ namespace Das.Views.Panels
             }
 
             var valign = content.VerticalAlignment;
-            //if (valign == VerticalAlignments.Default)
-            //    valign = visualContext.GetStyleSetter<VerticalAlignments>(
-            //        StyleSetterType.VerticalAlignment, content);
-
+           
             var halign = content.HorizontalAlignment;
-            //if (halign == HorizontalAlignments.Default)
-            //    halign = visualContext.GetStyleSetter<HorizontalAlignments>(
-            //        StyleSetterType.HorizontalAlignment, content);
-
+            
             //up to here we are giving content all available minus our padding
             var xDiff = width - contentMeasured.Width;
             var yDiff = height - contentMeasured.Height;
@@ -267,11 +262,6 @@ namespace Das.Views.Panels
 
             return new RenderRectangle(left, top, width, height, availableSpace.Offset);
         }
-
-        //protected virtual Thickness? GetPadding(IStyleProvider styleContext)
-        //{
-        //    return styleContext.GetStyleSetter<Thickness>(StyleSetterType.Padding, this);
-        //}
 
         public override void AcceptChanges()
         {

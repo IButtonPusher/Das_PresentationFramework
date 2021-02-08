@@ -7,5 +7,7 @@ namespace Das.Views.Images
     public interface ISvgPathBuilder
     {
         Task<ISvgImage?> LoadAsync(Stream stream);
+
+        ISvgImage? Load(Stream stream);
     }
 }

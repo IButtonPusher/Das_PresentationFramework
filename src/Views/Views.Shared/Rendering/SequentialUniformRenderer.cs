@@ -21,10 +21,10 @@ namespace Das.Views.Rendering
             _lastOrientation = Orientations.Vertical;
         }
 
-        public override ValueSize Measure(IVisualElement container,
-                                          Orientations orientation, 
-                                          IRenderSize availableSpace,
-                                          IMeasureContext measureContext)
+        public override ValueSize Measure<TRenderSize>(IVisualElement container,
+                                                      Orientations orientation, 
+                                                      TRenderSize availableSpace,
+                                                      IMeasureContext measureContext)
         {
             lock (_measureLock)
             {

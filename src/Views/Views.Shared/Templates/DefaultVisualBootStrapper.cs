@@ -28,13 +28,16 @@ namespace Das.Views.Templates
 
             _defaultConstructorLock = new Object();
             _defaultConstructors = new Dictionary<Type, ConstructorInfo>();
+
+            
         }
 
-        public void ResolveTo<TViewModel, TView>()
-            where TView : IView
-        {
-            throw new NotImplementedException();
-        }
+        //public void ResolveTo<TViewModel, TView>()
+        //    where TView : IView
+        //{
+        //    _dependencyResolver.ResolveTo<TViewModel, TView>();
+        //    //throw new NotImplementedException();
+        //}
 
         public IDataTemplate? TryResolveFromContext(Object dataContext)
         {
@@ -42,6 +45,16 @@ namespace Das.Views.Templates
                 out var dataTemplate)
                 ? dataTemplate
                 : null;
+        }
+
+        public Object Resolve(Type type)
+        {
+            return _dependencyResolver.Resolve(type);
+        }
+
+        public T Resolve<T>()
+        {
+            return _dependencyResolver.Resolve<T>();
         }
 
         public void ApplyVisualStyling(IVisualElement visual)

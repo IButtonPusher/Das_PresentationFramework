@@ -41,8 +41,8 @@ namespace Das.Views.Charting.Pie
                 return _legendItems.Any(l => l.Contains(element));
         }
 
-        public override void Arrange(IRenderSize availableSpace, 
-                                     IRenderContext renderContext)
+        public override void Arrange<TRenderSize>(TRenderSize availableSpace, 
+                                                 IRenderContext renderContext)
         {
             var side = Math.Min(availableSpace.Width, availableSpace.Height);
             if (side.IsZero() || !(DataContext is {} binding))
@@ -150,8 +150,8 @@ namespace Das.Views.Charting.Pie
             return brush;
         }
 
-        public override ValueSize Measure(IRenderSize availableSpace, 
-                                          IMeasureContext measureContext)
+        public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace, 
+                                                      IMeasureContext measureContext)
         {
             Double widestLegend;
 

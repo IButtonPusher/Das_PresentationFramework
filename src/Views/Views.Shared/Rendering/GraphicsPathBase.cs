@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Images;
+using Das.Views.Transforms;
 
 namespace Das.Views.Rendering
 {
@@ -37,6 +38,8 @@ namespace Das.Views.Rendering
         public abstract void StartFigure();
 
         public abstract void CloseFigure();
+
+        public abstract void Transform(TransformationMatrix matrix);
 
         public abstract ValueSize Size { get; }
 

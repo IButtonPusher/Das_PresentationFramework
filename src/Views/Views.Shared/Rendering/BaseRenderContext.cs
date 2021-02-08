@@ -298,9 +298,15 @@ namespace Das.Views.Rendering
             /////////////////////////////////
             if (useRect2.Bottom > 0 || useRect2.Right > 0)
             {
+                //TODO:
                 // don't draw it if it's completely off screen
                 layoutVisual.Arrange(CurrentElementRect.Size, this);
                 visual.ArrangedBounds = useRect2;
+            }
+            else
+            {
+                layoutVisual.ArrangedBounds = useRect2;
+                layoutVisual.AcceptChanges(ChangeType.Arrange);
             }
             /////////////////////////////////
             /////////////////////////////////
@@ -484,6 +490,7 @@ namespace Das.Views.Rendering
             CurrentElementRect = rect;
         }
 
+
         private void SetElementRenderPosition(ValueRenderRectangle useRect,
                                               IVisualElement element)
         {
@@ -493,9 +500,21 @@ namespace Das.Views.Rendering
                 RenderPositions[element] = new ValueCube(useRect, _currentZ);
             else
             {
+                if (useRect.Left >= currentClip.Right ||
+                    useRect.Right <= currentClip.Left ||
+                    useRect.Bottom <= currentClip.Top ||
+                    useRect.Top >= currentClip.Bottom)
+                {
+                    RenderPositions[element] =ValueCube.Empty;
+                    return;
+                }
+
                 var leftOverlap = useRect.Left < currentClip.Left
                     ? useRect.Left - currentClip.Left
-                    : 0;
+                    : 0; 
+                //a negative value means we went outside clip so we have to reduce the width and the left
+
+
                 var topOverlap = useRect.Top < currentClip.Top
                     ? useRect.Top - currentClip.Top
                     : 0;
@@ -506,15 +525,61 @@ namespace Das.Views.Rendering
                     ? useRect.Bottom - currentClip.Bottom
                     : 0;
 
-                var left = useRect.Left + leftOverlap;
+                var left = useRect.Left - leftOverlap;
                 var top = useRect.Top + topOverlap;
-                var width = useRect.Width - (leftOverlap + rightOverlap);
+                var width = useRect.Width + (leftOverlap + rightOverlap);
                 var height = useRect.Height - (topOverlap + bottomOverlap);
+
+                if (leftOverlap != 0)
+                {}
+
+                if (rightOverlap != 0)
+                {}
+
+                if (topOverlap != 0)
+                {}
 
                 RenderPositions[element] = new ValueCube(left, top, width, height,
                     _currentZ);
             }
         }
+
+        // this is causing items outside of their clip to have exaggerated and incorrect values
+        //private void SetElementRenderPosition(ValueRenderRectangle useRect,
+        //                                      IVisualElement element)
+        //{
+        //    var currentClip = GetCurrentClip();
+
+        //    if (currentClip.IsEmpty)
+        //        RenderPositions[element] = new ValueCube(useRect, _currentZ);
+        //    else
+        //    {
+        //        var leftOverlap = useRect.Left < currentClip.Left
+        //            ? useRect.Left - currentClip.Left
+        //            : 0;
+        //        var topOverlap = useRect.Top < currentClip.Top
+        //            ? useRect.Top - currentClip.Top
+        //            : 0;
+        //        var rightOverlap = useRect.Right > currentClip.Right
+        //            ? useRect.Right - currentClip.Right
+        //            : 0;
+        //        var bottomOverlap = useRect.Bottom > currentClip.Bottom
+        //            ? useRect.Bottom - currentClip.Bottom
+        //            : 0;
+
+        //        if (topOverlap != 0)
+        //        {}
+
+        //        var left = useRect.Left + leftOverlap;
+        //        var top = useRect.Top + topOverlap;
+        //        var width = useRect.Width - (leftOverlap + rightOverlap);
+        //        var height = useRect.Height - (topOverlap + bottomOverlap);
+
+        //        RenderPositions[element] = new ValueCube(left, top, width, height,
+        //            _currentZ);
+        //    }
+        //}
+
         //private String _tabs = String.Empty;
         
 

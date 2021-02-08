@@ -37,8 +37,9 @@ namespace Das.Xamarin.Android.Controls
             _hasPendingContent = htmlPanel.Markup != null || htmlPanel.Uri != null;
         } 
 
-        public ValueSize Measure(IRenderSize availableSpace,
-                                 IMeasureContext measureContext)
+        public ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                             IMeasureContext measureContext)
+            where TRenderSize : IRenderSize
         {
             return availableSpace.ToValueSize();
         }
@@ -63,8 +64,9 @@ namespace Das.Xamarin.Android.Controls
 
         public Boolean IsRequiresArrange => _htmlPanel.IsRequiresArrange;
 
-        public void Arrange(IRenderSize availableSpace,
-                            IRenderContext renderContext)
+        public void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                        IRenderContext renderContext)
+            where TRenderSize : IRenderSize
         {
             if (_hasPendingContent)
             {

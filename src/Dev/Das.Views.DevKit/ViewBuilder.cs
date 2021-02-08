@@ -20,16 +20,16 @@ namespace Das.Views.DevKit
     {
         
         
-        void IVisualRenderer.Arrange(IRenderSize availableSpace,
-                                     IRenderContext renderContext)
+        void IVisualRenderer.Arrange<TRenderSize>(TRenderSize availableSpace,
+                                                  IRenderContext renderContext)
         {
             if (Content is {} content)
                 renderContext.DrawElement(content, new RenderRectangle(0, 0, 
                     availableSpace.Width, availableSpace.Height, availableSpace.Offset));
         }
 
-        ValueSize IVisualRenderer.Measure(IRenderSize availableSpace, 
-                                          IMeasureContext measureContext)
+        ValueSize IVisualRenderer.Measure<TRenderSize>(TRenderSize availableSpace, 
+                                                      IMeasureContext measureContext)
         {
             if (Content is {} content)
                 return measureContext.MeasureElement(content, availableSpace);

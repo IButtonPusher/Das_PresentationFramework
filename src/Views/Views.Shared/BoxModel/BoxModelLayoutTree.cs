@@ -96,6 +96,7 @@ namespace Das.Views.Layout
             where TRenderRectangle : IRenderRectangle
             where TThickness : IThickness
         {
+
             var left = rect.Left + margin.Left - CurrentElementRect.Offset.X;
             var top = rect.Top + margin.Top - CurrentElementRect.Offset.Y;
             var w = rect.Width - margin.Width;

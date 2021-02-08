@@ -1,6 +1,7 @@
 ﻿using System;
 using Das.Views.Core.Geometry;
 using Das.Views.Images;
+using Das.Views.Transforms;
 
 namespace Das.Views.Core.Drawing
 {
@@ -35,6 +36,8 @@ namespace Das.Views.Core.Drawing
         void StartFigure();
 
         void CloseFigure();
+
+        void Transform(TransformationMatrix matrix);
 
         ValueSize Size { get; }
 

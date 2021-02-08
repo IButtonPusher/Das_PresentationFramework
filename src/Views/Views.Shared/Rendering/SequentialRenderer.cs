@@ -24,15 +24,16 @@ namespace Das.Views.Rendering
             ElementsRendered = new Dictionary<IVisualElement, ValueRenderRectangle>();
         }
 
-        protected ValueThickness MeasureImpl(IVisualElement container,
-                                        IMeasureContext measureContext,
-                                        IRenderSize availableSpace,
-                                        Orientations orientation,
-                                        List<IVisualElement> currentlyRendering,
-                                        out Double maxWidth,
-                                        out Double maxHeight,
-                                        out Double totalWidth,
-                                        out Double totalHeight)
+        protected ValueThickness MeasureImpl<TRenderSize>(IVisualElement container,
+                                                         IMeasureContext measureContext,
+                                                         TRenderSize availableSpace,
+                                                         Orientations orientation,
+                                                         List<IVisualElement> currentlyRendering,
+                                                         out Double maxWidth,
+                                                         out Double maxHeight,
+                                                         out Double totalWidth,
+                                                         out Double totalHeight)
+            where TRenderSize : IRenderSize
         {
             var remainingSize = new RenderSize(availableSpace.Width,
                 availableSpace.Height, availableSpace.Offset);
@@ -105,10 +106,11 @@ namespace Das.Views.Rendering
             return margin;
         }
 
-        public virtual ValueSize Measure(IVisualElement container,
-                                         Orientations orientation,
-                                         IRenderSize availableSpace,
-                                         IMeasureContext measureContext)
+        public virtual ValueSize Measure<TRenderSize>(IVisualElement container,
+                                                     Orientations orientation,
+                                                     TRenderSize availableSpace,
+                                                     IMeasureContext measureContext)
+            where TRenderSize : IRenderSize
         {
             lock (_measureLock)
             {
@@ -128,9 +130,10 @@ namespace Das.Views.Rendering
 
        
 
-        public virtual void Arrange(Orientations orientation,
-                                    IRenderRectangle bounds, 
-                                    IRenderContext renderContext)
+        public virtual void Arrange<TRenderRect>(Orientations orientation,
+                                                TRenderRect bounds, 
+                                                IRenderContext renderContext)
+            where TRenderRect : IRenderRectangle
         {
             var offset = bounds.Location;
 

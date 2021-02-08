@@ -16,6 +16,7 @@ using Das.Xamarin.Android.Controls;
 using Das.Xamarin.Android.Images;
 using Das.Xamarin.Android.Input;
 
+
 namespace Das.Xamarin.Android
 {
     /// <summary>
@@ -64,12 +65,11 @@ namespace Das.Xamarin.Android
             //                                   renderKit.DisplayMetrics.HeightPixels + " dpi: " +
             //                                   renderKit.DisplayMetrics.ScaledDensity);
 
+
             _paintView = new AndroidPaintView(context, renderKit, view);
-            
             AddView(_paintView);
 
             var inputHandler = new BaseInputHandler(RenderKit.RenderContext);
-
             _inputContext = new AndroidInputContext(this, context, inputHandler, _viewState);
         }
 
@@ -230,8 +230,6 @@ namespace Das.Xamarin.Android
 
                 if (willInvalidate)
                 {
-                    //_paintView.Invalidate();
-                    
                     if (ChildCount > 1)
                         Invalidate();
                     //WriteLine("Invalidating paint view");

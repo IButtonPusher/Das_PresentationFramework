@@ -26,8 +26,8 @@ namespace Das.Views.Charting.Pie
 
         public IBrush? Brush { get; set; }
 
-        public override void Arrange(IRenderSize availableSpace,
-                                     IRenderContext renderContext)
+        public override void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                                 IRenderContext renderContext)
         {
             var h = availableSpace.Height * 0.7;
             var center = new ValuePoint2D(0, h);
@@ -38,8 +38,8 @@ namespace Das.Views.Charting.Pie
             renderContext.DrawElement(_label, rect);
         }
 
-        public override ValueSize Measure(IRenderSize availableSpace,
-                                          IMeasureContext measureContext)
+        public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                                      IMeasureContext measureContext)
         {
             if (!_isStyleSet) _isStyleSet = true;
 
