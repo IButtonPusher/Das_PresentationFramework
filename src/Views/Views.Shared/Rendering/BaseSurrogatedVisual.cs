@@ -1,16 +1,16 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Das.Views.Core.Geometry;
 
 namespace Das.Views.Rendering
 {
     public abstract class BaseSurrogatedVisual : VisualElement
     {
-        public override void OnParentChanging(IVisualElement? newParent)
+        protected BaseSurrogatedVisual(IVisualBootstrapper visualBootstrapper)
+            : base(visualBootstrapper)
+        //: base(NullVisualBootStrapper.Instance)
         {
-            base.OnParentChanging(newParent);
-            Parent = newParent;
         }
-
-        private IVisualElement? _parent;
 
         public IVisualElement? Parent
         {
@@ -18,10 +18,24 @@ namespace Das.Views.Rendering
             set => SetValue(ref _parent, value);
         }
 
-        protected BaseSurrogatedVisual(IVisualBootstrapper visualBootstrapper) 
-            : base(visualBootstrapper)
-            //: base(NullVisualBootStrapper.Instance)
+        public override void Arrange<TRenderSize>(TRenderSize availableSpace,
+                                                  IRenderContext renderContext)
         {
+            throw new NotSupportedException("A surrogate is required for this control");
         }
+
+        public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                                       IMeasureContext measureContext)
+        {
+            throw new NotSupportedException("A surrogate is required for this control");
+        }
+
+        public override void OnParentChanging(IVisualElement? newParent)
+        {
+            base.OnParentChanging(newParent);
+            Parent = newParent;
+        }
+
+        private IVisualElement? _parent;
     }
 }

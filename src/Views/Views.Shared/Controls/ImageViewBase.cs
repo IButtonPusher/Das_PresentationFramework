@@ -17,9 +17,7 @@ namespace Das.Views.Controls
         public override void Arrange<TRenderSize>(TRenderSize availableSpace,
                                                   IRenderContext renderContext)
         {
-            if (!TryGetImage(Convert.ToInt32(availableSpace.Width),
-                Convert.ToInt32(availableSpace.Height),
-                out var img))
+            if (!TryGetImage(availableSpace, out var img))
                 return;
 
             ValueRectangle rect;
@@ -44,9 +42,7 @@ namespace Das.Views.Controls
         public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
                                                        IMeasureContext measureContext)
         {
-            if (!TryGetImage(Convert.ToInt32(availableSpace.Width),
-                Convert.ToInt32(availableSpace.Height),
-                out var img))
+            if (!TryGetImage(availableSpace, out var img))
                 return ValueSize.Empty;
 
             var size = measureContext.MeasureImage(img);
@@ -72,8 +68,8 @@ namespace Das.Views.Controls
             return size;
         }
 
-        protected abstract Boolean TryGetImage(Int32 width,
-                                               Int32 height,
-                                               out IImage image);
+        protected abstract Boolean TryGetImage<TRenderSize>(TRenderSize size,
+                                                            out IImage image)
+            where TRenderSize : IRenderSize;
     }
 }

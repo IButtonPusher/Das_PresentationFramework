@@ -7,6 +7,7 @@ using Windows.Shared.Input;
 using Das.Extensions;
 using Das.Views.Core.Geometry;
 using Das.Views.Input;
+using Gdi.Shared;
 using DragEventArgs = Das.Views.Input.DragEventArgs;
 using MouseButtons = Das.Views.Input.MouseButtons;
 
@@ -15,11 +16,15 @@ namespace Das.Gdi
     public class InputContext : Win32InputContext, 
                                 IMessageFilter
     {
+        private readonly Control _window;
+
         public InputContext(IPositionOffseter offsetter,
                             IInputHandler inputHandler,
+                            Control window,
                             IntPtr windowHandle)
             : base(offsetter, inputHandler, windowHandle)
         {
+            _window = window;
             Application.AddMessageFilter(this);
         }
 
@@ -28,11 +33,22 @@ namespace Das.Gdi
         {
             ValuePoint2D pos;
 
+           
+
             switch ((MessageTypes)m.Msg)
             {
                 case MessageTypes.WM_LBUTTONDOWN:
 
-                    pos = GetPosition(m.LParam);
+                    pos = GetPosition(m);
+
+                    //if (m.HWnd != _window.Handle)
+                    //{
+                    //    var surrogate = _window.Controls.FindControl(m.HWnd);
+                    //    if (surrogate == null)
+                    //        return false;
+                    //}
+
+                    
                     _leftButtonWentDown = pos;
 
                     //System.Diagnostics.Debug.WriteLine("on l button down");
@@ -42,7 +58,7 @@ namespace Das.Gdi
                     break;
 
                 case MessageTypes.WM_RBUTTONDOWN:
-                    pos = GetPosition(m.LParam);
+                    pos = GetPosition(m);
                     _rightButtonWentDown = pos;
                     _inputHandler.OnMouseInput(
                         new MouseDownEventArgs(pos, MouseButtons.Right, this),
@@ -54,7 +70,7 @@ namespace Das.Gdi
                 case MessageTypes.WM_RBUTTONUP:
                     
                     _inputHandler.OnMouseInput(
-                        new MouseUpEventArgs(GetPosition(m.LParam),
+                        new MouseUpEventArgs(GetPosition(m),
                             _rightButtonWentDown,
                         MouseButtons.Right, this, true), 
                         InputAction.RightMouseButtonUp);
@@ -74,7 +90,7 @@ namespace Das.Gdi
 
                 case MessageTypes.WM_LBUTTONUP:
 
-                    pos = GetPosition(m.LParam);
+                    pos = GetPosition(m);
 
                     var dt = _lastDragTimestamp - _nextToLastDragTimestamp;
 
@@ -198,7 +214,22 @@ namespace Das.Gdi
         
         private Int64 _lastDragTimestamp;
         private Int64 _nextToLastDragTimestamp;
-       
+
+
+        private ValuePoint2D GetPosition(Message msg)
+        {
+            if (msg.HWnd == _window.Handle)
+                return GetPosition(msg.LParam);
+
+            var surrogate = _window.Controls.FindControl(msg.HWnd);
+            if (surrogate == null)
+                return ValuePoint2D.Empty;
+
+            var posInControl = GetPosition(msg.LParam);
+            return new ValuePoint2D(surrogate.Left + posInControl.X,
+                surrogate.Top + posInControl.Y);
+
+        }
 
         private static ValuePoint2D GetPosition(IntPtr lParam) => GetPosition((Int32) lParam);
         

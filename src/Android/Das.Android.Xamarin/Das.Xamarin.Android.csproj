@@ -54,6 +54,7 @@
     <Compile Include="AndroidExtensions.cs" />
     <Compile Include="Controls\AndroidSurrogateProvider.cs" />
     <Compile Include="Controls\HtmlSurrogate.cs" />
+    <Compile Include="Controls\HtmlSurrogate2.cs" />
     <Compile Include="DasMainActivity.cs" />
     <Compile Include="Images\AndroidBitmap.cs" />
     <Compile Include="AndroidMeasureKit.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Text\AndroidFontPaint.cs" />
     <Compile Include="Text\AndroidFontProvider.cs" />
     <Compile Include="Views\AndroidViewState.cs" />
+    <Compile Include="Views\SurrogateView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Das.Xamarin.Android.ruleset" />

@@ -70,6 +70,9 @@ namespace Das.Views.Rendering.Geometry
                 Height = renderSize.Height;
             }
 
+            if (ReferenceEquals(null, offset))
+                throw new ArgumentNullException(nameof(offset));
+
             Offset = offset;
 
             TopLeft = new ValuePoint2D(X, Y);
@@ -107,6 +110,10 @@ namespace Das.Views.Rendering.Geometry
             Y = y;
             Width = width;
             Height = height;
+
+            if (ReferenceEquals(null, offset))
+                throw new ArgumentNullException(nameof(offset));
+
             Offset = offset;
 
             TopLeft = new ValuePoint2D(X, Y);
@@ -139,14 +146,7 @@ namespace Das.Views.Rendering.Geometry
 
         public readonly ValuePoint2D BottomRight;
 
-        //public Point2D BottomLeft => new Point2D(Left, Top + Height);
-
-        //public Point2D BottomRight => new Point2D(Left + Width, Top + Height);
-
-        //public Point2D TopLeft => new Point2D(Left, Top);
-
-        //public Point2D TopRight => new Point2D(Left + Width, Top);
-
+     
         public Double X { get; }
 
         public Double Y { get; }
@@ -167,60 +167,6 @@ namespace Das.Views.Rendering.Geometry
 
         public IPoint2D Offset { get; }
 
-        public IRenderSize MinusVertical(ISize subtract)
-        {
-            return GeometryHelper.MinusVertical(Size, subtract);
-        }
-
-        public ValueSize ToValueSize()
-        {
-            return GeometryHelper.ToValueSize(Size);
-        }
-
-        //ISize ISize.Divide(Double pct)
-        //{
-        //    return new ValueSize(Width * pct, Height * pct);
-        //}
-
-        //ISize ISize.PlusVertical(ISize adding)
-        //{
-        //    return PlusVertical(adding);
-        //}
-
-        //ISize ISize.Reduce(Thickness padding)
-        //{
-        //    return GeometryHelper.Reduce(this, padding);
-        //}
-
-        public ValueRenderRectangle ToFullRectangle()
-        {
-            return this;
-        }
-
-        public IRenderSize PlusVertical(ISize adding)
-        {
-            return GeometryHelper.PlusRenderVertical(Size, adding);
-        }
-
-        //IRenderSize IRenderSize.DeepCopy()
-        //{
-        //    return new RenderSize(Width, Height, Offset);
-        //}
-
-        //public IRenderSize Reduce(Thickness padding)
-        //{
-        //    return GeometryHelper.Reduce(Size, padding);
-        //}
-
-        //ISize ISize.Minus(ISize subtract)
-        //{
-        //    return GeometryHelper.Minus(this, subtract);
-        //}
-
-        public IRenderSize Minus(ISize subtract)
-        {
-            return GeometryHelper.Minus(Size, subtract);
-        }
 
         public ValueRenderRectangle Move(IPoint2D point)
         {
@@ -258,26 +204,6 @@ namespace Das.Views.Rendering.Geometry
         void IRectangle.Union(IRectangle rect)
         {
             throw new NotSupportedException();
-        }
-
-        //ISize IDeepCopyable<ISize>.DeepCopy()
-        //{
-        //    return new ValueSize(Width, Height);
-        //}
-
-        //Boolean IEquatable<IRenderSize>.Equals(IRenderSize other)
-        //{
-        //    return false;
-        //}
-
-        public Double CenterY(ISize item)
-        {
-            return GeometryHelper.CenterY(this, item);
-        }
-
-        public Double CenterX(ISize item)
-        {
-            return GeometryHelper.CenterX(this, item);
         }
 
         public override String ToString()
@@ -327,10 +253,7 @@ namespace Das.Views.Rendering.Geometry
 
             if (rect.IsEmpty)
                 return rect;
-
-            //if (rect == null)
-            //    return null!;
-
+          
             return new ValueRenderRectangle(rect.X * val,
                 rect.Y * val,
                 rect.Size.Width * val,

@@ -162,8 +162,9 @@ namespace Das.Views.Core.Geometry
 
             return left.Width.AreEqualEnough(right.Width) &&
                    left.Height.AreEqualEnough(right.Height) &&
+                   
                    left.Left.AreEqualEnough(right.Left) &&
-                   left.Width.AreEqualEnough(right.Width);
+                   left.Top.AreEqualEnough(right.Top);
         }
 
         public static Boolean ArePoints2DEqual<TPoint>(TPoint left,

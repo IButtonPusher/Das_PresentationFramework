@@ -25,6 +25,9 @@ namespace Das.Xamarin.Android.Controls
                 if (!(element is HtmlPanel pnl))
                     throw new InvalidOperationException();
 
+                //var webView = new WebView(_viewGroup.Context);
+                //var surrogate = new HtmlSurrogate2(_viewGroup.Context, pnl, webView, _uiProvider, _viewGroup);
+                
                 var surrogate = new HtmlSurrogate(pnl, _viewGroup.Context, _viewGroup, _uiProvider);
 
                 _viewGroup.AddView(surrogate);

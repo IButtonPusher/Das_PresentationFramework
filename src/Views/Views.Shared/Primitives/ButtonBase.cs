@@ -122,6 +122,8 @@ namespace Das.Views.Controls
                 cmd.ExecuteAsync(boundValue).ConfigureAwait(false);
             else
                 cmd.ExecuteAsync().ConfigureAwait(false);
+
+            IsActive = false;
         }
 
         private const InputAction I_HANDLE_INPUT = InputAction.LeftMouseButtonDown |

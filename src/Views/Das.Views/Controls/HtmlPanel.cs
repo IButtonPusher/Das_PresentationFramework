@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Das.Views.Core.Geometry;
 using Das.Views.Rendering;
 
 namespace Das.Views.Controls
@@ -39,18 +38,6 @@ namespace Das.Views.Controls
             }
 
             Uri = value;
-        }
-
-        public override void Arrange<TRenderSize>(TRenderSize availableSpace,
-                                                 IRenderContext renderContext)
-        {
-            throw new NotSupportedException("A surrogate control is required for this control");
-        }
-
-        public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
-                                                      IMeasureContext measureContext)
-        {
-            throw new NotSupportedException("A surrogate control is required for this control");
         }
 
         private String? _markup;

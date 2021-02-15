@@ -71,6 +71,8 @@ namespace Das.Xamarin.Android
 
             var inputHandler = new BaseInputHandler(RenderKit.RenderContext);
             _inputContext = new AndroidInputContext(this, context, inputHandler, _viewState);
+
+            renderKit.Container.ResolveTo(this);
         }
 
         public sealed override void AddView(View? child)
@@ -134,11 +136,14 @@ namespace Das.Xamarin.Android
                         right = Convert.ToInt32(wants.Right * ZoomLevel);
                         bottom = Convert.ToInt32(wants.Bottom * ZoomLevel);
                     }
+                    else 
+                        continue;
+
+                    //WriteLine("[OKYN] Calling layout on surrogate " + current + " ltrb: " + left + "," + top + "," + right +
+                    //          "," + bottom);
                 }
 
 
-                //WriteLine("Calling layout on " + current + " ltrb: " + left + "," + top + "," + right +
-                //          "," + bottom);
                 current.Layout(left, top, right, bottom);
             }
         }

@@ -33,7 +33,16 @@ namespace Das.Views
             return _measuredSize;
         }
 
-        public virtual ValueRenderRectangle ArrangedBounds { get; set; }
+
+        private ValueRenderRectangle _arrangedBounds;
+
+        public virtual ValueRenderRectangle ArrangedBounds
+        {
+            get => _arrangedBounds;
+            set => SetValue(ref _arrangedBounds, value);
+        }
+
+        //public virtual ValueRenderRectangle ArrangedBounds { get; set; }
 
         public virtual void Arrange<TRenderSize>(TRenderSize availableSpace,
                                                  IRenderContext renderContext)

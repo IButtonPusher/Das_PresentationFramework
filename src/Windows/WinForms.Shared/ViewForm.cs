@@ -35,7 +35,10 @@ namespace Das.Views.Winforms
 
         public void Invoke(Action action)
         {
-            base.Invoke(action);
+            if (!InvokeRequired)
+                action();
+            else
+                base.Invoke(action);
         }
 
         public void Invoke(Action action,

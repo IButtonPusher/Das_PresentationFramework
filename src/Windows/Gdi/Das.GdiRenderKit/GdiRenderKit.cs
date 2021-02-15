@@ -197,10 +197,14 @@ namespace Das.Gdi.Kits
             _imageProvider.SetVisualHost(window);
 
             if (window is Control ctrl && ctrl.Controls.Count == 1)
+            {
                 _windowControl = ctrl.Controls[0];
+                Container.ResolveTo(_windowControl);
+            }
             else throw new InvalidOperationException();
 
-            _inputContext = new InputContext(window, new BaseInputHandler(RenderContext), ctrl.Handle);
+            _inputContext = new InputContext(window, new BaseInputHandler(RenderContext), _windowControl, 
+                ctrl.Handle);
         }
 
         protected static readonly DasSerializer Serializer = new();

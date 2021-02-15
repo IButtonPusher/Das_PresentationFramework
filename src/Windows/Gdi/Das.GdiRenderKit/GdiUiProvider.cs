@@ -42,6 +42,14 @@ namespace Das.Views.Gdi
                 action();
         }
 
+        public override void BeginInvoke(Action action)
+        {
+            if (_visualHost is { } host)
+                host.BeginInvoke(action);
+            else
+                action();
+        }
+
         public override T Invoke<T>(Func<T> action)
         {
             if (_visualHost is {} host)

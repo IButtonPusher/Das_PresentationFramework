@@ -136,10 +136,10 @@ namespace Das.Views.Core.Geometry
             return GeometryHelper.IsRectangleContains(this, x, y);
         }
 
-        public ISize PlusVertical(ISize adding)
-        {
-            return GeometryHelper.PlusVertical(this, adding);
-        }
+        //public ISize PlusVertical(ISize adding)
+        //{
+        //    return GeometryHelper.PlusVertical(this, adding);
+        //}
 
         public Boolean Equals(ISize other)
         {
@@ -161,15 +161,15 @@ namespace Das.Views.Core.Geometry
             return $"x: {Left:0.0}, y: {Top:0.0} w: {Width:0.0} h: {Height:0.0}";
         }
 
-        public Double CenterY(ISize item)
-        {
-            return GeometryHelper.CenterY(this, item);
-        }
+        //public Double CenterY(ISize item)
+        //{
+        //    return GeometryHelper.CenterY(this, item);
+        //}
 
-        public Double CenterX(ISize item)
-        {
-            return GeometryHelper.CenterX(this, item);
-        }
+        //public Double CenterX(ISize item)
+        //{
+        //    return GeometryHelper.CenterX(this, item);
+        //}
 
         public static ValueRectangle Empty = new ValueRectangle(0, 0, 0, 0);
         private readonly Int32 _hash;

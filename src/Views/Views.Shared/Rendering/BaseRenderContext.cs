@@ -530,15 +530,6 @@ namespace Das.Views.Rendering
                 var width = useRect.Width + (leftOverlap + rightOverlap);
                 var height = useRect.Height - (topOverlap + bottomOverlap);
 
-                if (leftOverlap != 0)
-                {}
-
-                if (rightOverlap != 0)
-                {}
-
-                if (topOverlap != 0)
-                {}
-
                 RenderPositions[element] = new ValueCube(left, top, width, height,
                     _currentZ);
             }
