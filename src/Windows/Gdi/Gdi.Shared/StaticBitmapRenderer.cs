@@ -18,7 +18,7 @@ namespace Das.Gdi
                                        ValueRenderSize availableSize,
                                        IColorPalette colorPalette)
         {
-            var viewState = new StaticViewState(dpi, colorPalette);
+            var viewState = new StaticViewState(dpi, colorPalette, 1.0F);
 
 
             var desired = renderKit.MeasureContext.MeasureMainView(view, availableSize,

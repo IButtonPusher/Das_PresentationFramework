@@ -29,7 +29,8 @@ namespace Das.Xamarin.Android
 
         protected override void OnDraw(Canvas? canvas)
         {
-            //System.Diagnostics.Debug.WriteLine("[OKYN] AndroidPaintView->OnDraw( " + canvas + ")");
+            //System.Diagnostics.Debug.WriteLine("BEGIN AndroidPaintView->OnDraw.  view needs arrange: " + 
+            //                                   _view.IsRequiresArrange);
 
             if (canvas == null)
                 return;
@@ -37,6 +38,9 @@ namespace Das.Xamarin.Android
             _renderContext.Canvas = canvas;
             _renderContext.DrawMainElement(_view,
                 _targetRect, _viewState);
+
+            //System.Diagnostics.Debug.WriteLine("END AndroidPaintView->OnDraw.  view needs arrange: " + 
+            //                                   _view.IsRequiresArrange);
         }
 
         protected override void OnMeasure(Int32 widthMeasureSpec,

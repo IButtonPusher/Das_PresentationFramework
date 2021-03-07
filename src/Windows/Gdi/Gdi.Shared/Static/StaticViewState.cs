@@ -8,10 +8,12 @@ namespace Gdi.Shared.Static
     public readonly struct StaticViewState : IViewState
     {
         public StaticViewState(Double zoomLevel,
-                               IColorPalette colorPalette)
+                               IColorPalette colorPalette,
+                               Single density)
         {
             ZoomLevel = zoomLevel;
             ColorPalette = colorPalette;
+            Density = density;
         }
 
 
@@ -19,5 +21,6 @@ namespace Gdi.Shared.Static
 
         public Double ZoomLevel { get; }
 
+        public Single Density { get; }
     }
 }

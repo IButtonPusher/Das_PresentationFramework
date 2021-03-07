@@ -61,6 +61,8 @@ namespace WinForms.Shared
             }
         }
 
+        public Single Density => 1.0f; //todo:
+
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);

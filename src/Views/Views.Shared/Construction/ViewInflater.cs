@@ -106,8 +106,8 @@ namespace Das.Views.Construction
                     else if (childObjRes.ChildType == ChildNodeType.PropertyValue &&
                              childObjRes.VisualProperty is { } prop)
                     {
-                        //Object oContentContainer = contentContainer;
-                        prop.SetPropertyValue(ref contentContainer, childObjRes.Child);
+                        Object oContentContainer = contentContainer;
+                        prop.SetPropertyValue(ref oContentContainer, childObjRes.Child);
                         //prop.SetValue(contentContainer, childObjRes.Child, null);
                     }
 
@@ -316,8 +316,8 @@ namespace Das.Views.Construction
                     childObjRes.VisualProperty is { } prop)
                 {
                     // visual is a property value, not a child visual
-                    //Object oVisual = visual;
-                    prop.SetPropertyValue(ref visual, childObjRes.Child);
+                    Object oVisual = visual;
+                    prop.SetPropertyValue(ref oVisual, childObjRes.Child);
                     //prop.SetValue(visual, childObjRes.Child, null);
                 }
                 else if (childObjRes.Child is IVisualElement childVisual)

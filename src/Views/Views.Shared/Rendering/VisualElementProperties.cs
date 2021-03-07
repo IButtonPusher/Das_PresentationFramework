@@ -24,7 +24,13 @@ namespace Das.Views
 
         public virtual Boolean IsRequiresArrange
         {
-            get => _isRequiresArrange;
+            get
+            {
+                if (_isRequiresArrange)
+                {}
+
+                return _isRequiresArrange;
+            }
             protected set => SetValue(ref _isRequiresArrange, value);
         }
         

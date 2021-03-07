@@ -40,6 +40,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\ITextVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IPropertyValueAssignment{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleValueDeclaration{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transitions\IManualTransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transitions\ITransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IAppliedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IAppliedStyleRule.cs" />

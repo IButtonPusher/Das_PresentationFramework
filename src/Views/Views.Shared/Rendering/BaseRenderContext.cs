@@ -13,7 +13,6 @@ using Das.Views.Core.Writing;
 using Das.Views.Images;
 using Das.Views.Input;
 using Das.Views.Layout;
-using Das.Views.Panels;
 using Das.Views.Rendering.Geometry;
 
 namespace Das.Views.Rendering
@@ -57,49 +56,49 @@ namespace Das.Views.Rendering
         }
 
 
-        public IEnumerable<IRenderedVisual> GetElementsAt<TPoint>(TPoint point2D)
-            where TPoint : IPoint2D
-        {
-            lock (_renderLock)
-            {
-                foreach (var kvp in RenderPositions.Where(p => p.Value.Contains(point2D))
-                                                   .OrderByDescending(p => p.Value.Depth))
-                {
-                    if (kvp.Key is IContentContainer container && container.Content != null)
-                        yield return new RenderedVisual(container.Content, kvp.Value);
+        //public IEnumerable<IRenderedVisual> GetElementsAt<TPoint>(TPoint point2D)
+        //    where TPoint : IPoint2D
+        //{
+        //    lock (_renderLock)
+        //    {
+        //        foreach (var kvp in RenderPositions.Where(p => p.Value.Contains(point2D))
+        //                                           .OrderByDescending(p => p.Value.Depth))
+        //        {
+        //            if (kvp.Key is IContentContainer container && container.Content != null)
+        //                yield return new RenderedVisual(container.Content, kvp.Value);
 
-                    yield return new RenderedVisual(kvp.Key, kvp.Value);
-                }
-            }
-        }
+        //            yield return new RenderedVisual(kvp.Key, kvp.Value);
+        //        }
+        //    }
+        //}
 
-        public IEnumerable<TVisual> GetVisualsForInput<TVisual, TPoint>(TPoint point2D,
-                                                                        InputAction inputAction)
-            where TVisual : class
-            where TPoint : IPoint2D
-        {
-            foreach (var visual in GetElementsAt(point2D))
-            {
-                if (!(visual.Element is IHandleInput interactive) ||
-                    !(visual.Element is TVisual ofType))
-                    continue;
+        //public IEnumerable<TVisual> GetVisualsForInput<TVisual, TPoint>(TPoint point2D,
+        //                                                                InputAction inputAction)
+        //    where TVisual : class
+        //    where TPoint : IPoint2D
+        //{
+        //    foreach (var visual in GetElementsAt(point2D))
+        //    {
+        //        if (!(visual.Element is IHandleInput interactive) ||
+        //            !(visual.Element is TVisual ofType))
+        //            continue;
 
-                if (interactive.HandlesActions.HasFlag(inputAction))
-                    yield return ofType;
-            }
-        }
+        //        if (interactive.HandlesActions.HasFlag(inputAction))
+        //            yield return ofType;
+        //    }
+        //}
 
-        public IEnumerable<IHandleInput<T>> GetVisualsForMouseInput<T, TPoint>(TPoint point2D,
-                                                                               InputAction inputAction)
-            where T : IInputEventArgs
-            where TPoint : IPoint2D
-        {
-            foreach (var visual in GetElementsAt(point2D))
-                if (visual.Element is IHandleInput interactive &&
-                    (interactive.HandlesActions & inputAction) == inputAction &&
-                    interactive is IHandleInput<T> handler)
-                    yield return handler;
-        }
+        //public IEnumerable<IHandleInput<T>> GetVisualsForMouseInput<T, TPoint>(TPoint point2D,
+        //                                                                       InputAction inputAction)
+        //    where T : IInputEventArgs
+        //    where TPoint : IPoint2D
+        //{
+        //    foreach (var visual in GetElementsAt(point2D))
+        //        if (visual.Element is IHandleInput interactive &&
+        //            (interactive.HandlesActions & inputAction) == inputAction &&
+        //            interactive is IHandleInput<T> handler)
+        //            yield return handler;
+        //}
 
         public IEnumerable<IRenderedVisual<IHandleInput<T>>> GetRenderedVisualsForMouseInput<T, TPoint>(
             TPoint point2D,
@@ -491,49 +490,112 @@ namespace Das.Views.Rendering
         }
 
 
-        private void SetElementRenderPosition(ValueRenderRectangle useRect,
-                                              IVisualElement element)
+        protected virtual void SetElementRenderPosition(ValueRenderRectangle useRect,
+                                                        IVisualElement element)
         {
+            //if (element is BaseSurrogatedVisual surrogate)
+            //{
+            //    SetSurrogatePosition(useRect, surrogate);
+            //    return;
+            //}
+
             var currentClip = GetCurrentClip();
 
             if (currentClip.IsEmpty)
-                RenderPositions[element] = new ValueCube(useRect, _currentZ);
-            else
             {
-                if (useRect.Left >= currentClip.Right ||
-                    useRect.Right <= currentClip.Left ||
-                    useRect.Bottom <= currentClip.Top ||
-                    useRect.Top >= currentClip.Bottom)
-                {
-                    RenderPositions[element] =ValueCube.Empty;
-                    return;
-                }
-
-                var leftOverlap = useRect.Left < currentClip.Left
-                    ? useRect.Left - currentClip.Left
-                    : 0; 
-                //a negative value means we went outside clip so we have to reduce the width and the left
-
-
-                var topOverlap = useRect.Top < currentClip.Top
-                    ? useRect.Top - currentClip.Top
-                    : 0;
-                var rightOverlap = useRect.Right > currentClip.Right
-                    ? useRect.Right - currentClip.Right
-                    : 0;
-                var bottomOverlap = useRect.Bottom > currentClip.Bottom
-                    ? useRect.Bottom - currentClip.Bottom
-                    : 0;
-
-                var left = useRect.Left - leftOverlap;
-                var top = useRect.Top + topOverlap;
-                var width = useRect.Width + (leftOverlap + rightOverlap);
-                var height = useRect.Height - (topOverlap + bottomOverlap);
-
-                RenderPositions[element] = new ValueCube(left, top, width, height,
-                    _currentZ);
+                RenderPositions[element] = new ValueCube(useRect, _currentZ);
+                return;
             }
+
+            if (useRect.Left >= currentClip.Right ||
+                useRect.Right <= currentClip.Left ||
+                useRect.Bottom <= currentClip.Top ||
+                useRect.Top >= currentClip.Bottom)
+            {
+                RenderPositions[element] = ValueCube.Empty;
+                return;
+            }
+
+            var leftOverlap = useRect.Left < currentClip.Left
+                ? useRect.Left - currentClip.Left
+                : 0;
+            //a negative value means we went outside clip so we have to reduce the width and the left
+
+
+            var topOverlap = useRect.Top < currentClip.Top
+                ? useRect.Top - currentClip.Top
+                : 0;
+            var rightOverlap = useRect.Right > currentClip.Right
+                ? useRect.Right - currentClip.Right
+                : 0;
+            var bottomOverlap = useRect.Bottom > currentClip.Bottom
+                ? useRect.Bottom - currentClip.Bottom
+                : 0;
+
+            var left = useRect.Left - leftOverlap;
+            var top = useRect.Top + topOverlap;
+            var width = useRect.Width + (leftOverlap + rightOverlap);
+            var height = useRect.Height - (topOverlap + bottomOverlap);
+
+            RenderPositions[element] = new ValueCube(left, top, width, height,
+                _currentZ);
         }
+
+        //protected virtual void SetSurrogatePosition(ValueRenderRectangle useRect,
+        //                                            BaseSurrogatedVisual element)
+        //{
+        //    var currentClip = GetCurrentClip();
+
+        //    if (currentClip.IsEmpty)
+        //    {
+
+        //        System.Diagnostics.Debug.WriteLine("[OKYN] setting surrogate based on no clip to: " +
+        //                                           useRect);
+        //        RenderPositions[element] = new ValueCube(useRect, _currentZ);
+        //        return;
+        //    }
+
+        //    if (useRect.Left >= currentClip.Right ||
+        //        useRect.Right <= currentClip.Left ||
+        //        useRect.Bottom <= currentClip.Top ||
+        //        useRect.Top >= currentClip.Bottom)
+        //    {
+
+        //        System.Diagnostics.Debug.WriteLine("[OKYN] setting surrogate to empty as it's " +
+        //                                           "completely outside clip");
+        //        RenderPositions[element] = ValueCube.Empty;
+        //        return;
+        //    }
+
+        //    //a negative value means we went outside clip so we have to reduce the width and the left
+        //    var leftOverlap = useRect.Left < currentClip.Left
+        //        ? useRect.Left - currentClip.Left
+        //        : 0;
+
+        //    var topOverlap = useRect.Top < currentClip.Top
+        //        ? useRect.Top - currentClip.Top
+        //        : 0;
+        //    var rightOverlap = useRect.Right > currentClip.Right
+        //        ? useRect.Right - currentClip.Right
+        //        : 0;
+        //    var bottomOverlap = useRect.Bottom > currentClip.Bottom
+        //        ? useRect.Bottom - currentClip.Bottom
+        //        : 0;
+
+        //    var left = useRect.Left - leftOverlap;
+        //    var top = useRect.Top + topOverlap;
+        //    var width = useRect.Width + (leftOverlap + rightOverlap);
+        //    var height = useRect.Height - (topOverlap + bottomOverlap);
+
+        //    RenderPositions[element] = new ValueCube(left, top, width, height,
+        //        _currentZ);
+
+
+        //    System.Diagnostics.Debug.WriteLine("[OKYN] setting surrogate to " +
+        //                                       RenderPositions[element] +
+        //                                       " due to active clip\r\n\t" +
+        //                                       "useRect: " + useRect + " clip: " + currentClip);
+        //}
 
         // this is causing items outside of their clip to have exaggerated and incorrect values
         //private void SetElementRenderPosition(ValueRenderRectangle useRect,

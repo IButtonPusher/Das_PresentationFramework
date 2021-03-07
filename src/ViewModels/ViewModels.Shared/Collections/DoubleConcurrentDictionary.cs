@@ -1,4 +1,6 @@
-﻿using System;
+﻿//moved to serializer...
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,7 +20,7 @@ namespace Das.ViewModels.Collections
         {
             get => _backingDictionary[k1][k2];
             set => AddOrUpdate(k1, k2, value);
-            
+
             //if (!_backingDictionary.TryGetValue(k1, out var d2))
             //{
             //    d2 = new ConcurrentDictionary<TKey2, TValue>();
@@ -34,8 +36,8 @@ namespace Das.ViewModels.Collections
                 var letsUse = new List<Tuple<TKey1, TKey2>>();
 
                 foreach (var kvp in _backingDictionary)
-                foreach (var k2 in kvp.Value)
-                    letsUse.Add(new Tuple<TKey1, TKey2>(kvp.Key, k2.Key));
+                    foreach (var k2 in kvp.Value)
+                        letsUse.Add(new Tuple<TKey1, TKey2>(kvp.Key, k2.Key));
 
                 return letsUse;
             }
@@ -49,7 +51,7 @@ namespace Das.ViewModels.Collections
                 updating[kvp] = kvp;
         }
 
-        private static ConcurrentDictionary<TKey2, TValue> BuildNewSecondary(TKey1 k1) 
+        private static ConcurrentDictionary<TKey2, TValue> BuildNewSecondary(TKey1 k1)
             => new ConcurrentDictionary<TKey2, TValue>();
 
         public void Clear()
@@ -62,7 +64,7 @@ namespace Das.ViewModels.Collections
             return _backingDictionary.TryGetValue(k1, out _);
         }
 
-        public async Task<TValue> GetOrAddAsync(TKey1 k1, 
+        public async Task<TValue> GetOrAddAsync(TKey1 k1,
                                                 TKey2 k2,
                                                 Func<TKey1, TKey2, Task<TValue>> bldr)
         {
@@ -77,7 +79,7 @@ namespace Das.ViewModels.Collections
             return gotIt;
         }
 
-        public IEnumerable<TValue> GetOrAddValues<TKeyValue>(TKey1 k1, 
+        public IEnumerable<TValue> GetOrAddValues<TKeyValue>(TKey1 k1,
                                                              Func<TKey2, Boolean> predicate,
                                                              Func<TKey1, IEnumerable<TKeyValue>> keyVals)
             where TKeyValue : TKey2, TValue
@@ -97,8 +99,8 @@ namespace Das.ViewModels.Collections
         }
 
 
-        public TValue GetOrAdd(TKey1 k1, 
-                               TKey2 k2, 
+        public TValue GetOrAdd(TKey1 k1,
+                               TKey2 k2,
                                Func<TKey1, TKey2, TValue> factory)
         {
             var innerD = _backingDictionary.GetOrAdd(k1, _ => new ConcurrentDictionary<TKey2, TValue>());
@@ -160,7 +162,7 @@ namespace Das.ViewModels.Collections
                                  TKey2 k2,
                                  out TValue value)
         {
-            if (!_backingDictionary.TryGetValue(k1, out var dic) || 
+            if (!_backingDictionary.TryGetValue(k1, out var dic) ||
                 !dic.TryRemove(k2, out value))
                 goto fail;
 
@@ -188,7 +190,7 @@ namespace Das.ViewModels.Collections
                               TKey2 k2,
                               TValue value)
         {
-            return _backingDictionary.TryAdd(k1, new ConcurrentDictionary<TKey2, TValue>()) 
+            return _backingDictionary.TryAdd(k1, new ConcurrentDictionary<TKey2, TValue>())
                    | _backingDictionary[k1].TryAdd(k2, value);
         }
 
@@ -198,8 +200,8 @@ namespace Das.ViewModels.Collections
             return _backingDictionary.TryGetValue(k1, out inner);
         }
 
-        public Boolean TryGetValue(TKey1 k1, 
-                                   TKey2 k2, 
+        public Boolean TryGetValue(TKey1 k1,
+                                   TKey2 k2,
                                    out TValue value)
         {
             if (_backingDictionary.TryGetValue(k1, out var d2) &&

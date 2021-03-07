@@ -20,6 +20,7 @@ namespace Das.Views
         protected VisualElement(IVisualBootstrapper visualBootstrapper)
         {
             _visualBootstrapper = visualBootstrapper;
+            _arrangedBounds = ValueRenderRectangle.Empty;
             
             _measuredSize = ValueSize.Empty;
             Id = Interlocked.Increment(ref _currentId);
@@ -41,8 +42,6 @@ namespace Das.Views
             get => _arrangedBounds;
             set => SetValue(ref _arrangedBounds, value);
         }
-
-        //public virtual ValueRenderRectangle ArrangedBounds { get; set; }
 
         public virtual void Arrange<TRenderSize>(TRenderSize availableSpace,
                                                  IRenderContext renderContext)

@@ -2,10 +2,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Styles.Transitions;
+using Das.Views.Transitions;
 
 namespace Das.Views.Input
 {
-    public class FlingTransition : BaseTransition
+    public class FlingTransition : BaseTransition,
+                                   IManualTransition
     {
         public FlingTransition(TimeSpan duration,
                                Double flingX,

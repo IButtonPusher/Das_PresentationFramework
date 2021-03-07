@@ -23,18 +23,19 @@ namespace Das.Xamarin.Android
     public abstract class SurrogateView : FrameLayout, //ViewGroup,
                                           IVisualSurrogate
     {
-        public SurrogateView(Context? context,
+        protected SurrogateView(Context? context,
                              IVisualElement replacingVisual,
                              View nativeView,
                              ViewGroup viewGroup) : base(context)
         {
             _viewGroup = viewGroup;
+            //_gestureDetector = gestureDetector;
+            //_inputContext = inputContext;
             ReplacingVisual = replacingVisual;
             //replacingVisual.PropertyChanged += OnControlPropertyChanged;
-            NativeView = nativeView;
+            //NativeView = nativeView;
             AddView(nativeView);
         }
-
         void IMeasureAndArrange.InvalidateMeasure()
         {
             ReplacingVisual.InvalidateMeasure();
@@ -224,42 +225,60 @@ namespace Das.Xamarin.Android
 
         public IVisualElement ReplacingVisual { get; }
 
-        public View NativeView { get; }
-        //{
-        //    get => _nativeView;
-        //    //set => SetNativeView(value);
-        //}
+       
 
         public sealed override void AddView(View? child)
         {
             base.AddView(child);
         }
 
-        public override Boolean OnInterceptTouchEvent(MotionEvent? ev)
-        {
-            System.Diagnostics.Debug.WriteLine("intercept touch: " + ev);
-            return base.OnInterceptTouchEvent(ev);
-        }
 
-        //private void SetNativeView(View? value)
+
+        //public override Boolean OnTouchEvent(MotionEvent? ev)
         //{
-        //    if (_nativeView != null)
-        //        RemoveView(_nativeView);
+        //    var res = base.OnTouchEvent(ev);
 
-        //    _nativeView = value;
-        //    if (value != null)
-        //        AddView(value);
+        //    System.Diagnostics.Debug.WriteLine("[OKYN] intercept touch? me.top=" + Top + " : " + ev);
+
+        //    switch (ev!.Action)
+        //    {
+        //        case MotionEventActions.Move:
+        //            _gestureDetector.OnTouchEvent(ev);
+        //            break;
+        //        case MotionEventActions.Down:
+        //        case MotionEventActions.Up:
+        //            _gestureDetector.OnTouchEvent(ev);
+        //            break;
+
+        //    }
+
+        //    return res;
         //}
 
-        //protected override void OnLayout(Boolean changed,
-        //                                 Int32 l,
-        //                                 Int32 t,
-        //                                 Int32 r,
-        //                                 Int32 b)
+        //public override Boolean OnInterceptTouchEvent(MotionEvent? ev)
         //{
-        //    NativeView.Layout(l, t, r, b);
+        //    //var res = base.OnInterceptTouchEvent(ev);
+
+        //    System.Diagnostics.Debug.WriteLine("[OKYN] intercept touch? me.top=" + Top + " : " + ev);
+
+        //    switch (ev!.Action)
+        //    {
+        //        case MotionEventActions.Move:
+        //            _gestureDetector.OnTouchEvent(ev);
+        //            break;
+                
+        //        case MotionEventActions.Down:
+        //        case MotionEventActions.Up:
+        //            _gestureDetector.OnTouchEvent(ev);
+        //            break;
+
+        //    }
+
+        //    return false;
         //}
 
         protected readonly ViewGroup _viewGroup;
+        //private readonly GestureDetectorCompat _gestureDetector;
+        
     }
 }

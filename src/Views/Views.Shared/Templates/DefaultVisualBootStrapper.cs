@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Das.Container;
 using Das.Serializer;
+using Das.Serializer.Properties;
 using Das.Views.Colors;
 using Das.Views.Core.Drawing;
 using Das.Views.DataBinding;
@@ -143,6 +144,11 @@ namespace Das.Views.Templates
                                                      String propertyName)
         {
             return _propertyProvider.GetPropertyAccessor(declaringType, propertyName);
+        }
+
+        public IPropertyAccessor<T> GetPropertyAccessor<T>(String propertyName)
+        {
+            return _propertyProvider.GetPropertyAccessor<T>(propertyName);
         }
 
         private void CopyChildren(IPanelElement fromPanel,

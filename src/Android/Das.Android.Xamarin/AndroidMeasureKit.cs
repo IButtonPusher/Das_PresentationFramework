@@ -45,7 +45,6 @@ namespace Das.Xamarin.Android
             if (!(_windowManager.DefaultDisplay is {}))
                 throw new NullReferenceException();
 
-
             return new ValueSize(metrics.WidthPixels / metrics.ScaledDensity,
                 metrics.HeightPixels / metrics.ScaledDensity);
         }

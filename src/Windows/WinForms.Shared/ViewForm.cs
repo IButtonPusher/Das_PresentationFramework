@@ -111,6 +111,8 @@ namespace Das.Views.Winforms
             set => _contents.ZoomLevel = value;
         }
 
+        public Single Density => _contents.Density;
+
         public void AcceptChanges()
         {
             ((IChangeTracking) _contents).AcceptChanges();

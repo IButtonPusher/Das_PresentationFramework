@@ -133,6 +133,8 @@ namespace Das.Gdi.Kits
 
         public Double ZoomLevel => RenderContext.ViewState?.ZoomLevel ?? 1;
 
+        public Single Density => 1.0f; //todo:
+
         IMeasureContext IRenderKit.MeasureContext => _measureContext;
 
         IRenderContext IRenderKit.RenderContext => _renderContext;

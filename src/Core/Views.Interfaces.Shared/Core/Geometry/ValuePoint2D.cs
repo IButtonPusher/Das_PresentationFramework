@@ -63,7 +63,9 @@ namespace Das.Views.Core.Geometry
 
         public override String ToString()
         {
-            return GetType().Name + " X: " + X + ", " + Y;
+            return //GetType().Name + 
+                   "X: " + X.ToString("0.0") + ", " + 
+                   Y.ToString("0.0");
         }
 
         public IPoint2D Offset(IPoint2D offset)

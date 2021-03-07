@@ -5,5 +5,7 @@ namespace Das.Views.Rendering
     public interface IDisplayMetrics
     {
         Double ZoomLevel { get; }
+
+        Single Density { get; }
     }
 }

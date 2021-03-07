@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Android.Content;
 using Android.OS;
+using Android.Support.V4.View;
 using Android.Views;
 using Das.Container;
 using Das.Views;
@@ -84,16 +85,20 @@ namespace Das.Xamarin.Android
 
         public AndroidRenderKit RenderKit { get; }
 
+        public GestureDetectorCompat GestureDetector => _inputContext.GestureDetector;
+
+        public AndroidInputContext InputContext => _inputContext;
+
         public override Boolean OnGenericMotionEvent(MotionEvent? e)
         {
             _inputContext.OnGenericMotionEvent(e);
             return base.OnGenericMotionEvent(e);
         }
 
-        public override Boolean OnTouchEvent(MotionEvent? e)
+        public override Boolean OnInterceptTouchEvent(MotionEvent? ev)
         {
-            _inputContext.OnTouchEvent(e);
-            return base.OnTouchEvent(e);
+            _inputContext.OnTouchEvent(ev);
+            return false;
         }
 
 
@@ -105,15 +110,15 @@ namespace Das.Xamarin.Android
         {
             var hasSurrogates = ChildCount > 1;
 
-            if (hasSurrogates)
-            {
-                RenderKit.RefreshRenderContext.DrawMainElement(_view,
-                    new ValueRectangle(0, 0, _targetRect.Width, _targetRect.Height), _viewState);
-                _view.InvalidateArrange();
-            }
-
-            //WriteLine("AndroidView->OnLayout surrogates: " + hasSurrogates +
+            //WriteLine("BEGIN AndroidView->OnLayout surrogates: " + hasSurrogates +
             //          " view needs arrange: " + _view.IsRequiresArrange);
+
+            //if (hasSurrogates && _view.IsRequiresArrange)
+            //{
+            //    RenderKit.RefreshRenderContext.DrawMainElement(_view,
+            //        new ValueRectangle(0, 0, _targetRect.Width, _targetRect.Height), _viewState);
+            //    _view.InvalidateArrange();
+            //}
 
             var count = ChildCount;
             for (var c = 0; c < count; c++)
@@ -128,24 +133,32 @@ namespace Das.Xamarin.Android
 
                 if (hasSurrogates && current is IVisualSurrogate surrogate)
                 {
-                    var wants = RenderKit.RenderContext.TryGetElementBounds(surrogate.ReplacingVisual);
-                    if (wants != null)
+                    //var wants = RenderKit.RenderContext.TryGetElementBounds(surrogate.ReplacingVisual);
+                    var wants = surrogate.ArrangedBounds;
+                    //if (wants != null)
+                    if (!wants.IsEmpty)
                     {
                         left = Convert.ToInt32(wants.Left * ZoomLevel);
                         top = Convert.ToInt32(wants.Top * ZoomLevel);
                         right = Convert.ToInt32(wants.Right * ZoomLevel);
                         bottom = Convert.ToInt32(wants.Bottom * ZoomLevel);
                     }
-                    else 
+                    else
+                    {
                         continue;
+                    }
 
-                    //WriteLine("[OKYN] Calling layout on surrogate " + current + " ltrb: " + left + "," + top + "," + right +
-                    //          "," + bottom);
+                    //WriteLine("Calling layout on surrogate " + current +
+                    //          " ltrb: " + left + "," + top + "," + 
+                    //          right + "," + bottom + " ***** HEIGHT: " + (bottom - top) + " *****");
                 }
 
 
                 current.Layout(left, top, right, bottom);
             }
+
+            //WriteLine("END AndroidView->OnLayout surrogates: " + hasSurrogates +
+            //          " view needs arrange: " + _view.IsRequiresArrange);
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -238,6 +251,7 @@ namespace Das.Xamarin.Android
                     if (ChildCount > 1)
                         Invalidate();
                     //WriteLine("Invalidating paint view");
+                    //else // else is no good - never draws...
                     _paintView.Invalidate();
                     
                     _inputContext.SleepTime = 0;

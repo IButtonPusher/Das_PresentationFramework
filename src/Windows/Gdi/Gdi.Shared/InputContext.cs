@@ -115,7 +115,8 @@ namespace Das.Gdi
                             if (Math.Abs(vx) >= MinimumFlingVelocity ||
                                 Math.Abs(vy) >= MinimumFlingVelocity)
                             {
-                                flingArgs = new FlingEventArgs(vx, vy, pos, this, null);
+                                flingArgs = new FlingEventArgs(vx, vy, pos, this, null, 
+                                    0.5f, 0.5f); //todo:
                             }
                         }
                     }
@@ -239,5 +240,7 @@ namespace Das.Gdi
             return new ValuePoint2D((Int16) lParam,
                 (Int16) (lParam >> 16)); //cast to int16 for overflow-negatives
         }
+
+        public override Double ZoomLevel => 1.0;
     }
 }

@@ -173,6 +173,8 @@ namespace Das.Xamarin.Android
             RoundedRectImpl(rect, cornerRadii);
         }
 
+        public ValueRectangle GetClip() => GetCurrentClip();
+
         protected override ValueRectangle GetCurrentClip()
         {
             var clip = GetCanvas().ClipBounds;

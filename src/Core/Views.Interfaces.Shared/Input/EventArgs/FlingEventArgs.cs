@@ -10,25 +10,34 @@ namespace Das.Views.Input
                               Double velocityY,
                               IPoint2D position,
                               IInputContext inputContext,
-                              Action? onFlingComplete)
+                              Action? onFlingComplete,
+                              Single effectiveFriction,
+                              Single physicalCoefficient)
         {
             VelocityX = velocityX;
             VelocityY = velocityY;
             _onFlingComplete = onFlingComplete;
+            EffectiveFriction = effectiveFriction;
             Position = position;
             InputContext = inputContext;
+            PhysicalCoefficient = physicalCoefficient;
         }
 
         public readonly Double VelocityX;
-
         public readonly Double VelocityY;
+
+        public readonly Single EffectiveFriction;
+
+        public readonly Single PhysicalCoefficient;
+
         private readonly Action? _onFlingComplete;
 
         public IPoint2D Position { get; }
 
         public FlingEventArgs Offset(IPoint2D offset)
         {
-            return new(VelocityX, VelocityY, Position.Offset(offset), InputContext, _onFlingComplete);
+            return new(VelocityX, VelocityY, Position.Offset(offset), 
+                InputContext, _onFlingComplete, EffectiveFriction, PhysicalCoefficient);
         }
 
 
