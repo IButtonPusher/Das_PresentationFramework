@@ -11,6 +11,7 @@ using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
+using Das.Views.Input;
 using Das.Views.Rendering;
 using Das.Views.Rendering.Geometry;
 using Das.Views.Styles.Application;
@@ -23,7 +24,7 @@ namespace Das.Xamarin.Android
     public abstract class SurrogateView : FrameLayout, //ViewGroup,
                                           IVisualSurrogate
     {
-        protected SurrogateView(Context? context,
+        protected SurrogateView(Context context,
                              IVisualElement replacingVisual,
                              View nativeView,
                              ViewGroup viewGroup) : base(context)
@@ -74,7 +75,7 @@ namespace Das.Xamarin.Android
 
         ValueRenderRectangle IVisualRenderer.ArrangedBounds
         {
-            get => ReplacingVisual.ArrangedBounds;
+            get => ReplacingVisual?.ArrangedBounds ?? ValueRenderRectangle.Empty;
             set => ReplacingVisual.ArrangedBounds = value;
         }
 
@@ -126,6 +127,8 @@ namespace Das.Xamarin.Android
             add => ReplacingVisual.Disposed += value;
             remove => ReplacingVisual.Disposed -= value;
         }
+
+        public Boolean IsDisposed => ReplacingVisual.IsDisposed;
 
         void IVisualElement.RaisePropertyChanged(String propertyName,
                                                  Object? value)
@@ -219,11 +222,18 @@ namespace Das.Xamarin.Android
             set => ReplacingVisual.AfterLabel = value;
         }
 
+        public Boolean TryHandleInput<TArgs>(TArgs args,
+                                             Int32 x,
+                                             Int32 y) where TArgs : IMouseInputEventArgs<TArgs>
+        {
+           return ReplacingVisual.TryHandleInput(args, x, y);
+        }
+
         Int32 IVisualElement.ZIndex => ReplacingVisual.ZIndex;
 
         IBoxShadow IVisualElement.BoxShadow => ReplacingVisual.BoxShadow;
 
-        public IVisualElement ReplacingVisual { get; }
+        public virtual IVisualElement ReplacingVisual { get; }
 
        
 

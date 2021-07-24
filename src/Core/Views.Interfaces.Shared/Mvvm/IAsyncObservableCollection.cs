@@ -46,9 +46,6 @@ namespace Das.Views.Mvvm
         Task DoTransaction<TInput>(IEnumerable<TInput> datas,
                                    Action<IAsyncObservableCollection<T>, TInput> action);
 
-        Task<T> FirstOrDefaultAsync(Func<T, Boolean> predicate);
-
-        Task<T> FirstOrDefaultAsync();
 
         Task<IReadOnlyList<T>> GetEnumerableAsync();
 
@@ -57,6 +54,8 @@ namespace Das.Views.Mvvm
         Task<Int32> IndexOfAsync(T item);
 
         Task Remove(IEnumerable<T> items);
+
+        Task<IReadOnlyList<T>> RemoveWhereAsync(Func<T, Boolean> predicate);
 
         Task RunOnEach(Action<T> action);
 

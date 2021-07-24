@@ -7,6 +7,7 @@ using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
+using Das.Views.Input;
 using Das.Views.Rendering;
 using Das.Views.Styles.Application;
 using Das.Views.Styles.Declarations;
@@ -40,6 +41,8 @@ namespace Das.Views
         void OnParentChanging(IVisualElement? newParent);
 
         event Action<IVisualElement>? Disposed;
+
+        Boolean IsDisposed { get; }
 
         void RaisePropertyChanged(String propertyName,
                                   Object? value);
@@ -75,6 +78,11 @@ namespace Das.Views
         ILabel? BeforeLabel { get; set; }
         
         ILabel? AfterLabel { get; set; }
+
+        Boolean TryHandleInput<TArgs>(TArgs args,
+                                      Int32 x,
+                                      Int32 y)
+           where TArgs : IMouseInputEventArgs<TArgs>;
 
         ///// <summary>
         ///// Tags in markup that are meant to identify this visual.

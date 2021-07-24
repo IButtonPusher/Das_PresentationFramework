@@ -8,7 +8,8 @@ using Size = Das.Views.Core.Geometry.Size;
 
 namespace Das.Views.Winforms
 {
-    public class VisualForm : Form, IVisualHost<Bitmap>
+   // ReSharper disable once UnusedType.Global
+   public class VisualForm : Form, IVisualHost<Bitmap>
     {
         public VisualForm(IVisualRenderer visual,
                           HostedControl<Bitmap> control)
@@ -60,6 +61,11 @@ namespace Das.Views.Winforms
                            Int32 priority)
         {
             Invoke(action);
+        }
+
+        public Task InvokeAsync(Func<Task> action)
+        {
+           return this.RunInvokeAsync(action);
         }
 
         public T Invoke<T>(Func<T> action)

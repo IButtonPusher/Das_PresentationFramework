@@ -60,6 +60,7 @@
     <Compile Include="DIBSection.cs" />
     <Compile Include="GLFormRenderer.cs" />
     <Compile Include="GLFormViewRenderer.cs" />
+    <Compile Include="GLNativeWindowBuilder.cs" />
     <Compile Include="Hosting\GLHostedElement.cs">
       <SubType>Component</SubType>
     </Compile>

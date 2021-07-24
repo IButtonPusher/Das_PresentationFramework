@@ -4,21 +4,23 @@ using System.Threading.Tasks;
 
 namespace Das.ViewModels
 {
-    public interface IAsyncCollection<T> : IAsyncEnumerable<T>
-    {
-        Task<Boolean> AddAsync(T item);
+   public interface IAsyncCollection<T> : IAsyncEnumerable<T>,
+                                          IAsyncQueryable<T>
+   {
+      Task<Boolean> AddAsync(T item);
 
-        Task AddAsync(IEnumerable<T> items);
+      Task AddAsync(IEnumerable<T> items);
 
-        IAsyncEnumerable<T> EnumerateAsync();
+      IAsyncEnumerable<T> EnumerateAsync();
 
-        Task<T> FirstOrDefaultAsync<TDerived>(Func<TDerived, Boolean> predicate)
-            where TDerived : class, T;
+      Task<T> FirstOrDefaultAsync<TDerived>(Func<TDerived, Boolean> predicate)
+         where TDerived : class, T;
 
-        Task InsertAsync(Int32 index, T item);
+      Task InsertAsync(Int32 index,
+                       T item);
 
-        Task RemoveAtAsync(Int32 index);
+      Task RemoveAtAsync(Int32 index);
 
-        Task<T[]> ToArrayAsync();
-    }
+      Task<T[]> ToArrayAsync();
+   }
 }

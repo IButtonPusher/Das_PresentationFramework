@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Android.Content;
 using Android.OS;
-using Android.Support.V4.View;
+
 using Android.Views;
 using Das.Container;
 using Das.Views;
@@ -16,6 +16,11 @@ using Das.Views.Styles;
 using Das.Xamarin.Android.Controls;
 using Das.Xamarin.Android.Images;
 using Das.Xamarin.Android.Input;
+using Java.Lang;
+using Boolean = System.Boolean;
+using Double = System.Double;
+using Math = System.Math;
+using Object = System.Object;
 
 
 namespace Das.Xamarin.Android
@@ -49,14 +54,17 @@ namespace Das.Xamarin.Android
                            IUiProvider uiProvider)
             : base(context)
         {
-            _loopHandler = new Handler(Looper.MainLooper);
-            _measured = Size.Empty;
+           UILogger.LogLevel = LogLevel.Level2;
+
+            _loopHandler = new Handler(Looper.MainLooper!);
+            //_measured = Size.Empty;
             _targetRect = ValueRectangle.Empty;
             _view = view;
             _surrogates = new AndroidSurrogateProvider(renderKit, uiProvider, this);
 
             RenderKit = renderKit;
             _viewState = renderKit.ViewState;
+            _layoutQueue = RenderKit.VisualBootstrapper.LayoutQueue;
 
 
             ZoomLevel = renderKit.DisplayMetrics.ScaledDensity;
@@ -73,8 +81,10 @@ namespace Das.Xamarin.Android
             var inputHandler = new BaseInputHandler(RenderKit.RenderContext);
             _inputContext = new AndroidInputContext(this, context, inputHandler, _viewState);
 
-            renderKit.Container.ResolveTo(this);
+            //view.PropertyChanged += OnViewPropertyChanged;
         }
+
+       
 
         public sealed override void AddView(View? child)
         {
@@ -85,9 +95,9 @@ namespace Das.Xamarin.Android
 
         public AndroidRenderKit RenderKit { get; }
 
-        public GestureDetectorCompat GestureDetector => _inputContext.GestureDetector;
+        //public GestureDetectorCompat GestureDetector => _inputContext.GestureDetector;
 
-        public AndroidInputContext InputContext => _inputContext;
+        //public AndroidInputContext InputContext => _inputContext;
 
         public override Boolean OnGenericMotionEvent(MotionEvent? e)
         {
@@ -101,6 +111,10 @@ namespace Das.Xamarin.Android
             return false;
         }
 
+        //public override void ComputeScroll()
+        //{
+        //    base.ComputeScroll();
+        //}
 
         protected override void OnLayout(Boolean changed,
                                          Int32 left,
@@ -108,9 +122,9 @@ namespace Das.Xamarin.Android
                                          Int32 right,
                                          Int32 bottom)
         {
-            var hasSurrogates = ChildCount > 1;
+           
 
-            //WriteLine("BEGIN AndroidView->OnLayout surrogates: " + hasSurrogates +
+           //WriteLine("BEGIN AndroidView->OnLayout surrogates: " + hasSurrogates +
             //          " view needs arrange: " + _view.IsRequiresArrange);
 
             //if (hasSurrogates && _view.IsRequiresArrange)
@@ -121,21 +135,22 @@ namespace Das.Xamarin.Android
             //}
 
             var count = ChildCount;
+            var hasSurrogates = count > 1;
+
+
             for (var c = 0; c < count; c++)
             {
                 var current = GetChildAt(c);
 
-                if (current == null)
+                if (current == null || current.Visibility != ViewStates.Visible)
                 {
-                    //WriteLine("Current child is null!");
-                    continue;
+                   continue;
                 }
 
                 if (hasSurrogates && current is IVisualSurrogate surrogate)
                 {
-                    //var wants = RenderKit.RenderContext.TryGetElementBounds(surrogate.ReplacingVisual);
-                    var wants = surrogate.ArrangedBounds;
-                    //if (wants != null)
+                   var wants = surrogate.ArrangedBounds;
+                    
                     if (!wants.IsEmpty)
                     {
                         left = Convert.ToInt32(wants.Left * ZoomLevel);
@@ -157,26 +172,30 @@ namespace Das.Xamarin.Android
                 current.Layout(left, top, right, bottom);
             }
 
+           
+
             //WriteLine("END AndroidView->OnLayout surrogates: " + hasSurrogates +
             //          " view needs arrange: " + _view.IsRequiresArrange);
         }
 
         // ReSharper disable once UnusedMember.Local
-        private static void WriteLine(String msg)
-        {
-            System.Diagnostics.Debug.WriteLine("[OKYN] " + msg);
-        }
+        //public static void WriteLine(String msg)
+        //{
+        //    System.Diagnostics.Debug.WriteLine("[OKYN] " + msg);
+        //}
 
         protected override void Dispose(Boolean disposing)
         {
             base.Dispose(disposing);
             _loopHandler.Dispose();
+
+            _isDisposed = true;
         }
 
         protected override void OnMeasure(Int32 widthMeasureSpec,
                                           Int32 heightMeasureSpec)
         {
-            base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
+           base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
             var w = MeasuredWidth;
             var h = MeasuredHeight;
 
@@ -201,13 +220,14 @@ namespace Das.Xamarin.Android
                     current?.Measure(widthMeasureSpec, heightMeasureSpec);
             }
 
-            _measured = new ValueSize(sz.Width, sz.Height);
-            RenderKit.MeasureContext.MeasureMainView(_view, sz, _viewState);
+            //_measured = new ValueSize(sz.Width, sz.Height);
+            //RenderKit.MeasureContext.MeasureMainView(_view, sz, _viewState);
 
             if (_refreshLoopCount == 0)
             {
                 _refreshLoopCount++;
-                var _ = RefreshLoop();
+                var _ = Task.Factory.StartNew(RefreshLoop3,
+                   TaskCreationOptions.LongRunning);
             }
         }
 
@@ -230,46 +250,144 @@ namespace Das.Xamarin.Android
         }
 
 
-        private async Task RefreshLoop()
-        {
-            while (true)
-            {
-                var willInvalidate = false;
+        //private async Task _RefreshLoop()
+        //{
+        //    while (true)
+        //    {
+        //        var willInvalidate = false;
 
-                if (_view.IsRequiresMeasure)
-                {
-                    RenderKit.MeasureContext.MeasureMainView(_view,
-                        new ValueRenderSize(_measured), _viewState);
+        //        if (_view.IsRequiresMeasure)
+        //        {
+        //            RenderKit.MeasureContext.MeasureMainView(_view,
+        //                new ValueRenderSize(_measured), _viewState);
 
-                    willInvalidate = true;
-                }
-                else if (_view.IsRequiresArrange || _inputContext.IsInteracting)
-                    willInvalidate = true;
+        //            willInvalidate = true;
+        //        }
+        //        else if (_view.IsRequiresArrange || _inputContext.IsInteracting)
+        //            willInvalidate = true;
 
-                if (willInvalidate)
-                {
-                    if (ChildCount > 1)
-                        Invalidate();
-                    //WriteLine("Invalidating paint view");
-                    //else // else is no good - never draws...
-                    _paintView.Invalidate();
+        //        if (willInvalidate)
+        //        {
+        //            if (ChildCount > 1)
+        //                Invalidate();
                     
-                    _inputContext.SleepTime = 0;
-                    await Task.Yield();
-                }
-                else
-                {
-                    //if (_inputContext.SleepTime == 0)
-                    //    WriteLine("frame skipped!");
+        //            _paintView.Invalidate();
+                    
+        //            _inputContext.SleepTime = 0;
+        //            await Task.Yield();
+        //        }
+        //        else
+        //        {
+        //            //if (_inputContext.SleepTime == 0)
+        //            //    WriteLine("frame skipped!");
 
-                    _inputContext.SleepTime = Math.Min(++_inputContext.SleepTime, 50);
+        //            _inputContext.SleepTime = Math.Min(++_inputContext.SleepTime, 50);
 
-                    await Task.Delay(_inputContext.SleepTime);
-                }
-            }
+        //            await Task.Delay(_inputContext.SleepTime);
+        //        }
+        //    }
 
-            // ReSharper disable once FunctionNeverReturns
+        //    // ReSharper disable once FunctionNeverReturns
+        //}
+
+
+        private void RefreshLoop3()
+        {
+           while (!_isDisposed && !_view.IsDisposed)
+           {
+              var willInvalidate = false;
+              var willInvalidate2 = _layoutQueue.HasVisualsNeedingLayout;
+
+              if (_view.IsRequiresMeasure)
+              {
+                 //RenderKit.MeasureContext.MeasureMainView(_view,
+                 //   new ValueRenderSize(_measured), _viewState);
+
+                 willInvalidate = true;
+              }
+              else if (_view.IsRequiresArrange || _inputContext.IsInteracting)
+                 willInvalidate = true;
+
+              if (willInvalidate != willInvalidate2)
+              {}
+
+
+              if (willInvalidate)
+              {
+                 _paintView.Refresh();
+
+                 if (ChildCount > 1)
+                    PostInvalidate();
+                   
+                 
+                 
+                 //_paintView.Draw();
+
+                 //_paintView.PostInvalidate();
+                    
+                 _inputContext.SleepTime = 0;
+              }
+              else
+              {
+                 //if (_inputContext.SleepTime == 0)
+                 //    WriteLine("frame skipped!");
+
+                 _inputContext.SleepTime = Math.Min(++_inputContext.SleepTime, 50);
+
+                  Thread.Sleep(_inputContext.SleepTime);
+
+                 //await Task.Delay(_inputContext.SleepTime).ConfigureAwait(false);
+              }
+           }
+
+           // ReSharper disable once FunctionNeverReturns
         }
+
+
+        //private async Task RefreshLoop2()
+        //{
+        //   while (true)
+        //   {
+        //      var willInvalidate = false;
+
+        //      if (_view.IsRequiresMeasure)
+        //      {
+        //         //RenderKit.MeasureContext.MeasureMainView(_view,
+        //         //   new ValueRenderSize(_measured), _viewState);
+
+        //         willInvalidate = true;
+        //      }
+        //      else if (_view.IsRequiresArrange || _inputContext.IsInteracting)
+        //         willInvalidate = true;
+
+        //      if (willInvalidate)
+        //      {
+        //         if (ChildCount > 1)
+        //            PostInvalidate();
+                   
+        //         _paintView.Refresh();
+                 
+        //         //_paintView.Draw();
+
+        //         //_paintView.PostInvalidate();
+                    
+        //         _inputContext.SleepTime = 0;
+        //         await Task.Yield();
+        //      }
+        //      else
+        //      {
+        //         //if (_inputContext.SleepTime == 0)
+        //         //    WriteLine("frame skipped!");
+
+        //         _inputContext.SleepTime = Math.Min(++_inputContext.SleepTime, 50);
+
+        //         await Task.Delay(_inputContext.SleepTime).ConfigureAwait(false);
+        //      }
+        //   }
+
+        //   // ReSharper disable once FunctionNeverReturns
+        //}
+
 
         private readonly AndroidInputContext _inputContext;
         private readonly AndroidPaintView _paintView;
@@ -280,10 +398,13 @@ namespace Das.Xamarin.Android
         private readonly IVisualElement _view;
 
         private readonly Handler _loopHandler;
+        
 
-        private Size _measured;
+        //private Size _measured;
+        private Boolean _isDisposed;
         private readonly IViewState _viewState;
         private Int32 _refreshLoopCount;
         private ValueRectangle _targetRect;
+        private readonly ILayoutQueue _layoutQueue;
     }
 }

@@ -217,7 +217,7 @@ namespace Das.Views.Panels
                 HorizontalOffset = Convert.ToInt32(_maximumXScroll);
 
             var dest = new ValueRenderRectangle(
-                0, //HorizontalOffset, 
+                0, 
                 0,
                 availableSpace.Width + HorizontalOffset,
                 availableSpace.Height + VerticalOffset,
@@ -260,9 +260,6 @@ namespace Das.Views.Panels
             var letsUseW = Math.Min(_lastNeeded.Width, availableSpace.Width);
             var letsUseH = Math.Min(_lastNeeded.Height, availableSpace.Height);
             return new ValueSize(letsUseW, letsUseH);
-
-
-            //return _lastNeeded;
         }
 
         protected virtual Boolean OnScroll(Double deltaX,
@@ -338,10 +335,9 @@ namespace Das.Views.Panels
 
         private void OnOffsetChanged(Int32 val)
         {
-            //Debug.WriteLine("vert offset is now " + val);
+           UILogger.Log("vert offset is now " + val, LogLevel.Level1);
 
-            InvalidateArrange();
-            //InvalidateMeasure();
+           InvalidateArrange();
         }
 
         /// <summary>

@@ -97,15 +97,6 @@ namespace Das.Xamarin.Android
             var canvas = GetCanvas();
             SetColor(brush);
 
-            //if (!_layoutCache.TryGetValue(s, out var textLayout))
-            //{
-            //    textLayout = new StaticLayout(s, this,
-            //        Convert.ToInt32(width),
-            //        Layout.Alignment.AlignNormal,
-            //        1, 1, false);
-            //    _layoutCache.Add(s, textLayout);
-            //}
-
             canvas.Save();
 
             canvas.Translate(Convert.ToSingle(x),
@@ -139,18 +130,6 @@ namespace Das.Xamarin.Android
         private StaticLayout GetOrCreateStaticLayout(String text)
         {
             return GetOrCreateStaticLayout(text, MeasureText);
-            //if (!_layoutCache.TryGetValue(text, out var textLayout))
-            //{
-            //    var width = MeasureText(text);
-            //    textLayout = new StaticLayout(text, this,
-            //        Convert.ToInt32(width),
-            //        Layout.Alignment.AlignNormal,
-            //        1, 1, false);
-
-            //    _layoutCache.Add(text, textLayout);
-            //}
-
-            //return textLayout;
         }
 
         private StaticLayout GetOrCreateStaticLayout(String text,
@@ -200,7 +179,7 @@ namespace Das.Xamarin.Android
             base.SetStyle(style);
         }
 
-//        private readonly Dictionary<IRectangle, StaticLayout> _layoutCache;
+
 private readonly Dictionary<String, StaticLayout> _layoutCache;
     }
 }

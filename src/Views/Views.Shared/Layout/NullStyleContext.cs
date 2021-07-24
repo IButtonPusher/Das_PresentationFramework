@@ -12,6 +12,8 @@ namespace Das.Views.Layout
 
         IColorPalette IThemeProvider.ColorPalette => ThrowException<IColorPalette>();
 
+        public Boolean IsDarkTheme => false;
+
         private static T ThrowException<T>()
         {
             throw new NotSupportedException("Style provider wasn't set.");

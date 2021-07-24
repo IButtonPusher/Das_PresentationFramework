@@ -12,6 +12,8 @@ namespace Das.Views
         void Invoke(Action action,
                     Int32 priority);
 
+        Task InvokeAsync(Func<Task> action);
+
         T Invoke<T>(Func<T> action);
 
         Task InvokeAsync(Action action);

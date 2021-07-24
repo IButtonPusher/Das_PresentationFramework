@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -14,8 +15,11 @@ namespace Das.Views.Core.Geometry
 
         public Boolean Equals(IRoundedSize other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other)) 
+               return false;
+
+            if (ReferenceEquals(this, other)) 
+               return true;
 
             return Width == other.Width &&
                    Height == other.Height;
@@ -26,6 +30,7 @@ namespace Das.Views.Core.Geometry
             return obj is IRoundedSize isize && Equals(isize);
         }
 
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
         public override Int32 GetHashCode()
         {
             unchecked

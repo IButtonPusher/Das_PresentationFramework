@@ -20,6 +20,8 @@ namespace Das.Views.DataBinding
             _bindings = new List<IDataBinding>();
         }
 
+        
+
         public void AddBinding(IDataBinding binding)
         {
             lock (_lockBindings)
@@ -45,6 +47,8 @@ namespace Das.Views.DataBinding
 
             return res;
         }
+
+        
 
         public override void Dispose()
         {

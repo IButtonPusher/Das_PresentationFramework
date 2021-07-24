@@ -10,131 +10,152 @@ using Das.Views.Rendering;
 namespace Das.Views.Panels
 {
    public abstract class BasePanel : BindableElement,
-                                         IVisualContainer
-                                         
-    {
-        // ReSharper disable once UnusedMember.Global
-        protected BasePanel(IVisualBootstrapper visualBootstrapper)
-            : this(visualBootstrapper, new VisualCollection())
-        {
-            
-        }
-        
-        protected BasePanel(IVisualBootstrapper visualBootstrapper,
-                            IVisualCollection children)
-            
-            : base(visualBootstrapper)
-        {
-            _children = children is VisualCollection good ? good : new VisualCollection(children);
-        }
+                                     IVisualContainer
 
-        /// <summary>
-        /// sealed so inheritors of BasePanel have to override 
-        /// </summary>
-        protected sealed override void OnDataContextChanged(Object? newValue)
-        {
-            base.OnDataContextChanged(newValue);
-            OnDistributeDataContextToChildren(newValue);
-        }
+   {
+      // ReSharper disable once UnusedMember.Global
+      protected BasePanel(IVisualBootstrapper visualBootstrapper)
+         : this(visualBootstrapper, new VisualCollection())
+      {
+      }
 
-        protected virtual void OnDistributeDataContextToChildren(Object? newValue)
-        {
-         
-        }
-        
-        protected readonly VisualCollection _children;
+      protected BasePanel(IVisualBootstrapper visualBootstrapper,
+                          IVisualCollection children)
+         : base(visualBootstrapper)
+      {
+         _children = children is VisualCollection good ? good : new VisualCollection(children);
+      }
 
-        public IVisualCollection Children => _children;
+      public IVisualCollection Children => _children;
 
-        public void AddChild(IVisualElement element)
-        {
-            _children.Add(element);
+      public void AddChild(IVisualElement element)
+      {
+         _children.Add(element);
+         InvalidateMeasure();
+      }
+
+      public Boolean RemoveChild(IVisualElement element)
+      {
+         var changed = _children.Remove(element);
+
+         if (changed)
             InvalidateMeasure();
-        }
 
-        public Boolean RemoveChild(IVisualElement element)
-        {
-            var changed = _children.Remove(element);
+         return changed;
+      }
 
-            if (changed)
-                InvalidateMeasure();
 
-            return changed;
-        }
+      public override Boolean TryHandleInput<TArgs>(TArgs args,
+                                                    Int32 x,
+                                                    Int32 y)
+      {
+         //if (!ArrangedBounds.Contains(x, y))
+         //   return false;
 
-        public void AddChildren(IEnumerable<IVisualElement> elements)
-        {
-            _children.AddRange(elements);
-            InvalidateMeasure();
-        }
-        
-        public void AddChildren(params IVisualElement[] elements)
-        {
-            _children.AddRange(elements);
-            InvalidateMeasure();
-        }
+         for (var c = Children.Count - 1; c >= 0; c--)
+         {
+            var child = Children[c];
+            if (child.ArrangedBounds.Contains(x, y) &&
+                child.TryHandleInput(args, x, y))
+               return true;
+         }
 
-        public virtual void OnChildDeserialized(IVisualElement element, INode node)
-        {
-        }
+         return TryHandleInput(args);
+      }
 
-        public virtual Boolean Contains(IVisualElement element)
-        {
-            return _children.IsTrueForAnyChild(element, (child, _) =>
-            {
-                if (child == element)
-                    return true;
+      public void AddChildren(IEnumerable<IVisualElement> elements)
+      {
+         _children.AddRange(elements);
+         InvalidateMeasure();
+      }
 
-                return child is IVisualContainer container &&
-                       container.Contains(element);
-            });
-        }
+      public virtual void OnChildDeserialized(IVisualElement element,
+                                              INode node)
+      {
+      }
 
-        
+      public virtual Boolean Contains(IVisualElement element)
+      {
+         return _children.IsTrueForAnyChild(element, (child,
+                                                      _) =>
+         {
+            if (child == element)
+               return true;
 
-        public virtual void AcceptChanges()
-        {
-            _children.RunOnEachChild(child =>
-            {
-                if (child is IChangeTracking changeTracking)
-                    changeTracking.AcceptChanges();
-            });
+            return child is IVisualContainer container &&
+                   container.Contains(element);
+         });
+      }
 
-            AcceptChanges(ChangeType.Measure);
-            AcceptChanges(ChangeType.Arrange);
-        }
 
-        public virtual Boolean IsChanged
-        {
-            get => _children.IsTrueForAnyChild(child => child is IChangeTracking {IsChanged: true});
-        }
+      public virtual void AcceptChanges()
+      {
+         _children.RunOnEachChild(child =>
+         {
+            if (child is IChangeTracking changeTracking)
+               changeTracking.AcceptChanges();
+         });
 
-        public override void InvalidateMeasure()
-        {
-            base.InvalidateMeasure();
+         AcceptChanges(ChangeType.Measure);
+         AcceptChanges(ChangeType.Arrange);
+      }
 
-            _children.RunOnEachChild(child => child.InvalidateMeasure());
-        }
+      public override void AcceptChanges(ChangeType changeType)
+      {
+         base.AcceptChanges(changeType);
 
-        public override Boolean IsRequiresMeasure
-        {
-            get => base.IsRequiresMeasure || 
-                   _children.IsTrueForAnyChild(child => child.IsRequiresMeasure);
-            protected set => base.IsRequiresMeasure = value;
-        }
+         _children.RunOnEachChild(changeType, (ct, child) => child.AcceptChanges(ct));
+      }
 
-        public override Boolean IsRequiresArrange
-        {
-            get => base.IsRequiresArrange || 
-                   _children.IsTrueForAnyChild(child => child.IsRequiresArrange);
-            protected set => base.IsRequiresArrange = value;
-        }
+      public virtual Boolean IsChanged =>
+         _children.IsTrueForAnyChild(child => child is IChangeTracking {IsChanged: true});
 
-        public override void Dispose()
-        {
-            base.Dispose();
-            _children.Dispose();
-        }
-        
-    }
+      public override void InvalidateMeasure()
+      {
+         base.InvalidateMeasure();
+
+         _children.RunOnEachChild(child => child.InvalidateMeasure());
+      }
+
+      public override Boolean IsRequiresMeasure
+      {
+         get => base.IsRequiresMeasure ||
+                _children.IsTrueForAnyChild(child => child.IsRequiresMeasure);
+         protected set => base.IsRequiresMeasure = value;
+      }
+
+      public override Boolean IsRequiresArrange
+      {
+         get => base.IsRequiresArrange ||
+                _children.IsTrueForAnyChild(child => child.IsRequiresArrange);
+         protected set => base.IsRequiresArrange = value;
+      }
+
+      public override void Dispose()
+      {
+         base.Dispose();
+         _children.Dispose();
+      }
+
+      public void AddChildren(params IVisualElement[] elements)
+      {
+         _children.AddRange(elements);
+         InvalidateMeasure();
+      }
+
+      /// <summary>
+      ///    sealed so inheritors of BasePanel have to override
+      /// </summary>
+      protected sealed override void OnDataContextChanged(Object? newValue)
+      {
+         base.OnDataContextChanged(newValue);
+         OnDistributeDataContextToChildren(newValue);
+      }
+
+      protected virtual void OnDistributeDataContextToChildren(Object? newValue)
+      {
+      }
+
+      protected readonly VisualCollection _children;
+   }
 }

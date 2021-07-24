@@ -34,7 +34,9 @@ namespace Das.Views.BoxModel
         public ValueThickness GetThickness<TSize>(TSize available)
             where TSize : ISize
         {
-            return new(Left.GetQuantity(available.Width),
+            return IsEmpty
+            ? ValueThickness.Empty  
+            : new(Left.GetQuantity(available.Width),
                 Top.GetQuantity(available.Height),
                 Right.GetQuantity(available.Width),
                 Bottom.GetQuantity(available.Height));

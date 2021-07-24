@@ -1,6 +1,5 @@
 ﻿using Das.Views.Mvvm;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -202,13 +201,14 @@ namespace Das.ViewModels.Collections
             singleAdded.Clear();
         }
 
-        protected void ClearImpl()
+        protected void ClearImpl(Boolean isRaiseChangedEvent)
         {
             _hashCheck.Clear();
             _count = 0;
             _backingCollection.Clear();
 
-           OnCollectionReset();
+            if (isRaiseChangedEvent)
+                OnCollectionReset();
         }
 
         protected void SynchronizeImpl(IEnumerable<T> items)
@@ -252,7 +252,7 @@ namespace Das.ViewModels.Collections
                 }
             }
 
-            if (args.NewItems is IList someList)
+            if (args.NewItems is { } someList)
             {
                 var addMany = new List<T>();
 

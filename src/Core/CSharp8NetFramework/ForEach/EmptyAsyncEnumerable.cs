@@ -12,10 +12,5 @@ namespace AsyncResults.ForEach
         {
             return AsyncEnumerator<T>.Empty;
         }
-
-        //#if !NETSTANDARD2_1 && !NETSTANDARD2_0 && !NET461
-        //        IAsyncEnumerator IAsyncEnumerable.GetAsyncEnumerator(CancellationToken cancellationToken)
-        //            => AsyncEnumerator.Empty;
-        //#endif
     }
 }

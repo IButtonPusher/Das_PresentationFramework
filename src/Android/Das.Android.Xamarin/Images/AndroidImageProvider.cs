@@ -6,10 +6,8 @@ using Android.Util;
 using Das.Extensions;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
-using Das.Views.Core.Geometry;
 using Das.Views.Images;
 using Das.Xamarin.Android.Rendering;
-using Path = Android.Graphics.Path;
 
 namespace Das.Xamarin.Android.Images
 {
@@ -107,7 +105,7 @@ namespace Das.Xamarin.Android.Images
                 if (_nullBitmap != null)
                     return _nullBitmap;
 
-                var resultBitmap = Bitmap.CreateBitmap(1, 1, Bitmap.Config.Argb8888);
+                var resultBitmap = Bitmap.CreateBitmap(1, 1, Bitmap.Config.Argb8888!);
                 _nullBitmap = new AndroidBitmap(resultBitmap!, null);
                 return _nullBitmap;
             }
@@ -120,27 +118,27 @@ namespace Das.Xamarin.Android.Images
             return new AndroidGraphicsPath();
         }
 
-        public IImage GetImage(IGraphicsPath path,
-                               IColor foreground)
-        {
-            //var size = path.Size.ToRoundedSize();
-            var size = new ValueRoundedSize(24, 24);
-            var androidPath = path.Unwrap<Path>();
+        //public IImage GetImage(IGraphicsPath path,
+        //                       IColor foreground)
+        //{
+        //    //var size = path.Size.ToRoundedSize();
+        //    var size = new ValueRoundedSize(24, 24);
+        //    var androidPath = path.Unwrap<Path>();
 
-            var bmp = Bitmap.CreateBitmap(size.Width, size.Height, Bitmap.Config.Argb8888)
-                ?? throw new InvalidOperationException();
+        //    var bmp = Bitmap.CreateBitmap(size.Width, size.Height, Bitmap.Config.Argb8888)
+        //        ?? throw new InvalidOperationException();
 
-            var canvas = new Canvas(bmp);
-            using (var paint = new Paint())
-            {
-                paint.SetStyle(Paint.Style.Stroke);
-                paint.SetARGB(foreground.A, foreground.R, foreground.G, foreground.B);
-                //canvas.SetColor(pen);
-                canvas.DrawPath(androidPath, paint);
-            }
+        //    var canvas = new Canvas(bmp);
+        //    using (var paint = new Paint())
+        //    {
+        //        paint.SetStyle(Paint.Style.Stroke);
+        //        paint.SetARGB(foreground.A, foreground.R, foreground.G, foreground.B);
+        //        //canvas.SetColor(pen);
+        //        canvas.DrawPath(androidPath, paint);
+        //    }
 
-            return new AndroidBitmap(bmp, null);
-        }
+        //    return new AndroidBitmap(bmp, null);
+        //}
 
 
         private IImage GetScaledImage(Bitmap? img,

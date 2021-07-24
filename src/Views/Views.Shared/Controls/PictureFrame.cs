@@ -22,6 +22,11 @@ namespace Das.Views.Controls
             Image = null;
         }
 
+        //public override void InvalidateMeasure()
+        //{
+        //   base.InvalidateMeasure();
+        //}
+
         protected override Boolean TryGetImage<TRenderSize>(TRenderSize size,
                                                             out IImage image)
         {

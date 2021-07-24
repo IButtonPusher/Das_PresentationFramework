@@ -1,7 +1,7 @@
 ﻿using System;
-using Das.Views.Controls;
 using Das.Views.Core.Enums;
 using Das.Views.DataBinding;
+using Das.Views.Templates;
 
 namespace Das.Views.Defaults
 {
@@ -33,12 +33,12 @@ namespace Das.Views.Defaults
         
         protected virtual IBindableElement GetToStringLabel(Object? dataContext)
         {
-            var txt = new Label(_visualBootstrapper)
+            var txt = new NullTemplateLabel(_visualBootstrapper)
             {
                     HorizontalAlignment = HorizontalAlignments.Center, 
                     VerticalAlignment = VerticalAlignments.Center,
                     Text = dataContext?.ToString() ?? String.Empty
-                };
+            };
 
             return txt;
         }

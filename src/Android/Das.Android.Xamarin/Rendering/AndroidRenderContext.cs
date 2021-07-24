@@ -33,7 +33,16 @@ namespace Das.Xamarin.Android
             ViewState = viewState;
         }
 
-        public Canvas? Canvas { get; set; }
+        public Canvas? Canvas
+        {
+           get => _canvas;
+           set
+           {
+              if (ReferenceEquals(_canvas, value))
+              {}
+              _canvas = value;
+           }
+        }
 
         public override void DrawEllipse<TPoint, TPen>(TPoint center,
                                                        Double radius,
@@ -323,5 +332,6 @@ namespace Das.Xamarin.Android
         private static Rect? _rect;
         private readonly AndroidFontProvider _fontProvider;
         private readonly Paint _paint;
+        private Canvas? _canvas;
     }
 }

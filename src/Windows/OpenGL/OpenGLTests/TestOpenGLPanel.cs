@@ -18,8 +18,9 @@ namespace GdiTest
         private const Double TwoPi = 2.0 * Math.PI;
 
         public TestOpenGLPanel(IVisualElement view, 
-                               IStyleContext styleContext)
-            : base(view, styleContext)
+                               IStyleContext styleContext,
+                               IVisualBootstrapper visualBootstrapper)
+            : base(view, styleContext, visualBootstrapper)
         {
             _font = new Font(18, "Segoe UI", FontStyle.Regular);
             _pen = new Pen(Color.Black, 2);

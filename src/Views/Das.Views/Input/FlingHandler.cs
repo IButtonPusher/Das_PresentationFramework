@@ -26,11 +26,11 @@ namespace Das.Views.Input
                             break;
 
                         case FlingMode.Default:
-                            _velocityX = args.VelocityX;
+                           _velocityX = args.DistanceFlungX;
                             break;
 
                         case FlingMode.Inverted:
-                            _velocityX = 0 - args.VelocityX;
+                            _velocityX = 0 - args.DistanceFlungX; //args.VelocityX;
                             break;
 
                         default:
@@ -45,11 +45,11 @@ namespace Das.Views.Input
                             break;
 
                         case FlingMode.Default:
-                            _velocityY = args.VelocityY;
+                            _velocityY = args.DistanceFlungY;// args.VelocityY;
                             break;
 
                         case FlingMode.Inverted:
-                            _velocityY = 0 - args.VelocityY;
+                            _velocityY = 0 - args.DistanceFlungY;//args.VelocityY;
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -57,32 +57,14 @@ namespace Das.Views.Input
 
                 if (_velocityX.IsZero() && _velocityY.IsZero())
                 {
-                    args.SetHandled(true);
+                    //args.SetHandled(true);
                     return true;
                 }
 
                 _currentTransition?.Cancel();
 
-                //var splineDist = GetSplineFlingDistance(Convert.ToInt32(args.VelocityY),
-                //    args.EffectiveFriction, args.PhysicalCoefficient);
-                //var splineDist2 = GetSplineFlingDistance(Convert.ToInt32(args.VelocityY / args.InputContext.ZoomLevel),
-                //    args.EffectiveFriction, args.PhysicalCoefficient);
-
-                //var mSplineDistance = (int) (splineDist * Math.Sign(args.VelocityY));
-
-
-                //var splineDur = GetSplineFlingDuration(Convert.ToInt32(args.VelocityY),
-                //    args.EffectiveFriction, args.PhysicalCoefficient);
-
-                //var splineDur2 = GetSplineFlingDuration(Convert.ToInt32(args.VelocityY/ args.InputContext.ZoomLevel),
-                //        args.EffectiveFriction, args.PhysicalCoefficient);
-
-                    
-
-                var sumX = Convert.ToInt32(_velocityX / 3);
-
-                //var sumY = Convert.ToInt32(_velocityY / 3);
-                var sumY = Convert.ToInt32(_velocityY / 2);
+                var sumX = Convert.ToInt32(_velocityX);
+                var sumY = Convert.ToInt32(_velocityY);
 
                 var validVeticalRange = _flingHost.GetVerticalMinMaxFling();
                 sumY = validVeticalRange.GetValueInRange(sumY);
@@ -93,35 +75,15 @@ namespace Das.Views.Input
                 if (sumX.IsZero() && sumY.IsZero())
                     return true;
 
-                var ms = Math.Max(
-                    Math.Abs(sumX),
-                    Math.Abs(sumY));
-                ms = Math.Max(ms, 500);
-
-                var duration = TimeSpan.FromMilliseconds(ms);
 
                 Debug.WriteLine("[OKYN] Created fling transition x,y: " + sumX +
-                                "," + sumY + " duration: " + duration +
-                                " based on: " + args);
+                                "," + sumY + " duration: " + args.FlingYDuration + //duration +
+                                "\t\t\t\r\nbased on: " + args);
 
-                for (var c = 1; c <= 10; c++)
-                {
-                    var decel = c * 500;
-                    var splineDist = SplineFlingTransition.GetSplineDistance(args.VelocityY, decel);
-                    var splineDur = SplineFlingTransition.GetSplineDuration(args.VelocityY, decel);
+                _currentTransition = new SplineFlingTransition(_flingHost,
+                    args.FlingYDuration, sumY, //args.DistanceFlungY, 
+                    TimeSpan.Zero);
 
-                    Debug.WriteLine("[OKYN] DECELERATION: " + decel +
-                                    "\r\n------------------------\r\n Spline-y would have been dist: " +
-                                    splineDist.ToString("0.00") +
-                                    " duration: " + splineDur + "\r\n");
-                    //+ " or dist: " + splineDist +
-                    //" duration: " + splineDur2);
-                }
-
-                
-
-                _currentTransition = new FlingTransition(duration, sumX, sumY,
-                    _flingHost, args);
                 _currentTransition.Start();
 
 
@@ -146,34 +108,6 @@ namespace Das.Views.Input
                 return true;
             }
         }
-
-        private Double GetSplineDeceleration(Int32 velocity,
-                                             Single mFlingFriction,
-                                             Single mPhysicalCoeff)
-        {
-            return Math.Log(_inflexion * Math.Abs(velocity) / (mFlingFriction * mPhysicalCoeff));
-        }
-
-        private Double GetSplineFlingDistance(Int32 velocity,
-                                              Single mFlingFriction,
-                                              Single mPhysicalCoeff)
-        {
-            var l = GetSplineDeceleration(velocity, mFlingFriction, mPhysicalCoeff);
-            var decelMinusOne = _decelerationRate - 1.0;
-            return mFlingFriction * mPhysicalCoeff * Math.Exp(_decelerationRate / decelMinusOne * l);
-        }
-
-        private Int32 GetSplineFlingDuration(Int32 velocity,
-                                             Single mFlingFriction,
-                                             Single mPhysicalCoeff)
-        {
-            var l = GetSplineDeceleration(velocity, mFlingFriction, mPhysicalCoeff);
-            var decelMinusOne = _decelerationRate - 1.0;
-            return (Int32) (1000.0 * Math.Exp(l / decelMinusOne));
-        }
-
-        private static readonly Single _decelerationRate = (Single) (Math.Log(0.78) / Math.Log(0.9));
-        private static readonly Single _inflexion = 0.35f; // Tension lines cross at (INFLEXION, 1)
 
         private readonly IFlingHost _flingHost;
         private readonly Object _flingLock;

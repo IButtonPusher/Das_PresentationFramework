@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Serializer;
+using Das.Views.Colors;
 using Das.Views.Core.Drawing;
 using Das.Views.DataBinding;
 
 namespace Das.Views
 {
-    public interface IVisualBootstrapper : IPropertyProvider
+    public interface IVisualBootstrapper
     {
         IColorPalette ColorPalette { get; }
 
         IUiProvider UiProvider { get; }
+
+        IPropertyProvider Properties { get; }
 
         /// <summary>
         /// Sets values of dependency properties based on applicable setters
@@ -19,6 +22,8 @@ namespace Das.Views
         void ApplyVisualStyling(IVisualElement visual);
 
         ILayoutQueue LayoutQueue { get; }
+
+        IThemeProvider ThemeProvider { get; }
 
 
         IVisualElement Instantiate(Type type);

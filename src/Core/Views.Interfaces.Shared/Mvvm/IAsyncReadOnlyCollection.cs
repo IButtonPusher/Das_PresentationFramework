@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Das.ViewModels
 {
-    public interface IAsyncReadOnlyCollection<out T> : IEnumerable<T>,
-                                                       INotifyCollectionChanged,
-                                                       ICollection
-    {
-        T this[Int32 index] { get; }
-    }
+   public interface IAsyncReadOnlyCollection<T> : IEnumerable<T>,
+                                                  INotifyCollectionChanged,
+                                                  IAsyncQueryable<T>,
+                                                  ICollection
+   {
+      T this[Int32 index] { get; }
+   }
 }

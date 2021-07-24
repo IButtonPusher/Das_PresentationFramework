@@ -63,6 +63,8 @@ namespace Das.ViewModels
         }
 
 
+       
+
         public async Task RunOnEach(Action<T> action)
         {
             await foreach (var t in this)
@@ -277,9 +279,29 @@ namespace Das.ViewModels
         {
             await _lock.WriteAsync(this, (t) =>
             {
-                t.ClearImpl();
+                t.ClearImpl(true);
                 return -0;
             });
+        }
+
+        public async Task<IReadOnlyList<T>> RemoveWhereAsync(Func<T, Boolean> predicate)
+        {
+            var got = await _lock.ReadAsync(_backingCollection, predicate, (b,p) =>
+            {
+                var res = GetNewReadOnlyList();
+
+                foreach (var item in b)
+                    if (p(item))
+                        res.Add(item);
+
+                foreach (var item in res)
+                {
+                    RemoveImpl(item);
+                }
+
+                return res;
+            });
+            return got;
         }
 
         public override async Task<IReadOnlyList<T>> SelectAsync(Func<T, Boolean> predicate)
@@ -408,7 +430,7 @@ namespace Das.ViewModels
 
         public async Task RemoveAtAsync(Int32 index)
         {
-            await _lock.WriteAsync<AsyncObservableCollection2<T>, Int32>(this, index, (t, i) => 
+            await _lock.WriteAsync(this, index, (t, i) => 
                  t.RemoveAtImpl(i)).ConfigureAwait(false);
         }
 
@@ -429,7 +451,8 @@ namespace Das.ViewModels
 
         public void Clear()
         {
-            _lock.Write(ClearImpl);
+            _lock.Write(() => ClearImpl(false));
+            OnCollectionReset();
             //DoBlockingTransaction(_ => ClearImpl());
         }
 

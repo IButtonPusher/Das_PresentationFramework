@@ -11,6 +11,8 @@ namespace Das.Views
         {
             Quantity = quantity;
             Units = units;
+
+            IsUnitsEffectivelyPixels = units is LengthUnits.Px or LengthUnits.None;
         }
 
         public Boolean IsNotZero()
@@ -96,7 +98,6 @@ namespace Das.Views
                 quantifiedDouble = default;
                 return false;
             }
-            //var val = Double.Parse(value.Substring(0, endOfValue + 1));
 
             quantifiedDouble = new QuantifiedDouble(val, units);
             return true;
@@ -122,7 +123,7 @@ namespace Das.Views
 
         public static implicit operator QuantifiedDouble(Double value)
         {
-            return new QuantifiedDouble(value, LengthUnits.Px);
+            return new (value, LengthUnits.Px);
         }
 
         public static implicit operator Double(QuantifiedDouble @double)
@@ -132,5 +133,7 @@ namespace Das.Views
 
         private readonly Double Quantity;
         public readonly LengthUnits Units;
+
+        public readonly Boolean IsUnitsEffectivelyPixels;
     }
 }

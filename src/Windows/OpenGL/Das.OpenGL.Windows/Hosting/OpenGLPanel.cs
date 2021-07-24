@@ -10,10 +10,11 @@ namespace Das.OpenGL.Windows
     public abstract class OpenGLPanel : GLHostedElement
     {
         public OpenGLPanel(IVisualElement view, 
-                           IStyleContext styleContext)
-            : base(view, styleContext)
+                           IStyleContext styleContext,
+                           IVisualBootstrapper visualBootstrapper)
+            : base(view, styleContext, visualBootstrapper)
         {
-            var bldr = new GLWindowBuilder("OpenGLSurface");
+            var bldr = new GLWindowBuilder("OpenGLSurface", visualBootstrapper);
             var boot = new GLBootStrapper(bldr);
             var context = boot.GetContext(this);
 

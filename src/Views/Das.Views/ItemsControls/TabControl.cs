@@ -75,8 +75,6 @@ namespace Das.Views
                 return _headerUses;
             }
 
-            //var usingWidth = Math.Max(availableSpace.Width, _contentUses.Width);
-            
 
             return new ValueSize(Math.Max(_headerUses.Width, _contentUses.Width),
                 _headerUses.Height + _contentUses.Height);
@@ -273,28 +271,27 @@ namespace Das.Views
         private void OnItemPropertyChanged(Object sender,
                                            PropertyChangedEventArgs e)
         {
-            switch (e.PropertyName)
-            {
-                case nameof(IToggleButton.IsChecked) when sender is IToggleButton toggle &&
-                                                          sender is IBindable dc && ItemsSource != null &&
-                                                          toggle.IsChecked == true && dc.DataContext != null:
+           switch (e.PropertyName)
+           {
+              case nameof(IToggleButton.IsChecked) when sender is IToggleButton toggle &&
+                                                        sender is IBindable dc && ItemsSource != null &&
+                                                        toggle.IsChecked == true && dc.DataContext != null:
 
-                    foreach (var item in ItemsSource)
-                        //if (item == dc.Value)
-                        if (Equals(item, dc.DataContext))
-                        {
-                            SelectedItem = item;
-                            if (sender is IBindableElement visual)
-                                SelectedTab = visual;
-                            break;
-                        }
+                 foreach (var item in ItemsSource)
+                    if (Equals(item, dc.DataContext))
+                    {
+                       SelectedItem = item;
+                       if (sender is IBindableElement visual)
+                          SelectedTab = visual;
+                       break;
+                    }
 
-                    break;
+                 break;
 
 
-                case nameof(IVisualElement.IsRequiresMeasure):
-                    break;
-            }
+              case nameof(IVisualElement.IsRequiresMeasure):
+                 break;
+           }
         }
 
         private void OnSelectedContentChanged(IVisualElement? obj)

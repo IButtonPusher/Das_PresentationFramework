@@ -115,8 +115,8 @@ namespace Das.Gdi
                             if (Math.Abs(vx) >= MinimumFlingVelocity ||
                                 Math.Abs(vy) >= MinimumFlingVelocity)
                             {
-                                flingArgs = new FlingEventArgs(vx, vy, pos, this, null, 
-                                    0.5f, 0.5f); //todo:
+                                flingArgs = new FlingEventArgs(vx, vy, pos, this, 
+                                    0.5f, 0.5f, TimeSpan.Zero,  TimeSpan.Zero); //todo:
                             }
                         }
                     }

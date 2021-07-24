@@ -13,15 +13,18 @@ namespace Das.Views
 
         void BrowseToUri(Uri uri);
 
-        Task<Boolean> Confirm(String message, String title);
+        Task<Boolean> Confirm(String message,
+                              String title);
 
         Task<Boolean> Confirm(String message);
 
         IObservableCommand GetCommand(Action action);
 
-        IObservableCommand GetCommand(Action action, String description);
+        IObservableCommand GetCommand(Action action,
+                                      String description);
 
-        IObservableCommand GetCommand(Func<Task> action, String description);
+        IObservableCommand GetCommand(Func<Task> action,
+                                      String description);
 
 
         IObservableCommand<T> GetCommand<T>(Func<T, Task> action);
@@ -36,20 +39,29 @@ namespace Das.Views
 
         IObservableCommand<T> GetCommand<T>(Func<T[], Task> action);
 
-        IObservableCommand<T> GetCommand<T>(Func<T[], Task> action, String description);
+        IObservableCommand<T> GetCommand<T>(Func<T[], Task> action,
+                                            String description);
 
         IObservableCommand GetCommand(Action action,
-                                      INotifyPropertyChanged viewModel, String canExecuteProperty);
+                                      INotifyPropertyChanged viewModel,
+                                      String canExecuteProperty);
 
         IObservableCommand GetCommand(Func<Task> action);
 
         //ValueSize GetMainViewSize();
 
-        Task HandleErrorAsync(String wasDoing, Exception ex);
+        Task HandleErrorAsync(String wasDoing,
+                              Exception ex);
 
-        void Notify(String text, String title);
+        void Notify(String text);
+
+        void Notify(String text,
+                    String title);
 
         Task NotifyAsync(String text);
+
+        Task NotifyAsync(String text,
+                         String title);
 
         void NotifyError(String message);
 

@@ -48,7 +48,8 @@ namespace Das.Gdi.Kits
         public GdiRenderKit(IViewPerspective viewPerspective,
                             IWindowProvider<IVisualHost> windowProvider)
             : base(GetDefaultImageBuilder(), Serializer,
-                new SvgPathBuilder(GetDefaultImageBuilder(), Serializer), null)
+                new SvgPathBuilder(GetDefaultImageBuilder(), Serializer), null,
+                BaselineThemeProvider.Instance)
         {
             _windowProvider = windowProvider;
             Init(windowProvider, BaselineThemeProvider.Instance, viewPerspective, _renderPositions,
@@ -57,79 +58,21 @@ namespace Das.Gdi.Kits
 
         public GdiRenderKit(IViewPerspective viewPerspective,
                             IWindowProvider<IVisualHost> windowProvider,
-                            IResolver container)
+                            IResolver container,
+                            IThemeProvider themeProvider)
             : base(GetDefaultImageBuilder(), Serializer,
-                new SvgPathBuilder(GetDefaultImageBuilder(), Serializer), container)
+                new SvgPathBuilder(GetDefaultImageBuilder(), Serializer), 
+                container, themeProvider)
         {
             _windowProvider = windowProvider;
-            Init(windowProvider, BaselineThemeProvider.Instance, viewPerspective, _renderPositions,
+            Init(windowProvider, themeProvider, viewPerspective, _renderPositions,
                 ref _imageProvider!, ref _measureContext!, ref _renderContext!);
         }
 
         private static GdiImageProvider GetDefaultImageBuilder() => _defaultImageBuilder ??= new GdiImageProvider();
         private static GdiImageProvider? _defaultImageBuilder;
 
-        //public GdiRenderKit(IViewPerspective viewPerspective,
-        //                    IWindowProvider<IVisualHost> windowProvider,
-        //                    IThemeProvider themeProvider,
-        //                    IResolver container)
-        //    : base(container, themeProvider, Serializer.AttributeParser, Serializer.TypeInferrer,
-        //        Serializer.TypeManipulator, new Dictionary<IVisualElement, ValueCube>(),
-        //        new GdiImageProvider(), Serializer.AssemblyList, Serializer)
-        //{
-        //    _windowProvider = windowProvider;
-        //    Init(windowProvider, themeProvider, viewPerspective, _renderPositions,
-        //        ref _imageProvider!, ref _measureContext!, ref _renderContext!);
-        //}
-
-        //public GdiRenderKit(IViewPerspective viewPerspective,
-        //                    IWindowProvider<IVisualHost> windowProvider,
-        //                    IStyleContext styleContext)
-        //    : this(viewPerspective, windowProvider, styleContext, new BaseResolver())
-        //{
-        //}
-
-        //public GdiRenderKit(IWindowProvider<IVisualHost> windowProvider,
-        //                    IViewPerspective viewPerspective,
-        //                    IStyleContext styleContext,
-        //                    IStringPrimitiveScanner attributeScanner,
-        //                    ITypeInferrer typeInferrer,
-        //                    IPropertyProvider propertyProvider,
-        //                    IAssemblyList assemblyList,
-        //                    IXmlSerializer xmlSerializer)
-        //    : base(styleContext, attributeScanner, typeInferrer, propertyProvider,
-        //        new Dictionary<IVisualElement, ValueCube>(),new GdiImageProvider(),
-        //        assemblyList, xmlSerializer)
-        //{
-        //    _windowProvider = windowProvider;
-        //    Init(windowProvider, styleContext, viewPerspective, 
-        //            _renderPositions,
-        //        ref _imageProvider!,
-        //        ref _measureContext!, ref _renderContext!);
-        //}
-
-        //public GdiRenderKit(IWindowProvider<IVisualHost> windowProvider,
-        //                    IViewPerspective viewPerspective,
-        //                    IResolver resolver,
-        //                    IStyleContext styleContext,
-        //                    IStringPrimitiveScanner attributeScanner,
-        //                    ITypeInferrer typeInferrer,
-        //                    IPropertyProvider propertyProvider,
-        //                    IVisualBootstrapper visualBootstrapper,
-        //                    IVisualStyleProvider styleProvider,
-        //                    IImageProvider imageProvider,
-        //                    IAssemblyList assemblyList,
-        //                    IXmlSerializer xmlSerializer)
-        //    : base(resolver, attributeScanner, typeInferrer,
-        //        propertyProvider, visualBootstrapper,
-        //        new Dictionary<IVisualElement, ValueCube>(), styleProvider, imageProvider,
-        //        assemblyList, xmlSerializer)
-        //{
-        //    _windowProvider = windowProvider;
-        //    Init(windowProvider, styleContext, viewPerspective, _renderPositions,
-        //        ref _imageProvider!,
-        //        ref _measureContext!, ref _renderContext!);
-        //}
+        
 
         public Double ZoomLevel => RenderContext.ViewState?.ZoomLevel ?? 1;
 

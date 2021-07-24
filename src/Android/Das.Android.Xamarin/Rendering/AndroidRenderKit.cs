@@ -32,7 +32,8 @@ namespace Das.Xamarin.Android
                                 IResolver container,
                                 IImageProvider imageProvider)
             : base(imageProvider, Serializer, 
-                new SvgPathBuilder(imageProvider, Serializer), container)
+                new SvgPathBuilder(imageProvider, Serializer), container,
+                themeProvider)
         {
             ViewState = viewState;
             DisplayMetrics = displayMetrics;
@@ -62,19 +63,17 @@ namespace Das.Xamarin.Android
             
             var lastMeasures = new Dictionary<IVisualElement, ValueSize>();
 
-            var layoutQueue = new LayoutQueue();
-
             measureContext = new AndroidMeasureKit(windowManager, fontProvider, 
-                this, lastMeasures,themeProvider, displayMetrics, visualLineage, layoutQueue);
+                this, lastMeasures,themeProvider, displayMetrics, visualLineage, _layoutQueue);
 
             var visualPositions = new Dictionary<IVisualElement, ValueCube>();
 
             renderContext = new AndroidRenderContext(viewPerspective,
                 fontProvider, viewState, this, visualPositions,
-                lastMeasures, themeProvider, visualLineage, layoutQueue);
+                lastMeasures, themeProvider, visualLineage, _layoutQueue);
             
             refreshRenderContext = new RefreshRenderContext(viewPerspective, this, 
-                visualPositions, lastMeasures, themeProvider, visualLineage, layoutQueue,
+                visualPositions, lastMeasures, themeProvider, visualLineage, _layoutQueue,
                 renderContext.GetClip);
 
             Container.ResolveTo<IImageProvider>(imageProvider);

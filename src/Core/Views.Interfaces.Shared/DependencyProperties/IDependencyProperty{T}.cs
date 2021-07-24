@@ -6,6 +6,8 @@ namespace Das.Views
     {
         new TValue DefaultValue {get;}
 
-        new TValue GetValue(IVisualElement visual);
+        //new TValue GetValue(IVisualElement visual);
+
+        TValue GetValue<TVisual>(TVisual visual) where TVisual : IVisualElement;
     }
 }

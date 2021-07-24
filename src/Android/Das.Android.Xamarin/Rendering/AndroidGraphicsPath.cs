@@ -180,9 +180,9 @@ namespace Das.Xamarin.Android.Rendering
             var androidPath = Path;
 
 
-            androidPath.SetFillType(Path.FillType.EvenOdd);
+            androidPath.SetFillType(Path.FillType.EvenOdd!);
 
-            var bmp = Bitmap.CreateBitmap(width, height, Bitmap.Config.Argb8888)
+            var bmp = Bitmap.CreateBitmap(width, height, Bitmap.Config.Argb8888!)
                       ?? throw new InvalidOperationException();
 
             var canvas = new Canvas(bmp);

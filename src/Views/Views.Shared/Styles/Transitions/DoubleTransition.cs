@@ -37,7 +37,7 @@ namespace Das.Views.Styles
             _updater = updater;
         }
 
-        public void Start()
+        public override void Start()
         {
             TaskEx.Run(() => RunUpdates(CancellationToken.None)).ConfigureAwait(false);
         }

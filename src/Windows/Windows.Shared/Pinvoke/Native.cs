@@ -55,8 +55,11 @@ namespace Das.Views.Windows
         public static extern Int32 GetMessage([In] [Out] ref MSG msg, IntPtr hWnd,
                                                 Int32 uMsgFilterMin, Int32 uMsgFilterMax);
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern Boolean GetMonitorInfo(HandleRef hmonitor, [In] [Out] MONITORINFOEX info);
+        [DllImport(User32, CharSet = CharSet.Auto)]
+        public static extern Boolean GetMonitorInfo(IntPtr hMonitor, ref MonitorInfoEx lpmi);
+
+        //[DllImport("user32.dll", CharSet = CharSet.Auto)]
+        //public static extern Boolean GetMonitorInfo(HandleRef hmonitor, [In] [Out] MONITORINFOEX info);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern Int32 GetSystemMetrics(Int32 nIndex);

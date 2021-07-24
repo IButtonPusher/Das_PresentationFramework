@@ -159,11 +159,10 @@ namespace Das.Xamarin.Android.Input
             //_velocityTracker.ComputeCurrentVelocity(1000, _maximumFlingVelocity);
             //var velociraptor = _velocityTracker.GetYVelocity(e2.GetPointerId(e2.ActionIndex));
 
-            System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS FLING vx: " + velocityX + 
-                                               " vy: " + velocityY + 
-              //                                 " vy2!: " + velociraptor +
-                                               " min: " + _minimumFlingVelocity + 
-                                               " e1: " + e1 + " e2: " + e2);
+            System.Diagnostics.Debug.WriteLine("[OKYN] !FLING!: " + velocityX +
+                                               " vy: " + velocityY +
+                                               " min: " + _minimumFlingVelocity);
+                                               //+ " e1: " + e1 + " e2: " + e2);
             
             if (e1 == null)
                 return false;
@@ -171,21 +170,28 @@ namespace Das.Xamarin.Android.Input
             var pos = GetPosition(e1);
 
             // why 0.5 - ???
-            var vx = velocityX;// * 0.5;
-            var vy = 0 - velocityY;// * 0.5;
+            //var vx = velocityX;// * 0.5;
+            //var vy = 0 - velocityY;// * 0.5;
+            velocityY = 0 - velocityY;
 
-            if (Math.Abs(vx) >= _minimumFlingVelocity ||
-                Math.Abs(vy) >= _minimumFlingVelocity)
+            if (Math.Abs(velocityX) >= _minimumFlingVelocity ||
+                Math.Abs(velocityY) >= _minimumFlingVelocity)
             {
-                var flingArgs = new FlingEventArgs(vx * _dpiRatio,
-                    vy * _dpiRatio, pos, this, RemoveFlingInteraction,
-                    _scrollFriction, _physicalCoefficient);
+                BuildFlingValues(velocityX, out var flungX, out var xDuration);
+                BuildFlingValues(velocityY, out var flungY, out var yDuration);
+
+                var flingArgs = new FlingEventArgs(velocityX * _dpiRatio,
+                    velocityY * _dpiRatio, pos, this, //RemoveFlingInteraction,
+                    flungX, flungY, xDuration, yDuration);
+
+                _lastFlingArgs = flingArgs;
 
                 AddInteraction(InputAction.Fling);
 
-                if (!_inputHandler.OnMouseInput(flingArgs, InputAction.Fling))
+                if (_inputHandler.OnMouseInput(flingArgs, InputAction.Fling))
                 {
-                    flingArgs.SetHandled(false);
+                    //flingArgs.SetHandled(false);
+                    RemoveFlingEventually(flingArgs);
                     //RemoveInteraction(InputAction.Fling);
                 }
             }
@@ -193,11 +199,64 @@ namespace Das.Xamarin.Android.Input
             return true;
         }
 
-        private void RemoveFlingInteraction()
+        private async void RemoveFlingEventually(FlingEventArgs fargs)
         {
-            //System.Diagnostics.Debug.WriteLine("[OKYN] removing fling interaction");
+            var useTime = fargs.FlingXDuration.TotalMilliseconds >
+                          fargs.FlingYDuration.TotalMilliseconds
+                ? fargs.FlingXDuration
+                : fargs.FlingYDuration;
+
+            await Task.Delay(useTime).ConfigureAwait(false);
+
+            if (!Equals(_lastFlingArgs, fargs))
+                return;
+
             RemoveInteraction(InputAction.Fling);
         }
+
+        private void BuildFlingValues(Double velocity,
+                                      out Double distance,
+                                      out TimeSpan duration)
+        {
+            if (velocity != 0)
+            {
+                distance = GetSplineFlingDistance(velocity * _dpiRatio);
+                duration = GetSplineFlingDuration(velocity);
+            }
+            else
+            {
+                distance = 0;
+                duration = TimeSpan.Zero;
+            }
+        }
+
+        private Double GetSplineDeceleration(Double velocity)
+        {
+            return Math.Log(_inflexion * Math.Abs(velocity) / 
+                            (_scrollFriction * _physicalCoefficient));
+        }
+
+        private Double GetSplineFlingDistance(Double velocity)
+        {
+            var l = GetSplineDeceleration(velocity);
+            var decelMinusOne = _decelerationRate - 1.0;
+            return _scrollFriction * _physicalCoefficient * 
+                   Math.Exp(_decelerationRate / decelMinusOne * l) *
+                   Math.Sign(velocity);
+        }
+
+        private TimeSpan GetSplineFlingDuration(Double velocity)
+        {
+            var l = GetSplineDeceleration(velocity);
+            var decelMinusOne = _decelerationRate - 1.0;
+            return TimeSpan.FromMilliseconds(1000.0 * Math.Exp(l / decelMinusOne));
+        }
+
+        //private void RemoveFlingInteraction()
+        //{
+        //    //System.Diagnostics.Debug.WriteLine("[OKYN] removing fling interaction");
+        //    RemoveInteraction(InputAction.Fling);
+        //}
 
         //private void OnFlingCompleted(Task<Boolean> obj)
         //{
@@ -385,6 +444,9 @@ namespace Das.Xamarin.Android.Input
         private readonly Boolean _isOffsetPositions;
         private readonly Single _scrollFriction;
         private readonly Single _physicalCoefficient;
-        //private VelocityTracker _velocityTracker;
+        private FlingEventArgs? _lastFlingArgs;
+        
+        private static readonly Single _decelerationRate = (Single) (Math.Log(0.78) / Math.Log(0.9));
+        private static readonly Single _inflexion = 0.35f; // Tension lines cross at (INFLEXION, 1)
     }
 }

@@ -123,7 +123,7 @@ namespace Das.Views.Styles.Functions
                     return default;
                 
                 if (//parameterValues[0] is IBrush brush &&
-                    color is IBrush brush && 
+                    color is { } brush && 
                     parameterValues[1] is String s1 &&
                     Double.TryParse(s1, out var opacity))
                 {

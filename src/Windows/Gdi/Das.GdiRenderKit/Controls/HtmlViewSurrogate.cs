@@ -9,6 +9,7 @@ using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
+using Das.Views.Input;
 using Das.Views.Rendering;
 using Das.Views.Rendering.Geometry;
 using Das.Views.Styles.Application;
@@ -66,18 +67,18 @@ namespace Das.Views.Gdi.Controls
 
         public void Arrange<TRenderSize>(TRenderSize availableSpace,
                                          IRenderContext renderContext)
-            where TRenderSize : IRenderSize
+           where TRenderSize : IRenderSize
         {
-            var cube = renderContext.TryGetElementBounds(ReplacingVisual);
+           var hadLast = renderContext.TryGetElementBounds(ReplacingVisual, out var cube);
 
-            BeginInvoke((Action) (() =>
-            {
-                _browser.Width = Convert.ToInt32(availableSpace.Width);
-                _browser.Height = Convert.ToInt32(availableSpace.Height);
-                if (cube != null)
-                    _browser.Location = new Point(Convert.ToInt32(cube.Left),
-                        Convert.ToInt32(cube.Top));
-            }));
+           BeginInvoke((Action) (() =>
+           {
+              _browser.Width = Convert.ToInt32(availableSpace.Width);
+              _browser.Height = Convert.ToInt32(availableSpace.Height);
+              if (hadLast)
+                 _browser.Location = new Point(Convert.ToInt32(cube.Left),
+                    Convert.ToInt32(cube.Top));
+           }));
         }
 
 
@@ -233,6 +234,14 @@ namespace Das.Views.Gdi.Controls
             set => _htmlPanel.AfterLabel = value;
         }
 
+
+        public Boolean TryHandleInput<TArgs>(TArgs args,
+                                             Int32 x,
+                                             Int32 y)
+           where TArgs : IMouseInputEventArgs<TArgs>
+        {
+           return _htmlPanel.TryHandleInput<TArgs>(args, x, y);
+        }
 
         public Int32 ZIndex => _htmlPanel.ZIndex;
 

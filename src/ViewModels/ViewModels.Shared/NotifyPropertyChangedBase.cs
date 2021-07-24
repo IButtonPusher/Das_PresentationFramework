@@ -24,7 +24,8 @@ namespace Das.Views.Mvvm
         /// <summary>
         ///     Sender, Property Name, Old Value, New Value, allow change
         /// </summary>
-        public event Func<Object, String, Object, Object, Boolean>? PropertyChanging;
+        //public event Func<Object, String, Object, Object, Boolean>? PropertyChanging;
+        public event OnPropertyChanging? PropertyChanging;
 
         public event Action<String, Object?>? PropertyValueChanged;
 
@@ -62,12 +63,12 @@ namespace Das.Views.Mvvm
         [DebuggerHidden]
         protected virtual Boolean SetValue<T>(ref T field,
                                               T value,
-                                              [CallerMemberName] String? propertyName = null)
+                                              [CallerMemberName] String propertyName = "")
         {
-            if (propertyName != null && !VerifyCanChangeValue(field, value, null, propertyName))
+            if (!VerifyCanChangeValue(field, value, null, propertyName))
                 return false;
 
-            SetValueImpl(ref field, value, null, propertyName);
+            SetValueImpl(ref field, value, null, propertyName!);
             return true;
         }
 
@@ -94,8 +95,6 @@ namespace Das.Views.Mvvm
             if (!VerifyCanChangeValue(field, newValue, onValueChanging, propertyName))
                 return;
 
-           
-
             SetValueImpl(ref field, newValue, null, propertyName);
         }
 
@@ -112,9 +111,24 @@ namespace Das.Views.Mvvm
 
             SetValueImpl(ref field, newValue, handleValueChanged, propertyName);
         }
+
+
+        [DebuggerStepThrough]
+        [DebuggerHidden]
+        protected virtual void SetValue<T>(ref T field,
+                                           T newValue,
+                                           Func<T, T, Boolean> onValueChanging,
+                                           Action<T, T> handleValueChanged,
+                                           [CallerMemberName] String propertyName = "")
+        {
+           if (!VerifyCanChangeValue(field, newValue, onValueChanging, propertyName))
+              return;
+
+           SetValueImpl(ref field, newValue, handleValueChanged, propertyName);
+        }
         
-        //[DebuggerStepThrough]
-        //[DebuggerHidden]
+        [DebuggerStepThrough]
+        [DebuggerHidden]
         protected virtual void SetValue<T>(ref T field,
                                            T newValue,
                                            Func<T, T, T> interceptValueChanging,
@@ -174,15 +188,14 @@ namespace Das.Views.Mvvm
         private void SetValueImpl<T>(ref T field,
                                      T value,
                                      Func<T, Task>? handleValueChanged,
-                                     [CallerMemberName] String? propertyName = null)
+                                     String propertyName)
         {
             field = value;
 
             if (handleValueChanged is { } validHandler)
                 validHandler(value);
 
-            if (propertyName != null)
-                RaisePropertyChanged(propertyName, value);
+            RaisePropertyChanged(propertyName, value);
         }
 
         [DebuggerStepThrough]
@@ -204,6 +217,23 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        private void SetValueImpl<T>(ref T field,
+                                     T value,
+                                     Action<T, T>? handleValueChanged,
+                                     [CallerMemberName] String? propertyName = null)
+        {
+           var was = field;
+           field = value;
+
+           if (handleValueChanged is { } validHandler)
+              validHandler(was, value);
+
+           if (propertyName != null)
+              RaisePropertyChanged(propertyName, value);
+        }
+
+        [DebuggerStepThrough]
+        [DebuggerHidden]
         private Boolean VerifyCanChangeValue<T>(T oldValue,
                                                 T newValue,
                                                 Func<T, T, Boolean>? handleValueChanging,
@@ -220,8 +250,8 @@ namespace Das.Views.Mvvm
                 return true;
 
             var listeners = detailedHandler.GetInvocationList();
-            foreach (var listener in listeners.OfType<Func<Object, String, Object, Object, Boolean>>())
-                if (!listener(this, propertyName, oldValue!, newValue!))
+            foreach (var listener in listeners.OfType<OnPropertyChanging>()) //OfType<Func<Object, String, Object, Object, Boolean>>())
+                if (!listener(this, propertyName, oldValue, newValue))
                     return false;
 
             return true;

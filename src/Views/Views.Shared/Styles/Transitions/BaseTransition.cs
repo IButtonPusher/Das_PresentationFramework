@@ -17,21 +17,31 @@ namespace Das.Views.Styles.Transitions
         {
             _duration = duration;
             _delay = delay;
+            _easing = easing;
 
-            switch (easing)
-            {
-                case Easing.QuadraticOut:
-                    _getCurrentPercent = EaseOutQuadratic;
-                    break;
+            //switch (easing)
+            //{
+            //    case Easing.QuadraticOut:
+            //        _getCurrentPercent = EaseOutQuadratic;
+            //        break;
 
-                case Easing.QuintOut:
-                    _getCurrentPercent = EaseOutQuint;
-                    break;
+            //    case Easing.QuintOut:
+            //        _getCurrentPercent = EaseOutQuint;
+            //        break;
 
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(easing), easing, null);
-            }
+            //    case Easing.Linear:
+            //        _getCurrentPercent = Linear;
+            //        break;
 
+            //    default:
+            //        throw new ArgumentOutOfRangeException(nameof(easing), easing, null);
+            //}
+
+        }
+
+        public virtual void Start()
+        {
+            Start(new CancellationTokenSource().Token);
         }
 
         public virtual void Start(CancellationToken cancel)
@@ -49,7 +59,11 @@ namespace Das.Views.Styles.Transitions
             return 1 - Math.Pow(1.0 - pctComplete, 5);
         }
 
-
+        //protected static Double Linear(Double pctComplete)
+        //{
+        //    return pctComplete;
+        //}
+        
         //protected static Double GetEaseOut(Double pctComplete)
         //{
         //    return 1 - Math.Pow(1.0 - pctComplete, 5);
@@ -77,8 +91,25 @@ namespace Das.Views.Styles.Transitions
                 var runningPct = Math.Min(
                     running.ElapsedMilliseconds / _duration.TotalMilliseconds, 1);
 
-                //runningPct = EaseOutQuadratic(runningPct);
-                runningPct = _getCurrentPercent(runningPct);
+                //runningPct = _getCurrentPercent(runningPct);
+
+                switch (_easing)
+                {
+                    case Easing.QuadraticOut:
+                        runningPct = EaseOutQuadratic(runningPct);
+                        break;
+
+                    case Easing.QuintOut:
+                        runningPct = EaseOutQuint(runningPct);
+                        break;
+
+                    case Easing.Linear:
+                        //intentionally blank
+                        break;
+                    
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
 
                 OnUpdate(runningPct);
 
@@ -91,7 +122,8 @@ namespace Das.Views.Styles.Transitions
 
         private const Int32 SIXTY_FPS = 1000 / 60;
         private readonly TimeSpan _delay;
+        private readonly Easing _easing;
         private readonly TimeSpan _duration;
-        private readonly Func<Double, Double> _getCurrentPercent;
+        //private readonly Func<Double, Double> _getCurrentPercent;
     }
 }

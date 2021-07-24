@@ -17,30 +17,25 @@ namespace Das.Gdi.Kits
     // ReSharper disable once ClassNeverInstantiated.Global
     public class StaticGdiRenderKit : BaseRenderKit, 
                                       IRenderKit 
-    { 
-        //public StaticGdiRenderKit(IViewPerspective viewPerspective,
-        //                          IMultiSerializer xmlSerializer)
-        //: this(viewPerspective, xmlSerializer)
-        //{}
-
-        public StaticGdiRenderKit(IViewPerspective viewPerspective,
-                                   IMultiSerializer xmlSerializer)
+    {
+       public StaticGdiRenderKit(IViewPerspective viewPerspective,
+                                 IMultiSerializer xmlSerializer)
             : base(new GdiImageProvider(), xmlSerializer, 
-                NullSvgBuilder.Instance, null)
+                NullSvgBuilder.Instance, null, NullLayoutQueue.Instance,
+                BaselineThemeProvider.Instance)
         {
             var defaultSurrogates = new BaseSurrogateProvider();
 
             var lastMeasure = new Dictionary<IVisualElement, ValueSize>();
             var visualLineage = new VisualLineage();
-            var layoutQueue = new LayoutQueue();
 
             MeasureContext = new GdiMeasureContext(defaultSurrogates, lastMeasure,
-                BaselineThemeProvider.Instance, visualLineage, layoutQueue);
+                BaselineThemeProvider.Instance, visualLineage, _layoutQueue);
 
             RenderContext = new GdiRenderContext(viewPerspective,
                 MeasureContext.Graphics, defaultSurrogates, lastMeasure,
                 new Dictionary<IVisualElement, ValueCube>(), 
-                BaselineThemeProvider.Instance, visualLineage, layoutQueue);
+                BaselineThemeProvider.Instance, visualLineage, _layoutQueue);
         }
 
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;

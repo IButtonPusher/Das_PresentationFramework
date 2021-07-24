@@ -6,5 +6,7 @@ namespace Das.Views.Colors
     public interface IThemeProvider
     {
         IColorPalette ColorPalette { get; }
+
+        Boolean IsDarkTheme { get; }
     }
 }

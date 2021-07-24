@@ -27,6 +27,8 @@ namespace Das.Views.Core.Geometry
                       bottom.IsZero();
         }
 
+        public static readonly ValueThickness Empty = new(0, 0, 0, 0);
+
         public Boolean Equals(ISize other)
         {
             return other.Width.AreEqualEnough(Width) &&

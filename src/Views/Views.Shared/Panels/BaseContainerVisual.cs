@@ -12,6 +12,7 @@ namespace Das.Views.Panels
         {
         }
 
+       
         public virtual Boolean IsChanged
         {
             get => IsRequiresMeasure || IsRequiresArrange;

@@ -21,10 +21,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IAttributeDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IResourceBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IPathData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\DoubleValueMinMax.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IMinMax.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IPoint2F.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IQuantifiedRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\MinMaxCore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValuePoint2F.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueRoundedSize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\IQuantifiedValue.cs" />
@@ -36,6 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Images\ISvgImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Images\ISvgPathBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\FlingMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IAsyncQueryable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\IFontVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\ITextVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IPropertyValueAssignment{T}.cs" />

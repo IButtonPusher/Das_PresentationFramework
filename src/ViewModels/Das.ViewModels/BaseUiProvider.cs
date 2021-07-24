@@ -92,6 +92,8 @@ namespace Das.ViewModels
             throw new NotImplementedException();
         }
 
+        public abstract void Notify(String text);
+
         public virtual void Notify(String text, String title)
         {
             throw new NotImplementedException();
@@ -101,6 +103,9 @@ namespace Das.ViewModels
         {
             throw new NotImplementedException();
         }
+
+        public abstract Task NotifyAsync(String text,
+                                         String title);
 
         public virtual void NotifyError(String message)
         {
@@ -132,6 +137,8 @@ namespace Das.ViewModels
         {
             throw new NotImplementedException();
         }
+
+        public abstract Task InvokeAsync(Func<Task> action);
 
         public virtual T Invoke<T>(Func<T> action)
         {

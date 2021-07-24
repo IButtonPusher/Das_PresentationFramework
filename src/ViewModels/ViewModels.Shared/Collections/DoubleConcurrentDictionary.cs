@@ -43,10 +43,25 @@ namespace Das.ViewModels.Collections
             }
         }
 
+        public async Task<ConcurrentDictionary<TKey2, TValue>> AddOrUpdateAsync(TKey1 k1,
+                                                                               Func<ConcurrentDictionary<TKey2, TValue>, Task> updatr)
+        {
+           var updating = _backingDictionary.GetOrAdd(k1, _ => new ConcurrentDictionary<TKey2, TValue>());
+           await updatr(updating);
+           return updating;
+        }
+
+        public void AddOrUpdate(TKey1 k1,
+                                           Action<ConcurrentDictionary<TKey2, TValue>> updatr)
+        {
+           var updating = _backingDictionary.GetOrAdd(k1, _ => new ConcurrentDictionary<TKey2, TValue>());
+           updatr(updating);
+        }
+
         public void AddRange<TKeyValue>(TKey1 k1, IEnumerable<TKeyValue> keyVals)
             where TKeyValue : TKey2, TValue
         {
-            var updating = _backingDictionary.GetOrAdd(k1, new ConcurrentDictionary<TKey2, TValue>());
+            var updating = _backingDictionary.GetOrAdd(k1, _ => new ConcurrentDictionary<TKey2, TValue>());
             foreach (var kvp in keyVals)
                 updating[kvp] = kvp;
         }

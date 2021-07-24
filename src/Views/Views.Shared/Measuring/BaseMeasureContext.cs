@@ -87,11 +87,7 @@ namespace Das.Views.Measuring
                     }
                 }
 
-            // measure anyways if we know nothing of it...?
-            //return ValueSize.Empty;
-
             VisualLineage.PushVisual(element);
-            //_styleContext.PushVisual(element);
 
             var layoutElement = GetElementForLayout(element);
 
@@ -99,7 +95,7 @@ namespace Das.Views.Measuring
             var res = MeasureElementImpl(layoutElement, availableSpace);
             ////////////////////////
 
-            LayoutQueue.RemoveVisualFromMeasureQueue(element);
+            //LayoutQueue.RemoveVisualFromMeasureQueue(element);
             element.AcceptChanges(ChangeType.Measure);
             return res;
         }
@@ -107,23 +103,6 @@ namespace Das.Views.Measuring
 
         public abstract ValueSize MeasureString(String s,
                                                 IFont font);
-
-        //public ValueSize GetStyleDesiredSize(IVisualElement element)
-        //{
-        //    //var viewState = GetViewState;
-        //    var styles = ViewState.StyleContext;
-        //    //var zoom = ViewState.ZoomLevel;
-
-        //    var specificHeight = styles.GetStyleSetter<Double>(StyleSetterType.Height, element,
-        //        VisualLineage);
-
-        //    var specificWidth = styles.GetStyleSetter<Double>(StyleSetterType.Width, element,
-        //        VisualLineage);
-
-
-        //    return new ValueSize(Double.IsNaN(specificWidth) ? 0 : specificWidth,
-        //        Double.IsNaN(specificHeight) ? 0 : specificHeight);
-        //}
 
         public virtual ValueSize ContextBounds => _contextBounds;
 

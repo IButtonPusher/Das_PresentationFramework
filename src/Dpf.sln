@@ -79,8 +79,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SourceGenerator", "Dev\Sour
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneratorTests", "Tests\GeneratorTests\GeneratorTests.csproj", "{F1EADAB5-9906-41CD-B88C-B18550D94CBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamarinAndroidNativeTest", "Android\XamarinAndroidNativeTest\XamarinAndroidNativeTest.csproj", "{CAD47F29-D2DC-4F13-9D95-9CD75D307969}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Windows\WinForms.Shared\WinForms.Shared.projitems*{15783956-b706-41d5-982b-1bcf698ca5b1}*SharedItemsImports = 13
@@ -183,12 +181,6 @@ Global
 		{F1EADAB5-9906-41CD-B88C-B18550D94CBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1EADAB5-9906-41CD-B88C-B18550D94CBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1EADAB5-9906-41CD-B88C-B18550D94CBE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CAD47F29-D2DC-4F13-9D95-9CD75D307969}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CAD47F29-D2DC-4F13-9D95-9CD75D307969}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CAD47F29-D2DC-4F13-9D95-9CD75D307969}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{CAD47F29-D2DC-4F13-9D95-9CD75D307969}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CAD47F29-D2DC-4F13-9D95-9CD75D307969}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CAD47F29-D2DC-4F13-9D95-9CD75D307969}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -223,7 +215,6 @@ Global
 		{6F5D2F7B-2D1D-4A5B-B1AE-654192AFB3B8} = {E1F74958-8371-483B-9766-F99868679BED}
 		{FC6C5B25-E2A8-444B-A8F6-A21006269A76} = {AC6A1DA4-64B6-4185-8FF6-7B9A88DFA489}
 		{F1EADAB5-9906-41CD-B88C-B18550D94CBE} = {E1F74958-8371-483B-9766-F99868679BED}
-		{CAD47F29-D2DC-4F13-9D95-9CD75D307969} = {225D062A-7759-4B85-AFF6-6798DC5E22E2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DFC00A6-1CD7-4B08-ADD9-F102FBD088BC}

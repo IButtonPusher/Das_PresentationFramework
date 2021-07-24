@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Das.ViewModels;
 
 namespace Das.Views.Gdi
@@ -20,6 +21,23 @@ namespace Das.Views.Gdi
         {
             _visualHost = visualHost;
             _windowProvider.WindowShown -= OnWindowShown;
+        }
+
+        public override void Notify(String text)
+        {
+           Invoke(() => NotifyImpl(text, String.Empty));
+        }
+
+        public override async Task NotifyAsync(String text,
+                                         String title)
+        {
+           await InvokeAsync(() => NotifyImpl(text, title));
+        }
+
+        private static void NotifyImpl(String text,
+                                       String title)
+        {
+           MessageBox.Show(text, title);
         }
 
         public override void BrowseToUri(Uri uri)
@@ -48,6 +66,11 @@ namespace Das.Views.Gdi
                 host.BeginInvoke(action);
             else
                 action();
+        }
+
+        public override Task InvokeAsync(Func<Task> action)
+        {
+           throw new NotImplementedException();
         }
 
         public override T Invoke<T>(Func<T> action)

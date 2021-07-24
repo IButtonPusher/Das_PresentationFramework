@@ -4,6 +4,7 @@ using Das.Views.Core.Geometry;
 using Das.Views.Primitives;
 using Das.Views.Rendering;
 using Das.Views.Styles.Declarations;
+
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
 
@@ -15,11 +16,34 @@ namespace Das.Views.Controls
     public class Label : TextBase,
                          ILabel
     {
-        public Label(IVisualBootstrapper visualBootstrapper)
-            : base(visualBootstrapper)
-        {
-        }
+       public Label(IVisualBootstrapper visualBootstrapper)
+          : base(visualBootstrapper)
+       {
 
+          //#if DEBUG
+
+          //lock (_aliveLock)
+          //   _alivers.Add(this, 1);
+
+          //#endif
+
+          //var wot = Interlocked.Add(ref _netAlive, 1);
+
+          //if (wot > 1000)
+          //{
+          //}
+       }
+
+       
+
+
+        #if DEBUG
+
+        //private static Int32 _netAlive;
+        //private static readonly Object _aliveLock = new();
+        //private static readonly Dictionary<Label, Byte> _alivers = new();
+
+        #endif
       
 
         public override void Arrange<TRenderSize>(TRenderSize availableSpace,
@@ -31,10 +55,9 @@ namespace Das.Views.Controls
 
 
         public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
-                                                      IMeasureContext measureContext)
+                                                       IMeasureContext measureContext)
         {
-            //var font = GetFont(measureContext);
-            var size = measureContext.MeasureString(Text, Font);
+           var size = measureContext.MeasureString(Text, Font);
             return size;
         }
 
@@ -42,16 +65,22 @@ namespace Das.Views.Controls
         public override String ToString()
         {
             return !String.IsNullOrEmpty(Text) 
-                ? Text
+                ? "Label: {" + Text + "}"
                 : "Label";
         }
 
-       
-
-        //private static void OnTextChanged(Label sender,
-        //                                  String oldValue, String newValue)
+        //public override void Dispose()
         //{
-        //    sender.InvalidateMeasure();
+        //   base.Dispose();
+           
+
+        //   //#if DEBUG
+
+        //   //Interlocked.Add(ref _netAlive, -1);
+        //   //lock (_aliveLock)
+        //   //   _alivers.Remove(this);
+
+        //   //#endif
         //}
 
         public override Boolean TryGetDependencyProperty(DeclarationProperty declarationProperty, 
@@ -66,13 +95,6 @@ namespace Das.Views.Controls
                 default:
                     return base.TryGetDependencyProperty(declarationProperty, out property);
             }
-            
-            
         }
-
-        
-
-
-        
     }
 }

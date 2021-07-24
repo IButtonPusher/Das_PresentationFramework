@@ -22,31 +22,38 @@ namespace Das.Views.Input
         {
             _lastInputContext = args.InputContext;
             
-            //System.Diagnostics.Debug.WriteLine("Input handler received: " + args + " capturing: " + 
-            //                                   _inputCapturingMouse);
+            UILogger.Log("Input handler received: " + args + " capturing: " + 
+                                               _inputCapturingMouse, LogLevel.Level1);
             
             var isButtonAction = (InputAction.AnyMouseButton & action) > InputAction.None;
             IHandleInput? handledBy = null;
 
+            var isHandled = false;
+
             if (_inputCapturingMouse is IHandleInput<TArgs> captureHandler && 
-                _inputCapturingMouse is IVisualElement captureElement)
+                _inputCapturingMouse is { } captureElement)
             {
-                OnMouseInputWithCapture(captureHandler, captureElement,
+                isHandled = OnMouseInputWithCapture(captureHandler, captureElement,
                     args, action, isButtonAction, out handledBy);
 
                 // smile
             }
 
-            if (handledBy == null)
+            //var isHandled = handledBy != null;
+
+            //if (handledBy == null)
+            if (!isHandled)
             {
-                OnMouseInputNoCapture(args, action, isButtonAction, out handledBy);
+                //OnMouseInputNoCapture(args, action, isButtonAction, out handledBy);
+                isHandled = OnMouseInputNoCapture(args, action, isButtonAction);
             }
 
             if (_handledMouseDown != null && (action == InputAction.LeftMouseButtonUp ||
                                               action == InputAction.RightMouseButtonUp))
                 _handledMouseDown = null;
 
-            return handledBy !=null;
+            return isHandled;
+            //return handledBy !=null;
         }
 
         // ReSharper disable once UnusedMethodReturnValue.Local
@@ -58,7 +65,7 @@ namespace Das.Views.Input
                                                        out IHandleInput handledBy)
             where TArgs : IMouseInputEventArgs<TArgs>
         {
-            if (!(_elementLocator.TryGetLastRenderBounds(captureAsVisual) is { } bounds))
+            if (!_elementLocator.TryGetLastRenderBounds(captureAsVisual, out var bounds))
             {
                 handledBy = default!;
                 return false;
@@ -85,9 +92,14 @@ namespace Das.Views.Input
                                                      out IHandleInput handledBy)
             where TArgs : IMouseInputEventArgs<TArgs>
         {
+
+           //_elementLocator.RootVisual.TryHandleInput()
+
             foreach (var clickable in _elementLocator.GetRenderedVisualsForMouseInput<TArgs, IPoint2D>(
                 args.Position, action))
             {
+               UILogger.Log("send input to " + clickable.Element, LogLevel.Level1);
+
                 var element = clickable.Element;
 
                 if (element == _inputCapturingMouse)
@@ -105,6 +117,39 @@ namespace Das.Views.Input
             return false;
         }
 
+        private Boolean OnMouseInputNoCapture<TArgs>(TArgs args,
+                                                     InputAction action,
+                                                     Boolean isButtonAction)
+           where TArgs : IMouseInputEventArgs<TArgs>
+        {
+
+           return _elementLocator.RootVisual is { } rv &&
+                  rv.TryHandleInput(args,
+              Convert.ToInt32(args.Position.X), 
+              Convert.ToInt32(args.Position.Y));
+
+           //foreach (var clickable in _elementLocator.GetRenderedVisualsForMouseInput<TArgs, IPoint2D>(
+           //   args.Position, action))
+           //{
+           //   UILogger.Log("send input to " + clickable.Element, LogLevel.Level1);
+
+           //   var element = clickable.Element;
+
+           //   if (element == _inputCapturingMouse)
+           //      continue;
+
+           //   if (TryHandleMouseAction(args, element, isButtonAction, action,
+           //      clickable.Position))
+           //   {
+           //      handledBy = element;
+           //      return true;
+           //   }
+           //}
+
+           //handledBy = default!;
+           //return false;
+        }
+
         private Boolean TryHandleMouseAction<TArgs>(TArgs args,
                                                     IHandleInput<TArgs> element,
                                                     Boolean isButtonAction,
@@ -113,6 +158,8 @@ namespace Das.Views.Input
             where TArgs : IMouseInputEventArgs<TArgs>
         {
             var margs = args.Offset(offsetCube.TopLeft);
+
+            UILogger.Log("try handle action by " + element, LogLevel.Level1);
 
             if (isButtonAction)
             {
@@ -244,6 +291,9 @@ namespace Das.Views.Input
             foreach (var visual in _elementLocator.GetRenderedVisualsForMouseInput<MouseOverEventArgs, TPoint>(
                 position, InputAction.MouseOver))
             {
+
+               UILogger.Log("send input to " + visual.Element, LogLevel.Level1);
+
                 if (visual.Element != capturingVisual)
                     continue;
 

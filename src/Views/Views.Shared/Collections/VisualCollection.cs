@@ -23,8 +23,7 @@ namespace Das.Views.Collections
 
         public VisualCollection(IEnumerable<IVisualElement> children)
         {
-          //  _lockChildren = new Object();
-            _children = new List<IVisualElement>(children);
+           _children = new List<IVisualElement>(children);
             _collectionHelper = new VisualCollectionHelper<IVisualElement>(_children, new Object());
         }
 
@@ -40,7 +39,7 @@ namespace Das.Views.Collections
         public Boolean Remove(IVisualElement element) => _collectionHelper.Remove(element);
 
         private readonly VisualCollectionHelper<IVisualElement> _collectionHelper;
-        //private readonly Object _lockChildren;
+        
         private readonly List<IVisualElement> _children;
 
         public IEnumerable<IVisualElement> GetAllChildren()

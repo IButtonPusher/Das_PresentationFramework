@@ -27,7 +27,7 @@ namespace Das.Views
                                 IViewInflater viewInflater,
                                 Dictionary<IVisualElement, ValueCube> renderPositions,
                                 IImageProvider imageProvider)
-        : this(ref resolver!, imageProvider, renderPositions)
+        : this(ref resolver!, imageProvider, renderPositions, new LayoutQueue())
         {
             VisualBootstrapper = visualBootstrapper;
 
@@ -40,15 +40,31 @@ namespace Das.Views
         protected BaseRenderKit(IImageProvider imageProvider,
                                 IMultiSerializer xmlSerializer,
                                 ISvgPathBuilder svgPathBuilder,
-                                IResolver? resolver)
-            : this(ref resolver,
-                imageProvider, new Dictionary<IVisualElement, ValueCube>())
+                                IResolver? resolver,
+                                IThemeProvider themeProvider)
+        : this(imageProvider, xmlSerializer, svgPathBuilder, resolver,
+           new LayoutQueue(), themeProvider)
         {
 
-            var styleProvider = GetStyleProvider(xmlSerializer.TypeInferrer, BaselineThemeProvider.Instance);
+        }
+
+        protected BaseRenderKit(IImageProvider imageProvider,
+                                IMultiSerializer xmlSerializer,
+                                ISvgPathBuilder svgPathBuilder,
+                                IResolver? resolver,
+                                ILayoutQueue layoutQueue,
+                                IThemeProvider themeProvider)
+            : this(ref resolver,
+                imageProvider, new Dictionary<IVisualElement, ValueCube>(),
+                layoutQueue)
+        {
+
+            var styleProvider = GetStyleProvider(xmlSerializer.TypeInferrer, themeProvider);
+
             var appliedStyleBuilder = GetAppliedStyleBuilder(xmlSerializer.TypeManipulator, styleProvider);
-            var visualBootstrapper = GetVisualBootstrapper(Container, BaselineThemeProvider.Instance,
-                xmlSerializer.TypeManipulator, appliedStyleBuilder);
+            var visualBootstrapper = GetVisualBootstrapper(Container, themeProvider,
+               //BaselineThemeProvider.Instance,
+                xmlSerializer.TypeManipulator, appliedStyleBuilder, layoutQueue);
 
             VisualBootstrapper = visualBootstrapper;
 
@@ -64,7 +80,8 @@ namespace Das.Views
 
         private BaseRenderKit(ref IResolver? resolver,
                               IImageProvider imageProvider, 
-                              Dictionary<IVisualElement, ValueCube> renderPositions)
+                              Dictionary<IVisualElement, ValueCube> renderPositions,
+                              ILayoutQueue layoutQueue)
         {
             resolver ??= new BaseResolver();
 
@@ -73,6 +90,7 @@ namespace Das.Views
             ImageProvider = imageProvider;
 
             _renderPositions = renderPositions;
+            _layoutQueue = layoutQueue;
             _surrogateInstances = new Dictionary<IVisualElement, IVisualSurrogate>();
             _surrogateTypeBuilders = new Dictionary<Type, Func<IVisualElement, IVisualSurrogate>>();
         }
@@ -83,10 +101,11 @@ namespace Das.Views
         private static IVisualBootstrapper GetVisualBootstrapper(IResolver resolver,
                                                                  IThemeProvider themeProvider,
                                                                  IPropertyProvider propertyProvider,
-                                                                 IAppliedStyleBuilder styleBuilder)
+                                                                 IAppliedStyleBuilder styleBuilder,
+                                                                 ILayoutQueue layoutQueue)
         {
             return new DefaultVisualBootstrapper(resolver, themeProvider, propertyProvider,
-                new LayoutQueue(), styleBuilder);
+               layoutQueue, styleBuilder);
         }
 
         private static IAppliedStyleBuilder GetAppliedStyleBuilder(IPropertyProvider propertyProvider,
@@ -168,6 +187,7 @@ namespace Das.Views
         }
         
         protected readonly Dictionary<IVisualElement, ValueCube> _renderPositions;
+        protected readonly ILayoutQueue _layoutQueue;
         private readonly Dictionary<IVisualElement, IVisualSurrogate> _surrogateInstances;
         private readonly Dictionary<Type, Func<IVisualElement, IVisualSurrogate>> _surrogateTypeBuilders;
     }
