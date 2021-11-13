@@ -15,7 +15,7 @@ namespace Das.Xamarin.Android
         {
             _unwrapLock = new Object();
 
-            _bmp = bmp!;
+            _bmp = bmp;
             _stream = stream;
             _isEmpty = bmp.Width == 1 && bmp.Height == 1;
         }

@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Das.Views;
+using Das.Views.Colors;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 
@@ -10,7 +11,7 @@ namespace Das.OpenGL.Windows
     public abstract class OpenGLPanel : GLHostedElement
     {
         public OpenGLPanel(IVisualElement view, 
-                           IStyleContext styleContext,
+                           IThemeProvider styleContext,
                            IVisualBootstrapper visualBootstrapper)
             : base(view, styleContext, visualBootstrapper)
         {

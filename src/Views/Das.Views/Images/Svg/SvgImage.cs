@@ -51,28 +51,28 @@ namespace Das.Views.Images
                                      IColor? stroke,
                                      IBrush? fill)
         {
-            if (width.IsZero() || height.IsZero())
-                return default;
+           if (width.IsZero() || height.IsZero())
+              return default;
 
-            using (var path = _imageProvider.GetNewGraphicsPath())
-            {
-                AddToPath(path);
+           using (var path = _imageProvider.GetNewGraphicsPath())
+           {
+              AddToPath(path);
 
-                if (Width.AreDifferent(width) || 
-                    Height.AreDifferent(height))
-                {
-                    var scaleX = width / Width;
-                    var scaleY = height / Height;
+              if (Width.AreDifferent(width) ||
+                  Height.AreDifferent(height))
+              {
+                 var scaleX = width / Width;
+                 var scaleY = height / Height;
 
-                    var xformMatrix = new TransformationMatrix(scaleX, 0, 0, scaleY, 0, 0);
-                    path.Transform(xformMatrix);
-                }
+                 var xformMatrix = new TransformationMatrix(scaleX, 0, 0, scaleY, 0, 0);
+                 path.Transform(xformMatrix);
+              }
 
-                var cooked = path.ToImage(width,
-                    height, stroke, fill);
+              var cooked = path.ToImage(width,
+                 height, stroke, fill);
 
-                return cooked;
-            }
+              return cooked;
+           }
         }
 
 

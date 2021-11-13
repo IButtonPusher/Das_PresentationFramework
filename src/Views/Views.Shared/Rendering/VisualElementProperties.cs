@@ -14,7 +14,7 @@ using TaskEx = System.Threading.Tasks.Task;
 #endif
 namespace Das.Views
 {
-   public abstract partial class VisualElement
+   public partial class VisualElement
    {
       public virtual Boolean IsRequiresMeasure
       {

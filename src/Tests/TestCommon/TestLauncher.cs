@@ -1,8 +1,13 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Das.Serializer;
 using Das.Views;
+using Das.Views.Construction;
+using Das.Views.DataBinding;
 using Das.Views.Panels;
+using TestCommon.Company;
 
 namespace TestCommon
 {
@@ -26,6 +31,33 @@ namespace TestCommon
             RenderKit = renderKit;
             TypeInferrer = typeInferrer;
             //_viewProvider = viewProvider;
+        }
+
+        public static IView GetTestCompanyTabsView(IViewInflater inflater,
+                                                   IVisualBootstrapper visualBootstrapper)
+        {
+           //var inflater = testLauncher.RenderKit.ViewInflater;
+            
+           //var inflator = new ViewInflater(testLauncher.RenderKit.VisualBootstrapper,
+           //    testLauncher.TypeInferrer);
+
+           var file = new FileInfo(
+              Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                 "company", "TestCompanyTabs.xml"));
+
+           var xml = File.ReadAllText(file.FullName);
+           var view = inflater.InflateXmlAsync<IBindableElement>(xml).Result;
+
+           ICompanyViewModel vm = new TestCompanyVm();
+           vm.SelectedEmployee = vm.Employees.FirstOrDefault();
+
+           view.DataContext = vm;
+
+           //return view;
+           return new View(visualBootstrapper)
+           {
+              Content = view
+           };
         }
 
         //public async Task MvvmTest()

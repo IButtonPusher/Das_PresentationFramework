@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)InvokableViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ObservableRangeCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NotifyPropertyChangedBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Selectable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SelectableCollection{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SelectableEnumCollection{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Selectable{T}.cs" />

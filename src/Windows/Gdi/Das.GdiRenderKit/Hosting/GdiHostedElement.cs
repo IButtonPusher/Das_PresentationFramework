@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.Views;
-using Das.Views.Styles;
 using WinForms.Shared;
 
 namespace Das.Gdi.Controls

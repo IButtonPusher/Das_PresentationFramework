@@ -43,6 +43,12 @@ namespace Das.Xamarin.Android.Rendering
         {
         }
 
+        public override void DrawImageAt<TLocation>(IImage img,
+                                                    TLocation destination)
+        {
+           
+        }
+
         public override void DrawImage<TRectangle>(IImage img,
                                                    TRectangle destination)
         {

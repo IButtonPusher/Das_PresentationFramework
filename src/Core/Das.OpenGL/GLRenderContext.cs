@@ -83,17 +83,17 @@ namespace Das.OpenGL
 
         protected override void PushClip<TRectangle>(TRectangle rect)
         {
-            throw new NotImplementedException();
+            
         }
 
         protected override void PopClip<TRectangle>(TRectangle rect)
         {
-            throw new NotImplementedException();
+            
         }
 
         protected override ValueRectangle GetCurrentClip()
         {
-            throw new NotImplementedException();
+           return ValueRectangle.Empty;
         }
 
         public override void DrawString<TFont, TBrush, TRectangle>(String s,
@@ -104,10 +104,16 @@ namespace Das.OpenGL
             throw new NotImplementedException();
         }
 
+        public override void DrawImageAt<TLocation>(IImage img,
+                                                    TLocation destination)
+        {
+           throw new NotImplementedException();
+        }
+
         public override  void DrawImage<TRectangle>(IImage img, 
                                                     TRectangle destination)
         {
-            throw new NotImplementedException();
+            
         }
 
         //public override IImage GetNullImage()

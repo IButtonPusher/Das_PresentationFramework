@@ -146,14 +146,14 @@ namespace Das.Views.Extended
                         var name = GetNameFromProperties(reader, meta);
                         var xform = GetModelTransformation(reader, fbxVersion);
 
-                        if (name == "Cone")
-                        {}
+                       
 
                         if (namedMeshes.TryGetValue(name, out var m))
                         {
-                            if (m.Name == "Cylinder.003")
+                            //if (m.Name == "Cylinder.003")
                             {
-                                m.Transform(xform);
+                               m.Transformation = xform;
+                                //m.Transform(xform);
                                 yield return m;
                             }
 
@@ -174,11 +174,11 @@ namespace Das.Views.Extended
         private static Transformation3D GetModelTransformation(BinaryReader reader,
                                                                Double fbxVersion)
         {
-            ValueVector3? positionOffset = null;
-            ValueVector3? rotation= null;
-            ValueVector3? scale= null;
+           var positionOffset = new ValueVector3(0, 0, 0);
+           var rotation = new ValueVector3(0, 0, 0);
+           var scale = new ValueVector3(1, 1, 1);
 
-            while (true)
+           while (true)
             {
                 var meta = GetNodeMeta(reader, fbxVersion);
 
@@ -237,12 +237,7 @@ namespace Das.Views.Extended
                 }
             }
 
-            if (positionOffset == null || rotation == null || scale == null)
-                throw new InvalidOperationException();
-
-            return new Transformation3D(positionOffset.Value, 
-                rotation.Value, 
-                scale.Value);
+            return new Transformation3D(positionOffset, rotation, scale);
         }
 
         private static Object[] GetPropertyValues(BinaryReader reader,

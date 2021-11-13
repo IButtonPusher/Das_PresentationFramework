@@ -39,6 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Images\ISvgImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Images\ISvgPathBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\FlingMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IZoomLevelAware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IAsyncQueryable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\IFontVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\ITextVisual.cs" />

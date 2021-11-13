@@ -41,20 +41,20 @@ namespace Das.Views.Measuring
 
             ViewState = viewState;
 
-            if (viewState.ZoomLevel.AreDifferent(1.0))
-            {
-                var zoomWidth = availableSpace.Width / viewState.ZoomLevel;
-                var zoomHeight = availableSpace.Height / viewState.ZoomLevel;
+            //if (viewState.ZoomLevel.AreDifferent(1.0))
+            //{
+            //    var zoomWidth = availableSpace.Width / viewState.ZoomLevel;
+            //    var zoomHeight = availableSpace.Height / viewState.ZoomLevel;
 
-                if (_contextBounds.Width.AreDifferent(zoomWidth) ||
-                    _contextBounds.Height.AreDifferent(zoomHeight))
-                    _contextBounds = new ValueSize(zoomWidth, zoomHeight);
+            //    if (_contextBounds.Width.AreDifferent(zoomWidth) ||
+            //        _contextBounds.Height.AreDifferent(zoomHeight))
+            //        _contextBounds = new ValueSize(zoomWidth, zoomHeight);
 
-                var availableSpace2 = new ValueRenderSize(zoomWidth, zoomHeight, availableSpace.Offset);
+            //    var availableSpace2 = new ValueRenderSize(zoomWidth, zoomHeight, availableSpace.Offset);
 
-                //Debug.WriteLine("********** END MEASURE ***********");
-                return MeasureElement(element, availableSpace2);
-            }
+            //    //Debug.WriteLine("********** END MEASURE ***********");
+            //    return MeasureElement(element, availableSpace2);
+            //}
 
             if (_contextBounds.Width.AreDifferent(availableSpace.Width) ||
                 _contextBounds.Height.AreDifferent(availableSpace.Height))

@@ -19,8 +19,7 @@ namespace WinForms.Shared
       protected HostedViewControl(IVisualElement view,
                                   IThemeProvider themeProvider,
                                   IVisualBootstrapper visualBootstrapper)
-         //IStyleContext styleContext)
-         : this() //styleContext)
+         : this()
       {
          _themeProvider = themeProvider;
          _visualBootstrapper = visualBootstrapper;
@@ -29,7 +28,7 @@ namespace WinForms.Shared
       }
 
 #pragma warning disable 8618
-      protected HostedViewControl() //IStyleContext styleContext)
+      protected HostedViewControl() 
 #pragma warning restore 8618
       {
          //StyleContext = styleContext;
@@ -42,8 +41,6 @@ namespace WinForms.Shared
 
       // ReSharper disable once UnusedAutoPropertyAccessor.Global
       public SizeToContent SizeToContent { get; set; }
-
-      //public IStyleContext StyleContext { get; set; }
 
       public Thickness RenderMargin { get; } = Thickness.Empty;
 
@@ -70,7 +67,6 @@ namespace WinForms.Shared
          get
          {
             return _layoutQueue.HasVisualsNeedingLayout;
-            //return View.IsRequiresMeasure || View.IsRequiresArrange;
          }
       }
 
@@ -79,7 +75,6 @@ namespace WinForms.Shared
          return Point2D.Empty;
       }
 
-      //public IVisualRenderer Visual => View;
       public IColorPalette ColorPalette => _themeProvider.ColorPalette;
 
 

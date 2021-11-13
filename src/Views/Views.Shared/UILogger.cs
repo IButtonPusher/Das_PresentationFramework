@@ -16,9 +16,7 @@ namespace Das.Views
 
    public static class UILogger
    {
-      public static LogLevel LogLevel { get; set; }
-
-      public static void Log(String msg, 
+      public static void Log(String msg,
                              LogLevel level)
       {
          if (level < LogLevel)
@@ -27,6 +25,8 @@ namespace Das.Views
          Debug.WriteLine("[OKYN" + Thread.CurrentThread.ManagedThreadId + "][" +
                          _sw.ElapsedMilliseconds + "] " + msg);
       }
+
+      public static LogLevel LogLevel { get; set; }
 
       private static readonly Stopwatch _sw = Stopwatch.StartNew();
    }

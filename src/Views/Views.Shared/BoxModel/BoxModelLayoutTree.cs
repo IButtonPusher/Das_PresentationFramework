@@ -65,9 +65,10 @@ namespace Das.Views.Layout
 
       public void PopCurrentBox()
       {
-         _currentZ--;
          _locations.Pop();
          _currentElementRect = _locations.Peek();
+         if (Double.IsNaN(_currentElementRect.Width))
+         {}
       }
 
       public ValuePoint2D GetAbsolutePoint<TPoint>(TPoint relativePoint2D,
@@ -171,9 +172,11 @@ namespace Das.Views.Layout
 
       private void PushRect(ValueRenderRectangle rect)
       {
-         _currentZ++;
+         //_currentZ++;
          _locations.Push(rect);
          _currentElementRect = rect;
+         if (Double.IsNaN(_currentElementRect.Width))
+         {}
       }
 
       protected Dictionary<IVisualElement, ValueCube> RenderPositions { get; }
@@ -183,7 +186,7 @@ namespace Das.Views.Layout
       private readonly Stack<TransformationMatrix> _transforms;
 
       private ValueRenderRectangle _currentElementRect;
-      private Int32 _currentZ;
+      //private Int32 _currentZ;
 
       private TransformationMatrix _netTransform;
    }

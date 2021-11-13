@@ -57,7 +57,7 @@ namespace Das.Xamarin.Android
                           ref AndroidRenderContext renderContext,
                           ref RefreshRenderContext refreshRenderContext)
         {
-            var imageProvider = new AndroidImageProvider(displayMetrics);
+            
 
             var visualLineage = new VisualLineage();
             
@@ -75,6 +75,8 @@ namespace Das.Xamarin.Android
             refreshRenderContext = new RefreshRenderContext(viewPerspective, this, 
                 visualPositions, lastMeasures, themeProvider, visualLineage, _layoutQueue,
                 renderContext.GetClip);
+
+            var imageProvider = new AndroidImageProvider(displayMetrics);//, renderContext);
 
             Container.ResolveTo<IImageProvider>(imageProvider);
             Container.ResolveTo(uiProvider);

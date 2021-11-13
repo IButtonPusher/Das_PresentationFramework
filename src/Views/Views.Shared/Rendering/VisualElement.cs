@@ -16,10 +16,10 @@ using TaskEx = System.Threading.Tasks.Task;
 
 namespace Das.Views
 {
-   public abstract partial class VisualElement : NotifyPropertyChangedBase,
+   public partial class VisualElement : NotifyPropertyChangedBase,
                                                  IVisualElement
    {
-      protected VisualElement(IVisualBootstrapper visualBootstrapper)
+      public VisualElement(IVisualBootstrapper visualBootstrapper)
       {
          _visualBootstrapper = visualBootstrapper;
          _arrangedBounds = ValueRenderRectangle.Empty;

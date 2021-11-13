@@ -40,7 +40,7 @@ namespace Das.Gdi
         {
         }
 
-        public void Run(IView view)
+        public void Run(IVisualElement view)
         {
             var window = Show(view);
 
@@ -50,7 +50,7 @@ namespace Das.Gdi
         public IVisualBootstrapper VisualBootstrapper { get; }
 
 
-        public ViewWindow Show<TRectangle>(IView view,
+        public ViewWindow Show<TRectangle>(IVisualElement view,
                                            TRectangle rect)
             where TRectangle : IRectangle
         {
@@ -67,7 +67,7 @@ namespace Das.Gdi
             return form;
         }
 
-        public ViewWindow Show(IView view)
+        public ViewWindow Show(IVisualElement view)
         {
             //var styleContext = view.StyleContext;
 

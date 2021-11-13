@@ -11,7 +11,7 @@ namespace TestCommon
         public TestCompanyVm() 
             : base("ACME Inc.")//, MakeAScene())
         {
-            var address1 = new AddressVm
+           var address1 = new AddressVm
             {
                 HouseNumber = "11280",
                 Street = "NW 35th Court",

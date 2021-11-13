@@ -18,7 +18,6 @@ namespace Das.Views
         /// <summary>
         /// Sets values of dependency properties based on applicable setters
         /// </summary>
-        /// <param name="visual"></param>
         void ApplyVisualStyling(IVisualElement visual);
 
         ILayoutQueue LayoutQueue { get; }

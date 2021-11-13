@@ -2,10 +2,8 @@
 
 namespace Das.Views.Rendering
 {
-    public interface IDisplayMetrics
+    public interface IDisplayMetrics : IZoomLevelAware
     {
-        Double ZoomLevel { get; }
-
-        Single Density { get; }
+       Single Density { get; }
     }
 }

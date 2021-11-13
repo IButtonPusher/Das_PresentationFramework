@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
-using Boolean = System.Boolean;
 using Object = System.Object;
 
 namespace Das.Xamarin.Android
@@ -14,7 +12,7 @@ namespace Das.Xamarin.Android
          : base(TaskCreationOptions.RunContinuationsAsynchronously)
       {
          _androidActivity = androidActivity;
-         Id = Interlocked.Increment(ref _lastId);
+         //Id = Interlocked.Increment(ref _lastId);
 
          System.Threading.Tasks.Task.Factory.StartNew(() => RunAction(action));
       }
@@ -28,9 +26,9 @@ namespace Das.Xamarin.Android
          });
       }
 
-      public Int32 Id { get; }
+      //public Int32 Id { get; }
 
-      private static Int32 _lastId;
+      //private static Int32 _lastId;
       private readonly Activity _androidActivity;
    }
 
@@ -67,7 +65,7 @@ namespace Das.Xamarin.Android
          : base(TaskCreationOptions.RunContinuationsAsynchronously)
       {
          _androidActivity = androidActivity;
-         Id = Interlocked.Increment(ref _lastId);
+         //Id = Interlocked.Increment(ref _lastId);
 
          
          System.Threading.Tasks.Task.Factory.StartNew(() => RunAction(action));
@@ -78,21 +76,17 @@ namespace Das.Xamarin.Android
          _androidActivity.RunOnUiThread(() =>
          {
             var res = action();
-            res.ContinueWith(p =>
-            {
-               SetResult(p);
-            });
+            res.ContinueWith(SetResult);
          });
       }
 
 
       public InvokeCompletionSource(Action action,
-                                    Activity androidActivity,
-                                    Boolean isBlocking)
+                                    Activity androidActivity)
          : base(TaskCreationOptions.RunContinuationsAsynchronously)
       {
          _androidActivity = androidActivity;
-         Id = Interlocked.Increment(ref _lastId);
+        // Id = Interlocked.Increment(ref _lastId);
 
          _androidActivity.RunOnUiThread(() =>
          {
@@ -101,9 +95,9 @@ namespace Das.Xamarin.Android
          });
       }
 
-      public Int32 Id { get; }
+      //public Int32 Id { get; }
 
-      private static Int32 _lastId;
+      //private static Int32 _lastId;
 
       // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
       private readonly Activity _androidActivity;

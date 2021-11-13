@@ -20,7 +20,6 @@ using Java.Lang;
 using Boolean = System.Boolean;
 using Double = System.Double;
 using Math = System.Math;
-using Object = System.Object;
 
 
 namespace Das.Xamarin.Android
@@ -79,7 +78,7 @@ namespace Das.Xamarin.Android
             AddView(_paintView);
 
             var inputHandler = new BaseInputHandler(RenderKit.RenderContext);
-            _inputContext = new AndroidInputContext(this, context, inputHandler, _viewState);
+            _inputContext = new AndroidInputContext(this, context, inputHandler, renderKit.ViewState);
 
             //view.PropertyChanged += OnViewPropertyChanged;
         }
@@ -221,7 +220,7 @@ namespace Das.Xamarin.Android
             }
 
             //_measured = new ValueSize(sz.Width, sz.Height);
-            //RenderKit.MeasureContext.MeasureMainView(_view, sz, _viewState);
+            RenderKit.MeasureContext.MeasureMainView(_view, sz, _viewState);
 
             if (_refreshLoopCount == 0)
             {
@@ -245,50 +244,9 @@ namespace Das.Xamarin.Android
 
             var fontProvider = new AndroidFontProvider(displayMetrics);
             return new AndroidRenderKit(new BasePerspective(), viewState,
-                fontProvider, windowManager, uiProvider, themeProvider, displayMetrics,
-                resolver, new AndroidImageProvider(displayMetrics));
+               fontProvider, windowManager, uiProvider, themeProvider, displayMetrics,
+               resolver, new AndroidImageProvider(displayMetrics)); //, viewState));
         }
-
-
-        //private async Task _RefreshLoop()
-        //{
-        //    while (true)
-        //    {
-        //        var willInvalidate = false;
-
-        //        if (_view.IsRequiresMeasure)
-        //        {
-        //            RenderKit.MeasureContext.MeasureMainView(_view,
-        //                new ValueRenderSize(_measured), _viewState);
-
-        //            willInvalidate = true;
-        //        }
-        //        else if (_view.IsRequiresArrange || _inputContext.IsInteracting)
-        //            willInvalidate = true;
-
-        //        if (willInvalidate)
-        //        {
-        //            if (ChildCount > 1)
-        //                Invalidate();
-                    
-        //            _paintView.Invalidate();
-                    
-        //            _inputContext.SleepTime = 0;
-        //            await Task.Yield();
-        //        }
-        //        else
-        //        {
-        //            //if (_inputContext.SleepTime == 0)
-        //            //    WriteLine("frame skipped!");
-
-        //            _inputContext.SleepTime = Math.Min(++_inputContext.SleepTime, 50);
-
-        //            await Task.Delay(_inputContext.SleepTime);
-        //        }
-        //    }
-
-        //    // ReSharper disable once FunctionNeverReturns
-        //}
 
 
         private void RefreshLoop3()
@@ -344,49 +302,7 @@ namespace Das.Xamarin.Android
         }
 
 
-        //private async Task RefreshLoop2()
-        //{
-        //   while (true)
-        //   {
-        //      var willInvalidate = false;
-
-        //      if (_view.IsRequiresMeasure)
-        //      {
-        //         //RenderKit.MeasureContext.MeasureMainView(_view,
-        //         //   new ValueRenderSize(_measured), _viewState);
-
-        //         willInvalidate = true;
-        //      }
-        //      else if (_view.IsRequiresArrange || _inputContext.IsInteracting)
-        //         willInvalidate = true;
-
-        //      if (willInvalidate)
-        //      {
-        //         if (ChildCount > 1)
-        //            PostInvalidate();
-                   
-        //         _paintView.Refresh();
-                 
-        //         //_paintView.Draw();
-
-        //         //_paintView.PostInvalidate();
-                    
-        //         _inputContext.SleepTime = 0;
-        //         await Task.Yield();
-        //      }
-        //      else
-        //      {
-        //         //if (_inputContext.SleepTime == 0)
-        //         //    WriteLine("frame skipped!");
-
-        //         _inputContext.SleepTime = Math.Min(++_inputContext.SleepTime, 50);
-
-        //         await Task.Delay(_inputContext.SleepTime).ConfigureAwait(false);
-        //      }
-        //   }
-
-        //   // ReSharper disable once FunctionNeverReturns
-        //}
+       
 
 
         private readonly AndroidInputContext _inputContext;

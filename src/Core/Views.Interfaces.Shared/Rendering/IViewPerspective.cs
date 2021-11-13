@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace Das.Views.Rendering
 {
-    public interface IViewPerspective
+    public interface IViewPerspective : IZoomLevelAware
     {
-        Double ZoomLevel { get; }
+        
     }
 }

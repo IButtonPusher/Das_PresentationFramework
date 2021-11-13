@@ -45,7 +45,7 @@ namespace Das.Xamarin.Android.Mvvm
             {
                // _activity.RunOnUiThread(...) schedules the action so this would work like BeginInvoke
                // but the InvokeCompletionSource allows us to block the current thread till it finishes
-               var src = new InvokeCompletionSource(action, _activity, true);
+               var src = new InvokeCompletionSource(action, _activity);
                 src.Task.ConfigureAwait(false);
                 src.Task.Wait();
                 
@@ -112,7 +112,7 @@ namespace Das.Xamarin.Android.Mvvm
                 action();
             else
             {
-                var src = new InvokeCompletionSource(action, _activity, false);
+                var src = new InvokeCompletionSource(action, _activity);
                 await src.Task;
             }
         }

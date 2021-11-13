@@ -68,7 +68,7 @@ namespace Das.Views.Mvvm
             if (!VerifyCanChangeValue(field, value, null, propertyName))
                 return false;
 
-            SetValueImpl(ref field, value, null, propertyName!);
+            SetValueImpl(ref field, value, null, propertyName);
             return true;
         }
 

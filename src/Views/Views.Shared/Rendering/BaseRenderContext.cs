@@ -60,7 +60,7 @@ namespace Das.Views.Rendering
       public IVisualElement? RootVisual { get; private set; }
 
       public IEnumerable<IRenderedVisual<IHandleInput<T>>> GetRenderedVisualsForMouseInput<T, TPoint>(TPoint point2D,
-                                                                                                      InputAction inputAction)
+         InputAction inputAction)
          where T : IInputEventArgs
          where TPoint : IPoint2D
       {
@@ -69,7 +69,7 @@ namespace Das.Views.Rendering
          var rp = LastRenderPositions;
 
          foreach (var kvp in rp.Where(p => p.Value.Contains(point2D))
-                                            .OrderByDescending(p => p.Value.Depth))
+                               .OrderByDescending(p => p.Value.Depth))
          {
             if (!(kvp.Key is IHandleInput interactive) ||
                 (interactive.HandlesActions & inputAction) != inputAction ||
@@ -168,9 +168,18 @@ namespace Das.Views.Rendering
 
       public abstract void DrawFrame(IFrame frame);
 
+      public abstract void DrawImageAt<TLocation>(IImage img,
+                                                  TLocation destination) where TLocation : IPoint2D;
+
       public abstract void DrawImage<TRectangle>(IImage img,
                                                  TRectangle destination)
          where TRectangle : IRectangle;
+
+      public abstract void DrawImage<TRectangle1, TRectangle2>(IImage img,
+                                                               TRectangle1 sourceRect,
+                                                               TRectangle2 destination)
+         where TRectangle1 : IRectangle
+         where TRectangle2 : IRectangle;
 
       public virtual void DrawMainElement<TRectangle>(IVisualElement element,
                                                       TRectangle rect,
@@ -200,7 +209,6 @@ namespace Das.Views.Rendering
 
          lock (_renderLock)
             LastRenderPositions = RenderPositions;
-
       }
 
 
@@ -242,7 +250,7 @@ namespace Das.Views.Rendering
             }
          }
 
-         if (layoutVisual.Background is {IsInvisible: false} background)
+         if (layoutVisual.Background is { IsInvisible: false } background)
          {
             if (radius.IsEmpty)
                FillRectangle(useRect2, background);
@@ -327,12 +335,6 @@ namespace Das.Views.Rendering
          where TFont : IFont
          where TBrush : IBrush
          where TRectangle : IRectangle;
-
-      public abstract void DrawImage<TRectangle1, TRectangle2>(IImage img,
-                                                               TRectangle1 sourceRect,
-                                                               TRectangle2 destination)
-         where TRectangle1 : IRectangle
-         where TRectangle2 : IRectangle;
 
 
       public abstract void DrawString<TFont, TBrush, TPoint>(String s,
@@ -519,17 +521,17 @@ namespace Das.Views.Rendering
 
       protected ValuePoint2D CurrentLocation => _boxModel.CurrentElementRect.Location;
 
-      //protected ValuePoint2D CurrentLocation => CurrentElementRect.Location;
-
-      protected Dictionary<IVisualElement, ValueCube> LastRenderPositions;
-
-      protected Dictionary<IVisualElement, ValueCube> RenderPositions;
-
       protected readonly IBoxModel _boxModel;
 
 
       //private readonly Stack<ValueRenderRectangle> _locations;
       private readonly Object _renderLock;
+
+      //protected ValuePoint2D CurrentLocation => CurrentElementRect.Location;
+
+      protected Dictionary<IVisualElement, ValueCube> LastRenderPositions;
+
+      protected Dictionary<IVisualElement, ValueCube> RenderPositions;
 
       //private Int32 _currentZ;
       //protected ValueRenderRectangle CurrentElementRect;

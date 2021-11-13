@@ -5,11 +5,10 @@ using Das.Views.Core.Geometry;
 
 namespace Das.Views.Rendering
 {
-    public interface IVisualContext : IThemeProvider
+    public interface IVisualContext : IThemeProvider,
+                                      IZoomLevelAware
     {
-        Double ZoomLevel { get; }
-
-        ValueSize GetLastMeasure(IVisualElement element);
+       ValueSize GetLastMeasure(IVisualElement element);
         
         IVisualLineage VisualLineage { get; }
 

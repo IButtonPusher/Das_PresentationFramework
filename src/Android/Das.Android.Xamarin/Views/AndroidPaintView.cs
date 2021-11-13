@@ -23,7 +23,7 @@ namespace Das.Xamarin.Android
          : base(context)
       {
          _surfaceHolder = Holder;
-         _surfaceHolder!.AddCallback(this);
+         _surfaceHolder.AddCallback(this);
          _renderContext = renderKit.RenderContext;
          _measureContext = renderKit.MeasureContext;
          _targetRect = ValueRectangle.Empty;
@@ -82,6 +82,8 @@ namespace Das.Xamarin.Android
             _renderKit.MeasureContext.MeasureMainView(_view,
                new ValueRenderSize(_targetRect), _viewState);
          }
+         else
+         {}
 
          _renderContext.Canvas = canvas;
          _renderContext.DrawMainElement(_view,
@@ -102,10 +104,9 @@ namespace Das.Xamarin.Android
                                   " invalidate requests: " + _timesInvalidated, LogLevel.Level2);
 
             _totalRun.Restart();
+            _totalLayoutMs = 0;
+            _totalLayouts = 0;
          }
-
-         //System.Diagnostics.Debug.WriteLine("END AndroidPaintView->OnDraw.  view needs arrange: " + 
-         //                                   _view.IsRequiresArrange);
       }
 
       protected override void OnMeasure(Int32 widthMeasureSpec,

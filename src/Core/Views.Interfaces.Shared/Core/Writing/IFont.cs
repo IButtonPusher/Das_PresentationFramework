@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Das.Views.Core.Writing
 {
-    public interface IFont
+    public interface IFont : IEquatable<IFont>
     {
         String FamilyName { get; }
 

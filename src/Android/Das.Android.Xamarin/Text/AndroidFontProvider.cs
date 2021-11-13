@@ -8,14 +8,13 @@ using Das.Views.Rendering;
 
 namespace Das.Xamarin.Android
 {
-    public class AndroidFontProvider //: IFontProvider<AndroidFontPaint>
+    public class AndroidFontProvider
     {
         public AndroidFontProvider(DisplayMetrics displayMetrics)
         {
             _fontLock = new Object();
 
             _displayMetrics = displayMetrics;
-            //_styleContext = styleContext;
             _fonts = new Dictionary<IFont, AndroidFontPaint>();
             _visualFonts = new Dictionary<IVisualElement, Dictionary<IFont, AndroidFontPaint>>();
         }
@@ -50,12 +49,16 @@ namespace Das.Xamarin.Android
                         myFonts = new Dictionary<IFont, AndroidFontPaint>();
                         _visualFonts[currentVisual] = myFonts;
                     }
+                    else
+                    {}
 
                     if (!myFonts.TryGetValue(font, out painter))
                     {
                         painter = new AndroidFontPaint(font, _displayMetrics, true);
                         myFonts[font] = painter;
                     }
+                    else
+                    {}
 
                     return painter;
                 }
@@ -71,7 +74,7 @@ namespace Das.Xamarin.Android
         }
 
         private readonly DisplayMetrics _displayMetrics;
-        //private readonly IStyleContext _styleContext;
+        
 
         private readonly Dictionary<IVisualElement, Dictionary<IFont, AndroidFontPaint>> _visualFonts;
         private readonly Dictionary<IFont, AndroidFontPaint> _fonts;

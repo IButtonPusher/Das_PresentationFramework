@@ -32,12 +32,23 @@ namespace Das.Views.Transforms
             if (String.IsNullOrEmpty(_aboutMe))
                 _aboutMe = "Identity";
 
-            IsIdentity = offsetX.IsZero() &&
-                         offsetY.IsZero() &&
-                         scaleX.AreEqualEnough(1.0) &&
-                         scaleY.AreEqualEnough(1.0) &&
-                         skewX.IsZero() &&
-                         skewY.IsZero();
+            HasSkew = skewX.IsNotZero() ||
+                      skewY.IsNotZero();
+
+            HasOffset = offsetX.IsNotZero() ||
+                        offsetY.IsNotZero();
+
+            HasScale = scaleX.AreDifferent(1.0) ||
+                       scaleY.AreDifferent(1.0);
+
+            IsIdentity = !HasSkew && !HasOffset && !HasScale;
+
+            //IsIdentity = offsetX.IsZero() &&
+            //             offsetY.IsZero() &&
+            //             scaleX.AreEqualEnough(1.0) &&
+            //             scaleY.AreEqualEnough(1.0) &&
+            //             skewX.IsZero() &&
+            //             skewY.IsZero();
         }
 
 
@@ -104,6 +115,10 @@ namespace Das.Views.Transforms
 
         public static TransformationMatrix Identity = new TransformationMatrix(1, 0, 0, 1, 0, 0);
 
+        public readonly Boolean HasSkew;
+        public readonly Boolean HasScale;
+        public readonly Boolean HasOffset;
+        
         public readonly Boolean IsIdentity;
 
 

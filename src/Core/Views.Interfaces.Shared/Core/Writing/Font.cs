@@ -5,8 +5,7 @@ using Das.Extensions;
 namespace Das.Views.Core.Writing
 {
     public class Font : IEquatable<Font>,
-                        IFont,
-                        IEquatable<IFont>
+                        IFont
     {
         public Font(Double size, 
                     String familyName, 

@@ -56,6 +56,13 @@ namespace Das.Gdi
                 DrawLines(_testPen, frame.Triangles[c].PointArray);
         }
 
+        public override void DrawImageAt<TLocation>(IImage img,
+                                                    TLocation destination)
+        {
+           var loc = GetAbsoluteGdiPoint(destination);
+           img.UnwrapLocked<Bitmap>(b => Graphics.DrawImage(b, loc));
+        }
+
 
         public override void DrawImage<TRectangle>(IImage img,
                                                    TRectangle destination)

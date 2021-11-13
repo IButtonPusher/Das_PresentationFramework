@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Drawing;
 using Das.Views.Images;
+using Das.Views.Rendering;
 
 namespace Das.Views.Controls
 {
@@ -32,15 +33,16 @@ namespace Das.Views.Controls
         }
 
         protected override Boolean TryGetImage<TRenderSize>(TRenderSize size,
+                                                            IVisualContext visualContext,
                                                             out IImage image)
         {
-            var width = !Double.IsInfinity(size.Width) && !Double.IsNaN(size.Width)
-                ? size.Width
-                : _image?.Width ?? Width ?? 0;
+           var width = Convert.ToInt32(!Double.IsInfinity(size.Width) && !Double.IsNaN(size.Width)
+              ? size.Width * visualContext.ZoomLevel
+              : _image?.Width ?? Width ?? 0);
 
-            var height = !Double.IsInfinity(size.Height) && !Double.IsNaN(size.Height)
-                ? size.Height
-                : _image?.Height ?? Height ?? 0;
+           var height = Convert.ToInt32(!Double.IsInfinity(size.Height) && !Double.IsNaN(size.Height)
+              ? size.Height * visualContext.ZoomLevel
+              : _image?.Height ?? Height ?? 0);
 
 
             if (_image is { } img &&
@@ -55,8 +57,7 @@ namespace Das.Views.Controls
                 (Stroke != null ||
                  Fill != null))
             {
-                image = source.ToStaticImage(Convert.ToInt32(width),
-                    Convert.ToInt32(height), Stroke, Fill)!;
+                image = source.ToStaticImage(width, height, Stroke, Fill)!;
 
                 if (_image is { } ripImg)
                     ripImg.Dispose();

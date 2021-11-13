@@ -240,7 +240,7 @@ namespace Das.Views.Gdi.Controls
                                              Int32 y)
            where TArgs : IMouseInputEventArgs<TArgs>
         {
-           return _htmlPanel.TryHandleInput<TArgs>(args, x, y);
+           return _htmlPanel.TryHandleInput(args, x, y);
         }
 
         public Int32 ZIndex => _htmlPanel.ZIndex;

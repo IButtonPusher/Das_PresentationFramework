@@ -1,61 +1,25 @@
 ﻿using System;
-using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Das.OpenGL;
 using Das.OpenGL.Windows;
 using Das.Views.Windows;
+using OpenGLTests.Samples;
 
 // ReSharper disable All
 
 
 namespace OpenGLTests
 {
-   public class HelloTriangle
+   /// <summary>
+   /// https://learnopengl.com/Getting-started/Hello-Triangle
+   /// </summary>
+   public class HelloTriangle : HelloBase
    {
       public HelloTriangle(Form form,
                            IntPtr handle)
+         : base(form, handle)
       {
-         _form = form;
-         _requestedOpenGLVersion = OpenGLVersion.OpenGL4_4;
-         _delegateCache = new DelegateCache();
-
-         _windowBuilder = new GLNativeWindowBuilder("OpenGLSurface");
-         _dibSection = new DIBSection();
-
-         var _hostGraphics = Graphics.FromHwnd(handle);
-         _hostDc = _hostGraphics.GetHdc();
-
-         _windowHandle = _windowBuilder.BuildNativeWindow(_roundedWidth, _roundedHeight);
-
-         _deviceContextHandle = Native.GetDC(_windowHandle);
-
-         var pfd = new Pixelformatdescriptor();
-         pfd.Init();
-         pfd.nVersion = 1;
-         pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-         pfd.iPixelType = PFD_TYPE_RGBA;
-         pfd.cColorBits = _bitDepth;
-         pfd.cDepthBits = 16;
-         pfd.cStencilBits = 8;
-         pfd.iLayerType = PFD_MAIN_PLANE;
-
-         Int32 iPixelformat;
-         if ((iPixelformat = Native.ChoosePixelFormat(_deviceContextHandle, pfd)) == 0)
-            throw new InvalidOperationException();
-
-         if (Native.SetPixelFormat(_deviceContextHandle, iPixelformat, pfd) == 0)
-            throw new InvalidOperationException();
-
-         _renderContextHandle = GLWindows.wglCreateContext(_deviceContextHandle);
-
-         GLWindows.wglMakeCurrent(_deviceContextHandle, _renderContextHandle);
-         UpdateContextVersion();
-         CreateDBOs();
-
-
-         OnSizeChanged();
-
 
          const String vertexShaderSource = "#version 330 core\n" +
                                            "layout (location = 0) in vec3 aPos;\n" +
@@ -112,7 +76,6 @@ namespace OpenGLTests
             -0.5f, 0.5f, 0.0f // top left 
          };
 
-
          UInt16[] indices =
          {
             // note that we start from 0!
@@ -156,13 +119,6 @@ namespace OpenGLTests
          GL.BindVertexArray(0);
       }
 
-      public IntPtr CreateContextAttribsARB(IntPtr hShareContext,
-                                            Int32[] attribList)
-      {
-         return _delegateCache.Get<wglCreateContextAttribsARB>()(_deviceContextHandle,
-            hShareContext, attribList);
-      }
-
 
       public void Paint()
       {
@@ -174,8 +130,8 @@ namespace OpenGLTests
          // draw our first triangle
          GL.UseProgram(_shaderProgram);
 
-         GL.BindVertexArray(
-            VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+         // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+         GL.BindVertexArray(VAO); 
          //GL.glDrawArrays(GL.GL_TRIANGLES, 0, 6);
          GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT, IntPtr.Zero);
          // glBindVertexArray(0); // no need to unbind it every time 
@@ -189,37 +145,6 @@ namespace OpenGLTests
          Native.BitBlt(_hostDc, 0, 0, w, h,
             _dibSectionDeviceContext, 0, 0, Native.SRCCOPY);
       }
-
-      protected void UpdateContextVersion()
-      {
-         //  If the request version number is anything up to and including 2.1, standard render contexts
-         //  will provide what we need (as long as the graphics card drivers are up to date).
-         var requestedVersionNumber = VersionAttribute.GetVersionAttribute(_requestedOpenGLVersion);
-         if (requestedVersionNumber.IsAtLeastVersion(3, 0) == false) return;
-
-         //  Now the none-trivial case. We must use the WGL_ARB_create_context extension to 
-         //  attempt to create a 3.0+ context.
-         try
-         {
-            Int32[] attributes =
-            {
-               WGL_CONTEXT_MAJOR_VERSION_ARB, requestedVersionNumber.Major,
-               WGL_CONTEXT_MINOR_VERSION_ARB, requestedVersionNumber.Minor,
-               WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
-               0
-            };
-            var hrc = CreateContextAttribsARB(IntPtr.Zero, attributes);
-            GLWindows.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
-            GLWindows.wglDeleteContext(_renderContextHandle);
-            GLWindows.wglMakeCurrent(_deviceContextHandle, hrc);
-            _renderContextHandle = hrc;
-         }
-         catch (Exception)
-         {
-            //  TODO: can we actually get the real version?
-         }
-      }
-
       private void CreateDBOs()
       {
          _dibSectionDeviceContext = Native.CreateCompatibleDC(_deviceContextHandle);
@@ -238,10 +163,6 @@ namespace OpenGLTests
 
          _dibSection.Resize(w, h, _bitDepth);
 
-         //  DestroyFramebuffers();
-
-         // BindBuffers();
-
          GL.glViewport(0, 0, w, h);
       }
 
@@ -257,45 +178,16 @@ namespace OpenGLTests
          _currentSize.Height = h;
       }
 
-      public const Byte PFD_TYPE_RGBA = 0;
-      public const UInt32 PFD_DOUBLEBUFFER = 1;
-      private const UInt32 PFD_DRAW_TO_WINDOW = 4;
-      public const UInt32 PFD_SUPPORT_OPENGL = 32;
-      public const SByte PFD_MAIN_PLANE = 0;
-      public const Int32 WGL_CONTEXT_MAJOR_VERSION_ARB = 0x2091;
-      public const Int32 WGL_CONTEXT_MINOR_VERSION_ARB = 0x2092;
-      public const Int32 WGL_CONTEXT_FLAGS_ARB = 0x2094;
-      public const Int32 WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB = 0x0002;
-
-      private readonly Byte _bitDepth = 32;
-      private readonly DelegateCache _delegateCache;
-      protected readonly DIBSection _dibSection;
-      private readonly Form _form;
-      private readonly IntPtr _hostDc;
-
-
-      protected readonly OpenGLVersion _requestedOpenGLVersion;
-
+      //public const Int32 WGL_CONTEXT_MAJOR_VERSION_ARB = 0x2091;
+      //public const Int32 WGL_CONTEXT_MINOR_VERSION_ARB = 0x2092;
+      //public const Int32 WGL_CONTEXT_FLAGS_ARB = 0x2094;
+      //public const Int32 WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB = 0x0002;
 
       private readonly UInt32 _shaderProgram;
-      private readonly GLNativeWindowBuilder _windowBuilder;
-      private readonly UInt32 EBO;
-      private readonly UInt32 VAO;
-
-      private readonly UInt32 VBO;
+      
       protected UInt32 _colorRenderBufferID;
-      private Size _currentSize;
+      
       protected UInt32 _depthRenderBufferID;
-      protected IntPtr _deviceContextHandle = IntPtr.Zero;
-
-      protected IntPtr _dibSectionDeviceContext = IntPtr.Zero;
-
-
       protected UInt32 _frameBufferID;
-      protected IntPtr _renderContextHandle = IntPtr.Zero;
-      private Int32 _roundedHeight;
-
-      private Int32 _roundedWidth;
-      protected IntPtr _windowHandle = IntPtr.Zero;
    }
 }

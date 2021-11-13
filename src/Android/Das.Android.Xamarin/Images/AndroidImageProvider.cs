@@ -14,8 +14,11 @@ namespace Das.Xamarin.Android.Images
     public class AndroidImageProvider : IImageProvider
     {
         public AndroidImageProvider(DisplayMetrics displayMetrics)
+                                    //IVisualContext visualContext)
         {
             _displayMetrics = displayMetrics;
+            // the visual context is too broad in scope for whatever this was intended for
+            //_visualContext = visualContext;
             _nullBitmapLock = new Object();
         }
 
@@ -45,7 +48,7 @@ namespace Das.Xamarin.Android.Images
             if (!stream.CanSeek)
             {
                 var img = BitmapFactory.DecodeStream(stream);
-                return GetScaledImage(img, null, imgMaxWidth, false);
+                return GetScaledImage(img, null, imgMaxWidth, false, true);
             }
 
             var options = new BitmapFactory.Options
@@ -61,7 +64,10 @@ namespace Das.Xamarin.Android.Images
                 scale++;
 
             if (scale == 1)
-                return GetImage(stream, isPreserveStream);
+            {
+               stream.Position = 0;
+               return GetImage(stream, isPreserveStream);
+            }
 
             options = new BitmapFactory.Options
             {
@@ -71,7 +77,7 @@ namespace Das.Xamarin.Android.Images
             var bmp = BitmapFactory.DecodeStream(stream, null,
                 options);
 
-            return GetScaledImage(bmp, stream, imgMaxWidth, isPreserveStream);
+            return GetScaledImage(bmp, stream, imgMaxWidth, isPreserveStream, true);
         }
 
         public IImage GetScaledImage(IImage input,
@@ -79,7 +85,7 @@ namespace Das.Xamarin.Android.Images
                                      Double height)
         {
             var bmp = input.Unwrap<Bitmap>();
-            return GetScaledImage(bmp, null, width, false);
+            return GetScaledImage(bmp, null, width, false, false);
         }
 
         public IImage? GetImage(Byte[] bytes) => GetImage(bytes, false);
@@ -115,7 +121,7 @@ namespace Das.Xamarin.Android.Images
 
         public IGraphicsPath GetNewGraphicsPath()
         {
-            return new AndroidGraphicsPath();
+           return new AndroidGraphicsPath();//_visualContext);
         }
 
         //public IImage GetImage(IGraphicsPath path,
@@ -144,7 +150,8 @@ namespace Das.Xamarin.Android.Images
         private IImage GetScaledImage(Bitmap? img,
                                       Stream? stream,
                                       Double imgDesiredWidth,
-                                      Boolean isPreserveStream)
+                                      Boolean isPreserveStream,
+                                      Boolean isDisposeOriginal)
         {
             if (img == null)
             {
@@ -166,11 +173,13 @@ namespace Das.Xamarin.Android.Images
 
             var scaledBitmap = Bitmap.CreateScaledBitmap(img,
                 width, height, true);
-            img.Dispose();
+            if (isDisposeOriginal)
+               img.Dispose();
             return new AndroidBitmap(scaledBitmap!, null);
         }
 
         private readonly DisplayMetrics _displayMetrics;
+        //private readonly IVisualContext _visualContext;
         private readonly Object _nullBitmapLock;
 
         private AndroidBitmap? _nullBitmap;

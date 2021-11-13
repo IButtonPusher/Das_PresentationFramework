@@ -96,6 +96,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="freetype.lib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -124,6 +127,11 @@
       <Project>{bb6f35ef-5375-44d1-8398-0480a61d2bd6}</Project>
       <Name>Das.Views</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="freetype.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="..\..\Windows.Shared\Windows.Shared.projitems" Label="Shared" />
   <Import Project="..\..\WinForms.Shared\WinForms.Shared.projitems" Label="Shared" />

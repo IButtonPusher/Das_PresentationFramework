@@ -286,8 +286,8 @@ namespace Das.Views.Core.Geometry
       {
          var x = Convert.ToInt32(me.X);
          var y = Convert.ToInt32(me.Y);
-         var w = Convert.ToInt32(me.Width);
-         var h = Convert.ToInt32(me.Height);
+         var w = Double.IsNaN(me.Width) ? 0 : Convert.ToInt32(me.Width);
+         var h = Double.IsNaN(me.Height) ? 0 : Convert.ToInt32(me.Height);
 
          return x ^ ((y << 13) | (Int32) ((UInt32) y >> 19)) ^ ((w << 26) | (Int32) ((UInt32) w >> 6)) ^
                 ((h << 7) | (Int32) ((UInt32) h >> 25));

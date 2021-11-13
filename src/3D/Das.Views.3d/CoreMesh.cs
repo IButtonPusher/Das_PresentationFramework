@@ -14,10 +14,12 @@ namespace Das.Views.Extended
    {
       public CoreMesh()
       {
-         Position = new Vector3();
-         Rotation = new Vector3();
+         //Position = new Vector3();
+         //Rotation = new Vector3();
          Vertices = new IPoint3D[0];
          Faces = new Face[0];
+
+         Transformation = Transformation3D.Identity;
       }
 
       public CoreMesh(IEnumerable<IPoint3D> vertices) : this()
@@ -31,36 +33,41 @@ namespace Das.Views.Extended
          Faces = faces.ToArray();
       }
 
-      public IPoint3D Position { get; protected set; }
+      public IPoint3D Position => Transformation.PositionOffset;
 
-      public IPoint3D Rotation { get; protected set; }
+      public IPoint3D Rotation => Transformation.Rotation;  //{ get; protected set; }
 
       public IPoint3D[] Vertices { get; protected set; }
 
       public Face[] Faces { get; protected set; }
 
+      public Transformation3D Transformation { get; set; }
+
       public void Rotate(Single x,
                          Single y,
                          Single z)
       {
-         Rotation = Rotation.Rotate(x, y, z);
+         throw new NotImplementedException();
+         //Rotation = Rotation.Rotate(x, y, z);
       }
 
-      public void Transform(Transformation3D xform)
+      //public void Transform(Transformation3D xform)
+      //{
+      //   Rotate((Single) xform.Rotation.X, (Single) xform.Rotation.Y, (Single) xform.Rotation.Z);
+
+      //   for (var c = 0; c < Vertices.Length; c++)
+      //   {
+      //      var v = Vertices[c];
+      //      Vertices[c] = new Vector3(v.X * xform.Scale.X,
+      //         v.Y * xform.Scale.Y,
+      //         v.Z * xform.Scale.Z);
+      //   }
+      //}
+
+      public override String ToString()
       {
-         Rotate((Single) xform.Rotation.X, (Single) xform.Rotation.Y, (Single) xform.Rotation.Z);
-
-         //Position = new Vector3(Position.X + xform.PositionOffset.X,
-         //    Position.Y + xform.PositionOffset.Y,
-         //    Position.Z + xform.PositionOffset.Z);
-
-         for (var c = 0; c < Vertices.Length; c++)
-         {
-            var v = Vertices[c];
-            Vertices[c] = new Vector3(v.X * xform.Scale.X,
-               v.Y * xform.Scale.Y,
-               v.Z * xform.Scale.Z);
-         }
+         return "Vertices: " + Vertices.Length + " pos: " + Position +
+                " rotation: " + Rotation;
       }
    }
 }

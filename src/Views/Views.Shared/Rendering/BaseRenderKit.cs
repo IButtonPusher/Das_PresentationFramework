@@ -63,8 +63,7 @@ namespace Das.Views
 
             var appliedStyleBuilder = GetAppliedStyleBuilder(xmlSerializer.TypeManipulator, styleProvider);
             var visualBootstrapper = GetVisualBootstrapper(Container, themeProvider,
-               //BaselineThemeProvider.Instance,
-                xmlSerializer.TypeManipulator, appliedStyleBuilder, layoutQueue);
+               xmlSerializer.TypeManipulator, appliedStyleBuilder, layoutQueue);
 
             VisualBootstrapper = visualBootstrapper;
 

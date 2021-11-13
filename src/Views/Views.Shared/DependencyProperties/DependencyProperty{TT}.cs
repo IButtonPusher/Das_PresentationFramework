@@ -383,13 +383,17 @@ namespace Das.Views
          if (!(visual is TVisual valid))
             return;
 
-         _knownVisuals.TryRemove(valid, out _);
-
          _values.TryRemove(valid, out _);
          _computedValues.TryRemove(valid, out _);
-         _changeds.TryRemove(valid, out _);
+
          _changings.TryRemove(valid, out _);
+         _changeds.TryRemove(valid, out _);
+
+         _knownVisuals.TryRemove(valid, out _);
+
          _transitions.TryRemove(valid, out _);
+
+         _visualsSetByNotStyle.TryRemove(valid, out _);
       }
 
       private void SetRuntimeValueImpl(IVisualElement visual,
@@ -450,7 +454,6 @@ namespace Das.Views
                   break;
             }
 
-
             if (_transitions.TryGetValue(forVisual, out var transition))
             {
                transition.SetValue(oldValue, value);
@@ -458,7 +461,18 @@ namespace Das.Views
             }
          }
 
-         _values[forVisual] = value;
+         if (Equals(value, DefaultValue) || forVisual.IsDisposed)
+         {
+            _values.TryRemove(forVisual, out _);
+         }
+         else
+         {
+            EnsureKnown(forVisual);
+            _values[forVisual] = value;
+         }
+
+         if (forVisual.IsDisposed)
+            return;
 
          foreach (var oc in onChangeds)
          {

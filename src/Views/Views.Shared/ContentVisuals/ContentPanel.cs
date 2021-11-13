@@ -116,11 +116,8 @@ namespace Das.Views.Panels
                out _,
                out _);
 
-            if (contentSpace.Left < 0)
-            {
-            }
-
-            renderContext.DrawElement(content, contentSpace);
+            if (contentSpace.Width > 0 && contentSpace.Height > 0)
+               renderContext.DrawElement(content, contentSpace);
          }
 
          IsRequiresArrange = false;
@@ -249,6 +246,11 @@ namespace Das.Views.Panels
 
          if (mySize.IsEmpty)
             mySize = availableSpace.ToValueSize();
+
+         if (useAvailable.Width < 0 || useAvailable.Height < 0)
+         {
+            useAvailable = ValueRenderSize.Empty;
+         }
 
          return useAvailable;
       }

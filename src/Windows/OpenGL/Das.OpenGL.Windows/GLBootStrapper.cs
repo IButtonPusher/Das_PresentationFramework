@@ -24,7 +24,7 @@ namespace Das.OpenGL
             _taskScheduler = new StaScheduler("Das GL Thread");
         }
 
-        public void Run(IView view)
+        public void Run(IVisualElement view)
         {
             var window = _windowBuilder.Show(view);
             Cook(window);
@@ -50,11 +50,9 @@ namespace Das.OpenGL
         {
             var context = GetContext(element);
             var fontProvider = GetFontProvider(context);
-            //var styleContext = new BaseStyleContext(DefaultStyle.Instance,
-            //    new DefaultColorPalette());
 
-            
-            
+
+
             var kit = new OpenGLRenderKit(fontProvider, context, BaselineThemeProvider.Instance,
                 new GLImageProvider());
 

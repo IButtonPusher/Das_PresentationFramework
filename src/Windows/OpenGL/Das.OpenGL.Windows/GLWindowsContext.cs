@@ -85,8 +85,13 @@ namespace Das.OpenGL.Windows
 
             _deviceContextHandle = Native.GetDC(_windowHandle);
 
+            //////////////////////////////////
+            //_renderContextHandle = GLWindows.wglCreateContext(_deviceContextHandle);
+            //GLWindows.wglMakeCurrent(_deviceContextHandle, _renderContextHandle);
+            //////////////////////////////////
 
-           
+
+            //return;
             
             
             var pfd = new Pixelformatdescriptor();
@@ -122,88 +127,90 @@ namespace Das.OpenGL.Windows
 
             OnSizeChanged();
 
+            return;
+
 
             /////////////////////////////////////////////////////////////////
 
-            var vertexShaderSource = "#version 330 core\n" + 
-                                     "layout (location = 0) in vec3 aPos;\n" + 
-                                     "void main()\n" + 
-                                     "{\n" + 
-                                     "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n" + 
-                                     "}\0";
+            //var vertexShaderSource = "#version 330 core\n" + 
+            //                         "layout (location = 0) in vec3 aPos;\n" + 
+            //                         "void main()\n" + 
+            //                         "{\n" + 
+            //                         "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n" + 
+            //                         "}\0";
 
-            var fragmentShaderSource = "#version 330 core\n" + 
-            "out vec4 FragColor;\n" + 
-            "void main()\n" + 
-            "{\n" + 
-            "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n" + 
-            "}\n\0";
+            //var fragmentShaderSource = "#version 330 core\n" + 
+            //"out vec4 FragColor;\n" + 
+            //"void main()\n" + 
+            //"{\n" + 
+            //"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n" + 
+            //"}\n\0";
 
 
-            var vertexShader = GL.CreateVertexShader();
-            GL.ShaderSource(vertexShader, vertexShaderSource);
-            GL.CompileShader(vertexShader);
-            var rdrr = GL.GetCompileStatus(vertexShader);
+            //var vertexShader = GL.CreateVertexShader();
+            //GL.ShaderSource(vertexShader, vertexShaderSource);
+            //GL.CompileShader(vertexShader);
+            //var rdrr = GL.GetCompileStatus(vertexShader);
             
-            var fragmentShader = GL.CreateShader(GL.GL_FRAGMENT_SHADER);
-            GL.ShaderSource(fragmentShader, fragmentShaderSource);
-            GL.CompileShader(fragmentShader);
-            rdrr = GL.GetCompileStatus(fragmentShader);
+            //var fragmentShader = GL.CreateShader(GL.GL_FRAGMENT_SHADER);
+            //GL.ShaderSource(fragmentShader, fragmentShaderSource);
+            //GL.CompileShader(fragmentShader);
+            //rdrr = GL.GetCompileStatus(fragmentShader);
 
-            GL.DeleteShader(vertexShader);
-            GL.DeleteShader(fragmentShader);
-
-
-            //////////////////////////////
+            //GL.DeleteShader(vertexShader);
+            //GL.DeleteShader(fragmentShader);
 
 
-            float[] vertices = {
-                0.5f,  0.5f, 0.0f,  // top right
-                0.5f, -0.5f, 0.0f,  // bottom right
-                -0.5f, -0.5f, 0.0f,  // bottom left
-                -0.5f,  0.5f, 0.0f   // top left 
-            };
-            ushort[] indices =
-            {
-                // note that we start from 0!
-                0, 1, 3, // first Triangle
-                1, 2, 3 // second Triangle
-            };
+            ////////////////////////////////
+
+
+            //float[] vertices = {
+            //    0.5f,  0.5f, 0.0f,  // top right
+            //    0.5f, -0.5f, 0.0f,  // bottom right
+            //    -0.5f, -0.5f, 0.0f,  // bottom left
+            //    -0.5f,  0.5f, 0.0f   // top left 
+            //};
+            //ushort[] indices =
+            //{
+            //    // note that we start from 0!
+            //    0, 1, 3, // first Triangle
+            //    1, 2, 3 // second Triangle
+            //};
             
-            uint VBO, VAO = 1, EBO;
-            uint[] vaoIds = new uint[1];
-            GL.GenVertexArrays(1, vaoIds);
-            VAO = vaoIds[0];
+            //uint VBO, VAO = 1, EBO;
+            //uint[] vaoIds = new uint[1];
+            //GL.GenVertexArrays(1, vaoIds);
+            //VAO = vaoIds[0];
 
-            uint[] vboBuffers = new uint[1];
-            GL.GenBuffers(1, vboBuffers);
-            VBO = vboBuffers[0];
+            //uint[] vboBuffers = new uint[1];
+            //GL.GenBuffers(1, vboBuffers);
+            //VBO = vboBuffers[0];
             
-            uint[] ebobuffers = new uint[1];
-            GL.GenBuffers(1, ebobuffers);
-            EBO = ebobuffers[0];
+            //uint[] ebobuffers = new uint[1];
+            //GL.GenBuffers(1, ebobuffers);
+            //EBO = ebobuffers[0];
 
-            //// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-            GL.BindVertexArray(VAO);
+            ////// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+            //GL.BindVertexArray(VAO);
 
-            GL.BindBuffer(GL.GL_ARRAY_BUFFER, VBO);
-            GL.BufferData(GL.GL_ARRAY_BUFFER, vertices, GL.GL_STATIC_DRAW);
+            //GL.BindBuffer(GL.GL_ARRAY_BUFFER, VBO);
+            //GL.BufferData(GL.GL_ARRAY_BUFFER, vertices, GL.GL_STATIC_DRAW);
 
-            GL.BindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, EBO);
-            GL.BufferData(GL.GL_ELEMENT_ARRAY_BUFFER, indices, GL.GL_STATIC_DRAW);
+            //GL.BindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, EBO);
+            //GL.BufferData(GL.GL_ELEMENT_ARRAY_BUFFER, indices, GL.GL_STATIC_DRAW);
 
-            GL.VertexAttribPointer(0, 3, GL.GL_FLOAT, false, 3 * 0, IntPtr.Zero);
-            GL.EnableVertexAttribArray(0);
+            //GL.VertexAttribPointer(0, 3, GL.GL_FLOAT, false, 3 * 0, IntPtr.Zero);
+            //GL.EnableVertexAttribArray(0);
 
-            //// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-            GL.BindBuffer(GL.GL_ARRAY_BUFFER, 0); 
+            ////// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+            //GL.BindBuffer(GL.GL_ARRAY_BUFFER, 0); 
 
-            // remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
-            //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            //// remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
+            ////glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-            // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-            // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-            GL.BindVertexArray(0); 
+            //// You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
+            //// VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
+            //GL.BindVertexArray(0); 
 
 
 

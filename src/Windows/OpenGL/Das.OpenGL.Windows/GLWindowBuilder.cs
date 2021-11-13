@@ -42,7 +42,7 @@ namespace Das.OpenGL.Windows
         //    return form;
         //}
 
-        public GLForm Show<TRectangle>(IView view,
+        public GLForm Show<TRectangle>(IVisualElement view,
                                        TRectangle rect) 
             where TRectangle : IRectangle
         {
@@ -64,27 +64,31 @@ namespace Das.OpenGL.Windows
             return form;
         }
         
-        public GLForm Show<TViewModel>(TViewModel viewModel, 
-                                       IView view)
+        //public GLForm Show<TViewModel>(TViewModel viewModel, 
+        //                               IVisualElement view)
+        //{
+        //   var control = new GLHostedElement(view, BaselineThemeProvider.Instance,
+        //       _visualBootstrapper);
+        //    var form = new GLForm(control);
+
+        //    view.DataContext = viewModel;
+
+        //    WindowShown?.Invoke(form);
+
+        //    return form;
+        //}
+
+        public GLForm Show(IVisualElement view)
         {
-            //var styleContext = view.StyleContext;
+           var control = new GLHostedElement(view,
+              BaselineThemeProvider.Instance, _visualBootstrapper);
+           var form = new GLForm(control);
 
-            var control = new GLHostedElement(view, BaselineThemeProvider.Instance,
-               _visualBootstrapper);
-            var form = new GLForm(control);
-
-            view.DataContext = viewModel;
-            //view.SetDataContext(viewModel);
+            //return Show(view.DataContext, view);
 
             WindowShown?.Invoke(form);
 
             return form;
-        }
-
-        public GLForm Show(IView view) 
-            //where TViewModel : IViewModel
-        {
-            return Show(view.DataContext, view);
         }
 
         public event Action<GLForm>? WindowShown;

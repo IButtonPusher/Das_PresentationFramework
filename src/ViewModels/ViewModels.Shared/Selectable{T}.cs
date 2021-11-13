@@ -5,51 +5,44 @@ using Das.ViewModels;
 
 namespace Das.Mvvm
 {
-    public class Selectable<T> : BaseViewModel
-    {
-        public Selectable(T item)
-        {
-            switch (item)
-            {
-                case null:
-                    throw new ArgumentNullException();
+   public class Selectable<T> : Selectable
+   {
+      public Selectable(T item,
+                        Boolean isSelected)
+         : base(GetDescription(item), isSelected)
+      {
+         Item = item;
+      }
 
-                case Enum _:
-                    var fi = item.GetType().GetField(item.ToString());
+      public Selectable(T item) : base(GetDescription(item))
+      {
+         Item = item;
+      }
 
-                    var attributes = (DescriptionAttribute[]) fi.GetCustomAttributes(
-                        typeof(DescriptionAttribute), false);
+      private static String GetDescription(T item)
+      {
+         switch (item)
+         {
+            case null:
+               throw new ArgumentNullException();
 
-                    if (attributes.Length > 0)
-                        _description = attributes[0].Description;
-                    else
-                        _description = item.ToString();
-                    break;
+            case Enum _:
+               var fi = item.GetType().GetField(item.ToString());
 
-                default:
-                    _description = item.ToString();
-                    break;
-            }
+               var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(
+                  typeof(DescriptionAttribute), true);
 
-            Item = item;
-        }
+               if (attributes.Length > 0)
+                  return attributes[0].Description;
+               else
+                  return item.ToString();
 
-        public Boolean IsSelected
-        {
-            get => _isSelected;
-            set => SetValue(ref _isSelected, value);
-        }
-
-        public T Item { get; }
-
-        public override String ToString()
-        {
-            return _description;
-        }
-
-        private readonly String _description;
+            default:
+               return item.ToString();
+         }
+      }
 
 
-        private Boolean _isSelected;
-    }
+      public T Item { get; }
+   }
 }

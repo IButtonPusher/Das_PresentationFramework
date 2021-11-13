@@ -119,10 +119,10 @@ namespace Das.ViewModels
       }
 
       T IAsyncObservableCollection<T>.this[Int32 index]
-         => _copyForSynchronous[index]; 
+         => _copyForSynchronous[index];
 
       T INotifyingCollection<T>.this[Int32 index]
-         => _copyForSynchronous[index]; 
+         => _copyForSynchronous[index];
 
       public async Task<Boolean> AddAsync(T item)
       {
@@ -235,7 +235,7 @@ namespace Das.ViewModels
 
          void LetsRun()
          {
-            foreach (var d in ds!)
+            foreach (var d in ds)
             {
                action(this, d);
             }
@@ -251,7 +251,7 @@ namespace Das.ViewModels
 
          void LetsRun()
          {
-            foreach (var d in ds!)
+            foreach (var d in ds)
             {
                action(this, d);
             }
@@ -267,24 +267,25 @@ namespace Das.ViewModels
             ilist = new List<T>(items);
 
          await _ui.InvokeAsync(() =>
-         {
-            var good = new List<T>();
+                  {
+                     var good = new List<T>();
 
-            foreach (var item in ilist)
-            {
-               if (!_hashCheck.Add(item))
-                  continue;
+                     foreach (var item in ilist)
+                     {
+                        if (!_hashCheck.Add(item))
+                           continue;
 
-               good.Add(item);
-               _count++;
-            }
+                        good.Add(item);
+                        _count++;
+                     }
 
-            _copyForSynchronous = _hashCheck.ToArray();
+                     _copyForSynchronous = _hashCheck.ToArray();
 
-            _backingCollection.AddRange(good);
+                     _backingCollection.AddRange(good);
 
-            return good;
-         }).ConfigureAwait(false);
+                     return good;
+                  })
+                  .ConfigureAwait(false);
       }
 
       public async Task AddRangeAsync(IAsyncEnumerable<T> items)
@@ -581,7 +582,7 @@ namespace Das.ViewModels
       public void CopyTo(Array array,
                          Int32 index)
       {
-         ((ICollection) _backingCollection).CopyTo(array, index);
+         ((ICollection)_backingCollection).CopyTo(array, index);
       }
 
       public Int32 Count
@@ -590,9 +591,9 @@ namespace Das.ViewModels
          private set => SetValue(ref _count, value);
       }
 
-      public Object SyncRoot => ((ICollection) _backingCollection).SyncRoot;
+      public Object SyncRoot => ((ICollection)_backingCollection).SyncRoot;
 
-      public Boolean IsSynchronized => ((ICollection) _backingCollection).IsSynchronized;
+      public Boolean IsSynchronized => ((ICollection)_backingCollection).IsSynchronized;
 
 
       IEnumerator IEnumerable.GetEnumerator()
@@ -602,20 +603,20 @@ namespace Das.ViewModels
 
       public Int32 Add(Object value)
       {
-         _ui.Invoke(() => { AddImpl((T) value); });
+         _ui.Invoke(() => { AddImpl((T)value); });
 
          return _count;
       }
 
       public Boolean Contains(Object value)
       {
-         return ((IList) _backingCollection).Contains(value);
+         return ((IList)_backingCollection).Contains(value);
       }
 
 
       public Int32 IndexOf(Object value)
       {
-         return ((IList) _backingCollection).IndexOf(value);
+         return ((IList)_backingCollection).IndexOf(value);
       }
 
       public void Insert(Int32 index,
@@ -647,12 +648,12 @@ namespace Das.ViewModels
       public Object this[Int32 index]
       {
          get => _copyForSynchronous[index];
-         set => _ui.Invoke(() => ((IList) _backingCollection)[index] = value);
+         set => _ui.Invoke(() => ((IList)_backingCollection)[index] = value);
       }
 
-      public Boolean IsReadOnly => ((IList) _backingCollection).IsReadOnly;
+      public Boolean IsReadOnly => ((IList)_backingCollection).IsReadOnly;
 
-      public Boolean IsFixedSize => ((IList) _backingCollection).IsFixedSize;
+      public Boolean IsFixedSize => ((IList)_backingCollection).IsFixedSize;
 
       T IReadOnlyList<T>.this[Int32 index] => GetAt(index);
 
@@ -725,7 +726,7 @@ namespace Das.ViewModels
 
          void LetsRun()
          {
-            foreach (var d in ds!)
+            foreach (var d in ds)
             {
                action(this, d);
             }
@@ -778,7 +779,7 @@ namespace Das.ViewModels
 
             return default!;
          });
-         return got!;
+         return got;
       }
 
 
@@ -881,8 +882,6 @@ namespace Das.ViewModels
          }
 
          NotifyCollectionChanged(e);
-
-         //CollectionChanged?.Invoke(this, e);
       }
 
       private void OnBackingCollectionPropertyChanged(Object sender,
