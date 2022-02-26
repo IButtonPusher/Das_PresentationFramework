@@ -39,7 +39,10 @@ namespace Das.Views.Panels
          var changed = _children.Remove(element);
 
          if (changed)
-            InvalidateMeasure();
+         {
+             element.OnParentChanging(default);
+             InvalidateMeasure();
+         }
 
          return changed;
       }

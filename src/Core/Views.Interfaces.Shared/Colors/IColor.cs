@@ -13,6 +13,6 @@ namespace Das.Views.Core.Drawing
 
         Byte R { get; }
 
-        SolidColorBrush ToBrush();
+        IBrush ToBrush();
     }
 }

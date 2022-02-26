@@ -38,7 +38,10 @@ namespace TestCommon
             var john = new EmployeeViewModel { FirstName = "john", LastName = "doe", Addresses = addies };
             var bobJr = new EmployeeViewModel { FirstName = "bob", LastName = "jones" };
 
-            Employees.AddRange(new List<EmployeeViewModel>{ larry, curly, moe, bob, john, bobJr });
+            var allMyEmployees = new List<EmployeeViewModel> { larry, curly, moe, bob, john, bobJr };
+            foreach (var employee in allMyEmployees)
+                Employees.Add(employee);
+            //Employees.AddRange(new List<EmployeeViewModel>{ larry, curly, moe, bob, john, bobJr });
         }
 
         //private static IScene MakeAScene()

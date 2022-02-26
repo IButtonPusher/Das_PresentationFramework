@@ -353,7 +353,7 @@ namespace Das.Views.Rendering
 
       protected void OnDrawBorder<TRectangle, TBoxValue, TThickness>(TRectangle rect,
                                                                      TBoxValue color,
-                                                                     ValueThickness thickness,
+                                                                     IThickness thickness,
                                                                      TThickness cornerRadius)
          where TRectangle : IRectangle
          where TThickness : IThickness

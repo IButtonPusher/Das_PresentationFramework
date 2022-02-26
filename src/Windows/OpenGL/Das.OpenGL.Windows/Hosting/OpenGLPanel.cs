@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Das.Views;
 using Das.Views.Colors;
 using Das.Views.Rendering;
-using Das.Views.Styles;
 
 namespace Das.OpenGL.Windows
 {

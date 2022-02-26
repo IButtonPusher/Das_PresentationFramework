@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Reflection;
+using Das.Mvvm;
 using Das.Serializer;
 
 namespace Das.Views.DataBinding

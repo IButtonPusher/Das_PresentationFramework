@@ -17,7 +17,7 @@ using Das.Views.Transforms;
 namespace Das.Views
 {
     public interface IVisualElement : IVisualRenderer,
-                                      IDisposable,
+                                      INotifyDisposable,
                                       INotifyPropertyChanged,
                                       ITemplatableVisual,
                                       IEquatable<IVisualElement>,
@@ -39,10 +39,6 @@ namespace Das.Views
         Boolean IsClipsContent { get; set; }
 
         void OnParentChanging(IVisualElement? newParent);
-
-        event Action<IVisualElement>? Disposed;
-
-        Boolean IsDisposed { get; }
 
         void RaisePropertyChanged(String propertyName,
                                   Object? value);
@@ -66,7 +62,7 @@ namespace Das.Views
         
         QuantifiedThickness BorderRadius { get; set; }
 
-        VisualBorder Border {get; set; }
+        IVisualBorder Border {get; set; }
         
         Boolean IsEnabled { get; set; }
 

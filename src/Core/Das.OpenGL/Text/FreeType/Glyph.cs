@@ -1,14 +1,13 @@
-﻿using Das.Views.Core.Geometry;
-using System;
+﻿using System;
+using System.Threading.Tasks;
+using Das.Views.Core.Geometry;
 
 namespace Das.OpenGL.Text.FreeType
 {
     public class Glyph
     {
-        private readonly GlyphSlotRec _slotRect;
-        public Char Char { get; }
-
-        public Glyph(GlyphSlotRec slotRec, Char c)
+        public Glyph(GlyphSlotRec slotRec,
+                     Char c)
         {
             _slotRect = slotRec;
             Char = c;
@@ -19,6 +18,13 @@ namespace Das.OpenGL.Text.FreeType
             };
         }
 
+        private static Single GetFloat(IntPtr ptr)
+        {
+            return Fixed26Dot6.FromRawValue((Int32)ptr).Value / 64f;
+        }
+
+        public Char Char { get; }
+
         public Vector Advance { get; }
 
         public Single HorizontalBearingX => GetFloat(_slotRect.metrics.horiBearingX);
@@ -28,8 +34,7 @@ namespace Das.OpenGL.Text.FreeType
         public Single Height => GetFloat(_slotRect.metrics.height);
 
         public Single Width => GetFloat(_slotRect.metrics.width);
-     
-        private static Single GetFloat(IntPtr ptr) =>
-            Fixed26Dot6.FromRawValue((Int32)ptr).Value / 64f;
+
+        private readonly GlyphSlotRec _slotRect;
     }
 }

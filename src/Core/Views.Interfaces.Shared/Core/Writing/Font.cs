@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Extensions;
+using Das.Views.Text.Fonts;
 
 namespace Das.Views.Core.Writing
 {
     public class Font : IEquatable<Font>,
                         IFont
     {
-        public Font(Double size, 
-                    String familyName, 
+        public Font(Double size,
+                    String familyName,
                     FontStyle fontStyle)
         {
             Size = size;
@@ -18,7 +19,7 @@ namespace Das.Views.Core.Writing
             var familyHash = String.Intern(FamilyName).GetHashCode();
 
             _hashCode = Convert.ToInt32(Size) +
-                        ((Int32) FontStyle << 8) +
+                        ((Int32)FontStyle << 8) +
                         (familyHash << 11);
         }
 
@@ -52,9 +53,21 @@ namespace Das.Views.Core.Writing
 
         public Double Size { get; }
 
+        public FontMetrics Metrics => throw new NotImplementedException();
+
         public IFont Resize(Double newSize)
         {
             return new Font(newSize, FamilyName, FontStyle);
+        }
+
+        public IFontFace GetFontFace()
+        {
+            return new FontFace(); //TODO:
+        }
+
+        public Boolean HasCharacter(UInt32 unicodeValue)
+        {
+            throw new NotImplementedException();
         }
 
         public String FamilyName { get; }
@@ -77,7 +90,8 @@ namespace Das.Views.Core.Writing
             return _hashCode;
         }
 
-        public static Font operator *(Font font, Double val)
+        public static Font operator *(Font font,
+                                      Double val)
         {
             if (val.AreEqualEnough(1))
                 return font;

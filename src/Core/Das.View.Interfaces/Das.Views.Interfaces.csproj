@@ -10,6 +10,7 @@
   <PropertyGroup>
    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+   <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath></OutputPath>

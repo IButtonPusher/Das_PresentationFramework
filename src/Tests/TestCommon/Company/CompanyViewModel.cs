@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using Das.ViewModels;
 
 
@@ -11,7 +12,7 @@ namespace TestCommon.Company
         public CompanyViewModel(String name)
                                 //, IScene scene)
         {
-            Employees = new ObservableRangeCollection<EmployeeViewModel>();
+            Employees = new ObservableCollection<EmployeeViewModel>();
             //_scene = scene;
             Name = name;
             //Camera = new WireframeCamera(new Vector3(0, 0, 10.0f), Vector3.Zero, Vector3.Zero, scene);
@@ -31,7 +32,7 @@ namespace TestCommon.Company
 
         //private readonly IScene _scene;
         public ICompanyViewModel Self => this;
-        public ObservableRangeCollection<EmployeeViewModel> Employees { get; set; }
+        public ObservableCollection<EmployeeViewModel> Employees { get; set; }
         //public IPieData<String, Double> SalesReport { get; }
 
         public String Name { get; }

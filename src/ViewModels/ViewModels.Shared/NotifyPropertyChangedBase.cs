@@ -250,7 +250,7 @@ namespace Das.Views.Mvvm
                 return true;
 
             var listeners = detailedHandler.GetInvocationList();
-            foreach (var listener in listeners.OfType<OnPropertyChanging>()) //OfType<Func<Object, String, Object, Object, Boolean>>())
+            foreach (var listener in listeners.OfType<OnPropertyChanging>())
                 if (!listener(this, propertyName, oldValue, newValue))
                     return false;
 

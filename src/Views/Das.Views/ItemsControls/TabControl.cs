@@ -33,7 +33,8 @@ namespace Das.Views
             _lockContentVisuals = new Object();
             _tabContentVisuals = new Dictionary<Object, IVisualElement>();
 
-            TabItems = new AsyncObservableCollection2<IVisualElement>();
+            //TabItems = new AsyncObservableCollection2<IVisualElement>();
+            TabItems = new ObservableRangeCollection<IVisualElement>();
             TabItems.CollectionChanged += OnTabItemsChanged;
 
             HeaderTemplate = new DefaultTabHeaderTemplate(_visualBootstrapper, this);
@@ -141,10 +142,12 @@ namespace Das.Views
             set => SelectedTab = value;
         }
 
-        public AsyncObservableCollection2<IVisualElement> TabItems { get; }
+        //public AsyncObservableCollection2<IVisualElement> TabItems { get; }
+
+        public ObservableRangeCollection<IVisualElement> TabItems { get; }
 
 
-        protected override async void AddNewItems(IEnumerable<Object> items)
+        protected override void AddNewItems(IEnumerable<Object> items)
         {
             var itemTemplate = ItemTemplate ?? _defaultItemTemplate;
 
@@ -154,7 +157,8 @@ namespace Das.Views
 
                 if (visual is INotifyPropertyChanged notifier)
                     notifier.PropertyChanged += OnItemPropertyChanged;
-                await TabItems.AddAsync(visual);
+                TabItems.Add(visual);
+                //await TabItems.AddAsync(visual);
             }
         }
 
@@ -305,13 +309,14 @@ namespace Das.Views
             InvalidateMeasure();
         }
 
-        private async void OnTabItemsChanged(Object sender,
+        private void OnTabItemsChanged(Object sender,
                                              NotifyCollectionChangedEventArgs e)
         {
             if (SelectedTab != null)
                 return;
 
-            SelectedTab = await TabItems.FirstOrDefaultAsync();
+            SelectedTab = TabItems.FirstOrDefault();
+            //SelectedTab = await TabItems.FirstOrDefaultAsync();
         }
 
         private readonly IDataTemplate _defaultItemTemplate;

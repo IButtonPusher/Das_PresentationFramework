@@ -199,7 +199,7 @@ namespace Das.Views.Gdi.Controls
             set => _htmlPanel.BorderRadius = value;
         }
 
-        public VisualBorder Border
+        public IVisualBorder Border
         {
             get => _htmlPanel.Border;
             set => _htmlPanel.Border = value;

@@ -30,11 +30,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Input\Text\Pointers\TextPointer.cs" />
+    <Compile Remove="Input\Text\Pointers\TextPointerBase.cs" />
     <Compile Remove="Panels\Grid\GridPanel.cs" />
     <Compile Remove="Panels\Grid\RepeaterGrid.cs" />
     <Compile Remove="Panels\Providers\StackPanelProvider.cs" />
     <Compile Remove="Panels\WrapPanel.cs" />
+    <Compile Remove="Resources\Channel.cs" />
+    <Compile Remove="Resources\IResource.cs" />
+    <Compile Remove="Resources\ResourceHandle.cs" />
     <Compile Remove="SurrogateVisualBase.cs" />
+    <Compile Remove="Text\Fonts\GlyphTypeface.cs" />
+    <Compile Remove="Text\TextSchema.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +51,7 @@
   <ItemGroup>
     <Folder Include="Panels\Grid\" />
     <Folder Include="Panels\Providers\" />
+    <Folder Include="Resources\" />
     <Folder Include="Styles\Application\" />
   </ItemGroup>
 

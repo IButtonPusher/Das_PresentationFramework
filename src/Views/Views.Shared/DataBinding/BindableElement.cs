@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Views.Controls;
+using Das.Views.DependencyProperties;
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
 
@@ -9,7 +10,7 @@ using TaskEx = System.Threading.Tasks.Task;
 
 namespace Das.Views.DataBinding
 {
-    public abstract class BindableElement : VisualElement,
+    public class BindableElement : VisualElement,
                                             IBindableElement
     {
         protected BindableElement(IVisualBootstrapper visualBootstrapper)
@@ -128,5 +129,39 @@ namespace Das.Views.DataBinding
 
 
         private Object? _dataContext;
+
+        public void SetValue<T>(IDependencyProperty property,
+                                T value)
+        {
+            property.SetValue(this, value);
+        }
+
+        public Object? ReadLocalValue(IDependencyProperty dp)
+        {
+            return dp.GetValue(this);
+        }
+
+        public void ClearValue(IDependencyProperty dp)
+        {
+            dp.ClearValue(this);
+        }
+
+        public T GetValue<T>(IDependencyProperty<T> dp)
+        {
+            return dp.GetValue(this);
+        }
+
+        public Object? GetValue(IDependencyProperty dp)
+        {
+            return dp.GetValue(this);
+        }
+
+        public IEnumerable<LocalValueEntry> GetLocalValues()
+        {
+            foreach (var dp in DependencyProperty.GetDependencyPropertiesForType(GetType()))
+            {
+                yield return new LocalValueEntry(dp, dp.GetValue(this));
+            }
+        }
     }
 }

@@ -5,7 +5,6 @@ using Das.OpenGL.Text.FreeType;
 using Das.OpenGL.Windows;
 using Das.Views;
 using Das.Views.Core.Writing;
-using Das.Views.Panels;
 using Das.Views.Updaters;
 using Das.Views.Windows;
 using Das.Views.Styles;

@@ -174,7 +174,7 @@ namespace Das.Views.Panels
                         _controls.Remove(ctrl);
                     }
 
-                    _controls.Add(ctrl);
+                    //_controls.Add(ctrl);
                 }
             }
         }
@@ -183,7 +183,6 @@ namespace Das.Views.Panels
         private readonly Object _controlsLock;
 
         private readonly ItemsControlHelper _itemsControlHelper;
-
         private readonly ISequentialRenderer _renderer;
         private readonly Dictionary<Object, IVisualElement> _visualsByVm;
     }

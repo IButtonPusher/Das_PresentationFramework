@@ -30,6 +30,8 @@ namespace Das.Views
          
          // Keep a reference typed to IVisualElement so that dependency property lookups are faster
          _me = this;
+
+         _interactive = this as IHandleInput;
       }
 
       public virtual ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
@@ -118,9 +120,9 @@ namespace Das.Views
       protected Boolean TryHandleInput<TArgs>(TArgs args)
          where TArgs : IMouseInputEventArgs<TArgs>
       {
-         if (this is not IHandleInput interactive ||
-             (interactive.HandlesActions & args.Action) != args.Action ||
-             interactive is not IHandleInput<TArgs> inputHandler)
+          if (_interactive == null ||
+             (_interactive.HandlesActions & args.Action) != args.Action ||
+             _interactive is not IHandleInput<TArgs> inputHandler)
             return false;
 
          return inputHandler.OnInput(args);
@@ -215,5 +217,7 @@ namespace Das.Views
       private ValueSize _measuredSize;
       private readonly ILayoutQueue _layoutQueue;
       private readonly IVisualElement _me;
+
+      private readonly IHandleInput? _interactive;
    }
 }

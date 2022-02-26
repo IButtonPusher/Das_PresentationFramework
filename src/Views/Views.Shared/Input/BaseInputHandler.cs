@@ -22,8 +22,8 @@ namespace Das.Views.Input
         {
            _lastInputContext = args.InputContext;
             
-           UILogger.Log("Input handler received: " + args + " capturing: " + 
-                        _inputCapturingMouse, LogLevel.Level1);
+           //UILogger.Log("Input handler received: " + args + " capturing: " + 
+           //             _inputCapturingMouse, LogLevel.Level1);
             
            var isButtonAction = (InputAction.AnyMouseButton & action) > InputAction.None;
            //IHandleInput? handledBy = null;
@@ -225,7 +225,7 @@ namespace Das.Views.Input
         {
             var margs = args.Offset(offsetCube.TopLeft);
 
-            UILogger.Log("try handle action by " + element, LogLevel.Level1);
+            //UILogger.Log("try handle action by " + element, LogLevel.Level1);
 
             if (isButtonAction)
             {

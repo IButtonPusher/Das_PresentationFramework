@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
@@ -81,31 +80,7 @@ namespace Das.Views
             }
         }
 
-        public static void HandleCollectionChanges<T>(this NotifyCollectionChangedEventArgs e,
-                                                      Action<IEnumerable<T>> oldItems,
-                                                      Action<IEnumerable<T>> newItems,
-                                                      Action? onClear = null)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Reset)
-            {
-                if (onClear != null)
-                    onClear();
-
-                return;
-            }
-
-            if (e.OldItems != null)
-            {
-                var olds = e.OldItems.OfType<T>();
-                oldItems(olds);
-            }
-
-            if (e.NewItems == null)
-                return;
-
-            var news = e.NewItems.OfType<T>();
-            newItems(news);
-        }
+        
 
         public static String ToSvgString(this Double value)
         {

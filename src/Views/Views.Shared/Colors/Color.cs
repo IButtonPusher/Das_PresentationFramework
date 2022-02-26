@@ -27,6 +27,8 @@ namespace Das.Views.Core.Drawing
 
         public Byte R { get; }
 
+        IBrush IColor.ToBrush() => ToBrush();
+
         public SolidColorBrush ToBrush()
         {
             return _asBrush ??= new SolidColorBrush(this);

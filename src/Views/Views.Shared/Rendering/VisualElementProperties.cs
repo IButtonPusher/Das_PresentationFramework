@@ -58,6 +58,17 @@ namespace Das.Views
          set => VerticalAlignmentProperty.SetValue(this, value);
       }
 
+      public static readonly DependencyProperty<IVisualElement, IBrush?> ForegroundProperty =
+          DependencyProperty<IVisualElement, IBrush?>.Register(
+              nameof(Foreground),
+              default);
+
+      public IBrush? Foreground
+      {
+          get => ForegroundProperty.GetValue(this);
+          set => ForegroundProperty.SetValue(this, value);
+      }
+
       public IBrush? Background
       {
          get => BackgroundProperty.GetValue(_me);
@@ -85,9 +96,10 @@ namespace Das.Views
 
       public virtual Boolean IsClipsContent { get; set; }
 
+      #if DEBUG
+
       private Action<IVisualElement>? _disposed;
 
-      #if DEBUG
       private readonly System.Collections.Generic.HashSet<Action<IVisualElement>> _disposeCheck = new ();
 
       public event Action<IVisualElement>? Disposed
@@ -209,11 +221,11 @@ namespace Das.Views
          set => BorderRadiusProperty.SetValue(this, value);
       }
 
-      public static readonly DependencyProperty<IVisualElement, VisualBorder> BorderProperty =
-         DependencyProperty<IVisualElement, VisualBorder>.Register(
+      public static readonly DependencyProperty<IVisualElement, IVisualBorder> BorderProperty =
+         DependencyProperty<IVisualElement, IVisualBorder>.Register(
             nameof(Border), VisualBorder.Empty);
 
-      public VisualBorder Border
+      public IVisualBorder Border
       {
          get => BorderProperty.GetValue(_me);
          set => BorderProperty.SetValue(this, value);

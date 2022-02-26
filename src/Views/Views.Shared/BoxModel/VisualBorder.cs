@@ -6,7 +6,7 @@ using Das.Views.Core.Geometry;
 namespace Das.Views.BoxModel
 {
     public readonly struct VisualBorder : IBoxValue<BorderSide>,
-                                          IBoxValue<IBrush>
+                                          IVisualBorder
     {
         public VisualBorder(BorderSide all)
         : this(all, all, all, all)
@@ -30,6 +30,10 @@ namespace Das.Views.BoxModel
                              Left.Color.Equals(Top.Color) &&
                              Left.Color.Equals(Bottom.Color);
         }
+
+        IThickness IVisualBorder.GetThickness<TSize>(TSize available) => GetThickness(available);
+
+        Boolean IVisualBorder.IsEmpty => IsEmpty;
 
         public ValueThickness GetThickness<TSize>(TSize available)
             where TSize : ISize

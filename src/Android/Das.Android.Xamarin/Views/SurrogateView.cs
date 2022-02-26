@@ -122,13 +122,19 @@ namespace Das.Xamarin.Android
             else _viewGroup.AddView(this);
         }
 
-        event Action<IVisualElement>? IVisualElement.Disposed
+        event Action<IVisualElement>? INotifyDisposable.Disposed
         {
             add => ReplacingVisual.Disposed += value;
             remove => ReplacingVisual.Disposed -= value;
         }
 
         public Boolean IsDisposed => ReplacingVisual.IsDisposed;
+
+        public event Action<IVisualElement>? Disposed
+        {
+            add => ReplacingVisual.Disposed += value;
+            remove => ReplacingVisual.Disposed -= value;
+        }
 
         void IVisualElement.RaisePropertyChanged(String propertyName,
                                                  Object? value)
@@ -186,7 +192,7 @@ namespace Das.Xamarin.Android
             set => ReplacingVisual.BorderRadius = value;
         }
 
-        VisualBorder IVisualElement.Border
+        IVisualBorder IVisualElement.Border
         {
             get => ReplacingVisual.Border;
             set => ReplacingVisual.Border = value;

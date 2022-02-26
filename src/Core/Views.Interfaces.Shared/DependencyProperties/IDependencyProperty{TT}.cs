@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views.DependencyProperties;
 using Das.Views.Transitions;
 
 namespace Das.Views
 {
-   public interface IDependencyProperty<TVisual, TValue> : INamedProperty
-       where TVisual : IVisualElement
+    public interface IDependencyProperty<TVisual, TValue> : INamedProperty
+        where TVisual : IVisualElement
     {
         void AddOnChangedHandler(Action<TVisual, TValue, TValue> handler);
 

@@ -592,8 +592,8 @@ namespace Das.Views.Extended
         private async Task CheckHeaderAsync(Stream stream)
         {
             var buf = new Byte[_standardHeaderLength];
-            await stream.ReadAsync(buf, 0, _standardHeaderLength).ConfigureAwait(false);
-            if (!AreEqual(_standardHeader, buf))
+            var amountRead = await stream.ReadAsync(buf, 0, _standardHeaderLength).ConfigureAwait(false);
+            if (amountRead != _standardHeaderLength || !AreEqual(_standardHeader, buf))
                 throw new InvalidOperationException("Invalid header");
         }
 

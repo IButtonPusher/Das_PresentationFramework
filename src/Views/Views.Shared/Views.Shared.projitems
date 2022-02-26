@@ -10,10 +10,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BaseSurrogateProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BorderSide.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BoxShadow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BoxShadowLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BoxValues.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\VisualBorder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\VisualCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\VisualCollectionHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Colors\Color.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Colors\HatchBrush.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Colors\SolidColorBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\BindingType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\BindingBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\ChildNodeType.cs" />
@@ -39,6 +45,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converters\QuantifiedThicknessConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToColorConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToVisualConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\NamedObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\DependencyPropertyBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\DependencyProperty{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Images\NullSvgBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\HitTester.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\InteractiveVisualProperties.cs" />
@@ -161,5 +170,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Geometry\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Validation\" />
   </ItemGroup>
 </Project>

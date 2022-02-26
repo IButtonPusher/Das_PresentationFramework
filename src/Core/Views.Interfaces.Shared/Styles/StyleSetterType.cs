@@ -42,13 +42,13 @@ namespace Das.Views.Styles
         [StyleType(typeof(FontStyle), true)]
         FontWeight,
 
-        [StyleType(typeof(SolidColorBrush), false)]
+        [StyleType(typeof(IBrush), false)]
         Foreground,
 
-        [StyleType(typeof(SolidColorBrush), false)]
+        [StyleType(typeof(IBrush), false)]
         Background,
 
-        [StyleType(typeof(SolidColorBrush), false)]
+        [StyleType(typeof(IBrush), false)]
         BorderBrush,
 
         [StyleType(typeof(VerticalAlignments), false)]
