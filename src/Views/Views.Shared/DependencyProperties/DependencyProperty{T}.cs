@@ -553,11 +553,6 @@ namespace Das.Views
         //private readonly List<Action<IBindableElement, TValue, TValue>> _staticChangeds;
         //private readonly ConcurrentDictionary<IBindableElement, ITransition<TValue>> _transitions;
         //private readonly ConcurrentDictionary<IBindableElement, TValue> _values;
-
-        /// <summary>
-        ///     Once a property's value has been set by something other than a style (binding, direct set)
-        ///     it isn't eligible to be set by a style anymore
-        /// </summary>
-        //private readonly ConcurrentDictionary<IBindableElement, Boolean> _visualsSetByNotStyle;
+        
     }
 }

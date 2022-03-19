@@ -16,6 +16,7 @@ namespace Das.Views.Core.Geometry
       {
          _width = width;
          _height = height;
+         UpdateHasInfinite();
       }
 
       public Size DeepCopy()
@@ -25,14 +26,36 @@ namespace Das.Views.Core.Geometry
 
       public virtual Double Width
       {
-         get => _width;
-         set => _width = value;
+          get => _width;
+          set
+          {
+              if (Equals(_width, value))
+                  return;
+
+              _width = value;
+              UpdateHasInfinite();
+          }
       }
+
+      private void UpdateHasInfinite()
+      {
+          HasInfiniteDimension = Double.IsInfinity(_width) ||
+                                 Double.IsInfinity(_height);
+      }
+
+      public Boolean HasInfiniteDimension { get; private set; }
 
       public virtual Double Height
       {
-         get => _height;
-         set => _height = value;
+          get => _height;
+          set
+          {
+              if (Equals(_height, value))
+                  return;
+              
+              _height = value;
+              UpdateHasInfinite();
+          }
       }
 
       public Boolean IsEmpty => Width.IsZero() && Height.IsZero();

@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Text;
-using Das.Container;
-using Das.Views.Core.Geometry;
 using Das.Views.Localization;
-using Das.Views.Text.Fonts;
-using Das.Views.Transforms;
-using Das.Views.Validation;
 
 namespace Das.Views.Text
 {

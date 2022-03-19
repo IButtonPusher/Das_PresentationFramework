@@ -25,6 +25,8 @@ namespace Das.Views.Core.Geometry
                       right.IsZero() &&
                       top.IsZero() &&
                       bottom.IsZero();
+
+            HasInfiniteDimension = false;
         }
 
         public static readonly ValueThickness Empty = new(0, 0, 0, 0);
@@ -55,6 +57,8 @@ namespace Das.Views.Core.Geometry
         public Double Right { get; }
 
         public Double Width => Left + Right;
+
+        public Boolean HasInfiniteDimension { get; }
 
         public Double Height => Top + Bottom;
 

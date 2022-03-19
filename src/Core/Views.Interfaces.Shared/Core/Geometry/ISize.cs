@@ -10,5 +10,7 @@ namespace Das.Views.Core.Geometry
         Boolean IsEmpty { get; }
 
         Double Width { get; }
+
+        Boolean HasInfiniteDimension { get; }
     }
 }

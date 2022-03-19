@@ -672,10 +672,7 @@ namespace Das.Views.Extended
 					if(checksum != ((DeflateWithChecksum)s.BaseStream).Checksum)
 						throw new Exception("Compressed data has invalid checksum");
 				}
-				//else
-				//{
-				//	stream.BaseStream.Position = endPos;
-				//}
+				
 			}
 			return ret;
 		}

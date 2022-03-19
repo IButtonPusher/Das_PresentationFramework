@@ -10,6 +10,7 @@ namespace Das.Views.DependencyProperties
 
         public override Int32 GetHashCode()
         {
+            // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
             return base.GetHashCode();
         }
 

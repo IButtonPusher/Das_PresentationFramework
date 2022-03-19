@@ -18,6 +18,8 @@ namespace Das.Views.Core.Geometry
             Height = height;
             Width = width;
             Offset = offset;
+
+            HasInfiniteDimension = Double.IsInfinity(Width) || Double.IsInfinity(Height);
         }
 
         [DebuggerStepThrough]
@@ -38,6 +40,7 @@ namespace Das.Views.Core.Geometry
             }
 
             Offset = offset;
+            HasInfiniteDimension = Double.IsInfinity(Width) || Double.IsInfinity(Height);
         }
 
         public ValueRenderSize(Double width,
@@ -73,16 +76,18 @@ namespace Das.Views.Core.Geometry
         //    return DeepCopy();
         //}
 
-        public IRenderSize DeepCopy()
-        {
-            return new ValueRenderSize(Width, Height, Offset);
-        }
+        //public IRenderSize DeepCopy()
+        //{
+        //    return new ValueRenderSize(Width, Height, Offset);
+        //}
 
         public Double Height { get; }
 
         public Boolean IsEmpty => Width.IsZero() && Height.IsZero();
 
         public Double Width { get; }
+
+        public Boolean HasInfiniteDimension { get; }
 
         //ISize ISize.Reduce(Thickness padding)
         //{

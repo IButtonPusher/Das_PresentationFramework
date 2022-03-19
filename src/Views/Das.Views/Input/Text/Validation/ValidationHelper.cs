@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using Das.Views.Core;
 using Das.Views.Input.Text.Pointers;
 using Das.Views.Localization;

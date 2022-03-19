@@ -41,6 +41,8 @@ namespace Das.Views.Core.Geometry
          BottomLeft = new ValuePoint2D(X, Y + Height);
          BottomRight = new ValuePoint2D(X + Width, Y + Height);
 
+         HasInfiniteDimension = Double.IsInfinity(Width) || Double.IsInfinity(Height);
+
          _hash = 0;
          _hash = GeometryHelper.BuildRectHash(this);
       }
@@ -78,6 +80,8 @@ namespace Das.Views.Core.Geometry
       public Boolean IsEmpty => Width.IsZero() && Height.IsZero();
 
       public Double Width { get; }
+
+      public Boolean HasInfiniteDimension { get; }
 
       public Boolean Equals(IRectangle other)
       {

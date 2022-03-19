@@ -31,6 +31,8 @@ namespace OpenGLTests
 
       Double ISize.Width => _bmp.Width;
 
+      public Boolean HasInfiniteDimension => false;
+
       void IDisposable.Dispose()
       {
          if (_isDisposed)

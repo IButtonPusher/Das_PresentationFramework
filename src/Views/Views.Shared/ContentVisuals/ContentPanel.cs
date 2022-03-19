@@ -54,8 +54,7 @@ namespace Das.Views.Panels
                                                      IMeasureContext measureContext)
       {
          var contentCanHave = GetMeasureSpace(measureContext, availableSpace,
-            out var padding,
-            out var mySize);
+            out var padding, out var mySize);
 
          _contentMeasured = Content is { } content
             ? measureContext.MeasureElement(content, contentCanHave)

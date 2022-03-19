@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Das.Views.Input.Text.Pointers;
 
 namespace Das.Views.Text

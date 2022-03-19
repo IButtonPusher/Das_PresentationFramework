@@ -41,6 +41,8 @@ namespace Das.Views.Core.Geometry
          Width = width;
          Height = height;
          Depth = depth;
+
+         HasInfiniteDimension = Double.IsInfinity(Width) || Double.IsInfinity(Height);
       }
 
       public ValueCube(IRectangle start,
@@ -59,6 +61,8 @@ namespace Das.Views.Core.Geometry
          Height = start.Height;
 
          Depth = depth;
+
+         HasInfiniteDimension = Double.IsInfinity(Width) || Double.IsInfinity(Height);
       }
 
       IPoint2D IRectangle.TopLeft => TopLeft;
@@ -94,6 +98,8 @@ namespace Das.Views.Core.Geometry
       public Boolean IsEmpty => Width.IsZero() && Height.IsZero();
 
       public Double Width { get; }
+
+      public Boolean HasInfiniteDimension { get; }
 
       public IPoint2D Location => TopLeft;
 

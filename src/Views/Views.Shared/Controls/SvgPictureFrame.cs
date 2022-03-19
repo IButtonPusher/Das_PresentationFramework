@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Drawing;
+using Das.Views.Core.Geometry;
 using Das.Views.Images;
+using Das.Views.Measuring;
 using Das.Views.Rendering;
 
 namespace Das.Views.Controls
@@ -31,6 +33,43 @@ namespace Das.Views.Controls
             get => StrokeProperty.GetValue(this);
             set => StrokeProperty.SetValue(this, value);
         }
+
+        public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
+                                                       IMeasureContext measureContext)
+        {
+            var ezMeasure = MeasureHelper.MeasureVisual(this, availableSpace,
+                out var desiredWidth, out var desiredHeight);
+
+            if (ezMeasure == DimensionResult.HeightAndWidth)
+                return new ValueSize(desiredWidth, desiredHeight);
+
+            if (Source is not { } source)
+                return ValueSize.Empty;
+
+            switch (ezMeasure)
+            {
+                case DimensionResult.Invalid:
+                case DimensionResult.None:
+                    desiredWidth = source.Width;
+                    desiredHeight = source.Height;
+                    break;
+
+                case DimensionResult.Width:
+                    desiredHeight = source.Height;
+                    break;
+
+                case DimensionResult.Height:
+                    desiredWidth = source.Width;
+                    break;
+
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return new ValueSize(desiredWidth, desiredHeight);
+        }
+
 
         protected override Boolean TryGetImage<TRenderSize>(TRenderSize size,
                                                             IVisualContext visualContext,

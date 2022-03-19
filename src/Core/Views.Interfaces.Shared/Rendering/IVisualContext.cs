@@ -15,7 +15,7 @@ namespace Das.Views.Rendering
         ILayoutQueue LayoutQueue { get; }
 
         /// <summary>
-        /// Returns the Size + Width properties of the visual, if set.
+        /// Returns the Size of the visual, if both height and width were specified
         /// </summary>
         Boolean TryGetElementSize(IVisualElement visual,
                                   ISize availableSize,

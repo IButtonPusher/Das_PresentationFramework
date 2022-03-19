@@ -26,6 +26,8 @@ namespace Das.Views.Images
             Segments = new List<SvgPathSegment>(segments);
 
             Stroke = Color.Black;
+
+            HasInfiniteDimension = Double.IsInfinity(Width) || Double.IsInfinity(Height);
         }
 
         public Double Height { get; }
@@ -34,6 +36,8 @@ namespace Das.Views.Images
 
 
         public Double Width { get; }
+
+        public Boolean HasInfiniteDimension { get; }
 
         public IColor? Stroke { get; set; }
 

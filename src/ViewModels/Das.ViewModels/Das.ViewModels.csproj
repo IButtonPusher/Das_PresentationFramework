@@ -7,9 +7,9 @@
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Core\Das.View.Interfaces\Das.Views.Interfaces.csproj" />
-  </ItemGroup>
-
   <Import Project="..\ViewModels.Shared\ViewModels.Shared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\Das.ViewModels.Interfaces\Das.ViewModels.Interfaces.csproj" />
+  </ItemGroup>
 </Project>

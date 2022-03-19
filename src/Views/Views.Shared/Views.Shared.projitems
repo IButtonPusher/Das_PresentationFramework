@@ -61,6 +61,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Layout\NullStyleContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\NullViewState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\VisualLineage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Measuring\DimensionResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Measuring\MeasureHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\Canvas.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\ButtonBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Label.cs" />

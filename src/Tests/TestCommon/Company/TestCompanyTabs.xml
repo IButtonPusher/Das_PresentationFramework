@@ -3,45 +3,33 @@
 <ContentPanel xmlns:data="clr-namespace:TestCommon.Company;assembly=TestCommon"
               ContextType="ICompanyViewModel">
 
-  <StackPanel>
+	<StackPanel>
 
-    <TabControl ItemsSource="{Binding Employees}"
-                SelectedItem="{Binding SelectedEmployee}">
+		<TabControl ItemsSource="{Binding Employees}"
+		            SelectedItem="{Binding SelectedEmployee}">
 
-      <ContentTemplate>
-        <UniformRepeaterPanel ItemsSource="{Binding Addresses}">
-          <Label Text="{Binding HouseNumber}" />
-          <Label Text="{Binding Street}" />
-          <Label Text="{Binding City}" />
-          <Label Text="{Binding State}" />
-          <Label Text="{Binding ZipCode}" />
-        </UniformRepeaterPanel>
-      </ContentTemplate>
-    </TabControl>
+			<ContentTemplate>
+				<UniformRepeaterPanel ItemsSource="{Binding Addresses}">
+					<Label Text="{Binding HouseNumber}" />
+					<Label Text="{Binding Street}" />
+					<Label Text="{Binding City}" />
+					<Label Text="{Binding State}" />
+					<Label Text="{Binding ZipCode}" />
+				</UniformRepeaterPanel>
+			</ContentTemplate>
+		</TabControl>
 
-    <ToggleButton Content="hello"
-                  Style="mat-toggle-button"/>
+		<ToggleButton Content="hello"
+		              Style="mat-toggle-button" />
 
-    <Button>
-      <svg Source="{Resource TestCommon.Resources.cog.svg}"
-           Fill="DarkGray" 
-           Stroke="DarkGray"/>
-    </Button>
+		<Button VerticalAlignment="Center"
+		        HorizontalAlignment="Center">
+			<svg Source="{Resource TestCommon.Resources.cog.svg}"
+			     Fill="DarkGray"
+			     Stroke="DarkGray" />
+		</Button>
 
-    <!--<ToggleButton>
-      <Template>
-        <Label>
-          hello 2 u 2
-        </Label>
-      </Template>
-    </ToggleButton>
 
-    <ToggleButton Content="hello 3 u 3">
-      <Template>
-        <Label Text="{Content}" />
-      </Template>
-    </ToggleButton>-->
-
-  </StackPanel>
+	</StackPanel>
 
 </ContentPanel>

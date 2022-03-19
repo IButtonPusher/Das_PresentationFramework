@@ -16,6 +16,8 @@ namespace Das.Views.Core.Geometry
             IsEmpty = Width.IsZero() && Height.IsZero();
             IsValid = Width.IsNotZero() && Height.IsNotZero() &&
                       !Double.IsInfinity(Width) && !Double.IsInfinity(Height);
+
+            HasInfiniteDimension = Double.IsInfinity(Width) || Double.IsInfinity(Height);
         }
 
         public ValueSize(ISize size) 
@@ -40,6 +42,8 @@ namespace Das.Views.Core.Geometry
         }
 
         public Double Width { get; }
+
+        public Boolean HasInfiniteDimension { get; }
 
 
         /// <summary>

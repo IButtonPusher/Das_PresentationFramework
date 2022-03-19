@@ -71,11 +71,10 @@ namespace Das.Views.Rendering.Geometry
          Offset = offset;
 
          TopLeft = new ValuePoint2D(X, Y);
-         //TopRight = new ValuePoint2D(X + Width, Y);
-         //BottomLeft = new ValuePoint2D(X, Y + Height);
-         //BottomRight = new ValuePoint2D(X + Width, Y + Height);
 
          IsEmpty = Width.IsZero() && Height.IsZero();
+
+         HasInfiniteDimension = Double.IsInfinity(Width) || Double.IsInfinity(Height);
 
          _hash = 0;
          _hash = GeometryHelper.BuildRectHash(this);
@@ -114,6 +113,8 @@ namespace Das.Views.Rendering.Geometry
          TopLeft = new ValuePoint2D(X, Y);
          IsEmpty = Width.IsZero() && Height.IsZero();
 
+         HasInfiniteDimension = Double.IsInfinity(Width) || Double.IsInfinity(Height);
+
          _hash = 0;
          _hash = GeometryHelper.BuildRectHash(this);
       }
@@ -133,11 +134,11 @@ namespace Das.Views.Rendering.Geometry
          Offset = offset;
 
          TopLeft = new ValuePoint2D(x, y);
-         //TopRight = new ValuePoint2D(X + Width, Y);
-         //BottomLeft = new ValuePoint2D(X, Y + Height);
-         //BottomRight = new ValuePoint2D(X + Width, Y + Height);
+         
 
          IsEmpty = width.IsZero() && height.IsZero();
+
+         HasInfiniteDimension = Double.IsInfinity(Width) || Double.IsInfinity(Height);
 
          _hash = 0;
          _hash = GeometryHelper.BuildRectHash(this);
@@ -181,6 +182,8 @@ namespace Das.Views.Rendering.Geometry
       public Boolean IsEmpty { get; }
 
       public Double Width { get; }
+
+      public Boolean HasInfiniteDimension { get; }
 
       public IPoint2D Offset { get; }
 

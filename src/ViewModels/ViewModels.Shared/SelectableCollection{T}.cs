@@ -1,17 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Das.ViewModels;
 
 // ReSharper disable VirtualMemberCallInConstructor
 
 namespace Das.Mvvm
 {
-   public class SelectableCollection<T> : ObservableCollection<Selectable<T>>,
+   public class SelectableCollection<T> : ObservableRangeCollection<Selectable<T>>,
                                           IDisposable
+                                          
+                                          
    {
+       public SelectableCollection()
+       {
+           CollectionChanged += OnThisHereCollectionChanged;
+       }
+
       public SelectableCollection(IEnumerable<Selectable<T>> items)
          : base(items)
       {
@@ -22,6 +31,8 @@ namespace Das.Mvvm
 
          CollectionChanged += OnThisHereCollectionChanged;
       }
+
+      //protected override event PropertyChangedEventHandler PropertyChanged;
 
       public SelectableCollection(IEnumerable<T> available,
                                   IEnumerable<T> initiallySelected,
@@ -44,6 +55,13 @@ namespace Das.Mvvm
          CollectionChanged += OnThisHereCollectionChanged;
       }
 
+      public void Add(T value,
+                      Boolean isSelected,
+                      String description)
+      {
+          Add(new Selectable<T>(value, isSelected, description));
+      }
+
       public IEnumerable<T> GetSelectedItems()
       {
          foreach (var item in this)
@@ -55,19 +73,62 @@ namespace Das.Mvvm
          }
       }
 
+      public Boolean Select(T item)
+      {
+          foreach (var vm in this)
+          {
+              if (Equals(vm.Item, item))
+              {
+                  vm.IsSelected = true;
+                  return true;
+              }
+          }
+
+          return false;
+      }
+
+      private void SetValue<TProp>(ref TProp storage,
+                                   TProp value,
+                                   [CallerMemberName] String? propertyName = null)
+      {
+          if (Equals(storage, value))
+              return;
+
+          storage = value;
+          OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+      }
+
+
+      private Boolean _isAnySelected;
+
+      public Boolean IsAnySelected
+      {
+          get => _isAnySelected;
+          set => SetValue(ref _isAnySelected, value);
+      }
+
+
+      private Boolean _isAllSelected;
+
       public Boolean IsAllSelected
       {
-         get
-         {
-            foreach (var item in this)
-            {
-               if (!item.IsSelected)
-                  return false;
-            }
-
-            return true;
-         }
+          get => _isAllSelected;
+          set => SetValue(ref _isAllSelected, value);
       }
+
+      //public Boolean IsAllSelected
+      //{
+      //   get
+      //   {
+      //      foreach (var item in this)
+      //      {
+      //         if (!item.IsSelected)
+      //            return false;
+      //      }
+
+      //      return true;
+      //   }
+      //}
 
       private void OnThisHereCollectionChanged(Object sender,
                                                NotifyCollectionChangedEventArgs e)
@@ -75,7 +136,7 @@ namespace Das.Mvvm
          e.HandleCollectionChanges<Selectable<T>>(oldies =>
          {
             foreach (var o in oldies)
-               o.PropertyChanged -= OnSelectableValueChanged;
+               o.Dispose();
 
          }, newbies =>
          {
@@ -89,18 +150,26 @@ namespace Das.Mvvm
       private void OnSelectableValueChanged(Object sender,
                                             PropertyChangedEventArgs e)
       {
-         if (e.PropertyName == nameof(Selectable<T>.IsSelected) &&
-             sender is Selectable<T> good)
-            SelectionChanged?.Invoke(good);
+          if (e.PropertyName == nameof(Selectable<T>.IsSelected))
+          {
+              if (sender is Selectable<T> good)
+                  SelectionChanged?.Invoke(good);
+
+              var selCount = this.Count(i => i.IsSelected);
+              IsAllSelected = selCount == Count;
+              IsAnySelected = selCount > 0;
+          }
+
       }
 
 
       public void Dispose()
       {
+
          SelectionChanged = null;
          foreach (var item in this)
          {
-            item.PropertyChanged -= OnSelectableValueChanged;
+             item.Dispose();
          }
       }
    }

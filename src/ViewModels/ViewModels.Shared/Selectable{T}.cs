@@ -14,6 +14,15 @@ namespace Das.Mvvm
          Item = item;
       }
 
+      public Selectable(T item,
+                        Boolean isSelected,
+                        String description)
+          : base(description, isSelected)
+      {
+          Item = item;
+      }
+
+
       public Selectable(T item) : base(GetDescription(item))
       {
          Item = item;

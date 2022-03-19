@@ -35,4 +35,8 @@
     <Folder Include="Controls\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\ViewModels\Das.ViewModels.Interfaces\Das.ViewModels.Interfaces.csproj" />
+  </ItemGroup>
+
 </Project>

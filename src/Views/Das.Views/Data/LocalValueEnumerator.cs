@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Threading.Tasks;
-using Das.Views.Data;
 using Das.Views.DependencyProperties;
 using Das.Views.Localization;
 
@@ -15,6 +14,7 @@ namespace Das.Views.Collections
 
         public override Int32 GetHashCode()
         {
+            // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
             return base.GetHashCode();
         }
 
