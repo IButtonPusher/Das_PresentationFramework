@@ -54,7 +54,8 @@ namespace System.Runtime.CompilerServices
 
         private readonly Boolean _continueOnCapturedContext;
 
-        internal ConfiguredCancelableAsyncEnumerable(IAsyncEnumerable<T> enumerable, Boolean continueOnCapturedContext,
+        internal ConfiguredCancelableAsyncEnumerable(IAsyncEnumerable<T> enumerable, 
+                                                     Boolean continueOnCapturedContext,
                                                      CancellationToken cancellationToken)
         {
             _enumerable = enumerable;

@@ -67,7 +67,9 @@ namespace Das.Views.DataBinding
         public virtual Object? DataContext
         {
             get => _dataContext;
+#pragma warning disable CS8634
             set => SetValue(ref _dataContext, value,
+#pragma warning restore CS8634
                 OnInterceptDataContextChanging, OnDataContextChanged);
         }
 

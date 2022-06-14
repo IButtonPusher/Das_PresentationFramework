@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace System.Threading
@@ -32,5 +33,10 @@ namespace System.Threading
     public interface IAsyncTaskWaiter<TResult> : ITaskWaiter
     {
         Task<TResult> GetResultAsync();
+    }
+
+    public interface IAsyncEnumerableWaiter<out TResult> : ITaskWaiter
+    {
+        IAsyncEnumerable<TResult> GetResultsAsync();
     }
 }

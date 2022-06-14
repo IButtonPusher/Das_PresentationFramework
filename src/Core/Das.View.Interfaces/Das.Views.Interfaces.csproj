@@ -19,9 +19,7 @@
     <OutputPath>..\bla</OutputPath>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>  
-
-  <Import Project="..\CSharp8NetFramework\CSharp8NetFramework.projitems" Label="Shared" />
+  </PropertyGroup>
 
   <Import Project="..\Views.Interfaces.Shared\Views.Interfaces.Shared.projitems" Label="Shared" />
 

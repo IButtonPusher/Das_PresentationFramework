@@ -62,7 +62,7 @@ namespace Das.Views.Construction
 
                 var classRules = new HashSet<IStyleRule>();
 
-                await foreach (var r in GetStylesByClassNameAsync(className))
+                foreach (var r in GetStylesByClassName(className))
                     classRules.Add(r);
 
                 foreach (var r in typeStyles)
@@ -212,7 +212,7 @@ namespace Das.Views.Construction
         }
 
 
-        private async IAsyncEnumerable<IStyleRule> GetStylesByClassNameAsync(String className)
+        private IEnumerable<IStyleRule> GetStylesByClassName(String className)
         {
             lock (_lockStylesByClassName)
             {
@@ -241,7 +241,7 @@ namespace Das.Views.Construction
                         continue;
                 }
 
-                var resourceStyles = await _styleInflater.InflateResourceCssAsync(name).ConfigureAwait(false);
+                var resourceStyles = _styleInflater.InflateResourceCss(name);
 
                 if (resourceStyles == null)
                     continue;

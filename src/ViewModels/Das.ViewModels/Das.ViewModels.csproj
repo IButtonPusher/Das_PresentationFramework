@@ -2,12 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-	 <LangVersion>9.0</LangVersion>
+	 <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
   </PropertyGroup>
 
   <Import Project="..\ViewModels.Shared\ViewModels.Shared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <Compile Remove="ChangeTracking\TranscendentAttribute.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Das.ViewModels.Interfaces\Das.ViewModels.Interfaces.csproj" />

@@ -649,7 +649,7 @@ namespace Das.Views.Extended
 			}
 			try
 			{
-                for (Int32 i = 0; i < len; i++)
+                for (var i = 0; i < len; i++)
                 {
                     ret[i] = readPrimitive(s);
                     //ret.SetValue(readPrimitive(s), i);
@@ -665,11 +665,15 @@ namespace Das.Views.Extended
 				{
 					stream.BaseStream.Position = endPos - sizeof(Int32);
 					var checksumBytes = new Byte[sizeof(Int32)];
-					stream.BaseStream.Read(checksumBytes, 0, checksumBytes.Length);
-					Int32 checksum = 0;
-					for (Int32 i = 0; i < checksumBytes.Length; i++)
-						checksum = (checksum << 8) + checksumBytes[i];
-					if(checksum != ((DeflateWithChecksum)s.BaseStream).Checksum)
+					var returned = stream.BaseStream.Read(checksumBytes, 0, checksumBytes.Length);
+					var checksum = 0;
+                    //for (var i = 0; i < checksumBytes.Length; i++)
+                    for (var i = 0; i < returned; i++)
+                    {
+                        checksum = (checksum << 8) + checksumBytes[i];
+                    }
+
+                    if(checksum != ((DeflateWithChecksum)s.BaseStream).Checksum)
 						throw new Exception("Compressed data has invalid checksum");
 				}
 				

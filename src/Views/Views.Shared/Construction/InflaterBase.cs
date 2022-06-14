@@ -23,6 +23,22 @@ namespace Das.Views.Construction
             }
         }
 
+        protected static String GetStringFromResource(String resourceName)
+        {
+            var thisExe = Assembly.GetExecutingAssembly();
+
+            using (var stream = thisExe.GetManifestResourceStream(resourceName))
+            {
+                if (stream == null)
+                    throw new FileNotFoundException(resourceName);
+
+                using (var sr = new StreamReader(stream))
+                {
+                    return sr.ReadToEnd();
+                }
+            }
+        }
+
         protected static IMarkupNode GetRootNode(String xml)
         {
             IMarkupNode? node = XmlNodeBuilder.GetMarkupNode(xml);

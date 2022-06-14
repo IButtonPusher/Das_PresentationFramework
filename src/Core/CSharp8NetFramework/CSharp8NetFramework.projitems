@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AsyncTaskCompletionSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CancellationTokenEx.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\ListEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\AsyncSemaphore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\AsyncWaiter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\ReaderWriter\IReaderWriterAsync.cs" />
@@ -21,6 +22,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\ReaderWriter\WriterAsync.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\SyncReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\WaiterAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Concurrency\Waiters\AsyncEnumerableWaiter2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Concurrency\Waiters\AsyncEnumerableWaiter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\Waiters\AsyncTaskAwaiter{T1T2TR}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\Waiters\AsyncTaskWaiterBase{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\Waiters\AsyncTaskWaiter{TInTOut}.cs" />
@@ -58,6 +61,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ForEach\IAsyncEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ForEach\TaskAsyncEnumerableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ForEach\YieldAwaitable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IsExternalInit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ITaskCompletionSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MultiTaskCompletionSource{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nullables\NullableAttributes.cs" />

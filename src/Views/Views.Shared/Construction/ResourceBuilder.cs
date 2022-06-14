@@ -7,8 +7,6 @@ using Das.Views.Images;
 
 namespace Das.Views.Construction
 {
-
-
     public class ResourceBuilder : IResourceBuilder
     {
         public ResourceBuilder(IImageProvider imageProvider,
@@ -34,6 +32,34 @@ namespace Das.Views.Construction
                 {
                     case SVG:
                         var svg = await _svgBuilder.LoadAsync(stream);
+                        return svg;
+
+                    case PNG:
+                    case JPEG:
+                    case GIF:
+                        return _imageProvider.GetImage(stream);
+
+                    default:
+                        return default;
+                }
+            }
+        }
+
+        public Object? GetEmbeddedResource(String path,
+                                           String[] pathTokens,
+                                           Assembly assembly)
+        {
+            using (var stream = assembly.GetManifestResourceStream(path))
+            {
+                if (stream == null)
+                    return default;
+
+                var fileExtension = pathTokens[pathTokens.Length - 1].ToLower();
+
+                switch (fileExtension)
+                {
+                    case SVG:
+                        var svg = _svgBuilder.Load(stream);
                         return svg;
 
                     case PNG:

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 //using Das.Serializer;
 using Das.Views;
 using Das.Views.Mvvm;
@@ -9,7 +9,8 @@ using Das.Views.Mvvm;
 namespace Das.ViewModels
 {
     public class BaseObservableCommand : NotifyPropertyChangedBase,
-                                         IObservableCommand
+                                         IObservableCommand,
+                                         ICommand
     {
         public BaseObservableCommand(Action execute,
                                      IUiProvider uiThread)
@@ -166,12 +167,12 @@ namespace Das.ViewModels
         private readonly Action? _execute;
 
         private readonly Func<Task>? _executeAsync;
-        private readonly String? _propertyName;
+        //private readonly String? _propertyName;
         private readonly IUiProvider _uiProvider;
 
 
         private Boolean _canExecuteVal;
-        private Int32 _canExecutions;
+        //private Int32 _canExecutions;
 
 
         private String? _description;

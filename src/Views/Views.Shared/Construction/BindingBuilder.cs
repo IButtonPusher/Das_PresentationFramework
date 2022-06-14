@@ -8,6 +8,10 @@ using Das.ViewModels.Collections;
 using Das.Views.DataBinding;
 using Das.Views.Resources;
 
+#if !NET40
+using TaskEx = System.Threading.Tasks.Task;
+#endif
+
 namespace Das.Views.Construction
 {
     public class BindingBuilder : IBindingBuilder
@@ -24,18 +28,25 @@ namespace Das.Views.Construction
             _cachedPropertyAccessors = new DoubleConcurrentDictionary<Type, String, IPropertyAccessor>();
         }
 
-        public async Task<Dictionary<String, IPropertyBinding>> GetBindingsDictionaryAsync(
-            IMarkupNode node,
-            Type? dataContextType,
-            Dictionary<String, String>
-                nameSpaceAssemblySearch)
+        public virtual Task<Dictionary<String, IPropertyBinding>> GetBindingsDictionaryAsync(IMarkupNode node,
+                                                                                     Type? dataContextType,
+                                                                                     Dictionary<String, String> nameSpaceAssemblySearch)
+        {
+            var res = GetBindingsDictionary(node, dataContextType, nameSpaceAssemblySearch);
+            return TaskEx.FromResult(res);
+        }
+
+        public virtual Dictionary<String, IPropertyBinding> GetBindingsDictionary(IMarkupNode node,
+                                                                          Type? dataContextType,
+                                                                          Dictionary<String, String>
+                                                                              nameSpaceAssemblySearch)
         {
             Dictionary<String, IPropertyBinding> bindings;
 
             if (dataContextType != null)
             {
                 bindings = new Dictionary<String, IPropertyBinding>();
-                await foreach (var kvp in GetBindings(dataContextType, node, nameSpaceAssemblySearch))
+                foreach (var kvp in GetBindings(dataContextType, node, nameSpaceAssemblySearch))
                 {
                     bindings.Add(kvp.Key, kvp.Value);
                 }
@@ -98,7 +109,7 @@ namespace Das.Views.Construction
         }
 
 
-        private async IAsyncEnumerable<KeyValuePair<String, IPropertyBinding>> GetBindings(
+        private IEnumerable<KeyValuePair<String, IPropertyBinding>> GetBindings(
             Type dataContextType,
             IMarkupNode node,
             Dictionary<String, String>
@@ -195,7 +206,7 @@ namespace Das.Views.Construction
                         break;
 
                     case BindingType.Resource:
-                        var resourceBinding = await GetEmbeddedResourceBinding(propName);
+                        var resourceBinding = GetEmbeddedResourceBinding(propName);
                         if (resourceBinding != null)
                             yield return new(kvp.Key, resourceBinding);
                         break;
@@ -206,7 +217,7 @@ namespace Das.Views.Construction
             }
         }
 
-        private async Task<EmbeddedResourceBinding?> GetEmbeddedResourceBinding(String path)
+        private EmbeddedResourceBinding? GetEmbeddedResourceBinding(String path)
         {
             var tokens = path.Split('.');
             if (tokens.Length < 3)
@@ -215,10 +226,10 @@ namespace Das.Views.Construction
             var asmName = tokens[0];
 
             for (var c = 1; c < tokens.Length - 2; c++)
-                //if (_assemblies.TryGetAssembly(asmName + ".dll", out var foundAsm))
+                
                 if (_assemblies.TryGetAssemblyByName(asmName, out var foundAsm))
                 {
-                    var obj = await _resourceBuilder.GetEmbeddedResourceAsync(path, tokens, foundAsm);
+                    var obj = _resourceBuilder.GetEmbeddedResource(path, tokens, foundAsm);
                     if (obj == null)
                         return default;
 
@@ -227,6 +238,28 @@ namespace Das.Views.Construction
 
             return default;
         }
+
+        //private async Task<EmbeddedResourceBinding?> GetEmbeddedResourceBindingAsync(String path)
+        //{
+        //    var tokens = path.Split('.');
+        //    if (tokens.Length < 3)
+        //        return default;
+
+        //    var asmName = tokens[0];
+
+        //    for (var c = 1; c < tokens.Length - 2; c++)
+                
+        //        if (_assemblies.TryGetAssemblyByName(asmName, out var foundAsm))
+        //        {
+        //            var obj = await _resourceBuilder.GetEmbeddedResourceAsync(path, tokens, foundAsm);
+        //            if (obj == null)
+        //                return default;
+
+        //            return new EmbeddedResourceBinding(path, obj);
+        //        }
+
+        //    return default;
+        //}
 
         private Type GetType(String name,
                              String? genericArgName,

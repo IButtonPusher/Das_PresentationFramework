@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Threading.Tasks;
 using Das.Views;
 using Das.Views.Input;
@@ -14,78 +14,124 @@ namespace Das.ViewModels
             throw new NotImplementedException();
         }
 
-        public virtual Task<Boolean> Confirm(String message, 
+        public virtual Task<Boolean> ConfirmAsync(String message, 
                                              String title)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task<Boolean> Confirm(String message)
+        public virtual Task<Boolean> ConfirmAsync(String message)
         {
             throw new NotImplementedException();
         }
 
-        public virtual IObservableCommand GetCommand(Action action)
+        public virtual Boolean Confirm(String message,
+                               String title)
         {
             throw new NotImplementedException();
         }
 
-        public virtual IObservableCommand GetCommand(Action action, 
-                                                     String description)
+        public virtual Boolean Confirm(String message)
         {
             throw new NotImplementedException();
         }
 
-        public virtual IObservableCommand GetCommand(Func<Task> action, 
-                                                     String description)
+        public virtual Task<T?> ShowDialogAsync<T>(IModalVm<T> vm)
         {
             throw new NotImplementedException();
         }
 
-        public virtual IObservableCommand<T> GetCommand<T>(Func<T, Task> action)
-        {
-            return new BaseObservableCommand<T>(action);
-        }
-
-        public virtual IObservableCommand<T> GetCommand<T>(Action<T> action)
+        public virtual Task<Boolean?> ShowDialogAsync(INotifyPropertyChanged vm)
         {
             throw new NotImplementedException();
         }
 
-        public virtual IObservableCommand<T> GetCommand<T>(Func<T, Task> action,
-                                                           String description)
+        public virtual Task CopyTextAsync(Func<String> getText)
         {
             throw new NotImplementedException();
         }
 
-        public virtual IObservableCommand<T> GetCommand<T>(Func<IEnumerable<T>, Task> action, 
-                                                           String description)
+        public virtual Boolean TryGetFileToOpen(DirectoryInfo initialDirectory,
+                                                OpenFileTypes fileType,
+                                                out FileInfo file)
         {
             throw new NotImplementedException();
         }
 
-        public virtual IObservableCommand<T> GetCommand<T>(Func<T[], Task> action)
+        public virtual Boolean TryGetFileToSave(DirectoryInfo initialDirectory,
+                                        OpenFileTypes fileType,
+                                        out FileInfo file)
         {
             throw new NotImplementedException();
         }
 
-        public virtual IObservableCommand<T> GetCommand<T>(Func<T[], Task> action, 
-                                                           String description)
+        public virtual Task<FileInfo?> TryGetFileToSaveAsync(DirectoryInfo initialDirectory,
+                                                     OpenFileTypes fileType)
         {
             throw new NotImplementedException();
         }
 
-        public virtual IObservableCommand GetCommand(Action action, 
-                                                     INotifyPropertyChanged viewModel, 
-                                                     String canExecuteProperty)
-        {
-            throw new NotImplementedException();
-        }
+        //public virtual IObservableCommand GetCommand(Action action)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public virtual IObservableCommand GetCommand(Func<Task> action)
-        {
-            return new BaseObservableCommand(action, this);
-        }
+        //public virtual IObservableCommand GetCommand(Action action, 
+        //                                             String description)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public virtual IObservableCommand GetCommand(Func<Task> action, 
+        //                                             String description)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public virtual IObservableCommand<T> GetCommand<T>(Func<T, Task> action)
+        //{
+        //    return new BaseObservableCommand<T>(action);
+        //}
+
+        //public virtual IObservableCommand<T> GetCommand<T>(Action<T> action)
+        //{
+        //    return new ObservableActionCommand<T>(action, this);
+        //}
+
+        //public virtual IObservableCommand<T> GetCommand<T>(Func<T, Task> action,
+        //                                                   String description)
+        //{
+        //    return new ObservableAsyncCommand<T>(action, this) { Description = description };
+        //}
+
+        //public virtual IObservableCommand<T> GetCommand<T>(Func<IEnumerable<T>, Task> action, 
+        //                                                   String description)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public virtual IObservableCommand<T> GetCommand<T>(Func<T[], Task> action)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public virtual IObservableCommand<T> GetCommand<T>(Func<T[], Task> action, 
+        //                                                   String description)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public virtual IObservableCommand GetCommand(Action action, 
+        //                                             INotifyPropertyChanged viewModel, 
+        //                                             String canExecuteProperty)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public virtual IObservableCommand GetCommand(Func<Task> action)
+        //{
+        //    return new BaseObservableCommand(action, this);
+        //}
 
         public virtual Task HandleErrorAsync(String wasDoing, Exception ex)
         {

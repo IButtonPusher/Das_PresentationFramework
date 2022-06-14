@@ -139,9 +139,7 @@ namespace Das.Views
 
       public override void Dispose()
       {
-         _isDisposed = true;
-         
-         base.Dispose();
+          base.Dispose();
 
          if (BeforeLabel is { } beforeLabel)
          {
@@ -210,9 +208,9 @@ namespace Das.Views
 
       private ValueRenderRectangle _arrangedBounds;
 
-#pragma warning disable 414
-      private Boolean _isDisposed;
-#pragma warning restore 414
+//#pragma warning disable 414
+//      private Boolean _isDisposed;
+//#pragma warning restore 414
       private Boolean _isLayoutSuspended;
       private ValueSize _measuredSize;
       private readonly ILayoutQueue _layoutQueue;

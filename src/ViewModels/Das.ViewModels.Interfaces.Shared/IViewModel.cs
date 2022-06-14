@@ -7,6 +7,8 @@ namespace Das.Views.Mvvm
     public interface IViewModel : INotifyPropertyChanged,
                                   IDisposable
     {
+        public Boolean IsDisposed { get; }
+
         /// <summary>
         ///     Sender, Property Name, Old Value, New Value, allow change
         /// </summary>
@@ -17,6 +19,6 @@ namespace Das.Views.Mvvm
 
     public delegate Boolean OnPropertyChanging(IViewModel vm,
                                                String propertyName,
-                                               Object? oldValud,
+                                               Object? oldValue,
                                                Object? newValue);
 }

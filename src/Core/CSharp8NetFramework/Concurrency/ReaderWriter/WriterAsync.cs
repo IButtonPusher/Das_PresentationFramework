@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using CSharp8NetFramework.Concurrency.Waiters;
 
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
@@ -248,6 +250,62 @@ namespace System.Threading
             {
                 var res = action(p1, p2);
                 return res;
+            }
+            finally
+            {
+                EndWriterImpl();
+            }
+        }
+
+        public async IAsyncEnumerable<TResult> WriteAsync<TParam1, TParam2, TResult>(TParam1 p1,
+            TParam2 p2,
+            RunManyAsync<TParam1, TParam2, TResult> action)
+        {
+            if (_isDisposed)
+                yield break;
+
+            if (TryGetWriterWaiter((w,
+                                    c) => new AsyncEnumerableWaiter<TParam1, TParam2, TResult>(p1, p2, action, w, c),
+                    ref _writerCount,
+                    out var waiter))
+            {
+                await foreach (var r in waiter.ConfigureAwait(false))
+                    yield return r;
+                yield break;
+            }
+
+            try
+            {
+                await foreach (var r in action(p1, p2).ConfigureAwait(false))
+                    yield return r;
+            }
+            finally
+            {
+                EndWriterImpl();
+            }
+        }
+
+        public async IAsyncEnumerable<TResult> WriteManyAsync<TParam1, TParam2, TResult>(TParam1 p1,
+                                                                               TParam2 p2,
+                                                                               RunMany<TParam1, TParam2, TResult> action)
+        {
+            if (_isDisposed)
+                yield break;
+
+            if (TryGetWriterWaiter((w,
+                                    c) => new AsyncEnumerableWaiter2<TParam1, TParam2, TResult>(p1, p2, action, w, c),
+                    ref _writerCount,
+                    out var waiter))
+            {
+                await foreach (var r in waiter.GetResultsAsync().ConfigureAwait(false))
+                    yield return r;
+                yield break;
+            }
+
+            try
+            {
+                foreach (var r in action(p1, p2))
+                    yield return r;
             }
             finally
             {

@@ -262,28 +262,28 @@ namespace Das.Xamarin.Android
                 Convert.ToInt32(rect.Bottom));
         }
 
-        private static void BakeRect(ref Rect rect,
-                                     Double left,
-                                     Double top,
-                                     Double right,
-                                     Double bottom)
-        {
-            //if (_rect == null)
-            //{
-            //    _rect = new Rect(Convert.ToInt32(left),
-            //        Convert.ToInt32(top),
-            //        Convert.ToInt32(right),
-            //        Convert.ToInt32(bottom));
-            //    return _rect;
-            //}
+        //private static void BakeRect(ref Rect rect,
+        //                             Double left,
+        //                             Double top,
+        //                             Double right,
+        //                             Double bottom)
+        //{
+        //    //if (_rect == null)
+        //    //{
+        //    //    _rect = new Rect(Convert.ToInt32(left),
+        //    //        Convert.ToInt32(top),
+        //    //        Convert.ToInt32(right),
+        //    //        Convert.ToInt32(bottom));
+        //    //    return _rect;
+        //    //}
 
-            rect.Left = Convert.ToInt32(left);
-            rect.Top = Convert.ToInt32(top);
-            rect.Right = Convert.ToInt32(right);
-            rect.Bottom = Convert.ToInt32(bottom);
+        //    rect.Left = Convert.ToInt32(left);
+        //    rect.Top = Convert.ToInt32(top);
+        //    rect.Right = Convert.ToInt32(right);
+        //    rect.Bottom = Convert.ToInt32(bottom);
 
             
-        }
+        //}
 
         private static void BakeRect(ref Rect rect,
                                      Int32 left,

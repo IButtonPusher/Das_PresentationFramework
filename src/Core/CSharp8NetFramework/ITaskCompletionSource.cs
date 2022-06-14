@@ -9,13 +9,13 @@ namespace System.Threading.Tasks
    }
 
 
-   public interface ITaskCompletionSource<T>
+   public interface ITaskCompletionSource<T> : ITaskCompletionSource
    {
       Boolean TrySetResult(T result);
 
       Boolean IsComplete { get; }
 
-      Task<T> Task { get; }
+      new Task<T> Task { get; }
    }
 
    public interface IMultiTaskCompletionSource<T> : ITaskCompletionSource<T>

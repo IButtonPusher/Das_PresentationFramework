@@ -13,10 +13,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)Collections\INotifyingCollection{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\IObservableCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\IObservableCommand{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IMutableVm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interaction\IVisibilityMutable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interaction\MousePointers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interaction\OpenFileTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISingleThreadedInvoker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interaction\IUiProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ITitledVm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Modal\IModalBaseVm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Modal\IModalVm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Modal\IModalVm{T}.cs" />
   </ItemGroup>
 </Project>

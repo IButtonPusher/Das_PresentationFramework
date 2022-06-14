@@ -13,25 +13,35 @@
 
   <ItemGroup>
     <Compile Remove="DataBinding\**" />
+    <Compile Remove="Input\Text\**" />
     <Compile Remove="Invocations\**" />
     <Compile Remove="Kits\**" />
+    <Compile Remove="Layout\**" />
     <Compile Remove="Measuring\**" />
     <Compile Remove="Rendering\**" />
+    <Compile Remove="Text\**" />
+    <Compile Remove="Undo\**" />
     <EmbeddedResource Remove="DataBinding\**" />
+    <EmbeddedResource Remove="Input\Text\**" />
     <EmbeddedResource Remove="Invocations\**" />
     <EmbeddedResource Remove="Kits\**" />
+    <EmbeddedResource Remove="Layout\**" />
     <EmbeddedResource Remove="Measuring\**" />
     <EmbeddedResource Remove="Rendering\**" />
+    <EmbeddedResource Remove="Text\**" />
+    <EmbeddedResource Remove="Undo\**" />
     <None Remove="DataBinding\**" />
+    <None Remove="Input\Text\**" />
     <None Remove="Invocations\**" />
     <None Remove="Kits\**" />
+    <None Remove="Layout\**" />
     <None Remove="Measuring\**" />
     <None Remove="Rendering\**" />
+    <None Remove="Text\**" />
+    <None Remove="Undo\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Input\Text\Pointers\TextPointer.cs" />
-    <Compile Remove="Input\Text\Pointers\TextPointerBase.cs" />
     <Compile Remove="Panels\Grid\GridPanel.cs" />
     <Compile Remove="Panels\Grid\RepeaterGrid.cs" />
     <Compile Remove="Panels\Providers\StackPanelProvider.cs" />
@@ -40,8 +50,6 @@
     <Compile Remove="Resources\IResource.cs" />
     <Compile Remove="Resources\ResourceHandle.cs" />
     <Compile Remove="SurrogateVisualBase.cs" />
-    <Compile Remove="Text\Fonts\GlyphTypeface.cs" />
-    <Compile Remove="Text\TextSchema.cs" />
   </ItemGroup>
 
   <ItemGroup>

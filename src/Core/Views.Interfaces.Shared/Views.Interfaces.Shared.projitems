@@ -214,7 +214,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Input\InputAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Invocations\ExclusiveSynchronizationContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRenderKit.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IMutableVm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IViewProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IWindowProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IBoundElementContainer.cs" />
@@ -255,5 +254,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Input\Text\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Mvvm\" />
   </ItemGroup>
 </Project>

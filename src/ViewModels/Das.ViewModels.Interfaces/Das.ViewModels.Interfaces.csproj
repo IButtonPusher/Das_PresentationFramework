@@ -7,6 +7,7 @@
 	<RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
 	<RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
 	<AnalysisLevel>none</AnalysisLevel>
+	<RootNamespace>Das.ViewModels</RootNamespace>
   </PropertyGroup>
 
   <Import Project="..\Das.ViewModels.Interfaces.Shared\Das.ViewModels.Interfaces.Shared.projitems" Label="Shared" />

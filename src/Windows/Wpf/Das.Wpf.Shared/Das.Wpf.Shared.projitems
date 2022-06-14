@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>cef972ef-9df4-4138-bfbe-5359d32b5cc8</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Das.Views.Wpf</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DialogBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\DataTemplateHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\WpfExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\DialogSizeAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\EscapeModalCanceller.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\ModalWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\StateRestrictedWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\VisualShouldBeReusedAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WpfUiProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WpfUiProvider{T}.cs" />
+  </ItemGroup>
+</Project>

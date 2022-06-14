@@ -9,12 +9,13 @@
     <Import_RootNamespace>Das.ViewModels</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)BaseViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NotifyProperties\BaseViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\DoubleConcurrentDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ObservableRangeCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExtensionMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InvokableViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NotifyPropertyChangedBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NotifyProperties\Delegates.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NotifyProperties\NotifyPropertyChangedBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Selectable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SelectableCollection{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SelectableEnumCollection{T}.cs" />

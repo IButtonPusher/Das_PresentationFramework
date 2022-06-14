@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 namespace System.Threading.Tasks
 {
    public class AsyncTaskCompletionSource<T> : TaskCompletionSource<T>,
-                                               ITaskCompletionSource<T>,
-                                               ITaskCompletionSource
+                                               ITaskCompletionSource<T>
    {
       static AsyncTaskCompletionSource()
       {

@@ -7,8 +7,6 @@ using Das.Views.Core.Geometry;
 
 namespace Das.Views.Images.Svg
 {
-   
-
     /// <summary>
     ///     https://github.com/svg-net
     /// </summary>

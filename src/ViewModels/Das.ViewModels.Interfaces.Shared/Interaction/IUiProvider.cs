@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Threading.Tasks;
 using Das.ViewModels;
 using Das.Views.Input;
@@ -13,42 +13,32 @@ namespace Das.Views
 
         void BrowseToUri(Uri uri);
 
-        Task<Boolean> Confirm(String message,
-                              String title);
+        Task<Boolean> ConfirmAsync(String message,
+                                   String title);
 
-        Task<Boolean> Confirm(String message);
+        Task<Boolean> ConfirmAsync(String message);
 
-        IObservableCommand GetCommand(Action action);
+        Boolean Confirm(String message,
+                        String title);
 
-        IObservableCommand GetCommand(Action action,
-                                      String description);
+        Boolean Confirm(String message);
 
-        IObservableCommand GetCommand(Func<Task> action,
-                                      String description);
+        Task<T?> ShowDialogAsync<T>(IModalVm<T> vm);
 
+        Task<Boolean?> ShowDialogAsync(INotifyPropertyChanged vm);
 
-        IObservableCommand<T> GetCommand<T>(Func<T, Task> action);
+        Task CopyTextAsync(Func<String> getText);
 
-        IObservableCommand<T> GetCommand<T>(Action<T> action);
+        Boolean TryGetFileToOpen(DirectoryInfo initialDirectory,
+                                 OpenFileTypes fileType,
+                                 out FileInfo file);
 
-        IObservableCommand<T> GetCommand<T>(Func<T, Task> action,
-                                            String description);
+        Boolean TryGetFileToSave(DirectoryInfo initialDirectory,
+                                 OpenFileTypes fileType,
+                                 out FileInfo file);
 
-        IObservableCommand<T> GetCommand<T>(Func<IEnumerable<T>, Task> action,
-                                            String description);
-
-        IObservableCommand<T> GetCommand<T>(Func<T[], Task> action);
-
-        IObservableCommand<T> GetCommand<T>(Func<T[], Task> action,
-                                            String description);
-
-        IObservableCommand GetCommand(Action action,
-                                      INotifyPropertyChanged viewModel,
-                                      String canExecuteProperty);
-
-        IObservableCommand GetCommand(Func<Task> action);
-
-        //ValueSize GetMainViewSize();
+        Task<FileInfo?> TryGetFileToSaveAsync(DirectoryInfo initialDirectory,
+                                        OpenFileTypes fileType);
 
         Task HandleErrorAsync(String wasDoing,
                               Exception ex);

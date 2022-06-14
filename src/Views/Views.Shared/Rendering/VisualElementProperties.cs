@@ -308,7 +308,7 @@ namespace Das.Views
          set => BoxShadowProperty.SetValue(this, value);
       }
 
-      public virtual Boolean IsDisposed => _isDisposed;
+      //public Boolean IsDisposed => _isDisposed;
 
       private Boolean _isRequiresArrange;
       private Boolean _isRequiresMeasure;
