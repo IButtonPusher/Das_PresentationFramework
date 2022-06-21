@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Das.Serializer;
 using Das.Views.Controls;
 using Das.Views.DataBinding;
+
 using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Resources;
@@ -17,7 +18,45 @@ namespace Das.Views.Construction
     public partial class ViewInflater : InflaterBase,
                                         IViewInflater
     {
-        
+
+      #if !NET40
+
+       public ViewInflater(IVisualBootstrapper visualBootstrapper,
+                           IMultiSerializer serializer,
+                           Core.IImageProvider imageProvider)
+       {
+          _typeManipulator = serializer.TypeManipulator;
+
+          var themeProvider = Views.Styles.BaselineThemeProvider.Instance;
+          //var serializer = new DasSerializer();
+
+          _visualBootstrapper = visualBootstrapper;
+          _typeInferrer = serializer.TypeInferrer;
+
+          var svgPathBuilder = new Images.Svg.SvgPathBuilder(imageProvider, serializer);
+
+          var resourceBuilder = new ResourceBuilder(imageProvider, svgPathBuilder);
+          _bindingBuilder = new BindingBuilder(_typeInferrer, _typeManipulator, 
+             serializer.AssemblyList, resourceBuilder);
+
+          
+          _converterProvider = new DefaultValueConverterProvider(visualBootstrapper);
+          _visualTypeResolver = new VisualTypeResolver(_typeInferrer);
+
+          var declarationWorker = new Styles.DeclarationWorker();
+
+          var variableAccessor = new Styles.StyleVariableAccessor(themeProvider.ColorPalette);
+          var inflator = new DefaultStyleInflater(serializer.TypeInferrer, variableAccessor);
+          var styleProvider = new VisualStyleProvider(inflator);
+
+          _appliedStyleBuilder = new Views.Styles.AppliedRuleBuilder(styleProvider, declarationWorker,
+             _typeManipulator);
+
+          _attributeValueScanner = serializer.AttributeParser;
+       }
+
+#endif
+
         public ViewInflater(IVisualBootstrapper visualBootstrapper,
                             IStringPrimitiveScanner xmlAttributeParser,
                             ITypeInferrer typeInferrer,
@@ -106,8 +145,8 @@ namespace Das.Views.Construction
                     else if (childObjRes.ChildType == ChildNodeType.PropertyValue &&
                              childObjRes.VisualProperty is { } prop)
                     {
-                        //Object oContentContainer = contentContainer;
-                        prop.SetPropertyValue(ref contentContainer, childObjRes.Child);
+                        Object oContentContainer = contentContainer;
+                        prop.SetPropertyValue(ref oContentContainer, childObjRes.Child);
                         //prop.SetValue(contentContainer, childObjRes.Child, null);
                     }
 
@@ -132,7 +171,7 @@ namespace Das.Views.Construction
             }
 
 
-            contentContainer!.Content = contentVisual;
+            contentContainer.Content = contentVisual;
 
             if (contentVisual != null)
                 visualLineage.AssertPopVisual(contentVisual);
@@ -316,8 +355,8 @@ namespace Das.Views.Construction
                     childObjRes.VisualProperty is { } prop)
                 {
                     // visual is a property value, not a child visual
-                    //Object oVisual = visual;
-                    prop.SetPropertyValue(ref visual, childObjRes.Child);
+                    Object oVisual = visual;
+                    prop.SetPropertyValue(ref oVisual, childObjRes.Child);
                     //prop.SetValue(visual, childObjRes.Child, null);
                 }
                 else if (childObjRes.Child is IVisualElement childVisual)

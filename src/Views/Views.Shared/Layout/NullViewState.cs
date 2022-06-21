@@ -17,6 +17,8 @@ namespace Das.Views.Layout
         
         public Double ZoomLevel => 1.0;
 
+        public Single Density => 1.0f;
+
         public IColorPalette ColorPalette => BaselineThemeProvider.Instance.ColorPalette;
     }
 }

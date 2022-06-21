@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.OpenGL;
 using Das.OpenGL.Windows;
 using Das.Views;
+using Das.Views.Colors;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
 using Das.Views.Rendering;
-using Das.Views.Styles;
 
-namespace GdiTest
+namespace OpenGLTests
 {
     public class TestOpenGLPanel : OpenGLPanel
     {
@@ -18,8 +19,9 @@ namespace GdiTest
         private const Double TwoPi = 2.0 * Math.PI;
 
         public TestOpenGLPanel(IVisualElement view, 
-                               IStyleContext styleContext)
-            : base(view, styleContext)
+                               IThemeProvider styleContext,
+                               IVisualBootstrapper visualBootstrapper)
+            : base(view, styleContext, visualBootstrapper)
         {
             _font = new Font(18, "Segoe UI", FontStyle.Regular);
             _pen = new Pen(Color.Black, 2);

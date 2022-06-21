@@ -60,6 +60,7 @@
     <Compile Include="DIBSection.cs" />
     <Compile Include="GLFormRenderer.cs" />
     <Compile Include="GLFormViewRenderer.cs" />
+    <Compile Include="GLNativeWindowBuilder.cs" />
     <Compile Include="Hosting\GLHostedElement.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -95,6 +96,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="freetype.lib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -103,7 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Das.Serializer.Split">
-      <Version>0.0.21-alpha</Version>
+      <Version>0.0.22-alpha</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +119,10 @@
       <Project>{694f0d45-3e66-40f3-be93-1aac0921befb}</Project>
       <Name>Das.Views.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\ViewModels\Das.ViewModels.Interfaces\Das.ViewModels.Interfaces.csproj">
+      <Project>{5fd8539b-c19b-4a4c-b217-0cc601307485}</Project>
+      <Name>Das.ViewModels.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\ViewModels\Das.ViewModels\Das.ViewModels.csproj">
       <Project>{e8ed9ca5-6316-4f1a-9c58-35334be1cb5e}</Project>
       <Name>Das.ViewModels</Name>
@@ -123,6 +131,11 @@
       <Project>{bb6f35ef-5375-44d1-8398-0480a61d2bd6}</Project>
       <Name>Das.Views</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="freetype.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="..\..\Windows.Shared\Windows.Shared.projitems" Label="Shared" />
   <Import Project="..\..\WinForms.Shared\WinForms.Shared.projitems" Label="Shared" />

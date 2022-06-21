@@ -13,9 +13,13 @@ namespace Das.Xamarin.Android.Rendering
 {
     public class AndroidGraphicsPath : GraphicsPathBase
     {
-        public AndroidGraphicsPath()
+       //private readonly IVisualContext _visualContext;
+
+       public AndroidGraphicsPath()//IVisualContext visualContext)
         {
-            Path = new Path();
+           // the visual context is too broad in scope for whatever this was intended for
+           //_visualContext = visualContext;
+           Path = new Path();
             
             _pointTypes = new List<PathPointType>();
             _points = new List<IPoint2F>();
@@ -40,15 +44,12 @@ namespace Das.Xamarin.Android.Rendering
             {
                 if (_points.Count > 1)
                 {
-                    //System.Diagnostics.Debug.WriteLine("path.Close();");
-                    Path.Close();
+                   Path.Close();
                 }
 
-                //System.Diagnostics.Debug.WriteLine("path.MoveTo(" + R4(p1.X) + "f, " + R4(p1.Y) + "f);");
                 Path.MoveTo(p1.X, p1.Y);
             }
 
-            //System.Diagnostics.Debug.WriteLine("path.LineTo(" + R4(p1.X) + "f, " + R4(p1.Y) + "f);");
             Path.LineTo(p2.X, p2.Y);
 
             AddPoint(p2, PathPointType.Line);
@@ -143,12 +144,20 @@ namespace Das.Xamarin.Android.Rendering
 
         public override void Transform(TransformationMatrix matrix)
         {
-            var androidMatrix = new Matrix();
-            androidMatrix.SetSkew(R4(matrix.SkewX), R4(matrix.SkewY));
-            androidMatrix.SetScale(R4(matrix.ScaleX), R4(matrix.ScaleY));
-            androidMatrix.SetTranslate(R4(matrix.OffsetX), R4(matrix.OffsetY));
+           if (matrix.IsIdentity)
+              return;
 
-            Path.Transform(androidMatrix);
+           var androidMatrix = new Matrix();
+           if (matrix.HasSkew)
+              androidMatrix.SetSkew(R4(matrix.SkewX), R4(matrix.SkewY));
+
+           if (matrix.HasScale)
+              androidMatrix.SetScale(R4(matrix.ScaleX), R4(matrix.ScaleY));
+
+           if (matrix.HasOffset)
+              androidMatrix.SetTranslate(R4(matrix.OffsetX), R4(matrix.OffsetY));
+
+           Path.Transform(androidMatrix);
         }
 
         public override ValueSize Size
@@ -180,9 +189,9 @@ namespace Das.Xamarin.Android.Rendering
             var androidPath = Path;
 
 
-            androidPath.SetFillType(Path.FillType.EvenOdd);
+            androidPath.SetFillType(Path.FillType.EvenOdd!);
 
-            var bmp = Bitmap.CreateBitmap(width, height, Bitmap.Config.Argb8888)
+            var bmp = Bitmap.CreateBitmap(width, height, Bitmap.Config.Argb8888!)
                       ?? throw new InvalidOperationException();
 
             var canvas = new Canvas(bmp);

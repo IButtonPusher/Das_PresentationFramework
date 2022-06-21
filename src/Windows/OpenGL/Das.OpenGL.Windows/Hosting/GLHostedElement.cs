@@ -8,8 +8,9 @@ namespace Das.OpenGL.Windows
     public class GLHostedElement : HostedViewControl
     {
         public GLHostedElement(IVisualElement view,
-                               IThemeProvider themeProvider) 
-            : base(view, themeProvider)
+                               IThemeProvider themeProvider,
+                               IVisualBootstrapper visualBootstrapper) 
+            : base(view, themeProvider, visualBootstrapper)
         {
             IsLoaded = true;
         }

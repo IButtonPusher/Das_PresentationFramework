@@ -29,6 +29,8 @@ namespace Das.Views.Images
 
         public Double Width => 0;
 
+        public Boolean HasInfiniteDimension => false;
+
         public void Dispose()
         {
             

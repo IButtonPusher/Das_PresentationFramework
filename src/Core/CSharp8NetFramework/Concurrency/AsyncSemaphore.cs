@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
 
@@ -22,8 +23,6 @@ namespace System.Threading
                 throw new ArgumentOutOfRangeException(nameof(initialCount));
             _availableCount = initialCount;
         }
-
-        public Int32 CurrentCount => _initialCount - _availableCount;
 
         public void Release()
         {
@@ -62,17 +61,16 @@ namespace System.Threading
             }
         }
 
-        private static void OnCancelled(Object state)
+        public Boolean TryEnter()
         {
-            if (!(state is TaskCompletionSource<Boolean> valid))
-                return;
+            lock (_lockObj)
+            {
+                if (_availableCount == 0)
+                    return false;
 
-            if (valid.Task.Status == TaskStatus.Faulted ||
-                valid.Task.Status == TaskStatus.RanToCompletion ||
-                valid.Task.Status == TaskStatus.Canceled)
-                return;
-
-            valid.TrySetCanceled();
+                --_availableCount;
+                return true;
+            }
         }
 
         public Task WaitAsync()
@@ -92,7 +90,7 @@ namespace System.Threading
         }
 
         public void Wait()
-        { 
+        {
             lock (_lockObj)
             {
                 if (_availableCount > 0)
@@ -107,7 +105,6 @@ namespace System.Threading
 
             var waited = 2;
 
-            //waiter.Task.ContinueWith(OnSynchronousWaiterFinished, new Object());
 
             while (waiter.Task.Status == TaskStatus.Running)
             {
@@ -115,10 +112,22 @@ namespace System.Threading
 
                 waited = Math.Min(MAX_SYNCH_THREAD_SLEEP, waited * waited);
             }
-
-
-            //TaskEx.Run(async () => await WaitAsync().ConfigureAwait(false)).Wait();
         }
+
+        private static void OnCancelled(Object state)
+        {
+            if (!(state is TaskCompletionSource<Boolean> valid))
+                return;
+
+            if (valid.Task.Status == TaskStatus.Faulted ||
+                valid.Task.Status == TaskStatus.RanToCompletion ||
+                valid.Task.Status == TaskStatus.Canceled)
+                return;
+
+            valid.TrySetCanceled();
+        }
+
+        public Int32 CurrentCount => _initialCount - _availableCount;
 
 
         private const Int32 MAX_SYNCH_THREAD_SLEEP = 256;

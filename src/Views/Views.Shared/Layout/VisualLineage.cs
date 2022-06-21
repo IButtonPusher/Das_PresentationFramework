@@ -46,9 +46,7 @@ namespace Das.Views.Layout
 
         public void PushVisual(IVisualElement visual)
         {
-            //Debug.WriteLine("Push: " + visual);
-
-            lock (_lock)
+           lock (_lock)
                 _visualStack.Push(visual);
         }
 
@@ -58,7 +56,6 @@ namespace Das.Views.Layout
             lock (_lock)
             {
                 var res =_visualStack.Pop();
-              //  Debug.WriteLine("Pop: " + res);
                 return res;
             }
         }

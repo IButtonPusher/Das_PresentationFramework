@@ -29,9 +29,27 @@ namespace Das.Views.Updaters
                 TaskCreationOptions.PreferFairness, this));
         }
 
-        public void Invoke(Action action, Int32 priority)
+        public void Invoke(Action action, 
+                           Int32 priority)
         {
             throw new NotImplementedException();
+        }
+
+        public Task InvokeAsync(Func<Task> action)
+        {
+           var src = new InvokeCompletionSource<Task>(action, RunFuncFairly);
+           return src.Task;
+           //return await Task.Factory.StartNew(() =>
+           //   {
+           //      return action();
+           //   }, CancellationToken.None,
+           //   TaskCreationOptions.PreferFairness, this);
+        }
+
+        private void RunFuncFairly(Action action)
+        {
+           Task.Factory.StartNew(action, CancellationToken.None,
+              TaskCreationOptions.PreferFairness, this);
         }
 
         public async Task InvokeAsync(Action action)

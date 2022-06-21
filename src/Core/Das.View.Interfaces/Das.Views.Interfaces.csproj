@@ -10,6 +10,7 @@
   <PropertyGroup>
    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+   <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath></OutputPath>
@@ -18,20 +19,22 @@
     <OutputPath>..\bla</OutputPath>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>  
-
-  <Import Project="..\CSharp8NetFramework\CSharp8NetFramework.projitems" Label="Shared" />
+  </PropertyGroup>
 
   <Import Project="..\Views.Interfaces.Shared\Views.Interfaces.Shared.projitems" Label="Shared" />
 
 
   <ItemGroup>
-    <PackageReference Include="Das.Container.Interfaces" Version="0.0.8-alpha" />
-    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.21-alpha" />
+    <PackageReference Include="Das.Container.Interfaces" Version="0.0.10-alpha" />
+    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.22-alpha" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controls\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ViewModels\Das.ViewModels.Interfaces\Das.ViewModels.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

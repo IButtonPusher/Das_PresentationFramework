@@ -54,6 +54,20 @@ namespace Das.Views.Styles
             Hex("#000000"),
             Hex("#FFFFFF"));
 
+        public static readonly ColorPalette DefaultDark = new ColorPalette(
+           primary: Hex("#BB86FC"), //
+           primaryVariant: Hex("#3700BC"),
+           secondary: Hex("#03DAC6"), //
+           secondaryVariant: Hex("#03DAC6"),
+           background: Hex("#121212"), //
+           surface: Hex("#121212"), //
+           error: Hex("#CF6679"), //
+           onPrimary: Hex("#000000"),
+           onSecondary: Hex("#000000"),
+           onBackground: Hex("#FFFFFF"),
+           onSurface: Hex("#FFFFFF"),
+           onError: Hex("#000000"));
+
         private static IBrush Hex(String hex) => new SolidColorBrush(hex);
 
         public IBrush Primary { get; }

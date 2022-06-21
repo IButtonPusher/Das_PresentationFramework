@@ -18,91 +18,202 @@ namespace Das.Views.Input
 
         public Boolean OnMouseInput<TArgs>(TArgs args, 
                                            InputAction action)
-            where TArgs : IMouseInputEventArgs<TArgs>
+           where TArgs : IMouseInputEventArgs<TArgs>
         {
-            _lastInputContext = args.InputContext;
+           _lastInputContext = args.InputContext;
             
-            //System.Diagnostics.Debug.WriteLine("Input handler received: " + args + " capturing: " + 
-            //                                   _inputCapturingMouse);
+           //UILogger.Log("Input handler received: " + args + " capturing: " + 
+           //             _inputCapturingMouse, LogLevel.Level1);
             
-            var isButtonAction = (InputAction.AnyMouseButton & action) > InputAction.None;
-            IHandleInput? handledBy = null;
+           var isButtonAction = (InputAction.AnyMouseButton & action) > InputAction.None;
+           //IHandleInput? handledBy = null;
 
-            if (_inputCapturingMouse is IHandleInput<TArgs> captureHandler && 
-                _inputCapturingMouse is IVisualElement captureElement)
-            {
-                OnMouseInputWithCapture(captureHandler, captureElement,
-                    args, action, isButtonAction, out handledBy);
+           var isHandled = false;
 
-                // smile
-            }
+           if (_inputCapturingMouse is IHandleInput<TArgs> captureHandler && 
+               _inputCapturingMouse is { } captureElement)
+           {
+              isHandled = OnMouseInputWithCapture(captureHandler, captureElement,
+                 args, action, isButtonAction);
 
-            if (handledBy == null)
-            {
-                OnMouseInputNoCapture(args, action, isButtonAction, out handledBy);
-            }
+              // smile
+           }
 
-            if (_handledMouseDown != null && (action == InputAction.LeftMouseButtonUp ||
-                                              action == InputAction.RightMouseButtonUp))
-                _handledMouseDown = null;
+           //var isHandled = handledBy != null;
 
-            return handledBy !=null;
+           //if (handledBy == null)
+           if (!isHandled)
+           {
+              //OnMouseInputNoCapture(args, action, isButtonAction, out handledBy);
+              isHandled = OnMouseInputNoCapture(args);
+           }
+
+           if (_handledMouseDown != null && (action == InputAction.LeftMouseButtonUp ||
+                                             action == InputAction.RightMouseButtonUp))
+              _handledMouseDown = null;
+
+           return isHandled;
+           //return handledBy !=null;
         }
 
+
+        //public Boolean OnMouseInput<TArgs>(TArgs args, 
+        //                                   InputAction action)
+        //    where TArgs : IMouseInputEventArgs<TArgs>
+        //{
+        //    _lastInputContext = args.InputContext;
+            
+        //    UILogger.Log("Input handler received: " + args + " capturing: " + 
+        //                                       _inputCapturingMouse, LogLevel.Level1);
+            
+        //    var isButtonAction = (InputAction.AnyMouseButton & action) > InputAction.None;
+        //    IHandleInput? handledBy = null;
+
+        //    var isHandled = false;
+
+        //    if (_inputCapturingMouse is IHandleInput<TArgs> captureHandler && 
+        //        _inputCapturingMouse is { } captureElement)
+        //    {
+        //        isHandled = OnMouseInputWithCapture(captureHandler, captureElement,
+        //            args, action, isButtonAction, out handledBy);
+
+        //        // smile
+        //    }
+
+        //    //var isHandled = handledBy != null;
+
+        //    //if (handledBy == null)
+        //    if (!isHandled)
+        //    {
+        //        //OnMouseInputNoCapture(args, action, isButtonAction, out handledBy);
+        //        isHandled = OnMouseInputNoCapture(args, action, isButtonAction);
+        //    }
+
+        //    if (_handledMouseDown != null && (action == InputAction.LeftMouseButtonUp ||
+        //                                      action == InputAction.RightMouseButtonUp))
+        //        _handledMouseDown = null;
+
+        //    return isHandled;
+        //    //return handledBy !=null;
+        //}
+
         // ReSharper disable once UnusedMethodReturnValue.Local
+        //private Boolean OnMouseInputWithCapture<TArgs>(IHandleInput<TArgs> capture,
+        //                                               IVisualElement captureAsVisual,
+        //                                               TArgs args,
+        //                                               InputAction action,
+        //                                               Boolean isButtonAction,
+        //                                               out IHandleInput handledBy)
+        //    where TArgs : IMouseInputEventArgs<TArgs>
+        //{
+        //    if (!_elementLocator.TryGetLastRenderBounds(captureAsVisual, out var bounds))
+        //    {
+        //        handledBy = default!;
+        //        return false;
+        //        //todo: this is not good
+        //    }
+
+        //    if (TryHandleMouseAction(args, capture, isButtonAction, action, bounds))
+        //    {
+        //        handledBy = capture;
+        //        return true;
+        //    }
+
+        //    // if the capture doesn't want it, maybe a parent visual does
+        //    return OnMouseInputNoCapture(args, action, isButtonAction, out handledBy);
+            
+        //    //using the args over capture here had elements that were nowhere near the mouse handling input
+        //    //var argsOverCapture = args.Offset(bounds.TopLeft);
+        //    //return OnMouseInputNoCapture(argsOverCapture, action, isButtonAction, out handledBy);
+        //}
+
         private Boolean OnMouseInputWithCapture<TArgs>(IHandleInput<TArgs> capture,
                                                        IVisualElement captureAsVisual,
                                                        TArgs args,
                                                        InputAction action,
-                                                       Boolean isButtonAction,
-                                                       out IHandleInput handledBy)
-            where TArgs : IMouseInputEventArgs<TArgs>
+                                                       Boolean isButtonAction)
+           where TArgs : IMouseInputEventArgs<TArgs>
         {
-            if (!(_elementLocator.TryGetLastRenderBounds(captureAsVisual) is { } bounds))
-            {
-                handledBy = default!;
-                return false;
-                //todo: this is not good
-            }
+           if (!_elementLocator.TryGetLastRenderBounds(captureAsVisual, out var bounds))
+           {
+              return false;
+              //todo: this is not good
+           }
 
-            if (TryHandleMouseAction(args, capture, isButtonAction, action, bounds))
-            {
-                handledBy = capture;
-                return true;
-            }
+           if (TryHandleMouseAction(args, capture, isButtonAction, action, bounds))
+           {
+              //handledBy = capture;
+              return true;
+           }
 
-            // if the capture doesn't want it, maybe a parent visual does
-            return OnMouseInputNoCapture(args, action, isButtonAction, out handledBy);
+           // if the capture doesn't want it, maybe a parent visual does
+           return OnMouseInputNoCapture(args);
             
-            //using the args over capture here had elements that were nowhere near the mouse handling input
-            //var argsOverCapture = args.Offset(bounds.TopLeft);
-            //return OnMouseInputNoCapture(argsOverCapture, action, isButtonAction, out handledBy);
+           //using the args over capture here had elements that were nowhere near the mouse handling input
+           //var argsOverCapture = args.Offset(bounds.TopLeft);
+           //return OnMouseInputNoCapture(argsOverCapture, action, isButtonAction, out handledBy);
         }
 
-        private Boolean OnMouseInputNoCapture<TArgs>(TArgs args,
-                                                     InputAction action,
-                                                     Boolean isButtonAction,
-                                                     out IHandleInput handledBy)
-            where TArgs : IMouseInputEventArgs<TArgs>
+        //private Boolean OnMouseInputNoCapture<TArgs>(TArgs args,
+        //                                             InputAction action,
+        //                                             Boolean isButtonAction,
+        //                                             out IHandleInput handledBy)
+        //    where TArgs : IMouseInputEventArgs<TArgs>
+        //{
+
+        //   //_elementLocator.RootVisual.TryHandleInput()
+
+        //    foreach (var clickable in _elementLocator.GetRenderedVisualsForMouseInput<TArgs, IPoint2D>(
+        //        args.Position, action))
+        //    {
+        //       UILogger.Log("send input to " + clickable.Element, LogLevel.Level1);
+
+        //        var element = clickable.Element;
+
+        //        if (element == _inputCapturingMouse)
+        //            continue;
+
+        //        if (TryHandleMouseAction(args, element, isButtonAction, action,
+        //            clickable.Position))
+        //        {
+        //            handledBy = element;
+        //            return true;
+        //        }
+        //    }
+
+        //    handledBy = default!;
+        //    return false;
+        //}
+
+        private Boolean OnMouseInputNoCapture<TArgs>(TArgs args)
+           where TArgs : IMouseInputEventArgs<TArgs>
         {
-            foreach (var clickable in _elementLocator.GetRenderedVisualsForMouseInput<TArgs, IPoint2D>(
-                args.Position, action))
-            {
-                var element = clickable.Element;
 
-                if (element == _inputCapturingMouse)
-                    continue;
+           return _elementLocator.RootVisual is { } rv &&
+                  rv.TryHandleInput(args,
+              Convert.ToInt32(args.Position.X), 
+              Convert.ToInt32(args.Position.Y));
 
-                if (TryHandleMouseAction(args, element, isButtonAction, action,
-                    clickable.Position))
-                {
-                    handledBy = element;
-                    return true;
-                }
-            }
+           //foreach (var clickable in _elementLocator.GetRenderedVisualsForMouseInput<TArgs, IPoint2D>(
+           //   args.Position, action))
+           //{
+           //   UILogger.Log("send input to " + clickable.Element, LogLevel.Level1);
 
-            handledBy = default!;
-            return false;
+           //   var element = clickable.Element;
+
+           //   if (element == _inputCapturingMouse)
+           //      continue;
+
+           //   if (TryHandleMouseAction(args, element, isButtonAction, action,
+           //      clickable.Position))
+           //   {
+           //      handledBy = element;
+           //      return true;
+           //   }
+           //}
+
+           //handledBy = default!;
+           //return false;
         }
 
         private Boolean TryHandleMouseAction<TArgs>(TArgs args,
@@ -113,6 +224,8 @@ namespace Das.Views.Input
             where TArgs : IMouseInputEventArgs<TArgs>
         {
             var margs = args.Offset(offsetCube.TopLeft);
+
+            //UILogger.Log("try handle action by " + element, LogLevel.Level1);
 
             if (isButtonAction)
             {
@@ -244,6 +357,9 @@ namespace Das.Views.Input
             foreach (var visual in _elementLocator.GetRenderedVisualsForMouseInput<MouseOverEventArgs, TPoint>(
                 position, InputAction.MouseOver))
             {
+
+               UILogger.Log("send input to " + visual.Element, LogLevel.Level1);
+
                 if (visual.Element != capturingVisual)
                     continue;
 

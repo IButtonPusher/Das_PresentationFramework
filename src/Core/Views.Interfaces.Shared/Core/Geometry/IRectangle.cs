@@ -20,5 +20,7 @@ namespace Das.Views.Core.Geometry
         Double Y { get; }
 
         void Union(IRectangle rect);
+
+        Boolean IntersectsWith(IRectangle rect);
     }
 }

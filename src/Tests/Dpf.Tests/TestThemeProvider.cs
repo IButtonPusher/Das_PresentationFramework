@@ -8,5 +8,7 @@ namespace Dpf.Tests
     public class TestThemeProvider : IThemeProvider
     {
         public IColorPalette ColorPalette => Das.Views.Styles.ColorPalette.Baseline;
+
+        public Boolean IsDarkTheme => false;
     }
 }

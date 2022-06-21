@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views.Winforms;
 using System.Windows.Forms;
 using Das.Views.Core.Geometry;
+using Das.Views.Windows;
 
 namespace Das.OpenGL.Windows
 {
-    public class GLForm : ViewForm
+    public class GLForm : ViewForm,
+                          IWindowsHost
     {
         private readonly GLHostedElement _element;
 
@@ -26,5 +29,7 @@ namespace Das.OpenGL.Windows
         {
             throw new NotImplementedException();
         }
+
+        public Task<IntPtr> GraphicsDeviceContextPromise => _element.GraphicsDeviceContextPromise;
     }
 }

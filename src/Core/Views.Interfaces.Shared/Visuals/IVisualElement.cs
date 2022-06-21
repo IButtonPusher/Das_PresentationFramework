@@ -7,6 +7,7 @@ using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
+using Das.Views.Input;
 using Das.Views.Rendering;
 using Das.Views.Styles.Application;
 using Das.Views.Styles.Declarations;
@@ -16,7 +17,7 @@ using Das.Views.Transforms;
 namespace Das.Views
 {
     public interface IVisualElement : IVisualRenderer,
-                                      IDisposable,
+                                      INotifyDisposable,
                                       INotifyPropertyChanged,
                                       ITemplatableVisual,
                                       IEquatable<IVisualElement>,
@@ -38,8 +39,6 @@ namespace Das.Views
         Boolean IsClipsContent { get; set; }
 
         void OnParentChanging(IVisualElement? newParent);
-
-        event Action<IVisualElement>? Disposed;
 
         void RaisePropertyChanged(String propertyName,
                                   Object? value);
@@ -63,7 +62,7 @@ namespace Das.Views
         
         QuantifiedThickness BorderRadius { get; set; }
 
-        VisualBorder Border {get; set; }
+        IVisualBorder Border {get; set; }
         
         Boolean IsEnabled { get; set; }
 
@@ -75,6 +74,11 @@ namespace Das.Views
         ILabel? BeforeLabel { get; set; }
         
         ILabel? AfterLabel { get; set; }
+
+        Boolean TryHandleInput<TArgs>(TArgs args,
+                                      Int32 x,
+                                      Int32 y)
+           where TArgs : IMouseInputEventArgs<TArgs>;
 
         ///// <summary>
         ///// Tags in markup that are meant to identify this visual.

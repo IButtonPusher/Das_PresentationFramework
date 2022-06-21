@@ -14,14 +14,12 @@ namespace Das.Views
     {
         protected ContextBase(Dictionary<IVisualElement, ValueSize> lastMeasurements,
                               IThemeProvider themeProvider,
-                              //IStyleContext styleContext,
                               IVisualSurrogateProvider surrogateProvider,
                               IVisualLineage visualLineage,
                               ILayoutQueue layoutQueue)
         {
             _measureLock = new Object();
             _lastMeasurements = lastMeasurements;
-            //_styleContext = styleContext;
             _surrogateProvider = surrogateProvider;
             _themeProvider = themeProvider;
             VisualLineage = visualLineage;
@@ -81,6 +79,8 @@ namespace Das.Views
         private readonly IVisualSurrogateProvider _surrogateProvider;
         protected readonly IThemeProvider _themeProvider;
 
-        public IColorPalette ColorPalette => _themeProvider.ColorPalette; 
+        public IColorPalette ColorPalette => _themeProvider.ColorPalette;
+
+        public Boolean IsDarkTheme => _themeProvider.IsDarkTheme;
     }
 }

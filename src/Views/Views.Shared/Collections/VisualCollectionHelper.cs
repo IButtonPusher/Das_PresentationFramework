@@ -48,20 +48,24 @@ namespace Das.Views.Collections
 
         public void Clear(Boolean isDisposeVisuals)
         {
-            lock (_lockChildren)
-            {
-                if (isDisposeVisuals)
-                {
-                    for (var c = 0; c < _children.Count; c++)
-                        _children[c].Dispose();
-                }
+           lock (_lockChildren)
+           {
+              if (isDisposeVisuals)
+              {
+                 for (var c = _children.Count - 1; c >= 0; c--)
+                 {
+                    var gone = _children[c];
+                    _children.RemoveAt(c);
+                    gone.Dispose();
+                 }
+              }
+              else
+                 _children.Clear(); //todo: more efficient
+           }
 
-                _children.Clear(); //todo: more efficient
-            }
-            
-            OnCollectionReset();
+           OnCollectionReset();
         }
-        
+
         protected void OnCollectionReset()
         {
             if (!TryGetChangeHandler(out var changed))
@@ -400,7 +404,7 @@ namespace Das.Views.Collections
             }
             set
             {
-                if (!(value is TVisual visual))
+                if (!(value is { } visual))
                     return;
 
                 lock (_lockChildren)

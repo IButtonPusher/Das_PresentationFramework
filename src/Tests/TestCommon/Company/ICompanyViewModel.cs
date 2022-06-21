@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using Das.ViewModels;
 
 
@@ -10,7 +11,7 @@ namespace TestCommon.Company
     {
         ICompanyViewModel Self { get; }
 
-        ObservableRangeCollection<EmployeeViewModel> Employees { get; set; }
+        ObservableCollection<EmployeeViewModel> Employees { get; set; }
 
         EmployeeViewModel SelectedEmployee { get; set; }
 

@@ -15,20 +15,9 @@ namespace Das.Views.Extended.Runtime
     // ReSharper disable once UnusedType.Global
     public class SceneMonitor : BindableElement, IChangeTracking
     {
-        //public SceneMonitor(IDataBinding<ICamera>? binding, 
-        //                    IVisualBootstrapper templateResolver) 
-        //    : base(binding, templateResolver)
-        //{
-        //}
-
         public SceneMonitor(IVisualBootstrapper templateResolver) : base(templateResolver)
         {
         }
-
-        //public override void Dispose()
-        //{
-
-        //}
 
         public void AcceptChanges()
         {
@@ -43,9 +32,6 @@ namespace Das.Views.Extended.Runtime
                 return;
 
             camera.RenderFrame(availableSpace, renderContext);
-
-            //var frame = camera.GetFrame(availableSpace);
-            //renderContext.DrawFrame(frame);
         }
 
         public override ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
@@ -79,12 +65,6 @@ namespace Das.Views.Extended.Runtime
         {
             camera = (DataContext as ICamera)!;
             return camera != null;
-
-            //if (!(DataContext is { } binding) || !(DataContext is { } dc))
-            //    camera = default!;
-            //else camera = binding.GetValue(dc);
-
-            //return camera != null;
         }
     }
 }

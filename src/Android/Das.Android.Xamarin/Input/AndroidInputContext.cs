@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Android.Content;
+using Android.Hardware;
 using Android.Support.V4.View;
 using Android.Views;
 using Das.Extensions;
 using Das.Views;
 using Das.Views.Core.Geometry;
-using Das.Views.Core.Input;
 using Das.Views.Input;
 using Das.Views.Rendering;
 
@@ -26,15 +26,18 @@ namespace Das.Xamarin.Android.Input
             _hostView = hostView;
             _inputHandler = inputHandler;
             _activeInputActions = InputAction.None;
-            
+
+            //_velocityTracker = VelocityTracker.Obtain();
+
             var viewConfig = ViewConfiguration.Get(context) ?? throw new NotSupportedException();
 
             _maximumFlingVelocity = viewConfig.ScaledMaximumFlingVelocity;
             _minimumFlingVelocity = viewConfig.ScaledMinimumFlingVelocity;
 
             _touchSlop = viewConfig.ScaledTouchSlop;
+            var ppi = displayMetrics.Density * 160.0f;
 
-            
+
             if (displayMetrics.ZoomLevel.AreEqualEnough(1.0))
             {
                 _dpiRatio = 1;
@@ -45,7 +48,17 @@ namespace Das.Xamarin.Android.Input
                 _dpiRatio = 1 / displayMetrics.ZoomLevel;
                 _isOffsetPositions = true;
             }
+
             
+            _scrollFriction = ViewConfiguration.ScrollFriction;
+            //_scrollFriction = (Single)(ViewConfiguration.ScrollFriction * _dpiRatio);
+
+            _physicalCoefficient = SensorManager.GravityEarth // g (m/s^2)
+                                             * 39.37f // inch/meter
+                                             * ppi
+                                             * 0.84f; // look and feel tuning
+                                            
+
             _gestureDetector = new GestureDetectorCompat(context, this);
             _gestureDetector.SetOnDoubleTapListener(this);
 
@@ -68,9 +81,6 @@ namespace Das.Xamarin.Android.Input
             return _inputHandler.GetVisualWithMouseCapture();
         }
 
-        public Double MaximumFlingVelocity => _maximumFlingVelocity;
-
-        public Double MinimumFlingVelocity => _minimumFlingVelocity;
 
         public Boolean OnDoubleTap(MotionEvent? e)
         {
@@ -104,8 +114,8 @@ namespace Das.Xamarin.Android.Input
 
         public Boolean OnDown(MotionEvent? e)
         {
-            if (!(e is { } eve))
-                return false;
+            //if (!(e is { } eve))
+            //    return false;
 
             //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS OnDown.");
 
@@ -113,7 +123,9 @@ namespace Das.Xamarin.Android.Input
             //IsInteracting = true;
             
 
-            var pos = GetPosition(eve);
+            var pos = GetPosition(e);
+            if (pos.IsOrigin)
+                return false;
             
             _leftButtonWentDown = pos;
 
@@ -144,28 +156,42 @@ namespace Das.Xamarin.Android.Input
                                Single velocityX,
                                Single velocityY)
         {
-            //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS FLING vx: " + velocityX + 
-            //                                   " vy: " + velocityY);
+            //_velocityTracker.ComputeCurrentVelocity(1000, _maximumFlingVelocity);
+            //var velociraptor = _velocityTracker.GetYVelocity(e2.GetPointerId(e2.ActionIndex));
+
+            System.Diagnostics.Debug.WriteLine("[OKYN] !FLING!: " + velocityX +
+                                               " vy: " + velocityY +
+                                               " min: " + _minimumFlingVelocity);
+                                               //+ " e1: " + e1 + " e2: " + e2);
             
             if (e1 == null)
                 return false;
 
             var pos = GetPosition(e1);
 
-            var vx = velocityX * 0.5;
-            var vy = 0 - velocityY * 0.5;
+            // why 0.5 - ???
+            //var vx = velocityX;// * 0.5;
+            //var vy = 0 - velocityY;// * 0.5;
+            velocityY = 0 - velocityY;
 
-            if (Math.Abs(vx) >= MinimumFlingVelocity ||
-                Math.Abs(vy) >= MinimumFlingVelocity)
+            if (Math.Abs(velocityX) >= _minimumFlingVelocity ||
+                Math.Abs(velocityY) >= _minimumFlingVelocity)
             {
-                var flingArgs = new FlingEventArgs(vx * _dpiRatio, 
-                    vy * _dpiRatio, pos, this, RemoveFlingInteraction);
+                BuildFlingValues(velocityX, out var flungX, out var xDuration);
+                BuildFlingValues(velocityY, out var flungY, out var yDuration);
+
+                var flingArgs = new FlingEventArgs(velocityX * _dpiRatio,
+                    velocityY * _dpiRatio, pos, this, //RemoveFlingInteraction,
+                    flungX, flungY, xDuration, yDuration);
+
+                _lastFlingArgs = flingArgs;
 
                 AddInteraction(InputAction.Fling);
 
-                if (!_inputHandler.OnMouseInput(flingArgs, InputAction.Fling))
+                if (_inputHandler.OnMouseInput(flingArgs, InputAction.Fling))
                 {
-                    flingArgs.SetHandled(false);
+                    //flingArgs.SetHandled(false);
+                    RemoveFlingEventually(flingArgs);
                     //RemoveInteraction(InputAction.Fling);
                 }
             }
@@ -173,11 +199,64 @@ namespace Das.Xamarin.Android.Input
             return true;
         }
 
-        private void RemoveFlingInteraction()
+        private async void RemoveFlingEventually(FlingEventArgs fargs)
         {
-            //System.Diagnostics.Debug.WriteLine("[OKYN] removing fling interaction");
+            var useTime = fargs.FlingXDuration.TotalMilliseconds >
+                          fargs.FlingYDuration.TotalMilliseconds
+                ? fargs.FlingXDuration
+                : fargs.FlingYDuration;
+
+            await Task.Delay(useTime).ConfigureAwait(false);
+
+            if (!Equals(_lastFlingArgs, fargs))
+                return;
+
             RemoveInteraction(InputAction.Fling);
         }
+
+        private void BuildFlingValues(Double velocity,
+                                      out Double distance,
+                                      out TimeSpan duration)
+        {
+            if (velocity != 0)
+            {
+                distance = GetSplineFlingDistance(velocity * _dpiRatio);
+                duration = GetSplineFlingDuration(velocity);
+            }
+            else
+            {
+                distance = 0;
+                duration = TimeSpan.Zero;
+            }
+        }
+
+        private Double GetSplineDeceleration(Double velocity)
+        {
+            return Math.Log(_inflexion * Math.Abs(velocity) / 
+                            (_scrollFriction * _physicalCoefficient));
+        }
+
+        private Double GetSplineFlingDistance(Double velocity)
+        {
+            var l = GetSplineDeceleration(velocity);
+            var decelMinusOne = _decelerationRate - 1.0;
+            return _scrollFriction * _physicalCoefficient * 
+                   Math.Exp(_decelerationRate / decelMinusOne * l) *
+                   Math.Sign(velocity);
+        }
+
+        private TimeSpan GetSplineFlingDuration(Double velocity)
+        {
+            var l = GetSplineDeceleration(velocity);
+            var decelMinusOne = _decelerationRate - 1.0;
+            return TimeSpan.FromMilliseconds(1000.0 * Math.Exp(l / decelMinusOne));
+        }
+
+        //private void RemoveFlingInteraction()
+        //{
+        //    //System.Diagnostics.Debug.WriteLine("[OKYN] removing fling interaction");
+        //    RemoveInteraction(InputAction.Fling);
+        //}
 
         //private void OnFlingCompleted(Task<Boolean> obj)
         //{
@@ -200,19 +279,26 @@ namespace Das.Xamarin.Android.Input
             if (e1 == null || e2 == null)
                 return false;
 
-            var start = GetPosition(e1);
-            var last = GetPosition(e2);
+            //var start = GetPosition(e1);
+            //var last = GetPosition(e2);
 
-            var x = (0 - distanceX) * _dpiRatio;
-            var y = (0 - distanceY)* _dpiRatio;
+            //var x = (0 - distanceX) * _dpiRatio;
+            //var y = (0 - distanceY)* _dpiRatio;
 
-            var delta = new ValueSize(x, y);
+            //var delta = new ValueSize(
+            //    (0 - distanceX) * _dpiRatio, //x
+            //    (0 - distanceY)* _dpiRatio); //y
 
 
-            var dragArgs = new DragEventArgs(start, last, delta,
+            var dragArgs = new DragEventArgs(
+                GetPosition(e1), //start pos
+                GetPosition(e2), //current pos
+                new ValueSize( //delta
+                    (0 - distanceX) * _dpiRatio, //x
+                    (0 - distanceY)* _dpiRatio), //y,
                 _leftButtonWentDown != null ? MouseButtons.Left : MouseButtons.Right,
                 this);
-            
+
             _inputHandler.OnMouseInput(dragArgs, InputAction.MouseDrag);
             
 
@@ -316,52 +402,19 @@ namespace Das.Xamarin.Android.Input
 
         }
 
+        public GestureDetectorCompat GestureDetector => _gestureDetector;
+
         public Int32 SleepTime;
-        
-        IPoint2D IInputProvider.CursorPosition { get; } = Point2D.Empty;
-
-        Boolean IInputProvider.IsCapsLockOn => false;
-
-        Boolean IInputProvider.AreButtonsPressed(KeyboardButtons button1,
-                                                 KeyboardButtons button2)
-        {
-            return false;
-        }
-
-        Boolean IInputProvider.AreButtonsPressed(KeyboardButtons button1,
-                                                 KeyboardButtons button2,
-                                                 KeyboardButtons button3)
-        {
-            return false;
-        }
-
-        Boolean IInputProvider.AreButtonsPressed(MouseButtons button1,
-                                                 MouseButtons button2)
-        {
-            return false;
-        }
-
-        Boolean IInputProvider.AreButtonsPressed(MouseButtons button1,
-                                                 MouseButtons button2,
-                                                 MouseButtons button3)
-        {
-            return false;
-        }
-
-        Boolean IInputProvider.IsButtonPressed(KeyboardButtons keyboardButton)
-        {
-            return false;
-        }
-
-        Boolean IInputProvider.IsButtonPressed(MouseButtons mouseButton)
-        {
-            return false;
-        }
 
         Boolean IInputContext.IsMousePresent => false;
 
-        private ValuePoint2D GetPosition(MotionEvent eve)
+        public Double ZoomLevel => _dpiRatio;
+
+        private ValuePoint2D GetPosition(MotionEvent? eve)
         {
+            if (ReferenceEquals(null, eve))
+                return ValuePoint2D.Empty;
+
             if (_isOffsetPositions)
             {
                 var x = eve.GetX() * _dpiRatio;
@@ -380,6 +433,7 @@ namespace Das.Xamarin.Android.Input
         private readonly View _hostView;
         private readonly BaseInputHandler _inputHandler;
         
+        // ReSharper disable once NotAccessedField.Local
         private readonly Int32 _maximumFlingVelocity;
         private readonly Int32 _minimumFlingVelocity;
         private readonly Double _touchSlop;
@@ -388,5 +442,11 @@ namespace Das.Xamarin.Android.Input
 
         private readonly Double _dpiRatio;
         private readonly Boolean _isOffsetPositions;
+        private readonly Single _scrollFriction;
+        private readonly Single _physicalCoefficient;
+        private FlingEventArgs? _lastFlingArgs;
+        
+        private static readonly Single _decelerationRate = (Single) (Math.Log(0.78) / Math.Log(0.9));
+        private static readonly Single _inflexion = 0.35f; // Tension lines cross at (INFLEXION, 1)
     }
 }

@@ -49,6 +49,14 @@ namespace Das.Views.Charting.Pie
             return res;
         }
 
+        public override void Dispose()
+        {
+           _label.Dispose();
+           
+           base.Dispose();
+           
+        }
+
         protected override void OnDataContextChanged(Object? newValue)
         {
             base.OnDataContextChanged(newValue);

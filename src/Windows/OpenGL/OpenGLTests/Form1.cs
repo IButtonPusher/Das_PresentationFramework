@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using OpenGLTests.Samples;
 
 namespace OpenGLTests
 {
@@ -25,7 +26,8 @@ namespace OpenGLTests
 
         private void BobRunner(IntPtr ptr)
         {
-            var bob = new HelloTriangle(this, ptr);
+            //var bob = new HelloTriangle(this, ptr);
+            var bob = new HelloShaders(this, ptr);
 
             while (true)
             {

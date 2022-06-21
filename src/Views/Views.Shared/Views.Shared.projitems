@@ -10,10 +10,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BaseSurrogateProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BorderSide.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BoxShadow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BoxShadowLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BoxValues.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\VisualBorder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\VisualCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\VisualCollectionHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Colors\Color.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Colors\HatchBrush.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Colors\SolidColorBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\BindingType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\BindingBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\ChildNodeType.cs" />
@@ -39,15 +45,24 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converters\QuantifiedThicknessConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToColorConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToVisualConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\NamedObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\DependencyPropertyBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\DependencyProperty{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Images\NullSvgBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\HitTester.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\InteractiveVisualProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BoxModelLayoutTree.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Invocations\InvokeCompletionSource{TvTr}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Invocations\InvokeCompletionSource{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\ContextBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\NullLayoutQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\NullStyleContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\NullViewState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\VisualLineage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Measuring\DimensionResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Measuring\MeasureHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\Canvas.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\ButtonBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Label.cs" />
@@ -121,6 +136,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\BaselineThemeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\CascadingAssignedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Declarations\ObjectDeclaration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\DefaultDarkThemeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\DependencyPropertyValueRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Selectors\DependencyPropertySelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\StyleSheet.cs" />
@@ -145,14 +161,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)Templates\DefaultVisualBootstrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\DeferredVisualTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\MultiDataTemplate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Templates\NullTemplateLabel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\VisualTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\IdentityTransform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\ScaleTransform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transforms\TranslateTransform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UILogger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Updaters\BaseLoopUpdater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Updaters\LoopViewUpdater.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Geometry\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Validation\" />
   </ItemGroup>
 </Project>

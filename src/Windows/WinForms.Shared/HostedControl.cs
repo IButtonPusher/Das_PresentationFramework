@@ -50,6 +50,11 @@ namespace Das.Views.Winforms
             Invoke(action);
         }
 
+        public Task InvokeAsync(Func<Task> action)
+        {
+           return this.RunInvokeAsync(action);
+        }
+
         public T Invoke<T>(Func<T> action)
         {
             return this.RunInvoke(action);

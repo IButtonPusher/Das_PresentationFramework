@@ -153,24 +153,11 @@ namespace Das.Views.DataBinding
                         if (TryGetGenericCollectionArgument(valType, out var germane) ||
                             TryGetGenericCollectionArgument(_srcProp.PropertyType, out germane))
                         {
-                            targetType = typeof(AsyncObservableCollection2<>).MakeGenericType(germane);
+                            //throw new NotImplementedException();
+                            //targetType = typeof(AsyncObservableCollection2<>).MakeGenericType(germane);
+                            targetType = typeof(ObservableRangeCollection<>).MakeGenericType(germane);
                         }
                     }
-                    
-                    //if (targetType.IsInterface &&
-                    //    targetType == typeof(INotifyingCollection) &&
-                    //    valType.IsGenericType)
-                    //    //targetType.GetGenericTypeDefinition() == typeof(INotifyingCollection))
-                    //{
-                    //    //treat the target property type like a concrete version of a notifying collection
-
-                    //    var gargs = valType.GetGenericArguments();
-                    //    if (gargs.Length == 1)
-                    //    {
-
-                    //        targetType = typeof(AsyncObservableCollection2<>).MakeGenericType(gargs[0]);
-                    //    }
-                    //}
 
                     foreach (var targetCtor in targetType.GetConstructors())
                     {
@@ -185,8 +172,6 @@ namespace Das.Views.DataBinding
                             _targetSetter?.Invoke(_target, new[] {newObj});
                             return;
                         }
-                        
-                        
                     }
                 }
             }

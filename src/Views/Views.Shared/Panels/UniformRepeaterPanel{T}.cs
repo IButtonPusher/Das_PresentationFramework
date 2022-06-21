@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Das.Extensions;
+using Das.Mvvm;
 using Das.Views.Collections;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
@@ -292,7 +293,7 @@ namespace Das.Views.Panels
 
                             break;
 
-                        case IDataTemplate dataTemplate:
+                        case { } dataTemplate:
                             var single = dataTemplate.BuildVisual(null);
                             if (single != null)
                                 AddNewColumn(single);
@@ -328,7 +329,7 @@ namespace Das.Views.Panels
         {
             switch (_children[columnIndex])
             {
-                case IVisualElement template:
+                case { } template:
                     var ctrl = _visualBootstrapper.InstantiateCopy(template, vm);
                     //var ctrl = (TVisual) template.DeepCopy();
                     //ctrl.DataContext = vm;

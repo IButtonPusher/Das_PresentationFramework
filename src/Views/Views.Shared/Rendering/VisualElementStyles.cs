@@ -4,7 +4,7 @@ using Das.Views.Styles.Declarations;
 
 namespace Das.Views
 {
-    public abstract partial class VisualElement
+    public partial class VisualElement
     {
         public virtual Boolean TryGetDependencyProperty(DeclarationProperty declarationProperty,
                                                         out IDependencyProperty property)

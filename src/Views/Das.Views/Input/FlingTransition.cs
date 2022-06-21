@@ -2,16 +2,17 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Styles.Transitions;
+using Das.Views.Transitions;
 
 namespace Das.Views.Input
 {
-    public class FlingTransition : BaseTransition
+    public class FlingTransition : BaseTransition,
+                                   IManualTransition
     {
         public FlingTransition(TimeSpan duration,
                                Double flingX,
                                Double flingY,
-                               IFlingHost host,
-                               FlingEventArgs args)
+                               IFlingHost host)
             : base(duration, TimeSpan.Zero, Easing.QuadraticOut)
         {
             //System.Diagnostics.Debug.WriteLine("Created fling transition x,y: " + flingX + 
@@ -25,7 +26,6 @@ namespace Das.Views.Input
             _startY = host.CurrentY;
             
             _host = host;
-            _args = args;
             _cancellationSource = new CancellationTokenSource();
         }
 
@@ -34,7 +34,7 @@ namespace Das.Views.Input
             _cancellationSource.Cancel(false);
         }
 
-        public void Start()
+        public override void Start()
         {
             Start(_cancellationSource.Token);
         }
@@ -55,7 +55,7 @@ namespace Das.Views.Input
         {
             base.OnFinished(wasCancelled);
             _host.OnFlingEnded(wasCancelled);
-            _args.SetHandled(true);
+            //_args.SetHandled(true);
         }
 
         private readonly CancellationTokenSource _cancellationSource;
@@ -67,6 +67,5 @@ namespace Das.Views.Input
         private readonly Double _startY;
         
         private readonly IFlingHost _host;
-        private readonly FlingEventArgs _args;
     }
 }

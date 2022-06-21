@@ -30,8 +30,6 @@ namespace Das.Views.Core.Drawing
 
         IBrush OnError { get; }
 
-        //IBrush Accent { get; }
-
 
         IBrush GetAlpha(ColorType type,
                         Double opacity);

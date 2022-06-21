@@ -47,6 +47,11 @@ namespace Das.Views.Winforms
             Invoke(action);
         }
 
+        public Task InvokeAsync(Func<Task> action)
+        {
+           return this.RunInvokeAsync(action);
+        }
+
         public T Invoke<T>(Func<T> action)
         {
             return this.RunInvoke(action);
@@ -110,6 +115,8 @@ namespace Das.Views.Winforms
             get => _contents.ZoomLevel;
             set => _contents.ZoomLevel = value;
         }
+
+        public Single Density => _contents.Density;
 
         public void AcceptChanges()
         {

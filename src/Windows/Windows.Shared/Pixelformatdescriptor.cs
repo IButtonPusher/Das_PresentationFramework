@@ -7,6 +7,13 @@ namespace Das.Views.Windows
     [StructLayout(LayoutKind.Explicit)]
     public class Pixelformatdescriptor
     {
+
+       public const Byte PFD_TYPE_RGBA = 0;
+       public const UInt32 PFD_DOUBLEBUFFER = 1;
+       public const UInt32 PFD_DRAW_TO_WINDOW = 4;
+       public const UInt32 PFD_SUPPORT_OPENGL = 32;
+       public const SByte PFD_MAIN_PLANE = 0;
+
         public void Init()
         {
             nSize = (UInt16) Marshal.SizeOf(this);

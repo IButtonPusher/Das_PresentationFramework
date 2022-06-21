@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Das.Serializer;
 
 namespace Das.Views.Panels
 {
@@ -19,8 +18,8 @@ namespace Das.Views.Panels
 
         new void AddChildren(IEnumerable<IVisualElement> elements);
 
-        void OnChildDeserialized(IVisualElement element,
-                                 INode node);
+        //void OnChildDeserialized(IVisualElement element,
+        //                         INode node);
 
     }
 }

@@ -1,26 +1,30 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Das.Views.Rendering;
 
 namespace Das.Views
 {
-    public interface ILayoutQueue
-    {
-        Boolean HasVisualsNeedingLayout { get; }
+   public interface ILayoutQueue
+   {
+      void QueueVisualForMeasure(IVisualElement visual);
 
-        void QueueVisualForMeasure(IVisualElement visual);
+      Boolean TryDequeueVisualNeedingMeasure(out IVisualElement visual);
 
-        Boolean HasVisualsNeedingMeasure { get; }
+      void RemoveVisualFromMeasureQueue(IVisualElement visual);
 
-        Boolean TryDequeueVisualNeedingMeasure(out IVisualElement visual);
+      void QueueVisualForArrange(IVisualElement visual);
 
-        void RemoveVisualFromMeasureQueue(IVisualElement visual);
+      Boolean TryDequeueVisualNeedingArrange(out IVisualElement visual);
 
+      void RemoveVisualFromArrangeQueue(IVisualElement visual);
 
-        void QueueVisualForArrange(IVisualElement visual);
+      void RemoveVisualFromQueues(IVisualElement visual, 
+                                  ChangeType type);
 
-        Boolean HasVisualsNeedingArrange { get; }
+      Boolean HasVisualsNeedingLayout { get; }
 
-        Boolean TryDequeueVisualNeedingArrange(out IVisualElement visual);
+      Boolean HasVisualsNeedingMeasure { get; }
 
-        void RemoveVisualFromArrangeQueue(IVisualElement visual);
-    }
+      Boolean HasVisualsNeedingArrange { get; }
+   }
 }

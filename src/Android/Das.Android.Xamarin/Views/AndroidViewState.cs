@@ -14,10 +14,13 @@ namespace Das.Xamarin.Android
                                 IThemeProvider themeProvider)
         {
             _themeProvider = themeProvider;
+            Density = displayMetrics.Density;
             ZoomLevel = displayMetrics.ScaledDensity;
         }
 
         public Double ZoomLevel { get; }
+
+        public Single Density { get; }
 
         public IColorPalette ColorPalette => _themeProvider.ColorPalette;
     }

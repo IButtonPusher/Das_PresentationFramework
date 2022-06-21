@@ -11,6 +11,7 @@ using Das.Views.Core;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
+using Das.Views.Input;
 using Das.Views.Rendering;
 using Das.Views.Rendering.Geometry;
 using Das.Views.Styles.Application;
@@ -23,18 +24,19 @@ namespace Das.Xamarin.Android
     public abstract class SurrogateView : FrameLayout, //ViewGroup,
                                           IVisualSurrogate
     {
-        public SurrogateView(Context? context,
+        protected SurrogateView(Context context,
                              IVisualElement replacingVisual,
                              View nativeView,
                              ViewGroup viewGroup) : base(context)
         {
             _viewGroup = viewGroup;
+            //_gestureDetector = gestureDetector;
+            //_inputContext = inputContext;
             ReplacingVisual = replacingVisual;
             //replacingVisual.PropertyChanged += OnControlPropertyChanged;
-            NativeView = nativeView;
+            //NativeView = nativeView;
             AddView(nativeView);
         }
-
         void IMeasureAndArrange.InvalidateMeasure()
         {
             ReplacingVisual.InvalidateMeasure();
@@ -73,7 +75,7 @@ namespace Das.Xamarin.Android
 
         ValueRenderRectangle IVisualRenderer.ArrangedBounds
         {
-            get => ReplacingVisual.ArrangedBounds;
+            get => ReplacingVisual?.ArrangedBounds ?? ValueRenderRectangle.Empty;
             set => ReplacingVisual.ArrangedBounds = value;
         }
 
@@ -120,7 +122,15 @@ namespace Das.Xamarin.Android
             else _viewGroup.AddView(this);
         }
 
-        event Action<IVisualElement>? IVisualElement.Disposed
+        event Action<IVisualElement>? INotifyDisposable.Disposed
+        {
+            add => ReplacingVisual.Disposed += value;
+            remove => ReplacingVisual.Disposed -= value;
+        }
+
+        public Boolean IsDisposed => ReplacingVisual.IsDisposed;
+
+        public event Action<IVisualElement>? Disposed
         {
             add => ReplacingVisual.Disposed += value;
             remove => ReplacingVisual.Disposed -= value;
@@ -182,7 +192,7 @@ namespace Das.Xamarin.Android
             set => ReplacingVisual.BorderRadius = value;
         }
 
-        VisualBorder IVisualElement.Border
+        IVisualBorder IVisualElement.Border
         {
             get => ReplacingVisual.Border;
             set => ReplacingVisual.Border = value;
@@ -218,48 +228,73 @@ namespace Das.Xamarin.Android
             set => ReplacingVisual.AfterLabel = value;
         }
 
+        public Boolean TryHandleInput<TArgs>(TArgs args,
+                                             Int32 x,
+                                             Int32 y) where TArgs : IMouseInputEventArgs<TArgs>
+        {
+           return ReplacingVisual.TryHandleInput(args, x, y);
+        }
+
         Int32 IVisualElement.ZIndex => ReplacingVisual.ZIndex;
 
         IBoxShadow IVisualElement.BoxShadow => ReplacingVisual.BoxShadow;
 
-        public IVisualElement ReplacingVisual { get; }
+        public virtual IVisualElement ReplacingVisual { get; }
 
-        public View NativeView { get; }
-        //{
-        //    get => _nativeView;
-        //    //set => SetNativeView(value);
-        //}
+       
 
         public sealed override void AddView(View? child)
         {
             base.AddView(child);
         }
 
-        public override Boolean OnInterceptTouchEvent(MotionEvent? ev)
-        {
-            System.Diagnostics.Debug.WriteLine("intercept touch: " + ev);
-            return base.OnInterceptTouchEvent(ev);
-        }
 
-        //private void SetNativeView(View? value)
+
+        //public override Boolean OnTouchEvent(MotionEvent? ev)
         //{
-        //    if (_nativeView != null)
-        //        RemoveView(_nativeView);
+        //    var res = base.OnTouchEvent(ev);
 
-        //    _nativeView = value;
-        //    if (value != null)
-        //        AddView(value);
+        //    System.Diagnostics.Debug.WriteLine("[OKYN] intercept touch? me.top=" + Top + " : " + ev);
+
+        //    switch (ev!.Action)
+        //    {
+        //        case MotionEventActions.Move:
+        //            _gestureDetector.OnTouchEvent(ev);
+        //            break;
+        //        case MotionEventActions.Down:
+        //        case MotionEventActions.Up:
+        //            _gestureDetector.OnTouchEvent(ev);
+        //            break;
+
+        //    }
+
+        //    return res;
         //}
 
-        //protected override void OnLayout(Boolean changed,
-        //                                 Int32 l,
-        //                                 Int32 t,
-        //                                 Int32 r,
-        //                                 Int32 b)
+        //public override Boolean OnInterceptTouchEvent(MotionEvent? ev)
         //{
-        //    NativeView.Layout(l, t, r, b);
+        //    //var res = base.OnInterceptTouchEvent(ev);
+
+        //    System.Diagnostics.Debug.WriteLine("[OKYN] intercept touch? me.top=" + Top + " : " + ev);
+
+        //    switch (ev!.Action)
+        //    {
+        //        case MotionEventActions.Move:
+        //            _gestureDetector.OnTouchEvent(ev);
+        //            break;
+                
+        //        case MotionEventActions.Down:
+        //        case MotionEventActions.Up:
+        //            _gestureDetector.OnTouchEvent(ev);
+        //            break;
+
+        //    }
+
+        //    return false;
         //}
 
         protected readonly ViewGroup _viewGroup;
+        //private readonly GestureDetectorCompat _gestureDetector;
+        
     }
 }

@@ -4,183 +4,175 @@ using Das.Extensions;
 
 namespace Das.Views.Core.Geometry
 {
-    public class Size : GeometryBase, IDeepCopyable<Size>,
-                        ISize
-    {
-        protected Size()
-        {
-        }
+   public class Size : GeometryBase, IDeepCopyable<Size>,
+                       ISize
+   {
+      protected Size()
+      {
+      }
 
-        public Size(Double width,
-                    Double height)
-        {
-            _width = width;
-            _height = height;
-        }
+      public Size(Double width,
+                  Double height)
+      {
+         _width = width;
+         _height = height;
+         UpdateHasInfinite();
+      }
 
-        public Size DeepCopy()
-        {
-            return new Size(Width, Height);
-        }
+      public Size DeepCopy()
+      {
+         return new Size(Width, Height);
+      }
 
-        //ISize ISize.Divide(Double pct)
-        //{
-        //    return GeometryHelper.Divide(this, pct);
-        //}
+      public virtual Double Width
+      {
+          get => _width;
+          set
+          {
+              if (Equals(_width, value))
+                  return;
 
-        public virtual Double Width
-        {
-            get => _width;
-            set => _width = value;
-        }
+              _width = value;
+              UpdateHasInfinite();
+          }
+      }
 
-        //public ISize Reduce(Thickness padding)
-        //{
-        //    return GeometryHelper.Reduce(this, padding);
-        //}
+      private void UpdateHasInfinite()
+      {
+          HasInfiniteDimension = Double.IsInfinity(_width) ||
+                                 Double.IsInfinity(_height);
+      }
 
-        //public Double CenterY(ISize item)
-        //{
-        //    return GeometryHelper.CenterY(this, item);
-        //}
+      public Boolean HasInfiniteDimension { get; private set; }
 
-        //public Double CenterX(ISize item)
-        //{
-        //    return GeometryHelper.CenterX(this, item);
-        //}
+      public virtual Double Height
+      {
+          get => _height;
+          set
+          {
+              if (Equals(_height, value))
+                  return;
+              
+              _height = value;
+              UpdateHasInfinite();
+          }
+      }
 
-        //public ISize Minus(ISize subtract)
-        //{
-        //    return GeometryHelper.Minus(this, subtract);
-        //}
+      public Boolean IsEmpty => Width.IsZero() && Height.IsZero();
 
-        public virtual Double Height
-        {
-            get => _height;
-            set => _height = value;
-        }
+      public Boolean Equals(ISize? other)
+      {
+         return GeometryHelper.AreSizesEqual(this, other);
+      }
 
-        public Boolean IsEmpty => Width.IsZero() && Height.IsZero();
+      public static Size Add(params ISize[] sizes)
+      {
+         var width = 0.0;
+         var height = 0.0;
 
-        public Boolean Equals(ISize? other)
-        {
-            return GeometryHelper.AreSizesEqual(this, other);
-        }
+         for (var c = 0; c < sizes.Length; c++)
+         {
+            var current = sizes[c];
+            if (current == null)
+               continue;
 
+            width += current.Width;
+            height += current.Height;
+         }
 
-        //ISize IDeepCopyable<ISize>.DeepCopy()
-        //{
-        //    return DeepCopy();
-        //}
+         return new Size(width, height);
+      }
 
-        public static Size Empty { get; } = new Size(0, 0);
+      // ReSharper disable once UnusedMember.Global
+      public static Size Add(ISize size1,
+                             ISize size2)
+      {
+         if (size1 == null || size2 == null)
+            throw new InvalidOperationException();
 
-        public static Size Add(params ISize[] sizes)
-        {
-            var width = 0.0;
-            var height = 0.0;
+         return new Size(size1.Width + size2.Width,
+            size1.Height + size2.Height);
+      }
 
-            for (var c = 0; c < sizes.Length; c++)
-            {
-                var current = sizes[c];
-                if (current == null)
-                    continue;
+      public ISize PlusVertical(ISize adding)
+      {
+         return GeometryHelper.PlusVertical(this, adding);
+      }
 
-                width += current.Width;
-                height += current.Height;
-            }
+      public override Boolean Equals(Object obj)
+      {
+         return obj is ISize isize && Equals(isize);
+      }
 
-            return new Size(width, height);
-        }
+      public override Int32 GetHashCode()
+      {
+         unchecked
+         {
+            return (Width.GetHashCode() * 397) ^ Height.GetHashCode();
+         }
+      }
 
-        // ReSharper disable once UnusedMember.Global
-        public static Size Add(ISize size1, 
-                               ISize size2)
-        {
-            if (size1 == null || size2 == null)
-                throw new InvalidOperationException();
+      public static Size operator +(Size size,
+                                    Thickness margin)
+      {
+         if (margin == null)
+            return size.DeepCopy();
 
-            return new Size(size1.Width + size2.Width,
-                size1.Height + size2.Height);
-        }
+         return new Size(size.Width + margin.Left + margin.Right,
+            size.Height + margin.Top + margin.Bottom);
+      }
 
-        public ISize PlusVertical(ISize adding)
-        {
-            return GeometryHelper.PlusVertical(this, adding);
-        }
+      public static implicit operator ValueSize(Size size)
+      {
+         return new ValueSize(size.Width, size.Height);
+      }
 
-        public override Boolean Equals(Object obj)
-        {
-            return obj is ISize isize && Equals(isize);
-        }
+      public static Size operator *(Size size,
+                                    Double val)
+      {
+         if (val.AreEqualEnough(1))
+            return size;
 
-        public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-                return (Width.GetHashCode() * 397) ^ Height.GetHashCode();
-            }
-        }
+         if (size == null)
+            return null!;
 
-        public static Size operator +(Size size, 
-                                      Thickness margin)
-        {
-            if (margin == null)
-                return size.DeepCopy();
+         return new Size(size.Width * val, size.Height * val);
+      }
 
-            return new Size(size.Width + margin.Left + margin.Right,
-                size.Height + margin.Top + margin.Bottom);
-        }
+      public static Size operator -(Size size,
+                                    Thickness margin)
+      {
+         if (margin == null)
+            return size.DeepCopy();
 
-        public static implicit operator ValueSize(Size size)
-        {
-            return new ValueSize(size.Width, size.Height);
-        }
+         return new Size(size.Width - (margin.Left + margin.Right),
+            size.Height - (margin.Top + margin.Bottom));
+      }
 
-        public static Size operator *(Size size, Double val)
-        {
-            if (val.AreEqualEnough(1))
-                return size;
+      public static Size Subtract(ISize size,
+                                  ISize size2)
+      {
+         if (size == null || size2 == null)
+            throw new InvalidOperationException();
 
-            if (size == null)
-                return null!;
+         return new Size(size.Width - size2.Width,
+            size.Height - size2.Height);
+      }
 
-            return new Size(size.Width * val, size.Height * val);
-        }
+      public override String ToString()
+      {
+         return "Width: " + Width + " Height: " + Height;
+      }
 
-        public static Size operator -(Size size,
-                                      Thickness margin)
-        {
-            if (margin == null)
-                return size.DeepCopy();
+      public static implicit operator Size(ValueSize value)
+      {
+         return new Size(value.Width, value.Height);
+      }
 
-            return new Size(size.Width - (margin.Left + margin.Right),
-                size.Height - (margin.Top + margin.Bottom));
-        }
+      public static Size Empty { get; } = new Size(0, 0);
 
-        public static Size Subtract(ISize size, ISize size2)
-        {
-            if (size == null || size2 == null)
-                throw new InvalidOperationException();
+      private Double _height;
 
-            return new Size(size.Width - size2.Width,
-                size.Height - size2.Height);
-        }
-
-        public override String ToString()
-        {
-            return "Width: " + Width + " Height: " + Height;
-            //return Width.ToString("0.00") + ", " +
-            //       Height.ToString("0.00");
-        }
-
-        public static implicit operator Size(ValueSize value)
-        {
-            return new Size(value.Width, value.Height);
-        }
-
-        private Double _height;
-
-        private Double _width;
-    }
+      private Double _width;
+   }
 }

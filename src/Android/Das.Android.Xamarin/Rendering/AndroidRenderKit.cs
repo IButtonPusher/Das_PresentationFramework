@@ -32,7 +32,8 @@ namespace Das.Xamarin.Android
                                 IResolver container,
                                 IImageProvider imageProvider)
             : base(imageProvider, Serializer, 
-                new SvgPathBuilder(imageProvider, Serializer), container)
+                new SvgPathBuilder(imageProvider, Serializer), container,
+                themeProvider)
         {
             ViewState = viewState;
             DisplayMetrics = displayMetrics;
@@ -42,43 +43,7 @@ namespace Das.Xamarin.Android
                 ref _measureContext!, ref _renderContext!, ref _refreshRenderContext!);
         }
 
-        //public AndroidRenderKit(IViewPerspective viewPerspective,
-        //                        IViewState viewState,
-        //                        AndroidFontProvider fontProvider,
-        //                        IWindowManager windowManager,
-        //                        IUiProvider uiProvider,
-        //                        IThemeProvider themeProvider,
-        //                        DisplayMetrics displayMetrics)
-        //    : this(viewPerspective, viewState, fontProvider, windowManager, uiProvider,
-        //        themeProvider, displayMetrics, new BaseResolver(TimeSpan.FromSeconds(5)),
-        //        new AndroidImageProvider(displayMetrics))
-        //{
-            
-        //}
 
-      
-
-        //public AndroidRenderKit(IViewPerspective viewPerspective,
-        //                        IViewState viewState,
-        //                        IWindowManager windowManager,
-        //                        AndroidFontProvider fontProvider,
-        //                        DisplayMetrics displayMetrics,
-        //                        IUiProvider uiProvider,
-        //                        IResolver resolver,
-        //                        IThemeProvider styleContext, 
-        //                        IVisualBootstrapper visualBootstrapper, 
-        //                        IViewInflater viewInflater) 
-        //    : base(resolver, visualBootstrapper, viewInflater,
-        //        new Dictionary<IVisualElement, ValueCube>(),
-        //        new AndroidImageProvider(displayMetrics))
-        //{
-        //    ViewState = viewState;
-        //    DisplayMetrics = displayMetrics;
-            
-        //    Init(windowManager, styleContext, viewPerspective, displayMetrics,
-        //        fontProvider, viewState, uiProvider,
-        //        ref _measureContext!, ref _renderContext!, ref _refreshRenderContext!);
-        //}
         
         [SuppressMessage("ReSharper", "RedundantAssignment")]
         private void Init(IWindowManager windowManager,
@@ -92,25 +57,26 @@ namespace Das.Xamarin.Android
                           ref AndroidRenderContext renderContext,
                           ref RefreshRenderContext refreshRenderContext)
         {
-            var imageProvider = new AndroidImageProvider(displayMetrics);
+            
 
             var visualLineage = new VisualLineage();
             
             var lastMeasures = new Dictionary<IVisualElement, ValueSize>();
 
-            var layoutQueue = new LayoutQueue();
-
             measureContext = new AndroidMeasureKit(windowManager, fontProvider, 
-                this, lastMeasures,themeProvider, displayMetrics, visualLineage, layoutQueue);
+                this, lastMeasures,themeProvider, displayMetrics, visualLineage, _layoutQueue);
 
             var visualPositions = new Dictionary<IVisualElement, ValueCube>();
 
             renderContext = new AndroidRenderContext(viewPerspective,
                 fontProvider, viewState, this, visualPositions,
-                lastMeasures, themeProvider, visualLineage, layoutQueue);
+                lastMeasures, themeProvider, visualLineage, _layoutQueue);
             
             refreshRenderContext = new RefreshRenderContext(viewPerspective, this, 
-                visualPositions, lastMeasures, themeProvider, visualLineage, layoutQueue);
+                visualPositions, lastMeasures, themeProvider, visualLineage, _layoutQueue,
+                renderContext.GetClip);
+
+            var imageProvider = new AndroidImageProvider(displayMetrics);//, renderContext);
 
             Container.ResolveTo<IImageProvider>(imageProvider);
             Container.ResolveTo(uiProvider);

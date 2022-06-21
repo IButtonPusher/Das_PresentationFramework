@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using Das.Mvvm;
 using Das.Views.Mvvm;
 
 namespace Das.Views.ItemsControls

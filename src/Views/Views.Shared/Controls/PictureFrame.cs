@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Views.Images;
+using Das.Views.Rendering;
 
 namespace Das.Views.Controls
 {
@@ -22,7 +23,13 @@ namespace Das.Views.Controls
             Image = null;
         }
 
+        //public override void InvalidateMeasure()
+        //{
+        //   base.InvalidateMeasure();
+        //}
+
         protected override Boolean TryGetImage<TRenderSize>(TRenderSize size,
+                                                            IVisualContext visualContext,
                                                             out IImage image)
         {
             if (Image is { } img)

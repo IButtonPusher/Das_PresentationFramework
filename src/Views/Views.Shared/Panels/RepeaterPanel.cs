@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Das.Views.Collections;
 using Das.Views.Core.Enums;
@@ -47,7 +48,14 @@ namespace Das.Views.Panels
             _visualsByVm = new Dictionary<Object, IVisualElement>();
             _itemsControlHelper = new ItemsControlHelper(AddNewItems, RemoveItems, ClearItems,
                 null, null);
+
+            var wot = Interlocked.Add(ref _netAlive, 1);
+
+            if (wot > 1000)
+            {}
         }
+
+        private static Int32 _netAlive;
 
         INotifyingCollection? IItemsControl.ItemsSource => ItemsSource;
 
@@ -71,6 +79,11 @@ namespace Das.Views.Panels
             base.Dispose();
 
             _controls.Dispose();
+
+            lock (_controlsLock)
+               _visualsByVm.Clear();
+
+            Interlocked.Add(ref _netAlive, -1);
         }
 
         public Orientations Orientation { get; set; }
@@ -161,7 +174,7 @@ namespace Das.Views.Panels
                         _controls.Remove(ctrl);
                     }
 
-                    _controls.Add(ctrl);
+                    //_controls.Add(ctrl);
                 }
             }
         }
@@ -170,7 +183,6 @@ namespace Das.Views.Panels
         private readonly Object _controlsLock;
 
         private readonly ItemsControlHelper _itemsControlHelper;
-
         private readonly ISequentialRenderer _renderer;
         private readonly Dictionary<Object, IVisualElement> _visualsByVm;
     }

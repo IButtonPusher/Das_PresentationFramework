@@ -102,6 +102,8 @@ namespace Windows.Shared.Input
 
         public Boolean IsMousePresent => true; //todo: better answer
 
+        public abstract Double ZoomLevel { get; }
+
         public Double MaximumFlingVelocity => 9000;
 
         public Double MinimumFlingVelocity => 90;

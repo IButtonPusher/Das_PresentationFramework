@@ -92,7 +92,7 @@ namespace Das.Gdi
 
                 var available = new ValueRenderSize(_visualHost.AvailableSize);
 
-                if (view.IsRequiresMeasure)
+                if (view.IsRequiresMeasure || _layoutQueue.HasVisualsNeedingMeasure)
                 {
                     var desired = _measureContext.MeasureMainView(view, available, _viewHost);
                     _renderRect.Size = desired;
@@ -114,30 +114,14 @@ namespace Das.Gdi
                     
                     _gdiDevice.Clear();
                     
-                    
-                    //if (view.VerticalAlignment == VerticalAlignments.Default &&
-                    //    view.HorizontalAlignment == HorizontalAlignments.Default)
-                    //{
-                    //    if (_gdiDevice.UpdateSize(desired))
-                    //    {
-                    //        //view.InvalidateMeasure();
-                    //        //return null!;
-                    //    }
-                    //}
-
-                    //_gdiDevice.Width = Convert.ToInt32(desired.Width);
-                    //_gdiDevice.Height = Convert.ToInt32(desired.Height);
+                  
                 }
 
                 var bmp = _gdiDevice.Run(view, DoRender);
 
 
 
-                //if (bmp != null)
-                //{
-                //    _dumpIndex++;
-                //    bmp.Save("dump\\img_" + _dumpIndex + ".png");
-                //}
+                
 
                 return bmp!;
             }

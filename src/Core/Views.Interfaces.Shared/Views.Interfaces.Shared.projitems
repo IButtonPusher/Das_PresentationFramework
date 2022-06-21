@@ -9,37 +9,49 @@
     <Import_RootNamespace>Das.Views</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BorderSide.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BoxValues.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxShadow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxShadowLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IVisualBorder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\OutlineStyle.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)BoxModel\VisualBorder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\ColorType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\IThemeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\ApplyVisualStyles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IAttributeDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Construction\IResourceBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Drawing\IPathData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Enums\LogicalDirection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\DoubleValueMinMax.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IGeometry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IMinMax.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IPoint2F.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\IQuantifiedRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\IBoxModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\MinMaxCore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValuePoint2F.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Geometry\ValueRoundedSize.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\INotifyDisposable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\IQuantifiedValue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\FontFace.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\FontFaceType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\FontMetrics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\IFontFace.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Writing\OpenTypeTableTag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IDependencyProperty{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\INamedProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\IPropertyBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\LocalValueEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\PropertyMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ILayoutQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Images\ISvgImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Images\ISvgPathBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\FlingMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IZoomLevelAware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\IFontVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\ITextVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IPropertyValueAssignment{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\IStyleValueDeclaration{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Transitions\IManualTransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Transitions\ITransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IAppliedStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Application\IAppliedStyleRule.cs" />
@@ -98,12 +110,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Primitives\IToggleButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IVisualSurrogate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\IVisualSurrogateProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Colors\HatchBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\HatchStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\IColorPalette.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Images\IImageProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Colors\SolidColorBrush.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Colors\Color.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\Colors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\IBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Colors\IColor.cs" />
@@ -150,15 +159,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ISelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsControls\ITabControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IWindowNotifier.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\INotifyingCollection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\INotifyingCollection{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IContainerVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IContentContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IContentPresenter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IPanelElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IVisualCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IVisualCollection{T}.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Panels\IVisualContainer{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\ChangeType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\Geometry\IDisplayMetrics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\Geometry\RenderRectangle.cs" />
@@ -206,20 +212,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Input\IInputProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\IMouseInputHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\InputAction.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Input\MousePointers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Invocations\ExclusiveSynchronizationContext.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Invocations\ISingleThreadedInvoker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRenderKit.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Invocations\IUiProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IAsyncCollection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IAsyncObservableCollection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IAsyncReadOnlyCollection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IMutableVm.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IObservableCommand.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IViewProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IWindowProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Mvvm\IVisibilityMutable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IBoundElementContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Panels\IRepeaterPanel.cs" />
@@ -255,5 +251,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Templates\IMultiDataTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\ITemplatableVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IVisualBootstrapper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Input\Text\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Mvvm\" />
   </ItemGroup>
 </Project>

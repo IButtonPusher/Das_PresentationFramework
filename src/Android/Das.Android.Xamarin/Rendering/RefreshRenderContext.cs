@@ -17,16 +17,20 @@ namespace Das.Xamarin.Android.Rendering
     /// </summary>
     public class RefreshRenderContext : BaseRenderContext
     {
+        private readonly Func<ValueRectangle> _getClip;
+
         public RefreshRenderContext(IViewPerspective perspective,
                                     IVisualSurrogateProvider surrogateProvider,
                                     Dictionary<IVisualElement, ValueCube> renderPositions,
                                     Dictionary<IVisualElement, ValueSize> lastMeasurements,
                                     IThemeProvider themeProvider,
                                     IVisualLineage visualLineage,
-                                    ILayoutQueue layoutQueue)
+                                    ILayoutQueue layoutQueue,
+                                    Func<ValueRectangle> getClip)
             : base(perspective, surrogateProvider, renderPositions,
                 lastMeasurements, themeProvider, visualLineage, layoutQueue)
         {
+            _getClip = getClip;
         }
 
         public override void DrawEllipse<TPoint, TPen>(TPoint center,
@@ -37,6 +41,12 @@ namespace Das.Xamarin.Android.Rendering
 
         public override void DrawFrame(IFrame frame)
         {
+        }
+
+        public override void DrawImageAt<TLocation>(IImage img,
+                                                    TLocation destination)
+        {
+           
         }
 
         public override void DrawImage<TRectangle>(IImage img,
@@ -108,7 +118,8 @@ namespace Das.Xamarin.Android.Rendering
 
         protected override ValueRectangle GetCurrentClip()
         {
-            return ValueRectangle.Empty;
+            return _getClip();
+            //return ValueRectangle.Empty;
         }
 
         protected override void PopClip<TRectangle>(TRectangle rect)
@@ -119,5 +130,11 @@ namespace Das.Xamarin.Android.Rendering
         protected override void PushClip<TRectangle>(TRectangle rect)
         {
         }
+
+        //protected override void SetElementRenderPosition(ValueRenderRectangle useRect,
+        //                                                 IVisualElement element)
+        //{
+        //    //base.SetElementRenderPosition(useRect, element);
+        //}
     }
 }

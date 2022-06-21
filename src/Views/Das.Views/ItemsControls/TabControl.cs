@@ -33,7 +33,8 @@ namespace Das.Views
             _lockContentVisuals = new Object();
             _tabContentVisuals = new Dictionary<Object, IVisualElement>();
 
-            TabItems = new AsyncObservableCollection2<IVisualElement>();
+            //TabItems = new AsyncObservableCollection2<IVisualElement>();
+            TabItems = new ObservableRangeCollection<IVisualElement>();
             TabItems.CollectionChanged += OnTabItemsChanged;
 
             HeaderTemplate = new DefaultTabHeaderTemplate(_visualBootstrapper, this);
@@ -75,8 +76,6 @@ namespace Das.Views
                 return _headerUses;
             }
 
-            //var usingWidth = Math.Max(availableSpace.Width, _contentUses.Width);
-            
 
             return new ValueSize(Math.Max(_headerUses.Width, _contentUses.Width),
                 _headerUses.Height + _contentUses.Height);
@@ -143,10 +142,12 @@ namespace Das.Views
             set => SelectedTab = value;
         }
 
-        public AsyncObservableCollection2<IVisualElement> TabItems { get; }
+        //public AsyncObservableCollection2<IVisualElement> TabItems { get; }
+
+        public ObservableRangeCollection<IVisualElement> TabItems { get; }
 
 
-        protected override async void AddNewItems(IEnumerable<Object> items)
+        protected override void AddNewItems(IEnumerable<Object> items)
         {
             var itemTemplate = ItemTemplate ?? _defaultItemTemplate;
 
@@ -156,7 +157,8 @@ namespace Das.Views
 
                 if (visual is INotifyPropertyChanged notifier)
                     notifier.PropertyChanged += OnItemPropertyChanged;
-                await TabItems.AddAsync(visual);
+                TabItems.Add(visual);
+                //await TabItems.AddAsync(visual);
             }
         }
 
@@ -273,28 +275,27 @@ namespace Das.Views
         private void OnItemPropertyChanged(Object sender,
                                            PropertyChangedEventArgs e)
         {
-            switch (e.PropertyName)
-            {
-                case nameof(IToggleButton.IsChecked) when sender is IToggleButton toggle &&
-                                                          sender is IBindable dc && ItemsSource != null &&
-                                                          toggle.IsChecked == true && dc.DataContext != null:
+           switch (e.PropertyName)
+           {
+              case nameof(IToggleButton.IsChecked) when sender is IToggleButton toggle &&
+                                                        sender is IBindable dc && ItemsSource != null &&
+                                                        toggle.IsChecked == true && dc.DataContext != null:
 
-                    foreach (var item in ItemsSource)
-                        //if (item == dc.Value)
-                        if (Equals(item, dc.DataContext))
-                        {
-                            SelectedItem = item;
-                            if (sender is IBindableElement visual)
-                                SelectedTab = visual;
-                            break;
-                        }
+                 foreach (var item in ItemsSource)
+                    if (Equals(item, dc.DataContext))
+                    {
+                       SelectedItem = item;
+                       if (sender is IBindableElement visual)
+                          SelectedTab = visual;
+                       break;
+                    }
 
-                    break;
+                 break;
 
 
-                case nameof(IVisualElement.IsRequiresMeasure):
-                    break;
-            }
+              case nameof(IVisualElement.IsRequiresMeasure):
+                 break;
+           }
         }
 
         private void OnSelectedContentChanged(IVisualElement? obj)
@@ -308,13 +309,14 @@ namespace Das.Views
             InvalidateMeasure();
         }
 
-        private async void OnTabItemsChanged(Object sender,
+        private void OnTabItemsChanged(Object sender,
                                              NotifyCollectionChangedEventArgs e)
         {
             if (SelectedTab != null)
                 return;
 
-            SelectedTab = await TabItems.FirstOrDefaultAsync();
+            SelectedTab = TabItems.FirstOrDefault();
+            //SelectedTab = await TabItems.FirstOrDefaultAsync();
         }
 
         private readonly IDataTemplate _defaultItemTemplate;

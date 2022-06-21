@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>a5852b61-cfcb-417d-ad8c-a66bb704a3b8</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Das.ViewModels</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\INotifyingCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\INotifyingCollection{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\IObservableCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\IObservableCommand{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IMutableVm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interaction\IVisibilityMutable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interaction\MousePointers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interaction\OpenFileTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ISingleThreadedInvoker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interaction\IUiProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ITitledVm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Modal\IModalBaseVm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Modal\IModalVm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Modal\IModalVm{T}.cs" />
+  </ItemGroup>
+</Project>

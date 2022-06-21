@@ -31,16 +31,9 @@ namespace Das.Views.Input
 
         public DragEventArgs Offset(IPoint2D offset)
         {
-            return new DragEventArgs(StartPosition.Offset(offset),
+            return new(StartPosition.Offset(offset),
                 Position.Offset(offset), LastChange, Button, InputContext);
         }
-
-        //public DragEventArgs Offset(Double pct)
-        //{
-        //    return new DragEventArgs(StartPosition.Offset(pct),
-        //        Position.Offset(pct), 
-        //        LastChange.Divide(pct), Button, InputContext);
-        //}
 
         public InputAction Action => InputAction.MouseDrag;
 
@@ -50,7 +43,7 @@ namespace Das.Views.Input
 
         public override String ToString()
         {
-            return "Drag - start: " + StartPosition + " Now: " + Position + " dragged: " + TotalDragged;
+            return "Drag - Σ " + TotalDragged + " start: " + StartPosition + " Now: " + Position;
         }
     }
 }

@@ -492,7 +492,8 @@ namespace Das.Views.Styles
                     nameof(IVisualElement.Class));
                 if (propAccessor.CanWrite)
                 {
-                    propAccessor.SetPropertyValue(ref visual, className);
+                    Object oVisual = visual;
+                    propAccessor.SetPropertyValue(ref oVisual, className);
                 }
             }
         }
@@ -504,7 +505,8 @@ namespace Das.Views.Styles
                 nameof(IVisualElement.Style));
             if (propAccessor.CanWrite)
             {
-                propAccessor.SetPropertyValue(ref visual, styleSheet);
+                Object oVisual = visual;
+                propAccessor.SetPropertyValue(ref oVisual, styleSheet);
             }
         }
 

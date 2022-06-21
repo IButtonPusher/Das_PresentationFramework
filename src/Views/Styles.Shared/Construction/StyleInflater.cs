@@ -42,6 +42,12 @@ namespace Das.Views.Styles.Construction
             return InflateCss(css);
         }
 
+        public ICascadingStyle InflateResourceCss(String resourceName)
+        {
+            var css = GetStringFromResource(resourceName);
+            return InflateCss(css);
+        }
+
         public IStyleSheet InflateXml(String xml)
         {
             var node = GetRootNode(xml);

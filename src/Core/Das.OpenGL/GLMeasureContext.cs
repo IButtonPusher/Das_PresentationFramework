@@ -6,7 +6,6 @@ using Das.Views.Colors;
 using Das.Views.Controls;
 using Das.Views.Core.Geometry;
 using Das.Views.Core.Writing;
-using Das.Views.Images;
 using Das.Views.Measuring;
 using Das.Views.Rendering;
 
@@ -27,10 +26,10 @@ namespace Das.OpenGL
         }
 
 
-        public override ValueSize MeasureImage(IImage img)
-        {
-            throw new NotImplementedException();
-        }
+        //public override ValueSize MeasureImage(IImage img)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
 
         public override ValueSize MeasureString(String s,

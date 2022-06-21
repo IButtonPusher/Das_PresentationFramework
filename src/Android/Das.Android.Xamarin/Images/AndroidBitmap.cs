@@ -15,9 +15,11 @@ namespace Das.Xamarin.Android
         {
             _unwrapLock = new Object();
 
-            _bmp = bmp!;
+            _bmp = bmp;
             _stream = stream;
             _isEmpty = bmp.Width == 1 && bmp.Height == 1;
+
+            HasInfiniteDimension = false;
         }
 
         Boolean IEquatable<ISize>.Equals(ISize other)
@@ -31,6 +33,8 @@ namespace Das.Xamarin.Android
         Boolean ISize.IsEmpty => _isEmpty;
 
         Double ISize.Width => _bmp.Width;
+
+        public Boolean HasInfiniteDimension { get; }
 
         void IDisposable.Dispose()
         {

@@ -55,7 +55,12 @@ namespace Das.OpenGL.Text
 
         public ValueSize MeasureString(String text)
         {
-            Single w = 0;
+
+           if (String.IsNullOrEmpty(text))
+              return ValueSize.Empty;
+
+
+           Single w = 0;
             var isUnderrun = false;
             Single overrun = 0;
             Single underrun = 0;

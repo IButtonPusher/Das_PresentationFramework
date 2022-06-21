@@ -5,7 +5,6 @@ using Das.OpenGL.Text.FreeType;
 using Das.OpenGL.Windows;
 using Das.Views;
 using Das.Views.Core.Writing;
-using Das.Views.Panels;
 using Das.Views.Updaters;
 using Das.Views.Windows;
 using Das.Views.Styles;
@@ -24,7 +23,7 @@ namespace Das.OpenGL
             _taskScheduler = new StaScheduler("Das GL Thread");
         }
 
-        public void Run(IView view)
+        public void Run(IVisualElement view)
         {
             var window = _windowBuilder.Show(view);
             Cook(window);
@@ -50,11 +49,9 @@ namespace Das.OpenGL
         {
             var context = GetContext(element);
             var fontProvider = GetFontProvider(context);
-            //var styleContext = new BaseStyleContext(DefaultStyle.Instance,
-            //    new DefaultColorPalette());
 
-            
-            
+
+
             var kit = new OpenGLRenderKit(fontProvider, context, BaselineThemeProvider.Instance,
                 new GLImageProvider());
 

@@ -48,11 +48,11 @@
     <Reference Include="Das.Container.Interfaces, Version=0.0.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Das.Container.Interfaces.0.0.8-alpha\lib\netstandard2.0\Das.Container.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="Das.Serializer, Version=0.0.21.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Das.Serializer.Split.0.0.21-alpha\lib\net45\Das.Serializer.dll</HintPath>
+    <Reference Include="Das.Serializer, Version=0.0.22.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Das.Serializer.Split.0.0.22-alpha\lib\net45\Das.Serializer.dll</HintPath>
     </Reference>
-    <Reference Include="Serializer.Interfaces, Version=0.0.21.0, Culture=neutral, PublicKeyToken=55ec9f54a6117381, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Das.Serializer.Interfaces.0.0.21-alpha\lib\net45\Serializer.Interfaces.dll</HintPath>
+    <Reference Include="Serializer.Interfaces, Version=0.0.22.0, Culture=neutral, PublicKeyToken=55ec9f54a6117381, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Das.Serializer.Interfaces.0.0.22-alpha\lib\net45\Serializer.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -108,6 +108,10 @@
     <ProjectReference Include="..\..\..\Tests\TestCommon\TestCommon.csproj">
       <Project>{6f5d2f7b-2d1d-4a5b-b1ae-654192afb3b8}</Project>
       <Name>TestCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\ViewModels\Das.ViewModels.Interfaces\Das.ViewModels.Interfaces.csproj">
+      <Project>{5fd8539b-c19b-4a4c-b217-0cc601307485}</Project>
+      <Name>Das.ViewModels.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\ViewModels\Das.ViewModels\Das.ViewModels.csproj">
       <Project>{e8ed9ca5-6316-4f1a-9c58-35334be1cb5e}</Project>

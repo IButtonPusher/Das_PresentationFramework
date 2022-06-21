@@ -18,6 +18,17 @@ namespace Das.Xamarin.Android.Mvvm
                       throw new ArgumentNullException(nameof(Activity.MainLooper));
         }
 
+        public override void Notify(String text)
+        {
+           throw new NotImplementedException();
+        }
+
+        public override Task NotifyAsync(String text,
+                                         String title)
+        {
+           throw new NotImplementedException();
+        }
+
         public override void BrowseToUri(bob uri)
         {
             Intent intent = new Intent(Intent.ActionView);
@@ -31,21 +42,49 @@ namespace Das.Xamarin.Android.Mvvm
             if (_looper.IsCurrentThread)
                 action();
             else
-                _activity.RunOnUiThread(action);
+            {
+               // _activity.RunOnUiThread(...) schedules the action so this would work like BeginInvoke
+               // but the InvokeCompletionSource allows us to block the current thread till it finishes
+               var src = new InvokeCompletionSource(action, _activity);
+                src.Task.ConfigureAwait(false);
+                src.Task.Wait();
+                
+            }
+        }
+
+        public override void BeginInvoke(Action action)
+        {
+            if (_looper.IsCurrentThread)
+                action();
+            else
+                _activity.RunOnUiThread(action); //non-blocking...
+        }
+
+        public override async Task InvokeAsync(Func<Task> action)
+        {
+           if (_looper.IsCurrentThread)
+           {
+              await action();
+              return;
+           }
+
+           var src = new InvokeCompletionSource(action, _activity);
+
+           await src.Task;
         }
 
         public override T Invoke<T>(Func<T> action)
         {
-            T res = default;
+            //T res = default;
 
             if (_looper.IsCurrentThread)
                 return action();
 
-            _activity.RunOnUiThread(() =>
-            {
-                res = action();
-            });
-            return res!;
+            var src = new InvokeCompletionSource<T>(action, _activity);
+
+            var res = src.Task.Result;
+
+            return res;
         }
 
         public override async Task<T> InvokeAsync<T>(Func<T> action)

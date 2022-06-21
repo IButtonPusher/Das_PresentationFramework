@@ -118,7 +118,6 @@ namespace Das.Views.Charting.Pie
                 renderContext.FillRectangle(rect, _legendBackground);
                 renderContext.DrawRect(rect, _legendOutline);
 
-
                 var i = 0;
                 rect.X = 10;
                 rect.Width -= 10;
@@ -131,6 +130,13 @@ namespace Das.Views.Charting.Pie
                     rect.Y += rect.Height + rowMargin;
                 }
             }
+        }
+
+        public override void Dispose()
+        {
+            DisposeLegend();
+
+           base.Dispose();
         }
 
 
@@ -184,23 +190,27 @@ namespace Das.Views.Charting.Pie
             //return _desiredSize;
         }
 
+        private void DisposeLegend()
+        {
+           lock (_legendLock)
+           {
+              foreach (var item in _legendItems)
+              {
+                 item.Dispose();
+              }
+
+              _legendItems.Clear();
+              _legendItemSizes.Clear();
+           }
+        }
+
         protected override void OnDataContextChanged(Object? newValue)
         {
-            lock (_legendLock)
-            {
-                foreach (var item in _legendItems)
-                {
-                    item.Dispose();
-                }
+            DisposeLegend();
 
-                _legendItems.Clear();
-                _legendItemSizes.Clear();
-            }
-
-            
             base.OnDataContextChanged(newValue);
 
-            if (!(newValue is IPieData<TKey, TValue> currentValue))
+            if (newValue is not IPieData<TKey, TValue> currentValue)
                 return;
 
             var data = currentValue.Items.OrderByDescending(v => v.Value).ToArray();

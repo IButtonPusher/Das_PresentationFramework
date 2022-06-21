@@ -6,18 +6,19 @@ using Android.Util;
 using Das.Extensions;
 using Das.Views.Core;
 using Das.Views.Core.Drawing;
-using Das.Views.Core.Geometry;
 using Das.Views.Images;
 using Das.Xamarin.Android.Rendering;
-using Path = Android.Graphics.Path;
 
 namespace Das.Xamarin.Android.Images
 {
     public class AndroidImageProvider : IImageProvider
     {
         public AndroidImageProvider(DisplayMetrics displayMetrics)
+                                    //IVisualContext visualContext)
         {
             _displayMetrics = displayMetrics;
+            // the visual context is too broad in scope for whatever this was intended for
+            //_visualContext = visualContext;
             _nullBitmapLock = new Object();
         }
 
@@ -47,7 +48,7 @@ namespace Das.Xamarin.Android.Images
             if (!stream.CanSeek)
             {
                 var img = BitmapFactory.DecodeStream(stream);
-                return GetScaledImage(img, null, imgMaxWidth, false);
+                return GetScaledImage(img, null, imgMaxWidth, false, true);
             }
 
             var options = new BitmapFactory.Options
@@ -63,7 +64,10 @@ namespace Das.Xamarin.Android.Images
                 scale++;
 
             if (scale == 1)
-                return GetImage(stream, isPreserveStream);
+            {
+               stream.Position = 0;
+               return GetImage(stream, isPreserveStream);
+            }
 
             options = new BitmapFactory.Options
             {
@@ -73,7 +77,7 @@ namespace Das.Xamarin.Android.Images
             var bmp = BitmapFactory.DecodeStream(stream, null,
                 options);
 
-            return GetScaledImage(bmp, stream, imgMaxWidth, isPreserveStream);
+            return GetScaledImage(bmp, stream, imgMaxWidth, isPreserveStream, true);
         }
 
         public IImage GetScaledImage(IImage input,
@@ -81,7 +85,7 @@ namespace Das.Xamarin.Android.Images
                                      Double height)
         {
             var bmp = input.Unwrap<Bitmap>();
-            return GetScaledImage(bmp, null, width, false);
+            return GetScaledImage(bmp, null, width, false, false);
         }
 
         public IImage? GetImage(Byte[] bytes) => GetImage(bytes, false);
@@ -107,7 +111,7 @@ namespace Das.Xamarin.Android.Images
                 if (_nullBitmap != null)
                     return _nullBitmap;
 
-                var resultBitmap = Bitmap.CreateBitmap(1, 1, Bitmap.Config.Argb8888);
+                var resultBitmap = Bitmap.CreateBitmap(1, 1, Bitmap.Config.Argb8888!);
                 _nullBitmap = new AndroidBitmap(resultBitmap!, null);
                 return _nullBitmap;
             }
@@ -117,36 +121,37 @@ namespace Das.Xamarin.Android.Images
 
         public IGraphicsPath GetNewGraphicsPath()
         {
-            return new AndroidGraphicsPath();
+           return new AndroidGraphicsPath();//_visualContext);
         }
 
-        public IImage GetImage(IGraphicsPath path,
-                               IColor foreground)
-        {
-            //var size = path.Size.ToRoundedSize();
-            var size = new ValueRoundedSize(24, 24);
-            var androidPath = path.Unwrap<Path>();
+        //public IImage GetImage(IGraphicsPath path,
+        //                       IColor foreground)
+        //{
+        //    //var size = path.Size.ToRoundedSize();
+        //    var size = new ValueRoundedSize(24, 24);
+        //    var androidPath = path.Unwrap<Path>();
 
-            var bmp = Bitmap.CreateBitmap(size.Width, size.Height, Bitmap.Config.Argb8888)
-                ?? throw new InvalidOperationException();
+        //    var bmp = Bitmap.CreateBitmap(size.Width, size.Height, Bitmap.Config.Argb8888)
+        //        ?? throw new InvalidOperationException();
 
-            var canvas = new Canvas(bmp);
-            using (var paint = new Paint())
-            {
-                paint.SetStyle(Paint.Style.Stroke);
-                paint.SetARGB(foreground.A, foreground.R, foreground.G, foreground.B);
-                //canvas.SetColor(pen);
-                canvas.DrawPath(androidPath, paint);
-            }
+        //    var canvas = new Canvas(bmp);
+        //    using (var paint = new Paint())
+        //    {
+        //        paint.SetStyle(Paint.Style.Stroke);
+        //        paint.SetARGB(foreground.A, foreground.R, foreground.G, foreground.B);
+        //        //canvas.SetColor(pen);
+        //        canvas.DrawPath(androidPath, paint);
+        //    }
 
-            return new AndroidBitmap(bmp, null);
-        }
+        //    return new AndroidBitmap(bmp, null);
+        //}
 
 
         private IImage GetScaledImage(Bitmap? img,
                                       Stream? stream,
                                       Double imgDesiredWidth,
-                                      Boolean isPreserveStream)
+                                      Boolean isPreserveStream,
+                                      Boolean isDisposeOriginal)
         {
             if (img == null)
             {
@@ -168,11 +173,13 @@ namespace Das.Xamarin.Android.Images
 
             var scaledBitmap = Bitmap.CreateScaledBitmap(img,
                 width, height, true);
-            img.Dispose();
+            if (isDisposeOriginal)
+               img.Dispose();
             return new AndroidBitmap(scaledBitmap!, null);
         }
 
         private readonly DisplayMetrics _displayMetrics;
+        //private readonly IVisualContext _visualContext;
         private readonly Object _nullBitmapLock;
 
         private AndroidBitmap? _nullBitmap;

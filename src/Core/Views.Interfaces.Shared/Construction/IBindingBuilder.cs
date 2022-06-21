@@ -9,11 +9,13 @@ namespace Das.Views.Construction
     {
         Task<Dictionary<String, IPropertyBinding>> GetBindingsDictionaryAsync(IMarkupNode node,
                                                                               Type? dataContextType,
-                                                                              Dictionary<String, String> nameSpaceAssemblySearch);
+                                                                              Dictionary<String, String>
+                                                                                  nameSpaceAssemblySearch);
 
-        //Dictionary<String, IDataBinding> GetBindingsDictionary(IMarkupNode node,
-        //                                                       Type? dataContextType,
-        //                                                       Dictionary<String, String> nameSpaceAssemblySearch);
+        Dictionary<String, IPropertyBinding> GetBindingsDictionary(IMarkupNode node,
+                                                                   Type? dataContextType,
+                                                                   Dictionary<String, String>
+                                                                       nameSpaceAssemblySearch);
 
         Type? InferDataContextTypeFromBindings(IEnumerable<IDataBinding> bindings,
                                                Type? currentGenericArg);

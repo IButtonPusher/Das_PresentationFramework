@@ -146,14 +146,14 @@ namespace Das.Views.Extended
                         var name = GetNameFromProperties(reader, meta);
                         var xform = GetModelTransformation(reader, fbxVersion);
 
-                        if (name == "Cone")
-                        {}
+                       
 
                         if (namedMeshes.TryGetValue(name, out var m))
                         {
-                            if (m.Name == "Cylinder.003")
+                            //if (m.Name == "Cylinder.003")
                             {
-                                m.Transform(xform);
+                               m.Transformation = xform;
+                                //m.Transform(xform);
                                 yield return m;
                             }
 
@@ -174,11 +174,11 @@ namespace Das.Views.Extended
         private static Transformation3D GetModelTransformation(BinaryReader reader,
                                                                Double fbxVersion)
         {
-            ValueVector3? positionOffset = null;
-            ValueVector3? rotation= null;
-            ValueVector3? scale= null;
+           var positionOffset = new ValueVector3(0, 0, 0);
+           var rotation = new ValueVector3(0, 0, 0);
+           var scale = new ValueVector3(1, 1, 1);
 
-            while (true)
+           while (true)
             {
                 var meta = GetNodeMeta(reader, fbxVersion);
 
@@ -237,12 +237,7 @@ namespace Das.Views.Extended
                 }
             }
 
-            if (positionOffset == null || rotation == null || scale == null)
-                throw new InvalidOperationException();
-
-            return new Transformation3D(positionOffset.Value, 
-                rotation.Value, 
-                scale.Value);
+            return new Transformation3D(positionOffset, rotation, scale);
         }
 
         private static Object[] GetPropertyValues(BinaryReader reader,
@@ -597,8 +592,8 @@ namespace Das.Views.Extended
         private async Task CheckHeaderAsync(Stream stream)
         {
             var buf = new Byte[_standardHeaderLength];
-            await stream.ReadAsync(buf, 0, _standardHeaderLength).ConfigureAwait(false);
-            if (!AreEqual(_standardHeader, buf))
+            var amountRead = await stream.ReadAsync(buf, 0, _standardHeaderLength).ConfigureAwait(false);
+            if (amountRead != _standardHeaderLength || !AreEqual(_standardHeader, buf))
                 throw new InvalidOperationException("Invalid header");
         }
 
@@ -654,7 +649,7 @@ namespace Das.Views.Extended
 			}
 			try
 			{
-                for (Int32 i = 0; i < len; i++)
+                for (var i = 0; i < len; i++)
                 {
                     ret[i] = readPrimitive(s);
                     //ret.SetValue(readPrimitive(s), i);
@@ -670,17 +665,18 @@ namespace Das.Views.Extended
 				{
 					stream.BaseStream.Position = endPos - sizeof(Int32);
 					var checksumBytes = new Byte[sizeof(Int32)];
-					stream.BaseStream.Read(checksumBytes, 0, checksumBytes.Length);
-					Int32 checksum = 0;
-					for (Int32 i = 0; i < checksumBytes.Length; i++)
-						checksum = (checksum << 8) + checksumBytes[i];
-					if(checksum != ((DeflateWithChecksum)s.BaseStream).Checksum)
+					var returned = stream.BaseStream.Read(checksumBytes, 0, checksumBytes.Length);
+					var checksum = 0;
+                    //for (var i = 0; i < checksumBytes.Length; i++)
+                    for (var i = 0; i < returned; i++)
+                    {
+                        checksum = (checksum << 8) + checksumBytes[i];
+                    }
+
+                    if(checksum != ((DeflateWithChecksum)s.BaseStream).Checksum)
 						throw new Exception("Compressed data has invalid checksum");
 				}
-				//else
-				//{
-				//	stream.BaseStream.Position = endPos;
-				//}
+				
 			}
 			return ret;
 		}

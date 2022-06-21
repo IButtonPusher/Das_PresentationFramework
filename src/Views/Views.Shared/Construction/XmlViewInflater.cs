@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Views.Layout;
 
@@ -53,7 +52,7 @@ namespace Das.Views.Construction
         private async Task<IVisualElement> InflateXmlImpl(String xml,
                                               IDictionary<String, String> searchSeed)
         {
-            var sw = Stopwatch.StartNew();
+            //var sw = Stopwatch.StartNew();
 
             var node = GetRootNode(xml);
             
@@ -64,7 +63,7 @@ namespace Das.Views.Construction
             var res = await GetVisualAsync(node, null, nsAsmSearch, lineage,
                 _appliedStyleBuilder.ApplyVisualStylesAsync).ConfigureAwait(false);
 
-            Debug.WriteLine("Inflated visual in " + sw.ElapsedMilliseconds + " ms");
+            //Debug.WriteLine("Inflated visual in " + sw.ElapsedMilliseconds + " ms");
 
             
             lineage.AssertPopVisual(res);

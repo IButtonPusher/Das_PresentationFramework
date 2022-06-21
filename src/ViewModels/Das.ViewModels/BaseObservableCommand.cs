@@ -1,15 +1,16 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Das.Serializer;
+using System.Windows.Input;
+//using Das.Serializer;
 using Das.Views;
 using Das.Views.Mvvm;
 
 namespace Das.ViewModels
 {
     public class BaseObservableCommand : NotifyPropertyChangedBase,
-                                         IObservableCommand
+                                         IObservableCommand,
+                                         ICommand
     {
         public BaseObservableCommand(Action execute,
                                      IUiProvider uiThread)
@@ -27,18 +28,18 @@ namespace Das.ViewModels
             _canExecute = CanIExecute;
         }
 
-        public BaseObservableCommand(Action execute,
-                                     IObjectManipulator typeManipulator,
-                                     INotifyPropertyChanged viewModel,
-                                     String propertyName,
-                                     IUiProvider uiProvider)
-            : this(execute,
-                _ => typeManipulator.GetPropertyValue<Boolean>(viewModel, propertyName),
-                uiProvider)
-        {
-            _propertyName = propertyName;
-            viewModel.PropertyChanged += OnViewModelPropertyChanged;
-        }
+        //public BaseObservableCommand(Action execute,
+        //                             IObjectManipulator typeManipulator,
+        //                             INotifyPropertyChanged viewModel,
+        //                             String propertyName,
+        //                             IUiProvider uiProvider)
+        //    : this(execute,
+        //        _ => typeManipulator.GetPropertyValue<Boolean>(viewModel, propertyName),
+        //        uiProvider)
+        //{
+        //    _propertyName = propertyName;
+        //    viewModel.PropertyChanged += OnViewModelPropertyChanged;
+        //}
 
         public BaseObservableCommand(Action execute,
                                      Predicate<Object> canExecute,
@@ -141,16 +142,16 @@ namespace Das.ViewModels
             await _uiProvider.InvokeAsync(() => { CanExecuteChanged?.Invoke(canExecute, EventArgs.Empty); });
         }
 
-        private async void OnViewModelPropertyChanged(Object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName != _propertyName)
-                return;
+        //private async void OnViewModelPropertyChanged(Object sender, PropertyChangedEventArgs e)
+        //{
+        //    if (e.PropertyName != _propertyName)
+        //        return;
 
-            if (Interlocked.Increment(ref _canExecutions) == 1)
-                await _uiProvider.InvokeAsync(() => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
+        //    if (Interlocked.Increment(ref _canExecutions) == 1)
+        //        await _uiProvider.InvokeAsync(() => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
 
-            Interlocked.Decrement(ref _canExecutions);
-        }
+        //    Interlocked.Decrement(ref _canExecutions);
+        //}
 
 
         public event EventHandler? CanExecuteChanged;
@@ -166,12 +167,12 @@ namespace Das.ViewModels
         private readonly Action? _execute;
 
         private readonly Func<Task>? _executeAsync;
-        private readonly String? _propertyName;
+        //private readonly String? _propertyName;
         private readonly IUiProvider _uiProvider;
 
 
         private Boolean _canExecuteVal;
-        private Int32 _canExecutions;
+        //private Int32 _canExecutions;
 
 
         private String? _description;

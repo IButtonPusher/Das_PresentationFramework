@@ -5,6 +5,7 @@ namespace Das.Views.Styles.Transitions
     public enum Easing
     {
         QuadraticOut,
-        QuintOut
+        QuintOut,
+        Linear
     }
 }

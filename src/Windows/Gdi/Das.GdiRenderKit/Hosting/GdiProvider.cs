@@ -7,11 +7,13 @@ using Das.Gdi.Controls;
 using Das.Gdi.Core;
 using Das.Gdi.Kits;
 using Das.Views;
+using Das.Views.Colors;
 using Das.Views.Core.Geometry;
 using Das.Views.DataBinding;
 using Das.Views.Mvvm;
 using Das.Views.Panels;
 using Das.Views.Rendering;
+using Das.Views.Styles;
 
 namespace Das.Gdi
 {
@@ -25,18 +27,20 @@ namespace Das.Gdi
             VisualBootstrapper = renderKit.VisualBootstrapper;
         }
 
-        public GdiProvider(IResolver container)
+        public GdiProvider(IResolver container,
+                           IThemeProvider themeProvider)
         {
-            RenderKit = GetKit(this, container);
+            RenderKit = GetKit(this, container, themeProvider);
             VisualBootstrapper = RenderKit.VisualBootstrapper;
         }
 
         // ReSharper disable once UnusedMember.Global
-        public GdiProvider() : this(new BaseResolver())
+        public GdiProvider() : this(new BaseResolver(),
+           BaselineThemeProvider.Instance)
         {
         }
 
-        public void Run(IView view)
+        public void Run(IVisualElement view)
         {
             var window = Show(view);
 
@@ -46,13 +50,13 @@ namespace Das.Gdi
         public IVisualBootstrapper VisualBootstrapper { get; }
 
 
-        public ViewWindow Show<TRectangle>(IView view,
+        public ViewWindow Show<TRectangle>(IVisualElement view,
                                            TRectangle rect)
             where TRectangle : IRectangle
         {
             //var styleContext = view.StyleContext;
 
-            var control = new GdiHostedElement(view);
+            var control = new GdiHostedElement(view, RenderKit.VisualBootstrapper);
             var form = new ViewWindow(control);
             Cook(form);
 
@@ -63,11 +67,11 @@ namespace Das.Gdi
             return form;
         }
 
-        public ViewWindow Show(IView view)
+        public ViewWindow Show(IVisualElement view)
         {
             //var styleContext = view.StyleContext;
 
-            var control = new GdiHostedElement(view);
+            var control = new GdiHostedElement(view, RenderKit.VisualBootstrapper);
             var form = new ViewWindow(control);
             Cook(form);
 
@@ -91,7 +95,7 @@ namespace Das.Gdi
                                                  IView view)
             where TViewModel : IViewModel
         {
-            var control = new GdiHostedElement(view);
+            var control = new GdiHostedElement(view, RenderKit.VisualBootstrapper);
             
             Cook(control);
 
@@ -105,7 +109,7 @@ namespace Das.Gdi
         public GdiHostedElement HostStatic<TViewModel>(TViewModel viewModel
                                                        , IView view)
         {
-            var control = new GdiHostedElement(view);
+            var control = new GdiHostedElement(view, RenderKit.VisualBootstrapper);
             var renderer = new BitmapRenderer(control,
                 RenderKit.MeasureContext, RenderKit.RenderContext);
 
@@ -122,7 +126,7 @@ namespace Das.Gdi
             //where TViewModel : IViewModel
         {
 
-            var control = new GdiHostedElement(view);
+            var control = new GdiHostedElement(view, RenderKit.VisualBootstrapper);
             var form = new ViewWindow(control);
             Cook(form);
 
@@ -143,10 +147,12 @@ namespace Das.Gdi
         }
 
         private static GdiRenderKit GetKit(IWindowProvider<IVisualHost> windowProvider,
-                                           IResolver container)
+                                           IResolver container,
+                                           IThemeProvider themeProvider)
         {
             var perspective = new BasePerspective();
-            var kit = new GdiRenderKit(perspective, windowProvider, container);
+            var kit = new GdiRenderKit(perspective, windowProvider, 
+               container, themeProvider);
                 //BaselineThemeProvider.Instance,
                 //container);
             return kit;

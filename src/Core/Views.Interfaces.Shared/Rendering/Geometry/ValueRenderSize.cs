@@ -18,6 +18,8 @@ namespace Das.Views.Core.Geometry
             Height = height;
             Width = width;
             Offset = offset;
+
+            HasInfiniteDimension = Double.IsInfinity(Width) || Double.IsInfinity(Height);
         }
 
         [DebuggerStepThrough]
@@ -38,6 +40,7 @@ namespace Das.Views.Core.Geometry
             }
 
             Offset = offset;
+            HasInfiniteDimension = Double.IsInfinity(Width) || Double.IsInfinity(Height);
         }
 
         public ValueRenderSize(Double width,
@@ -56,15 +59,7 @@ namespace Das.Views.Core.Geometry
             return GeometryHelper.AreSizesEqual(this, other);
         }
 
-        //IRenderSize IRenderSize.PlusVertical(ISize adding)
-        //{
-        //    return GeometryHelper.PlusRenderVertical(this, adding);
-        //}
-
-        //public IRenderSize Reduce(Thickness padding)
-        //{
-        //    return GeometryHelper.Reduce(this, padding);
-        //}
+       
 
         public ValueRenderRectangle ToFullRectangle()
         {
@@ -81,16 +76,18 @@ namespace Das.Views.Core.Geometry
         //    return DeepCopy();
         //}
 
-        public IRenderSize DeepCopy()
-        {
-            return new ValueRenderSize(Width, Height, Offset);
-        }
+        //public IRenderSize DeepCopy()
+        //{
+        //    return new ValueRenderSize(Width, Height, Offset);
+        //}
 
         public Double Height { get; }
 
         public Boolean IsEmpty => Width.IsZero() && Height.IsZero();
 
         public Double Width { get; }
+
+        public Boolean HasInfiniteDimension { get; }
 
         //ISize ISize.Reduce(Thickness padding)
         //{
@@ -112,22 +109,6 @@ namespace Das.Views.Core.Geometry
             return GeometryHelper.Minus(this, subtract);
         }
 
-        //ISize ISize.Minus(ISize subtract)
-        //{
-        //    return Minus(subtract);
-        //}
-
-        //public Double CenterY(ISize item)
-        //{
-        //    return GeometryHelper.CenterY(this, item);
-        //}
-
-        //public Double CenterX(ISize item)
-        //{
-        //    return GeometryHelper.CenterX(this, item);
-        //}
-
-
         public IPoint2D Offset { get; }
 
         public Boolean Equals(IRenderSize other)
@@ -140,10 +121,6 @@ namespace Das.Views.Core.Geometry
             return "Width: " + Width + " Height: " + Height;
         }
 
-        //ISize ISize.Divide(Double pct)
-        //{
-        //    return new ValueSize(Width * pct, Height * pct);
-        //}
 
         public static readonly ValueRenderSize Empty = new ValueRenderSize(0, 0);
 

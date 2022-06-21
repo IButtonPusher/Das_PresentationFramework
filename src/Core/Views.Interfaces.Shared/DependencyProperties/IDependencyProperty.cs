@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Views.DependencyProperties;
 using Das.Views.Transitions;
 
@@ -9,18 +10,20 @@ namespace Das.Views
     {
         Object? GetValue(IVisualElement visual);
 
-        
+
         void SetValue(IVisualElement visual,
                       Object? value);
 
         void SetValueNoTransitions(IVisualElement visual,
-                      Object? value);
+                                   Object? value);
 
         void SetValueFromStyle(IVisualElement visual,
                                Object? value);
-        
+
+        void ClearValue(IVisualElement visual);
+
         void SetComputedValueFromStyle(IVisualElement visual,
-                               Func<IVisualElement, Object?> value);
+                                       Func<IVisualElement, Object?> value);
 
         void AddOnChangedHandler(IVisualElement visual,
                                  Action<IDependencyProperty> onChange);
@@ -31,7 +34,9 @@ namespace Das.Views
         Object? DefaultValue { get; }
 
         Type PropertyType { get; }
-        
+
         Type VisualType { get; }
+
+        Boolean IsReadOnly { get; }
     }
 }

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+	<UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<LangVersion>10</LangVersion>
+    <Nullable>enable</Nullable>
+	<RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+    <EnableNETAnalyzers>False</EnableNETAnalyzers>
+    <AnalysisLevel>none</AnalysisLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\ViewModels\Das.ViewModels.Interfaces\Das.ViewModels.Interfaces.csproj" />
+    <ProjectReference Include="..\..\..\ViewModels\Das.ViewModels\Das.ViewModels.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\Das.Wpf.Shared\Das.Wpf.Shared.projitems" Label="Shared" />
+
+</Project>

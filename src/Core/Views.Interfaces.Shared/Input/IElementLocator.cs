@@ -6,30 +6,21 @@ using Das.Views.Rendering;
 
 namespace Das.Views.Input
 {
-    public interface IElementLocator
-    {
-        IEnumerable<IRenderedVisual> GetElementsAt<TPoint>(TPoint point2D)
-            where TPoint : IPoint2D;
-
-        IEnumerable<IRenderedVisual<IHandleInput<T>>> GetRenderedVisualsForMouseInput<T, TPoint>(
-            TPoint point2D,
-            InputAction inputAction)
-            where T : IInputEventArgs
-            where TPoint : IPoint2D;
-
-        IEnumerable<TVisual> GetVisualsForInput<TVisual, TPoint>(TPoint point2D,
-                                                                 InputAction inputAction)
-            where TVisual : class
-            where TPoint : IPoint2D;
-
-        IEnumerable<IHandleInput<T>> GetVisualsForMouseInput<T, TPoint>(TPoint point2D,
-                                                                        InputAction inputAction)
-            where T : IInputEventArgs
-            where TPoint : IPoint2D;
+   public interface IElementLocator
+   {
+      IVisualElement? RootVisual { get; }
 
 
-        ICube? TryGetElementBounds(IVisualElement element);
+      IEnumerable<IRenderedVisual<IHandleInput<T>>> GetRenderedVisualsForMouseInput<T, TPoint>(TPoint point2D,
+         InputAction inputAction)
+         where T : IInputEventArgs
+         where TPoint : IPoint2D;
 
-        ICube? TryGetLastRenderBounds(IVisualElement element);
-    }
+
+      Boolean TryGetElementBounds(IVisualElement element,
+                                  out ValueCube bounds);
+
+      Boolean TryGetLastRenderBounds(IVisualElement element,
+                                     out ValueCube bounds);
+   }
 }

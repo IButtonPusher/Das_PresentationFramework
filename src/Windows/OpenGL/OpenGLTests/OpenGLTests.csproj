@@ -10,6 +10,8 @@
     <AssemblyName>OpenGLTests</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -47,7 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HelloTriangle.cs" />
+    <Compile Include="Samples\00_HelloBase.cs" />
+    <Compile Include="Samples\02_HelloTriangle.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -57,12 +60,20 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Samples\03_HelloShaders.cs" />
     <Compile Include="ShaderProgram.cs" />
+    <Compile Include="TestBitmap.cs" />
+    <Compile Include="TestGraphicsPath.cs" />
+    <Compile Include="TestImageProvider.cs" />
     <Compile Include="TestOpenGLPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="TestTypeConverter.cs" />
     <Compile Include="VertexBuffer.cs" />
     <Compile Include="VertexBufferArray.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -81,6 +92,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Samples\03_Shader.fs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Samples\03_Shader.vs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Shader.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -92,6 +109,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\3D\Das.Views.3d\Das.Views.3d.csproj">
+      <Project>{38da919c-2399-4e7c-885a-02e71c785851}</Project>
+      <Name>Das.Views.3d</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Core\Das.OpenGL\Das.OpenGL.csproj">
       <Project>{f48cb532-2a19-46c5-9404-e059434425c6}</Project>
       <Name>Das.OpenGL</Name>
@@ -99,6 +120,14 @@
     <ProjectReference Include="..\..\..\Core\Das.View.Interfaces\Das.Views.Interfaces.csproj">
       <Project>{694f0d45-3e66-40f3-be93-1aac0921befb}</Project>
       <Name>Das.Views.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Tests\TestCommon\TestCommon.csproj">
+      <Project>{6f5d2f7b-2d1d-4a5b-b1ae-654192afb3b8}</Project>
+      <Name>TestCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\ViewModels\Das.ViewModels.Interfaces\Das.ViewModels.Interfaces.csproj">
+      <Project>{5fd8539b-c19b-4a4c-b217-0cc601307485}</Project>
+      <Name>Das.ViewModels.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\ViewModels\Das.ViewModels\Das.ViewModels.csproj">
       <Project>{e8ed9ca5-6316-4f1a-9c58-35334be1cb5e}</Project>
@@ -113,5 +142,6 @@
       <Name>Das.OpenGL.Windows</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -88,6 +88,19 @@ namespace Das.Views.Winforms
             return await src.Task;
         }
 
+        public static async Task RunInvokeAsync(this Control ctrl, 
+                                                      Func<Task> action)
+        {
+           if (!ctrl.InvokeRequired)
+           {
+              await action();
+              return;
+           }
+
+           var src = new InvokeActionCompletionSource<Task>(action, ctrl);
+           await src.Task;
+        }
+
         public static async Task<TOutput> RunInvokeAsync<TInput, TOutput>(this Control ctrl,
                                                                  TInput input,
                                                                  Func<TInput, TOutput> action)

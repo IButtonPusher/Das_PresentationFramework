@@ -22,12 +22,9 @@ namespace Das.Xamarin.Android.Controls
         {
             return _uiProvider.Invoke(() =>
             {
-                if (!(element is HtmlPanel pnl))
-                    throw new InvalidOperationException();
+                if (element is not HtmlPanel pnl)
+                    throw new InvalidCastException($"{element} is not of type {typeof(HtmlPanel)}");
 
-                //var webView = new WebView(_viewGroup.Context);
-                //var surrogate = new HtmlSurrogate2(_viewGroup.Context, pnl, webView, _uiProvider, _viewGroup);
-                
                 var surrogate = new HtmlSurrogate(pnl, _viewGroup.Context, _viewGroup, _uiProvider);
 
                 _viewGroup.AddView(surrogate);

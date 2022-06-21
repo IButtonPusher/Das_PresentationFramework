@@ -1,163 +1,164 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Das.Extensions;
+using Das.Views.Rendering.Geometry;
 
 namespace Das.Views.Core.Geometry
 {
-    public readonly struct ValueCube : ICube
-    {
-        public ValueCube(Double x,
-                         Double y,
-                         ISize size,
-                         Double depth)
-            : this(x, y, size.Width, size.Height, depth)
-        {
-        }
+   public readonly struct ValueCube : ICube
+   {
+      public ValueCube(Double x,
+                       Double y,
+                       ISize size,
+                       Double depth)
+         : this(x, y, size.Width, size.Height, depth)
+      {
+      }
 
-        public ValueCube(IPoint2D position,
-                         ISize size,
-                         Double depth)
-            : this(position.X, position.Y, size.Width, size.Height, depth)
-        {
-        }
+      public ValueCube(IPoint2D position,
+                       ISize size,
+                       Double depth)
+         : this(position.X, position.Y, size.Width, size.Height, depth)
+      {
+      }
 
-        public ValueCube(IPoint2D position,
-                         Double width,
-                         Double height,
-                         Double depth)
-            : this(position.X, position.Y, width, height, depth)
-        {
-        }
+      public ValueCube(IPoint2D position,
+                       Double width,
+                       Double height,
+                       Double depth)
+         : this(position.X, position.Y, width, height, depth)
+      {
+      }
 
-        //ISize ISize.Divide(Double pct)
-        //{
-        //    return GeometryHelper.Divide(this, pct);
-        //}
+      public ValueCube(Double x,
+                       Double y,
+                       Double width,
+                       Double height,
+                       Double depth)
+      {
+         X = x;
+         Y = y;
+         Width = width;
+         Height = height;
+         Depth = depth;
 
-        public ValueCube(Double x,
-                         Double y,
-                         Double width,
-                         Double height,
-                         Double depth)
-        {
-            X = x;
-            Y = y;
-            Width = width;
-            Height = height;
-            Depth = depth;
-        }
+         HasInfiniteDimension = Double.IsInfinity(Width) || Double.IsInfinity(Height);
+      }
 
-        public ValueCube(IRectangle start, 
-                         Double depth) 
-        : this(start.X, start.Y, start.Width, start.Height, depth)
-        {
-            Depth = depth;
-        }
+      public ValueCube(IRectangle start,
+                       Double depth)
+         : this(start.X, start.Y, start.Width, start.Height, depth)
+      {
+         Depth = depth;
+      }
 
-        IPoint2D IRectangle.TopLeft => TopLeft;
+      public ValueCube(ValueRenderRectangle start,
+                       Double depth)
+      {
+         X = start.X;
+         Y = start.Y;
+         Width = start.Width;
+         Height = start.Height;
 
-        IPoint2D IRectangle.TopRight => TopRight;
+         Depth = depth;
 
-        IPoint2D IRectangle.BottomLeft => BottomLeft;
+         HasInfiniteDimension = Double.IsInfinity(Width) || Double.IsInfinity(Height);
+      }
 
-        IPoint2D IRectangle.BottomRight => BottomRight;
+      IPoint2D IRectangle.TopLeft => TopLeft;
 
-        public Point2D BottomLeft => new Point2D(Left, Top + Height);
+      IPoint2D IRectangle.TopRight => TopRight;
 
-        public Point2D BottomRight => new Point2D(Left + Width, Top + Height);
+      IPoint2D IRectangle.BottomLeft => BottomLeft;
 
-        public Point2D TopLeft => new Point2D(Left, Top);
+      IPoint2D IRectangle.BottomRight => BottomRight;
 
-        public Point2D TopRight => new Point2D(Left + Width, Top);
+      public Point2D BottomLeft => new Point2D(Left, Top + Height);
 
-        public Double X { get; }
+      public Point2D BottomRight => new Point2D(Left + Width, Top + Height);
 
-        public Double Y { get; }
+      public Point2D TopLeft => new Point2D(Left, Top);
 
-        public Double Bottom => Y + Height;
+      public Point2D TopRight => new Point2D(Left + Width, Top);
 
-        public Double Left => X;
+      public Double X { get; }
 
-        public Double Right => X + Width;
+      public Double Y { get; }
 
-        public Double Top => Y;
+      public Double Bottom => Y + Height;
 
-        public Double Height { get; }
+      public Double Left => X;
 
-        public Boolean IsEmpty => Width.IsZero() && Height.IsZero();
+      public Double Right => X + Width;
 
-        public Double Width { get; }
+      public Double Top => Y;
 
-        //public ISize Reduce(Thickness padding)
-        //{
-        //    return GeometryHelper.Reduce(this, padding);
-        //}
+      public Double Height { get; }
 
-        //ISize ISize.Minus(ISize subtract)
-        //{
-        //    return GeometryHelper.Minus(this, subtract);
-        //}
+      public Boolean IsEmpty => Width.IsZero() && Height.IsZero();
 
-        public IPoint2D Location => TopLeft;
+      public Double Width { get; }
 
-        public ISize Size => new ValueSize(Width, Height);
+      public Boolean HasInfiniteDimension { get; }
 
-        public Boolean Contains(IPoint2D point2D)
-        {
-            return GeometryHelper.IsRectangleContains(this, point2D);
-        }
+      public IPoint2D Location => TopLeft;
 
-        public Boolean Contains(Int32 x, Int32 y)
-        {
-            return GeometryHelper.IsRectangleContains(this, x, y);
-        }
+      public ISize Size => new ValueSize(Width, Height);
 
-        public Boolean Contains(Double x, Double y)
-        {
-            return GeometryHelper.IsRectangleContains(this, x, y);
-        }
+      public Boolean Contains(IPoint2D point2D)
+      {
+         return GeometryHelper.IsRectangleContains(this, point2D);
+      }
 
-        //public ISize PlusVertical(ISize adding)
-        //{
-        //    return GeometryHelper.PlusVertical(this, adding);
-        //}
+      public Boolean Contains(Int32 x,
+                              Int32 y)
+      {
+         return GeometryHelper.IsRectangleContains(this, x, y);
+      }
 
-        public Boolean Equals(ISize other)
-        {
-            return GeometryHelper.AreSizesEqual(this, other);
-        }
+      public Boolean Contains(Double x,
+                              Double y)
+      {
+         return GeometryHelper.IsRectangleContains(this, x, y);
+      }
 
-        void IRectangle.Union(IRectangle rect)
-        {
-            throw new NotSupportedException();
-        }
+      public Boolean Equals(ISize other)
+      {
+         return GeometryHelper.AreSizesEqual(this, other);
+      }
 
-        //ISize IDeepCopyable<ISize>.DeepCopy()
-        //{
-        //    return new ValueSize(Width, Height);
-        //}
+      public Boolean IntersectsWith(IRectangle rect)
+      {
+         return GeometryHelper.IsRectanglesIntersect(this, rect);
+      }
 
-        public Boolean Equals(IRectangle other)
-        {
-            return GeometryHelper.AreRectsEqual(this, other);
-        }
+      void IRectangle.Union(IRectangle rect)
+      {
+         throw new NotSupportedException();
+      }
 
-        public override String ToString()
-        {
-            return $"x: {Left:0.0}, y: {Top:0.0} w: {Width:0.0} h: {Height:0.0}";
-        }
+      public Boolean Equals(IRectangle other)
+      {
+         return GeometryHelper.AreRectsEqual(this, other);
+      }
 
-        public Double CenterY(ISize item)
-        {
-            return GeometryHelper.CenterY(this, item);
-        }
+      public override String ToString()
+      {
+         return $"x: {Left:0.0}, y: {Top:0.0} w: {Width:0.0} h: {Height:0.0}";
+      }
 
-        public Double CenterX(ISize item)
-        {
-            return GeometryHelper.CenterX(this, item);
-        }
+      public Double CenterY(ISize item)
+      {
+         return GeometryHelper.CenterY(this, item);
+      }
 
-        public static ValueCube Empty = new ValueCube(0, 0, 0, 0, 0);
+      public Double CenterX(ISize item)
+      {
+         return GeometryHelper.CenterX(this, item);
+      }
 
-        public Double Depth { get; }
-    }
+      public static ValueCube Empty = new ValueCube(0, 0, 0, 0, 0);
+
+      public Double Depth { get; }
+   }
 }

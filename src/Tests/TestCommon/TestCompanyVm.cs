@@ -11,7 +11,7 @@ namespace TestCommon
         public TestCompanyVm() 
             : base("ACME Inc.")//, MakeAScene())
         {
-            var address1 = new AddressVm
+           var address1 = new AddressVm
             {
                 HouseNumber = "11280",
                 Street = "NW 35th Court",
@@ -38,7 +38,10 @@ namespace TestCommon
             var john = new EmployeeViewModel { FirstName = "john", LastName = "doe", Addresses = addies };
             var bobJr = new EmployeeViewModel { FirstName = "bob", LastName = "jones" };
 
-            Employees.AddRange(new List<EmployeeViewModel>{ larry, curly, moe, bob, john, bobJr });
+            var allMyEmployees = new List<EmployeeViewModel> { larry, curly, moe, bob, john, bobJr };
+            foreach (var employee in allMyEmployees)
+                Employees.Add(employee);
+            //Employees.AddRange(new List<EmployeeViewModel>{ larry, curly, moe, bob, john, bobJr });
         }
 
         //private static IScene MakeAScene()

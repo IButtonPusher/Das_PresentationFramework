@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
-using Das.Views.Panels;
+
 // ReSharper disable UnusedMember.Global
 
 namespace Das.Views
@@ -9,10 +9,10 @@ namespace Das.Views
     public interface IWindowProvider<out TWindow> : IWindowNotifier<TWindow>
         where TWindow : IVisualHost
     {
-        TWindow Show<TRectangle>(IView view,
+        TWindow Show<TRectangle>(IVisualElement view,
                                  TRectangle rect)
             where TRectangle : IRectangle;
 
-        TWindow Show(IView view);
+        TWindow Show(IVisualElement visual);
     }
 }
