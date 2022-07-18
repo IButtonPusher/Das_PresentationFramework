@@ -150,11 +150,11 @@ namespace OpenGLTests.Samples
       protected readonly OpenGLVersion _requestedOpenGLVersion;
       protected readonly GLNativeWindowBuilder _windowBuilder;
       protected Size _currentSize;
-      protected IntPtr _deviceContextHandle = IntPtr.Zero;
+      protected IntPtr _deviceContextHandle;
       protected IntPtr _dibSectionDeviceContext = IntPtr.Zero;
-      protected IntPtr _renderContextHandle = IntPtr.Zero;
+      protected IntPtr _renderContextHandle;
       protected Int32 _roundedHeight;
       protected Int32 _roundedWidth;
-      protected IntPtr _windowHandle = IntPtr.Zero;
+      protected IntPtr _windowHandle;
    }
 }
