@@ -14,6 +14,7 @@ using Das.Views.Styles;
 using Das.Views.Styles.Construction;
 using Das.Views.Templates;
 using TestCommon;
+// ReSharper disable UnusedVariable
 
 namespace OpenGLTests
 {
@@ -45,6 +46,7 @@ namespace OpenGLTests
          Application.Run(new Form1());
       }
 
+      // ReSharper disable once UnusedMember.Local
       private static void RunTest()
       {
          var serializer = new DasSerializer();

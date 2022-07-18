@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection.Emit;
 using System.Threading.Tasks;
 
-namespace AssaultWare.Business;
+namespace RuntimeCode.Shared;
 
 // ReSharper disable once UnusedType.Global
 public class ThrowawayLocalVariable<T> : LocalVariable<T>,
@@ -47,6 +46,11 @@ public abstract class LocalVariable
     public LocalVariable(LocalBuilder localBuilder)
     {
         _localBuilder = localBuilder;
+    }
+
+    public static implicit operator LocalBuilder(LocalVariable? me)
+    {
+        return me?._localBuilder!;
     }
 
     public Type LocalType => _localBuilder.LocalType ?? throw new NullReferenceException();

@@ -55,15 +55,12 @@ namespace CaddyCore
          
 
             await TaskEx.WhenAll(waitForMeeee).ConfigureAwait(false);
-
-         
         }
 
 
         public static TValue GetOrAddNew<TKey, TValue>(this IDictionary<TKey, TValue> dictionary,
                                                                  TKey key)
             where TValue : new()
-            //where TDictionary : IDictionary<TKey, TValue>
         {
             if (!dictionary.TryGetValue(key, out var val))
             {
@@ -72,6 +69,52 @@ namespace CaddyCore
             }
 
             return val;
+        }
+
+        public static TValue GetOrAddNew<TKey, TValue, TData>(this IDictionary<TKey, TValue> dictionary,
+                                                       TKey key,
+                                                       TData data,
+                                                       Func<TData, TValue> newBldr)
+        {
+            if (!dictionary.TryGetValue(key, out var val))
+            {
+                val = newBldr(data);
+                dictionary.Add(key, val);
+            }
+
+            return val;
+        }
+
+        public static void AddToValueList<TKey, TValues, TValue>(
+            this IDictionary<TKey, TValues> dictionary,
+            TKey key,
+            TValue value)
+            where TValues : IList<TValue>, new()
+        {
+            if (!dictionary.TryGetValue(key, out var val))
+            {
+                val = new();
+                dictionary.Add(key, val);
+            }
+
+            val.Add(value);
+        }
+
+        public static void AddToValueList<TKey, TValues, TValue, TNewArg>(
+            this IDictionary<TKey, TValues> dictionary,
+            TKey key,
+            TValue value,
+            TNewArg newArg,
+            Func<TNewArg, TValues> buildNew)
+            where TValues : IList<TValue>
+        {
+            if (!dictionary.TryGetValue(key, out var val))
+            {
+                val = buildNew(newArg);
+                dictionary.Add(key, val);
+            }
+
+            val.Add(value);
         }
 
         public static async Task InvokeAsyncEvent<TArgs>(this Func<TArgs, Task>? @delegate,
@@ -130,8 +173,26 @@ namespace CaddyCore
         }
 
 
-        public static Boolean AreDictionariesEqual<TKey, TValue>(IDictionary<TKey, TValue> left,
-                                                                 IDictionary<TKey, TValue> right)
+        //public static Boolean AreDictionariesEqual<TKey, TValue>(IDictionary<TKey, TValue> left,
+        //                                                         IDictionary<TKey, TValue> right)
+
+        //    where TValue : IEquatable<TValue>
+        //{
+        //    if (left.Count != right.Count)
+        //        return false;
+
+        //    foreach (var kvp in left)
+        //    {
+        //        if (!right.TryGetValue(kvp.Key, out var rValue) || 
+        //            !rValue.Equals(kvp.Value))
+        //            return false;
+        //    }
+
+        //    return true;
+        //}
+
+        public static Boolean AreDictionariesEqual<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> left,
+                                                                 IReadOnlyDictionary<TKey, TValue> right)
 
             where TValue : IEquatable<TValue>
         {
