@@ -10,8 +10,16 @@ using Reflection.Common;
 
 namespace RuntimeCode.Shared;
 
-public class LoopBuilder<T> //where T : MemberInfo //<TState> where TState : IDynamicState
+public class LoopBuilder<T> 
 {
+    public LoopBuilder(ILGenerator il,
+                       T member,
+                       ITypeManipulator types)
+    : this(il, member, BuilderBase<T>.GetPushValueAction(member), types)
+    {
+
+    }
+
     public LoopBuilder(ILGenerator il,
                        T member,
                        Action<ILGenerator, T> pushMemberToStack,
@@ -39,36 +47,60 @@ public class LoopBuilder<T> //where T : MemberInfo //<TState> where TState : IDy
                 _memberType = l.LocalType;
                 break;
 
+            case LocalVariable lvar:
+                _memberType = lvar.LocalType;
+                break;
+
             default:
                 throw new ArgumentOutOfRangeException($"{member} is not of a valid type");
         }
 
         _types = types;
-        //_actionProvider = actionProvider;
-        var getEnumeratorMethod = _memberType.GetMethodOrDie(nameof(IEnumerable.GetEnumerator));
-        _enumeratorDisposeMethod = getEnumeratorMethod.ReturnType.GetMethod(
+        
+        _getEnumerator = _memberType.GetMethodOrDie(nameof(IEnumerable.GetEnumerator));
+        //var getEnumeratorMethod = _memberType.GetMethodOrDie(nameof(IEnumerable.GetEnumerator));
+
+        _enumeratorType = _getEnumerator.ReturnType;
+
+        _enumeratorDisposeMethod = _enumeratorType.GetMethod(
             nameof(IDisposable.Dispose));
 
-        _enumeratorMoveNext = typeof(IEnumerator).GetMethodOrDie(
-            nameof(IEnumerator.MoveNext));
+        //_enumeratorMoveNext = typeof(IEnumerator).GetMethodOrDie(
+        //    nameof(IEnumerator.MoveNext));
+
+       
+
+       // 
+
 
         var isExplicit = _enumeratorDisposeMethod == null;
-        if (isExplicit && typeof(IDisposable).IsAssignableFrom(getEnumeratorMethod.ReturnType))
+        if (isExplicit && typeof(IDisposable).IsAssignableFrom(_enumeratorType))
+        {
             _enumeratorDisposeMethod = typeof(IDisposable).GetMethodOrDie(
                 nameof(IDisposable.Dispose));
-        else
-            _enumeratorMoveNext = getEnumeratorMethod.ReturnType.GetMethodOrDie(
+            _enumeratorMoveNext = typeof(IEnumerator).GetMethodOrDie(
                 nameof(IEnumerator.MoveNext));
+            
+            //var enumeratorMoveNext2 = _enumeratorType.GetMethodOrDie(
+            //    nameof(IEnumerator.MoveNext));
+        }
+        else
+        {
+            _enumeratorMoveNext = _enumeratorType.GetMethodOrDie(
+                nameof(IEnumerator.MoveNext));
+        }
 
-        _enumeratorCurrent = getEnumeratorMethod.ReturnType.GetterOrDie(
+        _enumeratorCurrent = _enumeratorType.GetterOrDie(
             nameof(IEnumerator.Current), out _);
 
-        _enumeratorLocal = _il.DeclareLocal(getEnumeratorMethod.ReturnType);
+        _enumeratorLocal = _il.DeclareLocal(_enumeratorType);
 
-        var enumeratorType = _enumeratorLocal.LocalType ?? throw new InvalidOperationException();
-        //_enumeratorCurrentValue = _il.DeclareLocal(_enumeratorCurrent.ReturnType);
+        _enumeratorCurrentType = _enumeratorCurrent.ReturnType;
 
-        if (enumeratorType.IsValueType)
+        //var enumeratorType = _enumeratorLocal.LocalType ?? throw new InvalidOperationException();
+        _enumeratorCurrentValue = _il.DeclareLocal(_enumeratorCurrent.ReturnType);
+
+        if (_enumeratorType.IsValueType)
         {
             _loadEnumeratorLocal = OpCodes.Ldloca;
             _callEnumeratorMethod = OpCodes.Call;
@@ -87,14 +119,12 @@ public class LoopBuilder<T> //where T : MemberInfo //<TState> where TState : IDy
         {
             getLength = memberType.GetPropertyGetterOrDie(nameof(Array.Length));
 
-            return ((il,
-                     idx) =>
+            return (il,
+                    idx) =>
             {
-                //il.Emit(OpCodes.Ldarg_0);
-                //il.Emit(OpCodes.Ldfld, f);
                 il.Emit(OpCodes.Ldloc, idx);
                 il.Emit(OpCodes.Ldelem_Ref);
-            });
+            };
         }
 
         if (memberType.GetProperty("Item") is { } prop &&
@@ -103,33 +133,31 @@ public class LoopBuilder<T> //where T : MemberInfo //<TState> where TState : IDy
         {
             getLength = memberType.GetPropertyGetterOrDie(nameof(IList.Count));
 
-            return ((il,
-                     idx) =>
+            return (il,
+                    idx) =>
             {
-                //il.Emit(OpCodes.Ldarg_0);
-                //il.Emit(OpCodes.Ldfld, f);
                 il.Emit(OpCodes.Ldloc, idx);
                 il.Emit(OpCodes.Callvirt, gm);
-            });
+            };
         }
 
         throw new InvalidOperationException();
     }
 
-    public void ForEach<TData>(OnIndexedValueReady<TData> action,
-                               TData data)
+    public void ForEach<TData>(TData data,
+                               OnIndexedValueReady<TData> action)
     {
         ForEachImpl(null, action, data);
     }
 
-    public void ForEach<TData>(OnValueReady<TData> action,
-                               TData data)
+    public void ForEach<TData>(TData data,
+                               OnValueReady<TData> action)
     {
         ForEachImpl(action, null, data);
     }
 
-    public void ForLoop<TData>(OnIndexedValueReady<TData> action,
-                               TData data)
+    public void ForLoop<TData>(TData data,
+                               OnIndexedValueReady<TData> action)
     {
         //var pv = _buildState.CurrentField;
 
@@ -191,7 +219,7 @@ public class LoopBuilder<T> //where T : MemberInfo //<TState> where TState : IDy
 
         var germane = _types.GetGermaneType(_memberType);
 
-        var allDone = _il.DefineLabel();
+        //var allDone = _il.DefineLabel();
 
         LocalBuilder? actionIndex;
         LocalBuilder? enumeratorCurrentValue;
@@ -210,29 +238,31 @@ public class LoopBuilder<T> //where T : MemberInfo //<TState> where TState : IDy
 
         _pushMemberToStack(_il, _member);
 
-        var getEnumeratorMethod = _memberType.GetMethodOrDie(nameof(IEnumerable.GetEnumerator));
+        //var getEnumeratorMethod = _memberType.GetMethodOrDie(nameof(IEnumerable.GetEnumerator));
 
-        _il.Emit(OpCodes.Callvirt, getEnumeratorMethod);
-        
+        _il.Emit(OpCodes.Callvirt, _getEnumerator);
 
         _il.Emit(OpCodes.Stloc, _enumeratorLocal);
 
 
-        /////////////////////////////////////
+          /////////////////////////////////////
         // TRY
         /////////////////////////////////////
         if (_enumeratorDisposeMethod != null)
             _il.BeginExceptionBlock();
         {
-            var tryNext = _il.DefineLabel();
-            _il.MarkLabel(tryNext);
+            var moveNext = _il.DefineLabel();
+            var handleValue = _il.DefineLabel();
 
-            /////////////////////////////////////
-            // !enumerator.HasNext() -> EXIT LOOP
-            /////////////////////////////////////
-            _il.Emit(_loadEnumeratorLocal, _enumeratorLocal);
-            _il.Emit(_callEnumeratorMethod, _enumeratorMoveNext);
-            _il.Emit(OpCodes.Brfalse, allDone);
+            _il.Emit(OpCodes.Br, moveNext);
+
+
+            _il.MarkLabel(handleValue);
+
+
+            //_il.Emit(_loadEnumeratorLocal, _enumeratorLocal);
+            //_il.Emit(_callEnumeratorMethod, _enumeratorMoveNext);
+            //_il.Emit(OpCodes.Brfalse, allDone);
 
             if (enumeratorCurrentValue is { })
             {
@@ -257,9 +287,23 @@ public class LoopBuilder<T> //where T : MemberInfo //<TState> where TState : IDy
 
             /////////////////////////////////////////////////////////////
 
-            _il.Emit(OpCodes.Br, tryNext);
+           
 
-            _il.MarkLabel(allDone);
+            /////////////////////////////////////
+            // !enumerator.HasNext() -> EXIT LOOP
+            /////////////////////////////////////
+
+            _il.MarkLabel(moveNext);
+            _il.Emit(_loadEnumeratorLocal, _enumeratorLocal);
+            _il.Emit(_callEnumeratorMethod, _enumeratorMoveNext);
+
+            _il.Emit(OpCodes.Brtrue, handleValue);
+
+            //_il.Emit(OpCodes.Leave, allDone);
+
+            /////////////////////////////////////////////////////////////
+
+            
         }
 
         if (_enumeratorDisposeMethod == null)
@@ -270,23 +314,52 @@ public class LoopBuilder<T> //where T : MemberInfo //<TState> where TState : IDy
         /////////////////////////////////////
         _il.BeginFinallyBlock();
         {
+            var endfinally = _il.DefineLabel();
+
+            if (!_enumeratorType.IsValueType)
+            {
+                _il.Emit(_loadEnumeratorLocal, _enumeratorLocal);
+                _il.Emit(OpCodes.Brfalse, endfinally);
+            }
+
             _il.Emit(_loadEnumeratorLocal, _enumeratorLocal);
             _il.Emit(_callEnumeratorMethod, _enumeratorDisposeMethod);
+
+            _il.MarkLabel(endfinally);
         }
         _il.EndExceptionBlock();
+
+        //_il.MarkLabel(allDone);
+
+
+      
+        
     }
+
+ 
 
     private void LoadEnumeratorCurrentValue()
     {
         _il.Emit(_loadEnumeratorLocal, _enumeratorLocal);
         _il.Emit(OpCodes.Callvirt, _enumeratorCurrent);
+
+        if (_enumeratorCurrentType.IsValueType)
+        {
+            //_il.Emit(OpCodes.Stloc, _enumeratorCurrentValue);
+            //_il.Emit(OpCodes.Ldloca, _enumeratorCurrentValue);
+        }
+
     }
 
     private readonly MethodInfo _enumeratorCurrent;
-    //private readonly LocalBuilder _enumeratorCurrentValue;
+
+    private readonly Type _enumeratorCurrentType;
+    private readonly LocalBuilder _enumeratorCurrentValue;
     private readonly MethodInfo? _enumeratorDisposeMethod;
     private readonly LocalBuilder _enumeratorLocal;
     private readonly MethodInfo _enumeratorMoveNext;
+
+    private readonly Type _enumeratorType;
 
     private readonly OpCode _loadEnumeratorLocal;
     private readonly OpCode _callEnumeratorMethod;
@@ -295,6 +368,7 @@ public class LoopBuilder<T> //where T : MemberInfo //<TState> where TState : IDy
 
     private readonly T _member;
     private readonly Type _memberType;
+    private readonly MethodInfo _getEnumerator;
     private readonly Action<ILGenerator, T> _pushMemberToStack;
 
     //private readonly TState _buildState;

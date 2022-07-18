@@ -104,6 +104,11 @@ public static class RuntimeCodeHelper
         il.Emit(OpCodes.Ldfld, field);
     }
 
+    /// <summary>
+    /// ret
+    /// </summary>
+    public static void Return(this ILGenerator il) => il.Emit(OpCodes.Ret);
+
     public static void LoadField(this ILGenerator il,
                                  FieldInfo field)
     {
@@ -133,4 +138,83 @@ public static class RuntimeCodeHelper
 
         return res;
     }
+
+    public static void PushConstant<TConstValue>(this ILGenerator il,
+                                                   TConstValue value)
+         where TConstValue : IConvertible
+      {
+         var code = Type.GetTypeCode(value.GetType());
+
+         switch (code)
+         {
+            case TypeCode.Empty:
+            case TypeCode.Object:
+            case TypeCode.DBNull:
+               break;
+
+
+            case TypeCode.Boolean:
+               var bVal = Convert.ToBoolean(value);
+               il.Emit(bVal ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
+               return;
+
+            case TypeCode.Char:
+               il.Emit(OpCodes.Ldc_I4, Convert.ToInt32(value));
+               return;
+
+            case TypeCode.SByte:
+               il.Emit(OpCodes.Ldc_I4, Convert.ToInt32(value));
+               return;
+
+
+            case TypeCode.Byte:
+               il.Emit(OpCodes.Ldc_I4, Convert.ToInt32(value));
+               return;
+
+            case TypeCode.Int16:
+               il.Emit(OpCodes.Ldc_I4, Convert.ToInt32(value));
+               return;
+
+            case TypeCode.UInt16:
+               break;
+
+            case TypeCode.Int32:
+               il.Emit(OpCodes.Ldc_I4, Convert.ToInt32(value));
+               return;
+
+
+            case TypeCode.UInt32:
+               break;
+
+            case TypeCode.Int64:
+               il.Emit(OpCodes.Ldc_I8, Convert.ToInt64(value));
+               return;
+
+            case TypeCode.UInt64:
+                EmitConstUInt64(il, Convert.ToUInt64(value));
+                return;
+
+            case TypeCode.Single:
+               il.Emit(OpCodes.Ldc_R4, Convert.ToSingle(value));
+               return;
+
+            case TypeCode.Double:
+               il.Emit(OpCodes.Ldc_R8, Convert.ToDouble(value));
+               return;
+
+            case TypeCode.Decimal:
+               break;
+            case TypeCode.DateTime:
+               break;
+
+            case TypeCode.String:
+               il.Emit(OpCodes.Ldstr, value?.ToString() ?? String.Empty);
+               return;
+
+            default:
+               throw new ArgumentOutOfRangeException();
+         }
+
+         throw new NotImplementedException();
+      }
 }
