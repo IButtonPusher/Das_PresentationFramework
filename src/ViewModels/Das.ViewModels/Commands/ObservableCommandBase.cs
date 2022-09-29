@@ -21,6 +21,20 @@ namespace Das.ViewModels.Commands
             return IsExecutable;
         }
 
+        protected static T GetParamValue<T>(Object parameter)
+        {
+            switch (parameter)
+            {
+                case T good:
+                    return good;
+
+                case null:
+                    return default!;
+                default:
+                    return ThrowParamException<Object, T>();
+            }
+        }
+
         public abstract void Execute(Object parameter);
 
         public event EventHandler? CanExecuteChanged;

@@ -9,12 +9,14 @@
     <Import_RootNamespace>RuntimeCode.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ArgAccessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BuilderBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConstForLoop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DictionaryBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FieldDefinition.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LoopBuilderEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LoopBuilder{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LocalVariable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForLoopData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeCodeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeCodeHelper.cs" />
   </ItemGroup>

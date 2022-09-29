@@ -33,7 +33,7 @@ public static class WpfExtensions
     public static IEnumerable<TChild> GetTree<TChild>(this DependencyObject reference)
         where TChild : DependencyObject
     {
-        if (reference == null)
+        if (reference == null!)
             yield break;
 
         var childrens = GetDependents(reference);
@@ -101,6 +101,7 @@ public static class WpfExtensions
                 if (attribs != null && reference.TryGetPropertyValue<DependencyObject>(attribs.Name,
                         out var content))
                 {
+                    // ReSharper disable once SuspiciousTypeConversion.Global
                     if (content is IEnumerable enumerable)
                         foreach (var item in enumerable.OfType<DependencyObject>())
                         {

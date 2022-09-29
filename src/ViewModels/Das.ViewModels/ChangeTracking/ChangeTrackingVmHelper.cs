@@ -34,16 +34,8 @@ public abstract class ChangeTrackingVmHelperEditVmHelper<T> : IDisposable //: Ba
 
         _viewModel = viewModel;
         _getPropertyValue = getPropertyValue;
-        //_editPropertyNames = new List<String>();
-        //_propertyValues = new Dictionary<String, Object?>();
-        //_changedProperties = new HashSet<String>();
-
 
         _editPropertyNames ??= new HashSet<String>(triggeringPropertyNames);
-        //foreach (var propName in triggeringPropertyNames)
-        //{
-        //    _editPropertyNames.Add(propName);
-        //}
 
         if (!_propertyValues.TryAdd(viewModel, new Dictionary<String, Object?>()))
             return;
@@ -65,52 +57,7 @@ public abstract class ChangeTrackingVmHelperEditVmHelper<T> : IDisposable //: Ba
             new List<String>(EnumerateTriggeringPropertyNames(typeof(T), getPublicProperties)))
 
     {
-        //var changeType = ChangeTrackingTypes.SpecifyTriggeringProperties;
-
-
-        //_viewModel = viewModel;
-        //_getPropertyValue = getPropertyValue;
-        //_editPropertyNames = new List<String>();
-        //_propertyValues = new Dictionary<String, Object?>();
-        //_changedProperties = new HashSet<String>();
-
-        //var vmType = typeof(T);
-        //if (vmType.GetCustomAttribute<ChangeTrackingTypeAttribute>() is { } attr)
-        //{
-        //    changeType = attr.TrackingType;
-        //}
-
        
-
-        ////_typeStructure = typeCore.GetTypeStructure<T>();
-
-        //foreach (var prop in getPublicProperties(vmType))
-        //{
-        //    if (!prop.CanWrite)
-        //        continue;
-
-        //    switch (changeType)
-        //    {
-        //        case ChangeTrackingTypes.SpecifyTriggeringProperties when 
-        //            prop.GetCustomAttribute<TriggersIsChangedAttribute>(true) == null:
-        //            continue;
-                
-        //        case ChangeTrackingTypes.SpecifyExcludedProperties when
-        //            prop.GetCustomAttribute<TriggersIsChangedAttribute>(true) != null:
-        //            //TryGetCustomAttribute<NonEditPropertyAttribute>(prop, out _):
-        //            continue;
-                
-        //    }
-
-        //    //if (TryGetCustomAttribute<NonEditPropertyAttribute>(prop, out _))
-        //    //    continue;
-
-        //    _editPropertyNames.Add(prop.Name);
-        //}
-
-        //AcceptChanges();
-
-        //viewModel.PropertyChanged += OnViewModelPropertyChanged;
     }
 
     private static IEnumerable<String> EnumerateTriggeringPropertyNames(Type vmType,
@@ -166,13 +113,6 @@ public abstract class ChangeTrackingVmHelperEditVmHelper<T> : IDisposable //: Ba
             vm.UpdateIsChanged(false);
         }
     }
-
-    //[NonEditPropertyAttribute]
-    //public Boolean IsChanged
-    //{
-    //    get => _isChanged;
-    //    set => SetValue(ref _isChanged, value, OnHasChangesChanged);
-    //}
 
 
     public IReadOnlyCollection<String> TriggeringPropertyNames => _editPropertyNames!;

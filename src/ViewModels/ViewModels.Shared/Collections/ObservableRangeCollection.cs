@@ -66,8 +66,13 @@ namespace Das.ViewModels
               SuspendDown();
            }
 
-           OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,
-                arr));
+           // ListCollectionView doesn't support range actions...
+           //var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,
+           //    arr);
+
+           var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
+
+           OnCollectionChanged(args);
         }
 
 

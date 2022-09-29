@@ -21,10 +21,12 @@ namespace Das.ViewModels.Commands
 
         public override async Task ExecuteAsync(Object paramValue)
         {
-            if (paramValue is T good)
-                await _action(good);
-            else
-                await ThrowParamException<T, Task>();
+            await _action(GetParamValue<T>(paramValue));
+            
+            //if (paramValue is T good)
+            //    await _action(good);
+            //else
+            //    await ThrowParamException<T, Task>();
         }
 
         public async Task ExecuteAsync(T paramValue)

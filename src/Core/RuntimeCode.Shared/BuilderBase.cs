@@ -47,6 +47,10 @@ public abstract class BuilderBase<T>
                 _memberType = lvar.LocalType;
                 break;
 
+            case ArgAccessor arga:
+                _memberType = arga.ArgType;
+                break;
+
             default:
                 throw new ArgumentOutOfRangeException($"{member} is not of a valid type");
         }
@@ -73,6 +77,9 @@ public abstract class BuilderBase<T>
             case LocalVariable when _pushLocal2 is Action<ILGenerator, T> good:
                 return good;
 
+            case ArgAccessor when _pushArg is Action<ILGenerator, T> good:
+                return good;
+
             default:
                 throw new ArgumentOutOfRangeException($"{member} is not of a valid type");
         }
@@ -83,6 +90,7 @@ public abstract class BuilderBase<T>
     private static readonly Action<ILGenerator, MethodInfo> _pushMethod = PushMethod;
     private static readonly Action<ILGenerator, LocalBuilder> _pushLocal = PushLocal;
     private static readonly Action<ILGenerator, LocalVariable> _pushLocal2 = PushLocal2;
+    private static readonly Action<ILGenerator, ArgAccessor> _pushArg = PushArg;
 
     private static void PushProperty(ILGenerator il,
                                      PropertyInfo prop)
@@ -115,6 +123,12 @@ public abstract class BuilderBase<T>
                                    LocalVariable local)
     {
         il.Emit(OpCodes.Ldloc, local);
+    }
+
+    private static void PushArg(ILGenerator il,
+                                ArgAccessor argAccessor)
+    {
+        il.EmitLdArg(argAccessor.Index);
     }
 
     protected readonly ILGenerator _il;

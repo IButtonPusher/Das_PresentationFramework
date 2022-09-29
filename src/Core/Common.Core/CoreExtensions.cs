@@ -85,11 +85,12 @@ namespace CaddyCore
             return val;
         }
 
+       
         public static void AddToValueList<TKey, TValues, TValue>(
             this IDictionary<TKey, TValues> dictionary,
             TKey key,
             TValue value)
-            where TValues : IList<TValue>, new()
+            where TValues : ICollection<TValue>, new()
         {
             if (!dictionary.TryGetValue(key, out var val))
             {
@@ -398,7 +399,7 @@ namespace CaddyCore
             return GetAttributesForEnumValue<TAttribute>(value, typeof(TEnum));
         }
 
-        public static IEnumerable<TAttribute> GetAttributesForEnumValue<TAttribute>(IConvertible value,
+        public static IEnumerable<TAttribute> GetAttributesForEnumValue<TAttribute>(IConvertible? value,
             Type enumType)
             where TAttribute : Attribute
         {
@@ -440,7 +441,7 @@ namespace CaddyCore
             return list.ToDelimitedString(',');
         }
 
-        public static String ToDelimitedString<T>(this IEnumerable<T> list,
+        public static String ToDelimitedString<T>(this IEnumerable<T>? list,
                                                   Char delimiter)
         {
             if (list == null)

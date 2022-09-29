@@ -14,7 +14,6 @@ public class LoopBuilderEx<TEnumerable, TGermane>
     //private readonly LocalVariable<IEnumerator<TGermane>> _enumerator;
     //private readonly LocalVariable<IEnumerable<TGermane>> _enumerable;
     private readonly MethodInfo? _enumeratorDisposeMethod;
-    private readonly Type _memberType;
 
     private readonly OpCode _loadEnumeratorLocal;
     private readonly OpCode _callEnumeratorMethod;
@@ -34,8 +33,8 @@ public class LoopBuilderEx<TEnumerable, TGermane>
     {
         _il = il;
 
-        _memberType = typeof(TEnumerable);
-        _getEnumeratorMethod = _memberType.GetMethodOrDie(nameof(IEnumerable.GetEnumerator));
+        var memberType = typeof(TEnumerable);
+        _getEnumeratorMethod = memberType.GetMethodOrDie(nameof(IEnumerable.GetEnumerator));
 
         _enumeratorType = _getEnumeratorMethod.ReturnType;
 

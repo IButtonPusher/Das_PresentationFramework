@@ -15,9 +15,26 @@ namespace Das.ViewModels.Commands
 
         public override void Execute(Object parameter)
         {
-            if (parameter is T good)
-                _action(good);
-            else ThrowParamException<T, Object>();
+            _action(GetParamValue<T>(parameter));
+
+            //switch (parameter)
+            //{
+            //    case T good:
+            //        _action(good);
+            //        break;
+
+            //    case null:
+            //        _action(default!);
+            //        break;
+
+            //    default:
+            //        ThrowParamException<T, Object>();
+            //        break;
+            //}
+
+            //if (parameter is T good)
+            //    _action(good);
+            //else ThrowParamException<T, Object>();
         }
 
         public override Task ExecuteAsync()
@@ -27,9 +44,25 @@ namespace Das.ViewModels.Commands
 
         public override Task ExecuteAsync(Object paramValue)
         {
-            if (paramValue is T good)
-                _action(good);
-            else ThrowParamException<T, Object>();
+            _action(GetParamValue<T>(paramValue));
+
+            //switch (paramValue)
+            //{
+            //    case T good:
+            //        _action(good);
+            //        break;
+
+            //    case null:
+            //        _action(default!);
+            //        break;
+
+            //    default:
+            //        ThrowParamException<T, Object>();
+            //        break;
+            //}
+            //if (paramValue is T good)
+            //    _action(good);
+            //else ThrowParamException<T, Object>();
             return Task.CompletedTask;
         }
 
