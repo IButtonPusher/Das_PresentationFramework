@@ -68,6 +68,19 @@ public static class WpfExtensions
         return new Size(formattedText.Width, formattedText.Height);
     }
 
+    public static Boolean DrawTextMiddle(this DrawingContext dc,
+                                      FormattedText ftext,
+                                      Double y,
+                                      UIElement uiElement,
+                                      Boolean drawOutsideBounds)
+    {
+        var x = (uiElement.RenderSize.Width - ftext.Width) / 2;
+        if (!drawOutsideBounds && x < 0)
+            return false;
+        dc.DrawText(ftext, new Point(x, y));
+        return true;
+    }
+
     public static Size MeasureText(this TextBlock tb,
                                    Double fontSize)
         => tb.MeasureText(tb.Text, fontSize);
