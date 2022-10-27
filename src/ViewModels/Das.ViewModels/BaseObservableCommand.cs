@@ -28,19 +28,6 @@ namespace Das.ViewModels
             _canExecute = CanIExecute;
         }
 
-        //public BaseObservableCommand(Action execute,
-        //                             IObjectManipulator typeManipulator,
-        //                             INotifyPropertyChanged viewModel,
-        //                             String propertyName,
-        //                             IUiProvider uiProvider)
-        //    : this(execute,
-        //        _ => typeManipulator.GetPropertyValue<Boolean>(viewModel, propertyName),
-        //        uiProvider)
-        //{
-        //    _propertyName = propertyName;
-        //    viewModel.PropertyChanged += OnViewModelPropertyChanged;
-        //}
-
         public BaseObservableCommand(Action execute,
                                      Predicate<Object> canExecute,
                                      IUiProvider ui)
