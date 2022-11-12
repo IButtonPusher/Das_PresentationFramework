@@ -15,10 +15,9 @@ namespace Das.ViewModels.Commands
 
         public override void Execute(Object parameter)
         {
-            _action()
-                .ConfigureAwait(false)
-                .GetAwaiter()
-                .GetResult();
+            _action().ConfigureAwait(false);
+            //.GetAwaiter()
+            //.GetResult();
         }
 
         public override async Task ExecuteAsync()

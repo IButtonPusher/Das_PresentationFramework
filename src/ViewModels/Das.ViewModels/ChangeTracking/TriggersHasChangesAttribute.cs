@@ -1,10 +1,21 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Common.Core
+namespace Das.ViewModels.ChangeTracking
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class TriggersIsChangedAttribute : Attribute
     {
+        //public TriggersIsChangedAttribute()
+        //{
+        //    CheckEquality = true;
+        //}
+
+        public TriggersIsChangedAttribute(Boolean checkEquality = true)
+        {
+            CheckEquality = checkEquality;
+        }
+
+        public Boolean CheckEquality { get; set; }
     }
 }

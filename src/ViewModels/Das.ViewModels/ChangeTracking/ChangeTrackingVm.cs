@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
-using Common.Core;
+using Das.ViewModels.ChangeTracking;
 
 namespace Das.ViewModels.NotifyProperties
 {

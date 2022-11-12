@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using Das.ViewModels;
 using Microsoft.Win32;
 
@@ -22,6 +24,8 @@ namespace Das.Views.Wpf
         {
             _resources = appResources;
             _cachedContents = new Dictionary<Type, FrameworkElement>();
+            _dispatcher = Application.Current.Dispatcher;
+            _dispatcherThread = _dispatcher.Thread;
         }
 
         public override void Notify(String text)
@@ -52,52 +56,58 @@ namespace Das.Views.Wpf
                 MessageBoxImage.Question) == MessageBoxResult.Yes);
         }
 
+        [MethodImpl(256)]
+        private Boolean CheckAccess()
+        {
+            return Thread.CurrentThread == _dispatcherThread;
+        }
+
         public override void Invoke(Action action)
         {
-            if (Application.Current.Dispatcher.CheckAccess())
+            if (CheckAccess())
                 action();
             else
-                Application.Current.Dispatcher.Invoke(action);
+                _dispatcher.Invoke(action);
         }
 
         public override async Task<T> InvokeAsync<T>(Func<T> action)
         {
-            if (Application.Current.Dispatcher.CheckAccess())
+            if (CheckAccess())
                 return action();
             
-            return await Application.Current.Dispatcher.InvokeAsync(action);
+            return await _dispatcher.InvokeAsync(action);
         }
 
         public override T Invoke<T>(Func<T> action)
         {
-            if (Application.Current.Dispatcher.CheckAccess())
+            if (CheckAccess())
                 return action();
             
-            return Application.Current.Dispatcher.Invoke(action);
+            return _dispatcher.Invoke(action);
         }
 
         public override async Task InvokeAsync(Func<Task> action)
         {
-            if (Application.Current.Dispatcher.CheckAccess())
+            if (CheckAccess())
                 await action();
             else
-                await Application.Current.Dispatcher.InvokeAsync(action).Task.Unwrap();
+                await _dispatcher.InvokeAsync(action).Task.Unwrap();
         }
 
         public override void BeginInvoke(Action action)
         {
-            if (Application.Current.Dispatcher.CheckAccess())
+            if (CheckAccess())
                 action();
             else
-                Application.Current.Dispatcher.BeginInvoke(action);
+                _dispatcher.BeginInvoke(action);
         }
 
         public override async Task InvokeAsync(Action action)
         {
-            if (Application.Current.Dispatcher.CheckAccess())
+            if (CheckAccess())
                 action();
             else
-                await Application.Current.Dispatcher.InvokeAsync(action);
+                await _dispatcher.InvokeAsync(action);
         }
 
         public override Boolean TryGetFileToOpen(DirectoryInfo initialDirectory,
@@ -203,15 +213,28 @@ namespace Das.Views.Wpf
 
         private static Window? GetModalOwner()
         {
-            var res = ActiveWindow ?? Application.Current.MainWindow;
+            var res = ActiveWindow ?? Application.Current?.MainWindow;
             return res?.IsVisible == true ? res : default;
         }
 
-        private static Window? ActiveWindow =>
-            Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive) ??
-            Application.Current.Windows.OfType<Window>()
-                       .SingleOrDefault(x => x.IsVisible && x.Owner == Application.Current.MainWindow);
+        private static Window? ActiveWindow
+        {
+            get
+            {
+                return Application.Current?.Windows is { } wc
+                    ? wc.OfType<Window>().SingleOrDefault(x => x.IsActive)
+                      ?? wc.OfType<Window>()
+                           .SingleOrDefault(x => x.IsVisible && x.Owner == Application.Current.MainWindow)
+                    : default;
+            }
+        }
+            //=>
+            //Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive) ??
+            //Application.Current.Windows.OfType<Window>()
+            //           .SingleOrDefault(x => x.IsVisible && x.Owner == Application.Current.MainWindow);
 
         private readonly ResourceDictionary _resources;
+        private readonly Dispatcher _dispatcher;
+        private readonly Thread _dispatcherThread;
     }
 }

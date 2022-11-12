@@ -35,15 +35,15 @@ namespace Das.Views.Mvvm
         
 
         /// <summary>
-        ///     Sender, Property Name, Old Value, New Value, allow change
+        ///     Allows cancellation of a property change
         /// </summary>
-        //public event Func<Object, String, Object, Object, Boolean>? PropertyChanging;
         public event OnPropertyChanging? PropertyChanging;
 
         public event Action<String, Object?>? PropertyValueChanged;
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         protected virtual void RaisePropertyChanged(String propertyName,
                                                     Object? newValue)
         {
@@ -55,6 +55,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         protected virtual void RaisePropertyChanged(String propertyName)
         {
             var handler = PropertyChanged;
@@ -67,6 +68,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         protected virtual void RaisePropertyChanged(Object? obj,
                                                     PropertyChangedEventArgs args)
         {
@@ -75,6 +77,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         protected void RaisePropertyChanged(PropertyChangedEventArgs args)
         {
             PropertyChanged?.Invoke(this, args);
@@ -82,6 +85,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         protected virtual Boolean SetValue<T>(ref T field,
                                               T value,
                                               [CallerMemberName] String propertyName = "")
@@ -95,6 +99,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         protected virtual void SetValue<T>(ref T field,
                                            T newValue,
                                            Func<T, Task> handleValueChanged,
@@ -108,6 +113,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         protected virtual void SetValue<T>(ref T field,
                                            T newValue,
                                            AllowPropertyChangeDelegate<T> onValueChanging,
@@ -121,6 +127,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         protected virtual void SetValue<T>(ref T field,
                                            T newValue,
                                            AllowPropertyChangeDelegate<T> onValueChanging,
@@ -135,6 +142,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         protected virtual void SetValue<T>(ref T field,
                                            T newValue,
                                            AllowPropertyChangeDelegate<T> onValueChanging,
@@ -150,6 +158,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         protected virtual void SetValue<T>(ref T field,
                                            T newValue,
                                            AllowPropertyChangeDelegate<T> onValueChanging,
@@ -164,6 +173,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         protected virtual void SetValue<T>(ref T? field,
                                            T newValue,
                                            InterceptPropertyChangeDelegate<T> interceptValueChanging,
@@ -183,6 +193,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         protected virtual void SetValue<T>(ref T field,
                                            T newValue,
                                            AllowPropertyChangeDelegate<T> onValueChanging,
@@ -197,6 +208,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         protected virtual Boolean SetValue<T>(ref T field,
                                               T newValue,
                                               Action<T> onValueChanged,
@@ -218,6 +230,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         // ReSharper disable once RedundantAssignment
         private void SetValueImpl<T>(ref T field,
                                      T value,
@@ -234,6 +247,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         // ReSharper disable once RedundantAssignment
         private void SetValueImpl<T>(ref T field,
                                      T value,
@@ -251,6 +265,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         private void SetValueImpl<T>(ref T field,
                                      T value,
                                      Action<T, T>? handleValueChanged,
@@ -268,6 +283,7 @@ namespace Das.Views.Mvvm
 
         [DebuggerStepThrough]
         [DebuggerHidden]
+        [DebuggerNonUserCode]
         private Boolean VerifyCanChangeValue<T>(T oldValue,
                                                 T newValue,
                                                 AllowPropertyChangeDelegate<T>? handleValueChanging,

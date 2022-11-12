@@ -4,38 +4,36 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Threading.Tasks;
-using Common.Core;
 
 namespace Das.ViewModels.ChangeTracking;
 
-public abstract class ChangeTrackingVmHelperEditVmHelper<T> : IDisposable //: BaseViewModel,
-                                                     //IChangeTracking
+public abstract class ChangeTrackingVmHelperEditVmHelper<T> : IDisposable
     where T : BaseViewModel, IEditorChange
 {
-
-    private static readonly ConcurrentDictionary<T, HashSet<String>> _changedProperties;
-    private static readonly ConcurrentDictionary<T, Dictionary<String, Object?>> _propertyValues;
-    private readonly Object _synch;
-
     static ChangeTrackingVmHelperEditVmHelper()
     {
         _changedProperties = new ConcurrentDictionary<T, HashSet<String>>();
         _propertyValues = new ConcurrentDictionary<T, Dictionary<String, Object?>>();
-
-        
     }
 
 
-    public ChangeTrackingVmHelperEditVmHelper(T viewModel,
-                                              Func<T, String, Object?> getPropertyValue,
-                                              IReadOnlyCollection<String> triggeringPropertyNames)
+    protected ChangeTrackingVmHelperEditVmHelper(T viewModel,
+                                                 Func<T, String, Object?> getPropertyValue,
+                                                 IEnumerable<KeyValuePair<String, Boolean>> triggeringPropertyNames)
     {
         _synch = new Object();
 
         _viewModel = viewModel;
         _getPropertyValue = getPropertyValue;
 
-        _editPropertyNames ??= new HashSet<String>(triggeringPropertyNames);
+        if (_editPropertyNames == null)
+        {
+            var editPropertyNames = new Dictionary<String, Boolean>();
+            foreach (var tpn in triggeringPropertyNames)
+                editPropertyNames.Add(tpn.Key, tpn.Value);
+
+            _editPropertyNames = editPropertyNames;
+        }
 
         if (!_propertyValues.TryAdd(viewModel, new Dictionary<String, Object?>()))
             return;
@@ -45,77 +43,15 @@ public abstract class ChangeTrackingVmHelperEditVmHelper<T> : IDisposable //: Ba
         AcceptChanges();
 
         viewModel.PropertyChanged += OnViewModelPropertyChanged;
-
-        
-
     }
 
     public ChangeTrackingVmHelperEditVmHelper(T viewModel,
                                               Func<Type, IEnumerable<PropertyInfo>> getPublicProperties,
                                               Func<T, String, Object?> getPropertyValue)
-        : this(viewModel, getPropertyValue, 
-            new List<String>(EnumerateTriggeringPropertyNames(typeof(T), getPublicProperties)))
-
+        : this(viewModel, getPropertyValue,
+            EnumerateTriggeringPropertyNames(typeof(T), getPublicProperties))
     {
-       
     }
-
-    private static IEnumerable<String> EnumerateTriggeringPropertyNames(Type vmType,
-                                                                  Func<Type, IEnumerable<PropertyInfo>> getPublicProperties)
-    {
-        var changeType = ChangeTrackingTypes.SpecifyTriggeringProperties;
-
-        if (vmType.GetCustomAttribute<ChangeTrackingTypeAttribute>() is { } attr)
-            changeType = attr.TrackingType;
-        
-        foreach (var prop in getPublicProperties(vmType))
-        {
-            if (!prop.CanWrite)
-                continue;
-
-            switch (changeType)
-            {
-                case ChangeTrackingTypes.SpecifyTriggeringProperties when 
-                    prop.GetCustomAttribute<TriggersIsChangedAttribute>(true) == null:
-                    continue;
-                
-                case ChangeTrackingTypes.SpecifyExcludedProperties when
-                    prop.GetCustomAttribute<NonEditPropertyAttribute>(true) != null:
-                    //TryGetCustomAttribute<NonEditPropertyAttribute>(prop, out _):
-                    continue;
-                
-            }
-
-            //if (TryGetCustomAttribute<NonEditPropertyAttribute>(prop, out _))
-            //    continue;
-
-            yield return prop.Name;
-        }
-    }
-
-    public void AcceptChanges()
-    {
-        var vm = _viewModel;
-
-        if (!_propertyValues.TryGetValue(vm, out var propVals) || 
-            !_changedProperties.TryGetValue(vm, out var changedProps))
-        {
-            return;
-        }
-
-        lock (_synch)
-        {
-            foreach (var propName in _editPropertyNames!)
-                propVals[propName] = _getPropertyValue(vm, propName);
-
-            changedProps.Clear();
-
-            vm.UpdateIsChanged(false);
-        }
-    }
-
-
-    public IReadOnlyCollection<String> TriggeringPropertyNames => _editPropertyNames!;
 
     public void Dispose()
     {
@@ -125,32 +61,72 @@ public abstract class ChangeTrackingVmHelperEditVmHelper<T> : IDisposable //: Ba
         _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
     }
 
-    //protected static Boolean TryGetCustomAttribute<TAttribute>(MemberInfo m,
-    //                                                           out TAttribute value)
-    //    where TAttribute : Attribute
-    //{
-    //    Object[] customAttributes = m.GetCustomAttributes(typeof(TAttribute), true);
-    //    if (customAttributes.Length == 0)
-    //    {
-    //        value = default!;
-    //        return false;
-    //    }
-
-    //    value = (customAttributes[0] as TAttribute)!;
-    //    return value != null;
-    //}
-
-    protected virtual void OnHasChangesChanged(Boolean newValue)
+    public void AcceptChanges()
     {
+        if (!_propertyValues.TryGetValue(_viewModel, out var propVals) ||
+            !_changedProperties.TryGetValue(_viewModel, out var changedProps))
+        {
+            return;
+        }
+
+        lock (_synch)
+        {
+            foreach (var propName in _editPropertyNames!)
+            {
+                propVals[propName.Key] = _getPropertyValue(_viewModel, propName.Key);
+            }
+
+            changedProps.Clear();
+
+            _viewModel.UpdateIsChanged(false);
+        }
     }
+
+    private static IEnumerable<KeyValuePair<String, Boolean>> EnumerateTriggeringPropertyNames(Type vmType,
+        Func<Type, IEnumerable<PropertyInfo>> getPublicProperties)
+    {
+        var changeType = ChangeTrackingTypes.SpecifyTriggeringProperties;
+
+        if (vmType.GetCustomAttribute<ChangeTrackingTypeAttribute>() is { } attr)
+            changeType = attr.TrackingType;
+
+        switch (changeType)
+        {
+            case ChangeTrackingTypes.SpecifyTriggeringProperties:
+                foreach (var prop in getPublicProperties(vmType))
+                {
+                    var triggerChange = prop.GetCustomAttribute<TriggersIsChangedAttribute>(true);
+                    if (triggerChange != null)
+                        yield return new KeyValuePair<String, Boolean>(prop.Name, triggerChange.CheckEquality);
+                }
+
+                break;
+
+            case ChangeTrackingTypes.SpecifyExcludedProperties:
+                foreach (var prop in getPublicProperties(vmType))
+                {
+                    if (!prop.CanWrite ||
+                        prop.GetCustomAttribute<NonEditPropertyAttribute>(true) != null)
+                        continue;
+
+                    yield return new KeyValuePair<String, Boolean>(prop.Name, true);
+                }
+
+                break;
+        }
+    }
+
+    //protected virtual void OnHasChangesChanged(Boolean newValue)
+    //{
+    //}
 
     private void OnViewModelPropertyChanged(Object? sender,
                                             PropertyChangedEventArgs e)
     {
         var vm = _viewModel;
 
-        if (e.PropertyName is not { } propertyName || 
-            !_editPropertyNames!.Contains(propertyName))
+        if (e.PropertyName is not { } propertyName ||
+            !_editPropertyNames!.TryGetValue(propertyName, out var checkEquality))
             return;
 
         if (!_propertyValues.TryGetValue(vm, out var propVals) ||
@@ -162,24 +138,24 @@ public abstract class ChangeTrackingVmHelperEditVmHelper<T> : IDisposable //: Ba
             if (!propVals.TryGetValue(propertyName, out var propVal))
                 return;
 
-            if (Equals(propVal, _getPropertyValue(vm, propertyName)))
+            if (checkEquality && Equals(propVal, _getPropertyValue(vm, propertyName)))
                 changedProps.Remove(propertyName);
             else
                 changedProps.Add(propertyName);
 
             vm.UpdateIsChanged(changedProps.Count > 0);
         }
-
-      
     }
 
-    //private readonly HashSet<String> _changedProperties;
-    private static HashSet<String>? _editPropertyNames;
+
+    public IReadOnlyDictionary<String, Boolean> TriggeringPropertyNames => _editPropertyNames!;
+
+    private static readonly ConcurrentDictionary<T, HashSet<String>> _changedProperties;
+    private static readonly ConcurrentDictionary<T, Dictionary<String, Object?>> _propertyValues;
+
+    private static Dictionary<String, Boolean>? _editPropertyNames;
     private readonly Func<T, String, Object?> _getPropertyValue;
+    private readonly Object _synch;
 
-    //private readonly Dictionary<String, Object?> _propertyValues;
-
-    //private readonly ITypeStructure _typeStructure;
     private readonly T _viewModel;
-
 }

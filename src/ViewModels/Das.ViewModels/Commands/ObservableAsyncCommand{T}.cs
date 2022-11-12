@@ -22,11 +22,6 @@ namespace Das.ViewModels.Commands
         public override async Task ExecuteAsync(Object paramValue)
         {
             await _action(GetParamValue<T>(paramValue));
-            
-            //if (paramValue is T good)
-            //    await _action(good);
-            //else
-            //    await ThrowParamException<T, Task>();
         }
 
         public async Task ExecuteAsync(T paramValue)
@@ -43,10 +38,11 @@ namespace Das.ViewModels.Commands
         public override void Execute(Object parameter)
         {
             if (parameter is T good)
-                _action(good)
-                    .ConfigureAwait(false)
-                    .GetAwaiter()
-                    .GetResult();
+            {
+                _action(good).ConfigureAwait(false);
+                //.GetAwaiter()
+                //.GetResult();
+            }
             else ThrowParamException<T, Task>();
         }
 

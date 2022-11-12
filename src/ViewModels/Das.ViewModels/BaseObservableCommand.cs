@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-//using Das.Serializer;
 using Das.Views;
 using Das.Views.Mvvm;
 
@@ -81,6 +80,12 @@ namespace Das.ViewModels
             return ReferenceEquals(other, this);
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            CanExecuteChanged = null;
+        }
+
 
         public Boolean CanExecute(Object parameter)
         {
@@ -129,18 +134,6 @@ namespace Das.ViewModels
             await _uiProvider.InvokeAsync(() => { CanExecuteChanged?.Invoke(canExecute, EventArgs.Empty); });
         }
 
-        //private async void OnViewModelPropertyChanged(Object sender, PropertyChangedEventArgs e)
-        //{
-        //    if (e.PropertyName != _propertyName)
-        //        return;
-
-        //    if (Interlocked.Increment(ref _canExecutions) == 1)
-        //        await _uiProvider.InvokeAsync(() => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
-
-        //    Interlocked.Decrement(ref _canExecutions);
-        //}
-
-
         public event EventHandler? CanExecuteChanged;
 
         /// <summary>
@@ -154,14 +147,10 @@ namespace Das.ViewModels
         private readonly Action? _execute;
 
         private readonly Func<Task>? _executeAsync;
-        //private readonly String? _propertyName;
         private readonly IUiProvider _uiProvider;
 
 
         private Boolean _canExecuteVal;
-        //private Int32 _canExecutions;
-
-
         private String? _description;
         protected Int32 _runCounter;
     }
