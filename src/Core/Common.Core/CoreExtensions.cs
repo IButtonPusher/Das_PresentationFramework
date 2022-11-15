@@ -148,8 +148,14 @@ namespace CaddyCore
             if (info.GetType() != other.GetType())
                 return false;
 
-            return String.Equals(info.FullName.TrimEnd('\\'), other.FullName.TrimEnd('\\'),
-                StringComparison.OrdinalIgnoreCase);
+            var l = info.FullName.TrimEnd('\\');
+            var r = other.FullName.TrimEnd('\\');
+            var res = String.Equals(l, r, StringComparison.OrdinalIgnoreCase);
+
+            return res;
+
+            //return String.Equals(info.FullName.TrimEnd('\\'), other.FullName.TrimEnd('\\'),
+            //    StringComparison.OrdinalIgnoreCase);
         }
         
 
