@@ -221,6 +221,21 @@ namespace Das.Views.Mvvm
             return true;
         }
 
+        [DebuggerStepThrough]
+        [DebuggerHidden]
+        [DebuggerNonUserCode]
+        protected virtual Boolean SetValue<T>(ref T field,
+                                              T newValue,
+                                              Action<T, T> onValueChanged,
+                                              [CallerMemberName] String propertyName = "")
+        {
+           if (!VerifyCanChangeValue(field, newValue, null, propertyName))
+              return false;
+
+           SetValueImpl(ref field, newValue, onValueChanged, propertyName);
+           return true;
+        }
+
         // ReSharper disable once UnusedMember.Global
         protected Boolean TryGetPropertyHandler(out PropertyChangedEventHandler handler)
         {

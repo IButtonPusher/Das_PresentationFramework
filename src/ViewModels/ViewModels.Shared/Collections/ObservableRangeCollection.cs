@@ -58,7 +58,12 @@ namespace Das.ViewModels
 
                  arr = items.ToArray();
                  foreach (var item in arr)
+                 {
+                    //var index = Items.Count;
+                    //Items.Insert(index, item);
+                    //InsertItem(index, item);
                     Add(item);
+                 }
               }
            }
            finally

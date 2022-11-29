@@ -86,7 +86,11 @@ namespace CaddyCore
         }
 
        
-        public static void AddToValueList<TKey, TValues, TValue>(
+        /// <summary>
+        /// Adds a value to a collection of items which is the value of a dictionary
+        /// </summary>
+        /// <returns>true if <see cref="key"/> didn't already exist in the dictionary</returns>
+        public static Boolean AddToValueList<TKey, TValues, TValue>(
             this IDictionary<TKey, TValues> dictionary,
             TKey key,
             TValue value)
@@ -96,9 +100,13 @@ namespace CaddyCore
             {
                 val = new();
                 dictionary.Add(key, val);
+
+                val.Add(value);
+                return true;
             }
 
             val.Add(value);
+            return false;
         }
 
         public static void AddToValueList<TKey, TValues, TValue, TNewArg>(
@@ -241,21 +249,21 @@ namespace CaddyCore
                                                       Action<T> handleOldItem,
                                                       Action<T> handleNewItem)
         {
-            if (e.OldItems is { } oi)
-            {
-                foreach (var item in oi.OfType<T>())
-                {
-                    handleOldItem(item);
-                }
-            }
+           if (e.OldItems is { } oi)
+           {
+              foreach (var item in oi.OfType<T>())
+              {
+                 handleOldItem(item);
+              }
+           }
 
-            if (e.NewItems is { } ni)
-            {
-                foreach (var item in ni.OfType<T>())
-                {
-                    handleNewItem(item);
-                }
-            }
+           if (e.NewItems is { } ni)
+           {
+              foreach (var item in ni.OfType<T>())
+              {
+                 handleNewItem(item);
+              }
+           }
         }
 
         // ReSharper disable once UnusedMember.Global

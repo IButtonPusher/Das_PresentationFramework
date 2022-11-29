@@ -385,7 +385,7 @@ public class LoopBuilder<T>
 
         var _enumeratorLocal = _il.DeclareLocal(_enumeratorType);
 
-        var _enumeratorCurrentType = _enumeratorCurrent.ReturnType;
+        //var _enumeratorCurrentType = _enumeratorCurrent.ReturnType;
         OpCode _loadEnumeratorLocal;
         OpCode _callEnumeratorMethod;
 
