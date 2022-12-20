@@ -46,7 +46,11 @@ public abstract class LocalVariable
     public LocalVariable(LocalBuilder localBuilder)
     {
         _localBuilder = localBuilder;
+
+        LocalIndex = localBuilder.LocalIndex;
     }
+
+    public readonly Int32 LocalIndex;
 
     public static implicit operator LocalBuilder(LocalVariable? me)
     {

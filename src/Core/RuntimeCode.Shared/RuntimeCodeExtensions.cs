@@ -12,4 +12,16 @@ public static class RuntimeCodeExtensions
         
         return new LocalVariable<T>(loco);
     }
+
+    public static LocalVariable<T> DeclareLocal<T>(this ILGenerator il,
+                                                   T defaultValue)
+       where T : IConvertible
+    {
+       var localVar = DeclareLocal<T>(il);
+
+       il.PushConstant(defaultValue);
+       il.StoreLocal(localVar);
+
+       return localVar;
+    }
 }

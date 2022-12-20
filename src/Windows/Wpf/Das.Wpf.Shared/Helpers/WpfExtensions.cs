@@ -75,7 +75,7 @@ public static class WpfExtensions
                                       UIElement uiElement,
                                       Boolean drawOutsideBounds)
     {
-        var x = (uiElement.RenderSize.Width - ftext.Width) / 2;
+       var x = Math.Round((uiElement.RenderSize.Width - ftext.Width) / 2, 2);
         if (!drawOutsideBounds && x < 0)
             return false;
         dc.DrawText(ftext, new Point(x, y));

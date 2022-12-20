@@ -114,6 +114,18 @@ public static class RuntimeCodeHelper
         il.Emit(OpCodes.Ldfld, field);
     }
 
+
+    /// <summary>
+    ///     1. ldarg_0
+    ///     2. ldfld(metadataToken)
+    /// </summary>
+    public static void LoadThisField(this ILGenerator il,
+                                     Int32 metadataToken)
+    {
+       il.Emit(OpCodes.Ldarg_0);
+       il.Emit(OpCodes.Ldfld, metadataToken);
+    }
+
     public static void StoreLocal<T>(this ILGenerator il,
                                      FieldDefinition<T> field,
                                      LocalVariable<T> local)

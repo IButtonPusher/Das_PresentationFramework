@@ -52,45 +52,15 @@ public static class ConstForLoop
                   LocalVariable<Int32> idx,
                   TData d1,
                   Int32 d2) =>
-            LoopBodyConverter(action, g, idx, d1, d2);
+            LoopBodyConverter(action, g, idx, d1);
 
         Build(il, fromInclusive, toExclusive, data, 0, ConvertAction);
-        //var index = il.DeclareLocal<Int32>();
-        //il.PushConstant(fromInclusive);
-        //il.StoreLocal(index);
-
-        //var endOfLoop = il.DefineLabel();
-        //var nextIteration = il.DefineLabel();
-
-        //il.MarkLabel(nextIteration);
-
-        //il.LoadLocal(index);
-        //il.PushConstant(maxExclusive);
-        //il.Emit(OpCodes.Bge, endOfLoop);
-
-        ////////
-
-        //action(il, index, data);
-
-
-        ////////
-
-        //il.LoadLocal(index);
-        //il.PushConstant(1);
-        //il.Emit(OpCodes.Add);
-        //il.StoreLocal(index);
-
-        //il.Emit(OpCodes.Br, nextIteration);
-
-
-        //il.MarkLabel(endOfLoop);
     }
 
-    private static void LoopBodyConverter<TData1, TData2>(ForLoopDelegate<TData1> action,
-                                                          ILGenerator il,
-                                                          LocalVariable<Int32> currentIndex,
-                                                          TData1 data1,
-                                                          TData2 data2)
+    private static void LoopBodyConverter<TData1>(ForLoopDelegate<TData1> action,
+                                                  ILGenerator il,
+                                                  LocalVariable<Int32> currentIndex,
+                                                  TData1 data1)
     {
         action(il, currentIndex, data1);
     }
