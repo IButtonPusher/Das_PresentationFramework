@@ -17,7 +17,6 @@ public static class RuntimeCodeHelper
             case 1:
                 return OpCodes.Ldc_I4_1;
 
-
             case 2:
                 return OpCodes.Ldc_I4_2;
 
@@ -110,21 +109,26 @@ public static class RuntimeCodeHelper
     public static void LoadThisField(this ILGenerator il,
                                      FieldInfo field)
     {
-        il.Emit(OpCodes.Ldarg_0);
-        il.Emit(OpCodes.Ldfld, field);
+       if (field.IsStatic)
+          il.Emit(OpCodes.Ldsfld, field.MetadataToken);
+       else
+       {
+          il.Emit(OpCodes.Ldarg_0);
+          il.Emit(OpCodes.Ldfld, field.MetadataToken);
+       }
     }
 
 
-    /// <summary>
-    ///     1. ldarg_0
-    ///     2. ldfld(metadataToken)
-    /// </summary>
-    public static void LoadThisField(this ILGenerator il,
-                                     Int32 metadataToken)
-    {
-       il.Emit(OpCodes.Ldarg_0);
-       il.Emit(OpCodes.Ldfld, metadataToken);
-    }
+    ///// <summary>
+    /////     1. ldarg_0
+    /////     2. ldfld(metadataToken)
+    ///// </summary>
+    //public static void LoadThisField(this ILGenerator il,
+    //                                 Int32 metadataToken)
+    //{
+    //   il.Emit(OpCodes.Ldarg_0);
+    //   il.Emit(OpCodes.Ldfld, metadataToken);
+    //}
 
     public static void StoreLocal<T>(this ILGenerator il,
                                      FieldDefinition<T> field,
@@ -153,6 +157,14 @@ public static class RuntimeCodeHelper
         il.Emit(OpCodes.Stloc, localVar);
     }
 
+    public static void StoreConstToLocal(this ILGenerator il,
+                                            Double value,
+                                            LocalVariable<Double> localVar)
+    {
+       il.PushConstant(value);
+       il.Emit(OpCodes.Stloc, localVar);
+    }
+
 
     public static void StoreLocal(this ILGenerator il,
                                   FieldInfo field,
@@ -165,8 +177,14 @@ public static class RuntimeCodeHelper
     public static void StoreLocal(this ILGenerator il,
                                   LocalBuilder local) => il.Emit(OpCodes.Stloc, local);
 
+    public static void StoreLocal(this ILGenerator il,
+                                  Int32 localIndex) => il.Emit(OpCodes.Stloc, localIndex);
+
     public static void LoadLocal(this ILGenerator il,
                                  LocalBuilder local) => il.Emit(OpCodes.Ldloc, local);
+
+    public static void LoadLocal(this ILGenerator il,
+                                 Int32 localIndex) => il.Emit(OpCodes.Ldloc, localIndex);
 
     /// <summary>
     ///     ret
@@ -331,8 +349,15 @@ public static class RuntimeCodeHelper
     public static void PushConstant(this ILGenerator il,
                                     Double value)
     {
-        il.Emit(OpCodes.Ldc_R8, Convert.ToDouble(value));
+       il.Emit(OpCodes.Ldc_R8, value); //Convert.ToDouble(value));
     }
+
+    public static void PushConstant(this ILGenerator il,
+                                    UInt64 value)
+    {
+       EmitConstUInt64(il, value); //Convert.ToDouble(value));
+    }
+
 
     public static void PushConstant<TConstValue>(this ILGenerator il,
                                                  TConstValue value)
@@ -349,60 +374,55 @@ public static class RuntimeCodeHelper
 
 
             case TypeCode.Boolean:
-                var bVal = Convert.ToBoolean(value);
+               var bVal = value.ToBoolean(default); //Convert.ToBoolean(value);
                 il.Emit(bVal ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
                 return;
 
             case TypeCode.Char:
-                il.Emit(OpCodes.Ldc_I4, Convert.ToInt32(value));
+               il.Emit(OpCodes.Ldc_I4, value.ToInt32(default)); //Convert.ToInt32(value));
                 return;
 
             case TypeCode.SByte:
-                il.Emit(OpCodes.Ldc_I4, Convert.ToInt32(value));
+                il.Emit(OpCodes.Ldc_I4, value.ToInt32(default));//Convert.ToInt32(value));
                 return;
 
 
             case TypeCode.Byte:
-                il.Emit(OpCodes.Ldc_I4, Convert.ToInt32(value));
+                il.Emit(OpCodes.Ldc_I4, value.ToInt32(default));//Convert.ToInt32(value));
                 return;
 
             case TypeCode.Int16:
-                il.Emit(OpCodes.Ldc_I4, Convert.ToInt32(value));
+                il.Emit(OpCodes.Ldc_I4, value.ToInt32(default));//Convert.ToInt32(value));
                 return;
 
             case TypeCode.UInt16:
                 break;
 
             case TypeCode.Int32:
-                PushConstant(il, Convert.ToInt32(value));
+
+               PushConstant(il, value.ToInt32(default)); //Convert.ToInt32(value));
                 return;
 
 
             case TypeCode.UInt32:
-                il.Emit(OpCodes.Ldc_I4, Convert.ToUInt32(value));
+                il.Emit(OpCodes.Ldc_I4, value.ToUInt32(default));//Convert.ToUInt32(value));
                 return;
 
             case TypeCode.Int64:
-                il.Emit(OpCodes.Ldc_I8, Convert.ToInt64(value));
+                il.Emit(OpCodes.Ldc_I8, value.ToInt64(default));//Convert.ToInt64(value));
                 return;
 
             case TypeCode.UInt64:
 
-                //var woteva = Convert.ToUInt64(value);
-                //var m8 = unchecked((Int64)woteva);
-                //EmitConstUInt64(il, );
-                //var uKey = unchecked((Int64)value);
-
-
-                EmitConstUInt64(il, Convert.ToUInt64(value));
+               EmitConstUInt64(il, value.ToUInt64(default)); //Convert.ToUInt64(value));
                 return;
 
             case TypeCode.Single:
-                il.Emit(OpCodes.Ldc_R4, Convert.ToSingle(value));
+                il.Emit(OpCodes.Ldc_R4, value.ToSingle(default)); //Convert.ToSingle(value));
                 return;
 
             case TypeCode.Double:
-                il.Emit(OpCodes.Ldc_R8, Convert.ToDouble(value));
+                il.Emit(OpCodes.Ldc_R8, value.ToDouble(default)); //Convert.ToDouble(value));
                 return;
 
             case TypeCode.Decimal:

@@ -11,7 +11,11 @@ public class FieldDefinition<T>
         _fieldBuilder = fieldBuilder;
     }
 
+    public Boolean IsStatic => _fieldBuilder.IsStatic;
+
     public String Name => _fieldBuilder.Name;
+
+    public Int32 MetadataToken => _fieldBuilder.MetadataToken;
 
     public Type FieldType => typeof(T);
 

@@ -89,27 +89,70 @@ public class LoopBuilder<T>
         ForEachImpl(action, null, data);
     }
 
+    private void ForLoopSetup(Action<ILGenerator> getLength,
+                              out LocalBuilder c,
+                              out Label fore,
+                              out Label breakLoop,
+                              out Type germane,
+                              out LocalBuilder arrLength)
+    {
+       var loadIndex = GetLoadIndexAction(_memberType, out _);
+       ForLoopSetup(getLength, loadIndex, false,
+          out c, out fore, out breakLoop, out germane, out arrLength);
+    }
+
     private void ForLoopSetup(out LocalBuilder c,
                               out Label fore,
                               out Label breakLoop,
                               out Type germane,
                               out LocalBuilder arrLength)
     {
-        germane = _elementType;
-        var loadIndex = GetLoadIndexAction(_memberType, out var getLength);
+       var loadIndex = GetLoadIndexAction(_memberType, out var getLength);
+       ForLoopSetup(getLength, loadIndex, true,
+          out c, out fore, out breakLoop, out germane, out arrLength);
 
-        arrLength = _il.DeclareLocal(Const.IntType);
-        _pushMemberToStack(_il, _member);
-        getLength(_il);
+        //germane = _elementType;
+       
+
+        //arrLength = _il.DeclareLocal(Const.IntType);
+        //_pushMemberToStack(_il, _member);
+        //getLength(_il);
         
-        _il.Emit(OpCodes.Stloc, arrLength);
+        //_il.Emit(OpCodes.Stloc, arrLength);
 
-        c = _il.DeclareLocal(Const.IntType);
-        _il.Emit(OpCodes.Ldc_I4_0);
-        _il.Emit(OpCodes.Stloc, c);
+        //c = _il.DeclareLocal(Const.IntType);
+        //_il.Emit(OpCodes.Ldc_I4_0);
+        //_il.Emit(OpCodes.Stloc, c);
 
-        ForLoopSetup(arrLength, loadIndex, c,
-            out fore, out breakLoop, out germane);
+        //ForLoopSetup(arrLength, loadIndex, c,
+        //    out fore, out breakLoop, out germane);
+    }
+
+    private void ForLoopSetup(Action<ILGenerator> getLength,
+                              Action<ILGenerator, LocalBuilder> loadIndex,
+                              Boolean pushMemberForLength,
+                              out LocalBuilder c,
+                              out Label fore,
+                              out Label breakLoop,
+                              out Type germane,
+                              out LocalBuilder arrLength)
+    {
+       germane = _elementType;
+       //var loadIndex = GetLoadIndexAction(_memberType, out var getLength);
+
+       arrLength = _il.DeclareLocal(Const.IntType);
+       if (pushMemberForLength)
+         _pushMemberToStack(_il, _member);
+       getLength(_il);
+
+       _il.Emit(OpCodes.Stloc, arrLength);
+
+       c = _il.DeclareLocal(Const.IntType);
+       _il.Emit(OpCodes.Ldc_I4_0);
+       _il.Emit(OpCodes.Stloc, c);
+
+       ForLoopSetup(arrLength, loadIndex, c,
+          out fore, out breakLoop, out germane);
     }
 
     //private void ForLoopSetup(LocalBuilder arrLength,
@@ -226,6 +269,20 @@ public class LoopBuilder<T>
         action(_il, loopData, data);
 
         ForLoopIncrement(c, fore, breakLoop);
+    }
+
+    public void ForLoop<TData>(TData data,
+                               Action<ILGenerator> getLength,
+                               OnForLoopIteration<TData> action)
+    {
+       ForLoopSetup(getLength, out var c, out var fore, out var breakLoop, 
+          out var germane, out var countVar);
+
+       var loopData = new ForLoopData(CurrentValueLocal, c, countVar, germane);
+        
+       action(_il, loopData, data);
+
+       ForLoopIncrement(c, fore, breakLoop);
     }
 
     public void ForLoop<TData1, TData2>(TData1 data1,

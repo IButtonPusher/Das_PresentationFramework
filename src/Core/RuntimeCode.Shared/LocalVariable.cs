@@ -31,7 +31,8 @@ public class ThrowawayLocalVariable<T> : LocalVariable<T>,
 
 public class LocalVariable<T> : LocalVariable
 {
-    public LocalVariable(LocalBuilder localBuilder) : base(localBuilder)
+    public LocalVariable(LocalBuilder localBuilder) 
+       : base(localBuilder)
     {
     }
 
