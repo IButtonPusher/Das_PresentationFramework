@@ -505,17 +505,13 @@ public class LoopBuilder<T>
 
 
             _il.MarkLabel(handleValue);
-
-
-            //_il.Emit(_loadEnumeratorLocal, _enumeratorLocal);
-            //_il.Emit(_callEnumeratorMethod, _enumeratorMoveNext);
-            //_il.Emit(OpCodes.Brfalse, allDone);
+   
 
             if (enumeratorCurrentValue is { })
             {
                 _il.Emit(_loadEnumeratorLocal, _enumeratorLocal);
                 _il.Emit(OpCodes.Callvirt, _enumeratorCurrent);
-                _il.Emit(OpCodes.Stloc, enumeratorCurrentValue);
+                _il.Emit(OpCodes.Stloc, enumeratorCurrentValue.LocalIndex);
             }
 
             /////////////////////////////////////////////////////////////
@@ -547,9 +543,7 @@ public class LoopBuilder<T>
             _il.Emit(_callEnumeratorMethod, _enumeratorMoveNext);
 
             _il.Emit(OpCodes.Brtrue, handleValue);
-
-            //_il.Emit(OpCodes.Leave, allDone);
-
+   
             /////////////////////////////////////////////////////////////
         }
 
