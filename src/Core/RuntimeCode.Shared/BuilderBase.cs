@@ -100,14 +100,19 @@ public abstract class BuilderBase<T>
     }
 
     private static void PushField(ILGenerator il,
-                                     FieldInfo field)
+                                  FieldInfo field)
     {
-        il.Emit(OpCodes.Ldarg_0);
-        il.Emit(OpCodes.Ldfld, field);
+       if (field.IsStatic)
+          il.Emit(OpCodes.Ldsfld, field);
+       else
+       {
+          il.Emit(OpCodes.Ldarg_0);
+          il.Emit(OpCodes.Ldfld, field);
+       }
     }
 
     private static void PushMethod(ILGenerator il,
-                                  MethodInfo m)
+                                   MethodInfo m)
     {
         il.Emit(OpCodes.Ldarg_0);
         il.Emit(OpCodes.Callvirt, m);

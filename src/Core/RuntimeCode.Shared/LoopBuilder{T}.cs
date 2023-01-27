@@ -155,41 +155,7 @@ public class LoopBuilder<T>
           out fore, out breakLoop, out germane);
     }
 
-    //private void ForLoopSetup(LocalBuilder arrLength,
-    //                          out LocalBuilder c,
-    //                          out Label fore,
-    //                          out Label breakLoop,
-    //                          out Type germane)
-    //{
-    //    var loadIndex = GetLoadIndexAction(_memberType, out _);
-
-    //    ForLoopSetup(arrLength, loadIndex,
-    //        out c, out fore, out breakLoop, out germane);
-    //}
-
-    //private void ForLoopSetup(LocalBuilder arrLength,
-    //                          Action<ILGenerator, LocalBuilder> loadIndex,
-    //                          out LocalBuilder c,
-    //                          out Label fore,
-    //                          out Label breakLoop,
-    //                          out Type germane)
-    //{
-    //    germane = _elementType;
-    //    //var loadIndex = GetLoadIndexAction(_memberType, out var getLength);
-
-    //    //arrLength = _il.DeclareLocal(Const.IntType);
-    //    //_pushMemberToStack(_il, _member);
-    //    //getLength(_il);
-        
-    //    _il.Emit(OpCodes.Stloc, arrLength);
-
-    //    c = _il.DeclareLocal(Const.IntType);
-    //    _il.Emit(OpCodes.Ldc_I4_0);
-    //    _il.Emit(OpCodes.Stloc, c);
-
-    //    ForLoopSetup(arrLength, loadIndex, c,
-    //        out fore, out breakLoop, out germane);
-    //}
+  
 
     private void ForLoopSetup(LocalBuilder arrLength,
                               Action<ILGenerator, LocalBuilder> loadIndex,
