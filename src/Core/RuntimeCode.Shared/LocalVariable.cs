@@ -42,7 +42,7 @@ public class LocalVariable<T> : LocalVariable
     }
 }
 
-public abstract class LocalVariable
+public abstract class LocalVariable : IEquatable<LocalBuilder>
 {
     public LocalVariable(LocalBuilder localBuilder)
     {
@@ -61,4 +61,6 @@ public abstract class LocalVariable
     public Type LocalType => _localBuilder.LocalType ?? throw new NullReferenceException();
 
     protected readonly LocalBuilder _localBuilder;
+
+    public Boolean Equals(LocalBuilder? other) => ReferenceEquals(_localBuilder, other);
 }

@@ -14,10 +14,10 @@ namespace RuntimeCode.Shared;
 public class LoopBuilder<T>
 {
     public LoopBuilder(ILGenerator il,
-                       T member,
+                       T collectionAccessor,
                        ITypeManipulator types,
                        LocalBuilder? currentValueLocal = null)
-        : this(il, member, BuilderBase<T>.GetPushValueAction(member),
+        : this(il, collectionAccessor, BuilderBase<T>.GetPushValueAction(collectionAccessor),
             types, currentValueLocal)
     {
     }
@@ -110,22 +110,6 @@ public class LoopBuilder<T>
        var loadIndex = GetLoadIndexAction(_memberType, out var getLength);
        ForLoopSetup(getLength, loadIndex, true,
           out c, out fore, out breakLoop, out germane, out arrLength);
-
-        //germane = _elementType;
-       
-
-        //arrLength = _il.DeclareLocal(Const.IntType);
-        //_pushMemberToStack(_il, _member);
-        //getLength(_il);
-        
-        //_il.Emit(OpCodes.Stloc, arrLength);
-
-        //c = _il.DeclareLocal(Const.IntType);
-        //_il.Emit(OpCodes.Ldc_I4_0);
-        //_il.Emit(OpCodes.Stloc, c);
-
-        //ForLoopSetup(arrLength, loadIndex, c,
-        //    out fore, out breakLoop, out germane);
     }
 
     private void ForLoopSetup(Action<ILGenerator> getLength,
@@ -138,7 +122,6 @@ public class LoopBuilder<T>
                               out LocalBuilder arrLength)
     {
        germane = _elementType;
-       //var loadIndex = GetLoadIndexAction(_memberType, out var getLength);
 
        arrLength = _il.DeclareLocal(Const.IntType);
        if (pushMemberForLength)
@@ -165,34 +148,25 @@ public class LoopBuilder<T>
                               out Type germane)
     {
         germane = _elementType;
-        //var loadIndex = GetLoadIndexAction(_memberType, out var getLength);
 
-        //var arrLength = _il.DeclareLocal(Const.IntType);
-        //_pushMemberToStack(_il, _member);
-        //getLength(_il);
-        
-        //_il.Emit(OpCodes.Stloc, arrLength);
-
-        //c = _il.DeclareLocal(Const.IntType);
-        //_il.Emit(OpCodes.Ldc_I4_0);
-        //_il.Emit(OpCodes.Stloc, c);
-
+        //////////////////
         // for (var c = 0;
+        //////////////////
         fore = _il.DefineLabel();
         breakLoop = _il.DefineLabel();
 
-        //c = _il.DeclareLocal(Const.IntType);
-        //_il.Emit(OpCodes.Ldc_I4_0);
-        //_il.Emit(OpCodes.Stloc, c);
-        
         _il.MarkLabel(fore);
 
+        //////////////////
         // c < arr.Length
+        //////////////////
         _il.Emit(OpCodes.Ldloc, c);
         _il.Emit(OpCodes.Ldloc, arrLength);
         _il.Emit(OpCodes.Bge, breakLoop);
 
+        //////////////////////////
         // var current = array[c];
+        //////////////////////////
         _pushMemberToStack(_il, _member);
         loadIndex(_il, c);
 
@@ -203,14 +177,16 @@ public class LoopBuilder<T>
                                   Label fore,
                                   Label breakLoop)
     {
-        // c++
-        _il.Emit(OpCodes.Ldloc, c);
-        _il.Emit(OpCodes.Ldc_I4_1);
-        _il.Emit(OpCodes.Add);
-        _il.Emit(OpCodes.Stloc, c);
-        _il.Emit(OpCodes.Br, fore);
+       //////////////////////////
+       // c++
+       //////////////////////////
+       _il.Emit(OpCodes.Ldloc, c);
+       _il.Emit(OpCodes.Ldc_I4_1);
+       _il.Emit(OpCodes.Add);
+       _il.Emit(OpCodes.Stloc, c);
+       _il.Emit(OpCodes.Br, fore);
 
-        _il.MarkLabel(breakLoop);
+       _il.MarkLabel(breakLoop);
     }
 
     public void ForLoop<TData>(TData data,
@@ -264,35 +240,6 @@ public class LoopBuilder<T>
 
         ForLoopIncrement(c, fore, breakLoop);
     }
-
-    //public void ForLoop<TData>(TData data,
-    //                           LocalBuilder countVar,
-    //                           OnForLoopIteration<TData> action)
-    //{
-    //    ForLoopSetup(countVar, out var c, out var fore, out var breakLoop, 
-    //        out var germane);
-
-    //    var loopData = new ForLoopData(CurrentValueLocal, c, countVar, germane);
-        
-    //    action(_il, loopData, data);
-
-    //    ForLoopIncrement(c, fore, breakLoop);
-    //}
-
-    //public void ForLoop<TData1, TData2>(TData1 data1,
-    //                                    TData2 data2,
-    //                           LocalBuilder countVar,
-    //                           OnForLoopIteration<TData1, TData2> action)
-    //{
-    //    ForLoopSetup(countVar, out var c, out var fore, out var breakLoop, 
-    //        out var germane);
-
-    //    var loopData = new ForLoopData(CurrentValueLocal, c, countVar, germane);
-        
-    //    action(_il, loopData, data1, data2);
-
-    //    ForLoopIncrement(c, fore, breakLoop);
-    //}
 
     public void ForLoop<TData1, TData2>(TData1 data1,
                                         TData2 data2,
@@ -407,8 +354,7 @@ public class LoopBuilder<T>
             nameof(IEnumerator.Current), out _);
 
         var _enumeratorLocal = _il.DeclareLocal(_enumeratorType);
-
-        //var _enumeratorCurrentType = _enumeratorCurrent.ReturnType;
+   
         OpCode _loadEnumeratorLocal;
         OpCode _callEnumeratorMethod;
 
@@ -426,11 +372,6 @@ public class LoopBuilder<T>
         if (action == null && indexedAction == null)
             throw new InvalidOperationException();
 
-        var germane = _elementType;
-        //var germane = _types.GetGermaneType(_memberType);
-
-        
-
         LocalBuilder? actionIndex;
         LocalBuilder? enumeratorCurrentValue;
 
@@ -439,7 +380,6 @@ public class LoopBuilder<T>
             actionIndex = _il.DeclareLocal(typeof(Int32));
             _il.PushConstant(0);
             _il.StoreLocal(actionIndex);
-
 
             enumeratorCurrentValue = _il.DeclareLocal(_enumeratorCurrent.ReturnType);
         }
@@ -451,12 +391,9 @@ public class LoopBuilder<T>
 
 
         _pushMemberToStack(_il, _member);
-
         _il.Emit(OpCodes.Callvirt, _getEnumerator);
-
         _il.Emit(OpCodes.Stloc, _enumeratorLocal);
 
-        
 
         /////////////////////////////////////
         // TRY
@@ -486,11 +423,11 @@ public class LoopBuilder<T>
                 notIndexed(_il,
                     () => LoadEnumeratorCurrentValue(_enumeratorLocal, _enumeratorCurrent,
                         _loadEnumeratorLocal),
-                    germane, data);
+                    _elementType, data);
             else
             {
                 indexedAction!(_il, enumeratorCurrentValue!, actionIndex!,
-                    germane, data);
+                   _elementType, data);
                 _il.Emit(OpCodes.Ldloc, actionIndex!);
                 _il.Emit(OpCodes.Ldc_I4_1);
                 _il.Emit(OpCodes.Add);
@@ -503,7 +440,6 @@ public class LoopBuilder<T>
             /////////////////////////////////////
             // !enumerator.HasNext() -> EXIT LOOP
             /////////////////////////////////////
-
             _il.MarkLabel(moveNext);
             _il.Emit(_loadEnumeratorLocal, _enumeratorLocal);
             _il.Emit(_callEnumeratorMethod, _enumeratorMoveNext);
@@ -535,25 +471,16 @@ public class LoopBuilder<T>
             _il.MarkLabel(endfinally);
         }
         _il.EndExceptionBlock();
-
-        //_il.MarkLabel(allDone);
     }
 
   
 
-    private void LoadEnumeratorCurrentValue(LocalBuilder _enumeratorLocal,
-                                            MethodInfo _enumeratorCurrent,
-                                            //Type _enumeratorCurrentType,
-                                            OpCode _loadEnumeratorLocal)
+    private void LoadEnumeratorCurrentValue(LocalBuilder enumeratorLocal,
+                                            MethodInfo enumeratorCurrent,
+                                            OpCode loadEnumeratorLocal)
     {
-        _il.Emit(_loadEnumeratorLocal, _enumeratorLocal);
-        _il.Emit(OpCodes.Callvirt, _enumeratorCurrent);
-
-        //if (_enumeratorCurrentType.IsValueType)
-        //{
-        //    //_il.Emit(OpCodes.Stloc, _enumeratorCurrentValue);
-        //    //_il.Emit(OpCodes.Ldloca, _enumeratorCurrentValue);
-        //}
+        _il.Emit(loadEnumeratorLocal, enumeratorLocal);
+        _il.Emit(OpCodes.Callvirt, enumeratorCurrent);
     }
 
     public LocalBuilder CurrentValueLocal { get; }

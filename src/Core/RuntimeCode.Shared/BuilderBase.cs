@@ -61,7 +61,7 @@ public abstract class BuilderBase<T>
     {
         switch (member)
         {
-            case PropertyInfo _ when _pushProperty is Action<ILGenerator, T> good:
+            case PropertyInfo when _pushProperty is Action<ILGenerator, T> good:
                 return good;
 
             case FieldInfo when _pushField is Action<ILGenerator, T> good:
