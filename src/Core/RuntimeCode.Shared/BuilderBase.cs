@@ -103,7 +103,11 @@ public abstract class BuilderBase<T>
                                   FieldInfo field)
     {
        if (field.IsStatic)
+       {
           il.Emit(OpCodes.Ldsfld, field);
+   
+
+       }
        else
        {
           il.Emit(OpCodes.Ldarg_0);
