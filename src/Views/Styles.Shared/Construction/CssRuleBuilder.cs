@@ -54,7 +54,6 @@ namespace Das.Views.Construction.Styles
             {
                 case DeclarationProperty.ZIndex:
                     return new ScalarDeclaration<Int32>(value, _variableAccessor, property);
-                    //return new DoubleDeclaration(value, _variableAccessor, property);
 
                 case DeclarationProperty.Position:
                     return new PositionDeclaration(value, _variableAccessor);
