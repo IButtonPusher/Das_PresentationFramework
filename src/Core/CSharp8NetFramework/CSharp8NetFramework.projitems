@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AsyncTaskCompletionSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AwaitableCompletionSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CancellationTokenEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ListEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\AsyncSemaphore.cs" />
@@ -19,6 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\ReaderWriter\ReaderWriterAsync.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\ReaderWriter\ReaderWriteSync.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\ReaderWriter\StreamReaderAsync.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Concurrency\ReaderWriter\WorkerTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\ReaderWriter\WriterAsync.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\SyncReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\WaiterAction.cs" />

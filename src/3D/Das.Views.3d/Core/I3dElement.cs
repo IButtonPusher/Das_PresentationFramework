@@ -1,4 +1,5 @@
 ﻿using System;
+using Das.Views.Extended.Core;
 
 namespace Das.Views.Extended
 {

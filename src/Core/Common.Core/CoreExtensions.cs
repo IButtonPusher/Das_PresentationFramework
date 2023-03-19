@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections;
-using AssaultWare.Business;
 
 #if !NET40
 
@@ -19,7 +18,7 @@ using TaskEx = System.Threading.Tasks.Task;
 #endif
 
 
-namespace CaddyCore
+namespace Common.Core
 {
     public static class CoreExtensions
     {
@@ -206,6 +205,8 @@ namespace CaddyCore
         //    return true;
         //}
 
+      #if !NET40
+
         public static Boolean AreDictionariesEqual<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> left,
                                                                  IReadOnlyDictionary<TKey, TValue> right)
 
@@ -223,6 +224,8 @@ namespace CaddyCore
 
             return true;
         }
+
+         #endif
 
         public static async Task HandleCollectionChangedAsync<T>(this NotifyCollectionChangedEventArgs e,
                                                                  Func<T, Task> handleOldItem,
@@ -273,26 +276,6 @@ namespace CaddyCore
             return CombinationsImpl(argList, 0, argSetSize - 1);
         }
 
-
-        public static Char ToChar(this TableActions action)
-        {
-            switch (action)
-            {
-                case TableActions.Check:
-                    return 'X';
-                case TableActions.Bet:
-                    return 'B';
-                case TableActions.Raise:
-                    return 'R';
-                case TableActions.Call:
-                    return 'C';
-                case TableActions.Fold:
-                    return 'F';
-            }
-
-            return ' ';
-        }
-
         public static void AddRange<T>(this ICollection<T> collection,
                                        IEnumerable<T> items)
         {
@@ -333,11 +316,7 @@ namespace CaddyCore
             }
         }
 
-        [MethodImpl(256)]
-        public static Boolean IsAmayaSite(this Sites site)
-        {
-            return site is Sites.Stars or Sites.FullTilt;
-        }
+       
 
         public static IEnumerable<TEnum> GetLegitValues<TEnum>()
             where TEnum : struct, IConvertible
@@ -478,6 +457,12 @@ namespace CaddyCore
             return output.ToString();
         }
 
+        //[MethodImpl(256)]
+        //public static Boolean AreEqualEnough(this Double f1,
+        //                                     Double f2)
+        //{
+        //   return Math.Abs(f1 - f2) < 0.00001;
+        //}
 
         public static String ToMultiline(this String input,
                                          Int32 rowLength)

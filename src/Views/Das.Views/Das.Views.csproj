@@ -42,6 +42,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\LocalValueEnumerator.cs" />
+    <Compile Remove="Data\PropertyValue.cs" />
+    <Compile Remove="Data\SecurityCriticalDataForSet.cs" />
+    <Compile Remove="Localization\SR.cs" />
+    <Compile Remove="Localization\SRID.cs" />
     <Compile Remove="Panels\Grid\GridPanel.cs" />
     <Compile Remove="Panels\Grid\RepeaterGrid.cs" />
     <Compile Remove="Panels\Providers\StackPanelProvider.cs" />
@@ -50,6 +55,7 @@
     <Compile Remove="Resources\IResource.cs" />
     <Compile Remove="Resources\ResourceHandle.cs" />
     <Compile Remove="SurrogateVisualBase.cs" />
+    <Compile Remove="Validation\Invariant.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,15 +63,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Localization\" />
     <Folder Include="Panels\Grid\" />
     <Folder Include="Panels\Providers\" />
     <Folder Include="Resources\" />
     <Folder Include="Styles\Application\" />
+    <Folder Include="Validation\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Das.Container" Version="0.0.14-alpha" />
-    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.22-alpha" />
+    <PackageReference Include="Das.Serializer.Interfaces" Version="0.0.27-alpha" />
   </ItemGroup>
 
   <ItemGroup>

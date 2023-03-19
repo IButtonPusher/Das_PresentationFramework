@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CaddyCore;
+namespace Common.Core;
 
 public class UnsetEnumValueAttribute : Attribute
 {

@@ -6,12 +6,7 @@ namespace Das.ViewModels.ChangeTracking
     [AttributeUsage(AttributeTargets.Property)]
     public class TriggersIsChangedAttribute : Attribute
     {
-        //public TriggersIsChangedAttribute()
-        //{
-        //    CheckEquality = true;
-        //}
-
-        public TriggersIsChangedAttribute(Boolean checkEquality = true)
+       public TriggersIsChangedAttribute(Boolean checkEquality = true)
         {
             CheckEquality = checkEquality;
         }

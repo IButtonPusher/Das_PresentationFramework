@@ -15,8 +15,7 @@ namespace Das.Mvvm
         {
             if (e.Action == NotifyCollectionChangedAction.Reset)
             {
-                if (onClear != null)
-                    onClear();
+               onClear?.Invoke();
 
                 return;
             }
@@ -32,6 +31,32 @@ namespace Das.Mvvm
 
             var news = e.NewItems.OfType<T>();
             newItems(news);
+        }
+
+        public static async Task HandleCollectionChangesAsync<T>(this NotifyCollectionChangedEventArgs e,
+                                                      Func<IEnumerable<T>, Task> oldItems,
+                                                      Func<IEnumerable<T>, Task> newItems,
+                                                      Func<Task>? onClear = null)
+        {
+           if (e.Action == NotifyCollectionChangedAction.Reset)
+           {
+              if (onClear != null)
+                 await onClear();
+
+              return;
+           }
+
+           if (e.OldItems != null)
+           {
+              var olds = e.OldItems.OfType<T>();
+              await oldItems(olds);
+           }
+
+           if (e.NewItems == null)
+              return;
+
+           var news = e.NewItems.OfType<T>();
+           await newItems(news);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 
-namespace Das.Views.Extended
+namespace Das.Views.Extended.Core
 {
     public interface IPoint3D : IEquatable<IPoint3D>
     {

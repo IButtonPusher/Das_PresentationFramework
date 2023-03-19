@@ -254,6 +254,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Input\Text\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Mvvm\" />
   </ItemGroup>
 </Project>

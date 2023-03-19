@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using Das.Views.Extended.Core;
 
 namespace Das.Views.Extended
 {

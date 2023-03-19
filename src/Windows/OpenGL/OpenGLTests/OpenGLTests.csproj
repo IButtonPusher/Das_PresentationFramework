@@ -142,6 +142,10 @@
       <Name>Das.OpenGL.Windows</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="Das.Serializer.Split">
+      <Version>0.0.27-alpha</Version>
+    </PackageReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
