@@ -41,57 +41,57 @@ namespace System.Threading.Tasks
       public AsyncTaskCompletionSource() : base(_defaultCreationOptions)
       {
          //Interlocked.Add(ref _cnt, 1);
-         Task.ContinueWith(OnCompleted);
+         //Task.ContinueWith(OnCompleted);
       }
 
       Task ITaskCompletionSource.Task => Task;
 
       public Boolean IsComplete => Task.IsCompleted;
 
-      public T SetOrGetResult(Func<T> builder)
-      {
-         if (Interlocked.Add(ref _completionCount, 1) == 1)
-         {
-            var res = builder();
-            if (TrySetResult(res))
-               return res;
-         }
+      //public T SetOrGetResult(Func<T> builder)
+      //{
+      //   if (Interlocked.Add(ref _completionCount, 1) == 1)
+      //   {
+      //      var res = builder();
+      //      if (TrySetResult(res))
+      //         return res;
+      //   }
 
-         return Task.Result;
-      }
+      //   return Task.Result;
+      //}
 
-      public Boolean TrySetResult(Func<T>? builder)
-      {
-         if (Interlocked.Add(ref _completionCount, 1) == 1)
-         {
-            if (builder == null)
-               return TrySetResult(default(T)!);
+      //public Boolean TrySetResult(Func<T>? builder)
+      //{
+      //   if (Interlocked.Add(ref _completionCount, 1) == 1)
+      //   {
+      //      if (builder == null)
+      //         return TrySetResult(default(T)!);
 
-            return TrySetResult(builder());
-         }
+      //      return TrySetResult(builder());
+      //   }
 
-         return false;
-      }
+      //   return false;
+      //}
 
-      public async Task<Boolean> TrySetResultAsync(Func<Task<T>> builder)
-      {
-         if (Interlocked.Add(ref _completionCount, 1) == 1)
-         {
-            return TrySetResult(await builder());
-         }
+      //public async Task<Boolean> TrySetResultAsync(Func<Task<T>> builder)
+      //{
+      //   if (Interlocked.Add(ref _completionCount, 1) == 1)
+      //   {
+      //      return TrySetResult(await builder());
+      //   }
 
-         return false;
-      }
+      //   return false;
+      //}
 
       private void OnCancelled()
       {
-         TrySetResult(default);
+         TrySetResult(default!);
       }
 
-      protected virtual void OnCompleted(Task<T> obj)
-      {
-         Interlocked.Add(ref _completionCount, 1);
-      }
+      //protected virtual void OnCompleted(Task<T> obj)
+      //{
+      //   Interlocked.Add(ref _completionCount, 1);
+      //}
 
 
 
@@ -100,6 +100,6 @@ namespace System.Threading.Tasks
       //private static Int32 _cnt;
 
 
-      private Int64 _completionCount;
+      //private Int64 _completionCount;
    }
 }

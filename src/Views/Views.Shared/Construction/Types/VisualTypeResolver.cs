@@ -133,11 +133,7 @@ namespace Das.Views.Construction
 
                         case "assembly":
                             asmName = subTokens[1];
-                            //if (!asmName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) &&
-                            //    !asmName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
-                            //{
-                            //    asmName += ".dll";
-                            //}
+                            
                             break;
                     }
                 }

@@ -344,22 +344,6 @@ namespace Das.Xamarin.Android
            //_currentRectHeight = _currentRectBottom - _currentRectTop;
         }
 
-
-        //private Rect GetAbsoluteAndroidRect<TRectangle>(TRectangle rect)
-        //    where TRectangle : IRectangle
-        //{
-        //    if (ZoomLevel.AreDifferent(1.0))
-        //        return new Rect(Convert.ToInt32((rect.Left + CurrentLocation.X) * ZoomLevel),
-        //            Convert.ToInt32((rect.Top + CurrentLocation.Y) * ZoomLevel),
-        //            Convert.ToInt32((rect.Right + CurrentLocation.X) * ZoomLevel),
-        //            Convert.ToInt32((rect.Bottom + CurrentLocation.Y) * ZoomLevel));
-
-        //    return new Rect(Convert.ToInt32(rect.Left + CurrentLocation.X),
-        //        Convert.ToInt32(rect.Top + CurrentLocation.Y),
-        //        Convert.ToInt32(rect.Right + CurrentLocation.X),
-        //        Convert.ToInt32(rect.Bottom + CurrentLocation.Y));
-        //}
-
         private Canvas GetCanvas()
         {
             return Canvas ?? throw new NullReferenceException("Canvas must be set");

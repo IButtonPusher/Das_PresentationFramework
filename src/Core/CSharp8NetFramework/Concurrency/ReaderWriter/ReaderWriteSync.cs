@@ -48,6 +48,26 @@ namespace System.Threading
             }
         }
 
+        public TResult Read<TInput1, TInput2, TInput3, TResult>(TInput1 input,
+                                                       TInput2 input2,
+                                                       TInput3 input3,
+                                                       Func<TInput1, TInput2, TInput3, TResult> action)
+        {
+           if (!ObtainSyncReadImpl())
+              return default!;
+
+           try
+           {
+              var res = action(input, input2, input3);
+              return res;
+           }
+           finally
+           {
+              EndReaderImpl();
+           }
+        }
+
+
         public TResult Read<TInput, TResult>(TInput input,
                                              Func<TInput, TResult> action)
         {

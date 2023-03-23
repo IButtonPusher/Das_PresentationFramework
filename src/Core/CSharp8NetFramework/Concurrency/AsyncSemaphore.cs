@@ -89,6 +89,22 @@ namespace System.Threading
             }
         }
 
+        public Task WaitAsync<T>(T data)
+        {
+           lock (_lockObj)
+           {
+              if (_availableCount > 0)
+              {
+                 --_availableCount;
+                 return _completedTask;
+              }
+
+              var waiter = new SemaphoreCompletionSource<T>(data);
+              _waiters.Enqueue(waiter);
+              return waiter.Task;
+           }
+        }
+
         public void Wait()
         {
             lock (_lockObj)

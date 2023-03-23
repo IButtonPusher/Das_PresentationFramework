@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -9,7 +10,11 @@ namespace Das.Views.Construction
     {
         protected static async Task<String> GetStringFromResourceAsync(String resourceName)
         {
-            var thisExe = Assembly.GetExecutingAssembly();
+           await TaskEx.Yield();
+
+           var sw = Stopwatch.StartNew();
+
+           var thisExe = Assembly.GetExecutingAssembly();
 
             using (var stream = thisExe.GetManifestResourceStream(resourceName))
             {
@@ -18,7 +23,13 @@ namespace Das.Views.Construction
 
                 using (var sr = new StreamReader(stream))
                 {
-                    return await sr.ReadToEndAsync().ConfigureAwait(false);
+                   var sw2 = Stopwatch.StartNew();
+
+                    //var str = await sr.ReadToEndAsync().ConfigureAwait(false);
+                    var str = sr.ReadToEnd();
+                    Debug.WriteLine("read xml from resource in " + sw. ElapsedMilliseconds + "/"
+                                    + sw2.ElapsedMilliseconds + " ms");
+                    return str;
                 }
             }
         }

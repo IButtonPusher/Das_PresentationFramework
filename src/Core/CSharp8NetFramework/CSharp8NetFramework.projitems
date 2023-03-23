@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\ReaderWriter\StreamReaderAsync.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\ReaderWriter\WorkerTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\ReaderWriter\WriterAsync.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Concurrency\SemaphoreCompletionSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\SyncReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\WaiterAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\Waiters\AsyncEnumerableWaiter2.cs" />
@@ -44,6 +45,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\Waiters\FuncWaiter{T1TR}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\Waiters\FuncWaiter{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Concurrency\Waiters\ITaskAwaiters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DelegateTaskCompletionSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ForEach\AsyncEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ForEach\AsyncEnumerableWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ForEach\AsyncEnumerationCanceledException.cs" />

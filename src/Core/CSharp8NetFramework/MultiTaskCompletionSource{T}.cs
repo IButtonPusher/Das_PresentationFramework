@@ -1,10 +1,11 @@
-﻿using System;
+﻿using AssaultWare.Business;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace System.Threading.Tasks
 {
-   public class MultiTaskCompletionSource<T> : AsyncTaskCompletionSource<T>,
+   public class MultiTaskCompletionSource<T> : DelegateTaskCompletionSource<T>,
                                                IMultiTaskCompletionSource<T>
    {
       public MultiTaskCompletionSource(IMultiTaskCompletionSource<T> src)
