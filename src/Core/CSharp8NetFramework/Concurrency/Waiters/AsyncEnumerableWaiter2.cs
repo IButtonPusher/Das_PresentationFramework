@@ -71,7 +71,7 @@ namespace CSharp8NetFramework.Concurrency.Waiters
             lock (_currentItemCompletionLock)
             {
                 _currentItemRequest.TrySetResult(false);
-                _currentItemCompletion.TrySetResult(default);
+                _currentItemCompletion.TrySetResult(default!);
             }
         }
 

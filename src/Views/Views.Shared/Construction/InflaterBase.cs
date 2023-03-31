@@ -4,6 +4,13 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
+#if !NET40
+
+using TaskEx = System.Threading.Tasks.Task;
+
+#endif
+
+
 namespace Das.Views.Construction
 {
     public abstract class InflaterBase
@@ -25,8 +32,8 @@ namespace Das.Views.Construction
                 {
                    var sw2 = Stopwatch.StartNew();
 
-                    //var str = await sr.ReadToEndAsync().ConfigureAwait(false);
-                    var str = sr.ReadToEnd();
+                    var str = await sr.ReadToEndAsync().ConfigureAwait(false);
+                    //var str = sr.ReadToEnd();
                     Debug.WriteLine("read xml from resource in " + sw. ElapsedMilliseconds + "/"
                                     + sw2.ElapsedMilliseconds + " ms");
                     return str;
