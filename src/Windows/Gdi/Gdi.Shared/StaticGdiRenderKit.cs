@@ -38,9 +38,17 @@ namespace Das.Gdi.Kits
                 BaselineThemeProvider.Instance, visualLineage, _layoutQueue);
         }
 
+
+
         IMeasureContext IRenderKit.MeasureContext => MeasureContext;
 
         IRenderContext IRenderKit.RenderContext => RenderContext;
+
+        public void Clear()
+        {
+           MeasureContext.Clear();
+           RenderContext.Clear();
+        }
 
         public GdiMeasureContext MeasureContext { get; }
 

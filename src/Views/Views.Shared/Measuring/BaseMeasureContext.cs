@@ -62,6 +62,7 @@ namespace Das.Views.Measuring
 
             var res = MeasureElement(element, availableSpace);
             //Debug.WriteLine("********** END MEASURE ***********");
+
             return res;
         }
 
@@ -205,6 +206,11 @@ namespace Das.Views.Measuring
             VisualLineage.PopVisual();
 
             return desiredSize;
+        }
+
+        public override void Clear()
+        {
+           ClearLastMeasurements();
         }
 
         private void SetLastMeasured(IVisualElement element,

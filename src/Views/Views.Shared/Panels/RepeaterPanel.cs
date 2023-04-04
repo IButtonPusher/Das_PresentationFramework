@@ -48,11 +48,6 @@ namespace Das.Views.Panels
             _visualsByVm = new Dictionary<Object, IVisualElement>();
             _itemsControlHelper = new ItemsControlHelper(AddNewItems, RemoveItems, ClearItems,
                 null, null);
-
-            var wot = Interlocked.Add(ref _netAlive, 1);
-
-            if (wot > 1000)
-            {}
         }
 
         private static Int32 _netAlive;
@@ -143,6 +138,7 @@ namespace Das.Views.Panels
                 return default;
 
             _controls.Clear(true);
+            _renderer.Clear();
 
             return content;
         }
@@ -155,6 +151,7 @@ namespace Das.Views.Panels
             }
 
             _controls.Clear(true);
+            _renderer.Clear();
         }
 
         private ISequentialRenderer EnsureRenderer(ISequentialRenderer? input)

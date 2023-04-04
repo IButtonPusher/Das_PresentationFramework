@@ -42,6 +42,12 @@ namespace Das.OpenGL
 
       IRenderContext IRenderKit.RenderContext => RenderContext;
 
+      public void Clear()
+      {
+         MeasureContext.Clear();
+         RenderContext.Clear();
+      }
+
       public GLMeasureContext MeasureContext { get; }
 
       public GLRenderContext RenderContext { get; }

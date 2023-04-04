@@ -49,9 +49,7 @@ namespace Das.Views.Rendering
 
          _renderLock = new Object();
          Perspective = perspective;
-         //CurrentElementRect = ValueRenderRectangle.Empty;
-         //_locations = new Stack<ValueRenderRectangle>();
-         //_locations.Push(CurrentElementRect);
+ 
 
          _boxModel = new BoxModelLayoutTree();
       }
@@ -112,8 +110,15 @@ namespace Das.Views.Rendering
          lock (_renderLock)
          {
             return RenderPositions.TryGetValue(element, out bounds);
-            //||
-            //LastRenderPositions.TryGetValue(element, out bounds);
+         }
+      }
+
+      public override void Clear()
+      {
+         lock (_renderLock)
+         {
+            RenderPositions = new Dictionary<IVisualElement, ValueCube>();
+            LastRenderPositions = new Dictionary<IVisualElement, ValueCube>();
          }
       }
 
@@ -199,16 +204,13 @@ namespace Das.Views.Rendering
 
             RenderPositions = new Dictionary<IVisualElement, ValueCube>();
 
-            //LastRenderPositions.Clear();
-            //foreach (var kvp in RenderPositions) LastRenderPositions[kvp.Key] = kvp.Value;
-            //RenderPositions.Clear();
-
-
             DrawElement(element, new ValueRenderRectangle(rect));
          }
 
          lock (_renderLock)
             LastRenderPositions = RenderPositions;
+
+         ClearLastMeasurements();
       }
 
 
@@ -505,19 +507,6 @@ namespace Das.Views.Rendering
          return false;
       }
 
-      //private void PopRect()
-      //{
-      //   _currentZ--;
-      //   _locations.Pop();
-      //   CurrentElementRect = _locations.Peek();
-      //}
-
-      //private void PushRect(ValueRenderRectangle rect)
-      //{
-      //   _currentZ++;
-      //   _locations.Push(rect);
-      //   CurrentElementRect = rect;
-      //}
 
       protected ValuePoint2D CurrentLocation => _boxModel.CurrentElementRect.Location;
 

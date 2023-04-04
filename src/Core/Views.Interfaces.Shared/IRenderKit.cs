@@ -24,5 +24,7 @@ namespace Das.Views
 
         void RegisterSurrogate<T>(Func<IVisualElement, IVisualSurrogate> builder)
             where T : IVisualElement;
+
+        void Clear();
     }
 }

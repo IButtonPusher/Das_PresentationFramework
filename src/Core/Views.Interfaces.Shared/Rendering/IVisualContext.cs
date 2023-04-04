@@ -20,5 +20,7 @@ namespace Das.Views.Rendering
         Boolean TryGetElementSize(IVisualElement visual,
                                   ISize availableSize,
                                   out ValueSize size);
+
+        void Clear();
     }
 }

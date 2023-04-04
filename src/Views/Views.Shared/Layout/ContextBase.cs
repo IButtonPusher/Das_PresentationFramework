@@ -64,6 +64,16 @@ namespace Das.Views
             return false;
         }
 
+        public abstract void Clear();
+
+        protected void ClearLastMeasurements()
+        {
+           lock (_measureLock)
+           {
+              _lastMeasurements.Clear();
+           }
+        }
+
         protected IVisualElement GetElementForLayout(IVisualElement element)
         {
             _surrogateProvider.TrySetSurrogate(ref element);

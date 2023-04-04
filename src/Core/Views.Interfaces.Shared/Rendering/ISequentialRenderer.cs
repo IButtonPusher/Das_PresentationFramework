@@ -17,5 +17,7 @@ namespace Das.Views.Rendering
                                       TRenderSize availableSpace,
                                       IMeasureContext measureContext)
             where TRenderSize : IRenderSize;
+
+        void Clear();
     }
 }

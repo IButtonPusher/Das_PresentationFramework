@@ -184,7 +184,8 @@ namespace Das.Views
         {
             _surrogateTypeBuilders[typeof(T)] = builder;
         }
-        
+
+
         protected readonly Dictionary<IVisualElement, ValueCube> _renderPositions;
         protected readonly ILayoutQueue _layoutQueue;
         private readonly Dictionary<IVisualElement, IVisualSurrogate> _surrogateInstances;

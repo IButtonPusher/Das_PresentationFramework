@@ -83,7 +83,11 @@ namespace Das.Gdi.Kits
         IRenderContext IRenderKit.RenderContext => _renderContext;
 
         
-
+        public void Clear()
+        {
+           MeasureContext.Clear();
+           RenderContext.Clear();
+        }
 
         public GdiMeasureContext MeasureContext => _measureContext;
 

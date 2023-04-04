@@ -138,13 +138,14 @@ namespace Das.Views.DataBinding
             var targetType = _targetGetter.ReturnType;
             
             if (value is { } valueValue &&
+                valueValue.GetType() is {} valType &&
                 // ReSharper disable once UseMethodIsInstanceOfType
-                !targetType.IsAssignableFrom(valueValue.GetType()))
+                !targetType.IsAssignableFrom(valType))
 
             {
                 //not trivial to set the target value to the source value
                 
-                var valType = valueValue.GetType();
+                //var valType = valueValue.GetType();
                 
                 if (valueValue is IEnumerable valCollection)
                 {
@@ -153,9 +154,7 @@ namespace Das.Views.DataBinding
                         if (TryGetGenericCollectionArgument(valType, out var germane) ||
                             TryGetGenericCollectionArgument(_srcProp.PropertyType, out germane))
                         {
-                            //throw new NotImplementedException();
-                            //targetType = typeof(AsyncObservableCollection2<>).MakeGenericType(germane);
-                            targetType = typeof(ObservableRangeCollection<>).MakeGenericType(germane);
+                           targetType = typeof(ObservableRangeCollection<>).MakeGenericType(germane);
                         }
                     }
 
