@@ -65,7 +65,6 @@ namespace Das.Views.Rendering
       {
          var offset = bounds.Location;
 
-
          foreach (var kvp in GetRenderables(orientation, bounds))
          {
             if (offset.IsOrigin)
@@ -75,6 +74,9 @@ namespace Das.Views.Rendering
          }
 
          ElementsRendered.Clear();
+
+         lock (_measureLock)
+            _currentlyRendering.Clear();
       }
 
       protected ValueThickness MeasureImpl<TRenderSize>(IVisualElement container,
