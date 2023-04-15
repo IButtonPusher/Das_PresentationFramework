@@ -101,9 +101,20 @@ namespace Das.Gdi.Kits
 
             return window.Invoke(() =>
             {
-                var v = new HtmlViewSurrogate(element, control);
-                control.Controls.Add(v);
-                return v;
+               switch (element)
+               {
+                  case HtmlPanel web:
+                     var html = new WebViewSurrogate(web, control);
+                     control.Controls.Add(html);
+                     return html;
+
+                  default:
+                     throw new NotImplementedException(element.GetType().Name);
+               }
+
+                //var v = new HtmlViewSurrogate(element, control);
+                //control.Controls.Add(v);
+                //return v;
             });
         }
 
