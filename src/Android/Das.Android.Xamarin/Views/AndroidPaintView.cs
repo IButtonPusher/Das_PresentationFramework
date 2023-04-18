@@ -33,6 +33,8 @@ namespace Das.Xamarin.Android
          _totalRun = new Stopwatch();
          _currentRender = new Stopwatch();
 
+         _refreshStopwatch = new Stopwatch();
+
          _viewState = renderKit.RenderContext.ViewState ?? throw new NullReferenceException();
       }
 
@@ -50,17 +52,40 @@ namespace Das.Xamarin.Android
          if (!_isSurfaceReady)
             return;
 
+         var sw = Stopwatch.StartNew();
+
          var cnv = _surfaceHolder.LockCanvas();
+
+         var t1 = sw.ElapsedMilliseconds;
+         Int64 t2 = 0, t3;
 
          try
          {
             DrawImpl(cnv!);
+
+            t2 = sw.ElapsedMilliseconds - t1;
          }
          finally
          {
             _surfaceHolder.UnlockCanvasAndPost(cnv);
+            t3 = sw.ElapsedMilliseconds - t2;
+
+            _sum1 += t1;
+            _sum2 += t2;
+            _sum3 += t3;
+
+            if ((++_counter % 100) == 0)
+            {
+               Debug.WriteLine($"t1: {_sum1} t2: {_sum2} t3: {_sum3} counter: {_counter}");
+            }
          }
       }
+
+      private Int64 _sum1;
+      private Int64 _sum2;
+      private Int64 _sum3;
+
+      private Int32 _counter;
 
       protected override void OnDraw(Canvas? canvas)
       {
@@ -82,31 +107,29 @@ namespace Das.Xamarin.Android
             _renderKit.MeasureContext.MeasureMainView(_view,
                new ValueRenderSize(_targetRect), _viewState);
          }
-         else
-         {}
 
          _renderContext.Canvas = canvas;
          _renderContext.DrawMainElement(_view,
             _targetRect, _viewState);
 
 
-         _totalLayoutMs += _currentRender.ElapsedMilliseconds;
-         _totalLayouts++;
-         //if (Interlocked.Add(ref _totalLayouts, 1) % 10 == 0)
-         if (_totalRun.ElapsedMilliseconds >= 5000)
-         {
-            var ts = DateTime.Now - _timeStarted;
-            var layoutsPerSecond = _totalLayouts / ts.TotalSeconds;
-            var avgLayout = _totalLayoutMs / (Double) _totalLayouts;
+         //_totalLayoutMs += _currentRender.ElapsedMilliseconds;
+         //_totalLayouts++;
+         ////if (Interlocked.Add(ref _totalLayouts, 1) % 10 == 0)
+         //if (_totalRun.ElapsedMilliseconds >= 5000)
+         //{
+         //   var ts = DateTime.Now - _timeStarted;
+         //   var layoutsPerSecond = _totalLayouts / ts.TotalSeconds;
+         //   var avgLayout = _totalLayoutMs / (Double) _totalLayouts;
 
-            UILogger.Log("********layouts per second: " + layoutsPerSecond +
-                                  " avg layout time: " + avgLayout +
-                                  " invalidate requests: " + _timesInvalidated, LogLevel.Level2);
+         //   UILogger.Log("********layouts per second: " + layoutsPerSecond +
+         //                         " avg layout time: " + avgLayout +
+         //                         " invalidate requests: " + _timesInvalidated, LogLevel.Level2);
 
-            _totalRun.Restart();
-            _totalLayoutMs = 0;
-            _totalLayouts = 0;
-         }
+         //   _totalRun.Restart();
+         //   _totalLayoutMs = 0;
+         //   _totalLayouts = 0;
+         //}
       }
 
       protected override void OnMeasure(Int32 widthMeasureSpec,
@@ -143,6 +166,12 @@ namespace Das.Xamarin.Android
       private DateTime _timeStarted;
       private Int64 _totalLayoutMs;
       private Int32 _totalLayouts;
+
+      private readonly Stopwatch _refreshStopwatch;
+      private Int64 _totalRefreshMs;
+      private Int32 _totalRefreshes;
+
+
       private readonly ISurfaceHolder _surfaceHolder;
       private Boolean _isSurfaceReady;
       private readonly Stopwatch _totalRun;

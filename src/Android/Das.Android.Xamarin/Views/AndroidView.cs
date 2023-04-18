@@ -79,8 +79,6 @@ namespace Das.Xamarin.Android
 
             var inputHandler = new BaseInputHandler(RenderKit.RenderContext);
             _inputContext = new AndroidInputContext(this, context, inputHandler, renderKit.ViewState);
-
-            //view.PropertyChanged += OnViewPropertyChanged;
         }
 
        

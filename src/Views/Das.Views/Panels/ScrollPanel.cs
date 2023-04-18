@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Geometry;
@@ -265,7 +266,9 @@ namespace Das.Views.Panels
         protected virtual Boolean OnScroll(Double deltaX,
                                            Double deltaY)
         {
-            //Debug.WriteLine(Environment.TickCount + " scrolling Y " + deltaY + " WAS: " + VerticalOffset);
+            //Debug.WriteLine(Environment.TickCount + " scrolling Y " + deltaY + 
+            //                " WAS: " + VerticalOffset + 
+            //                " MAX: " + _maximumYScroll);
 
             var didScroll = false;
 
@@ -273,18 +276,27 @@ namespace Das.Views.Panels
             {
                 var nextYScroll = GetValueBetween(VerticalOffset + deltaY, 0, _maximumYScroll);
 
+                //Debug.WriteLine("next y: " + nextYScroll);
+
                 //var nextYScroll = Math.Max(0, VerticalOffset + deltaY);
 
                 if (nextYScroll.AreDifferent(VerticalOffset))
                 {
                     if (nextYScroll < 0)
                         VerticalOffset = 0;
-                    else if (nextYScroll > _maximumYScroll)
-                        VerticalOffset = _maximumYScroll;
+                    else if (nextYScroll >= _maximumYScroll)
+                    {
+                       VerticalOffset = _maximumYScroll;
+                       InvalidateMeasure();
+                    }
                     else
                         VerticalOffset = Convert.ToInt32(nextYScroll);
 
                     didScroll = true;
+                }
+                else
+                {
+                   InvalidateMeasure();
                 }
             }
 

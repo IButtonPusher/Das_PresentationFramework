@@ -30,11 +30,6 @@ public static class DataTemplateHelper
         where TVisual : UIElement, new()
     {
         var dataTemplate = GetDataTemplate<TDataContext>(resources);
-        //var k = new DataTemplateKey(typeof(TDataContext));
-        //if (resources[k] is not DataTemplate dataTemplate)
-        //    throw new ResourceReferenceKeyNotFoundException("No template was found",
-        //        $"{typeof(TDataContext)}");
-
 
         var contents = dataTemplate.LoadContent();
 

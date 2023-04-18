@@ -194,6 +194,10 @@ namespace Das.Xamarin.Android.Input
                     RemoveFlingEventually(flingArgs);
                     //RemoveInteraction(InputAction.Fling);
                 }
+                else
+                {
+
+                }
             }
 
             return true;

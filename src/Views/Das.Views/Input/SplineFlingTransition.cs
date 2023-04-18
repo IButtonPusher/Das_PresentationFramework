@@ -88,6 +88,10 @@ namespace Das.Views.Input
          _cancellationSource.Cancel(false);
       }
 
+      public override void Start()
+      {
+         Start(_cancellationSource.Token);
+      }
 
       protected override void OnUpdate(Double runningPct)
       {
