@@ -9,9 +9,5 @@ namespace Das.Views.Input
         Boolean IsMousePresent { get; }
 
         Double ZoomLevel { get; }
-
-        //Double MaximumFlingVelocity { get; }
-
-        //Double MinimumFlingVelocity { get; }
     }
 }

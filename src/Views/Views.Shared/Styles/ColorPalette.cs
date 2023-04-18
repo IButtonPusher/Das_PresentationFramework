@@ -17,7 +17,6 @@ namespace Das.Views.Styles
                             IBrush background,
                             IBrush surface,
                             IBrush error,
-
                             IBrush onPrimary,
                             IBrush onSecondary,
                             IBrush onBackground,
@@ -41,18 +40,18 @@ namespace Das.Views.Styles
         }
 
         public static readonly ColorPalette Baseline = new ColorPalette(
-            Hex("#6200EE"),
-            Hex("#3700B3"),
-            Hex("#03DAC6"),
-            Hex("#018786"),
-            Hex("#FFFFFF"),
-            Hex("#FFFFFF"),
-            Hex("#B00020"),
-            Hex("#FFFFFF"),
-            Hex("#000000"),
-            Hex("#000000"),
-            Hex("#000000"),
-            Hex("#FFFFFF"));
+           primary: Hex("#6200EE"),
+           primaryVariant: Hex("#3700B3"),
+           secondary:Hex("#03DAC6"),
+           secondaryVariant:Hex("#018786"),
+           background: Hex("#FFFFFF"),
+           surface: Hex("#FFFFFF"),
+           error: Hex("#B00020"),
+           onPrimary: Hex("#FFFFFF"),
+           onSecondary: Hex("#000000"),
+           onBackground: Hex("#000000"),
+           onSurface: Hex("#000000"),
+           onError: Hex("#FFFFFF"));
 
         public static readonly ColorPalette DefaultDark = new ColorPalette(
            primary: Hex("#BB86FC"), //

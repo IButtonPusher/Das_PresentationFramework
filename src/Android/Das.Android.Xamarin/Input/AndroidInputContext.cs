@@ -27,6 +27,8 @@ namespace Das.Xamarin.Android.Input
             _inputHandler = inputHandler;
             _activeInputActions = InputAction.None;
 
+            
+
             //_velocityTracker = VelocityTracker.Obtain();
 
             var viewConfig = ViewConfiguration.Get(context) ?? throw new NotSupportedException();
@@ -61,6 +63,8 @@ namespace Das.Xamarin.Android.Input
 
             _gestureDetector = new GestureDetectorCompat(context, this);
             _gestureDetector.SetOnDoubleTapListener(this);
+
+            _flingBuilder = new FlingBuilder(_dpiRatio, _scrollFriction, _physicalCoefficient);
 
             hostView.SetOnTouchListener(this);
         }
@@ -177,11 +181,11 @@ namespace Das.Xamarin.Android.Input
             if (Math.Abs(velocityX) >= _minimumFlingVelocity ||
                 Math.Abs(velocityY) >= _minimumFlingVelocity)
             {
-                BuildFlingValues(velocityX, out var flungX, out var xDuration);
-                BuildFlingValues(velocityY, out var flungY, out var yDuration);
+                _flingBuilder.BuildFlingValues(velocityX, out var flungX, out var xDuration);
+                _flingBuilder.BuildFlingValues(velocityY, out var flungY, out var yDuration);
 
                 var flingArgs = new FlingEventArgs(velocityX * _dpiRatio,
-                    velocityY * _dpiRatio, pos, this, //RemoveFlingInteraction,
+                    velocityY * _dpiRatio, pos, this, 
                     flungX, flungY, xDuration, yDuration);
 
                 _lastFlingArgs = flingArgs;
@@ -218,54 +222,45 @@ namespace Das.Xamarin.Android.Input
             RemoveInteraction(InputAction.Fling);
         }
 
-        private void BuildFlingValues(Double velocity,
-                                      out Double distance,
-                                      out TimeSpan duration)
-        {
-            if (velocity != 0)
-            {
-                distance = GetSplineFlingDistance(velocity * _dpiRatio);
-                duration = GetSplineFlingDuration(velocity);
-            }
-            else
-            {
-                distance = 0;
-                duration = TimeSpan.Zero;
-            }
-        }
-
-        private Double GetSplineDeceleration(Double velocity)
-        {
-            return Math.Log(_inflexion * Math.Abs(velocity) / 
-                            (_scrollFriction * _physicalCoefficient));
-        }
-
-        private Double GetSplineFlingDistance(Double velocity)
-        {
-            var l = GetSplineDeceleration(velocity);
-            var decelMinusOne = _decelerationRate - 1.0;
-            return _scrollFriction * _physicalCoefficient * 
-                   Math.Exp(_decelerationRate / decelMinusOne * l) *
-                   Math.Sign(velocity);
-        }
-
-        private TimeSpan GetSplineFlingDuration(Double velocity)
-        {
-            var l = GetSplineDeceleration(velocity);
-            var decelMinusOne = _decelerationRate - 1.0;
-            return TimeSpan.FromMilliseconds(1000.0 * Math.Exp(l / decelMinusOne));
-        }
-
-        //private void RemoveFlingInteraction()
+        //private void BuildFlingValues(Double velocity,
+        //                              out Double distance,
+        //                              out TimeSpan duration)
         //{
-        //    //System.Diagnostics.Debug.WriteLine("[OKYN] removing fling interaction");
-        //    RemoveInteraction(InputAction.Fling);
+        //    if (velocity != 0)
+        //    {
+        //        distance = GetSplineFlingDistance(velocity * _dpiRatio);
+        //        duration = GetSplineFlingDuration(velocity);
+        //    }
+        //    else
+        //    {
+        //        distance = 0;
+        //        duration = TimeSpan.Zero;
+        //    }
         //}
 
-        //private void OnFlingCompleted(Task<Boolean> obj)
+        //private Double GetSplineDeceleration(Double velocity)
         //{
-        //    RemoveInteraction(InputAction.Fling);
+        //    return Math.Log(_inflexion * Math.Abs(velocity) / 
+        //                    (_scrollFriction * _physicalCoefficient));
         //}
+
+        //private Double GetSplineFlingDistance(Double velocity)
+        //{
+        //    var l = GetSplineDeceleration(velocity);
+        //    var decelMinusOne = _decelerationRate - 1.0;
+        //    return _scrollFriction * _physicalCoefficient * 
+        //           Math.Exp(_decelerationRate / decelMinusOne * l) *
+        //           Math.Sign(velocity);
+        //}
+
+        //private TimeSpan GetSplineFlingDuration(Double velocity)
+        //{
+        //    var l = GetSplineDeceleration(velocity);
+        //    var decelMinusOne = _decelerationRate - 1.0;
+        //    return TimeSpan.FromMilliseconds(1000.0 * Math.Exp(l / decelMinusOne));
+        //}
+
+    
 
         public void OnLongPress(MotionEvent? e)
         {
@@ -434,6 +429,7 @@ namespace Das.Xamarin.Android.Input
         private InputAction _activeInputActions;
 
         private readonly GestureDetectorCompat _gestureDetector;
+        private readonly FlingBuilder _flingBuilder;
         private readonly View _hostView;
         private readonly BaseInputHandler _inputHandler;
         
@@ -450,7 +446,7 @@ namespace Das.Xamarin.Android.Input
         private readonly Single _physicalCoefficient;
         private FlingEventArgs? _lastFlingArgs;
         
-        private static readonly Single _decelerationRate = (Single) (Math.Log(0.78) / Math.Log(0.9));
-        private static readonly Single _inflexion = 0.35f; // Tension lines cross at (INFLEXION, 1)
+        //private static readonly Single _decelerationRate = (Single) (Math.Log(0.78) / Math.Log(0.9));
+        //private static readonly Single _inflexion = 0.35f; // Tension lines cross at (INFLEXION, 1)
     }
 }

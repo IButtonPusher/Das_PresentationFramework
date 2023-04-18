@@ -22,6 +22,19 @@ namespace Das.Gdi
          : base(offsetter, inputHandler, windowHandle)
       {
          _window = window;
+         var dpi = 1.0f;
+         _dpiRatio = dpi;
+         var ppi = dpi * 160.0f;
+
+         var _scrollFriction = 0.015f;
+      
+      var _physicalCoefficient = 9.80665f // g (m/s^2)
+                                 * 39.37f // inch/meter
+                                 * ppi
+                                 * 0.84f; // look and feel tuning
+
+      _flingBuilder = new FlingBuilder(dpi, _scrollFriction, _physicalCoefficient);
+
          Application.AddMessageFilter(this);
       }
 
@@ -111,8 +124,15 @@ namespace Das.Gdi
                      if (Math.Abs(vx) >= MinimumFlingVelocity ||
                          Math.Abs(vy) >= MinimumFlingVelocity)
                      {
-                        flingArgs = new FlingEventArgs(vx, vy, pos, this,
-                           0.5f, 0.5f, TimeSpan.Zero, TimeSpan.Zero); //todo:
+                        _flingBuilder.BuildFlingValues(vx, out var flungX, out var xDuration);
+                        _flingBuilder.BuildFlingValues(vy, out var flungY, out var yDuration);
+
+                        flingArgs = new FlingEventArgs(vx * _dpiRatio,
+                           vy* _dpiRatio, pos, this, 
+                           flungX, flungY, xDuration, yDuration);
+
+                        //flingArgs = new FlingEventArgs(vx, vy, pos, this,
+                        //   0.5f, 0.5f, TimeSpan.Zero, TimeSpan.Zero); //todo:
                      }
                   }
                }
@@ -271,5 +291,8 @@ namespace Das.Gdi
       private ValuePoint2D? _nextToLastDragPosition;
       private Int64 _nextToLastDragTimestamp;
       private ValuePoint2D? _rightButtonWentDown;
+
+      private readonly FlingBuilder _flingBuilder;
+      private readonly Single _dpiRatio;
    }
 }

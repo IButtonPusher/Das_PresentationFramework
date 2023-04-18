@@ -12,7 +12,7 @@ namespace Das.Views.Rendering
    /// <summary>
    ///    Renders a collection of elements vertically or horizontally
    /// </summary>
-   public class SequentialRenderer : ISequentialRenderer,
+   public partial class SequentialRenderer : ISequentialRenderer,
                                      IDisposable
    {
       public SequentialRenderer(IVisualCollection visuals,
@@ -46,7 +46,6 @@ namespace Das.Views.Rendering
                out var maxWidth, out var maxHeight,
                out var totalWidth, out var totalHeight);
 
-
             return new ValueSize(Math.Max(totalWidth, maxWidth) + margin.Width,
                Math.Max(totalHeight, maxHeight) + margin.Height);
          }
@@ -63,6 +62,8 @@ namespace Das.Views.Rendering
                                                IRenderContext renderContext)
          where TRenderRect : IRenderRectangle
       {
+         Debug.WriteLine("arrange sequential renderer");
+
          var offset = bounds.Location;
 
          foreach (var kvp in GetRenderables(orientation, bounds))
@@ -185,6 +186,10 @@ namespace Das.Views.Rendering
          lock (_measureLock)
          {
             var current = ValueRenderRectangle.Empty;
+
+            if (_currentlyRendering.Count == 0)
+            {
+            }
 
             foreach (var child in _currentlyRendering)
             {

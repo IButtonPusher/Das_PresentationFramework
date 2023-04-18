@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Das.ViewModels;
@@ -84,23 +85,44 @@ namespace Das.Views
         public override void Arrange<TRenderSize>(TRenderSize availableSpace,
                                                  IRenderContext renderContext)
         {
-            var targetRect = new ValueRenderRectangle(0, 0,
-                availableSpace.Width,
-                _headerUses.Height,
-                availableSpace.Offset);
+            //var targetRect = new ValueRenderRectangle(0, 0,
+            //    availableSpace.Width,
+            //    _headerUses.Height,
+            //    availableSpace.Offset);
 
-            if (_headerPanel is { } header) renderContext.DrawElement(header, targetRect);
+            //if (_headerPanel is { } header) renderContext.DrawElement(header, targetRect);
 
-            if (!(SelectedContent is { } selectedContent))
-                return;
+            //if (!(SelectedContent is { } selectedContent))
+            //    return;
 
-            targetRect = new ValueRenderRectangle(0,
-                _headerUses.Height,
-                availableSpace.Width,
-                availableSpace.Height - _headerUses.Height,
-                availableSpace.Offset);
+            ValueRenderRectangle targetRect;
 
-            renderContext.DrawElement(selectedContent, targetRect);
+            if ((SelectedContent is { } selectedContent))
+            {
+               targetRect = new ValueRenderRectangle(0,
+                  _headerUses.Height,
+                  availableSpace.Width,
+                  availableSpace.Height - _headerUses.Height,
+                  availableSpace.Offset);
+
+               renderContext.DrawElement(selectedContent, targetRect);
+            }
+
+            ///////////////////////
+
+            if (_headerPanel is { } header)
+            {
+               targetRect = new ValueRenderRectangle(0, 0,
+                  availableSpace.Width,
+                  _headerUses.Height,
+                  availableSpace.Offset);
+
+               Debug.WriteLine("draw tab header");
+
+               renderContext.DrawElement(header, targetRect);
+
+               Debug.WriteLine("drew tab header");
+            }
         }
 
         INotifyingCollection? IItemsControl.ItemsSource => ItemsSource;

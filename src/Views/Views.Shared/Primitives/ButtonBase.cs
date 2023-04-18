@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.ViewModels;
 using Das.Views.Core.Geometry;
@@ -28,6 +29,7 @@ namespace Das.Views.Controls
         public override void Arrange<TRenderSize>(TRenderSize availableSpace,
                                                  IRenderContext renderContext)
         {
+           Debug.WriteLine("arrange button");
             _lastRenderSize = availableSpace;
             base.Arrange(availableSpace, renderContext);
         }

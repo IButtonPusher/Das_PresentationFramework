@@ -117,6 +117,10 @@ namespace Das.Views.Panels
 
             if (contentSpace.Width > 0 && contentSpace.Height > 0)
                renderContext.DrawElement(content, contentSpace);
+            else
+            {
+
+            }
          }
 
          IsRequiresArrange = false;

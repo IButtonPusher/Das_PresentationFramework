@@ -172,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Geometry\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Rendering\Sequential\" />
     <Folder Include="$(MSBuildThisFileDirectory)Validation\" />
   </ItemGroup>
 </Project>
