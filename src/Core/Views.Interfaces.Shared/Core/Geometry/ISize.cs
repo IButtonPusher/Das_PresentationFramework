@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views.Core.Geometry
+namespace Das.Views.Core.Geometry;
+
+public interface ISize : IEquatable<ISize>
 {
-    public interface ISize : IEquatable<ISize>
-    {
-        Double Height { get; }
+   Double Height { get; }
 
-        Boolean IsEmpty { get; }
+   Boolean IsEmpty { get; }
 
-        Double Width { get; }
+   Double Width { get; }
 
-        Boolean HasInfiniteDimension { get; }
-    }
+   Boolean HasInfiniteDimension { get; }
 }

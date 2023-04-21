@@ -3,29 +3,28 @@ using System.IO;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 
-namespace Das.Views.Images
+namespace Das.Views.Images;
+
+public interface IImage : ISize,
+                          IDisposable
 {
-    public interface IImage : ISize,
-                              IDisposable
-    {
-        Boolean IsDisposed { get; }
+   Boolean IsDisposed { get; }
 
-        Boolean IsNullImage { get; }
+   Boolean IsNullImage { get; }
 
-        Task SaveAsync(FileInfo path);
+   Task SaveAsync(FileInfo path);
 
-        Task SaveThenDisposeAsync(FileInfo path);
+   Task SaveThenDisposeAsync(FileInfo path);
 
-        Stream? ToStream();
+   Stream? ToStream();
 
-        Task<Boolean> TrySave(FileInfo path);
+   Task<Boolean> TrySave(FileInfo path);
 
-        T Unwrap<T>();
+   T Unwrap<T>();
 
-        void UnwrapLocked<T>(Action<T> action);
+   void UnwrapLocked<T>(Action<T> action);
 
-        Task<TResult> UseImage<TImage, TParam, TResult>(
-            TParam param1,
-            Func<TImage, TParam, TResult> action);
-    }
+   Task<TResult> UseImage<TImage, TParam, TResult>(
+      TParam param1,
+      Func<TImage, TParam, TResult> action);
 }

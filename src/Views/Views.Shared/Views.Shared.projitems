@@ -49,6 +49,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\DependencyPropertyBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DependencyProperties\DependencyProperty{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Images\NullSvgBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\FlingBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\HitTester.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\InteractiveVisualProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoxModel\BoxModelLayoutTree.cs" />

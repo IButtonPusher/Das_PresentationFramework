@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.ViewModels;
 using Das.Views.Core.Geometry;
