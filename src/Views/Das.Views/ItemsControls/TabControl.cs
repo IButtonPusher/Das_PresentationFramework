@@ -117,11 +117,11 @@ namespace Das.Views
                   _headerUses.Height,
                   availableSpace.Offset);
 
-               Debug.WriteLine("draw tab header");
+               //Debug.WriteLine("draw tab header");
 
                renderContext.DrawElement(header, targetRect);
 
-               Debug.WriteLine("drew tab header");
+               //Debug.WriteLine("drew tab header");
             }
         }
 

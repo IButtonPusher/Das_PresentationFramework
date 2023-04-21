@@ -66,6 +66,11 @@ namespace Das.Views.Core.Geometry
          return new(X, Y, Width, Height);
       }
 
+      public virtual void Reset()
+      {
+         Left = Top = _w = _h = 0;
+      }
+
       public Boolean Equals(Rectangle? other)
       {
          if (ReferenceEquals(null, other)) return false;

@@ -29,7 +29,7 @@ namespace Das.Views.Controls
         public override void Arrange<TRenderSize>(TRenderSize availableSpace,
                                                  IRenderContext renderContext)
         {
-           Debug.WriteLine("arrange button");
+           //Debug.WriteLine("arrange button");
             _lastRenderSize = availableSpace;
             base.Arrange(availableSpace, renderContext);
         }

@@ -41,46 +41,95 @@ namespace Das.Views.Rendering
             return base.Measure(container, orientation, availableSpace, measureContext);
         }
 
-        protected override ValueRenderRectangle GetElementBounds(IVisualElement child,
-                                                                 ValueRenderRectangle precedingVisualBounds)
+        protected override Boolean TryGetElementBounds(IVisualElement child,
+                                                                 ValueRenderRectangle precedingVisualBounds,
+                                                                 out ValueRenderRectangle bounds)
         {
-            var useY = _currentY;
-            var topGap = 0.0;
+           var useY = _currentY;
+           var topGap = 0.0;
 
-            var consider = base.GetElementBounds(child, precedingVisualBounds);
-            var currentRowHeight = _rowHeights[_currentRow];
+           if (!base.TryGetElementBounds(child, precedingVisualBounds, out var consider))
+           {
+              bounds = default;
+              return false;
+           }
 
-            switch (child.VerticalAlignment)
-            {
-                case VerticalAlignments.Top:
-                case VerticalAlignments.Stretch:
-                    break;
+           //var consider = base.GetElementBounds(child, precedingVisualBounds);
+           var currentRowHeight = _rowHeights[_currentRow];
 
-                case VerticalAlignments.Bottom:
-                    topGap = currentRowHeight - consider.Height;
-                    break;
+           switch (child.VerticalAlignment)
+           {
+              case VerticalAlignments.Top:
+              case VerticalAlignments.Stretch:
+                 break;
 
-                case VerticalAlignments.Center:
-                case VerticalAlignments.Default:
-                    topGap = (currentRowHeight - consider.Height) / 2;
+              case VerticalAlignments.Bottom:
+                 topGap = currentRowHeight - consider.Height;
+                 break;
 
-                    break;
+              case VerticalAlignments.Center:
+              case VerticalAlignments.Default:
+                 topGap = (currentRowHeight - consider.Height) / 2;
 
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            var useHeight = currentRowHeight - topGap;
-            useY += topGap;
+                 break;
 
 
-            _currentRow++;
-            _currentY += currentRowHeight;
+              default:
+                 throw new ArgumentOutOfRangeException();
+           }
 
-            return new ValueRenderRectangle(consider.X, useY, 
-                new ValueSize(consider.Width, useHeight), consider.Offset);
+           var useHeight = currentRowHeight - topGap;
+           useY += topGap;
+
+
+           _currentRow++;
+           _currentY += currentRowHeight;
+
+           bounds = new ValueRenderRectangle(consider.X, useY, 
+              new ValueSize(consider.Width, useHeight), consider.Offset);
+           return true;
         }
+
+        //protected override ValueRenderRectangle GetElementBounds(IVisualElement child,
+        //                                                         ValueRenderRectangle precedingVisualBounds)
+        //{
+        //    var useY = _currentY;
+        //    var topGap = 0.0;
+
+        //    var consider = base.GetElementBounds(child, precedingVisualBounds);
+        //    var currentRowHeight = _rowHeights[_currentRow];
+
+        //    switch (child.VerticalAlignment)
+        //    {
+        //        case VerticalAlignments.Top:
+        //        case VerticalAlignments.Stretch:
+        //            break;
+
+        //        case VerticalAlignments.Bottom:
+        //            topGap = currentRowHeight - consider.Height;
+        //            break;
+
+        //        case VerticalAlignments.Center:
+        //        case VerticalAlignments.Default:
+        //            topGap = (currentRowHeight - consider.Height) / 2;
+
+        //            break;
+
+
+        //        default:
+        //            throw new ArgumentOutOfRangeException();
+        //    }
+
+        //    var useHeight = currentRowHeight - topGap;
+        //    useY += topGap;
+
+
+        //    _currentRow++;
+        //    _currentY += currentRowHeight;
+
+        //    return new ValueRenderRectangle(consider.X, useY, 
+        //        new ValueSize(consider.Width, useHeight), consider.Offset);
+        //}
 
         protected override ValueSize SetChildSize(IVisualElement child,
                                                   RenderRectangle current)

@@ -146,7 +146,7 @@ namespace Das.Gdi
                 throw new NotSupportedException(nameof(DrawString) +
                                                 " - " + brush);
 
-            Debug.WriteLine("draw string " + s + " at " + location + " brush " + brush);
+            //Debug.WriteLine("draw string " + s + " at " + location + " brush " + brush);
 
             var color = GdiTypeConverter.GetColor(scb.Color);
             var useFont = GdiTypeConverter.GetFont(font);
@@ -193,7 +193,7 @@ namespace Das.Gdi
             var useRect = GetAbsoluteGdiRectangle(rect);
             var useBrush = GdiTypeConverter.GetBrush(brush);
 
-      Debug.WriteLine("fill rect " + useRect + " with " + brush);
+      //Debug.WriteLine("fill rect " + useRect + " with " + brush);
 
             Graphics.FillRectangle(useBrush, useRect);
         }

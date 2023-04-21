@@ -360,10 +360,12 @@ namespace Das.Views.Collections
                                                          Func<TInput, TVisualAs, Task> action)
          where TVisualAs : IVisualElement
       {
-         var running = new List<Task>();
+         List<Task> running;
 
          lock (_lockChildren)
          {
+            running = new List<Task>(_children.Count);
+
             foreach (var visual in _children)
             {
                if (visual is TVisualAs valid)
@@ -437,12 +439,16 @@ namespace Das.Views.Collections
 
       private IEnumerator<TVisual> GetEnumeratorImpl()
       {
-         List<TVisual> res;
+         //List<TVisual> res;
 
          lock (_lockChildren)
-            res = new List<TVisual>(_children);
+         {
+            //res = new List<TVisual>(_children);
+            foreach (var child in _children)
+               yield return child;
+         }
 
-         return res.GetEnumerator();
+         //return res.GetEnumerator();
       }
 
       public Boolean IsRequiresMeasure

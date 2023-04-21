@@ -31,21 +31,22 @@ namespace Das.Views.Rendering
                 _maxWidth = _maxHeight = 0;
                 _lastOrientation = orientation;
 
-                _currentlyRendering.Clear();
+                //_currentlyRendering.Clear();
 
                 var margin = MeasureImpl(container, measureContext, availableSpace,
-                    orientation, _currentlyRendering,
+                    orientation, //_currentlyRendering,
                     out var maxWidth, out var maxHeight,
-                    out var totalWidth, out var totalHeight);
+                    out var totalWidth, out var totalHeight,
+                    out var renderingVisualsCount);
 
                 totalWidth = Math.Max(totalWidth, maxWidth);
                 totalHeight = Math.Max(totalHeight, maxHeight);
 
                 if (orientation == Orientations.Horizontal)
-                    totalWidth = _maxWidth * _currentlyRendering.Count;
+                   totalWidth = _maxWidth * renderingVisualsCount;//_currentlyRendering.Count;
 
                 if (orientation == Orientations.Vertical)
-                    totalHeight = _maxHeight * _currentlyRendering.Count;
+                    totalHeight = _maxHeight * renderingVisualsCount;//_currentlyRendering.Count;
 
                 return new ValueSize(totalWidth + margin.Width, totalHeight + margin.Height);
             }
@@ -76,21 +77,40 @@ namespace Das.Views.Rendering
 
         }
 
-        protected override ValueRenderRectangle GetElementBounds(IVisualElement child,
-                                                                 ValueRenderRectangle precedingVisualBounds)
+        protected override Boolean TryGetElementBounds(IVisualElement child,
+                                                                 ValueRenderRectangle precedingVisualBounds,
+                                                                 out ValueRenderRectangle bounds)
         {
-            return new(_lastOrientation == Orientations.Vertical  // X
-                    ? precedingVisualBounds.Left
-                : precedingVisualBounds.Right,
+           bounds = new(_lastOrientation == Orientations.Vertical  // X
+                 ? precedingVisualBounds.Left
+                 : precedingVisualBounds.Right,
                 
-                _lastOrientation == Orientations.Vertical // Y
-                    ? precedingVisualBounds.Bottom
-                    : precedingVisualBounds.Top,
+              _lastOrientation == Orientations.Vertical // Y
+                 ? precedingVisualBounds.Bottom
+                 : precedingVisualBounds.Top,
 
-                _maxWidth, 
-                _maxHeight, 
-                ValuePoint2D.Empty);
+              _maxWidth, 
+              _maxHeight, 
+              ValuePoint2D.Empty);
+
+           return true;
         }
+
+        //protected override ValueRenderRectangle GetElementBounds(IVisualElement child,
+        //                                                         ValueRenderRectangle precedingVisualBounds)
+        //{
+        //    return new(_lastOrientation == Orientations.Vertical  // X
+        //            ? precedingVisualBounds.Left
+        //        : precedingVisualBounds.Right,
+                
+        //        _lastOrientation == Orientations.Vertical // Y
+        //            ? precedingVisualBounds.Bottom
+        //            : precedingVisualBounds.Top,
+
+        //        _maxWidth, 
+        //        _maxHeight, 
+        //        ValuePoint2D.Empty);
+        //}
 
 
         private Double _maxWidth;

@@ -90,6 +90,12 @@ namespace Das.Views.Rendering.Geometry
            _h -= border.Height;
         }
 
+        public override void Reset()
+        {
+           base.Reset();
+           _offset = Point2D.Empty;
+        }
+
 
         public Boolean Equals(IRenderSize other)
         {

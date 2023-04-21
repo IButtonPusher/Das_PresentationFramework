@@ -25,7 +25,7 @@ namespace Das.Xamarin.Android.Controls
                                 IVisualSurrogate
    {
       public HtmlSurrogate(HtmlPanel htmlPanel,
-                           Context? context,
+                           Context context,
                            ViewGroup viewGroup,
                            IUiProvider uiProvider)
          : base(context)

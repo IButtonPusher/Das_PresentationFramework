@@ -44,7 +44,12 @@ namespace Das.Views.Collections
 
         public IEnumerable<IVisualElement> GetAllChildren()
         {
-            return _collectionHelper.GetChildrenOfType<IVisualElement>();
+           foreach (var child in _collectionHelper)
+           {
+              yield return child;
+           }
+
+            //return _collectionHelper.GetChildrenOfType<IVisualElement>();
         }
 
 

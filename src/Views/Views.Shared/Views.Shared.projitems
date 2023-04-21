@@ -118,8 +118,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\PathData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\PathPointType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\RenderedVisual.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Rendering\SequentialRenderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Rendering\SequentialUniformRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\Sequential\SequentialRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\Sequential\SequentialRendererArrange.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\Sequential\SequentialRendererMeasure.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\Sequential\SequentialUniformRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VisualElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VisualElementProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VisualElementStyles.cs" />
@@ -172,7 +174,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Geometry\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Rendering\Sequential\" />
     <Folder Include="$(MSBuildThisFileDirectory)Validation\" />
   </ItemGroup>
 </Project>

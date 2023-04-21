@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 using Android.Content;
 using Android.Graphics;
@@ -33,7 +32,7 @@ namespace Das.Xamarin.Android
          _totalRun = new Stopwatch();
          _currentRender = new Stopwatch();
 
-         _refreshStopwatch = new Stopwatch();
+         //_refreshStopwatch = new Stopwatch();
 
          _viewState = renderKit.RenderContext.ViewState ?? throw new NullReferenceException();
       }
@@ -41,51 +40,51 @@ namespace Das.Xamarin.Android
       public sealed override ISurfaceHolder Holder => base.Holder ?? throw new NullReferenceException(nameof(Holder));
 
 
-      public override void PostInvalidate()
-      {
-         Interlocked.Add(ref _timesInvalidated, 1);
-         base.PostInvalidate();
-      }
+      //public override void PostInvalidate()
+      //{
+      //   //Interlocked.Add(ref _timesInvalidated, 1);
+      //   base.PostInvalidate();
+      //}
 
       public void Refresh()
       {
          if (!_isSurfaceReady)
             return;
 
-         var sw = Stopwatch.StartNew();
+         //var sw = Stopwatch.StartNew();
 
          var cnv = _surfaceHolder.LockCanvas();
 
-         var t1 = sw.ElapsedMilliseconds;
-         Int64 t2 = 0, t3;
+         //var t1 = sw.ElapsedMilliseconds;
+         //Int64 t2 = 0, t3;
 
          try
          {
             DrawImpl(cnv!);
 
-            t2 = sw.ElapsedMilliseconds - t1;
+            //t2 = sw.ElapsedMilliseconds - t1;
          }
          finally
          {
             _surfaceHolder.UnlockCanvasAndPost(cnv);
-            t3 = sw.ElapsedMilliseconds - t2;
+            //t3 = sw.ElapsedMilliseconds - t2;
 
-            _sum1 += t1;
-            _sum2 += t2;
-            _sum3 += t3;
+            //_sum1 += t1;
+            //_sum2 += t2;
+            //_sum3 += t3;
 
-            if ((++_counter % 100) == 0)
-            {
-               Debug.WriteLine($"t1: {_sum1} t2: {_sum2} t3: {_sum3} counter: {_counter}");
-            }
+            //if ((++_counter % 100) == 0)
+            //{
+            //   Debug.WriteLine($"t1: {_sum1} t2: {_sum2} t3: {_sum3} counter: {_counter}");
+            //}
          }
       }
 
-      private Int64 _sum1;
-      private Int64 _sum2;
-      private Int64 _sum3;
+      //private Int64 _sum1;
+      //private Int64 _sum2;
+      //private Int64 _sum3;
 
-      private Int32 _counter;
+      //private Int32 _counter;
 
       protected override void OnDraw(Canvas? canvas)
       {
@@ -97,8 +96,8 @@ namespace Das.Xamarin.Android
 
       private void DrawImpl(Canvas canvas)
       {
-         UILogger.Log("BEGIN AndroidPaintView->OnDraw.  view needs arrange: " +
-                         _view.IsRequiresArrange, LogLevel.Level1);
+         //UILogger.Log("BEGIN AndroidPaintView->OnDraw.  view needs arrange: " +
+         //                _view.IsRequiresArrange, LogLevel.Level1);
 
          _currentRender.Restart();
 
@@ -135,7 +134,7 @@ namespace Das.Xamarin.Android
       protected override void OnMeasure(Int32 widthMeasureSpec,
                                         Int32 heightMeasureSpec)
       {
-         _timeStarted = DateTime.Now;
+         //_timeStarted = DateTime.Now;
 
          base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
          var w = MeasuredWidth;
@@ -161,15 +160,15 @@ namespace Das.Xamarin.Android
       private readonly IViewState _viewState;
 
       private ValueRectangle _targetRect;
-      private Int32 _timesInvalidated;
+      //private Int32 _timesInvalidated;
 
-      private DateTime _timeStarted;
-      private Int64 _totalLayoutMs;
-      private Int32 _totalLayouts;
+      //private DateTime _timeStarted;
+      //private Int64 _totalLayoutMs;
+      //private Int32 _totalLayouts;
 
-      private readonly Stopwatch _refreshStopwatch;
-      private Int64 _totalRefreshMs;
-      private Int32 _totalRefreshes;
+      //private readonly Stopwatch _refreshStopwatch;
+      //private Int64 _totalRefreshMs;
+      //private Int32 _totalRefreshes;
 
 
       private readonly ISurfaceHolder _surfaceHolder;

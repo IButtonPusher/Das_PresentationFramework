@@ -15,7 +15,7 @@ using Das.Views.Transitions;
 
 namespace Das.Views.Defaults
 {
-   public class DefaultTabHeaderPanel : BasePanel
+    public class DefaultTabHeaderPanel : BasePanel
    {
       public DefaultTabHeaderPanel(ITabControl tabControl,
                                    IVisualBootstrapper visualBootstrapper) :

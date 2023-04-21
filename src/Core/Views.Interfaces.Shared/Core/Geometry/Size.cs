@@ -14,6 +14,12 @@ namespace Das.Views.Core.Geometry
       public Size(Double width,
                   Double height)
       {
+         Reset(width, height);
+      }
+
+      public void Reset(Double width,
+                        Double height)
+      {
          _width = width;
          _height = height;
          UpdateHasInfinite();
