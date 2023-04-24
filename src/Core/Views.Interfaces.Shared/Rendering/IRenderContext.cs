@@ -15,20 +15,6 @@ namespace Das.Views.Rendering
                                          TRenderRectangle rect)
          where TRenderRectangle : IRenderRectangle;
 
-      //void DrawContentElement<TSize>(IVisualElement element,
-      //                               TSize size)
-      //    where TSize : ISize;
-
-
-      ///// <summary>
-      ///// Draws the specified element at the provided location using the element's last measured size
-      ///// </summary>
-      ///// <param name="element">The element to draw</param>
-      ///// <param name="location">The top left position where the element should be drawn</param>
-      //void DrawElementAt<TPosition>(IVisualElement element,
-      //                              TPosition location)
-      //    where TPosition : IPoint2D;
-
 
       void DrawEllipse<TPoint, TPen>(TPoint center,
                                      Double radius,
@@ -123,5 +109,7 @@ namespace Das.Views.Rendering
       IViewPerspective Perspective { get; }
 
       IViewState ViewState { get; }
+
+      ValuePoint2D CurrentLocation { get; }
    }
 }

@@ -1,13 +1,12 @@
 ﻿using System;
 // ReSharper disable UnusedMember.Global
 
-namespace Das.Views.Declarations
+namespace Das.Views.Declarations;
+
+public enum AppearanceType
 {
-    public enum AppearanceType
-    {
-        None,
-        Auto,
-        MenuListButton,
-        TextField
-    }
+   None,
+   Auto,
+   MenuListButton,
+   TextField
 }

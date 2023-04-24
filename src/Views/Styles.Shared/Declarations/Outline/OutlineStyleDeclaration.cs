@@ -1,14 +1,13 @@
 ﻿using System;
 using Das.Views.BoxModel;
 
-namespace Das.Views.Styles.Declarations
+namespace Das.Views.Styles.Declarations;
+
+public class OutlineStyleDeclaration : EnumDeclaration<OutlineStyle>
 {
-    public class OutlineStyleDeclaration : EnumDeclaration<OutlineStyle>
-    {
-        public OutlineStyleDeclaration(String value, 
-                                       IStyleVariableAccessor variableAccessor) 
-            : base(value, OutlineStyle.None, variableAccessor, DeclarationProperty.OutlineStyle)
-        {
-        }
-    }
+   public OutlineStyleDeclaration(String value/*, 
+                                  IStyleVariableAccessor variableAccessor*/) 
+      : base(value, OutlineStyle.None, /*variableAccessor, */DeclarationProperty.OutlineStyle)
+   {
+   }
 }

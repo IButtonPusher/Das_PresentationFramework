@@ -8,6 +8,7 @@ using Das.Views.Colors;
 using Das.Views.Core.Drawing;
 using Das.Views.DataBinding;
 using Das.Views.Panels;
+using Das.Views.Styles;
 using Das.Views.Styles.Construction;
 
 namespace Das.Views.Templates
@@ -53,6 +54,12 @@ namespace Das.Views.Templates
       public void ApplyVisualStyling(IVisualElement visual)
       {
          _styleBuilder.ApplyVisualCoreStyles(visual, this);
+      }
+
+      public void ApplyVisualStyling(IVisualElement visual,
+                                     IStyleSheet styleSheet)
+      {
+         _styleBuilder.ApplyVisualStyle(visual, styleSheet, this);
       }
 
       public ILayoutQueue LayoutQueue { get; }

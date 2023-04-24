@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Das.Views3d</RootNamespace>
-	 <LangVersion>9.0</LangVersion>
+	 <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>    
   </PropertyGroup>

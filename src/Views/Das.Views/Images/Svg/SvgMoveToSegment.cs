@@ -3,26 +3,25 @@ using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Core.Geometry;
 
-namespace Das.Views.Images.Svg
+namespace Das.Views.Images.Svg;
+
+/// <summary>
+///     https://github.com/svg-net
+/// </summary>
+public class SvgMoveToSegment : SvgPathSegment
 {
-    /// <summary>
-    ///     https://github.com/svg-net
-    /// </summary>
-    public class SvgMoveToSegment : SvgPathSegment
-    {
-        public SvgMoveToSegment(IPoint2F moveTo)
-            : base(moveTo, moveTo)
-        {
-        }
+   public SvgMoveToSegment(IPoint2F moveTo)
+      : base(moveTo, moveTo)
+   {
+   }
 
-        public override void AddToPath(IGraphicsPath graphicsPath)
-        {
-            graphicsPath.StartFigure();
-        }
+   public override void AddToPath(IGraphicsPath graphicsPath)
+   {
+      graphicsPath.StartFigure();
+   }
 
-        public override String ToString()
-        {
-            return "M" + Start.ToSvgString();
-        }
-    }
+   public override String ToString()
+   {
+      return "M" + Start.ToSvgString();
+   }
 }

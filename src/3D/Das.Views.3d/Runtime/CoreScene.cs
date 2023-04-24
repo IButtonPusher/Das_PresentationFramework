@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 
-namespace Das.Views.Extended.Runtime
-{
-    public class CoreScene : IScene
-    {
-        public IEnumerable<IMesh> VisualElements { get; }
+namespace Das.Views.Extended.Runtime;
 
-        public CoreScene(IEnumerable<IMesh> visualElements)
-        {
-            VisualElements = visualElements;
-        }
-    }
+public class CoreScene : IScene
+{
+   public IEnumerable<IMesh> VisualElements { get; }
+
+   public CoreScene(IEnumerable<IMesh> visualElements)
+   {
+      VisualElements = visualElements;
+   }
 }

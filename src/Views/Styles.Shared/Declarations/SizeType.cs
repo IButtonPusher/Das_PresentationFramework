@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace Das.Views.Styles.Declarations
+namespace Das.Views.Styles.Declarations;
+
+public enum SizeType
 {
-    public enum SizeType
-    {
-        Initial,
-        Auto,
-        Length,
-        Percent,
-        Inherit
-    }
+   Initial,
+   Auto,
+   Length,
+   Percent,
+   Inherit
 }

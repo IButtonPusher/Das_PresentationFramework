@@ -507,6 +507,7 @@ namespace Das.Views.Rendering
          return false;
       }
 
+      ValuePoint2D IRenderContext.CurrentLocation => CurrentLocation;
 
       protected ValuePoint2D CurrentLocation => _boxModel.CurrentElementRect.Location;
 

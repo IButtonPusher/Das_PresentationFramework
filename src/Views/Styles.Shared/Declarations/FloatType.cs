@@ -1,14 +1,13 @@
 ﻿using System;
 // ReSharper disable UnusedMember.Global
 
-namespace Das.Views.Styles.Declarations
+namespace Das.Views.Styles.Declarations;
+
+public enum FloatType
 {
-    public enum FloatType
-    {
-        None,
-        Left,
-        Right,
-        Initial,
-        Inherit
-    }
+   None,
+   Left,
+   Right,
+   Initial,
+   Inherit
 }

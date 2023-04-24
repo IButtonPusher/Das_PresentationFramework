@@ -4,34 +4,37 @@ using Das.Views.Construction;
 using Das.Views.Rendering;
 using Das.Views.Styles.Application;
 
-namespace Das.Views.Styles.Construction
+namespace Das.Views.Styles.Construction;
+
+public interface IAppliedStyleBuilder
 {
-    public interface IAppliedStyleBuilder
-    {
-        IAppliedStyle? BuildAppliedStyle(IStyleSheet style,
-                                         IVisualElement visual,
-                                         IVisualLineage visualLineage,
-                                         IVisualBootstrapper visualBootstrapper);
-
-        Task ApplyVisualStylesAsync(IVisualElement visual,
-                                    IAttributeDictionary attributeDictionary,
+   IAppliedStyle? BuildAppliedStyle(IStyleSheet style,
+                                    IVisualElement visual,
                                     IVisualLineage visualLineage,
                                     IVisualBootstrapper visualBootstrapper);
 
-        Task ApplyVisualStylesAsync(IVisualElement visual,
-                                    IAttributeDictionary attributeDictionary,
-                                    IVisualLineage visualLineage,
-                                    IViewInflater viewInflater,
-                                    IVisualBootstrapper visualBootstrapper);
+   Task ApplyVisualStylesAsync(IVisualElement visual,
+                               IAttributeDictionary attributeDictionary,
+                               IVisualLineage visualLineage,
+                               IVisualBootstrapper visualBootstrapper);
 
-        /// <summary>
-        /// Applied styles for the visual's Type and inherited types.
-        /// Does not apply styles based on a class or the Visual's Style property value
-        /// </summary>
-        ///  <see cref="IVisualElement.Style"/>
-        void ApplyVisualCoreStyles(IVisualElement visual,
-                                   IVisualBootstrapper visualBootstrapper);
+   Task ApplyVisualStylesAsync(IVisualElement visual,
+                               IAttributeDictionary attributeDictionary,
+                               IVisualLineage visualLineage,
+                               IViewInflater viewInflater,
+                               IVisualBootstrapper visualBootstrapper);
 
-        IVisualStyleProvider StyleProvider { get; }
-    }
+   /// <summary>
+   /// Applied styles for the visual's Type and inherited types.
+   /// Does not apply styles based on a class or the Visual's Style property value
+   /// </summary>
+   ///  <see cref="IVisualElement.Style"/>
+   void ApplyVisualCoreStyles(IVisualElement visual,
+                              IVisualBootstrapper visualBootstrapper);
+
+   void ApplyVisualStyle(IVisualElement visual,
+                              IStyleSheet styleSheet,
+                              IVisualBootstrapper visualBootstrapper);
+
+   IVisualStyleProvider StyleProvider { get; }
 }

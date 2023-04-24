@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.ViewModels.ChangeTracking
+namespace Das.ViewModels.ChangeTracking;
+
+public enum ChangeTrackingTypes
 {
-    public enum ChangeTrackingTypes
-    {
-        Invalid,
-        SpecifyTriggeringProperties,
-        SpecifyExcludedProperties
-    }
+   Invalid,
+   SpecifyTriggeringProperties,
+   SpecifyExcludedProperties
 }

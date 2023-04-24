@@ -5,77 +5,76 @@ using System.Windows.Forms;
 using Das.Views;
 using WinForms.Shared;
 
-namespace Das.Gdi.Controls
+namespace Das.Gdi.Controls;
+
+/// <summary>
+///     Control to show an IView in windows forms using GDI rendering
+/// </summary>
+public class GdiHostedElement : HostedViewControl,
+                                IViewHost<Bitmap>
 {
-    /// <summary>
-    ///     Control to show an IView in windows forms using GDI rendering
-    /// </summary>
-    public class GdiHostedElement : HostedViewControl,
-                                    IViewHost<Bitmap>
-    {
-        public GdiHostedElement(IVisualElement view,
-                                IVisualBootstrapper visualBootstrapper)
-            : base(view, visualBootstrapper.ThemeProvider,  visualBootstrapper)
-        {
-            View = view;
-            _lockBmp = new Object();
-        }
+   public GdiHostedElement(IVisualElement view,
+                           IVisualBootstrapper visualBootstrapper)
+      : base(view, visualBootstrapper.ThemeProvider,  visualBootstrapper)
+   {
+      View = view;
+      _lockBmp = new Object();
+   }
 
-        public override Boolean IsLoaded => true;
+   public override Boolean IsLoaded => true;
 
-        public Bitmap Asset
-        {
-            get => BackingBitmap!;
-            set => BackingBitmap = value;
-        }
+   public Bitmap Asset
+   {
+      get => BackingBitmap!;
+      set => BackingBitmap = value;
+   }
 
-        //todo: base on IView after changing element to IView type _
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-        public override Boolean IsChanged => View != null && (_isChanged //|| View.IsChanged 
-                                                              || base.IsChanged);
+   //todo: base on IView after changing element to IView type _
+   // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+   public override Boolean IsChanged => View != null && (_isChanged //|| View.IsChanged 
+                                                         || base.IsChanged);
 
-        public Bitmap? BackingBitmap
-        {
-            get => _backingBitmap;
-            set
+   public Bitmap? BackingBitmap
+   {
+      get => _backingBitmap;
+      set
+      {
+         lock (_lockBmp)
+         {
+            //Debug.WriteLine("updating hosted element bmp " + value?.Width + " " + 
+            //                 (_backingBitmap != value));
+
+            if (_backingBitmap != value)
             {
-                lock (_lockBmp)
-                {
-                    //Debug.WriteLine("updating hosted element bmp " + value?.Width + " " + 
-                    //                 (_backingBitmap != value));
-
-                    if (_backingBitmap != value)
-                    {
-                        _backingBitmap?.Dispose();
-                        _backingBitmap = value;
-                    }
-                }
-
-                Invalidate();
+               _backingBitmap?.Dispose();
+               _backingBitmap = value;
             }
-        }
+         }
 
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
+         Invalidate();
+      }
+   }
 
-            lock (_lockBmp)
-            {
-                if (BackingBitmap == null)
-                    return;
+   protected override void OnPaint(PaintEventArgs e)
+   {
+      base.OnPaint(e);
 
-                _isChanged = false;
+      lock (_lockBmp)
+      {
+         if (BackingBitmap == null)
+            return;
 
-                AvailableSize.Width = Width;
-                AvailableSize.Height = Height;
+         _isChanged = false;
 
-                e.Graphics.DrawImage(BackingBitmap, Point.Empty);
-            }
-        }
+         AvailableSize.Width = Width;
+         AvailableSize.Height = Height;
 
-        private readonly Object _lockBmp;
+         e.Graphics.DrawImage(BackingBitmap, Point.Empty);
+      }
+   }
 
-        private Bitmap? _backingBitmap;
-        private Boolean _isChanged;
-    }
+   private readonly Object _lockBmp;
+
+   private Bitmap? _backingBitmap;
+   private Boolean _isChanged;
 }

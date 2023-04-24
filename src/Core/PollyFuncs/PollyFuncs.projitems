@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>95c13b38-2006-4763-ae5b-c93487563139</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>PollyFuncs</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)IPollyAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IPollyAction{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IPollyFunc{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IPollyIterator{T2}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IPollyIterator{TinTout}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IPollyLateFunc{T2}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IPollyLateFunc{TInTOut}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IPollyPromise.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PollyAction{T2}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PollyAction{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PollyFunc{T1TR}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PollyFunc{T2TR}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PollyFunc{T4TR}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PollyIterator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PollyIterator{T2}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PollyLateAction{T2}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PollyLateAction{T4}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PollyLateFunc{T2Tout}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PollyLateFunc{TInTout}.cs" />
+  </ItemGroup>
+</Project>

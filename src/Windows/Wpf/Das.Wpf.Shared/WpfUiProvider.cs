@@ -2,9 +2,8 @@
 using System.Threading.Tasks;
 using Das.Views.Wpf;
 
-namespace Das.Wpf.Shared
+namespace Das.Wpf.Shared;
+
+public class WpfUiProvider : WpfUiProvider<ModalWindow>
 {
-    public class WpfUiProvider : WpfUiProvider<ModalWindow>
-    {
-    }
 }

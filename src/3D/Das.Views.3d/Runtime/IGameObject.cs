@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace Das.Views.Extended.Runtime
-{
-    public interface IGameObject<out TViewModel>
-        where TViewModel : I3dViewModel
-    {
-        IEnumerable<IMesh> VisualElements { get; }
+namespace Das.Views.Extended.Runtime;
 
-        TViewModel DataContext { get; }
-    }
+public interface IGameObject<out TViewModel>
+   where TViewModel : I3dViewModel
+{
+   IEnumerable<IMesh> VisualElements { get; }
+
+   TViewModel DataContext { get; }
 }

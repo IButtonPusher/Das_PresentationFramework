@@ -15,147 +15,153 @@ using Das.Views.Panels;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 
-namespace Das.Gdi
+namespace Das.Gdi;
+
+public class GdiProvider : IWindowProvider<ViewWindow>,
+                           IBootStrapper
 {
-    public class GdiProvider : IWindowProvider<ViewWindow>,
-                               IBootStrapper
-    {
-        // ReSharper disable once UnusedMember.Global
-        public GdiProvider(GdiRenderKit renderKit)
-        {
-            RenderKit = renderKit;
-            VisualBootstrapper = renderKit.VisualBootstrapper;
-        }
+   // ReSharper disable once UnusedMember.Global
+   public GdiProvider(GdiRenderKit renderKit)
+   {
+      RenderKit = renderKit;
+      VisualBootstrapper = renderKit.VisualBootstrapper;
+   }
 
-        public GdiProvider(IResolver container,
-                           IThemeProvider themeProvider)
-        {
-            RenderKit = GetKit(this, container, themeProvider);
-            VisualBootstrapper = RenderKit.VisualBootstrapper;
-        }
+   public GdiProvider(IResolver container,
+                      IThemeProvider themeProvider)
+   {
+      RenderKit = GetKit(this, container, themeProvider);
+      VisualBootstrapper = RenderKit.VisualBootstrapper;
+   }
 
-        // ReSharper disable once UnusedMember.Global
-        public GdiProvider() : this(new BaseResolver(),
-           BaselineThemeProvider.Instance)
-        {
-        }
+   // ReSharper disable once UnusedMember.Global
+   public GdiProvider() : this(new BaseResolver(),
+      BaselineThemeProvider.Instance)
+   {
+   }
 
-        public void Run(IVisualElement view)
-        {
-            var window = Show(view);
-
-            Application.Run(window);
-        }
-
-        public IVisualBootstrapper VisualBootstrapper { get; }
+   public GdiProvider(IThemeProvider themeProvider) : this(new BaseResolver(),
+      themeProvider)
+   {
+      
+   }
 
 
-        public ViewWindow Show<TRectangle>(IVisualElement view,
-                                           TRectangle rect)
-            where TRectangle : IRectangle
-        {
-            //var styleContext = view.StyleContext;
+   public void Run(IVisualElement view)
+   {
+      var window = Show(view);
 
-            var control = new GdiHostedElement(view, RenderKit.VisualBootstrapper);
-            var form = new ViewWindow(control);
-            Cook(form);
+      Application.Run(window);
+   }
 
-            form.Bounds = GdiTypeConverter.GetRect(rect);
+   public IVisualBootstrapper VisualBootstrapper { get; }
 
-            WindowShown?.Invoke(form);
 
-            return form;
-        }
+   public ViewWindow Show<TRectangle>(IVisualElement view,
+                                      TRectangle rect)
+      where TRectangle : IRectangle
+   {
+      //var styleContext = view.StyleContext;
 
-        public ViewWindow Show(IVisualElement view)
-        {
-            //var styleContext = view.StyleContext;
+      var control = new GdiHostedElement(view, RenderKit.VisualBootstrapper);
+      var form = new ViewWindow(control);
+      Cook(form);
 
-            var control = new GdiHostedElement(view, RenderKit.VisualBootstrapper);
-            var form = new ViewWindow(control);
-            Cook(form);
+      form.Bounds = GdiTypeConverter.GetRect(rect);
 
-            var viewWidth = view.Width ?? 0;
-            var viewHeight = view.Height ?? 0;
+      WindowShown?.Invoke(form);
 
-            if (viewWidth.IsNotZero() && viewHeight.IsNotZero())
-                form.Size = GdiTypeConverter.GetSize(viewWidth, viewHeight);
+      return form;
+   }
 
-            WindowShown?.Invoke(form);
+   public ViewWindow Show(IVisualElement view)
+   {
+      //var styleContext = view.StyleContext;
 
-            return form;
-        }
+      var control = new GdiHostedElement(view, RenderKit.VisualBootstrapper);
+      var form = new ViewWindow(control);
+      Cook(form);
 
-        public event Action<ViewWindow>? WindowShown;
+      var viewWidth = view.Width ?? 0;
+      var viewHeight = view.Height ?? 0;
 
-        public GdiRenderKit RenderKit { get; }
+      if (viewWidth.IsNotZero() && viewHeight.IsNotZero())
+         form.Size = GdiTypeConverter.GetSize(viewWidth, viewHeight);
 
-        // ReSharper disable once UnusedMember.Global
-        public GdiHostedElement Host<TViewModel>(TViewModel viewModel,
-                                                 IView view)
-            where TViewModel : IViewModel
-        {
-            var control = new GdiHostedElement(view, RenderKit.VisualBootstrapper);
+      WindowShown?.Invoke(form);
+
+      return form;
+   }
+
+   public event Action<ViewWindow>? WindowShown;
+
+   public GdiRenderKit RenderKit { get; }
+
+   // ReSharper disable once UnusedMember.Global
+   public GdiHostedElement Host<TViewModel>(TViewModel viewModel,
+                                            IView view)
+      where TViewModel : IViewModel
+   {
+      var control = new GdiHostedElement(view, RenderKit.VisualBootstrapper);
             
-            Cook(control);
+      Cook(control);
 
-            view.DataContext = viewModel;
-            
-
-            return control;
-        }
-
-        // ReSharper disable once UnusedMember.Global
-        public GdiHostedElement HostStatic<TViewModel>(TViewModel viewModel
-                                                       , IView view)
-        {
-            var control = new GdiHostedElement(view, RenderKit.VisualBootstrapper);
-            var renderer = new BitmapRenderer(control,
-                RenderKit.MeasureContext, RenderKit.RenderContext);
-
-            view.DataContext = viewModel;
+      view.DataContext = viewModel;
             
 
-            control.BackingBitmap = renderer.DoRender();
+      return control;
+   }
 
-            return control;
-        }
+   // ReSharper disable once UnusedMember.Global
+   public GdiHostedElement HostStatic<TViewModel>(TViewModel viewModel
+                                                  , IView view)
+   {
+      var control = new GdiHostedElement(view, RenderKit.VisualBootstrapper);
+      var renderer = new BitmapRenderer(control,
+         RenderKit.MeasureContext, RenderKit.RenderContext);
 
-        public ViewWindow Show<TViewModel>(TViewModel viewModel,
-                                           IBindableElement view)
-            //where TViewModel : IViewModel
-        {
+      view.DataContext = viewModel;
+            
 
-            var control = new GdiHostedElement(view, RenderKit.VisualBootstrapper);
-            var form = new ViewWindow(control);
-            Cook(form);
+      control.BackingBitmap = renderer.DoRender();
 
-            view.DataContext = viewModel;
+      return control;
+   }
 
-            WindowShown?.Invoke(form);
+   public ViewWindow Show<TViewModel>(TViewModel viewModel,
+                                      IBindableElement view)
+      //where TViewModel : IViewModel
+   {
 
-            return form;
-        }
+      var control = new GdiHostedElement(view, RenderKit.VisualBootstrapper);
+      var form = new ViewWindow(control);
+      Cook(form);
 
-        // ReSharper disable once UnusedMethodReturnValue.Local
-        private IRenderer<Bitmap> Cook(IViewHost<Bitmap> form)
-        {
-            var renderer = new BitmapRenderer(form,
-                RenderKit.MeasureContext, RenderKit.RenderContext);
-            var _ = new LoopViewUpdater<Bitmap>(form, renderer, RenderKit.RenderContext.LayoutQueue);
-            return renderer;
-        }
+      view.DataContext = viewModel;
 
-        private static GdiRenderKit GetKit(IWindowProvider<IVisualHost> windowProvider,
-                                           IResolver container,
-                                           IThemeProvider themeProvider)
-        {
-            var perspective = new BasePerspective();
-            var kit = new GdiRenderKit(perspective, windowProvider, 
-               container, themeProvider);
-                //BaselineThemeProvider.Instance,
-                //container);
-            return kit;
-        }
-    }
+      WindowShown?.Invoke(form);
+
+      return form;
+   }
+
+   // ReSharper disable once UnusedMethodReturnValue.Local
+   private IRenderer<Bitmap> Cook(IViewHost<Bitmap> form)
+   {
+      var renderer = new BitmapRenderer(form,
+         RenderKit.MeasureContext, RenderKit.RenderContext);
+      var _ = new LoopViewUpdater<Bitmap>(form, renderer, RenderKit.RenderContext.LayoutQueue);
+      return renderer;
+   }
+
+   private static GdiRenderKit GetKit(IWindowProvider<IVisualHost> windowProvider,
+                                      IResolver container,
+                                      IThemeProvider themeProvider)
+   {
+      var perspective = new BasePerspective();
+      var kit = new GdiRenderKit(perspective, windowProvider, 
+         container, themeProvider);
+      //BaselineThemeProvider.Instance,
+      //container);
+      return kit;
+   }
 }

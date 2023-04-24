@@ -1,15 +1,14 @@
 ﻿using System;
 
-namespace Das.Views.Styles.Declarations
+namespace Das.Views.Styles.Declarations;
+
+public enum PositionType
 {
-    public enum PositionType
-    {
-        Static,
-        Absolute,
-        Fixed,
-        Relative,
-        Sticky,
-        Initial,
-        Inherit
-    }
+   Static,
+   Absolute,
+   Fixed,
+   Relative,
+   Sticky,
+   Initial,
+   Inherit
 }

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Das.Views.Extended.Runtime
+namespace Das.Views.Extended.Runtime;
+
+public interface IScene
 {
-    public interface IScene
-    {
-        IEnumerable<IMesh> VisualElements { get; }
-    }
+   IEnumerable<IMesh> VisualElements { get; }
 }

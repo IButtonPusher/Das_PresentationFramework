@@ -1,9 +1,8 @@
 ﻿using Das.Views.Rendering;
 
-namespace Das.OpenGL
+namespace Das.OpenGL;
+
+public interface IGLRenderer : IRenderer
 {
-    public interface IGLRenderer : IRenderer
-    {
         
-    }
 }

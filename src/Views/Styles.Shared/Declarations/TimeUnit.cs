@@ -1,16 +1,15 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace Das.Views.Styles.Declarations
+namespace Das.Views.Styles.Declarations;
+
+public enum TimeUnit
 {
-    public enum TimeUnit
-    {
-        Invalid,
+   Invalid,
         
-        [Description("Seconds")]
-        S,
+   [Description("Seconds")]
+   S,
         
-        [Description("Milliseconds")]
-        Ms
-    }
+   [Description("Milliseconds")]
+   Ms
 }

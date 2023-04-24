@@ -2,46 +2,45 @@
 using System.Threading.Tasks;
 using Das.Views.Rendering;
 
-namespace Das.Views.Controls
+namespace Das.Views.Controls;
+
+public class HtmlPanel : BaseSurrogatedVisual
 {
-    public class HtmlPanel : BaseSurrogatedVisual
-    {
-        public HtmlPanel(IVisualBootstrapper visualBootstrapper) 
-            : base(visualBootstrapper)
-        {
-        }
+   public HtmlPanel(IVisualBootstrapper visualBootstrapper) 
+      : base(visualBootstrapper)
+   {
+   }
 
-        public String? Markup
-        {
-            get => _markup;
-            set => SetValue(ref _markup, value);
-        }
+   public String? Markup
+   {
+      get => _markup;
+      set => SetValue(ref _markup, value);
+   }
 
-        public Uri? Uri
-        {
-            get => _uri;
-            private set => SetValue(ref _uri, value);
-        }
+   public Uri? Uri
+   {
+      get => _uri;
+      private set => SetValue(ref _uri, value);
+   }
 
-        public void SetUri(Uri? value)
-        {
-            if (value == null)
-            {
-                Uri = value;
-                return;
-            }
+   public void SetUri(Uri? value)
+   {
+      if (value == null)
+      {
+         Uri = value;
+         return;
+      }
 
-            if (value.Scheme == "http")
-            {
-                //ensure https
-                value = new Uri("https://" + value.Authority + value.AbsolutePath);
-            }
+      if (value.Scheme == "http")
+      {
+         //ensure https
+         value = new Uri("https://" + value.Authority + value.AbsolutePath);
+      }
 
-            Uri = value;
-        }
+      Uri = value;
+   }
 
-        private String? _markup;
+   private String? _markup;
 
-        private Uri? _uri;
-    }
+   private Uri? _uri;
 }

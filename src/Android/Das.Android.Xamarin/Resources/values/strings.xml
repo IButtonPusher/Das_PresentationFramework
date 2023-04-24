@@ -1,4 +1,4 @@
 <resources>
-    <string name="hello">Hello World, Click Me!</string>
-    <string name="app_name">Das.Xamarin.Android</string>
+	<string name="hello">Hello World, Click Me!</string>
+	<string name="app_name">Das.Xamarin.Android</string>
 </resources>

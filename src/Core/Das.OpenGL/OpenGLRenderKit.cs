@@ -12,46 +12,45 @@ using Das.Views.Layout;
 using Das.Views.Rendering;
 using Das.Views.Styles;
 
-namespace Das.OpenGL
+namespace Das.OpenGL;
+
+public class OpenGLRenderKit : BaseRenderKit,
+                               IRenderKit
+
 {
-   public class OpenGLRenderKit : BaseRenderKit,
-                                  IRenderKit
-
+   public OpenGLRenderKit(IFontProvider fontProvider,
+                          IGLContext glContext,
+                          IThemeProvider themeProvider,
+                          IImageProvider imageProvider)
+      : base(imageProvider, Serializer,
+         new SvgPathBuilder(imageProvider, Serializer), null,
+         BaselineThemeProvider.Instance)
    {
-      public OpenGLRenderKit(IFontProvider fontProvider,
-                             IGLContext glContext,
-                             IThemeProvider themeProvider,
-                             IImageProvider imageProvider)
-         : base(imageProvider, Serializer,
-            new SvgPathBuilder(imageProvider, Serializer), null,
-            BaselineThemeProvider.Instance)
-      {
-         var lastMeasurements = new Dictionary<IVisualElement, ValueSize>();
-         var lastRender = new Dictionary<IVisualElement, ValueCube>();
-         var visualLineage = new VisualLineage();
+      var lastMeasurements = new Dictionary<IVisualElement, ValueSize>();
+      var lastRender = new Dictionary<IVisualElement, ValueCube>();
+      var visualLineage = new VisualLineage();
 
-         MeasureContext = new GLMeasureContext(fontProvider, this,
-            lastMeasurements, themeProvider, visualLineage, _layoutQueue);
+      MeasureContext = new GLMeasureContext(fontProvider, this,
+         lastMeasurements, themeProvider, visualLineage, _layoutQueue);
 
-         RenderContext = new GLRenderContext(new BasePerspective(),
-            glContext, fontProvider, this, themeProvider,
-            visualLineage, lastRender, _layoutQueue);
-      }
-
-      IMeasureContext IRenderKit.MeasureContext => MeasureContext;
-
-      IRenderContext IRenderKit.RenderContext => RenderContext;
-
-      public void Clear()
-      {
-         MeasureContext.Clear();
-         RenderContext.Clear();
-      }
-
-      public GLMeasureContext MeasureContext { get; }
-
-      public GLRenderContext RenderContext { get; }
-
-      protected static readonly DasSerializer Serializer = new();
+      RenderContext = new GLRenderContext(new BasePerspective(),
+         glContext, fontProvider, this, themeProvider,
+         visualLineage, lastRender, _layoutQueue);
    }
+
+   IMeasureContext IRenderKit.MeasureContext => MeasureContext;
+
+   IRenderContext IRenderKit.RenderContext => RenderContext;
+
+   public void Clear()
+   {
+      MeasureContext.Clear();
+      RenderContext.Clear();
+   }
+
+   public GLMeasureContext MeasureContext { get; }
+
+   public GLRenderContext RenderContext { get; }
+
+   protected static readonly DasSerializer Serializer = new();
 }

@@ -42,8 +42,8 @@
     <CodeAnalysisRuleSet>..\Das.Presentation.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Das.Container, Version=0.0.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Das.Container.0.0.14-alpha\lib\netstandard2.0\Das.Container.dll</HintPath>
+    <Reference Include="Das.Container, Version=0.0.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Das.Container.0.0.15-alpha\lib\netstandard2.0\Das.Container.dll</HintPath>
     </Reference>
     <Reference Include="Das.Container.Interfaces, Version=0.0.10.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Das.Container.Interfaces.0.0.10-alpha\lib\netstandard2.0\Das.Container.Interfaces.dll</HintPath>

@@ -53,13 +53,13 @@ namespace Das.Views.Construction.Styles
             switch (property)
             {
                 case DeclarationProperty.ZIndex:
-                    return new ScalarDeclaration<Int32>(value, _variableAccessor, property);
+                    return new ScalarDeclaration<Int32>(value, /*_variableAccessor, */property);
 
                 case DeclarationProperty.Position:
-                    return new PositionDeclaration(value, _variableAccessor);
+                    return new PositionDeclaration(value/*, _variableAccessor*/);
 
                 case DeclarationProperty.Display:
-                    return new DisplayDeclaration(value, _variableAccessor);
+                    return new DisplayDeclaration(value/*, _variableAccessor*/);
 
                 case DeclarationProperty.Color:
                 case DeclarationProperty.BackgroundColor:
@@ -69,36 +69,36 @@ namespace Das.Views.Construction.Styles
                     return new FontFamilyDeclaration(value, _variableAccessor);
 
                 case DeclarationProperty.FontSize:
-                    return new FontSizeDeclaration(value, _variableAccessor);
+                    return new FontSizeDeclaration(value/*, _variableAccessor*/);
 
                 case DeclarationProperty.LineHeight:
-                    return new LineHeightDeclaration(value, _variableAccessor);
+                    return new LineHeightDeclaration(value/*, _variableAccessor*/);
 
                 case DeclarationProperty.Appearance:
-                    return new AppearanceDeclaration(value, _variableAccessor);
+                    return new AppearanceDeclaration(value/*, _variableAccessor*/);
 
                 case DeclarationProperty.Right:
                 case DeclarationProperty.Left:
                 case DeclarationProperty.Top:
                 case DeclarationProperty.Bottom:
-                    return new QuantityDeclaration(value, _variableAccessor, property);
+                    return new QuantityDeclaration(value/*, _variableAccessor*/, property);
 
                 case DeclarationProperty.Margin:
-                    return new MarginDeclaration(value, _variableAccessor);
+                    return new MarginDeclaration(value/*, _variableAccessor*/);
 
                 case DeclarationProperty.BorderRadius:
-                    return new BorderRadiusDeclaration(value, _variableAccessor);
+                    return new BorderRadiusDeclaration(value/*, _variableAccessor*/);
 
                 case DeclarationProperty.Width:
                 case DeclarationProperty.Height:
-                    return new QuantityDeclaration(value, _variableAccessor, property);
+                    return new QuantityDeclaration(value/*, _variableAccessor*/, property);
 
                 
                 case DeclarationProperty.Outline:
                     return new OutlineDeclaration(value, _variableAccessor);
                 
                 case DeclarationProperty.Opacity:
-                    return new ScalarDeclaration<Double>(value, _variableAccessor, property);
+                    return new ScalarDeclaration<Double>(value/*, _variableAccessor*/, property);
                     //return new DoubleDeclaration(value, _variableAccessor, property);
                 
                 case DeclarationProperty.Transform:
@@ -106,24 +106,24 @@ namespace Das.Views.Construction.Styles
                 
                 case DeclarationProperty.PointerEvents:
                     return new EnumDeclaration<PointerEventType>(value, PointerEventType.Auto,
-                        _variableAccessor, property);
+                        /*_variableAccessor, */property);
                 
                 case DeclarationProperty.Transition:
-                    return new MultiTransitionDeclaration(value, _variableAccessor);
+                    return new MultiTransitionDeclaration(value/*, _variableAccessor*/);
                 
                 case DeclarationProperty.Cursor:
                     return new EnumDeclaration<CursorType>(value, CursorType.Pointer,
-                        _variableAccessor, property);
+                        /*_variableAccessor, */property);
                 
                 case DeclarationProperty.Content:
-                    return new StringDeclaration(value, _variableAccessor, property);
+                    return new StringDeclaration(value/*, _variableAccessor*/, property);
                 
                 case DeclarationProperty.Float:
                     return new EnumDeclaration<FloatType>(value, FloatType.None,
-                        _variableAccessor, property);
+                        /*_variableAccessor, */property);
                 
                 case DeclarationProperty.VerticalAlign:
-                    return new VerticalAlignDeclaration(value, _variableAccessor);
+                    return new VerticalAlignDeclaration(value/*, _variableAccessor*/);
                 
                 case DeclarationProperty.BoxShadow:
                     return new BoxShadowDeclaration(value, _variableAccessor);

@@ -2,10 +2,9 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace Das.ViewModels
+namespace Das.ViewModels;
+
+public interface IEditorChange : IChangeTracking
 {
-    public interface IEditorChange : IChangeTracking
-    {
-        void UpdateIsChanged(Boolean value);
-    }
+   void UpdateIsChanged(Boolean value);
 }

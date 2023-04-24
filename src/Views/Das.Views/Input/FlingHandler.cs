@@ -4,117 +4,119 @@ using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Transitions;
 
-namespace Das.Views.Input
+namespace Das.Views.Input;
+
+public class FlingHandler : IHandleInput<FlingEventArgs>,
+                            IHandleInput<MouseDownEventArgs>
 {
-    public class FlingHandler : IHandleInput<FlingEventArgs>,
-                                IHandleInput<MouseDownEventArgs>
-    {
-        public FlingHandler(IFlingHost flingHost)
-        {
-            _flingHost = flingHost;
-            _flingLock = new Object();
-        }
+   public FlingHandler(IFlingHost flingHost)
+   {
+      _flingHost = flingHost;
+      _flingLock = new Object();
+   }
 
-        public Boolean OnInput(FlingEventArgs args)
-        {
-            lock (_flingLock)
+   public Boolean OnInput(FlingEventArgs args)
+   {
+      lock (_flingLock)
+      {
+         if (args.VelocityX != 0)
+            switch (_flingHost.HorizontalFlingMode)
             {
-                if (args.VelocityX != 0)
-                    switch (_flingHost.HorizontalFlingMode)
-                    {
-                        case FlingMode.None:
-                            break;
+               case FlingMode.None:
+                  break;
 
-                        case FlingMode.Default:
-                           _velocityX = args.DistanceFlungX;
-                            break;
+               case FlingMode.Default:
+                  _velocityX = args.DistanceFlungX;
+                  break;
 
-                        case FlingMode.Inverted:
-                            _velocityX = 0 - args.DistanceFlungX; //args.VelocityX;
-                            break;
+               case FlingMode.Inverted:
+                  _velocityX = 0 - args.DistanceFlungX; //args.VelocityX;
+                  break;
 
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-
-
-                if (args.VelocityY != 0)
-                    switch (_flingHost.VerticalFlingMode)
-                    {
-                        case FlingMode.None:
-                            break;
-
-                        case FlingMode.Default:
-                            _velocityY = args.DistanceFlungY;// args.VelocityY;
-                            break;
-
-                        case FlingMode.Inverted:
-                            _velocityY = 0 - args.DistanceFlungY;//args.VelocityY;
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-
-                if (_velocityX.IsZero() && _velocityY.IsZero())
-                {
-                    //args.SetHandled(true);
-                    return true;
-                }
-
-                _currentTransition?.Cancel();
-
-                var sumX = Convert.ToInt32(_velocityX);
-                var sumY = Convert.ToInt32(_velocityY);
-
-                var validVeticalRange = _flingHost.GetVerticalMinMaxFling();
-                sumY = validVeticalRange.GetValueInRange(sumY);
-
-                var validHorizontalRange = _flingHost.GetHorizontalMinMaxFling();
-                sumX = validHorizontalRange.GetValueInRange(sumX);
-
-                if (sumX.IsZero() && sumY.IsZero())
-                    return true;
-
-
-                Debug.WriteLine("[OKYN] Created fling transition x,y: " + sumX +
-                                "," + sumY + " duration: " + args.FlingYDuration + //duration +
-                                "\t\t\t\r\nbased on: " + args);
-
-                _currentTransition = new SplineFlingTransition(_flingHost,
-                    args.FlingYDuration, sumY, //args.DistanceFlungY, 
-                    TimeSpan.Zero);
-
-                _currentTransition.Start();
-
-
-                _flingHost.OnFlingStarting(sumX, sumY);
+               default:
+                  throw new ArgumentOutOfRangeException();
             }
 
+
+         if (args.VelocityY != 0)
+            switch (_flingHost.VerticalFlingMode)
+            {
+               case FlingMode.None:
+                  break;
+
+               case FlingMode.Default:
+                  _velocityY = args.DistanceFlungY;// args.VelocityY;
+                  break;
+
+               case FlingMode.Inverted:
+                  _velocityY = 0 - args.DistanceFlungY;//args.VelocityY;
+                  break;
+               default:
+                  throw new ArgumentOutOfRangeException();
+            }
+
+         if (_velocityX.IsZero() && _velocityY.IsZero())
+         {
+            //args.SetHandled(true);
             return true;
-        }
+         }
+
+         _currentTransition?.Cancel();
+
+         var sumX = Convert.ToInt32(_velocityX);
+         var sumY = Convert.ToInt32(_velocityY);
+
+         var validVeticalRange = _flingHost.GetVerticalMinMaxFling();
+         sumY = validVeticalRange.GetValueInRange(sumY);
+
+         var validHorizontalRange = _flingHost.GetHorizontalMinMaxFling();
+         sumX = validHorizontalRange.GetValueInRange(sumX);
+
+         if (sumX.IsZero() && sumY.IsZero())
+            return true;
 
 
-        public InputAction HandlesActions => InputAction.Fling;
+         Debug.WriteLine("[OKYN] Created fling transition x,y: " + sumX + "," + sumY +
+                         " duration: " + args.FlingXDuration + "," + args.FlingYDuration +
+                         "\t\t\t\r\nbased on: " + args);
 
-        public Boolean OnInput(MouseDownEventArgs args)
-        {
-            lock (_flingLock)
-            {
-                if (_currentTransition == null)
-                    return false;
+         var dur = args.FlingYDuration > args.FlingXDuration
+            ? args.FlingYDuration
+            : args.FlingXDuration;
 
-                _currentTransition.Cancel();
-                _currentTransition = null;
-                return true;
-            }
-        }
+         _currentTransition = new SplineFlingTransition(_flingHost,
+            dur, sumX, sumY, TimeSpan.Zero);
 
-        private readonly IFlingHost _flingHost;
-        private readonly Object _flingLock;
-        private IManualTransition? _currentTransition;
-        private Double _velocityX;
-        private Double _velocityY;
+         _currentTransition.Start();
 
-        //private const Int32 _maxFlingMs = 3000;
-    }
+
+         _flingHost.OnFlingStarting(sumX, sumY);
+      }
+
+      return true;
+   }
+
+
+   public InputAction HandlesActions => InputAction.Fling;
+
+   public Boolean OnInput(MouseDownEventArgs args)
+   {
+      lock (_flingLock)
+      {
+         if (_currentTransition == null)
+            return false;
+
+         _currentTransition.Cancel();
+         _currentTransition = null;
+         return true;
+      }
+   }
+
+   private readonly IFlingHost _flingHost;
+   private readonly Object _flingLock;
+   private IManualTransition? _currentTransition;
+   private Double _velocityX;
+   private Double _velocityY;
+
+   //private const Int32 _maxFlingMs = 3000;
 }

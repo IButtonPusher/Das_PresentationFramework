@@ -21,163 +21,162 @@ using Das.Views.Styles;
 using Gdi.Shared;
 // ReSharper disable UnusedMember.Global
 
-namespace Das.Gdi.Kits
+namespace Das.Gdi.Kits;
+
+public class GdiRenderKit : BaseRenderKit,
+                            IRenderKit,
+                            IDisplayMetrics
 {
-    public class GdiRenderKit : BaseRenderKit,
-                                IRenderKit,
-                                IDisplayMetrics
-    {
-        public GdiRenderKit(IViewPerspective viewPerspective,
-                            IWindowProvider<IVisualHost> windowProvider,
-                            IResolver resolver,
-                            IThemeProvider styleContext,
-                            IVisualBootstrapper visualBootstrapper,
-                            IViewInflater viewInflater,
-                            IImageProvider imageProvider)
-            : base(resolver, visualBootstrapper, viewInflater,
-                new Dictionary<IVisualElement, ValueCube>(), imageProvider)
-        {
-            _windowProvider = windowProvider;
-            Init(windowProvider, styleContext, viewPerspective, _renderPositions,
-                ref _imageProvider!, ref _measureContext!, ref _renderContext!);
-        }
+   public GdiRenderKit(IViewPerspective viewPerspective,
+                       IWindowProvider<IVisualHost> windowProvider,
+                       IResolver resolver,
+                       IThemeProvider styleContext,
+                       IVisualBootstrapper visualBootstrapper,
+                       IViewInflater viewInflater,
+                       IImageProvider imageProvider)
+      : base(resolver, visualBootstrapper, viewInflater,
+         new Dictionary<IVisualElement, ValueCube>(), imageProvider)
+   {
+      _windowProvider = windowProvider;
+      Init(windowProvider, styleContext, viewPerspective, _renderPositions,
+         ref _imageProvider!, ref _measureContext!, ref _renderContext!);
+   }
 
-        /// <summary>
-        /// Minimal constructor
-        /// </summary>
-        public GdiRenderKit(IViewPerspective viewPerspective,
-                            IWindowProvider<IVisualHost> windowProvider)
-            : base(GetDefaultImageBuilder(), Serializer,
-                new SvgPathBuilder(GetDefaultImageBuilder(), Serializer), null,
-                BaselineThemeProvider.Instance)
-        {
-            _windowProvider = windowProvider;
-            Init(windowProvider, BaselineThemeProvider.Instance, viewPerspective, _renderPositions,
-                ref _imageProvider!, ref _measureContext!, ref _renderContext!);
-        }
+   /// <summary>
+   /// Minimal constructor
+   /// </summary>
+   public GdiRenderKit(IViewPerspective viewPerspective,
+                       IWindowProvider<IVisualHost> windowProvider)
+      : base(GetDefaultImageBuilder(), Serializer,
+         new SvgPathBuilder(GetDefaultImageBuilder(), Serializer), null,
+         BaselineThemeProvider.Instance)
+   {
+      _windowProvider = windowProvider;
+      Init(windowProvider, BaselineThemeProvider.Instance, viewPerspective, _renderPositions,
+         ref _imageProvider!, ref _measureContext!, ref _renderContext!);
+   }
 
-        public GdiRenderKit(IViewPerspective viewPerspective,
-                            IWindowProvider<IVisualHost> windowProvider,
-                            IResolver container,
-                            IThemeProvider themeProvider)
-            : base(GetDefaultImageBuilder(), Serializer,
-                new SvgPathBuilder(GetDefaultImageBuilder(), Serializer), 
-                container, themeProvider)
-        {
-            _windowProvider = windowProvider;
-            Init(windowProvider, themeProvider, viewPerspective, _renderPositions,
-                ref _imageProvider!, ref _measureContext!, ref _renderContext!);
-        }
+   public GdiRenderKit(IViewPerspective viewPerspective,
+                       IWindowProvider<IVisualHost> windowProvider,
+                       IResolver container,
+                       IThemeProvider themeProvider)
+      : base(GetDefaultImageBuilder(), Serializer,
+         new SvgPathBuilder(GetDefaultImageBuilder(), Serializer), 
+         container, themeProvider)
+   {
+      _windowProvider = windowProvider;
+      Init(windowProvider, themeProvider, viewPerspective, _renderPositions,
+         ref _imageProvider!, ref _measureContext!, ref _renderContext!);
+   }
 
-        private static GdiImageProvider GetDefaultImageBuilder() => _defaultImageBuilder ??= new GdiImageProvider();
-        private static GdiImageProvider? _defaultImageBuilder;
+   private static GdiImageProvider GetDefaultImageBuilder() => _defaultImageBuilder ??= new GdiImageProvider();
+   private static GdiImageProvider? _defaultImageBuilder;
 
         
 
-        public Double ZoomLevel => RenderContext.ViewState?.ZoomLevel ?? 1;
+   public Double ZoomLevel => RenderContext.ViewState?.ZoomLevel ?? 1;
 
-        public Single Density => 1.0f; //todo:
+   public Single Density => 1.0f; //todo:
 
-        IMeasureContext IRenderKit.MeasureContext => _measureContext;
+   IMeasureContext IRenderKit.MeasureContext => _measureContext;
 
-        IRenderContext IRenderKit.RenderContext => _renderContext;
+   IRenderContext IRenderKit.RenderContext => _renderContext;
 
         
-        public void Clear()
-        {
-           MeasureContext.Clear();
-           RenderContext.Clear();
-        }
+   public void Clear()
+   {
+      MeasureContext.Clear();
+      RenderContext.Clear();
+   }
 
-        public GdiMeasureContext MeasureContext => _measureContext;
+   public GdiMeasureContext MeasureContext => _measureContext;
 
-        public GdiRenderContext RenderContext => _renderContext;
-
-
-        private IVisualSurrogate GetHtmlPanelSurrogate(IVisualElement element)
-        {
-            if (!(_window is { } window) || !(_windowControl is { } control))
-                throw new InvalidOperationException();
-
-            return window.Invoke(() =>
-            {
-               switch (element)
-               {
-                  case HtmlPanel web:
-                     var html = new WebViewSurrogate(web, control);
-                     control.Controls.Add(html);
-                     return html;
-
-                  default:
-                     throw new NotImplementedException(element.GetType().Name);
-               }
-
-                //var v = new HtmlViewSurrogate(element, control);
-                //control.Controls.Add(v);
-                //return v;
-            });
-        }
+   public GdiRenderContext RenderContext => _renderContext;
 
 
-        [SuppressMessage("ReSharper", "RedundantAssignment")]
-        private void Init(IWindowProvider<IVisualHost> windowProvider,
-                          IThemeProvider themeProvider,
-                          IViewPerspective viewPerspective,
-                          Dictionary<IVisualElement, ValueCube> renderPositions,
-                          ref GdiImageProvider? imageProvider,
-                          ref GdiMeasureContext measureContext,
-                          ref GdiRenderContext renderContext)
-        {
-            imageProvider = new GdiImageProvider();
-            var lastMeasure = new Dictionary<IVisualElement, ValueSize>();
-            var visualLineage = new VisualLineage();
+   private IVisualSurrogate GetHtmlPanelSurrogate(IVisualElement element)
+   {
+      if (!(_window is { } window) || !(_windowControl is { } control))
+         throw new InvalidOperationException();
 
-            measureContext = new GdiMeasureContext(this, lastMeasure,
-                themeProvider, visualLineage, VisualBootstrapper.LayoutQueue);
+      return window.Invoke(() =>
+      {
+         switch (element)
+         {
+            case HtmlPanel web:
+               var html = new WebViewSurrogate(web, control);
+               control.Controls.Add(html);
+               return html;
 
-            renderContext = new GdiRenderContext(viewPerspective,
-                MeasureContext.Graphics, this, lastMeasure,
-                renderPositions, themeProvider, visualLineage, VisualBootstrapper.LayoutQueue);
+            default:
+               throw new NotImplementedException(element.GetType().Name);
+         }
 
-            Container.ResolveTo<IImageProvider>(imageProvider);
-            Container.ResolveTo<IUiProvider>(new GdiUiProvider(windowProvider));
-            Container.ResolveTo(themeProvider);
-
-            windowProvider.WindowShown += OnWindowShown;
-
-            RegisterSurrogate<HtmlPanel>(GetHtmlPanelSurrogate);
-        }
+         //var v = new HtmlViewSurrogate(element, control);
+         //control.Controls.Add(v);
+         //return v;
+      });
+   }
 
 
-        private void OnWindowShown(IVisualHost window)
-        {
-            _windowProvider.WindowShown -= OnWindowShown;
+   [SuppressMessage("ReSharper", "RedundantAssignment")]
+   private void Init(IWindowProvider<IVisualHost> windowProvider,
+                     IThemeProvider themeProvider,
+                     IViewPerspective viewPerspective,
+                     Dictionary<IVisualElement, ValueCube> renderPositions,
+                     ref GdiImageProvider? imageProvider,
+                     ref GdiMeasureContext measureContext,
+                     ref GdiRenderContext renderContext)
+   {
+      imageProvider = new GdiImageProvider();
+      var lastMeasure = new Dictionary<IVisualElement, ValueSize>();
+      var visualLineage = new VisualLineage();
 
-            _window = window;
-            _imageProvider.SetVisualHost(window);
+      measureContext = new GdiMeasureContext(this, lastMeasure,
+         themeProvider, visualLineage, VisualBootstrapper.LayoutQueue);
 
-            if (window is Control ctrl && ctrl.Controls.Count == 1)
-            {
-                _windowControl = ctrl.Controls[0];
-                Container.ResolveTo(_windowControl);
-            }
-            else throw new InvalidOperationException();
+      renderContext = new GdiRenderContext(viewPerspective,
+         MeasureContext.Graphics, this, lastMeasure,
+         renderPositions, themeProvider, visualLineage, VisualBootstrapper.LayoutQueue);
 
-            _inputContext = new InputContext(window, new BaseInputHandler(RenderContext), _windowControl, 
-                ctrl.Handle);
-        }
+      Container.ResolveTo<IImageProvider>(imageProvider);
+      Container.ResolveTo<IUiProvider>(new GdiUiProvider(windowProvider));
+      Container.ResolveTo(themeProvider);
 
-        protected static readonly DasSerializer Serializer = new();
-        private readonly GdiImageProvider _imageProvider;
-        private readonly GdiMeasureContext _measureContext;
+      windowProvider.WindowShown += OnWindowShown;
 
-        private readonly GdiRenderContext _renderContext;
-        private readonly IWindowProvider<IVisualHost> _windowProvider;
+      RegisterSurrogate<HtmlPanel>(GetHtmlPanelSurrogate);
+   }
 
 
-        // ReSharper disable once NotAccessedField.Local
-        private IInputContext? _inputContext;
-        private IVisualHost? _window;
-        private Control? _windowControl;
-    }
+   private void OnWindowShown(IVisualHost window)
+   {
+      _windowProvider.WindowShown -= OnWindowShown;
+
+      _window = window;
+      _imageProvider.SetVisualHost(window);
+
+      if (window is Control ctrl && ctrl.Controls.Count == 1)
+      {
+         _windowControl = ctrl.Controls[0];
+         Container.ResolveTo(_windowControl);
+      }
+      else throw new InvalidOperationException();
+
+      _inputContext = new InputContext(window, new BaseInputHandler(RenderContext), _windowControl, 
+         ctrl.Handle);
+   }
+
+   protected static readonly DasSerializer Serializer = new();
+   private readonly GdiImageProvider _imageProvider;
+   private readonly GdiMeasureContext _measureContext;
+
+   private readonly GdiRenderContext _renderContext;
+   private readonly IWindowProvider<IVisualHost> _windowProvider;
+
+
+   // ReSharper disable once NotAccessedField.Local
+   private IInputContext? _inputContext;
+   private IVisualHost? _window;
+   private Control? _windowControl;
 }

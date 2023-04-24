@@ -3,22 +3,21 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Views.Extended.Core;
 
-namespace Das.Views.Extended
+namespace Das.Views.Extended;
+
+public class NamedMesh : CoreMesh
 {
-   public class NamedMesh : CoreMesh
+   public NamedMesh(IEnumerable<IPoint3D> vertices,
+                    IEnumerable<Face> faces,
+                    String name) : base(vertices, faces)
    {
-      public NamedMesh(IEnumerable<IPoint3D> vertices,
-                       IEnumerable<Face> faces,
-                       String name) : base(vertices, faces)
-      {
-         Name = name;
-      }
-
-      public override String ToString()
-      {
-         return Name + " " + base.ToString();
-      }
-
-      public String Name { get; }
+      Name = name;
    }
+
+   public override String ToString()
+   {
+      return Name + " " + base.ToString();
+   }
+
+   public String Name { get; }
 }

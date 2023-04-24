@@ -1,13 +1,12 @@
 ﻿using System;
 // ReSharper disable UnusedMember.Global
 
-namespace Das.Views.Styles.Declarations
+namespace Das.Views.Styles.Declarations;
+
+public enum PointerEventType
 {
-    public enum PointerEventType
-    {
-        Auto,
-        None,
-        Initial,
-        Inherit
-    }
+   Auto,
+   None,
+   Initial,
+   Inherit
 }

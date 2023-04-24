@@ -41,6 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ContentVisuals\ContentPropertyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\CheckBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ImageViewBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\RadioButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\SvgPictureFrame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\QuantifiedThicknessConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\StringToColorConverter.cs" />
