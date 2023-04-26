@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace Das.Views.Core
+namespace Das.Views.Core;
+
+public interface IQuantifiedValue<TValue, out TUnits>
+   where TUnits : Enum
 {
-    public interface IQuantifiedValue<TValue, out TUnits>
-        where TUnits : Enum
-    {
-        TValue GetQuantity(TValue available);
+   TValue GetQuantity(TValue available);
 
-        TUnits Units {get;}
+   TUnits Units {get;}
 
-    }
 }

@@ -3,40 +3,39 @@ using System.Threading.Tasks;
 using Das.Views.DependencyProperties;
 using Das.Views.Transitions;
 
-namespace Das.Views
+namespace Das.Views;
+
+public interface IDependencyProperty : IEquatable<IDependencyProperty>,
+                                       INamedProperty
 {
-    public interface IDependencyProperty : IEquatable<IDependencyProperty>,
-                                           INamedProperty
-    {
-        Object? GetValue(IVisualElement visual);
+   Object? GetValue(IVisualElement visual);
 
 
-        void SetValue(IVisualElement visual,
-                      Object? value);
+   void SetValue(IVisualElement visual,
+                 Object? value);
 
-        void SetValueNoTransitions(IVisualElement visual,
-                                   Object? value);
+   void SetValueNoTransitions(IVisualElement visual,
+                              Object? value);
 
-        void SetValueFromStyle(IVisualElement visual,
-                               Object? value);
+   void SetValueFromStyle(IVisualElement visual,
+                          Object? value);
 
-        void ClearValue(IVisualElement visual);
+   void ClearValue(IVisualElement visual);
 
-        void SetComputedValueFromStyle(IVisualElement visual,
-                                       Func<IVisualElement, Object?> value);
+   void SetComputedValueFromStyle(IVisualElement visual,
+                                  Func<IVisualElement, Object?> value);
 
-        void AddOnChangedHandler(IVisualElement visual,
-                                 Action<IDependencyProperty> onChange);
+   void AddOnChangedHandler(IVisualElement visual,
+                            Action<IDependencyProperty> onChange);
 
-        void AddTransition(IVisualElement visual,
-                           ITransition transition);
+   void AddTransition(IVisualElement visual,
+                      ITransition transition);
 
-        Object? DefaultValue { get; }
+   Object? DefaultValue { get; }
 
-        Type PropertyType { get; }
+   Type PropertyType { get; }
 
-        Type VisualType { get; }
+   Type VisualType { get; }
 
-        Boolean IsReadOnly { get; }
-    }
+   Boolean IsReadOnly { get; }
 }

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views
+namespace Das.Views;
+
+public interface IWindowNotifier<out TWindow>
+   where TWindow : IVisualHost
 {
-    public interface IWindowNotifier<out TWindow>
-        where TWindow : IVisualHost
-    {
-        event Action<TWindow>? WindowShown;
-    }
+   event Action<TWindow>? WindowShown;
 }

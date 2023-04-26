@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Das.Views.DependencyProperties
+namespace Das.Views.DependencyProperties;
+
+public interface INamedProperty
 {
-    public interface INamedProperty
-    {
-        String Name { get; }
-    }
+   String Name { get; }
 }

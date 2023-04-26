@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Das.Views.Styles.Application
+namespace Das.Views.Styles.Application;
+
+public interface IStyleApplication
 {
-    public interface IStyleApplication
-    {
-        void Execute(Boolean isUpdate);
-    }
+   void Execute(Boolean isUpdate);
 }

@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Das.Views.DataBinding
-{
-    public interface IVisualPropertySetter
-    {
-        String PropertyName {get; }
+namespace Das.Views.DataBinding;
 
-        Object? GetSourceValue(Object? dataContext);
-    }
+public interface IVisualPropertySetter
+{
+   String PropertyName {get; }
+
+   Object? GetSourceValue(Object? dataContext);
 }

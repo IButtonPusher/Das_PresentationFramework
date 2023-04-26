@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Das.Views.Core
+namespace Das.Views.Core;
+
+public enum Visibility
 {
-    public enum Visibility
-    {
-        Visible,
-        Hidden,
-        Collapsed
-    }
+   Visible,
+   Hidden,
+   Collapsed
 }

@@ -3,26 +3,25 @@ using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 using Das.Views.Rendering.Geometry;
 
-namespace Das.Views.Rendering
+namespace Das.Views.Rendering;
+
+public interface IRenderSize : ISize,
+                               IEquatable<IRenderSize>
+
 {
-    public interface IRenderSize : ISize,
-                                   IEquatable<IRenderSize>
+   IPoint2D Offset { get; }
 
-    {
-        IPoint2D Offset { get; }
+   //new IRenderSize DeepCopy();
 
-        //new IRenderSize DeepCopy();
+   //new IRenderSize Minus(ISize subtract);
 
-        //new IRenderSize Minus(ISize subtract);
+   //IRenderSize MinusVertical(ISize subtract);
 
-        //IRenderSize MinusVertical(ISize subtract);
+   //new IRenderSize PlusVertical(ISize adding);
 
-        //new IRenderSize PlusVertical(ISize adding);
+   //new IRenderSize Reduce(Thickness padding);
 
-        //new IRenderSize Reduce(Thickness padding);
+   ValueRenderRectangle ToFullRectangle();
 
-        ValueRenderRectangle ToFullRectangle();
-
-        ValueSize ToValueSize();
-    }
+   ValueSize ToValueSize();
 }

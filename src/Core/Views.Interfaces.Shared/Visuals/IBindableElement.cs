@@ -3,22 +3,21 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Views.DependencyProperties;
 
-namespace Das.Views.DataBinding
+namespace Das.Views.DataBinding;
+
+public interface IBindableElement : IVisualElement,
+                                    IBindable
 {
-    public interface IBindableElement : IVisualElement,
-                                        IBindable
-    {
-        void SetValue<T>(IDependencyProperty property,
-                         T value);
+   void SetValue<T>(IDependencyProperty property,
+                    T value);
 
-        Object? ReadLocalValue(IDependencyProperty dp);
+   Object? ReadLocalValue(IDependencyProperty dp);
 
-        void ClearValue(IDependencyProperty dp);
+   void ClearValue(IDependencyProperty dp);
 
-        T GetValue<T>(IDependencyProperty<T> dp);
+   T GetValue<T>(IDependencyProperty<T> dp);
 
-        Object? GetValue(IDependencyProperty dp);
+   Object? GetValue(IDependencyProperty dp);
 
-        IEnumerable<LocalValueEntry> GetLocalValues();
-    }
+   IEnumerable<LocalValueEntry> GetLocalValues();
 }

@@ -2,22 +2,21 @@
 using System.Threading.Tasks;
 using Das.Views.Text.Fonts;
 
-namespace Das.Views.Core.Writing
+namespace Das.Views.Core.Writing;
+
+public interface IFont : IEquatable<IFont>
 {
-    public interface IFont : IEquatable<IFont>
-    {
-        IFont Resize(Double newSize);
+   IFont Resize(Double newSize);
 
-        IFontFace GetFontFace();
+   IFontFace GetFontFace();
 
-        Boolean HasCharacter(UInt32 unicodeValue);
+   Boolean HasCharacter(UInt32 unicodeValue);
 
-        String FamilyName { get; }
+   String FamilyName { get; }
 
-        FontStyle FontStyle { get; }
+   FontStyle FontStyle { get; }
 
-        Double Size { get; }
+   Double Size { get; }
 
-        FontMetrics Metrics { get; }
-    }
+   FontMetrics Metrics { get; }
 }

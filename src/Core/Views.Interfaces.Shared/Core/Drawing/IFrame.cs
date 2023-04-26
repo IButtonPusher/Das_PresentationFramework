@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Views.Core.Geometry;
 
-namespace Das.Views.Core.Drawing
-{
-    /// <summary>
-    ///     Two dimensional data from a three dimensional scene as observed by a camera.
-    /// </summary>
-    public interface IFrame
-    {
-        ISize Size { get; }
+namespace Das.Views.Core.Drawing;
 
-        IList<IMultiLine> Triangles { get; }
-    }
+/// <summary>
+///     Two dimensional data from a three dimensional scene as observed by a camera.
+/// </summary>
+public interface IFrame
+{
+   ISize Size { get; }
+
+   IList<IMultiLine> Triangles { get; }
 }

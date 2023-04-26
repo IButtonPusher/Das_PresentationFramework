@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views.Panels
+namespace Das.Views.Panels;
+
+public interface IContentContainer
 {
-    public interface IContentContainer
-    {
-        IVisualElement? Content { get; set; }
-    }
+   IVisualElement? Content { get; set; }
 }

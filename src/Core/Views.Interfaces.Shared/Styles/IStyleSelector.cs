@@ -1,22 +1,21 @@
 ﻿using System;
 
-namespace Das.Views.Styles
+namespace Das.Views.Styles;
+
+public interface IStyleSelector : IEquatable<IStyleSelector>
 {
-    public interface IStyleSelector : IEquatable<IStyleSelector>
-    {
-        Boolean TryGetClassName(out String className);
+   Boolean TryGetClassName(out String className);
 
-        Boolean TryGetContentAppendType(out ContentAppendType appendType);
+   Boolean TryGetContentAppendType(out ContentAppendType appendType);
 
-        /// <summary>
-        /// Returns true if this selector should only apply to a visual in certain states
-        /// </summary>
-        Boolean IsFilteringOnVisualState();
+   /// <summary>
+   /// Returns true if this selector should only apply to a visual in certain states
+   /// </summary>
+   Boolean IsFilteringOnVisualState();
 
-        /// <summary>
-        /// returns a selector without any visual state selectors
-        /// </summary>
-        /// <returns></returns>
-        IStyleSelector ToUnfiltered();
-    }
+   /// <summary>
+   /// returns a selector without any visual state selectors
+   /// </summary>
+   /// <returns></returns>
+   IStyleSelector ToUnfiltered();
 }

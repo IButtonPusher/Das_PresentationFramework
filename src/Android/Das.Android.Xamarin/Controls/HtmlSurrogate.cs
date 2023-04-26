@@ -258,7 +258,8 @@ public class HtmlSurrogate : WebView,
          case nameof(HtmlPanel.Markup):
             _uiProvider.BeginInvoke(() =>
             {
-               LoadData(_htmlPanel.Markup, "text/html; charset=utf-8", "UTF-8");
+            if (_htmlPanel.Markup is {} htmlmarkup)
+               LoadData(htmlmarkup, "text/html; charset=utf-8", "UTF-8");
             });
             break;
 

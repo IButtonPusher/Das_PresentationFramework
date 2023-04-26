@@ -1,10 +1,9 @@
 ﻿using System;
 using Das.Views.Controls;
 
-namespace Das.Views.Primitives
+namespace Das.Views.Primitives;
+
+public interface IToggleButton<T> : IButtonBase<T>,
+                                    IToggleButton
 {
-    public interface IToggleButton<T> : IButtonBase<T>,
-                                        IToggleButton
-    {
-    }
 }

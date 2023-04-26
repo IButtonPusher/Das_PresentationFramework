@@ -2,12 +2,11 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Das.Views.Images
-{
-    public interface ISvgPathBuilder
-    {
-        Task<ISvgImage?> LoadAsync(Stream stream);
+namespace Das.Views.Images;
 
-        ISvgImage? Load(Stream stream);
-    }
+public interface ISvgPathBuilder
+{
+   Task<ISvgImage?> LoadAsync(Stream stream);
+
+   ISvgImage? Load(Stream stream);
 }

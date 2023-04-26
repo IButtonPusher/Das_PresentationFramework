@@ -2,18 +2,17 @@
 using System.Threading.Tasks;
 using Das.Views.Styles;
 
-namespace Das.Views.Construction
+namespace Das.Views.Construction;
+
+public interface IStyleInflater
 {
-    public interface IStyleInflater
-    {
-        ICascadingStyle InflateCss(String css);
+   ICascadingStyle InflateCss(String css);
 
-        Task<ICascadingStyle> InflateResourceCssAsync(String resourceName);
+   Task<ICascadingStyle> InflateResourceCssAsync(String resourceName);
 
-        ICascadingStyle InflateResourceCss(String resourceName);
+   ICascadingStyle InflateResourceCss(String resourceName);
         
-        IStyleSheet InflateXml(String xml);
+   IStyleSheet InflateXml(String xml);
 
-        Task<IStyleSheet> InflateResourceXmlAsync(String resourceName);
-    }
+   Task<IStyleSheet> InflateResourceXmlAsync(String resourceName);
 }

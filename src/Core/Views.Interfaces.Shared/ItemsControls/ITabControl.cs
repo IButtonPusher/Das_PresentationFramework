@@ -1,16 +1,14 @@
 ﻿using System;
 using Das.Views.Mvvm;
 
-namespace Das.Views.ItemsControls
-{
+namespace Das.Views.ItemsControls;
 
-    public interface ITabControl : IItemsControl,
-                                   IContentPresenter
+public interface ITabControl : IItemsControl,
+                               IContentPresenter
                                    
-    {
-        INotifyingCollection TabItems { get; }
+{
+   INotifyingCollection TabItems { get; }
 
 
-        IVisualElement? SelectedTab { get; }
-    }
+   IVisualElement? SelectedTab { get; }
 }

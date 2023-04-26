@@ -3,38 +3,35 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Das.Views.Rendering;
 
-namespace Das.Views.Panels
+namespace Das.Views.Panels;
+
+public interface IVisualCollection : IMeasureAndArrange,
+                                     IDisposable
 {
-    public interface IVisualCollection : IMeasureAndArrange,
-                                         IDisposable
-    {
-        IVisualElement this[Int32 index] { get; }
+   IVisualElement this[Int32 index] { get; }
 
-        Int32 Count { get; }
+   Int32 Count { get; }
 
-        Boolean Contains(IVisualElement element);
+   Boolean Contains(IVisualElement element);
 
-        IEnumerable<IVisualElement> GetAllChildren();
+   IEnumerable<IVisualElement> GetAllChildren();
 
-        Boolean IsTrueForAnyChild<TInput>(TInput input,
-                                          Func<IVisualElement, TInput, Boolean> action);
+   Boolean IsTrueForAnyChild<TInput>(TInput input,
+                                     Func<IVisualElement, TInput, Boolean> action);
 
-        Boolean IsTrueForAnyChild(Func<IVisualElement, Boolean> action);
+   Boolean IsTrueForAnyChild(Func<IVisualElement, Boolean> action);
 
-        IEnumerable<T> GetFromEachChild<T>(Func<IVisualElement, T> action);
+   IEnumerable<T> GetFromEachChild<T>(Func<IVisualElement, T> action);
 
-        void RunOnEachChild(Action<IVisualElement> action);
+   void RunOnEachChild(Action<IVisualElement> action);
 
-        void RunOnEachChild<TInput>(TInput input,
-                                    Action<TInput, IVisualElement> action);
+   void RunOnEachChild<TInput>(TInput input,
+                               Action<TInput, IVisualElement> action);
 
-        Task RunOnEachChildAsync<TInput>(TInput input,
-                                         Func<TInput, IVisualElement, Task> action);
+   Task RunOnEachChildAsync<TInput>(TInput input,
+                                    Func<TInput, IVisualElement, Task> action);
 
 
-        void DistributeDataContext(Object? dataContext);
+   void DistributeDataContext(Object? dataContext);
 
-    }
-
-   
 }

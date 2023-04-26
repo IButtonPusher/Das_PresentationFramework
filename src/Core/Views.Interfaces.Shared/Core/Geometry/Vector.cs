@@ -2,12 +2,11 @@
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace Das.Views.Core.Geometry
+namespace Das.Views.Core.Geometry;
+
+[StructLayout(LayoutKind.Sequential)]
+public class Vector
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public class Vector
-    {
-        public Int32 x;
-        public Int32 y;
-    }
+   public Int32 x;
+   public Int32 y;
 }

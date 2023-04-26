@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views.Core.Geometry
+namespace Das.Views.Core.Geometry;
+
+public interface IPointContainer
 {
-    public interface IPointContainer
-    {
-        IPoint2D Location { get; }
+   IPoint2D Location { get; }
 
-        ISize Size { get; }
+   ISize Size { get; }
 
-        Boolean Contains(IPoint2D point2D);
+   Boolean Contains(IPoint2D point2D);
 
-        Boolean Contains(Int32 x, Int32 y);
+   Boolean Contains(Int32 x, Int32 y);
 
-        Boolean Contains(Double x, Double y);
-    }
+   Boolean Contains(Double x, Double y);
 }

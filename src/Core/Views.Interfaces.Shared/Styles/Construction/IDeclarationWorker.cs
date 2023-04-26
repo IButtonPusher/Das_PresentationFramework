@@ -3,13 +3,12 @@ using Das.Views.Rendering;
 using Das.Views.Styles;
 using Das.Views.Styles.Application;
 
-namespace Das.Views.Construction.Styles
+namespace Das.Views.Construction.Styles;
+
+public interface IDeclarationWorker
 {
-    public interface IDeclarationWorker
-    {
-        IEnumerable<IStyleValueAssignment> BuildStyleValueAssignments(IVisualElement visual,
-                                                                     IVisualLineage visualLineage,
-                                                                     IStyleRule rule,
-                                                                     IVisualBootstrapper visualBootstrapper);
-    }
+   IEnumerable<IStyleValueAssignment> BuildStyleValueAssignments(IVisualElement visual,
+                                                                 IVisualLineage visualLineage,
+                                                                 IStyleRule rule,
+                                                                 IVisualBootstrapper visualBootstrapper);
 }

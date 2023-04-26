@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Das.Views
-{
-    public interface ISelector : IVisualElement
-    {
-        Object? SelectedItem { get; set; }
+namespace Das.Views;
 
-        IVisualElement? SelectedVisual { get; set; }
-    }
+public interface ISelector : IVisualElement
+{
+   Object? SelectedItem { get; set; }
+
+   IVisualElement? SelectedVisual { get; set; }
 }

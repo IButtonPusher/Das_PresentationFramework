@@ -4,38 +4,37 @@ using System.Threading.Tasks;
 using Das.Views.Core.Drawing;
 using Das.Views.Images;
 
-namespace Das.Views.Core
+namespace Das.Views.Core;
+
+public interface IImageProvider
 {
-    public interface IImageProvider
-    {
-        IImage? GetImage(Stream stream);
+   IImage? GetImage(Stream stream);
 
-        IImage? GetImage(Stream stream,
-                         Boolean isPreserveStream);
+   IImage? GetImage(Stream stream,
+                    Boolean isPreserveStream);
 
-        /// <summary>
-        ///     Scales the image down (or up) based on available client viewing area
-        ///     (e.g. window size, mobile screen resolution)
-        /// </summary>
-        IImage? GetDeviceScaledImage(Stream stream,
-                                     Double maximumWidthPct,
-                                     Boolean isPreserveStream);
+   /// <summary>
+   ///     Scales the image down (or up) based on available client viewing area
+   ///     (e.g. window size, mobile screen resolution)
+   /// </summary>
+   IImage? GetDeviceScaledImage(Stream stream,
+                                Double maximumWidthPct,
+                                Boolean isPreserveStream);
 
-        IImage GetScaledImage(IImage input,
-                              Double width,
-                              Double height);
+   IImage GetScaledImage(IImage input,
+                         Double width,
+                         Double height);
 
-        IImage? GetImage(Byte[] bytes);
+   IImage? GetImage(Byte[] bytes);
 
-        IImage? GetImage(Byte[] bytes,
-                         Boolean isPreserveStream);
+   IImage? GetImage(Byte[] bytes,
+                    Boolean isPreserveStream);
 
-        IImage? GetImage(FileInfo file);
+   IImage? GetImage(FileInfo file);
 
-        IImage GetNullImage();
+   IImage GetNullImage();
 
-        Double DeviceEffectiveDpi { get; }
+   Double DeviceEffectiveDpi { get; }
 
-        IGraphicsPath GetNewGraphicsPath();
-    }
+   IGraphicsPath GetNewGraphicsPath();
 }

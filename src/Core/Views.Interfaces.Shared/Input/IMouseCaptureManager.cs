@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace Das.Views.Input
+namespace Das.Views.Input;
+
+public interface IMouseCaptureManager
 {
-    public interface IMouseCaptureManager
-    {
-        Boolean TryCaptureMouseInput(IVisualElement view);
+   Boolean TryCaptureMouseInput(IVisualElement view);
 
-        Boolean TryReleaseMouseCapture(IVisualElement view);
+   Boolean TryReleaseMouseCapture(IVisualElement view);
 
-        IVisualElement? GetVisualWithMouseCapture();
-    }
+   IVisualElement? GetVisualWithMouseCapture();
 }

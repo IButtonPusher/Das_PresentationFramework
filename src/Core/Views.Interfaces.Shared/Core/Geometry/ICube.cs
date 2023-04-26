@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views.Core.Geometry
+namespace Das.Views.Core.Geometry;
+
+public interface ICube : IRectangle
 {
-    public interface ICube : IRectangle
-    {
-        Double Depth { get; }
-    }
+   Double Depth { get; }
 }

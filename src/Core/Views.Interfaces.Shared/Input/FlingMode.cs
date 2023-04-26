@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Das.Views.Input
+namespace Das.Views.Input;
+
+public enum FlingMode
 {
-    public enum FlingMode
-    {
-        None,
-        Default,
-        Inverted
-    }
+   None,
+   Default,
+   Inverted
 }

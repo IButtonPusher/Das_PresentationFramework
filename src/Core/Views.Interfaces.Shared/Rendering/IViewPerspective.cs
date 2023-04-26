@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views.Rendering
+namespace Das.Views.Rendering;
+
+public interface IViewPerspective : IZoomLevelAware
 {
-    public interface IViewPerspective : IZoomLevelAware
-    {
         
-    }
 }

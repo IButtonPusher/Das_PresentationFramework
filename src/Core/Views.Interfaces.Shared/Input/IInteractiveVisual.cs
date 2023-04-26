@@ -2,17 +2,16 @@
 using System.Threading.Tasks;
 using Das.Views.Input;
 
-namespace Das.Views
+namespace Das.Views;
+
+public interface IInteractiveVisual : IVisualElement,
+                                      IHandleInput
 {
-    public interface IInteractiveVisual : IVisualElement,
-                                          IHandleInput
-    {
-        //InputAction HandlesActions { get; }
+   //InputAction HandlesActions { get; }
 
-        Boolean IsActive { get; set; }
+   Boolean IsActive { get; set; }
 
-        Boolean IsFocused { get; }
+   Boolean IsFocused { get; }
 
-        Boolean IsMouseOver { get; }
-    }
+   Boolean IsMouseOver { get; }
 }

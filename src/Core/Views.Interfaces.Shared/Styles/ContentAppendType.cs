@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Das.Views.Styles
+namespace Das.Views.Styles;
+
+public enum ContentAppendType
 {
-    public enum ContentAppendType
-    {
-        Invalid,
-        Before,
-        After
-    }
+   Invalid,
+   Before,
+   After
 }

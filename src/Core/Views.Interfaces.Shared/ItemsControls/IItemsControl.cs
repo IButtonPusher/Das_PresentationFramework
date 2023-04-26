@@ -2,12 +2,11 @@
 using Das.Views.Mvvm;
 using Das.Views.Panels;
 
-namespace Das.Views
-{
-    public interface IItemsControl : IContainerVisual
-    {
-        INotifyingCollection? ItemsSource { get; }
+namespace Das.Views;
 
-        IDataTemplate? ItemTemplate { get; }
-    }
+public interface IItemsControl : IContainerVisual
+{
+   INotifyingCollection? ItemsSource { get; }
+
+   IDataTemplate? ItemTemplate { get; }
 }

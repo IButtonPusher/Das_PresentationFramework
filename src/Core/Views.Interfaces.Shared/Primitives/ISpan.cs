@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace Das.Views.Primitives
+namespace Das.Views.Primitives;
+
+public interface ISpan : IVisualElement
 {
-    public interface ISpan : IVisualElement
-    {
-    }
 }

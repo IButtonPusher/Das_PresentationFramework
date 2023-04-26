@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace Das.Views.Controls
+namespace Das.Views.Controls;
+
+public interface IButton //: IInputVisual<InputVisualType>
 {
-    public interface IButton //: IInputVisual<InputVisualType>
-    {
-    }
 }

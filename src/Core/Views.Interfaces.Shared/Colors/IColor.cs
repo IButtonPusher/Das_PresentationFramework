@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views.Core.Drawing
+namespace Das.Views.Core.Drawing;
+
+public interface IColor
 {
-    public interface IColor
-    {
-        Byte A { get; }
+   Byte A { get; }
 
-        Byte B { get; }
+   Byte B { get; }
 
-        Byte G { get; }
+   Byte G { get; }
 
-        Byte R { get; }
+   Byte R { get; }
 
-        IBrush ToBrush();
-    }
+   IBrush ToBrush();
 }

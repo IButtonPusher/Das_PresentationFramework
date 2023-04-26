@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views.Controls
+namespace Das.Views.Controls;
+
+public interface IVisualSurrogateProvider
 {
-    public interface IVisualSurrogateProvider
-    {
-        Boolean TrySetSurrogate(ref IVisualElement element);
-    }
+   Boolean TrySetSurrogate(ref IVisualElement element);
 }

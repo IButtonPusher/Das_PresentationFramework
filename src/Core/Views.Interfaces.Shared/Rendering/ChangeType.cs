@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views.Rendering
+namespace Das.Views.Rendering;
+
+[Flags]
+public enum ChangeType
 {
-   [Flags]
-   public enum ChangeType
-   {
-      None = 1,
-      Measure = 2,
-      Arrange = 4,
-      MeasureAndArrange = 6
-   }
+   None = 1,
+   Measure = 2,
+   Arrange = 4,
+   MeasureAndArrange = 6
 }

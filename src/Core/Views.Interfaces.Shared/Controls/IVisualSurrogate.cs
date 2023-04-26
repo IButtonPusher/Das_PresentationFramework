@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views.Controls
+namespace Das.Views.Controls;
+
+/// <summary>
+///     A visual that requires a platform specific implementation
+/// </summary>
+public interface IVisualSurrogate : IVisualElement
 {
-    /// <summary>
-    ///     A visual that requires a platform specific implementation
-    /// </summary>
-    public interface IVisualSurrogate : IVisualElement
-    {
-        //Type ReplacesType { get; }
+   //Type ReplacesType { get; }
         
-        IVisualElement ReplacingVisual { get; }
-    }
+   IVisualElement ReplacingVisual { get; }
 }

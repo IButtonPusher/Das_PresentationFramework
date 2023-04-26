@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Das.Views.Transitions
-{
-    public interface IManualTransition
-    {
-        void Cancel();
+namespace Das.Views.Transitions;
 
-        void Start();
-    }
+public interface IManualTransition
+{
+   void Cancel();
+
+   void Start();
 }

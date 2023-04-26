@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace Das.Views
+namespace Das.Views;
+
+public interface IPropertyBinding
 {
-    public interface IPropertyBinding
-    {
-    }
 }

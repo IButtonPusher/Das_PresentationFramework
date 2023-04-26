@@ -3,63 +3,62 @@ using Das.Views.Core.Geometry;
 using Das.Views.Images;
 using Das.Views.Transforms;
 
-namespace Das.Views.Core.Drawing
+namespace Das.Views.Core.Drawing;
+
+public interface IGraphicsPath : IDisposable
 {
-    public interface IGraphicsPath : IDisposable
-    {
-        void LineTo<TPoint>(TPoint p1)
-            where TPoint : IPoint2D;
+   void LineTo<TPoint>(TPoint p1)
+      where TPoint : IPoint2D;
 
-        void AddLine<TPoint>(TPoint p1,
-                             TPoint p2)
-            where TPoint : IPoint2F;
+   void AddLine<TPoint>(TPoint p1,
+                        TPoint p2)
+      where TPoint : IPoint2F;
 
-        void AddArc<TRectangle>(TRectangle arc,
-                                Single startAngle,
-                                Single endAngle)
-            where TRectangle : IRectangle;
+   void AddArc<TRectangle>(TRectangle arc,
+                           Single startAngle,
+                           Single endAngle)
+      where TRectangle : IRectangle;
 
-        void AddBezier(Single x1,
-                       Single y1,
-                       Single x2,
-                       Single y2,
-                       Single x3,
-                       Single y3,
-                       Single x4,
-                       Single y4);
+   void AddBezier(Single x1,
+                  Single y1,
+                  Single x2,
+                  Single y2,
+                  Single x3,
+                  Single y3,
+                  Single x4,
+                  Single y4);
 
-        void AddBezier(IPoint2F p1,
-                       IPoint2F p2,
-                       IPoint2F p3,
-                       IPoint2F p4);
+   void AddBezier(IPoint2F p1,
+                  IPoint2F p2,
+                  IPoint2F p3,
+                  IPoint2F p4);
 
-        void StartFigure();
+   void StartFigure();
 
-        void CloseFigure();
+   void CloseFigure();
 
-        void Transform(TransformationMatrix matrix);
+   void Transform(TransformationMatrix matrix);
 
-        ValueSize Size { get; }
+   ValueSize Size { get; }
 
-        void SetRoundedRectangle<TThickness, TRect>(TRect bounds,
-                                                    TThickness cornerRadii)
-            where TThickness : IThickness
-            where TRect : IRectangle;
+   void SetRoundedRectangle<TThickness, TRect>(TRect bounds,
+                                               TThickness cornerRadii)
+      where TThickness : IThickness
+      where TRect : IRectangle;
 
-        IPathData PathData { get; }
+   IPathData PathData { get; }
 
-        public IColor Stroke { get; set; }
+   public IColor Stroke { get; set; }
 
-        public IBrush? Fill { get; set; }
+   public IBrush? Fill { get; set; }
 
-        /// <summary>
-        /// Gets the underlying system specific object
-        /// </summary>
-        T Unwrap<T>();
+   /// <summary>
+   /// Gets the underlying system specific object
+   /// </summary>
+   T Unwrap<T>();
 
-        IImage ToImage(Int32 width,
-                       Int32 height,
-                       IColor? stroke,
-                       IBrush? fill);
-    }
+   IImage ToImage(Int32 width,
+                  Int32 height,
+                  IColor? stroke,
+                  IBrush? fill);
 }

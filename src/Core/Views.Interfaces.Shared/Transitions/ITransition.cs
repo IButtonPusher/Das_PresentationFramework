@@ -1,19 +1,18 @@
 ﻿using System;
 
-namespace Das.Views.Transitions
+namespace Das.Views.Transitions;
+
+public interface ITransition<in T> : ITransition
 {
-    public interface ITransition<in T> : ITransition
-    {
-        void SetValue(T startValue,
-                      T endValue);
-    }
+   void SetValue(T startValue,
+                 T endValue);
+}
 
-    public interface ITransition
-    {
-        TimeSpan Duration { get; }
+public interface ITransition
+{
+   TimeSpan Duration { get; }
 
-        TimeSpan Delay { get; }
+   TimeSpan Delay { get; }
 
-        TransitionFunctionType Timing { get; }
-    }
+   TransitionFunctionType Timing { get; }
 }

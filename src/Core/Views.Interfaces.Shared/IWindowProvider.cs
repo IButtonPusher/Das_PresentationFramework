@@ -4,15 +4,14 @@ using Das.Views.Core.Geometry;
 
 // ReSharper disable UnusedMember.Global
 
-namespace Das.Views
-{
-    public interface IWindowProvider<out TWindow> : IWindowNotifier<TWindow>
-        where TWindow : IVisualHost
-    {
-        TWindow Show<TRectangle>(IVisualElement view,
-                                 TRectangle rect)
-            where TRectangle : IRectangle;
+namespace Das.Views;
 
-        TWindow Show(IVisualElement visual);
-    }
+public interface IWindowProvider<out TWindow> : IWindowNotifier<TWindow>
+   where TWindow : IVisualHost
+{
+   TWindow Show<TRectangle>(IVisualElement view,
+                            TRectangle rect)
+      where TRectangle : IRectangle;
+
+   TWindow Show(IVisualElement visual);
 }

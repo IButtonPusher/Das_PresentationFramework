@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Das.Views
+namespace Das.Views;
+
+public interface IVisualAliasProvider
 {
-    public interface IVisualAliasProvider
-    {
-        Type? GetVisualTypeFromAlias(String alias);
-    }
+   Type? GetVisualTypeFromAlias(String alias);
 }

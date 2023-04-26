@@ -2,10 +2,9 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Das.Views
+namespace Das.Views;
+
+public interface IViewProvider
 {
-    public interface IViewProvider
-    {
-        Task<IVisualElement> GetView(FileInfo file);
-    }
+   Task<IVisualElement> GetView(FileInfo file);
 }

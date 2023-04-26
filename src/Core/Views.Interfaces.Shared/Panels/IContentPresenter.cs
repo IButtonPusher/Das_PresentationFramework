@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Das.Views
+namespace Das.Views;
+
+public interface IContentPresenter : IVisualElement
 {
-    public interface IContentPresenter : IVisualElement
-    {
-        IDataTemplate? ContentTemplate { get; set; }
-    }
+   IDataTemplate? ContentTemplate { get; set; }
 }

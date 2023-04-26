@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Das.Views
-{
-    public interface IDependencyProperty<out TValue> : IDependencyProperty
-    {
-        new TValue DefaultValue {get;}
+namespace Das.Views;
 
-        TValue GetValue<TVisual>(TVisual visual) where TVisual : IVisualElement;
-    }
+public interface IDependencyProperty<out TValue> : IDependencyProperty
+{
+   new TValue DefaultValue {get;}
+
+   TValue GetValue<TVisual>(TVisual visual) where TVisual : IVisualElement;
 }

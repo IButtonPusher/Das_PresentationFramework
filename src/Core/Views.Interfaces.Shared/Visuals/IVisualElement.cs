@@ -14,80 +14,79 @@ using Das.Views.Styles.Declarations;
 using Das.Views.Templates;
 using Das.Views.Transforms;
 
-namespace Das.Views
+namespace Das.Views;
+
+public interface IVisualElement : IVisualRenderer,
+                                  INotifyDisposable,
+                                  INotifyPropertyChanged,
+                                  ITemplatableVisual,
+                                  IEquatable<IVisualElement>,
+                                  IQuantifiedRectangle
+
 {
-    public interface IVisualElement : IVisualRenderer,
-                                      INotifyDisposable,
-                                      INotifyPropertyChanged,
-                                      ITemplatableVisual,
-                                      IEquatable<IVisualElement>,
-                                      IQuantifiedRectangle
-
-    {
-        /// <summary>
-        ///     For style lookups. Allows items in repeaters to use the same style assignment
-        /// </summary>
-        Int32 Id { get; }
+   /// <summary>
+   ///     For style lookups. Allows items in repeaters to use the same style assignment
+   /// </summary>
+   Int32 Id { get; }
         
-        /// <summary>
-        /// Class name for style resolution
-        /// </summary>
-        String? Class { get; }
+   /// <summary>
+   /// Class name for style resolution
+   /// </summary>
+   String? Class { get; }
 
-        IAppliedStyle? Style { get; }
+   IAppliedStyle? Style { get; }
 
-        Boolean IsClipsContent { get; set; }
+   Boolean IsClipsContent { get; set; }
 
-        void OnParentChanging(IVisualElement? newParent);
+   void OnParentChanging(IVisualElement? newParent);
 
-        void RaisePropertyChanged(String propertyName,
-                                  Object? value);
+   void RaisePropertyChanged(String propertyName,
+                             Object? value);
 
-        QuantifiedDouble? Width { get; set; }
+   QuantifiedDouble? Width { get; set; }
 
-        QuantifiedDouble? Height { get; set; }
+   QuantifiedDouble? Height { get; set; }
 
 
-        HorizontalAlignments HorizontalAlignment { get; set; }
+   HorizontalAlignments HorizontalAlignment { get; set; }
 
-        VerticalAlignments VerticalAlignment { get; set; }
+   VerticalAlignments VerticalAlignment { get; set; }
 
-        IBrush? Background { get; set; }
+   IBrush? Background { get; set; }
         
-        QuantifiedThickness Margin { get; set; }
+   QuantifiedThickness Margin { get; set; }
 
-        Double Opacity { get; }
+   Double Opacity { get; }
         
-        Visibility Visibility { get; set; }
+   Visibility Visibility { get; set; }
         
-        QuantifiedThickness BorderRadius { get; set; }
+   QuantifiedThickness BorderRadius { get; set; }
 
-        IVisualBorder Border {get; set; }
+   IVisualBorder Border {get; set; }
         
-        Boolean IsEnabled { get; set; }
+   Boolean IsEnabled { get; set; }
 
-        TransformationMatrix Transform { get; set; }
+   TransformationMatrix Transform { get; set; }
 
-        Boolean TryGetDependencyProperty(DeclarationProperty declarationProperty,
-                                         out IDependencyProperty dependencyProperty);
+   Boolean TryGetDependencyProperty(DeclarationProperty declarationProperty,
+                                    out IDependencyProperty dependencyProperty);
 
-        ILabel? BeforeLabel { get; set; }
+   ILabel? BeforeLabel { get; set; }
         
-        ILabel? AfterLabel { get; set; }
+   ILabel? AfterLabel { get; set; }
 
-        Boolean TryHandleInput<TArgs>(TArgs args,
-                                      Int32 x,
-                                      Int32 y)
-           where TArgs : IMouseInputEventArgs<TArgs>;
+   Boolean TryHandleInput<TArgs>(TArgs args,
+                                 Int32 x,
+                                 Int32 y)
+      where TArgs : IMouseInputEventArgs<TArgs>;
 
-        ///// <summary>
-        ///// Tags in markup that are meant to identify this visual.
-        ///// </summary>
-        ///// <example>label = Label, input can be TextBox, Button, CheckBox, etc </example>
-        //Boolean IsMarkupNameAlias(String markupTag);
+   ///// <summary>
+   ///// Tags in markup that are meant to identify this visual.
+   ///// </summary>
+   ///// <example>label = Label, input can be TextBox, Button, CheckBox, etc </example>
+   //Boolean IsMarkupNameAlias(String markupTag);
         
-        Int32 ZIndex { get; }
+   Int32 ZIndex { get; }
 
-        IBoxShadow  BoxShadow { get; }
-    }
+   IBoxShadow  BoxShadow { get; }
 }

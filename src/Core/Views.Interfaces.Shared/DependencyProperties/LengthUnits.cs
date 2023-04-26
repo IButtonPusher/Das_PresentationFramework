@@ -1,48 +1,47 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace Das.Views
-{
-    public enum LengthUnits
-    {
-        Invalid,
-        None,
-        
-        [Description("Centimeters")]
-        Cm,
+namespace Das.Views;
 
-        [Description("Millimeters")]
-        Mm,
+public enum LengthUnits
+{
+   Invalid,
+   None,
         
-        /// <summary>
-        /// Inches
-        /// </summary>
-        [Description("Inches")]
-        In,
+   [Description("Centimeters")]
+   Cm,
+
+   [Description("Millimeters")]
+   Mm,
         
-        /// <summary>
-        /// Pixels
-        /// </summary>
-        [Description("Pixels")]
-        Px,
+   /// <summary>
+   /// Inches
+   /// </summary>
+   [Description("Inches")]
+   In,
         
-        /// <summary>
-        /// Points
-        /// </summary>
-        [Description("Points")]
-        Pt,
+   /// <summary>
+   /// Pixels
+   /// </summary>
+   [Description("Pixels")]
+   Px,
         
-        /// <summary>
-        /// Picas
-        /// </summary>
-        [Description("Picas")]
-        Pc,
+   /// <summary>
+   /// Points
+   /// </summary>
+   [Description("Points")]
+   Pt,
         
-        /// <summary>
-        /// Percent
-        /// </summary>
-        [Description("Percent")]
-        Percent
+   /// <summary>
+   /// Picas
+   /// </summary>
+   [Description("Picas")]
+   Pc,
         
-    }
+   /// <summary>
+   /// Percent
+   /// </summary>
+   [Description("Percent")]
+   Percent
+        
 }

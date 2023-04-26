@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace Das.Views.Rendering
+namespace Das.Views.Rendering;
+
+public interface IMeasureAndArrange
 {
-    public interface IMeasureAndArrange
-    {
-        void InvalidateMeasure();
+   void InvalidateMeasure();
 
-        void InvalidateArrange();
+   void InvalidateArrange();
 
-        Boolean IsRequiresMeasure { get; }
+   Boolean IsRequiresMeasure { get; }
 
-        Boolean IsRequiresArrange { get; }
+   Boolean IsRequiresArrange { get; }
 
-        void AcceptChanges(ChangeType changeType);
-    }
+   void AcceptChanges(ChangeType changeType);
 }

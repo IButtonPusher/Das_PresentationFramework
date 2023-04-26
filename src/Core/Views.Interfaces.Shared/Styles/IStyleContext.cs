@@ -5,46 +5,45 @@ using System.Threading.Tasks;
 using Das.Views.Colors;
 using Das.Views.Rendering;
 
-namespace Das.Views.Styles
+namespace Das.Views.Styles;
+
+public interface IStyleContext : IStyleRegistry,
+                                 IChangeTracking,
+                                 IThemeProvider
 {
-    public interface IStyleContext : IStyleRegistry,
-                                     IChangeTracking,
-                                     IThemeProvider
-    {
-        IEnumerable<IStyle> GetStylesForElement(IVisualElement element);
+   IEnumerable<IStyle> GetStylesForElement(IVisualElement element);
 
-        /// <summary>
-        ///     registers a style on the application level
-        /// </summary>
-        void RegisterStyle(IStyle style);
+   /// <summary>
+   ///     registers a style on the application level
+   /// </summary>
+   void RegisterStyle(IStyle style);
 
-        void RegisterStyle(IStyle style,
-                           IVisualElement scope);
+   void RegisterStyle(IStyle style,
+                      IVisualElement scope);
 
-        T GetStyleSetter<T>(StyleSetterType setterType,
-                            IVisualElement element,
-                            IVisualLineage visualLineage);
+   T GetStyleSetter<T>(StyleSetterType setterType,
+                       IVisualElement element,
+                       IVisualLineage visualLineage);
 
-        /// <summary>
-        ///     Falls back to StyleSelector.None if a different value is passed and no setter is found
-        /// </summary>
-        T GetStyleSetter<T>(StyleSetterType setterType,
-                            VisualStateType type,
-                            IVisualElement element,
-                            IVisualLineage visualLineage);
+   /// <summary>
+   ///     Falls back to StyleSelector.None if a different value is passed and no setter is found
+   /// </summary>
+   T GetStyleSetter<T>(StyleSetterType setterType,
+                       VisualStateType type,
+                       IVisualElement element,
+                       IVisualLineage visualLineage);
 
-        //void SetCurrentAccentColor(IColor color);
+   //void SetCurrentAccentColor(IColor color);
 
-        /// <summary>
-        ///     Registers a single style setter at the type level.
-        /// </summary>
-        void RegisterStyleSetter<T>(StyleSetterType setterType,
-                                    Object value,
-                                    IVisualElement scope)
-            where T : IVisualElement;
+   /// <summary>
+   ///     Registers a single style setter at the type level.
+   /// </summary>
+   void RegisterStyleSetter<T>(StyleSetterType setterType,
+                               Object value,
+                               IVisualElement scope)
+      where T : IVisualElement;
 
-        void CoerceIsChanged();
+   void CoerceIsChanged();
 
-        IStyleVariableAccessor VariableAccessor { get; }
-    }
+   IStyleVariableAccessor VariableAccessor { get; }
 }

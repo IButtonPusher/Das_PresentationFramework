@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace Das.Views.Construction
+namespace Das.Views.Construction;
+
+public enum MarkupLanguage
 {
-    public enum MarkupLanguage
-    {
-        Unknown,
-        Xml,
-        Json,
-        Css
-    }
+   Unknown,
+   Xml,
+   Json,
+   Css
 }

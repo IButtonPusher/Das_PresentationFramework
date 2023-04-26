@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Das.Views.Construction
+namespace Das.Views.Construction;
+
+/// <summary>
+/// Metadata extracted from markup like xml or json
+/// </summary>
+public interface IAttributeDictionary
 {
-    /// <summary>
-    /// Metadata extracted from markup like xml or json
-    /// </summary>
-    public interface IAttributeDictionary
-    {
-        Boolean TryGetAttributeValue(String key, 
-                                     out String value);
+   Boolean TryGetAttributeValue(String key, 
+                                out String value);
         
-        IEnumerable<KeyValuePair<String, String>> GetAllAttributes();
-    }
+   IEnumerable<KeyValuePair<String, String>> GetAllAttributes();
 }

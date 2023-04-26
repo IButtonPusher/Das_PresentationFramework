@@ -2,36 +2,35 @@
 using System.Collections.Generic;
 using Das.Views.Colors;
 
-namespace Das.Views.Core.Drawing
+namespace Das.Views.Core.Drawing;
+
+public interface IColorPalette: IEnumerable<KeyValuePair<ColorType, IBrush>>
 {
-    public interface IColorPalette: IEnumerable<KeyValuePair<ColorType, IBrush>>
-    {
-        IBrush Primary { get; }
+   IBrush Primary { get; }
 
-        IBrush PrimaryVariant { get; }
+   IBrush PrimaryVariant { get; }
 
-        IBrush Secondary { get; }
+   IBrush Secondary { get; }
 
-        IBrush SecondaryVariant { get; }
+   IBrush SecondaryVariant { get; }
         
-        IBrush Background { get; }
+   IBrush Background { get; }
 
-        IBrush Surface { get; }
+   IBrush Surface { get; }
 
-        IBrush Error { get; }
+   IBrush Error { get; }
         
-        IBrush OnPrimary { get; }
+   IBrush OnPrimary { get; }
         
-        IBrush OnSecondary { get; }
+   IBrush OnSecondary { get; }
 
-        IBrush OnBackground {get;}
+   IBrush OnBackground {get;}
 
-        IBrush OnSurface { get; }
+   IBrush OnSurface { get; }
 
-        IBrush OnError { get; }
+   IBrush OnError { get; }
 
 
-        IBrush GetAlpha(ColorType type,
-                        Double opacity);
-    }
+   IBrush GetAlpha(ColorType type,
+                   Double opacity);
 }

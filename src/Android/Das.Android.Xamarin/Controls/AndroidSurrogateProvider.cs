@@ -25,7 +25,10 @@ public class AndroidSurrogateProvider
          if (element is not HtmlPanel pnl)
             throw new InvalidCastException($"{element} is not of type {typeof(HtmlPanel)}");
 
-         var surrogate = new HtmlSurrogate(pnl, _viewGroup.Context, _viewGroup, _uiProvider);
+         if (_viewGroup.Context is not { } viewGroupContext)
+            throw new InvalidOperationException($"Null context for {_viewGroup}");
+
+         var surrogate = new HtmlSurrogate(pnl, viewGroupContext, _viewGroup, _uiProvider);
 
          _viewGroup.AddView(surrogate);
 

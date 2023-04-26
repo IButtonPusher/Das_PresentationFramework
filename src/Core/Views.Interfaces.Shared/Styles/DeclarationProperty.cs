@@ -1,98 +1,97 @@
 ﻿using System;
 // ReSharper disable UnusedMember.Global
 
-namespace Das.Views.Styles.Declarations
+namespace Das.Views.Styles.Declarations;
+
+/// <summary>
+/// Cascading style sheet properties (zb box-shadow, width, color)
+/// </summary>
+public enum DeclarationProperty
 {
-    /// <summary>
-    /// Cascading style sheet properties (zb box-shadow, width, color)
-    /// </summary>
-    public enum DeclarationProperty
-    {
-        Invalid,
+   Invalid,
         
-        Appearance,
-        BackgroundColor,
+   Appearance,
+   BackgroundColor,
 
-        Border,
-        BorderColor,
-        BorderStyle,
-        BorderWidth,
+   Border,
+   BorderColor,
+   BorderStyle,
+   BorderWidth,
         
-        BorderBottom,
-        BorderBottomColor,
-        BorderBottomStyle,
-        BorderBottomWidth,
+   BorderBottom,
+   BorderBottomColor,
+   BorderBottomStyle,
+   BorderBottomWidth,
 
-        BorderLeft,
-        BorderLeftColor,
-        BorderLeftStyle,
-        BorderLeftWidth,
+   BorderLeft,
+   BorderLeftColor,
+   BorderLeftStyle,
+   BorderLeftWidth,
 
-        BorderRight,
-        BorderRightColor,
-        BorderRightStyle,
-        BorderRightWidth,
+   BorderRight,
+   BorderRightColor,
+   BorderRightStyle,
+   BorderRightWidth,
 
-        BorderTop,
-        BorderTopColor,
-        BorderTopStyle,
-        BorderTopWidth,
+   BorderTop,
+   BorderTopColor,
+   BorderTopStyle,
+   BorderTopWidth,
         
-        BorderRadius,
-        BorderRadiusBottom,
-        BorderRadiusLeft,
-        BorderRadiusRight,
-        BorderRadiusTop,
+   BorderRadius,
+   BorderRadiusBottom,
+   BorderRadiusLeft,
+   BorderRadiusRight,
+   BorderRadiusTop,
         
-        Bottom,
-        BoxShadow,
-        Color,
-        Content,
-        Cursor,
-        Display,
+   Bottom,
+   BoxShadow,
+   Color,
+   Content,
+   Cursor,
+   Display,
         
-        Float,
-        FontFamily,
-        FontSize,
-        Height,
-        Left,
-        LineHeight,
+   Float,
+   FontFamily,
+   FontSize,
+   Height,
+   Left,
+   LineHeight,
         
-        Margin,
-        MarginBottom,
-        MarginLeft,
-        MarginRight,
-        MarginTop,
+   Margin,
+   MarginBottom,
+   MarginLeft,
+   MarginRight,
+   MarginTop,
 
-        Opacity,
+   Opacity,
         
-        Outline,
-        OutlineColor,
-        OutlineOffset,
-        OutlineStyle,
-        OutlineWidth,
+   Outline,
+   OutlineColor,
+   OutlineOffset,
+   OutlineStyle,
+   OutlineWidth,
 
-        Padding,
-        PaddingBottom,
-        PaddingLeft,
-        PaddingRight,
-        PaddingTop,
+   Padding,
+   PaddingBottom,
+   PaddingLeft,
+   PaddingRight,
+   PaddingTop,
         
-        PointerEvents,
-        Position,
-        Right,
-        Top,
-        Transform,
+   PointerEvents,
+   Position,
+   Right,
+   Top,
+   Transform,
         
-        Transition,
-        TransitionDelay,
-        TransitionDuration,
-        TransitionProperty,
-        TransitionTimingFunction,
+   Transition,
+   TransitionDelay,
+   TransitionDuration,
+   TransitionProperty,
+   TransitionTimingFunction,
         
-        VerticalAlign,
+   VerticalAlign,
         
-        Width,
-        ZIndex
-    }
+   Width,
+   ZIndex
 }

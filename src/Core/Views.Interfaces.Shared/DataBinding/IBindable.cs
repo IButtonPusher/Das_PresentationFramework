@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Das.Views.DataBinding
+namespace Das.Views.DataBinding;
+
+public interface IBindable : IDisposable
 {
-    public interface IBindable : IDisposable
-    {
-        void AddBinding(IDataBinding binding);
+   void AddBinding(IDataBinding binding);
 
-        IEnumerable<IDataBinding> GetBindings();
+   IEnumerable<IDataBinding> GetBindings();
 
-        Object? DataContext { get; set; }
-    }
+   Object? DataContext { get; set; }
 }

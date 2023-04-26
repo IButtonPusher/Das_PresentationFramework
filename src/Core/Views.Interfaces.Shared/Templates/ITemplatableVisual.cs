@@ -1,10 +1,9 @@
 ﻿using System;
 using Das.Views.Controls;
 
-namespace Das.Views.Templates
+namespace Das.Views.Templates;
+
+public interface ITemplatableVisual
 {
-    public interface ITemplatableVisual
-    {
-        IVisualTemplate? Template { get; set; }
-    }
+   IVisualTemplate? Template { get; set; }
 }

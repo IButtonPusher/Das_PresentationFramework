@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Das.Views.Controls
+namespace Das.Views.Controls;
+
+public interface IVisualTemplate //: IContentContainer
 {
-    public interface IVisualTemplate //: IContentContainer
-    {
-        IVisualElement? Content { get; }
-    }
+   IVisualElement? Content { get; }
 }

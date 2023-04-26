@@ -1,26 +1,25 @@
 ﻿using System;
 
-namespace Das.Views.Core.Geometry
+namespace Das.Views.Core.Geometry;
+
+public readonly struct ValueRoundedSize : IRoundedSize
 {
-    public readonly struct ValueRoundedSize : IRoundedSize
-    {
-        public ValueRoundedSize(Int32 width,
-                                Int32 height)
-        {
-            Width = width;
-            Height = height;
-        }
+   public ValueRoundedSize(Int32 width,
+                           Int32 height)
+   {
+      Width = width;
+      Height = height;
+   }
 
-        public Boolean Equals(IRoundedSize other)
-        {
-            if (ReferenceEquals(null, other)) return false;
+   public Boolean Equals(IRoundedSize other)
+   {
+      if (ReferenceEquals(null, other)) return false;
 
-            return Width == other.Width &&
-                   Height == other.Height;
-        }
+      return Width == other.Width &&
+             Height == other.Height;
+   }
 
-        public Int32 Height { get; }
+   public Int32 Height { get; }
 
-        public Int32 Width { get; }
-    }
+   public Int32 Width { get; }
 }

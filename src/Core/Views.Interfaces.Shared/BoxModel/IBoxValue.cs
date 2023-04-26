@@ -1,15 +1,14 @@
 ﻿using System;
 
-namespace Das.Views.Core
+namespace Das.Views.Core;
+
+public interface IBoxValue<out T>
 {
-    public interface IBoxValue<out T>
-    {
-        T Left { get; }
+   T Left { get; }
 
-        T Right { get; }
+   T Right { get; }
 
-        T Top { get; }
+   T Top { get; }
 
-        T Bottom { get; }
-    }
+   T Bottom { get; }
 }

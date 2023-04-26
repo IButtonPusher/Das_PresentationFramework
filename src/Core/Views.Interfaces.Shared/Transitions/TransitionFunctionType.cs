@@ -1,21 +1,20 @@
 ﻿using System;
 // ReSharper disable UnusedMember.Global
 
-namespace Das.Views.Transitions
+namespace Das.Views.Transitions;
+
+public enum TransitionFunctionType
 {
-    public enum TransitionFunctionType
-    {
-        Invalid,
+   Invalid,
         
-        Ease,
-        Linear,
-        EaseIn,
-        EaseOut,
-        EaseInOut,
-        StepStart,
-        StepEnd,
+   Ease,
+   Linear,
+   EaseIn,
+   EaseOut,
+   EaseInOut,
+   StepStart,
+   StepEnd,
         
-        Initial,
-        Inherit
-    }
+   Initial,
+   Inherit
 }

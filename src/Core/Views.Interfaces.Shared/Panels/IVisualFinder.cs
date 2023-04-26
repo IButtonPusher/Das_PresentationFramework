@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views.Panels
+namespace Das.Views.Panels;
+
+public interface IVisualFinder
 {
-    public interface IVisualFinder
-    {
-        Boolean Contains(IVisualElement element);
-    }
+   Boolean Contains(IVisualElement element);
 }

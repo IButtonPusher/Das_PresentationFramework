@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace Das.Views
+namespace Das.Views;
+
+public interface IDataTemplate
 {
-    public interface IDataTemplate
-    {
-        Type? DataType { get; }
+   Type? DataType { get; }
 
-        IVisualElement BuildVisual();
+   IVisualElement BuildVisual();
 
-        IVisualElement? BuildVisual(Object? dataContext);
-    }
+   IVisualElement? BuildVisual(Object? dataContext);
 }

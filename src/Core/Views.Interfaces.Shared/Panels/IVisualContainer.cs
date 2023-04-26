@@ -3,23 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace Das.Views.Panels
+namespace Das.Views.Panels;
+
+public interface IVisualContainer : IVisualFinder,
+                                    IChangeTracking,
+                                    IPanelElement
 {
+   new IVisualCollection Children { get; }
 
-    public interface IVisualContainer : IVisualFinder,
-                                        IChangeTracking,
-                                        IPanelElement
-    {
-        new IVisualCollection Children { get; }
+   new void AddChild(IVisualElement element);
 
-        new void AddChild(IVisualElement element);
+   Boolean RemoveChild(IVisualElement element);
 
-        Boolean RemoveChild(IVisualElement element);
+   new void AddChildren(IEnumerable<IVisualElement> elements);
 
-        new void AddChildren(IEnumerable<IVisualElement> elements);
+   //void OnChildDeserialized(IVisualElement element,
+   //                         INode node);
 
-        //void OnChildDeserialized(IVisualElement element,
-        //                         INode node);
-
-    }
 }

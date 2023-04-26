@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace Das.Views.DependencyProperties
+namespace Das.Views.DependencyProperties;
+
+[Flags]
+public enum PropertyMetadata
 {
-    [Flags]
-    public enum PropertyMetadata
-    {
-        None = 0,
-        AffectsArrange = 1,
-        AffectsMeasure = 2,
-    }
+   None = 0,
+   AffectsArrange = 1,
+   AffectsMeasure = 2,
 }

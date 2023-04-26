@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views.Core.Enums
+namespace Das.Views.Core.Enums;
+
+public enum VerticalAlignments
 {
-    public enum VerticalAlignments
-    {
-        Default,
-        Top,
-        Bottom,
-        Center,
-        Stretch
-    }
+   Default,
+   Top,
+   Bottom,
+   Center,
+   Stretch
 }

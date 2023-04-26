@@ -1,33 +1,32 @@
 ﻿using System;
 using Das.Views.Core.Geometry;
 
-namespace Das.Views.Input
+namespace Das.Views.Input;
+
+public interface IFlingHost
 {
-    public interface IFlingHost
-    {
-        FlingMode VerticalFlingMode { get; }
+   FlingMode VerticalFlingMode { get; }
 
-        FlingMode HorizontalFlingMode { get; }
+   FlingMode HorizontalFlingMode { get; }
 
-        //Boolean CanFlingVertical { get; }
+   //Boolean CanFlingVertical { get; }
 
-        //Boolean CanFlingHorizontal { get; }
+   //Boolean CanFlingHorizontal { get; }
         
-        Double CurrentX { get; }
+   Double CurrentX { get; }
         
-        Double CurrentY { get; }
+   Double CurrentY { get; }
 
-        ValueMinMax GetVerticalMinMaxFling();
+   ValueMinMax GetVerticalMinMaxFling();
         
-        ValueMinMax GetHorizontalMinMaxFling();
+   ValueMinMax GetHorizontalMinMaxFling();
 
 
-        void OnFlingStarting(Double totalHorizontalChange,
-                             Double totalVerticalChange);
+   void OnFlingStarting(Double totalHorizontalChange,
+                        Double totalVerticalChange);
 
-        void OnFlingStep(Double deltaHorizontal,
-                         Double deltaVertical);
+   void OnFlingStep(Double deltaHorizontal,
+                    Double deltaVertical);
 
-        void OnFlingEnded(Boolean wasCancelled);
-    }
+   void OnFlingEnded(Boolean wasCancelled);
 }

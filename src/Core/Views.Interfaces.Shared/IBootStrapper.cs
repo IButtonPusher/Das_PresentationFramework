@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views
-{
-    public interface IBootStrapper
-    {
-        void Run(IVisualElement view);
+namespace Das.Views;
 
-        IVisualBootstrapper VisualBootstrapper { get; }
-    }
+public interface IBootStrapper
+{
+   void Run(IVisualElement view);
+
+   IVisualBootstrapper VisualBootstrapper { get; }
 }

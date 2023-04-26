@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views.Input
+namespace Das.Views.Input;
+
+public interface IInputHandler : IDisposable, 
+                                 IMouseInputHandler
 {
-    public interface IInputHandler : IDisposable, 
-                                     IMouseInputHandler
-    {
-        void OnKeyboardStateChanged();
-    }
+   void OnKeyboardStateChanged();
 }

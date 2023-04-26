@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Das.Views.Rendering
+namespace Das.Views.Rendering;
+
+public interface IDisplayMetrics : IZoomLevelAware
 {
-    public interface IDisplayMetrics : IZoomLevelAware
-    {
-       Single Density { get; }
-    }
+   Single Density { get; }
 }

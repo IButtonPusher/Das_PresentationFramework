@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views.Core.Geometry
+namespace Das.Views.Core.Geometry;
+
+public interface IPositionOffseter
 {
-    public interface IPositionOffseter
-    {
-        IPoint2D GetOffset(IPoint2D input);
-    }
+   IPoint2D GetOffset(IPoint2D input);
 }

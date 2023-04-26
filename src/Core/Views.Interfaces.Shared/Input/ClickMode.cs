@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views.Input
+namespace Das.Views.Input;
+
+public enum ClickMode
 {
-    public enum ClickMode
-    {
-        Release = 0,
-        Press = 1,
-        Hover = 2
-    }
+   Release = 0,
+   Press = 1,
+   Hover = 2
 }

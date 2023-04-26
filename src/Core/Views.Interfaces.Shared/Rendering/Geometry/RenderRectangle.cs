@@ -3,214 +3,213 @@ using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Geometry;
 
-namespace Das.Views.Rendering.Geometry
+namespace Das.Views.Rendering.Geometry;
+
+public class RenderRectangle : Rectangle,
+                               IRenderRectangle
 {
-    public class RenderRectangle : Rectangle,
-                                   IRenderRectangle
-    {
-        private IPoint2D _offset;
+   private IPoint2D _offset;
 
-        public RenderRectangle(Double x,
-                               Double y,
-                               Double width,
-                               Double height,
-                               IPoint2D offset)
-            : base(x, y, width, height)
-        {
-            _offset = offset;
-        }
+   public RenderRectangle(Double x,
+                          Double y,
+                          Double width,
+                          Double height,
+                          IPoint2D offset)
+      : base(x, y, width, height)
+   {
+      _offset = offset;
+   }
 
-        public RenderRectangle(IRectangle start,
-                               Thickness margin,
-                               IPoint2D offset) : base(start, margin) 
-        {
-            _offset = offset;
-        }
+   public RenderRectangle(IRectangle start,
+                          Thickness margin,
+                          IPoint2D offset) : base(start, margin) 
+   {
+      _offset = offset;
+   }
 
-        public RenderRectangle(IPoint2D location,
-                               ISize size,
-                               IPoint2D offset)
-            : base(location, size)
-        {
-            _offset = offset;
-        }
+   public RenderRectangle(IPoint2D location,
+                          ISize size,
+                          IPoint2D offset)
+      : base(location, size)
+   {
+      _offset = offset;
+   }
 
-        public RenderRectangle()
-        {
-            _offset = Point2D.Empty;
-        }
+   public RenderRectangle()
+   {
+      _offset = Point2D.Empty;
+   }
 
-        public void Update<TPoint, TRenderRectangle, TThickness>(TRenderRectangle rect,
-                                                                 TPoint parentOffset,
-                                                                 TThickness margin,
-                                                                 TThickness border)
-            where TPoint : IPoint2D
-            where TRenderRectangle : IRenderRectangle
-            where TThickness : IThickness
-        {
-            _left = rect.Left + margin.Left - parentOffset.X;
-            _top = rect.Top + margin.Top - parentOffset.Y;
-            _w = rect.Width - margin.Width;
-            _h = rect.Height - margin.Height;
-            _offset = rect.Size.Offset;
+   public void Update<TPoint, TRenderRectangle, TThickness>(TRenderRectangle rect,
+                                                            TPoint parentOffset,
+                                                            TThickness margin,
+                                                            TThickness border)
+      where TPoint : IPoint2D
+      where TRenderRectangle : IRenderRectangle
+      where TThickness : IThickness
+   {
+      _left = rect.Left + margin.Left - parentOffset.X;
+      _top = rect.Top + margin.Top - parentOffset.Y;
+      _w = rect.Width - margin.Width;
+      _h = rect.Height - margin.Height;
+      _offset = rect.Size.Offset;
 
 
-            if (border.IsEmpty)
-                return;
+      if (border.IsEmpty)
+         return;
 
-            _left += border.Left;
-            _top += border.Top;
-            _w -= border.Width;
-            _h -= border.Height;
-        }
+      _left += border.Left;
+      _top += border.Top;
+      _w -= border.Width;
+      _h -= border.Height;
+   }
 
-        public void Update<TPoint>(Double x,
-                                   Double y,
-                                   Double width,
-                                   Double height,
-                                   TPoint parentOffset,
-                                   TPoint offset,
-                                   Thickness margin,
-                                   Thickness border)
-            where TPoint : IPoint2D
-        {
-            _left = x + margin.Left - parentOffset.X;
-           _top = y + margin.Top - parentOffset.Y;
-           _w = width - margin.Width;
-           _h = height - margin.Height;
-           _offset = offset;
-
-
-           if (border.IsEmpty) 
-               return;
-
-           _left += border.Left;
-           _top += border.Top;
-           _w -= border.Width;
-           _h -= border.Height;
-        }
-
-        public override void Reset()
-        {
-           base.Reset();
-           _offset = Point2D.Empty;
-        }
+   public void Update<TPoint>(Double x,
+                              Double y,
+                              Double width,
+                              Double height,
+                              TPoint parentOffset,
+                              TPoint offset,
+                              Thickness margin,
+                              Thickness border)
+      where TPoint : IPoint2D
+   {
+      _left = x + margin.Left - parentOffset.X;
+      _top = y + margin.Top - parentOffset.Y;
+      _w = width - margin.Width;
+      _h = height - margin.Height;
+      _offset = offset;
 
 
-        public Boolean Equals(IRenderSize other)
-        {
-            return false;
-        }
+      if (border.IsEmpty) 
+         return;
 
-        //public new IRenderSize Minus(ISize subtract)
-        //{
-        //    return GeometryHelper.Minus(this, subtract);
-        //}
+      _left += border.Left;
+      _top += border.Top;
+      _w -= border.Width;
+      _h -= border.Height;
+   }
 
-        //IRenderSize IRenderSize.PlusVertical(ISize adding)
-        //{
-        //    return GeometryHelper.PlusRenderVertical(this, adding);
-        //}
+   public override void Reset()
+   {
+      base.Reset();
+      _offset = Point2D.Empty;
+   }
 
-        //public IRenderSize MinusVertical(ISize subtract)
-        //{
-        //    return GeometryHelper.MinusVertical(this, subtract);
-        //}
 
-        public IPoint2D Offset  
-        {
-            get => _offset;
-        }
+   public Boolean Equals(IRenderSize other)
+   {
+      return false;
+   }
 
-        //IRenderSize IRenderSize.Reduce(Thickness padding)
-        //{
-        //    return GeometryHelper.Reduce(this, padding);
-        //}
+   //public new IRenderSize Minus(ISize subtract)
+   //{
+   //    return GeometryHelper.Minus(this, subtract);
+   //}
 
-        //public ValueRenderRectangle ToFullRectangle()
-        //{
-        //    return new ValueRenderRectangle(0,0, Width, Height, Offset);
-        //}
+   //IRenderSize IRenderSize.PlusVertical(ISize adding)
+   //{
+   //    return GeometryHelper.PlusRenderVertical(this, adding);
+   //}
 
-        //public ValueSize ToValueSize()
-        //{
-        //    return GeometryHelper.ToValueSize(this);
-        //}
+   //public IRenderSize MinusVertical(ISize subtract)
+   //{
+   //    return GeometryHelper.MinusVertical(this, subtract);
+   //}
 
-        //IRenderSize IRenderSize.DeepCopy()
-        //{
-        //    return new ValueRenderSize(Width, Height, Offset);
-        //}
+   public IPoint2D Offset  
+   {
+      get => _offset;
+   }
 
-        IRenderSize IRenderRectangle.Size => new ValueRenderSize(Width, Height, Offset);
+   //IRenderSize IRenderSize.Reduce(Thickness padding)
+   //{
+   //    return GeometryHelper.Reduce(this, padding);
+   //}
 
-        TRectangle IRenderRectangle.Reduce<TRectangle>(Double left, 
-                                             Double top, 
-                                             Double right, 
-                                             Double bottom)
-        {
-            var res = new RenderRectangle(X + left, Top + top,
-                Width - (left + right),
-                Height - (top + bottom), Offset);
+   //public ValueRenderRectangle ToFullRectangle()
+   //{
+   //    return new ValueRenderRectangle(0,0, Width, Height, Offset);
+   //}
 
-            if (res is TRectangle fku)
-                return fku;
-            throw new InvalidOperationException();
-        }
+   //public ValueSize ToValueSize()
+   //{
+   //    return GeometryHelper.ToValueSize(this);
+   //}
 
-        public new RenderRectangle DeepCopy()
-        {
-            return new RenderRectangle(this, Thickness.Empty, Offset);
-        }
+   //IRenderSize IRenderSize.DeepCopy()
+   //{
+   //    return new ValueRenderSize(Width, Height, Offset);
+   //}
 
-        public static RenderRectangle operator +(RenderRectangle rect, Thickness margin)
-        {
-            if (margin == null)
-                return rect.DeepCopy();
+   IRenderSize IRenderRectangle.Size => new ValueRenderSize(Width, Height, Offset);
 
-            return new RenderRectangle(rect.X, rect.Y,
-                rect.Width - (margin.Left + margin.Right),
-                rect.Height - (margin.Top + margin.Bottom), rect.Offset);
-        }
+   TRectangle IRenderRectangle.Reduce<TRectangle>(Double left, 
+                                                  Double top, 
+                                                  Double right, 
+                                                  Double bottom)
+   {
+      var res = new RenderRectangle(X + left, Top + top,
+         Width - (left + right),
+         Height - (top + bottom), Offset);
 
-        public static RenderRectangle operator +(RenderRectangle rect, Point2D location)
-        {
-            if (location == null)
-                return rect.DeepCopy();
+      if (res is TRectangle fku)
+         return fku;
+      throw new InvalidOperationException();
+   }
 
-            return new RenderRectangle(rect.X + location.X, rect.Y + location.Y,
-                rect.Width, rect.Height, rect.Offset);
-        }
+   public new RenderRectangle DeepCopy()
+   {
+      return new RenderRectangle(this, Thickness.Empty, Offset);
+   }
 
-        public static RenderRectangle operator +(RenderRectangle rect, Size size)
-        {
-            if (size == null)
-                return rect.DeepCopy();
+   public static RenderRectangle operator +(RenderRectangle rect, Thickness margin)
+   {
+      if (margin == null)
+         return rect.DeepCopy();
 
-            return new RenderRectangle(rect.X + size.Width, rect.Y + size.Height,
-                rect.Width, rect.Height, rect.Offset);
-        }
+      return new RenderRectangle(rect.X, rect.Y,
+         rect.Width - (margin.Left + margin.Right),
+         rect.Height - (margin.Top + margin.Bottom), rect.Offset);
+   }
 
-        public static RenderRectangle operator *(RenderRectangle rect, 
-                                                 Double val)
-        {
-            if (val.AreEqualEnough(1))
-                return rect;
+   public static RenderRectangle operator +(RenderRectangle rect, Point2D location)
+   {
+      if (location == null)
+         return rect.DeepCopy();
 
-            if (rect == null)
-                return null!;
+      return new RenderRectangle(rect.X + location.X, rect.Y + location.Y,
+         rect.Width, rect.Height, rect.Offset);
+   }
 
-            return new RenderRectangle(rect.X * val,
-                rect.Y * val,
-                rect.Size.Width * val,
-                rect.Size.Height * val,
-                new ValuePoint2D(rect.Offset.X * val,
-                    rect.Offset.Y * val));
-        }
+   public static RenderRectangle operator +(RenderRectangle rect, Size size)
+   {
+      if (size == null)
+         return rect.DeepCopy();
 
-        public Boolean Equals(IRenderRectangle other)
-        {
-            return GeometryHelper.AreRenderRectsEquals(this, other);
-        }
-    }
+      return new RenderRectangle(rect.X + size.Width, rect.Y + size.Height,
+         rect.Width, rect.Height, rect.Offset);
+   }
+
+   public static RenderRectangle operator *(RenderRectangle rect, 
+                                            Double val)
+   {
+      if (val.AreEqualEnough(1))
+         return rect;
+
+      if (rect == null)
+         return null!;
+
+      return new RenderRectangle(rect.X * val,
+         rect.Y * val,
+         rect.Size.Width * val,
+         rect.Size.Height * val,
+         new ValuePoint2D(rect.Offset.X * val,
+            rect.Offset.Y * val));
+   }
+
+   public Boolean Equals(IRenderRectangle other)
+   {
+      return GeometryHelper.AreRenderRectsEquals(this, other);
+   }
 }

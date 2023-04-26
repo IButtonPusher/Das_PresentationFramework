@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace Das.Views.Hosting
+namespace Das.Views.Hosting;
+
+[Flags]
+public enum SizeToContent
 {
-    [Flags]
-    public enum SizeToContent
-    {
-        None = 0,
-        Width = 1,
-        Height = 2
-    }
+   None = 0,
+   Width = 1,
+   Height = 2
 }

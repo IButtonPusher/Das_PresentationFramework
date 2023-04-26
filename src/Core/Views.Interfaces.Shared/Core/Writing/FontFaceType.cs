@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views.Text
+namespace Das.Views.Text;
+
+public enum FontFaceType
 {
-    public enum FontFaceType
-    {
-        CFF,
-        TrueType,
-        TrueTypeCollection,
-        Type1,
-        Vector,
-        Bitmap,
-        Unknown,
-    }
+   CFF,
+   TrueType,
+   TrueTypeCollection,
+   Type1,
+   Vector,
+   Bitmap,
+   Unknown,
 }

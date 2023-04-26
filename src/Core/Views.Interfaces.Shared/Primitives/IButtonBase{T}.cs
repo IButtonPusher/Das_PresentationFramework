@@ -2,12 +2,11 @@
 using Das.ViewModels;
 using Das.Views.Controls;
 
-namespace Das.Views.Primitives
+namespace Das.Views.Primitives;
+
+public interface IButtonBase<T> : IButtonBase
 {
-    public interface IButtonBase<T> : IButtonBase
-    {
-        new IObservableCommand<T>? Command { get; }
+   new IObservableCommand<T>? Command { get; }
         
-        T CommandParameter { get; }
-    }
+   T CommandParameter { get; }
 }

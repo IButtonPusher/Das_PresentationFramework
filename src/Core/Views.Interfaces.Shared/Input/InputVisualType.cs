@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Das.Views.Input
+namespace Das.Views.Input;
+
+public enum InputVisualType
 {
-    public enum InputVisualType
-    {
-        Button,
-        CheckBox,
-        Text
-    }
+   Button,
+   CheckBox,
+   Text
 }

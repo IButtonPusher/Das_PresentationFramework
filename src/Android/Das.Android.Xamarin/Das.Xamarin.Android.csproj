@@ -54,7 +54,6 @@
     <Compile Include="AndroidExtensions.cs" />
     <Compile Include="Controls\AndroidSurrogateProvider.cs" />
     <Compile Include="Controls\HtmlSurrogate.cs" />
-    <Compile Include="Controls\HtmlSurrogate2.cs" />
     <Compile Include="DasMainActivity.cs" />
     <Compile Include="Images\AndroidBitmap.cs" />
     <Compile Include="AndroidMeasureKit.cs" />

@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Das.Views
+namespace Das.Views;
+
+public interface IZoomLevelAware
 {
-   public interface IZoomLevelAware
-   {
-      Double ZoomLevel { get; }
-   }
+   Double ZoomLevel { get; }
 }

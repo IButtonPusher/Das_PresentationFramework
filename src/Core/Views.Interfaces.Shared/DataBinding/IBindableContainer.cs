@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Das.Views.DataBinding
+namespace Das.Views.DataBinding;
+
+public interface IBindableContainer : IBindableElement
 {
-    public interface IBindableContainer : IBindableElement
-    {
-        void UpdateContentDataContext(Object? newValue);
-    }
+   void UpdateContentDataContext(Object? newValue);
 }

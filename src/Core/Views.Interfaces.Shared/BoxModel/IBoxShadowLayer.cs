@@ -1,20 +1,19 @@
 ﻿using System;
 using Das.Views.Core.Drawing;
 
-namespace Das.Views.BoxModel
+namespace Das.Views.BoxModel;
+
+public interface IBoxShadowLayer
 {
-    public interface IBoxShadowLayer
-    {
-        QuantifiedDouble OffsetX { get; }
+   QuantifiedDouble OffsetX { get; }
         
-        QuantifiedDouble OffsetY { get; }
+   QuantifiedDouble OffsetY { get; }
         
-        QuantifiedDouble BlurRadius {get;}
+   QuantifiedDouble BlurRadius {get;}
 
-        QuantifiedDouble SpreadRadius { get; }
+   QuantifiedDouble SpreadRadius { get; }
 
-        IBrush Color { get; }
+   IBrush Color { get; }
 
-        Boolean IsInset { get; }
-    }
+   Boolean IsInset { get; }
 }

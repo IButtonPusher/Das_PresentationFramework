@@ -61,7 +61,7 @@ public class AndroidView : ViewGroup
 
       RenderKit = renderKit;
       _viewState = renderKit.ViewState;
-      _layoutQueue = RenderKit.VisualBootstrapper.LayoutQueue;
+      //_layoutQueue = RenderKit.VisualBootstrapper.LayoutQueue;
 
 
       ZoomLevel = renderKit.DisplayMetrics.ScaledDensity;
@@ -349,7 +349,7 @@ public class AndroidView : ViewGroup
 
 
    private readonly AndroidInputContext _inputContext;
-   private readonly ILayoutQueue _layoutQueue;
+   //private readonly ILayoutQueue _layoutQueue;
 
    private readonly Handler _loopHandler;
    private readonly AndroidPaintView _paintView;

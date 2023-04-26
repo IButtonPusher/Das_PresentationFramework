@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views
+namespace Das.Views;
+
+public interface IDeepCopyable<out T>
 {
-    public interface IDeepCopyable<out T>
-    {
-        T DeepCopy();
-    }
+   T DeepCopy();
 }

@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using Das.Views.BoxModel;
 using Das.Views.Controls;
-using Das.Views.Core.Drawing;
 using Das.Views.Core.Enums;
 using Das.Views.Core.Geometry;
-using Das.Views.Styles;
-using Das.Views.Styles.Declarations;
-using Das.Views.Styles.Selectors;
 
 namespace Das.Views.Defaults;
 
@@ -16,31 +11,31 @@ public class DefaultTabItemTemplate : DefaultContentTemplate
    public DefaultTabItemTemplate(IVisualBootstrapper visualBootstrapper)
       : base(visualBootstrapper)
    {
-      _buttonStyle = new StyleSheet(GetStyleRules());
+      //_buttonStyle = new StyleSheet(GetStyleRules());
    }
 
-   private static IEnumerable<IStyleRule> GetStyleRules()
-   {
-      var svr = Rule<IBrush?>(VisualStateType.Active, SolidColorBrush.LightGray,
-         DeclarationProperty.BackgroundColor);
-      yield return svr;
-   }
+   //private static IEnumerable<IStyleRule> GetStyleRules()
+   //{
+   //   var svr = Rule<IBrush?>(VisualStateType.Active, SolidColorBrush.LightGray,
+   //      DeclarationProperty.BackgroundColor);
+   //   yield return svr;
+   //}
 
-   private static IStyleRule Rule<TValue>(VisualStateType state,
-                                          TValue value,
-                                          DeclarationProperty declarationProperty)
-   {
-      return new StyleValueRule(Select(state),
-         new List<IStyleDeclaration>
-         {
-            new ValueDeclaration<TValue>(value, /*_variableAccessor, */declarationProperty)
-         });
-   }
+   //private static IStyleRule Rule<TValue>(VisualStateType state,
+   //                                       TValue value,
+   //                                       DeclarationProperty declarationProperty)
+   //{
+   //   return new StyleValueRule(Select(state),
+   //      new List<IStyleDeclaration>
+   //      {
+   //         new ValueDeclaration<TValue>(value, /*_variableAccessor, */declarationProperty)
+   //      });
+   //}
 
-   private static VisualStateSelector Select(VisualStateType state)
-   {
-      return new(AllStyleSelector.Instance, state);
-   }
+   //private static VisualStateSelector Select(VisualStateType state)
+   //{
+   //   return new(AllStyleSelector.Instance, state);
+   //}
 
    public override IVisualElement BuildVisual(Object? dataContext)
    {
@@ -62,5 +57,5 @@ public class DefaultTabItemTemplate : DefaultContentTemplate
       return btn;
    }
 
-   private StyleSheet _buttonStyle;
+   //private StyleSheet _buttonStyle;
 }

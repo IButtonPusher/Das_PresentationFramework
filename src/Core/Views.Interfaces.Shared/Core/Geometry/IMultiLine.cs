@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Das.Views.Core.Geometry
+namespace Das.Views.Core.Geometry;
+
+public interface IMultiLine : IEnumerable<IPoint2D>
 {
-    public interface IMultiLine : IEnumerable<IPoint2D>
-    {
-        IPoint2D[] PointArray { get; }
-    }
+   IPoint2D[] PointArray { get; }
 }

@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Das.Views.Styles
+namespace Das.Views.Styles;
+
+public interface IStyleValueDeclaration : IStyleDeclaration
 {
-    public interface IStyleValueDeclaration : IStyleDeclaration
-    {
-        Object? Value {get;}
-    }
+   Object? Value {get;}
 }

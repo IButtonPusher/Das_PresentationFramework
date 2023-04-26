@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace Das.Views.Core
+namespace Das.Views.Core;
+
+public interface IGeometry
 {
-    public interface IGeometry
-    {
-    }
 }
