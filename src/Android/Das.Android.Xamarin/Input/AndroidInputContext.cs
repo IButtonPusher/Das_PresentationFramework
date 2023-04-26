@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Android.Content;
 using Android.Hardware;
@@ -9,6 +10,7 @@ using Das.Views;
 using Das.Views.Core.Geometry;
 using Das.Views.Input;
 using Das.Views.Rendering;
+
 
 namespace Das.Xamarin.Android.Input;
 
@@ -27,7 +29,6 @@ public class AndroidInputContext : Java.Lang.Object,
       _inputHandler = inputHandler;
       _activeInputActions = InputAction.None;
 
-            
 
       //_velocityTracker = VelocityTracker.Obtain();
 
@@ -51,15 +52,15 @@ public class AndroidInputContext : Java.Lang.Object,
          _isOffsetPositions = true;
       }
 
-            
-      _scrollFriction = ViewConfiguration.ScrollFriction;
+
+      var _scrollFriction = ViewConfiguration.ScrollFriction;
       //_scrollFriction = (Single)(ViewConfiguration.ScrollFriction * _dpiRatio);
 
-      _physicalCoefficient = SensorManager.GravityEarth // g (m/s^2)
+      var _physicalCoefficient = SensorManager.GravityEarth // g (m/s^2)
                              * 39.37f // inch/meter
                              * ppi
                              * 0.84f; // look and feel tuning
-                                            
+
 
       _gestureDetector = new GestureDetectorCompat(context, this);
       _gestureDetector.SetOnDoubleTapListener(this);
@@ -70,51 +71,26 @@ public class AndroidInputContext : Java.Lang.Object,
    }
 
 
-   public Boolean TryCaptureMouseInput(IVisualElement view)
-   {
-      return _inputHandler.TryCaptureMouseInput(view);
-   }
+   public Boolean TryCaptureMouseInput(IVisualElement view) => _inputHandler.TryCaptureMouseInput(view);
 
-   public Boolean TryReleaseMouseCapture(IVisualElement view)
-   {
-      return _inputHandler.TryReleaseMouseCapture(view);
-   }
+   public Boolean TryReleaseMouseCapture(IVisualElement view) => _inputHandler.TryReleaseMouseCapture(view);
 
-   public IVisualElement? GetVisualWithMouseCapture()
-   {
-      return _inputHandler.GetVisualWithMouseCapture();
-   }
+   public IVisualElement? GetVisualWithMouseCapture() => _inputHandler.GetVisualWithMouseCapture();
+
+   Boolean IInputContext.IsMousePresent => false;
+
+   public Double ZoomLevel => _dpiRatio;
 
 
-   public Boolean OnDoubleTap(MotionEvent? e)
-   {
+   public Boolean OnDoubleTap(MotionEvent? e) =>
       //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS ON DOUBLE TAP: " + e);
-      return false;
-   }
+      false;
 
-   public Boolean OnDoubleTapEvent(MotionEvent? e)
-   {
+   public Boolean OnDoubleTapEvent(MotionEvent? e) =>
       //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS GENERIC DOUBLE TAP EVENT: " + e);
-      return false;
-   }
+      false;
 
-   public Boolean OnSingleTapConfirmed(MotionEvent? e)
-   {
-      return false;
-   }
-
-   public void OnGenericMotionEvent(MotionEvent? e)
-   {
-      //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS GENERIC MOTION EVENT: " + e);
-
-      _gestureDetector.OnTouchEvent(e);
-   }
-
-   public void OnTouchEvent(MotionEvent? e)
-   {
-      //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS TOUCH EVENT: " + e);
-      _gestureDetector.OnTouchEvent(e);
-   }
+   public Boolean OnSingleTapConfirmed(MotionEvent? e) => false;
 
    public Boolean OnDown(MotionEvent? e)
    {
@@ -125,12 +101,12 @@ public class AndroidInputContext : Java.Lang.Object,
 
       //AddInteraction(InputAction.LeftMouseButtonDown);
       //IsInteracting = true;
-            
+
 
       var pos = GetPosition(e);
       if (pos.IsOrigin)
          return false;
-            
+
       _leftButtonWentDown = pos;
 
       if (_inputHandler.OnMouseInput(new MouseDownEventArgs(
@@ -143,31 +119,15 @@ public class AndroidInputContext : Java.Lang.Object,
       return true;
    }
 
-   private void AddInteraction(InputAction action)
-   {
-      _activeInputActions |= action;
-   }
-
-   private void RemoveInteraction(InputAction action)
-   {
-      _activeInputActions &= ~action;
-      if (_activeInputActions == 0)
-         _activeInputActions = InputAction.None;
-   }
-
    public Boolean OnFling(MotionEvent? e1,
                           MotionEvent? e2,
                           Single velocityX,
                           Single velocityY)
    {
-      //_velocityTracker.ComputeCurrentVelocity(1000, _maximumFlingVelocity);
-      //var velociraptor = _velocityTracker.GetYVelocity(e2.GetPointerId(e2.ActionIndex));
+      Debug.WriteLine("[OKYN] !FLING!: " + velocityX +
+                      " vy: " + velocityY +
+                      " min: " + _minimumFlingVelocity);
 
-      System.Diagnostics.Debug.WriteLine("[OKYN] !FLING!: " + velocityX +
-                                         " vy: " + velocityY +
-                                         " min: " + _minimumFlingVelocity);
-      //+ " e1: " + e1 + " e2: " + e2);
-            
       if (e1 == null)
          return false;
 
@@ -185,7 +145,7 @@ public class AndroidInputContext : Java.Lang.Object,
          _flingBuilder.BuildFlingValues(velocityY, out var flungY, out var yDuration);
 
          var flingArgs = new FlingEventArgs(velocityX * _dpiRatio,
-            velocityY * _dpiRatio, pos, this, 
+            velocityY * _dpiRatio, pos, this,
             flungX, flungY, xDuration, yDuration);
 
          _lastFlingArgs = flingArgs;
@@ -194,77 +154,19 @@ public class AndroidInputContext : Java.Lang.Object,
 
          if (_inputHandler.OnMouseInput(flingArgs, InputAction.Fling))
          {
-            //flingArgs.SetHandled(false);
             RemoveFlingEventually(flingArgs);
-            //RemoveInteraction(InputAction.Fling);
          }
          else
          {
-
+            Debug.WriteLine("+++++++++input didn't handle fling");
          }
       }
 
       return true;
    }
-
-   private async void RemoveFlingEventually(FlingEventArgs fargs)
-   {
-      var useTime = fargs.FlingXDuration.TotalMilliseconds >
-                    fargs.FlingYDuration.TotalMilliseconds
-         ? fargs.FlingXDuration
-         : fargs.FlingYDuration;
-
-      await Task.Delay(useTime).ConfigureAwait(false);
-
-      if (!Equals(_lastFlingArgs, fargs))
-         return;
-
-      RemoveInteraction(InputAction.Fling);
-   }
-
-   //private void BuildFlingValues(Double velocity,
-   //                              out Double distance,
-   //                              out TimeSpan duration)
-   //{
-   //    if (velocity != 0)
-   //    {
-   //        distance = GetSplineFlingDistance(velocity * _dpiRatio);
-   //        duration = GetSplineFlingDuration(velocity);
-   //    }
-   //    else
-   //    {
-   //        distance = 0;
-   //        duration = TimeSpan.Zero;
-   //    }
-   //}
-
-   //private Double GetSplineDeceleration(Double velocity)
-   //{
-   //    return Math.Log(_inflexion * Math.Abs(velocity) / 
-   //                    (_scrollFriction * _physicalCoefficient));
-   //}
-
-   //private Double GetSplineFlingDistance(Double velocity)
-   //{
-   //    var l = GetSplineDeceleration(velocity);
-   //    var decelMinusOne = _decelerationRate - 1.0;
-   //    return _scrollFriction * _physicalCoefficient * 
-   //           Math.Exp(_decelerationRate / decelMinusOne * l) *
-   //           Math.Sign(velocity);
-   //}
-
-   //private TimeSpan GetSplineFlingDuration(Double velocity)
-   //{
-   //    var l = GetSplineDeceleration(velocity);
-   //    var decelMinusOne = _decelerationRate - 1.0;
-   //    return TimeSpan.FromMilliseconds(1000.0 * Math.Exp(l / decelMinusOne));
-   //}
-
-    
-
+   
    public void OnLongPress(MotionEvent? e)
    {
-            
    }
 
    public Boolean OnScroll(MotionEvent? e1,
@@ -277,36 +179,25 @@ public class AndroidInputContext : Java.Lang.Object,
 
       if (e1 == null || e2 == null)
          return false;
-
-      //var start = GetPosition(e1);
-      //var last = GetPosition(e2);
-
-      //var x = (0 - distanceX) * _dpiRatio;
-      //var y = (0 - distanceY)* _dpiRatio;
-
-      //var delta = new ValueSize(
-      //    (0 - distanceX) * _dpiRatio, //x
-      //    (0 - distanceY)* _dpiRatio); //y
-
+      
 
       var dragArgs = new DragEventArgs(
          GetPosition(e1), //start pos
          GetPosition(e2), //current pos
          new ValueSize( //delta
             (0 - distanceX) * _dpiRatio, //x
-            (0 - distanceY)* _dpiRatio), //y,
+            (0 - distanceY) * _dpiRatio), //y,
          _leftButtonWentDown != null ? MouseButtons.Left : MouseButtons.Right,
          this);
 
       _inputHandler.OnMouseInput(dragArgs, InputAction.MouseDrag);
-            
+
 
       return true;
    }
 
    public void OnShowPress(MotionEvent? e)
    {
-            
    }
 
    public Boolean OnSingleTapUp(MotionEvent? e)
@@ -320,12 +211,12 @@ public class AndroidInputContext : Java.Lang.Object,
 
       var args = new MouseUpEventArgs(
          pos, _leftButtonWentDown, MouseButtons.Left, this, true);
-            
+
       if (_inputHandler.OnMouseInput(args,
              InputAction.LeftMouseButtonUp))
       {
-                
       }
+
       //IsInteracting = false;
       RemoveInteraction(InputAction.LeftMouseButtonDown);
       _leftButtonWentDown = default;
@@ -337,7 +228,7 @@ public class AndroidInputContext : Java.Lang.Object,
    {
       _hostView.Dispose();
    }
-        
+
    public Boolean OnTouch(View? v,
                           MotionEvent? e)
    {
@@ -359,7 +250,7 @@ public class AndroidInputContext : Java.Lang.Object,
             RemoveInteraction(InputAction.LeftMouseButtonDown);
             break;
       }
-            
+
       if (res)
          return true;
 
@@ -371,10 +262,10 @@ public class AndroidInputContext : Java.Lang.Object,
       }
 
       var pos = GetPosition(e);
-                
+
       var distance = pos.Distance(_leftButtonWentDown);
       var willHandle = distance >= _touchSlop;
-            
+
       //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS TOUCH UP.  Distance from down:" +
       //                                   distance + " will handle: " + willHandle);
 
@@ -386,7 +277,6 @@ public class AndroidInputContext : Java.Lang.Object,
       if (_inputHandler.OnMouseInput(mouseUpArgs,
              InputAction.LeftMouseButtonUp))
       {
-                
       }
 
       RemoveInteraction(InputAction.LeftMouseButtonDown);
@@ -396,18 +286,47 @@ public class AndroidInputContext : Java.Lang.Object,
       _leftButtonWentDown = default;
 
       return true;
-
-            
-
    }
 
-   public GestureDetectorCompat GestureDetector => _gestureDetector;
+   public void OnGenericMotionEvent(MotionEvent? e)
+   {
+      //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS GENERIC MOTION EVENT: " + e);
 
-   public Int32 SleepTime;
+      _gestureDetector.OnTouchEvent(e);
+   }
 
-   Boolean IInputContext.IsMousePresent => false;
+   public void OnTouchEvent(MotionEvent? e)
+   {
+      //System.Diagnostics.Debug.WriteLine("[OKYN] ANDROID REPORTS TOUCH EVENT: " + e);
+      _gestureDetector.OnTouchEvent(e);
+   }
 
-   public Double ZoomLevel => _dpiRatio;
+   private void AddInteraction(InputAction action)
+   {
+      _activeInputActions |= action;
+   }
+
+   private void RemoveInteraction(InputAction action)
+   {
+      _activeInputActions &= ~action;
+      if (_activeInputActions == 0)
+         _activeInputActions = InputAction.None;
+   }
+
+   private async void RemoveFlingEventually(FlingEventArgs fargs)
+   {
+      var useTime = fargs.FlingXDuration.TotalMilliseconds >
+                    fargs.FlingYDuration.TotalMilliseconds
+         ? fargs.FlingXDuration
+         : fargs.FlingYDuration;
+
+      await Task.Delay(useTime).ConfigureAwait(false);
+
+      if (!Equals(_lastFlingArgs, fargs))
+         return;
+
+      RemoveInteraction(InputAction.Fling);
+   }
 
    private ValuePoint2D GetPosition(MotionEvent? eve)
    {
@@ -424,28 +343,32 @@ public class AndroidInputContext : Java.Lang.Object,
       return new ValuePoint2D(eve.GetX(), eve.GetY());
    }
 
-   public Boolean IsInteracting => _activeInputActions != InputAction.None; 
+   //public GestureDetectorCompat GestureDetector => _gestureDetector;
 
-   private InputAction _activeInputActions;
+   public Boolean IsInteracting => _activeInputActions != InputAction.None;
+
+   private readonly Double _dpiRatio;
+   private readonly FlingBuilder _flingBuilder;
 
    private readonly GestureDetectorCompat _gestureDetector;
-   private readonly FlingBuilder _flingBuilder;
    private readonly View _hostView;
    private readonly BaseInputHandler _inputHandler;
-        
+   private readonly Boolean _isOffsetPositions;
+
    // ReSharper disable once NotAccessedField.Local
    private readonly Int32 _maximumFlingVelocity;
    private readonly Int32 _minimumFlingVelocity;
+   //private readonly Single _physicalCoefficient;
+   //private readonly Single _scrollFriction;
    private readonly Double _touchSlop;
+
+   private InputAction _activeInputActions;
+   private FlingEventArgs? _lastFlingArgs;
 
    private ValuePoint2D? _leftButtonWentDown;
 
-   private readonly Double _dpiRatio;
-   private readonly Boolean _isOffsetPositions;
-   private readonly Single _scrollFriction;
-   private readonly Single _physicalCoefficient;
-   private FlingEventArgs? _lastFlingArgs;
-        
+   public Int32 SleepTime;
+
    //private static readonly Single _decelerationRate = (Single) (Math.Log(0.78) / Math.Log(0.9));
    //private static readonly Single _inflexion = 0.35f; // Tension lines cross at (INFLEXION, 1)
 }

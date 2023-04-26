@@ -232,7 +232,7 @@ public class AndroidView : ViewGroup
       while (!_isDisposed && !_view.IsDisposed)
       {
          var willInvalidate = false;
-         var willInvalidate2 = _layoutQueue.HasVisualsNeedingLayout;
+         //var willInvalidate2 = _layoutQueue.HasVisualsNeedingLayout;
 
          if (_view.IsRequiresMeasure)
          {
@@ -241,12 +241,18 @@ public class AndroidView : ViewGroup
 
             willInvalidate = true;
          }
-         else if (_view.IsRequiresArrange || _inputContext.IsInteracting)
+         else if (_view.IsRequiresArrange)
             willInvalidate = true;
-
-         if (willInvalidate != willInvalidate2)
+         else if (_inputContext.IsInteracting)
          {
+            System.Diagnostics.Debug.WriteLine("willInvalidate due to currently interacting");
+            willInvalidate = true;
          }
+
+         //if (willInvalidate != willInvalidate2)
+         //{
+         //   //System.Diagnostics.Debug.WriteLine($"mismatch of willinvalidates {willInvalidate} / {willInvalidate2}");
+         //}
 
 
          if (willInvalidate)
@@ -282,60 +288,60 @@ public class AndroidView : ViewGroup
       // ReSharper disable once FunctionNeverReturns
    }
 
-   private async Task RefreshLoop4()
-   {
-      while (!_isDisposed && !_view.IsDisposed)
-      {
-         var willInvalidate = false;
-         var willInvalidate2 = _layoutQueue.HasVisualsNeedingLayout;
+   //private async Task RefreshLoop4()
+   //{
+   //   while (!_isDisposed && !_view.IsDisposed)
+   //   {
+   //      var willInvalidate = false;
+   //      var willInvalidate2 = _layoutQueue.HasVisualsNeedingLayout;
 
-         if (_view.IsRequiresMeasure)
-         {
-            //RenderKit.MeasureContext.MeasureMainView(_view,
-            //   new ValueRenderSize(_measured), _viewState);
+   //      if (_view.IsRequiresMeasure)
+   //      {
+   //         //RenderKit.MeasureContext.MeasureMainView(_view,
+   //         //   new ValueRenderSize(_measured), _viewState);
 
-            willInvalidate = true;
-         }
-         else if (_view.IsRequiresArrange || _inputContext.IsInteracting)
-            willInvalidate = true;
+   //         willInvalidate = true;
+   //      }
+   //      else if (_view.IsRequiresArrange || _inputContext.IsInteracting)
+   //         willInvalidate = true;
 
-         if (willInvalidate != willInvalidate2)
-         {
-         }
-
-
-         if (willInvalidate)
-         {
-            //_paintView.Layout(0, 0, (Int32)(_targetRect.Right  * ZoomLevel),
-            //   (Int32)(_targetRect.Bottom  * ZoomLevel));
+   //      if (willInvalidate != willInvalidate2)
+   //      {
+   //      }
 
 
-            _paintView.Refresh();
+   //      if (willInvalidate)
+   //      {
+   //         //_paintView.Layout(0, 0, (Int32)(_targetRect.Right  * ZoomLevel),
+   //         //   (Int32)(_targetRect.Bottom  * ZoomLevel));
 
-            if (ChildCount > 1)
-               PostInvalidate();
 
-            //_paintView.Draw();
+   //         _paintView.Refresh();
 
-            //_paintView.PostInvalidate();
+   //         if (ChildCount > 1)
+   //            PostInvalidate();
 
-            _inputContext.SleepTime = 0;
-         }
-         else
-         {
-            //if (_inputContext.SleepTime == 0)
-            //    WriteLine("frame skipped!");
+   //         //_paintView.Draw();
 
-            _inputContext.SleepTime = Math.Min(++_inputContext.SleepTime, 50);
+   //         //_paintView.PostInvalidate();
 
-            //Thread.Sleep(_inputContext.SleepTime);
+   //         _inputContext.SleepTime = 0;
+   //      }
+   //      else
+   //      {
+   //         //if (_inputContext.SleepTime == 0)
+   //         //    WriteLine("frame skipped!");
 
-            await Task.Delay(_inputContext.SleepTime).ConfigureAwait(false);
-         }
-      }
+   //         _inputContext.SleepTime = Math.Min(++_inputContext.SleepTime, 50);
 
-      // ReSharper disable once FunctionNeverReturns
-   }
+   //         //Thread.Sleep(_inputContext.SleepTime);
+
+   //         await Task.Delay(_inputContext.SleepTime).ConfigureAwait(false);
+   //      }
+   //   }
+
+   //   // ReSharper disable once FunctionNeverReturns
+   //}
 
    public Double ZoomLevel { get; }
 

@@ -511,7 +511,7 @@ namespace Das.Views.Rendering
 
       protected ValuePoint2D CurrentLocation => _boxModel.CurrentElementRect.Location;
 
-      protected readonly IBoxModel _boxModel;
+      protected readonly BoxModelLayoutTree _boxModel;
 
 
       //private readonly Stack<ValueRenderRectangle> _locations;

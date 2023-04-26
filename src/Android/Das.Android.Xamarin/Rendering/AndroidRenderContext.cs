@@ -36,15 +36,6 @@ public class AndroidRenderContext : BaseRenderContext
       ViewState = viewState;
    }
 
-   public Canvas? Canvas
-   {
-      get => _canvas;
-      set
-      {
-         _canvas = value;
-      }
-   }
-
    public override void DrawEllipse<TPoint, TPen>(TPoint center,
                                                   Double radius,
                                                   TPen pen)
@@ -103,7 +94,7 @@ public class AndroidRenderContext : BaseRenderContext
       //UpdateAbsoluteAndroidRect(destination);
       //var dest = GetAbsoluteAndroidRect(destination);
 
-      BakeRect(ref _rect1, srcRect);//.Left, srcRect.Top, srcRect.Right, srcRect.Bottom);
+      BakeRect(ref _rect1, srcRect); //.Left, srcRect.Top, srcRect.Right, srcRect.Bottom);
       BakeRect(ref _rect2, destination);
       GetCanvas().DrawBitmap(bmp, _rect1, _rect2, _paint);
    }
@@ -203,15 +194,6 @@ public class AndroidRenderContext : BaseRenderContext
       //      _paint);
    }
 
-   private void DrawRectangleImpl<TRectangle>(TRectangle rect)
-      where TRectangle : IRectangle
-   {
-      BakeRect(ref _rect1, rect);
-
-      GetCanvas()
-         .DrawRect(_rect1, _paint);
-   }
-
    public override void FillRoundedRectangle<TRectangle, TBrush, TThickness>(TRectangle rect,
                                                                              TBrush brush,
                                                                              TThickness cornerRadii)
@@ -241,7 +223,7 @@ public class AndroidRenderContext : BaseRenderContext
          clip.Width(),
          clip.Height());
    }
-        
+
    protected override void PopClip<TRectangle>(TRectangle rect)
    {
       var canvas = GetCanvas();
@@ -258,6 +240,15 @@ public class AndroidRenderContext : BaseRenderContext
          Convert.ToInt32(rect.Y),
          Convert.ToInt32(rect.Right),
          Convert.ToInt32(rect.Bottom));
+   }
+
+   private void DrawRectangleImpl<TRectangle>(TRectangle rect)
+      where TRectangle : IRectangle
+   {
+      BakeRect(ref _rect1, rect);
+
+      GetCanvas()
+         .DrawRect(_rect1, _paint);
    }
 
    //private static void BakeRect(ref Rect rect,
@@ -280,7 +271,7 @@ public class AndroidRenderContext : BaseRenderContext
    //    rect.Right = Convert.ToInt32(right);
    //    rect.Bottom = Convert.ToInt32(bottom);
 
-            
+
    //}
 
    private static void BakeRect(ref Rect rect,
@@ -324,8 +315,7 @@ public class AndroidRenderContext : BaseRenderContext
    {
       if (ZoomLevel.AreDifferent(1.0))
       {
-              
-         outRect.Left= Convert.ToInt32((rect.Left + CurrentLocation.X) * ZoomLevel);
+         outRect.Left = Convert.ToInt32((rect.Left + CurrentLocation.X) * ZoomLevel);
          outRect.Top = Convert.ToInt32((rect.Top + CurrentLocation.Y) * ZoomLevel);
          outRect.Right = Convert.ToInt32((rect.Right + CurrentLocation.X) * ZoomLevel);
          outRect.Bottom = Convert.ToInt32((rect.Bottom + CurrentLocation.Y) * ZoomLevel);
@@ -342,13 +332,10 @@ public class AndroidRenderContext : BaseRenderContext
       //_currentRectHeight = _currentRectBottom - _currentRectTop;
    }
 
-   private Canvas GetCanvas()
-   {
-      return Canvas ?? throw new NullReferenceException("Canvas must be set");
-   }
+   private Canvas GetCanvas() => Canvas ?? throw new NullReferenceException("Canvas must be set");
 
    /// <summary>
-   ///     _paint.SetStyle and SetColor have to be called before this
+   ///    _paint.SetStyle and SetColor have to be called before this
    /// </summary>
    private void RoundedRectImpl<TRectangle, TThickness>(TRectangle rect,
                                                         TThickness cornerRadii)
@@ -371,19 +358,24 @@ public class AndroidRenderContext : BaseRenderContext
          return;
       }
 
-      var path = new AndroidGraphicsPath();//this);
+      var path = new AndroidGraphicsPath(); //this);
       path.SetRoundedRectangle(useRect, cornerRadii);
       GetCanvas().DrawPath(path.Path, _paint);
    }
 
-
-        
-   private Rect _rect1;
-   private Rect _rect2;
+   public Canvas? Canvas
+   {
+      get => _canvas;
+      set => _canvas = value;
+   }
 
    private readonly AndroidFontProvider _fontProvider;
    private readonly Paint _paint;
    private Canvas? _canvas;
+
+
+   private Rect _rect1;
+   private Rect _rect2;
 
    //private Int32 _currentRectLeft;
    //private Int32 _currentRectTop;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Extensions;
 using Das.Views.Core.Geometry;
@@ -84,9 +85,14 @@ public partial class ScrollPanel : ContentPanel,
          measureContext);
 
 
+      var maxyScrollWas = _maximumYScroll;
+
       _maximumYScroll = IsScrollsVertical
          ? Convert.ToInt32(Math.Max(_lastNeeded.Height - _lastAvailable.Height, 0))
          : 0;
+
+      if (_maximumYScroll != maxyScrollWas)
+         Debug.WriteLine($"maximum y scroll is now {_maximumYScroll}");
 
       _maximumXScroll = IsScrollsHorizontal
          ? Convert.ToInt32(Math.Max(_lastNeeded.Width - _lastAvailable.Width, 0))

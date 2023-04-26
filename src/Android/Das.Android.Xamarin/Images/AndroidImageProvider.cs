@@ -38,7 +38,6 @@ public class AndroidImageProvider : IImageProvider
    }
 
 
-
    public IImage? GetDeviceScaledImage(Stream stream,
                                        Double maximumWidthPct,
                                        Boolean isPreserveStream)
@@ -99,10 +98,7 @@ public class AndroidImageProvider : IImageProvider
       }
    }
 
-   IImage? IImageProvider.GetImage(FileInfo file)
-   {
-      throw new NotSupportedException();
-   }
+   IImage? IImageProvider.GetImage(FileInfo file) => throw new NotSupportedException();
 
    public IImage GetNullImage()
    {
@@ -119,10 +115,7 @@ public class AndroidImageProvider : IImageProvider
 
    public Double DeviceEffectiveDpi => 1.0;
 
-   public IGraphicsPath GetNewGraphicsPath()
-   {
-      return new AndroidGraphicsPath();//_visualContext);
-   }
+   public IGraphicsPath GetNewGraphicsPath() => new AndroidGraphicsPath(); //_visualContext);
 
    //public IImage GetImage(IGraphicsPath path,
    //                       IColor foreground)
@@ -156,7 +149,6 @@ public class AndroidImageProvider : IImageProvider
       if (img == null)
       {
          return GetNullImage();
-
       }
 
       if (imgDesiredWidth.AreEqualEnough(img.Width))
@@ -179,6 +171,7 @@ public class AndroidImageProvider : IImageProvider
    }
 
    private readonly DisplayMetrics _displayMetrics;
+
    //private readonly IVisualContext _visualContext;
    private readonly Object _nullBitmapLock;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Android.Graphics;
 using Das.Extensions;
 using Das.Views.Core.Drawing;
@@ -15,22 +16,21 @@ public class AndroidGraphicsPath : GraphicsPathBase
 {
    //private readonly IVisualContext _visualContext;
 
-   public AndroidGraphicsPath()//IVisualContext visualContext)
+   public AndroidGraphicsPath() //IVisualContext visualContext)
    {
       // the visual context is too broad in scope for whatever this was intended for
       //_visualContext = visualContext;
       Path = new Path();
-            
+
       _pointTypes = new List<PathPointType>();
       _points = new List<IPoint2F>();
    }
 
    public override void Dispose()
    {
-            
    }
 
-   public override void LineTo<TPoint>(TPoint p1) 
+   public override void LineTo<TPoint>(TPoint p1)
    {
       Path.LineTo(R4(p1.X), R4(p1.Y));
       //System.Diagnostics.Debug.WriteLine("path.LineTo(" + R4(p1.X) + "f, " + R4(p1.Y) + "f);");
@@ -55,10 +55,9 @@ public class AndroidGraphicsPath : GraphicsPathBase
       AddPoint(p2, PathPointType.Line);
    }
 
-       
 
-   public override void AddArc<TRectangle>(TRectangle arc, 
-                                           Single startAngle, 
+   public override void AddArc<TRectangle>(TRectangle arc,
+                                           Single startAngle,
                                            Single endAngle)
    {
       Path.AddArc(R4(arc.Left), R4(arc.Top), R4(arc.Right), R4(arc.Bottom),
@@ -96,10 +95,10 @@ public class AndroidGraphicsPath : GraphicsPathBase
       //y3 + "f, " + x4 + "f, " + y4 + "f);");
       Path.CubicTo(x2, y2, x3, y3, x4, y4);
 
-            
-      AddPoint(x2,y2, PathPointType.Bezier3);
-      AddPoint(x3,y3, PathPointType.Bezier3);
-      AddPoint(x4,y4, PathPointType.Bezier3);
+
+      AddPoint(x2, y2, PathPointType.Bezier3);
+      AddPoint(x3, y3, PathPointType.Bezier3);
+      AddPoint(x4, y4, PathPointType.Bezier3);
    }
 
    public override void AddBezier(IPoint2F p1,
@@ -123,7 +122,7 @@ public class AndroidGraphicsPath : GraphicsPathBase
       //p3.Y + "f, " + p4.X + "f, " + p4.Y + "f);");
       Path.CubicTo(p2.X, p2.Y, p3.X, p3.Y, p4.X, p4.Y);
 
-            
+
       AddPoint(p2, PathPointType.Bezier3);
       AddPoint(p3, PathPointType.Bezier3);
       AddPoint(p4, PathPointType.Bezier3);
@@ -160,17 +159,6 @@ public class AndroidGraphicsPath : GraphicsPathBase
       Path.Transform(androidMatrix);
    }
 
-   public override ValueSize Size
-   {
-      get
-      {
-         var pm = new PathMeasure(Path, false);
-         return new ValueSize(pm.Length, pm.Length);
-      }
-   }
-
-   public override IPathData PathData => new PathData(_points, _pointTypes.Cast<Byte>());
-
    public override T Unwrap<T>()
    {
       if (Path is T good)
@@ -179,13 +167,12 @@ public class AndroidGraphicsPath : GraphicsPathBase
       throw new InvalidCastException();
    }
 
-      
 
    public override IImage ToImage(Int32 width,
                                   Int32 height,
                                   IColor? stroke,
                                   IBrush? fill)
-   { 
+   {
       var androidPath = Path;
 
 
@@ -195,7 +182,7 @@ public class AndroidGraphicsPath : GraphicsPathBase
                 ?? throw new InvalidOperationException();
 
       var canvas = new Canvas(bmp);
-            
+
       using (var paint = new Paint())
       {
          paint.AntiAlias = true;
@@ -211,7 +198,6 @@ public class AndroidGraphicsPath : GraphicsPathBase
             paint.SetStrokeColor(different);
             canvas.DrawPath(androidPath, paint);
          }
-
       }
 
       return new AndroidBitmap(bmp, null);
@@ -237,11 +223,12 @@ public class AndroidGraphicsPath : GraphicsPathBase
       else
          _pointTypes.Add(pointType);
 
-      _points.Add(new ValuePoint2F(x,y));
+      _points.Add(new ValuePoint2F(x, y));
       if (_isPendingStart)
       {
          _isPendingStart = false;
       }
+
       return true;
    }
 
@@ -256,15 +243,26 @@ public class AndroidGraphicsPath : GraphicsPathBase
                          Single y,
                          PathPointType pointType)
    {
-      _points.Add(new ValuePoint2F(x,y));
+      _points.Add(new ValuePoint2F(x, y));
       _pointTypes.Add(pointType);
    }
 
-       
+   public override ValueSize Size
+   {
+      get
+      {
+         var pm = new PathMeasure(Path, false);
+         return new ValueSize(pm.Length, pm.Length);
+      }
+   }
+
+   public override IPathData PathData => new PathData(_points, _pointTypes.Cast<Byte>());
+
 
    public Path Path { get; }
 
-   private readonly List<PathPointType> _pointTypes;
    private readonly List<IPoint2F> _points;
+
+   private readonly List<PathPointType> _pointTypes;
    private Boolean _isPendingStart;
 }

@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Extensions;
-using Das.Views.Transitions;
 
 namespace Das.Views.Input;
 
@@ -57,11 +56,21 @@ public class FlingHandler : IHandleInput<FlingEventArgs>,
 
          if (_velocityX.IsZero() && _velocityY.IsZero())
          {
-            //args.SetHandled(true);
             return true;
          }
 
-         _currentTransition?.Cancel();
+         if (_currentTransition is { } currentTransition)
+         {
+            var vx = currentTransition.VelocityX;
+            var vy = currentTransition.VelocityY;
+
+            Debug.WriteLine($"@@@@@@@@ existing fling: {vx},{vy} new fling: {args.VelocityX},{args.VelocityY}");
+
+            currentTransition.Cancel();
+
+         }
+
+         //_currentTransition?.Cancel();
 
          var sumX = Convert.ToInt32(_velocityX);
          var sumY = Convert.ToInt32(_velocityY);
@@ -114,7 +123,7 @@ public class FlingHandler : IHandleInput<FlingEventArgs>,
 
    private readonly IFlingHost _flingHost;
    private readonly Object _flingLock;
-   private IManualTransition? _currentTransition;
+   private SplineFlingTransition? _currentTransition;
    private Double _velocityX;
    private Double _velocityY;
 

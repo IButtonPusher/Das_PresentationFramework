@@ -12,13 +12,11 @@ using Das.Views.Rendering;
 namespace Das.Xamarin.Android.Rendering;
 
 /// <summary>
-/// Faciliates size adjustments of visual elements without a full layout pass 
-///  when surrogates (native android views) are in the visual tree
+///    Faciliates size adjustments of visual elements without a full layout pass
+///    when surrogates (native android views) are in the visual tree
 /// </summary>
 public class RefreshRenderContext : BaseRenderContext
 {
-   private readonly Func<ValueRectangle> _getClip;
-
    public RefreshRenderContext(IViewPerspective perspective,
                                IVisualSurrogateProvider surrogateProvider,
                                Dictionary<IVisualElement, ValueCube> renderPositions,
@@ -46,7 +44,6 @@ public class RefreshRenderContext : BaseRenderContext
    public override void DrawImageAt<TLocation>(IImage img,
                                                TLocation destination)
    {
-           
    }
 
    public override void DrawImage<TRectangle>(IImage img,
@@ -80,7 +77,6 @@ public class RefreshRenderContext : BaseRenderContext
                                                                       TPen pen,
                                                                       TThickness cornerRadii)
    {
-            
    }
 
    public override void DrawString<TFont, TBrush, TPoint>(String s,
@@ -116,12 +112,9 @@ public class RefreshRenderContext : BaseRenderContext
    {
    }
 
-   protected override ValueRectangle GetCurrentClip()
-   {
-      return _getClip();
-      //return ValueRectangle.Empty;
-   }
+   protected override ValueRectangle GetCurrentClip() => _getClip();
 
+   //return ValueRectangle.Empty;
    protected override void PopClip<TRectangle>(TRectangle rect)
    {
    }
@@ -130,6 +123,8 @@ public class RefreshRenderContext : BaseRenderContext
    protected override void PushClip<TRectangle>(TRectangle rect)
    {
    }
+
+   private readonly Func<ValueRectangle> _getClip;
 
    //protected override void SetElementRenderPosition(ValueRenderRectangle useRect,
    //                                                 IVisualElement element)

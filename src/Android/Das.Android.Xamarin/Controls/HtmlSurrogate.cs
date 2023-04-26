@@ -40,10 +40,8 @@ public class HtmlSurrogate : WebView,
 
    public ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
                                          IMeasureContext measureContext)
-      where TRenderSize : IRenderSize
-   {
-      return availableSpace.ToValueSize();
-   }
+      where TRenderSize : IRenderSize =>
+      availableSpace.ToValueSize();
 
    public ValueRenderRectangle ArrangedBounds
    {
@@ -74,11 +72,11 @@ public class HtmlSurrogate : WebView,
          _hasPendingContent = false;
 
          if (_htmlPanel.Markup != null)
-            _uiProvider.BeginInvoke(() => 
+            _uiProvider.BeginInvoke(() =>
                LoadData(_htmlPanel.Markup, "text/html; charset=utf-8", "UTF-8"));
          else if (_htmlPanel.Uri != null)
          {
-            _uiProvider.BeginInvoke(() => 
+            _uiProvider.BeginInvoke(() =>
                LoadUrl(_htmlPanel.Uri.AbsoluteUri));
          }
       }
@@ -181,10 +179,8 @@ public class HtmlSurrogate : WebView,
    }
 
    public Boolean TryGetDependencyProperty(DeclarationProperty declarationProperty,
-                                           out IDependencyProperty dependencyProperty)
-   {
-      return _htmlPanel.TryGetDependencyProperty(declarationProperty, out dependencyProperty);
-   }
+                                           out IDependencyProperty dependencyProperty) =>
+      _htmlPanel.TryGetDependencyProperty(declarationProperty, out dependencyProperty);
 
    public ILabel? BeforeLabel
    {
@@ -201,10 +197,8 @@ public class HtmlSurrogate : WebView,
 
    public Boolean TryHandleInput<TArgs>(TArgs args,
                                         Int32 x,
-                                        Int32 y) where TArgs : IMouseInputEventArgs<TArgs>
-   {
-      return _htmlPanel.TryHandleInput(args, x, y);
-   }
+                                        Int32 y) where TArgs : IMouseInputEventArgs<TArgs> =>
+      _htmlPanel.TryHandleInput(args, x, y);
 
    public Int32 ZIndex => _htmlPanel.ZIndex;
 
@@ -229,10 +223,7 @@ public class HtmlSurrogate : WebView,
       else _viewGroup.AddView(this);
    }
 
-   public Boolean Equals(IVisualElement other)
-   {
-      return ReferenceEquals(this, other) || _htmlPanel.Equals(other);
-   }
+   public Boolean Equals(IVisualElement other) => ReferenceEquals(this, other) || _htmlPanel.Equals(other);
 
    public event PropertyChangedEventHandler PropertyChanged
    {

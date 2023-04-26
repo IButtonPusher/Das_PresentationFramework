@@ -37,6 +37,7 @@ public abstract class SurrogateView : FrameLayout, //ViewGroup,
       //NativeView = nativeView;
       AddView(nativeView);
    }
+
    void IMeasureAndArrange.InvalidateMeasure()
    {
       ReplacingVisual.InvalidateMeasure();
@@ -67,12 +68,10 @@ public abstract class SurrogateView : FrameLayout, //ViewGroup,
 
    public virtual ValueSize Measure<TRenderSize>(TRenderSize availableSpace,
                                                  IMeasureContext measureContext)
-      where TRenderSize : IRenderSize
-   {
-      return availableSpace.ToValueSize();
-      //return ReplacingVisual.Measure(availableSpace, measureContext);
-   }
+      where TRenderSize : IRenderSize =>
+      availableSpace.ToValueSize();
 
+   //return ReplacingVisual.Measure(availableSpace, measureContext);
    ValueRenderRectangle IVisualRenderer.ArrangedBounds
    {
       get => ReplacingVisual?.ArrangedBounds ?? ValueRenderRectangle.Empty;
@@ -91,10 +90,7 @@ public abstract class SurrogateView : FrameLayout, //ViewGroup,
       set => ReplacingVisual.Template = value;
    }
 
-   Boolean IEquatable<IVisualElement>.Equals(IVisualElement other)
-   {
-      return ReplacingVisual.Equals(other);
-   }
+   Boolean IEquatable<IVisualElement>.Equals(IVisualElement other) => ReplacingVisual.Equals(other);
 
    QuantifiedDouble? IBoxValue<QuantifiedDouble?>.Left => ReplacingVisual.Left;
 
@@ -129,12 +125,6 @@ public abstract class SurrogateView : FrameLayout, //ViewGroup,
    }
 
    public Boolean IsDisposed => ReplacingVisual.IsDisposed;
-
-   public event Action<IVisualElement>? Disposed
-   {
-      add => ReplacingVisual.Disposed += value;
-      remove => ReplacingVisual.Disposed -= value;
-   }
 
    void IVisualElement.RaisePropertyChanged(String propertyName,
                                             Object? value)
@@ -211,10 +201,8 @@ public abstract class SurrogateView : FrameLayout, //ViewGroup,
    }
 
    Boolean IVisualElement.TryGetDependencyProperty(DeclarationProperty declarationProperty,
-                                                   out IDependencyProperty dependencyProperty)
-   {
-      return ReplacingVisual.TryGetDependencyProperty(declarationProperty, out dependencyProperty);
-   }
+                                                   out IDependencyProperty dependencyProperty) =>
+      ReplacingVisual.TryGetDependencyProperty(declarationProperty, out dependencyProperty);
 
    ILabel? IVisualElement.BeforeLabel
    {
@@ -230,10 +218,8 @@ public abstract class SurrogateView : FrameLayout, //ViewGroup,
 
    public Boolean TryHandleInput<TArgs>(TArgs args,
                                         Int32 x,
-                                        Int32 y) where TArgs : IMouseInputEventArgs<TArgs>
-   {
-      return ReplacingVisual.TryHandleInput(args, x, y);
-   }
+                                        Int32 y) where TArgs : IMouseInputEventArgs<TArgs> =>
+      ReplacingVisual.TryHandleInput(args, x, y);
 
    Int32 IVisualElement.ZIndex => ReplacingVisual.ZIndex;
 
@@ -241,13 +227,17 @@ public abstract class SurrogateView : FrameLayout, //ViewGroup,
 
    public virtual IVisualElement ReplacingVisual { get; }
 
-       
 
    public sealed override void AddView(View? child)
    {
       base.AddView(child);
    }
 
+   public event Action<IVisualElement>? Disposed
+   {
+      add => ReplacingVisual.Disposed += value;
+      remove => ReplacingVisual.Disposed -= value;
+   }
 
 
    //public override Boolean OnTouchEvent(MotionEvent? ev)
@@ -282,7 +272,7 @@ public abstract class SurrogateView : FrameLayout, //ViewGroup,
    //        case MotionEventActions.Move:
    //            _gestureDetector.OnTouchEvent(ev);
    //            break;
-                
+
    //        case MotionEventActions.Down:
    //        case MotionEventActions.Up:
    //            _gestureDetector.OnTouchEvent(ev);
@@ -295,5 +285,4 @@ public abstract class SurrogateView : FrameLayout, //ViewGroup,
 
    protected readonly ViewGroup _viewGroup;
    //private readonly GestureDetectorCompat _gestureDetector;
-        
 }

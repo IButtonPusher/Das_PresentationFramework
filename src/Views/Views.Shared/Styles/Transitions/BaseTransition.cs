@@ -7,123 +7,112 @@ using TaskEx = System.Threading.Tasks.Task;
 
 #endif
 
-namespace Das.Views.Styles.Transitions
+namespace Das.Views.Styles.Transitions;
+
+public abstract class BaseTransition
 {
-    public abstract class BaseTransition
-    {
-        protected BaseTransition(TimeSpan duration,
-                                 TimeSpan delay,
-                                 Easing easing)
-        {
-            _duration = duration;
-            _delay = delay;
-            _easing = easing;
+   protected BaseTransition(TimeSpan duration,
+                            TimeSpan delay,
+                            Easing easing)
+   {
+      _duration = duration;
+      _delay = delay;
+      _easing = easing;
 
-            //switch (easing)
-            //{
-            //    case Easing.QuadraticOut:
-            //        _getCurrentPercent = EaseOutQuadratic;
-            //        break;
+      //switch (easing)
+      //{
+      //    case Easing.QuadraticOut:
+      //        _getCurrentPercent = EaseOutQuadratic;
+      //        break;
 
-            //    case Easing.QuintOut:
-            //        _getCurrentPercent = EaseOutQuint;
-            //        break;
+      //    case Easing.QuintOut:
+      //        _getCurrentPercent = EaseOutQuint;
+      //        break;
 
-            //    case Easing.Linear:
-            //        _getCurrentPercent = Linear;
-            //        break;
+      //    case Easing.Linear:
+      //        _getCurrentPercent = Linear;
+      //        break;
 
-            //    default:
-            //        throw new ArgumentOutOfRangeException(nameof(easing), easing, null);
-            //}
+      //    default:
+      //        throw new ArgumentOutOfRangeException(nameof(easing), easing, null);
+      //}
 
-        }
+   }
 
-        public virtual void Start()
-        {
-            Start(new CancellationTokenSource().Token);
-        }
+   public virtual void Start()
+   {
+      Start(new CancellationTokenSource().Token);
+   }
 
-        public virtual void Start(CancellationToken cancel)
-        {
-            Task.Factory.StartNew(() => RunUpdates(cancel)).ConfigureAwait(false);
-        }
+   public virtual void Start(CancellationToken cancel)
+   {
+      Task.Factory.StartNew(() => RunUpdates(cancel)).ConfigureAwait(false);
+   }
 
-        protected static Double EaseOutQuadratic(Double pctComplete)
-        {
-            return 1 - (1 - pctComplete) * (1 - pctComplete);
-        }
+   protected static Double EaseOutQuadratic(Double pctComplete)
+   {
+      return 1 - (1 - pctComplete) * (1 - pctComplete);
+   }
 
-        protected static Double EaseOutQuint(Double pctComplete)
-        {
-            return 1 - Math.Pow(1.0 - pctComplete, 5);
-        }
+   protected static Double EaseOutQuint(Double pctComplete)
+   {
+      return 1 - Math.Pow(1.0 - pctComplete, 5);
+   }
 
-        //protected static Double Linear(Double pctComplete)
-        //{
-        //    return pctComplete;
-        //}
-        
-        //protected static Double GetEaseOut(Double pctComplete)
-        //{
-        //    return 1 - Math.Pow(1.0 - pctComplete, 5);
-        //}
+   protected virtual void OnFinished(Boolean wasCancelled)
+   {
+   }
 
+   protected abstract void OnUpdate(Double runningPct);
 
-        protected virtual void OnFinished(Boolean wasCancelled)
-        {
-        }
+   protected virtual async Task RunUpdates(CancellationToken cancel)
+   {
+      await TaskEx.Delay(_delay).ConfigureAwait(false);
+      if (cancel.IsCancellationRequested)
+         return;
 
-        protected abstract void OnUpdate(Double runningPct);
+      var running = Stopwatch.StartNew();
 
-        protected virtual async Task RunUpdates(CancellationToken cancel)
-        {
-            await TaskEx.Delay(_delay).ConfigureAwait(false);
-            if (cancel.IsCancellationRequested)
-                return;
+      while (!cancel.IsCancellationRequested)
+      {
+         await TaskEx.Delay(SIXTY_FPS).ConfigureAwait(false);
 
-            var running = Stopwatch.StartNew();
+         var runningPct = Math.Min(
+            running.ElapsedMilliseconds / _duration.TotalMilliseconds, 1);
 
-            while (!cancel.IsCancellationRequested)
-            {
-                await TaskEx.Delay(SIXTY_FPS).ConfigureAwait(false);
+         //runningPct = _getCurrentPercent(runningPct);
 
-                var runningPct = Math.Min(
-                    running.ElapsedMilliseconds / _duration.TotalMilliseconds, 1);
+         switch (_easing)
+         {
+            case Easing.QuadraticOut:
+               runningPct = EaseOutQuadratic(runningPct);
+               break;
 
-                //runningPct = _getCurrentPercent(runningPct);
+            case Easing.QuintOut:
+               runningPct = EaseOutQuint(runningPct);
+               break;
 
-                switch (_easing)
-                {
-                    case Easing.QuadraticOut:
-                        runningPct = EaseOutQuadratic(runningPct);
-                        break;
+            case Easing.Linear:
+               //intentionally blank
+               break;
 
-                    case Easing.QuintOut:
-                        runningPct = EaseOutQuint(runningPct);
-                        break;
+            default:
+               throw new ArgumentOutOfRangeException();
+         }
 
-                    case Easing.Linear:
-                        //intentionally blank
-                        break;
-                    
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+         OnUpdate(runningPct);
 
-                OnUpdate(runningPct);
+         if (runningPct >= 1)
+            break;
+      }
 
-                if (runningPct >= 1)
-                    break;
-            }
+      OnFinished(cancel.IsCancellationRequested);
+   }
 
-            OnFinished(cancel.IsCancellationRequested);
-        }
+   private const Int32 SIXTY_FPS = 1000 / 60;
+   private readonly TimeSpan _delay;
+   private readonly Easing _easing;
 
-        private const Int32 SIXTY_FPS = 1000 / 60;
-        private readonly TimeSpan _delay;
-        private readonly Easing _easing;
-        private readonly TimeSpan _duration;
-        //private readonly Func<Double, Double> _getCurrentPercent;
-    }
+   protected readonly TimeSpan _duration;
+   //private readonly Func<Double, Double> _getCurrentPercent;
 }

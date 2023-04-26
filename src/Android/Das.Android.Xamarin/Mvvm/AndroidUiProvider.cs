@@ -24,14 +24,12 @@ public class AndroidUiProvider : BaseUiProvider
    }
 
    public override Task NotifyAsync(String text,
-                                    String title)
-   {
+                                    String title) =>
       throw new NotImplementedException();
-   }
 
    public override void BrowseToUri(bob uri)
    {
-      Intent intent = new Intent(Intent.ActionView);
+      var intent = new Intent(Intent.ActionView);
       intent.SetData(Uri.Parse(uri.AbsoluteUri));
       _activity.StartActivity(intent);
    }
@@ -48,7 +46,6 @@ public class AndroidUiProvider : BaseUiProvider
          var src = new InvokeCompletionSource(action, _activity);
          src.Task.ConfigureAwait(false);
          src.Task.Wait();
-                
       }
    }
 

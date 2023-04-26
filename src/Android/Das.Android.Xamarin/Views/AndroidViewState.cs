@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Android.Util;
 using Das.Views.Colors;
 using Das.Views.Core.Drawing;
@@ -8,8 +9,6 @@ namespace Das.Xamarin.Android;
 
 public class AndroidViewState : IViewState
 {
-   private readonly IThemeProvider _themeProvider;
-
    public AndroidViewState(DisplayMetrics displayMetrics,
                            IThemeProvider themeProvider)
    {
@@ -23,4 +22,6 @@ public class AndroidViewState : IViewState
    public Single Density { get; }
 
    public IColorPalette ColorPalette => _themeProvider.ColorPalette;
+
+   private readonly IThemeProvider _themeProvider;
 }

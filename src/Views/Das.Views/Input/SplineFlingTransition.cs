@@ -58,18 +58,6 @@ public class SplineFlingTransition : BaseTransition, IManualTransition
       fArr[100] = END_TENSION;
    }
 
-   //public SplineFlingTransition(Double initialVelocity,
-   //                             Single friction,
-   //                             Single physicalCoefficient,
-   //                             IFlingHost host,
-   //                             TimeSpan delay) :
-   //   this(host,
-   //      GetSplineFlingDuration(initialVelocity, friction, physicalCoefficient),
-   //      GetSplineFlingDistance(initialVelocity, friction, physicalCoefficient),
-   //      delay)
-   //{
-   //}
-
    public SplineFlingTransition(IFlingHost host,
                                 TimeSpan duration,
                                 Double distanceX,
@@ -100,21 +88,26 @@ public class SplineFlingTransition : BaseTransition, IManualTransition
    {
       var index = (Int32) (NB_SAMPLES * runningPct);
       var distanceCoef = 1.0f;
+      Single velocityCoef;
+
       if (index < NB_SAMPLES)
       {
-         var t_inf = (Single) index / NB_SAMPLES;
-         var t_sup = (Single) (index + 1) / NB_SAMPLES;
+         var t_inf = (Single)index / NB_SAMPLES;
+         var t_sup = (Single)(index + 1) / NB_SAMPLES;
          var d_inf = SPLINE_POSITION[index];
          var d_sup = SPLINE_POSITION[index + 1];
-         var velocityCoef = (d_sup - d_inf) / (t_sup - t_inf);
-         distanceCoef = (Single) (d_inf + (runningPct - t_inf) * velocityCoef);
+         velocityCoef = (d_sup - d_inf) / (t_sup - t_inf);
+         distanceCoef = (Single)(d_inf + (runningPct - t_inf) * velocityCoef);
       }
+      else velocityCoef = 0;
 
+      VelocityX = velocityCoef * _distanceX / _duration.Milliseconds;// * 1000.0f;
       var distanceX = distanceCoef * _distanceX;
       var flungX = _host.CurrentX - _startX;
       var currentX = distanceX - flungX;
 
 
+      VelocityY = velocityCoef * _distanceY / _duration.Milliseconds;// * 1000.0f;
       var distanceY = distanceCoef * _distanceY;
       var flungY = _host.CurrentY - _startY;
       var currentY = distanceY - flungY;
@@ -124,43 +117,23 @@ public class SplineFlingTransition : BaseTransition, IManualTransition
       //                " total: " + flungY);
 
       _host.OnFlingStep(currentX, currentY);
-
-      //UpdateCurrentVelocity(velocityCoef * _distance / _splineDuration * 1000.0f,
-      //    "update where index = " + index + " t = " + t);
    }
 
    protected override void OnFinished(Boolean wasCancelled)
    {
       base.OnFinished(wasCancelled);
       _host.OnFlingEnded(wasCancelled);
-         
    }
 
-   //private static Double GetSplineDeceleration(Double velocity,
-   //                                            Single mFlingFriction,
-   //                                            Single mPhysicalCoeff)
-   //{
-   //   return Math.Log(_inflexion * Math.Abs(velocity) / (mFlingFriction * mPhysicalCoeff));
-   //}
+   public Double PendingX => _distanceX - (_host.CurrentX - _startX);
 
-   //private static Double GetSplineFlingDistance(Double velocity,
-   //                                             Single mFlingFriction,
-   //                                             Single mPhysicalCoeff)
-   //{
-   //   var l = GetSplineDeceleration(velocity, mFlingFriction, mPhysicalCoeff);
-   //   var decelMinusOne = _decelerationRate - 1.0;
-   //   return mFlingFriction * mPhysicalCoeff * Math.Exp(_decelerationRate / decelMinusOne * l);
-   //}
+   public Double PendingY => _distanceY - (_host.CurrentY - _startY);
 
-   //private static TimeSpan GetSplineFlingDuration(Double velocity,
-   //                                               Single mFlingFriction,
-   //                                               Single mPhysicalCoeff)
-   //{
-   //   var l = GetSplineDeceleration(velocity, mFlingFriction, mPhysicalCoeff);
-   //   var decelMinusOne = _decelerationRate - 1.0;
-   //   return TimeSpan.FromMilliseconds(1000.0 * Math.Exp(l / decelMinusOne));
-   //}
+   public Double VelocityX { get; private set; }
 
+   public Double VelocityY { get; private set; }
+
+ 
    private const Single START_TENSION = 0.5f;
    private const Single END_TENSION = 1.0f;
 
@@ -172,10 +145,7 @@ public class SplineFlingTransition : BaseTransition, IManualTransition
    private static readonly Single P2 = 1.0f - END_TENSION * (1.0f - INFLEXION);
    private static readonly Single[] SPLINE_POSITION = new Single[NB_SAMPLES + 1];
    private static readonly Single[] SPLINE_TIME = new Single[NB_SAMPLES + 1];
-
-   //private static readonly Single _decelerationRate = (Single) (Math.Log(0.78) / Math.Log(0.9));
-   //private static readonly Single _inflexion = 0.35f; // Tension lines cross at (INFLEXION, 1)
-
+   
    private readonly CancellationTokenSource _cancellationSource;
    
    private readonly Double _distanceX;

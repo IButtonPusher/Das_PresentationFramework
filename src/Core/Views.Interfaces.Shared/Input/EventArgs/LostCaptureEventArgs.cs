@@ -1,28 +1,27 @@
 ﻿using System;
 
-namespace Das.Views.Input
+namespace Das.Views.Input;
+
+public readonly struct LostCaptureEventArgs : IInputEventArgs//IMouseInputEventArgs<LostCaptureEventArgs>
 {
-    public readonly struct LostCaptureEventArgs : IInputEventArgs//IMouseInputEventArgs<LostCaptureEventArgs>
-    {
-        public LostCaptureEventArgs(IInputContext inputContext)
-        {
-            InputContext = inputContext;
-        }
+   public LostCaptureEventArgs(IInputContext inputContext)
+   {
+      InputContext = inputContext;
+   }
 
-        public InputAction Action => InputAction.LostCapture;
+   public InputAction Action => InputAction.LostCapture;
 
-        public IInputContext InputContext { get; }
+   public IInputContext InputContext { get; }
 
-        //public IPoint2D Position { get; }
+   //public IPoint2D Position { get; }
 
-        //public LostCaptureEventArgs Offset(IPoint2D offset)
-        //{
-        //    return new LostCaptureEventArgs(InputContext, Position.Offset(offset));
-        //}
+   //public LostCaptureEventArgs Offset(IPoint2D offset)
+   //{
+   //    return new LostCaptureEventArgs(InputContext, Position.Offset(offset));
+   //}
 
-        //public LostFocusEventArgs Offset(Double pct)
-        //{
-        //    return TODO_IMPLEMENT_ME;
-        //}
-    }
+   //public LostFocusEventArgs Offset(Double pct)
+   //{
+   //    return TODO_IMPLEMENT_ME;
+   //}
 }

@@ -9,7 +9,6 @@ namespace Das.Xamarin.Android;
 
 public class AndroidBitmap : IImage
 {
-
    public AndroidBitmap(Bitmap bmp,
                         Stream? stream)
    {
@@ -22,11 +21,9 @@ public class AndroidBitmap : IImage
       HasInfiniteDimension = false;
    }
 
-   Boolean IEquatable<ISize>.Equals(ISize other)
-   {
-      return _bmp.Width == Convert.ToInt32(other.Width) &&
-             _bmp.Height == Convert.ToInt32(other.Height);
-   }
+   Boolean IEquatable<ISize>.Equals(ISize other) =>
+      _bmp.Width == Convert.ToInt32(other.Width) &&
+      _bmp.Height == Convert.ToInt32(other.Height);
 
    Double ISize.Height => _bmp.Height;
 
@@ -50,15 +47,9 @@ public class AndroidBitmap : IImage
 
    Boolean IImage.IsDisposed => _isDisposed;
 
-   Task IImage.SaveAsync(FileInfo path)
-   {
-      throw new NotImplementedException();
-   }
+   Task IImage.SaveAsync(FileInfo path) => throw new NotImplementedException();
 
-   Task IImage.SaveThenDisposeAsync(FileInfo path)
-   {
-      throw new NotImplementedException();
-   }
+   Task IImage.SaveThenDisposeAsync(FileInfo path) => throw new NotImplementedException();
 
    Stream IImage.ToStream()
    {
@@ -74,11 +65,8 @@ public class AndroidBitmap : IImage
       return ms;
    }
 
-       
-   Task<Boolean> IImage.TrySave(FileInfo path)
-   {
-      throw new NotImplementedException();
-   }
+
+   Task<Boolean> IImage.TrySave(FileInfo path) => throw new NotImplementedException();
 
    T IImage.Unwrap<T>()
    {
@@ -88,7 +76,7 @@ public class AndroidBitmap : IImage
       throw new NotImplementedException();
    }
 
-      
+
    public void UnwrapLocked<T>(Action<T> action)
    {
       lock (_unwrapLock)
@@ -102,14 +90,12 @@ public class AndroidBitmap : IImage
 
 
    Task<TResult> IImage.UseImage<TImage, TParam, TResult>(TParam param1,
-                                                          Func<TImage, TParam, TResult> action)
-   {
+                                                          Func<TImage, TParam, TResult> action) =>
       throw new NotImplementedException();
-   }
 
    private readonly Bitmap _bmp;
-   private readonly Stream? _stream;
    private readonly Boolean _isEmpty;
+   private readonly Stream? _stream;
    private readonly Object _unwrapLock;
 
    private Boolean _isDisposed;

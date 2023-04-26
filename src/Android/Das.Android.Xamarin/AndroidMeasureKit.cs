@@ -24,39 +24,20 @@ public class AndroidMeasureKit : BaseMeasureContext
                             DisplayMetrics displayMetrics,
                             IVisualLineage visualLineage,
                             ILayoutQueue layoutQueue)
-      : base(surrogateProvider, lastMeasurements, 
-         themeProvider, visualLineage,layoutQueue)
+      : base(surrogateProvider, lastMeasurements,
+         themeProvider, visualLineage, layoutQueue)
    {
       _windowManager = windowManager;
       _fontProvider = fontProvider;
       _contextBounds = GetCOntextBounds(displayMetrics);
    }
 
-   public override ValueSize ContextBounds
-   {
-      get
-      {
-         return _contextBounds;
-      }
-   }
-
-   private ValueSize GetCOntextBounds(DisplayMetrics metrics)
-   {
-      if (!(_windowManager.DefaultDisplay is {}))
-         throw new NullReferenceException();
-
-      return new ValueSize(metrics.WidthPixels / metrics.ScaledDensity,
-         metrics.HeightPixels / metrics.ScaledDensity);
-   }
-
    public sealed override ValueSize MeasureElement<TRenderSize>(IVisualElement element,
-                                                                TRenderSize availableSpace)
-   {
+                                                                TRenderSize availableSpace) =>
       //_fontProvider.RemoveElement(element); <---- why remove, adds GC pressure + slow af
-      return base.MeasureElement(element, availableSpace);
-   }
+      base.MeasureElement(element, availableSpace);
 
-   public sealed override ValueSize MeasureString(String s, 
+   public sealed override ValueSize MeasureString(String s,
                                                   IFont font)
    {
       var renderer = _fontProvider.GetRenderer(font, VisualLineage);
@@ -72,7 +53,6 @@ public class AndroidMeasureKit : BaseMeasureContext
       }
 
       return res;
-
    }
 
    protected sealed override void OnElementDisposed(IVisualElement element)
@@ -81,7 +61,18 @@ public class AndroidMeasureKit : BaseMeasureContext
       _fontProvider.RemoveElement(element);
    }
 
+   private ValueSize GetCOntextBounds(DisplayMetrics metrics)
+   {
+      if (!(_windowManager.DefaultDisplay is { }))
+         throw new NullReferenceException();
+
+      return new ValueSize(metrics.WidthPixels / metrics.ScaledDensity,
+         metrics.HeightPixels / metrics.ScaledDensity);
+   }
+
+   public override ValueSize ContextBounds => _contextBounds;
+
    private readonly ValueSize _contextBounds;
-   private readonly IWindowManager _windowManager;
    private readonly AndroidFontProvider _fontProvider;
+   private readonly IWindowManager _windowManager;
 }
