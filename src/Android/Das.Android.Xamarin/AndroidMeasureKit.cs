@@ -34,7 +34,6 @@ public class AndroidMeasureKit : BaseMeasureContext
 
    public sealed override ValueSize MeasureElement<TRenderSize>(IVisualElement element,
                                                                 TRenderSize availableSpace) =>
-      //_fontProvider.RemoveElement(element); <---- why remove, adds GC pressure + slow af
       base.MeasureElement(element, availableSpace);
 
    public sealed override ValueSize MeasureString(String s,

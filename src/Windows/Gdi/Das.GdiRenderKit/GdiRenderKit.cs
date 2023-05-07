@@ -111,10 +111,6 @@ public class GdiRenderKit : BaseRenderKit,
             default:
                throw new NotImplementedException(element.GetType().Name);
          }
-
-         //var v = new HtmlViewSurrogate(element, control);
-         //control.Controls.Add(v);
-         //return v;
       });
    }
 

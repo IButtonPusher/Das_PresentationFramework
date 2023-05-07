@@ -790,6 +790,7 @@ namespace XamarinAndroidTest
 			global::Das.Xamarin.Android.Resource.Id.uniform = global::XamarinAndroidTest.Resource.Id.uniform;
 			global::Das.Xamarin.Android.Resource.Id.up = global::XamarinAndroidTest.Resource.Id.up;
 			global::Das.Xamarin.Android.Resource.Id.useLogo = global::XamarinAndroidTest.Resource.Id.useLogo;
+			global::Das.Xamarin.Android.Resource.Id.view_tree_lifecycle_owner = global::XamarinAndroidTest.Resource.Id.view_tree_lifecycle_owner;
 			global::Das.Xamarin.Android.Resource.Id.withText = global::XamarinAndroidTest.Resource.Id.withText;
 			global::Das.Xamarin.Android.Resource.Id.wrap_content = global::XamarinAndroidTest.Resource.Id.wrap_content;
 			global::Das.Xamarin.Android.Resource.Integer.abc_config_activityDefaultDur = global::XamarinAndroidTest.Resource.Integer.abc_config_activityDefaultDur;

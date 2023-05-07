@@ -160,6 +160,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\BaseTransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\TransformTransition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\TransitionBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\Transitions\TransitionState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\TypeStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\DataTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Templates\DefaultVisualBootstrapper.cs" />

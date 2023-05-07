@@ -22,7 +22,7 @@ namespace Das.Views
          if (level < LogLevel)
             return;
 
-         Debug.WriteLine("[OKYN" + Thread.CurrentThread.ManagedThreadId + "][" +
+         Debug.WriteLine("[UI " + Thread.CurrentThread.ManagedThreadId + "][" +
                          _sw.ElapsedMilliseconds + "] " + msg);
       }
 

@@ -2403,10 +2403,13 @@ namespace Das.Xamarin.Android
 			public static int useLogo = 2131165358;
 			
 			// aapt resource value: 0x7F0700AF
-			public static int withText = 2131165359;
+			public static int view_tree_lifecycle_owner = 2131165359;
 			
 			// aapt resource value: 0x7F0700B0
-			public static int wrap_content = 2131165360;
+			public static int withText = 2131165360;
+			
+			// aapt resource value: 0x7F0700B1
+			public static int wrap_content = 2131165361;
 			
 			static Id()
 			{

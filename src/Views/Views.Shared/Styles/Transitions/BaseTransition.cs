@@ -19,25 +19,10 @@ public abstract class BaseTransition
       _delay = delay;
       _easing = easing;
 
-      //switch (easing)
-      //{
-      //    case Easing.QuadraticOut:
-      //        _getCurrentPercent = EaseOutQuadratic;
-      //        break;
-
-      //    case Easing.QuintOut:
-      //        _getCurrentPercent = EaseOutQuint;
-      //        break;
-
-      //    case Easing.Linear:
-      //        _getCurrentPercent = Linear;
-      //        break;
-
-      //    default:
-      //        throw new ArgumentOutOfRangeException(nameof(easing), easing, null);
-      //}
-
+      TransitionState = TransitionState.PendingStart;
    }
+
+   public TransitionState TransitionState { get; protected set; }
 
    public virtual void Start()
    {
@@ -67,21 +52,27 @@ public abstract class BaseTransition
 
    protected virtual async Task RunUpdates(CancellationToken cancel)
    {
-      await TaskEx.Delay(_delay).ConfigureAwait(false);
+      if (_delay.TotalMilliseconds > 0)
+         await TaskEx.Delay(_delay).ConfigureAwait(false);
+
       if (cancel.IsCancellationRequested)
+      {
+         TransitionState = TransitionState.Cancelled;
          return;
+      }
 
       var running = Stopwatch.StartNew();
+      var swUpdate = new Stopwatch();
 
       while (!cancel.IsCancellationRequested)
       {
-         await TaskEx.Delay(SIXTY_FPS).ConfigureAwait(false);
+         //await TaskEx.Delay(SIXTY_FPS).ConfigureAwait(false);
+
+         TransitionState = TransitionState.Running;
 
          var runningPct = Math.Min(
             running.ElapsedMilliseconds / _duration.TotalMilliseconds, 1);
-
-         //runningPct = _getCurrentPercent(runningPct);
-
+   
          switch (_easing)
          {
             case Easing.QuadraticOut:
@@ -100,10 +91,23 @@ public abstract class BaseTransition
                throw new ArgumentOutOfRangeException();
          }
 
+         swUpdate.Restart();
+
          OnUpdate(runningPct);
 
+         var elapsedMs = swUpdate.ElapsedMilliseconds;
+
          if (runningPct >= 1)
+         {
+            TransitionState = TransitionState.Finished;
             break;
+         }
+
+         var waitFor = SIXTY_FPS - elapsedMs;
+         if (waitFor > 0 && waitFor < Int32.MaxValue)
+         {
+            await TaskEx.Delay((Int32)waitFor).ConfigureAwait(false);
+         }
       }
 
       OnFinished(cancel.IsCancellationRequested);

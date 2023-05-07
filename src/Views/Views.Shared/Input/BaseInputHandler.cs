@@ -226,7 +226,7 @@ public class BaseInputHandler : IInputHandler
                   position, InputAction.MouseOver))
       {
 
-         UILogger.Log("send input to " + visual.Element, LogLevel.Level1);
+         //UILogger.Log("send input to " + visual.Element, LogLevel.Level1);
 
          if (visual.Element != capturingVisual)
             continue;

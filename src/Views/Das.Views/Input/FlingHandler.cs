@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Das.Extensions;
+using Das.Views.Styles.Transitions;
 
 namespace Das.Views.Input;
 
@@ -59,10 +60,13 @@ public class FlingHandler : IHandleInput<FlingEventArgs>,
             return true;
          }
 
-         if (_currentTransition is { } currentTransition)
+         if (_currentTransition is { } currentTransition && 
+             currentTransition.TransitionState == TransitionState.Running)
          {
             var vx = currentTransition.VelocityX;
             var vy = currentTransition.VelocityY;
+
+            //UILogger.Log();
 
             Debug.WriteLine($"@@@@@@@@ existing fling: {vx},{vy} new fling: {args.VelocityX},{args.VelocityY}");
 
@@ -85,7 +89,7 @@ public class FlingHandler : IHandleInput<FlingEventArgs>,
             return true;
 
 
-         Debug.WriteLine("[OKYN] Created fling transition x,y: " + sumX + "," + sumY +
+         Debug.WriteLine("^^^ Created fling transition x,y: " + sumX + "," + sumY +
                          " duration: " + args.FlingXDuration + "," + args.FlingYDuration +
                          "\t\t\t\r\nbased on: " + args);
 
@@ -93,10 +97,10 @@ public class FlingHandler : IHandleInput<FlingEventArgs>,
             ? args.FlingYDuration
             : args.FlingXDuration;
 
-         _currentTransition = new SplineFlingTransition(_flingHost,
+         _currentTransition = currentTransition = new SplineFlingTransition(_flingHost,
             dur, sumX, sumY, TimeSpan.Zero);
 
-         _currentTransition.Start();
+         currentTransition.Start();
 
 
          _flingHost.OnFlingStarting(sumX, sumY);

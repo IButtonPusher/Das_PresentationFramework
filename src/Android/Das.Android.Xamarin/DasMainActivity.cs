@@ -22,6 +22,17 @@ namespace Das.Xamarin.Android;
 
 public abstract class DasMainActivity : AppCompatActivity
 {
+   protected DasMainActivity()
+   {
+      _defaultBackButtonCommand = OnDefaultBackButtonCommand;
+   }
+
+   private Task<Boolean> OnDefaultBackButtonCommand()
+   {
+      Finish();
+      return Task.FromResult(true);
+   }
+
    public override async void OnBackPressed()
    {
       var handled = await BackButtonCommand();
@@ -132,6 +143,8 @@ public abstract class DasMainActivity : AppCompatActivity
 
    // ReSharper disable once UnusedMember.Global
    protected abstract Func<Task<Boolean>> BackButtonCommand { get; }
+
+   protected readonly Func<Task<Boolean>> _defaultBackButtonCommand;
 
    private AndroidView? _androidView;
 

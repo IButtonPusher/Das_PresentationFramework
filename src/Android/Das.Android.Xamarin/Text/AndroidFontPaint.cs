@@ -157,6 +157,7 @@ public class AndroidFontPaint : TextPaint,
    {
       if (brush is SolidColorBrush scb)
          SetARGB(scb.Color.A, scb.Color.R, scb.Color.G, scb.Color.B);
+      else throw new NotImplementedException($"SetColor {brush}");
    }
 
    public sealed override Single StrokeWidth
