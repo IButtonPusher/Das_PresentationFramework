@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections;
+using System.Collections.Concurrent;
 
 #if !NET40
 
@@ -106,6 +107,24 @@ namespace Common.Core
 
             val.Add(value);
             return false;
+        }
+
+        /// <summary>
+        /// Adds a value to a collection of items which is the value of a dictionary
+        /// </summary>
+        /// <returns>true if <see cref="key"/> didn't already exist in the dictionary</returns>
+        public static void AddToValueList<TKey, TValues, TValue>(
+           this ConcurrentDictionary<TKey, TValues> dictionary,
+           TKey key,
+           TValue value)
+           where TValues : ICollection<TValue>, ICollection, new()
+        {
+           var vals = dictionary.GetOrAdd(key, _ => new());
+
+           lock (vals.SyncRoot)
+              vals.Add(value);
+
+          
         }
 
         public static void AddToValueList<TKey, TValues, TValue, TNewArg>(
