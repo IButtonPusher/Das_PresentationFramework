@@ -136,10 +136,6 @@ public class AndroidView : ViewGroup
             {
                continue;
             }
-
-            //WriteLine("Calling layout on surrogate " + current +
-            //          " ltrb: " + left + "," + top + "," + 
-            //          right + "," + bottom + " ***** HEIGHT: " + (bottom - top) + " *****");
          }
 
          current.Layout(left, top, right, bottom);

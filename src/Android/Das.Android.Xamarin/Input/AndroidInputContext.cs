@@ -158,7 +158,7 @@ public class AndroidInputContext : Java.Lang.Object,
          }
          else
          {
-            Debug.WriteLine("+++++++++input didn't handle fling");
+            RemoveInteraction(InputAction.Fling);
          }
       }
 
