@@ -46,6 +46,8 @@ public abstract class BaseUiProvider : IUiProvider
       throw new NotImplementedException();
    }
 
+   public virtual Task ShowAsync(INotifyPropertyChanged vm) => throw new NotImplementedException();
+
    public virtual Task CopyTextAsync(Func<String> getText)
    {
       throw new NotImplementedException();

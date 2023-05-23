@@ -22,6 +22,26 @@ public partial class WpfUiProvider<TModalWindow>
 
    public override Task<Boolean?> ShowDialogAsync(INotifyPropertyChanged vm) => ShowBooleanDialogAsync(vm);
 
+   public override async Task ShowAsync(INotifyPropertyChanged vm)
+   {
+      await InvokeAsync(() =>
+      {
+         var window = GetWindowForDialog(vm);
+         //if (GetModalOwner() is { } pwner)
+         //   window.Owner = pwner;
+
+         if (vm is IDisposable dvm)
+         {
+            window.Closed += delegate
+            {
+               dvm.Dispose();
+            };
+         }
+
+         window.Show();
+      });
+   }
+
    private async Task<Boolean?> ShowBooleanDialogAsync(INotifyPropertyChanged vm)
    {
       return await InvokeAsync(() => ShowBooleanDialogImpl(vm));
@@ -149,7 +169,7 @@ public partial class WpfUiProvider<TModalWindow>
       var window = GetWindowForDialog(vm);
       if (GetModalOwner() is { } pwner)
          window.Owner = pwner;
-
+      
       return window.ShowDialog();
    }
 

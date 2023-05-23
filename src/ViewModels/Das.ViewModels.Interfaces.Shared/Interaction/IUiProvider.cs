@@ -27,6 +27,8 @@ namespace Das.Views
 
         Task<Boolean?> ShowDialogAsync(INotifyPropertyChanged vm);
 
+        Task ShowAsync(INotifyPropertyChanged vm);
+
         Task CopyTextAsync(Func<String> getText);
 
         Boolean TryGetFileToOpen(DirectoryInfo initialDirectory,
