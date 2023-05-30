@@ -1,31 +1,30 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Das.Views
+namespace Das.Views;
+
+public interface ISingleThreadedInvoker
 {
-    public interface ISingleThreadedInvoker
-    {
-        void BeginInvoke(Action action);
+   void BeginInvoke(Action action);
 
-        void Invoke(Action action);
+   void Invoke(Action action);
 
-        void Invoke(Action action,
-                    Int32 priority);
+   void Invoke(Action action,
+               Int32 priority);
 
-        Task InvokeAsync(Func<Task> action);
+   Task InvokeAsync(Func<Task> action);
 
-        T Invoke<T>(Func<T> action);
+   T Invoke<T>(Func<T> action);
 
-        Task InvokeAsync(Action action);
+   Task InvokeAsync(Action action);
 
-        Task<T> InvokeAsync<T>(Func<T> action);
+   Task<T> InvokeAsync<T>(Func<T> action);
 
-        Task<TOutput> InvokeAsync<TInput, TOutput>(TInput input,
-                                                   Func<TInput, TOutput> action);
+   Task<TOutput> InvokeAsync<TInput, TOutput>(TInput input,
+                                              Func<TInput, TOutput> action);
 
-        Task InvokeAsync<TInput>(TInput input,
-                                 Func<TInput, Task> action);
+   Task InvokeAsync<TInput>(TInput input,
+                            Func<TInput, Task> action);
 
-        Task<T> InvokeAsync<T>(Func<Task<T>> action);
-    }
+   Task<T> InvokeAsync<T>(Func<Task<T>> action);
 }

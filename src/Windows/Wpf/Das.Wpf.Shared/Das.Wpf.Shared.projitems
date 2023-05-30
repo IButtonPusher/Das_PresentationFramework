@@ -12,7 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DialogBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\DataTemplateHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\WpfExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Windows\DialogSizeAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowDisplayAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\EscapeModalCanceller.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\ModalWindow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\StateRestrictedWindow.cs" />

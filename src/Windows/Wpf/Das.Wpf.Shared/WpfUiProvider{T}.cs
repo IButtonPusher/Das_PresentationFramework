@@ -44,10 +44,7 @@ public partial class WpfUiProvider<TModalWindow> : BaseUiProvider
       Process.Start(uri.AbsoluteUri);
    }
 
-   public override Boolean Confirm(String message)
-   {
-      return Confirm(message, String.Empty);
-   }
+   public override Boolean Confirm(String message) => Confirm(message, String.Empty);
 
    public override Boolean Confirm(String message,
                                    String title)
@@ -57,10 +54,7 @@ public partial class WpfUiProvider<TModalWindow> : BaseUiProvider
    }
 
    [MethodImpl(256)]
-   private Boolean CheckAccess()
-   {
-      return Thread.CurrentThread == _dispatcherThread;
-   }
+   private Boolean CheckAccess() => Thread.CurrentThread == _dispatcherThread;
 
    public override void Invoke(Action action)
    {
@@ -156,10 +150,7 @@ public partial class WpfUiProvider<TModalWindow> : BaseUiProvider
             Filter = GetExtensionsFilterText(fileType)
          };
 
-         if (TryGetFileImpl(ofd, out var file))
-            return file;
-
-         return default;
+         return TryGetFileImpl(ofd, out var file) ? file : default;
       });
    }
 
@@ -184,7 +175,7 @@ public partial class WpfUiProvider<TModalWindow> : BaseUiProvider
          case OpenFileTypes.PngOrAny:
             return "PNG Files (.png)|*.png|All Files (*.*)|*.*";
          case OpenFileTypes.Zip:
-            return "NoteCaddy coaching packages|*.zip";
+            return "Zip Files|*.zip";
          default:
             throw new NotImplementedException();
       }
@@ -228,10 +219,6 @@ public partial class WpfUiProvider<TModalWindow> : BaseUiProvider
             : default;
       }
    }
-   //=>
-   //Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive) ??
-   //Application.Current.Windows.OfType<Window>()
-   //           .SingleOrDefault(x => x.IsVisible && x.Owner == Application.Current.MainWindow);
 
    private readonly ResourceDictionary _resources;
    private readonly Dispatcher _dispatcher;

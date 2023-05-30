@@ -5,60 +5,59 @@ using System.Threading.Tasks;
 using Das.ViewModels;
 using Das.Views.Input;
 
-namespace Das.Views
+namespace Das.Views;
+
+public interface IUiProvider : ISingleThreadedInvoker
 {
-    public interface IUiProvider : ISingleThreadedInvoker
-    {
-        void BeginNotify(String text);
+   void BeginNotify(String text);
 
-        void BrowseToUri(Uri uri);
+   void BrowseToUri(Uri uri);
 
-        Task<Boolean> ConfirmAsync(String message,
-                                   String title);
+   Task<Boolean> ConfirmAsync(String message,
+                              String title);
 
-        Task<Boolean> ConfirmAsync(String message);
+   Task<Boolean> ConfirmAsync(String message);
 
-        Boolean Confirm(String message,
-                        String title);
+   Boolean Confirm(String message,
+                   String title);
 
-        Boolean Confirm(String message);
+   Boolean Confirm(String message);
 
-        Task<T?> ShowDialogAsync<T>(IModalVm<T> vm);
+   Task<T?> ShowDialogAsync<T>(IModalVm<T> vm);
 
-        Task<Boolean?> ShowDialogAsync(INotifyPropertyChanged vm);
+   Task<Boolean?> ShowDialogAsync(INotifyPropertyChanged vm);
 
-        Task ShowAsync(INotifyPropertyChanged vm);
+   Task ShowAsync(INotifyPropertyChanged vm);
 
-        Task CopyTextAsync(Func<String> getText);
+   Task CopyTextAsync(Func<String> getText);
 
-        Boolean TryGetFileToOpen(DirectoryInfo initialDirectory,
-                                 OpenFileTypes fileType,
-                                 out FileInfo file);
+   Boolean TryGetFileToOpen(DirectoryInfo initialDirectory,
+                            OpenFileTypes fileType,
+                            out FileInfo file);
 
-        Boolean TryGetFileToSave(DirectoryInfo initialDirectory,
-                                 OpenFileTypes fileType,
-                                 out FileInfo file);
+   Boolean TryGetFileToSave(DirectoryInfo initialDirectory,
+                            OpenFileTypes fileType,
+                            out FileInfo file);
 
-        Task<FileInfo?> TryGetFileToSaveAsync(DirectoryInfo initialDirectory,
-                                        OpenFileTypes fileType);
+   Task<FileInfo?> TryGetFileToSaveAsync(DirectoryInfo initialDirectory,
+                                         OpenFileTypes fileType);
 
-        Task HandleErrorAsync(String wasDoing,
-                              Exception ex);
+   Task HandleErrorAsync(String wasDoing,
+                         Exception ex);
 
-        void Notify(String text);
+   void Notify(String text);
 
-        void Notify(String text,
+   void Notify(String text,
+               String title);
+
+   Task NotifyAsync(String text);
+
+   Task NotifyAsync(String text,
                     String title);
 
-        Task NotifyAsync(String text);
+   void NotifyError(String message);
 
-        Task NotifyAsync(String text,
-                         String title);
+   Task NotifyErrorAsync(String message);
 
-        void NotifyError(String message);
-
-        Task NotifyErrorAsync(String message);
-
-        Task SetCursor(MousePointers cursor);
-    }
+   Task SetCursor(MousePointers cursor);
 }

@@ -2,18 +2,17 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace Das.ViewModels
+namespace Das.ViewModels;
+
+public interface IObservableCommand : INotifyPropertyChanged,
+                                      IEquatable<IObservableCommand>,
+                                      IDisposable
 {
-    public interface IObservableCommand : INotifyPropertyChanged,
-                                          IEquatable<IObservableCommand>,
-                                          IDisposable
-    {
-        Task ExecuteAsync();
+   Task ExecuteAsync();
 
-        Task ExecuteAsync(Object paramValue);
+   Task ExecuteAsync(Object paramValue);
 
-        String? Description { get; set; }
+   String? Description { get; set; }
 
-        Boolean IsExecutable { get; set; }
-    }
+   Boolean IsExecutable { get; set; }
 }

@@ -26,9 +26,7 @@ public partial class WpfUiProvider<TModalWindow>
    {
       await InvokeAsync(() =>
       {
-         var window = GetWindowForDialog(vm);
-         //if (GetModalOwner() is { } pwner)
-         //   window.Owner = pwner;
+         var window = GetWindow(vm, true);
 
          if (vm is IDisposable dvm)
          {
@@ -76,31 +74,38 @@ public partial class WpfUiProvider<TModalWindow>
       }
    }
 
-   private static Boolean TryGetWindowSizeFromAttribute(Object? windowContents,
-                                                        out Size size)
+   private static Boolean TryGetWindowDisplayFromAttribute(Object? windowContents,
+                                                        out Size size,
+                                                        out Boolean? showInTaskBar)
    {
-      if (windowContents is { } wc &&
-          wc.GetType().GetCustomAttribute<DialogSizeAttribute>() is { } sattr &&
+      if (windowContents != null &&
+          windowContents.GetType().GetCustomAttribute<WindowDisplayAttribute>() is { } sattr &&
           sattr.Width > 0 && sattr.Height > 0)
       {
          size = new Size(sattr.Width, sattr.Height);
+         showInTaskBar = sattr.ShowInTaskBar;
          return true;
       }
 
       size = Size.Empty;
+      showInTaskBar = default;
       return false;
    }
 
-   private Window GetWindowForDialog(INotifyPropertyChanged vm)
+   private Window GetWindow(INotifyPropertyChanged vm,
+                            Boolean showInTaskbar)
    {
       var isSizeWindow = false;
       var windowSize = Size.Empty;
+      Boolean? attrShowInTaskBar = null;
 
       Object? windowContents = vm;
 
       if (_cachedContents.TryGetValue(vm.GetType(), out var cached))
       {
-         isSizeWindow = TryGetWindowSizeFromAttribute(cached, out windowSize);
+         isSizeWindow = TryGetWindowDisplayFromAttribute(cached, 
+            out windowSize,
+            out attrShowInTaskBar);
          cached.DataContext = vm;
          windowContents = cached;
 
@@ -116,9 +121,9 @@ public partial class WpfUiProvider<TModalWindow>
          //found a data template or vm's type
 
          windowContents = tf.LoadContent();
-
-         isSizeWindow = TryGetWindowSizeFromAttribute(windowContents, out windowSize);
-
+         isSizeWindow = TryGetWindowDisplayFromAttribute(windowContents, 
+            out windowSize,
+            out attrShowInTaskBar);
 
          if (windowContents is Window templateWindow)
          {
@@ -141,13 +146,15 @@ public partial class WpfUiProvider<TModalWindow>
          ? SizeToContent.Manual
          : SizeToContent.WidthAndHeight;
 
+      if (attrShowInTaskBar.HasValue)
+         showInTaskbar = attrShowInTaskBar.Value;
 
       var ww = new TModalWindow
       {
          Content = windowContents,
          DataContext = vm,
          SizeToContent = stc,
-         ShowInTaskbar = false,
+         ShowInTaskbar = showInTaskbar,
          Resources = _resources,
          WindowStartupLocation = WindowStartupLocation.CenterOwner
       };
@@ -166,7 +173,7 @@ public partial class WpfUiProvider<TModalWindow>
 
    private Boolean? ShowBooleanDialogImpl(INotifyPropertyChanged vm)
    {
-      var window = GetWindowForDialog(vm);
+      var window = GetWindow(vm, false);
       if (GetModalOwner() is { } pwner)
          window.Owner = pwner;
       
