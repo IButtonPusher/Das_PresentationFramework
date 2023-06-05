@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading.Tasks;
+// ReSharper disable UnusedMember.Global
 
 namespace RuntimeCode.Shared;
 
@@ -9,38 +10,55 @@ public static class RuntimeCodeHelper
 {
     public static OpCode? TryGetLdConst(this Int32 value)
     {
-        switch (value)
-        {
-            case 0:
-                return OpCodes.Ldc_I4_0;
+       TryGetLdConstInt32(value, out var opCode);
+       return opCode;
+    }
 
-            case 1:
-                return OpCodes.Ldc_I4_1;
+    public static Boolean TryGetLdConstInt32(this Int32 value,
+                                             out OpCode? opCode)
+    {
+       switch (value)
+       {
+          case 0:
+             opCode = OpCodes.Ldc_I4_0;
+             return true;
 
-            case 2:
-                return OpCodes.Ldc_I4_2;
+          case 1:
+             opCode = OpCodes.Ldc_I4_1;
+             return true;
 
-            case 3:
-                return OpCodes.Ldc_I4_3;
+          case 2:
+             opCode = OpCodes.Ldc_I4_2;
+             return true;
 
-            case 4:
-                return OpCodes.Ldc_I4_4;
+          case 3:
+             opCode = OpCodes.Ldc_I4_3;
+             return true;
 
-            case 5:
-                return OpCodes.Ldc_I4_5;
+          case 4:
+             opCode = OpCodes.Ldc_I4_4;
+             return true;
 
-            case 6:
-                return OpCodes.Ldc_I4_6;
+          case 5:
+             opCode = OpCodes.Ldc_I4_5;
+             return true;
 
-            case 7:
-                return OpCodes.Ldc_I4_7;
+          case 6:
+             opCode = OpCodes.Ldc_I4_6;
+             return true;
 
-            case 8:
-                return OpCodes.Ldc_I4_8;
+          case 7:
+             opCode = OpCodes.Ldc_I4_7;
+             return true;
 
-            default:
-                return default;
-        }
+          case 8:
+             opCode = OpCodes.Ldc_I4_8;
+             return true;
+
+          default:
+             opCode = default;
+             return false;
+       }
     }
 
     public static OpCode? TryGetLdArg(this Int32 value)
@@ -64,25 +82,6 @@ public static class RuntimeCodeHelper
         }
     }
 
-    //public static void EmitConstDouble(this ILGenerator il,
-    //                                   Double value)
-    //{
-    //    il.Emit(OpCodes.Ldc_R8, Convert.ToDouble(value));
-    //}
-
-    //public static void EmitConstInt32(this ILGenerator il,
-    //                                  Int32 value)
-    //{
-    //    var opCode = TryGetLdConst(value);
-    //    if (opCode != null)
-    //        il.Emit(opCode.Value);
-    //    else if (value <= 127)
-    //        il.Emit(OpCodes.Ldc_I4_S, value);
-    //    else
-    //        il.Emit(OpCodes.Ldc_I4, value);
-    //}
-
-
     public static void EmitLdArg(this ILGenerator il,
                                  Int32 value)
     {
@@ -102,6 +101,7 @@ public static class RuntimeCodeHelper
         il.Emit(OpCodes.Ldc_I8, uKey);
     }
 
+   
     /// <summary>
     ///     1. ldarg_0
     ///     2. ldfld(field)
@@ -117,18 +117,6 @@ public static class RuntimeCodeHelper
           il.Emit(OpCodes.Ldfld, field.MetadataToken);
        }
     }
-
-
-    ///// <summary>
-    /////     1. ldarg_0
-    /////     2. ldfld(metadataToken)
-    ///// </summary>
-    //public static void LoadThisField(this ILGenerator il,
-    //                                 Int32 metadataToken)
-    //{
-    //   il.Emit(OpCodes.Ldarg_0);
-    //   il.Emit(OpCodes.Ldfld, metadataToken);
-    //}
 
     public static void StoreLocal<T>(this ILGenerator il,
                                      FieldDefinition<T> field,
@@ -335,13 +323,19 @@ public static class RuntimeCodeHelper
     }
 
     public static void PushConstant(this ILGenerator il,
+                                    Int16 value)
+    {
+       il.Emit(OpCodes.Ldc_I4, (Int32)value);
+    }
+
+    public static void PushConstant(this ILGenerator il,
                                     Int32 value)
     {
         var opCode = TryGetLdConst(value);
         if (opCode != null)
             il.Emit(opCode.Value);
-        else if (value >= 0 && value <= 127)
-            il.Emit(OpCodes.Ldc_I4_S, value);
+        //else if (value >= 0 && value <= 127)
+        //    il.Emit(OpCodes.Ldc_I4_S, value);
         else
             il.Emit(OpCodes.Ldc_I4, value);
     }
@@ -356,6 +350,12 @@ public static class RuntimeCodeHelper
                                     UInt64 value)
     {
        EmitConstUInt64(il, value); //Convert.ToDouble(value));
+    }
+
+    public static void PushConstant(this ILGenerator il,
+                                    Boolean value)
+    {
+       il.Emit(value ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
     }
 
 
