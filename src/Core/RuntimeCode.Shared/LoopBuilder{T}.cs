@@ -66,8 +66,8 @@ public class LoopBuilder<T>
         _types = types;
 
         _elementType = _memberType.IsArray
-            ? _memberType.GetElementType() ?? _types.GetGermaneType(_memberType)
-            : _types.GetGermaneType(_memberType);
+            ? _memberType.GetElementType() ?? types.GetGermaneType(_memberType)
+            : types.GetGermaneType(_memberType);
 
         if (currentValueLocal != null)
             CurrentValueLocal = currentValueLocal;
@@ -496,6 +496,7 @@ public class LoopBuilder<T>
     private readonly Action<ILGenerator, T> _pushMemberToStack;
 
     
+    // ReSharper disable once NotAccessedField.Global
     protected readonly ITypeManipulator _types;
     private readonly Type _elementType;
 }
