@@ -85,6 +85,47 @@ namespace Common.Core
             return val;
         }
 
+
+        public static Boolean AddValues<TKey, TValKey, TValue, TValues1>(
+           this IDictionary<TKey, TValues1> dictionary,
+           TKey key,
+           TValKey value1,
+           TValue value2)
+           where TValues1 : IDictionary<TValKey, TValue>, new()
+           
+        {
+           if (!dictionary.TryGetValue(key, out var val))
+           {
+              val = new TValues1();
+              dictionary.Add(key, val);
+              val.Add(value1, value2);
+              return true;
+           }
+
+           val.Add(value1, value2);
+           return false;
+        }
+
+        public static Boolean AddToValueList<TKey, TValKey, TValue, TValues1, TValues2>(
+           this IDictionary<TKey, TValues1> dictionary,
+           TKey key,
+           TValKey value1,
+           TValue value2)
+           where TValues1 : IDictionary<TValKey, TValues2>, new()
+        where TValues2 : ICollection<TValue>, new()
+        {
+           if (!dictionary.TryGetValue(key, out var val))
+           {
+              val = new TValues1();
+              dictionary.Add(key, val);
+
+
+              return AddToValueList(val, value1, value2);
+           }
+
+           AddToValueList(val, value1, value2);
+           return false;
+        }
        
         /// <summary>
         /// Adds a value to a collection of items which is the value of a dictionary

@@ -8,7 +8,14 @@ public static class RuntimeCodeExtensions
 {
     public static LocalVariable<T> DeclareLocal<T>(this ILGenerator il)
     {
-        var loco = il.DeclareLocal(typeof(T));
+       var loco = il.DeclareLocal(typeof(T));
+
+       if (typeof(T) == typeof(Double) && 
+           loco.LocalIndex == 8)
+       {
+
+       }
+
         return new LocalVariable<T>(loco);
     }
 

@@ -213,6 +213,9 @@ public class LoopBuilder<T>
         ForLoopIncrement(c, fore, breakLoop);
     }
 
+
+   
+
     public void ForLoop<TData>(TData data,
                                Action<ILGenerator> getLength,
                                OnForLoopIteration<TData> action)
@@ -545,3 +548,11 @@ public delegate void OnIndexedValueReady<in TData1, in TData2, in TData3, in TDa
                                                                           TData2 data2,
                                                                           TData3 data3,
                                                                           TData4 data4);
+
+public delegate void OnIndexedOnlyeReady<in TData1, in TData2, in TData3, in TData4>(ILGenerator il,
+   LocalBuilder currentIndex,
+   Type itemType,
+   TData1 data1,
+   TData2 data2,
+   TData3 data3,
+   TData4 data4);
